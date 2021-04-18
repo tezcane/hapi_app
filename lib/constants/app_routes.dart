@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:flutter_starter/ui/ui.dart';
-import 'package:flutter_starter/ui/auth/auth.dart';
+import 'package:hapi/ui/auth/auth.dart';
+import 'package:hapi/ui/ui.dart';
 
 class AppRoutes {
   AppRoutes._(); //this is to prevent anyone from instantiating this object

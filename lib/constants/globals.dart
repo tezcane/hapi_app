@@ -1,4 +1,4 @@
-import 'package:flutter_starter/models/models.dart';
+import 'package:hapi/models/models.dart';
 
 class Globals {
   static final String defaultLanguage = 'en';

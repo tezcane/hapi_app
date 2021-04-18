@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_starter/controllers/controllers.dart';
-import 'package:flutter_starter/ui/components/components.dart';
-import 'package:flutter_starter/ui/ui.dart';
 import 'package:get/get.dart';
+import 'package:hapi/controllers/controllers.dart';
+import 'package:hapi/ui/components/components.dart';
+import 'package:hapi/ui/ui.dart';
 
 class HomeUI extends StatelessWidget {
   @override

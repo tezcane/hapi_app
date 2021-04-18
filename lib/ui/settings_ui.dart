@@ -1,12 +1,12 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_starter/ui/auth/auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:flutter_starter/ui/components/segmented_selector.dart';
-import 'package:flutter_starter/controllers/controllers.dart';
-import 'package:flutter_starter/ui/components/components.dart';
-import 'package:flutter_starter/models/models.dart';
-import 'package:flutter_starter/constants/constants.dart';
+import 'package:hapi/constants/constants.dart';
+import 'package:hapi/controllers/controllers.dart';
+import 'package:hapi/models/models.dart';
+import 'package:hapi/ui/auth/auth.dart';
+import 'package:hapi/ui/components/components.dart';
+import 'package:hapi/ui/components/segmented_selector.dart';
 
 class SettingsUI extends StatelessWidget {
   //final LanguageController languageController = LanguageController.to;

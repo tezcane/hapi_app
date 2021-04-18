@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:flutter_starter/ui/components/components.dart';
-import 'package:flutter_starter/helpers/helpers.dart';
-import 'package:flutter_starter/controllers/controllers.dart';
-import 'package:flutter_starter/ui/auth/auth.dart';
+import 'package:hapi/controllers/controllers.dart';
+import 'package:hapi/helpers/helpers.dart';
+import 'package:hapi/ui/auth/auth.dart';
+import 'package:hapi/ui/components/components.dart';
 
 class SignUpUI extends StatelessWidget {
   final AuthController authController = AuthController.to;

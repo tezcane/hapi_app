@@ -1,14 +1,15 @@
+import 'dart:async';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_starter/models/models.dart';
-import 'package:flutter_starter/ui/auth/auth.dart';
-import 'package:flutter_starter/ui/ui.dart';
-import 'package:flutter_starter/ui/components/components.dart';
-import 'package:flutter_starter/helpers/helpers.dart';
+import 'package:hapi/helpers/helpers.dart';
+import 'package:hapi/models/models.dart';
+import 'package:hapi/ui/auth/auth.dart';
+import 'package:hapi/ui/components/components.dart';
+import 'package:hapi/ui/ui.dart';
 
 class AuthController extends GetxController {
   static AuthController to = Get.find();
