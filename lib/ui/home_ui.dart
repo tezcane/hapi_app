@@ -20,7 +20,7 @@ class HomeUI extends StatelessWidget {
                   IconButton(
                       icon: Icon(Icons.settings),
                       onPressed: () {
-                        Get.to(SettingsUI());
+                        Get.to(() => SettingsUI());
                       }),
                 ],
               ),

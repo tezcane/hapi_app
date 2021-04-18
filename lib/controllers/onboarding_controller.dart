@@ -17,7 +17,7 @@ class OnboardingController extends GetxController {
   Future<void> setOnboardingComplete() async {
     onboarded.value = true;
     await store.write('onboarded', true);
-    Get.offAll(SignUpUI());
+    Get.offAll(() => SignUpUI());
     update(); // TODO not needed
   }
 }

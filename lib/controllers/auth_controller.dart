@@ -54,13 +54,13 @@ class AuthController extends GetxController {
     if (_firebaseUser == null) {
       if (onboardingController.isOnboarded()) {
         print('Send to signin');
-        Get.offAll(SignInUI());
+        Get.offAll(() => SignInUI());
       } else {
         print('Send to onboarding');
-        Get.offAll(OnboardingUI());
+        Get.offAll(() => OnboardingUI());
       }
     } else {
-      Get.offAll(HomeUI());
+      Get.offAll(() => HomeUI());
     }
   }
 
