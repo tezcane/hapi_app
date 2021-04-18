@@ -16,6 +16,7 @@ void main() async {
   await GetStorage.init();
   Get.put<OnboardingController>(OnboardingController());
   Get.put<AuthController>(AuthController());
+//Get.put<TaskController>(TaskController());
   Get.put<ThemeController>(ThemeController());
   Get.put<LanguageController>(LanguageController());
   runApp(MyApp());

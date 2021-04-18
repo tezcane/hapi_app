@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/controllers/controllers.dart';
-import 'package:hapi/ui/components/components.dart';
+import 'package:hapi/controllers/task_controller.dart';
+import 'package:hapi/services/database.dart';
+import 'package:hapi/ui/components/task_card.dart';
 import 'package:hapi/ui/ui.dart';
 
 class HomeUI extends StatelessWidget {
+  final TextEditingController _taskController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AuthController>(
@@ -24,6 +28,7 @@ class HomeUI extends StatelessWidget {
                       }),
                 ],
               ),
+              /*
               body: Center(
                 child: Column(
                   children: <Widget>[
@@ -61,6 +66,71 @@ class HomeUI extends StatelessWidget {
                     ),
                   ],
                 ),
+              ), */
+              body: Column(
+                children: <Widget>[
+                  SizedBox(
+                    height: 20,
+                  ),
+                  Text(
+                    "Add Task Here:",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Card(
+                    margin: EdgeInsets.all(20),
+                    child: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: TextFormField(
+                              controller: _taskController,
+                            ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.add),
+                            onPressed: () {
+                              if (_taskController.text != "") {
+                                Database().addTask(_taskController.text,
+                                    controller.firestoreUser.value!.uid);
+                                _taskController.clear();
+                              }
+                            },
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  Text(
+                    "Your Tasks",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  GetX<TaskController>(
+                    init: Get.put<TaskController>(TaskController()),
+                    builder: (TaskController taskController) {
+                      if (taskController != null &&
+                          taskController.tasks != null) {
+                        return Expanded(
+                          child: ListView.builder(
+                            itemCount: taskController.tasks.length,
+                            itemBuilder: (_, index) {
+                              return TaskCard(
+                                  task: taskController.tasks[index]);
+                            },
+                          ),
+                        );
+                      } else {
+                        return Text("Loading...");
+                      }
+                    },
+                  )
+                ],
               ),
             ),
     );
