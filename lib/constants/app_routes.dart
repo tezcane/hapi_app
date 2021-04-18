@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:hapi/ui/auth/auth.dart';
-import 'package:hapi/ui/auth/onboarding_ui.dart';
+import 'package:hapi/ui/onboarding_ui.dart';
 import 'package:hapi/ui/ui.dart';
 
 class AppRoutes {

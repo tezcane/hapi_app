@@ -9,8 +9,8 @@ import 'package:hapi/controllers/onboarding_controller.dart';
 import 'package:hapi/helpers/helpers.dart';
 import 'package:hapi/models/models.dart';
 import 'package:hapi/ui/auth/auth.dart';
-import 'package:hapi/ui/auth/onboarding_ui.dart';
 import 'package:hapi/ui/components/components.dart';
+import 'package:hapi/ui/onboarding_ui.dart';
 import 'package:hapi/ui/ui.dart';
 
 class AuthController extends GetxController {
