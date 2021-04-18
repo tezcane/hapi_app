@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 class AppThemes {
   AppThemes._();
 
+  // TODO
+  static const Color logoBackground = Color.fromRGBO(0x0A, 0x0E, 0x21, 1);
+//static const Color dodgerBlue = Color.fromRGBO(0x1D, 0x1E, 0x33, 1);
+
   static const Color dodgerBlue = Color.fromRGBO(29, 161, 242, 1);
   static const Color whiteLilac = Color.fromRGBO(248, 250, 252, 1);
   static const Color blackPearl = Color.fromRGBO(30, 31, 43, 1);
