@@ -6,6 +6,7 @@ import 'package:hapi/constants/constants.dart';
 //import 'package:firebase_analytics/firebase_analytics.dart';
 //import 'package:firebase_analytics/observer.dart';
 import 'package:hapi/controllers/controllers.dart';
+import 'package:hapi/controllers/onboarding_controller.dart';
 import 'package:hapi/helpers/helpers.dart';
 import 'package:hapi/ui/components/components.dart';
 
@@ -13,6 +14,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await GetStorage.init();
+  Get.put<OnboardingController>(OnboardingController());
   Get.put<AuthController>(AuthController());
   Get.put<ThemeController>(ThemeController());
   Get.put<LanguageController>(LanguageController());

@@ -5,13 +5,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:hapi/controllers/onboarding_controller.dart';
 import 'package:hapi/helpers/helpers.dart';
 import 'package:hapi/models/models.dart';
 import 'package:hapi/ui/auth/auth.dart';
+import 'package:hapi/ui/auth/onboarding_ui.dart';
 import 'package:hapi/ui/components/components.dart';
 import 'package:hapi/ui/ui.dart';
 
 class AuthController extends GetxController {
+  final OnboardingController onboardingController = OnboardingController.to;
+
   static AuthController to = Get.find();
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -48,8 +52,13 @@ class AuthController extends GetxController {
     }
 
     if (_firebaseUser == null) {
-      print('Send to signin');
-      Get.offAll(SignInUI());
+      if (onboardingController.isOnboarded()) {
+        print('Send to signin');
+        Get.offAll(SignInUI());
+      } else {
+        print('Send to onboarding');
+        Get.offAll(OnboardingUI());
+      }
     } else {
       Get.offAll(HomeUI());
     }
