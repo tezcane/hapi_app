@@ -224,13 +224,14 @@ class AuthController extends GetxController {
   //check if user is an admin user
   isAdmin() async {
     await getUser.then((user) async {
-      DocumentSnapshot adminRef =
-          await _db.collection('admin').doc(user.uid).get();
-      if (adminRef.exists) {
-        admin.value = true;
-      } else {
-        admin.value = false;
-      }
+      // TODO needed? This fails when the app goes offline:
+      // DocumentSnapshot adminRef =
+      //     await _db.collection('admin').doc(user.uid).get();
+      // if (adminRef.exists) {
+      //   admin.value = true;
+      // } else {
+      admin.value = false;
+      // }
       update();
     });
   }

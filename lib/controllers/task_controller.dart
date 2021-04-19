@@ -14,6 +14,7 @@ class TaskController extends GetxController {
   @override
   void onInit() {
     String uid = Get.find<AuthController>().firebaseUser.value!.uid;
+    print('TaskController.onInit: binding to db with uid=$uid');
     taskList.bindStream(Database().taskStream(uid)); //stream from firebase
 
     super.onInit();

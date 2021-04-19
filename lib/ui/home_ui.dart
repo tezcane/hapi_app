@@ -8,117 +8,68 @@ import 'package:hapi/ui/components/task_card.dart';
 import 'package:hapi/ui/settings_ui.dart';
 
 class HomeUI extends StatelessWidget {
-  final TextEditingController _taskController = TextEditingController();
+  final TextEditingController _textEditingController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AuthController>(
       init: AuthController(),
-      builder: (controller) => controller.firestoreUser.value!.uid == null
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : Scaffold(
-              appBar: AppBar(
-                title: Text(
-                  'hapi',
-                  style: TextStyle(
-                    fontFamily: 'Lobster',
-                    color: AppThemes.logoText,
-                    fontSize: 28,
-                  ),
-                ),
-                actions: [
-                  IconButton(
-                      icon: Icon(Icons.settings),
-                      onPressed: () {
-                        Get.to(() => SettingsUI());
-                      }),
-                ],
-              ),
-              /*
-              body: Center(
-                child: Column(
-                  children: <Widget>[
-                    SizedBox(height: 120),
-                    Avatar(controller.firestoreUser.value!),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        FormVerticalSpace(),
-                        Text(
-                            'home.uidLabel'.tr +
-                                ': ' +
-                                controller.firestoreUser.value!.uid,
-                            style: TextStyle(fontSize: 16)),
-                        FormVerticalSpace(),
-                        Text(
-                            'home.nameLabel'.tr +
-                                ': ' +
-                                controller.firestoreUser.value!.name,
-                            style: TextStyle(fontSize: 16)),
-                        FormVerticalSpace(),
-                        Text(
-                            'home.emailLabel'.tr +
-                                ': ' +
-                                controller.firestoreUser.value!.email,
-                            style: TextStyle(fontSize: 16)),
-                        FormVerticalSpace(),
-                        Text(
-                            'home.adminUserLabel'.tr +
-                                ': ' +
-                                controller.admin.value.toString(),
-                            style: TextStyle(fontSize: 16)),
-                      ],
-                    ),
-                  ],
-                ),
-              ), */
-              body: Column(
-                children: <Widget>[
-                  SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    "Add Task Here:",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  AddTask(
-                      authController: controller,
-                      taskController: _taskController),
-                  Text(
-                    "Your Tasks",
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  GetX<TaskController>(
-                    init: Get.put<TaskController>(TaskController()),
-                    builder: (TaskController taskController) {
-                      if (taskController != null &&
-                          taskController.tasks != null) {
-                        return Expanded(
-                          child: ListView.builder(
-                            itemCount: taskController.tasks.length,
-                            itemBuilder: (_, index) {
-                              return TaskCard(
-                                  task: taskController.tasks[index]);
-                            },
-                          ),
-                        );
-                      } else {
-                        return Text("Loading...");
-                      }
-                    },
-                  )
-                ],
+      builder: (controller) => Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'hapi',
+            style: TextStyle(
+              fontFamily: 'Lobster',
+              color: AppThemes.logoText,
+              fontSize: 28,
+            ),
+          ),
+          actions: [
+            IconButton(
+                icon: Icon(Icons.settings),
+                onPressed: () {
+                  Get.to(() => SettingsUI());
+                }),
+          ],
+        ),
+        body: Column(
+          children: <Widget>[
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              "Add Task Here:",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
               ),
             ),
+            AddTask(
+                authController: controller,
+                textEditingController: _textEditingController),
+            Text(
+              "Your Tasks",
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            GetX<TaskController>(
+              init: Get.put<TaskController>(TaskController()),
+              builder: (TaskController taskController) {
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: taskController.tasks.length,
+                    itemBuilder: (_, index) {
+                      return TaskCard(task: taskController.tasks[index]);
+                    },
+                  ),
+                );
+              },
+            )
+          ],
+        ),
+      ),
     );
   }
 }
@@ -127,13 +78,13 @@ class AddTask extends StatelessWidget {
   const AddTask({
     Key? key,
     required AuthController authController,
-    required TextEditingController taskController,
+    required TextEditingController textEditingController,
   })   : _authController = authController,
-        _taskController = taskController,
+        _textEditingController = textEditingController,
         super(key: key);
 
   final AuthController _authController;
-  final TextEditingController _taskController;
+  final TextEditingController _textEditingController;
 
   @override
   Widget build(BuildContext context) {
@@ -145,16 +96,16 @@ class AddTask extends StatelessWidget {
           children: [
             Expanded(
               child: TextFormField(
-                controller: _taskController,
+                controller: _textEditingController,
               ),
             ),
             IconButton(
               icon: Icon(Icons.add),
               onPressed: () {
-                if (_taskController.text != "") {
-                  Database().addTask(_taskController.text,
+                if (_textEditingController.text != "") {
+                  Database().addTask(_textEditingController.text,
                       _authController.firestoreUser.value!.uid);
-                  _taskController.clear();
+                  _textEditingController.clear();
                 }
               },
             )
