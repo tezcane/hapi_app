@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/controllers/controllers.dart';
+import 'package:hapi/controllers/auth_controller.dart';
 import 'package:hapi/controllers/task_controller.dart';
 import 'package:hapi/services/database.dart';
 import 'package:hapi/ui/components/task_card.dart';
-import 'package:hapi/ui/ui.dart';
+import 'package:hapi/ui/settings_ui.dart';
 
 class HomeUI extends StatelessWidget {
   final TextEditingController _taskController = TextEditingController();

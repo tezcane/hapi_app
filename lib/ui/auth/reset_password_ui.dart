@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:hapi/controllers/controllers.dart';
-import 'package:hapi/helpers/helpers.dart';
-import 'package:hapi/ui/auth/auth.dart';
-import 'package:hapi/ui/components/components.dart';
+import 'package:hapi/controllers/auth_controller.dart';
+import 'package:hapi/helpers/validator.dart';
+import 'package:hapi/ui/auth/sign_in_ui.dart';
+import 'package:hapi/ui/components/form_input_field_with_icon.dart';
+import 'package:hapi/ui/components/form_vertical_spacing.dart';
+import 'package:hapi/ui/components/label_button.dart';
+import 'package:hapi/ui/components/logo_graphic_header.dart';
+import 'package:hapi/ui/components/primary_button.dart';
 
 class ResetPasswordUI extends StatelessWidget {
   final AuthController authController = AuthController.to;

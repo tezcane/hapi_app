@@ -1,14 +1,17 @@
+//import 'package:firebase_analytics/firebase_analytics.dart';
+//import 'package:firebase_analytics/observer.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:hapi/constants/constants.dart';
-//import 'package:firebase_analytics/firebase_analytics.dart';
-//import 'package:firebase_analytics/observer.dart';
-import 'package:hapi/controllers/controllers.dart';
+import 'package:hapi/constants/app_routes.dart';
+import 'package:hapi/constants/app_themes.dart';
+import 'package:hapi/controllers/auth_controller.dart';
+import 'package:hapi/controllers/language_controller.dart';
 import 'package:hapi/controllers/onboarding_controller.dart';
-import 'package:hapi/helpers/helpers.dart';
-import 'package:hapi/ui/components/components.dart';
+import 'package:hapi/controllers/theme_controller.dart';
+import 'package:hapi/helpers/localization.g.dart';
+import 'package:hapi/ui/components/loading.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -16,7 +19,7 @@ void main() async {
   await GetStorage.init();
   Get.put<OnboardingController>(OnboardingController());
   Get.put<AuthController>(AuthController());
-//Get.put<TaskController>(TaskController());
+//Get.put<TaskController>(TaskController()); needs auth controller to init first
   Get.put<ThemeController>(ThemeController());
   Get.put<LanguageController>(LanguageController());
   runApp(MyApp());

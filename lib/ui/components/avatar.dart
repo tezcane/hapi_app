@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hapi/models/models.dart';
-import 'package:hapi/ui/components/components.dart';
+import 'package:hapi/models/user_model.dart';
+import 'package:hapi/ui/components/logo_graphic_header.dart';
 
 class Avatar extends StatelessWidget {
   Avatar(

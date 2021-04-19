@@ -1,4 +1,4 @@
-import 'package:hapi/models/models.dart';
+import 'package:hapi/models/menu_option_model.dart';
 
 class Globals {
   static final String defaultLanguage = 'en';

@@ -1,11 +1,13 @@
-import 'package:flutter/cupertino.dart';
+//import 'package:flutter/cupertino.dart'; TODO what's this for?
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/constants/constants.dart';
-import 'package:hapi/controllers/controllers.dart';
-import 'package:hapi/models/models.dart';
-import 'package:hapi/ui/auth/auth.dart';
-import 'package:hapi/ui/components/components.dart';
+import 'package:hapi/constants/globals.dart';
+import 'package:hapi/controllers/auth_controller.dart';
+import 'package:hapi/controllers/language_controller.dart';
+import 'package:hapi/controllers/theme_controller.dart';
+import 'package:hapi/models/menu_option_model.dart';
+import 'package:hapi/ui/auth/update_profile_ui.dart';
+import 'package:hapi/ui/components/dropdown_picker.dart';
 import 'package:hapi/ui/components/segmented_selector.dart';
 
 class SettingsUI extends StatelessWidget {
