@@ -5,6 +5,7 @@ class AppThemes {
 
   // TODO
   static const Color logoBackground = Color.fromRGBO(0x0A, 0x0E, 0x21, 1);
+  static const Color logoText = Color.fromRGBO(0xE3, 0x0A, 0x17, 1);
 //static const Color dodgerBlue = Color.fromRGBO(0x1D, 0x1E, 0x33, 1);
 
   static const Color dodgerBlue = Color.fromRGBO(29, 161, 242, 1);

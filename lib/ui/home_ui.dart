@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hapi/constants/app_themes.dart';
 import 'package:hapi/controllers/auth_controller.dart';
 import 'package:hapi/controllers/task_controller.dart';
 import 'package:hapi/services/database.dart';
@@ -19,7 +20,14 @@ class HomeUI extends StatelessWidget {
             )
           : Scaffold(
               appBar: AppBar(
-                title: Text('home.title'.tr),
+                title: Text(
+                  'hapi',
+                  style: TextStyle(
+                    fontFamily: 'Lobster',
+                    color: AppThemes.logoText,
+                    fontSize: 28,
+                  ),
+                ),
                 actions: [
                   IconButton(
                       icon: Icon(Icons.settings),
@@ -79,31 +87,9 @@ class HomeUI extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                  Card(
-                    margin: EdgeInsets.all(20),
-                    child: Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: TextFormField(
-                              controller: _taskController,
-                            ),
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.add),
-                            onPressed: () {
-                              if (_taskController.text != "") {
-                                Database().addTask(_taskController.text,
-                                    controller.firestoreUser.value!.uid);
-                                _taskController.clear();
-                              }
-                            },
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+                  AddTask(
+                      authController: controller,
+                      taskController: _taskController),
                   Text(
                     "Your Tasks",
                     style: TextStyle(
@@ -133,6 +119,48 @@ class HomeUI extends StatelessWidget {
                 ],
               ),
             ),
+    );
+  }
+}
+
+class AddTask extends StatelessWidget {
+  const AddTask({
+    Key? key,
+    required AuthController authController,
+    required TextEditingController taskController,
+  })   : _authController = authController,
+        _taskController = taskController,
+        super(key: key);
+
+  final AuthController _authController;
+  final TextEditingController _taskController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: EdgeInsets.all(20),
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                controller: _taskController,
+              ),
+            ),
+            IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                if (_taskController.text != "") {
+                  Database().addTask(_taskController.text,
+                      _authController.firestoreUser.value!.uid);
+                  _taskController.clear();
+                }
+              },
+            )
+          ],
+        ),
+      ),
     );
   }
 }

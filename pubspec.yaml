@@ -42,8 +42,7 @@ flutter:
   assets:
     - assets/images/
     - assets/images/logo/
-
-fonts:
-  - family: Lobster
-    fonts:
-      - asset: fonts/Lobster-Regular.ttf
+  fonts:
+    - family: Lobster
+      fonts:
+        - asset: fonts/Lobster-Regular.ttf
