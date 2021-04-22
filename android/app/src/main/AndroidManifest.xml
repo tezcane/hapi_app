@@ -9,6 +9,7 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="hapi"
         android:icon="@mipmap/ic_launcher">
+<!--        android:usesCleartextTraffic="true"> &lt;!&ndash;Allow http calls &ndash;&gt;-->
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
