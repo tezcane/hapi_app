@@ -20,7 +20,7 @@ void main() async {
   quran_cloud.quranCloud.enableLogs = true;
 
   /// use edition identifer to determine which edition of the quran to get
-  final allEditions = await quran_cloud.getAllEditions();
+  // final allEditions = await quran_cloud.getAllEditions();
 
   // /// also you can query the edition you want
   // final editionsQuery = await quran_cloud.getAllEditions(
