@@ -29,8 +29,6 @@ class HomeUI extends StatelessWidget {
         items: myMenuValue
             .map((value) => Icon(value.icon, color: Colors.white, size: 75))
             .toList(),
-        selectedColor: Color(0xFFFF595E),
-        unselectedColor: Color(0xFF1F2041),
         onItemSelected: (value) {
           if (value == myMenuValue.length - 1 || value == _index.value) {
             print('selected index did not change, is $value');

@@ -41,33 +41,49 @@ class Menu extends StatefulWidget {
 class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   final MenuController c = Get.find();
   AnimationController? _animationController;
+  //bool buttonIsDisabled = false;
+
+  @override
+  void initState() {
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 450));
+
+    // Do this so we can change fab button menu/close animation when
+    // animated_menu updates this
+    c.initMenuButtonAnimatedController(_animationController!);
+
+    super.initState();
+  }
 
   @override
   void dispose() {
     super.dispose();
-    _animationController!.dispose();
+    if (_animationController != null) {
+      _animationController!.dispose();
+    }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _animationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 450));
-  }
+  // /// Prevent user spamming menu button to breaking the menu.
+  // _disabledButton() {
+  //   buttonIsDisabled = true;
+  //   Timer(Duration(seconds: 1), () => buttonIsDisabled = false);
+  // }
 
   void _handleOnPressed() {
+    // if (buttonIsDisabled) {  TODO doesn't work
+    //   print('buttonIsDisabled');
+    //   return;
+    // }
+    // print('button is NOT disabled');
+    // _disabledButton(); //temporarily disable button so menu can be shown
+
     // shows animated icons only if menu is not open. For case when same menu
     // was hit twice to show settings, so next time fab is hit, it closes menu.
     if (!c.isOpen()) {
-      widget.onPressed.call();
+      widget.onPressed.call(); // TODO move to controller
     }
 
     c.handleOnPressed(); // toggle open/closed menu state
-
-    // TODO is this doing anything?:
-    c.isOpen() // depending if we are open or not we do this animation
-        ? _animationController!.forward()
-        : _animationController!.reverse();
   }
 
   @override
@@ -131,8 +147,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
             ),
           ),
           GetBuilder<MenuController>(
-            init: c,
-            builder: (controller) {
+            builder: (c) {
               return SlideAnimation(
                 opened: c.isOpen(),
                 xScale: _xScale,

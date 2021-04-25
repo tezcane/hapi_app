@@ -25,12 +25,8 @@ class MenuAnimation extends StatefulWidget {
     required this.builder,
     required this.items,
     required this.onItemSelected,
-    this.selectedColor = Colors.black,
-    this.unselectedColor = Colors.green,
     double? menuWidth,
     Duration? duration,
-    this.tapOutsideToDismiss = true,
-    this.scrimColor = Colors.transparent,
     double? edgeDragWidth,
     this.enableEdgeDragGesture = false,
     this.curveAnimation = Curves.linear,
@@ -48,13 +44,9 @@ class MenuAnimation extends StatefulWidget {
     required this.builder,
     required this.items,
     required this.onItemSelected,
-    this.selectedColor = Colors.black,
-    this.unselectedColor = Colors.green,
     double? menuWidth,
     Duration? duration,
     this.indexSelected = 0,
-    this.tapOutsideToDismiss = true,
-    this.scrimColor = Colors.transparent,
     double? edgeDragWidth,
     this.enableEdgeDragGesture = false,
     this.curveAnimation = Curves.linear,
@@ -73,12 +65,6 @@ class MenuAnimation extends StatefulWidget {
   /// Function where we receive the current index selected.
   final ValueChanged<int> onItemSelected;
 
-  /// [Color] used for the background of the selected item.
-  final Color selectedColor;
-
-  /// [Color] used for the background of the unselected item.
-  final Color unselectedColor;
-
   /// Menu width for the Side Menu.
   final double menuWidth;
 
@@ -88,15 +74,6 @@ class MenuAnimation extends StatefulWidget {
 
   /// Initial index selected
   final int? indexSelected;
-
-  /// Enables to dismiss the [MenuAnimation] when user taps outside
-  /// the widget.
-  /// It's `false` by default.
-  final bool tapOutsideToDismiss;
-
-  /// If `tapOutsideToDismiss` is true, then the `scrimColor` is enabled
-  /// to change, this is the panel where we tap to dismiss the Side Menu.
-  final Color scrimColor;
 
   /// Enables swipe from left to right to display the menu,
   /// it's `false` by default.
@@ -119,55 +96,51 @@ class _MenuAnimationState extends State<MenuAnimation>
 
   late AnimationController _animationController;
 
-//late int _selectedIndex;
-//late int _oldSelectedIndex;
-  late int _selectedColor; // TODO what do we need this for?
+  late int _selectedIndex;
 
-  late ColorTween _scrimColorTween;
+  bool menuShownAlready = false;
 
   @override
   void initState() {
     // select home by default:
-    _selectedColor = widget.indexSelected ?? widget.items.length - 2;
-    //_selectedIndex = widget.indexSelected ?? widget.items.length - 2;
-    //_oldSelectedIndex = _selectedIndex;
+    _selectedIndex = widget.indexSelected ?? widget.items.length - 2;
     _animationController = AnimationController(
       vsync: this,
       duration: widget.duration,
     );
     _animationController.forward(from: 1.0);
-    _createColorTween();
     super.initState();
   }
 
-  void _createColorTween() {
-    _scrimColorTween = ColorTween(
-      end: Colors.transparent,
-      begin: widget.scrimColor,
-    );
+  @override //TODO asdf needed?
+  void didUpdateWidget(MenuAnimation oldWidget) {
+    print("didUpdateWidget didUpdateWidget didUpdateWidget asddfffffffffff");
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.duration != widget.duration) {
+      _animationController.duration = widget.duration;
+    }
   }
-
-  // @override  TODO needed?
-  // void didUpdateWidget(MenuAnimation oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //   if (oldWidget.scrimColor != widget.scrimColor) _createColorTween();
-  //   if (oldWidget.duration != widget.duration) {
-  //     _animationController.duration = widget.duration;
-  //   }
-  // }
 
   @override
   void dispose() {
+    // TODO asdf
+    print("dispose dispose dispose asddfffffffffff");
     _animationController.dispose();
     super.dispose();
   }
 
   void _displayMenuDragGesture(DragEndDetails endDetails) {
+    c.handleOnPressed();
+    print(// TODO asdf
+        "_displayMenuDragGesture _displayMenuDragGesture _displayMenuDragGesture asddfffffffffff");
     final velocity = endDetails.primaryVelocity!;
     if (velocity < 0) _animationReverse();
   }
 
   void _animationReverse() {
+    this.menuShownAlready = true;
+    print(// TODO asdf
+        "_animationReverse _animationReverse _animationReverse asddfffffffffff");
     _animationController.reverse();
   }
 
@@ -188,22 +161,22 @@ class _MenuAnimationState extends State<MenuAnimation>
                 animation: _animationController,
                 builder: (context, child) => Stack(
                   children: [
-                    if (widget.tapOutsideToDismiss &&
-                        _animationController.value == widget.items.length - 1)
+                    /// Enables to dismiss the [MenuAnimation] when user taps outside
+                    /// the widget.
+                    if (_animationController.value < 1)
                       Align(
                         child: GestureDetector(
-                          onTap: () => _animationController.forward(from: 0.0),
-                          child: AnimatedContainer(
-                            duration: widget.duration,
-                            color: _scrimColorTween.evaluate(
-                              Tween(begin: 0.0, end: 1.0)
-                                  .animate(_animationController),
-                            ),
-                          ),
+                          onTap: () {
+                            _animationController.forward(from: 0.0);
+                            menuShownAlready = false;
+                            c.handleOnPressed();
+                          },
                         ),
                       ),
+                    // handle drag out of menu from right side of screen
                     if (widget.enableEdgeDragGesture &&
-                        _animationController.isCompleted)
+                        _animationController.isCompleted &&
+                        !menuShownAlready)
                       Align(
                         alignment: Alignment.bottomRight, // was centerRight
                         child: GestureDetector(
@@ -213,7 +186,7 @@ class _MenuAnimationState extends State<MenuAnimation>
                           child: Container(width: widget.edgeDragWidth),
                         ),
                       ),
-                    // -1 hide the close button, use fab to close
+                    // -1 hide the close button, use fab to close:
                     for (int i = 0; i < widget.items.length - 1; i++)
                       MenuItem(
                         index: i,
@@ -222,22 +195,22 @@ class _MenuAnimationState extends State<MenuAnimation>
                         height: itemSize,
                         controller: _animationController,
                         curve: widget.curveAnimation,
-                        color: (i == _selectedColor)
-                            ? widget.selectedColor
-                            : widget.unselectedColor,
+                        color: (i == _selectedIndex)
+                            ? Color(0xFFFF595E) // TODO theme
+                            : Color(0xFF1F2041),
                         onTap: () {
-                          if (i != _selectedColor) {
+                          if (i != _selectedIndex) {
                             if (i != widget.items.length - 1) {
                               setState(() {
                                 //_oldSelectedIndex = _selectedIndex;
                                 // _selectedIndex = i - 1;
-                                _selectedColor = i;
+                                _selectedIndex = i;
                               });
                             }
-                            widget.onItemSelected(i);
+                            widget.onItemSelected(i); // TODO asdf needed?
                           }
                         },
-                        child: widget.items[i], // TODO whats this do?
+                        child: widget.items[i],
                       ),
                   ],
                 ),
@@ -261,11 +234,11 @@ class MenuItem extends StatelessWidget {
     required this.length,
     required this.width,
     required this.height,
-    required this.child,
     required this.curve,
     required this.controller,
     required this.color,
     required this.onTap,
+    required this.child,
   }) : super(key: key);
 
   /// `index` for the [MenuItem]
@@ -280,9 +253,6 @@ class MenuItem extends StatelessWidget {
   /// `height` for the [MenuItem]
   final double height;
 
-  /// widget `child`
-  final Widget child;
-
   /// [AnimationController] used in the [MenuAnimation]
   final AnimationController controller;
 
@@ -294,6 +264,9 @@ class MenuItem extends StatelessWidget {
 
   /// Callback invoked `onTap`
   final VoidCallback onTap;
+
+  /// widget `child`
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
