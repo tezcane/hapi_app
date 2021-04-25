@@ -2,19 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/controllers/menu_controller.dart';
 import 'package:hapi/ui/components/menu.dart';
-import 'package:hapi/ui/components/menu_animation.dart';
+import 'package:hapi/ui/components/menu_nav.dart';
 import 'package:hapi/ui/tasks_ui.dart';
 
 class HomeUI extends StatelessWidget {
   final MenuController c = Get.find();
 
-  Widget foregroundPage = TasksUI();
-  final _index = ValueNotifier<int>(myMenuValue.length - 2); // defaults to home
+  final Widget foregroundPage = TasksUI();
+
+  final int selectedIndexAtInit = myMenuValue.length - 2; // defaults to home
+  final _index = ValueNotifier<int>(myMenuValue.length - 2);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: MenuAnimation.builder(
+      body: MenuNav(
         builder: (showMenu) {
           return Scaffold(
             body: Menu(
@@ -25,13 +27,12 @@ class HomeUI extends StatelessWidget {
             ),
           );
         },
-        enableEdgeDragGesture: true,
+        selectedIndexAtInit: selectedIndexAtInit,
         items: myMenuValue
             .map((value) => Icon(value.icon, color: Colors.white, size: 75))
             .toList(),
         onItemSelected: (value) {
           if (value == _index.value) {
-            // no longer needed as we hide close button: value == myMenuValue.length - 1 ||
             print('selected index did not change, is $value');
           } else {
             _index.value = value;

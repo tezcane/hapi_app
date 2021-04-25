@@ -2,62 +2,47 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/controllers/menu_controller.dart';
 
-/// Signature for creating a widget with a `showMenu` callback
-/// for opening the Side Menu.
-///
-/// See also:
-/// * [SideMenuAnimation.builder]
-/// * [SideMenuAnimationAppBarBuilder]
+/// Signature for creating widget with `showMenu` callback to open/close Side Menu.
 typedef SideMenuAnimationBuilder = Widget Function(VoidCallback showMenu);
 
-const _sideMenuWidth = 88.0;
-const _sideMenuDuration = Duration(milliseconds: 800);
+/// Enables swipe from left to right to display the menu, it's `false` by default.
+const bool _enableEdgeDragGesture = true;
+
+/// If `enableEdgeDragGesture` true, `edgeDragWidth` is the swipe detection width area.
 const _kEdgeDragWidth = 20.0;
 
-/// The [MenuAnimation] controls the items from the lateral menu
+/// Menu width for the Side Menu.
+const double _kSideMenuWidth = 88.0;
+
+/// Menu animation total duration time, each item has total_duration/items.length
+const Duration _kDuration = Duration(milliseconds: 800);
+
+/// [Curve] used for the animation
+const Curve _kCurveAnimation = Curves.linear;
+
+const Color _kButtonColorSelected = Color(0xFFFF595E); // TODO theme
+const Color _kButtonColorUnselected = Color(0xFF1F2041);
+
+/// The [MenuNav] controls the items from the lateral menu
 /// and also can control the circular reveal transition.
-class MenuAnimation extends StatefulWidget {
-  /// Creates a [MenuAnimation] without Circular Reveal animation.
+class MenuNav extends StatefulWidget {
+  /// Creates a [MenuNav] with Circular Reveal animation.
   /// Also it is responsible for updating/changing the [AppBar]
   /// based on the index we receive.
-  const MenuAnimation.builder({
+  const MenuNav({
     Key? key,
     required this.builder,
+    required this.selectedIndexAtInit,
     required this.items,
     required this.onItemSelected,
-    double? menuWidth,
-    Duration? duration,
-    double? edgeDragWidth,
-    this.enableEdgeDragGesture = false,
-    this.curveAnimation = Curves.linear,
-  })  : indexSelected = null,
-        menuWidth = menuWidth ?? _sideMenuWidth,
-        duration = duration ?? _sideMenuDuration,
-        edgeDragWidth = edgeDragWidth ?? _kEdgeDragWidth,
-        super(key: key);
+  }) : super(key: key);
 
-  /// Creates a [MenuAnimation] with Circular Reveal animation.
-  /// Also it is responsible for updating/changing the [AppBar]
-  /// based on the index we receive.
-  const MenuAnimation({
-    Key? key,
-    required this.builder,
-    required this.items,
-    required this.onItemSelected,
-    double? menuWidth,
-    Duration? duration,
-    this.indexSelected = 0,
-    double? edgeDragWidth,
-    this.enableEdgeDragGesture = false,
-    this.curveAnimation = Curves.linear,
-  })  : menuWidth = menuWidth ?? _sideMenuWidth,
-        duration = duration ?? _sideMenuDuration,
-        edgeDragWidth = edgeDragWidth ?? _kEdgeDragWidth,
-        super(key: key);
-
-  /// `builder` builds a view/page based on the `selectedIndex.
+  /// `builder` builds a view/page based on the `selectedIndex`.
   /// It also comes with a `showMenu` callback for opening the Side Menu.
   final SideMenuAnimationBuilder builder;
+
+  /// Initial index selected, if nothing to select pass size/count of items[].
+  final int selectedIndexAtInit;
 
   /// List of items that we want to display on the Side Menu.
   final List<Widget> items;
@@ -65,50 +50,27 @@ class MenuAnimation extends StatefulWidget {
   /// Function where we receive the current index selected.
   final ValueChanged<int> onItemSelected;
 
-  /// Menu width for the Side Menu.
-  final double menuWidth;
-
-  /// Duration for the animation when the menu appears, this is
-  /// the total duration, each item has total_duration/items.lenght
-  final Duration duration;
-
-  /// Initial index selected
-  final int? indexSelected;
-
-  /// Enables swipe from left to right to display the menu,
-  /// it's `false` by default.
-  final bool enableEdgeDragGesture;
-
-  /// If `enableEdgeDragGesture` is true, then we can change
-  /// the `edgeDragWidth`, this is the width of the area where we do swipe.
-  final double edgeDragWidth;
-
-  /// [Curve] used for the animation
-  final Curve curveAnimation;
-
   @override
-  _MenuAnimationState createState() => _MenuAnimationState();
+  _MenuNavState createState() => _MenuNavState();
 }
 
-class _MenuAnimationState extends State<MenuAnimation>
-    with SingleTickerProviderStateMixin {
+class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
   final MenuController c = Get.find();
-
   late AnimationController _animationController;
 
   late int _selectedIndex;
-
   bool menuShownAlready = false;
 
   @override
   void initState() {
-    // select home by default:
-    _selectedIndex = widget.indexSelected ?? widget.items.length - 2;
+    _selectedIndex = widget.selectedIndexAtInit;
+
     _animationController = AnimationController(
       vsync: this,
-      duration: widget.duration,
+      duration: _kDuration,
     );
     _animationController.forward(from: 1.0);
+
     super.initState();
   }
 
@@ -121,12 +83,14 @@ class _MenuAnimationState extends State<MenuAnimation>
   void _displayMenuDragGesture(DragEndDetails endDetails) {
     print("_displayMenuDragGesture called");
     c.handleOnPressed();
+
     final velocity = endDetails.primaryVelocity!;
     if (velocity < 0) _animationReverse();
   }
 
   void _animationReverse() {
     print("_animationReverse called");
+
     this.menuShownAlready = true;
     _animationController.reverse();
   }
@@ -136,7 +100,7 @@ class _MenuAnimationState extends State<MenuAnimation>
     return Material(
       child: LayoutBuilder(
         builder: (context, constraints) {
-          // final itemSize = constraints.maxHeight / widget.items.length;
+          // was: constraints.maxHeight / widget.items.length;
           // 88 = 16 + 56 + 16 (fabSize and it's padding)
           // - 1 since last index (close button) is deleted:
           final itemSize =
@@ -161,7 +125,7 @@ class _MenuAnimationState extends State<MenuAnimation>
                         ),
                       ),
                     // handle drag out of menu from right side of screen
-                    if (widget.enableEdgeDragGesture &&
+                    if (_enableEdgeDragGesture &&
                         _animationController.isCompleted &&
                         !menuShownAlready)
                       Align(
@@ -170,7 +134,7 @@ class _MenuAnimationState extends State<MenuAnimation>
                           onHorizontalDragEnd: _displayMenuDragGesture,
                           behavior: HitTestBehavior.translucent,
                           excludeFromSemantics: true,
-                          child: Container(width: widget.edgeDragWidth),
+                          child: Container(width: _kEdgeDragWidth),
                         ),
                       ),
                     // -1 hide the close button, use fab to close:
@@ -178,13 +142,13 @@ class _MenuAnimationState extends State<MenuAnimation>
                       MenuItem(
                         index: i,
                         length: widget.items.length,
-                        width: widget.menuWidth,
+                        width: _kSideMenuWidth,
                         height: itemSize,
                         controller: _animationController,
-                        curve: widget.curveAnimation,
+                        curve: _kCurveAnimation,
                         color: (i == _selectedIndex)
-                            ? Color(0xFFFF595E) // TODO theme
-                            : Color(0xFF1F2041),
+                            ? _kButtonColorSelected
+                            : _kButtonColorUnselected,
                         onTap: () {
                           if (i != _selectedIndex) {
                             if (i != widget.items.length - 1) {
@@ -209,19 +173,16 @@ class _MenuAnimationState extends State<MenuAnimation>
   }
 }
 
-/// {@template MenuItem}
-/// A [MenuItem] for the [MenuAnimation]
-/// {@endtemplate}
+/// A [MenuItem]/A button for the [MenuNav]
 class MenuItem extends StatelessWidget {
-  /// {@macro MenuItem}
   const MenuItem({
     Key? key,
     required this.index,
     required this.length,
     required this.width,
     required this.height,
-    required this.curve,
     required this.controller,
+    required this.curve,
     required this.color,
     required this.onTap,
     required this.child,
@@ -239,7 +200,7 @@ class MenuItem extends StatelessWidget {
   /// `height` for the [MenuItem]
   final double height;
 
-  /// [AnimationController] used in the [MenuAnimation]
+  /// [AnimationController] used in the [MenuNav]
   final AnimationController controller;
 
   /// Animation [Curve]
@@ -270,6 +231,7 @@ class MenuItem extends StatelessWidget {
         ),
       ),
     );
+
     return Positioned(
       left: null,
       right: 0,

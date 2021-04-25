@@ -5,32 +5,31 @@ import 'package:hapi/controllers/menu_controller.dart';
 
 class Menu extends StatefulWidget {
   final VoidCallback onPressed;
-  final double scaleWidth;
-  final double scaleHeight;
   final Widget foregroundPage;
   final Widget columnWidget;
   final Widget bottomWidget;
-  final Duration buttonAnimationDuration;
+
+  final IconData buttonIcon;
+  final double scaleWidth;
+  final double scaleHeight;
   final Duration slideAnimationDuration;
+  final Duration buttonAnimationDuration;
   final Curve openAnimationCurve;
   final Curve closeAnimationCurve;
-  final IconData buttonIcon;
-  final bool animateButton;
 
   const Menu({
     Key? key,
-    this.scaleWidth = 56,
-    this.scaleHeight = 56, // * Globals.PHI,
     required this.onPressed,
+    required this.foregroundPage,
     required this.columnWidget,
     required this.bottomWidget,
-    required this.foregroundPage,
+    this.buttonIcon = Icons.add,
+    this.scaleWidth = 56,
+    this.scaleHeight = 56, // * Globals.PHI,
     this.slideAnimationDuration = const Duration(milliseconds: 800),
     this.buttonAnimationDuration = const Duration(milliseconds: 240),
     this.openAnimationCurve = const ElasticOutCurve(0.9),
     this.closeAnimationCurve = const ElasticInCurve(0.9),
-    this.buttonIcon = Icons.add,
-    this.animateButton = true,
   })  : assert(scaleHeight >= 40),
         super(key: key);
 
@@ -48,7 +47,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
         AnimationController(vsync: this, duration: Duration(milliseconds: 450));
 
     // Do this so we can change fab button menu/close animation when
-    // animated_menu updates this
+    // menu_nav updates this
     c.initMenuButtonAnimatedController(_animationController!);
 
     super.initState();
@@ -159,13 +158,14 @@ class SlideAnimation extends StatefulWidget {
   final double xScale;
   final double yScale;
   final Duration duration;
+
   final Curve openAnimationCurve;
   final Curve closeAnimationCurve;
 
   const SlideAnimation({
     Key? key,
     required this.child,
-    this.opened = false,
+    required this.opened,
     required this.xScale,
     required this.yScale,
     required this.duration,
@@ -180,7 +180,6 @@ class SlideAnimation extends StatefulWidget {
 class _SlideState extends State<SlideAnimation>
     with SingleTickerProviderStateMixin {
   final MenuController c = Get.find();
-
   late AnimationController _animationController;
   late Animation<Offset> offset;
 
