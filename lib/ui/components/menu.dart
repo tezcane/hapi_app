@@ -19,8 +19,8 @@ class Menu extends StatefulWidget {
 
   const Menu({
     Key? key,
-    this.scaleWidth = 85,
-    this.scaleHeight = 85,
+    this.scaleWidth = 56,
+    this.scaleHeight = 56,
     required this.onPressed,
     required this.columnWidget,
     required this.bottomWidget,

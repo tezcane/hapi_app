@@ -10,7 +10,7 @@ import 'package:hapi/controllers/menu_controller.dart';
 /// * [SideMenuAnimationAppBarBuilder]
 typedef SideMenuAnimationBuilder = Widget Function(VoidCallback showMenu);
 
-const _sideMenuWidth = 117.0;
+const _sideMenuWidth = 88.0;
 const _sideMenuDuration = Duration(milliseconds: 800);
 const _kEdgeDragWidth = 20.0;
 
@@ -176,7 +176,11 @@ class _MenuAnimationState extends State<MenuAnimation>
     return Material(
       child: LayoutBuilder(
         builder: (context, constraints) {
-          final itemSize = constraints.maxHeight / widget.items.length;
+          // final itemSize = constraints.maxHeight / widget.items.length;
+          // 88 = 16 + 56 + 16 (fabSize and it's padding)
+          // - 1 since last index (close button) is deleted:
+          final itemSize =
+              (constraints.maxHeight - 88) / (widget.items.length - 1);
           return Stack(
             children: [
               widget.builder(_animationReverse),
@@ -201,7 +205,7 @@ class _MenuAnimationState extends State<MenuAnimation>
                     if (widget.enableEdgeDragGesture &&
                         _animationController.isCompleted)
                       Align(
-                        alignment: Alignment.centerRight,
+                        alignment: Alignment.bottomRight, // was centerRight
                         child: GestureDetector(
                           onHorizontalDragEnd: _displayMenuDragGesture,
                           behavior: HitTestBehavior.translucent,
@@ -209,7 +213,8 @@ class _MenuAnimationState extends State<MenuAnimation>
                           child: Container(width: widget.edgeDragWidth),
                         ),
                       ),
-                    for (int i = 0; i < widget.items.length; i++)
+                    // -1 hide the close button, use fab to close
+                    for (int i = 0; i < widget.items.length - 1; i++)
                       MenuItem(
                         index: i,
                         length: widget.items.length,
@@ -316,7 +321,7 @@ class MenuItem extends StatelessWidget {
         transform: Matrix4.identity()
           ..setEntry(3, 2, 0.001)
           ..rotateY(-_animation.value),
-        alignment: Alignment.topRight,
+        alignment: Alignment.bottomRight, // was topRight
         child: Material(
           color: color,
           child: InkWell(
