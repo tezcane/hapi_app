@@ -19,4 +19,6 @@ class Globals {
     MenuOptionsModel(key: "pt", value: "Português"), //Portuguese
     MenuOptionsModel(key: "ru", value: "русский"), //Russian
   ];
+
+  static const PHI = 1.618033; // GOLDEN RATIO
 }
