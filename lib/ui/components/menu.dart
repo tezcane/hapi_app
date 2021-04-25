@@ -20,7 +20,7 @@ class Menu extends StatefulWidget {
   const Menu({
     Key? key,
     this.scaleWidth = 56,
-    this.scaleHeight = 56,
+    this.scaleHeight = 56, // * Globals.PHI,
     required this.onPressed,
     required this.columnWidget,
     required this.bottomWidget,
