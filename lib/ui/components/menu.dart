@@ -64,7 +64,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   void _handleOnPressed() {
     // shows animated icons only if menu is not open. For case when same menu
     // was hit twice to show settings, so next time fab is hit, it closes menu.
-    if (!c.isOpen()) {
+    if (!c.isMenuShowing()) {
       widget.onPressed.call(); // TODO move to controller
     }
 
@@ -134,7 +134,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
           GetBuilder<MenuController>(
             builder: (c) {
               return SlideAnimation(
-                opened: c.isOpen(),
+                opened: c.isMenuShowing(),
                 xScale: _xScale,
                 yScale: _yScale,
                 duration: widget.slideAnimationDuration,
