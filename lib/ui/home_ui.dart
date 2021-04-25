@@ -9,7 +9,7 @@ class HomeUI extends StatelessWidget {
   final MenuController c = Get.find();
 
   Widget foregroundPage = TasksUI();
-  final _index = ValueNotifier<int>(1);
+  final _index = ValueNotifier<int>(myMenuValue.length - 2); // defaults to home
 
   @override
   Widget build(BuildContext context) {
@@ -30,13 +30,14 @@ class HomeUI extends StatelessWidget {
             .map((value) => Icon(value.icon, color: Colors.white, size: 75))
             .toList(),
         onItemSelected: (value) {
-          if (value == myMenuValue.length - 1 || value == _index.value) {
+          if (value == _index.value) {
+            // no longer needed as we hide close button: value == myMenuValue.length - 1 ||
             print('selected index did not change, is $value');
           } else {
             _index.value = value;
             print('selected index changed to $value');
+            // TODO NAVIGATE
           }
-          c.handleOnPressed(); // hide menu
         },
       ),
     );
@@ -57,5 +58,5 @@ const myMenuValue = const [
   MenuValues(icon: Icons.library_add),
   MenuValues(icon: Icons.book),
   MenuValues(icon: Icons.home, page: '/home'),
-  MenuValues(icon: Icons.close),
+  MenuValues(icon: Icons.close), // dummy close button hidden on ui
 ];

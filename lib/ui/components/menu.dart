@@ -41,7 +41,6 @@ class Menu extends StatefulWidget {
 class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   final MenuController c = Get.find();
   AnimationController? _animationController;
-  //bool buttonIsDisabled = false;
 
   @override
   void initState() {
@@ -63,20 +62,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
     }
   }
 
-  // /// Prevent user spamming menu button to breaking the menu.
-  // _disabledButton() {
-  //   buttonIsDisabled = true;
-  //   Timer(Duration(seconds: 1), () => buttonIsDisabled = false);
-  // }
-
   void _handleOnPressed() {
-    // if (buttonIsDisabled) {  TODO doesn't work
-    //   print('buttonIsDisabled');
-    //   return;
-    // }
-    // print('button is NOT disabled');
-    // _disabledButton(); //temporarily disable button so menu can be shown
-
     // shows animated icons only if menu is not open. For case when same menu
     // was hit twice to show settings, so next time fab is hit, it closes menu.
     if (!c.isOpen()) {
@@ -210,16 +196,8 @@ class _SlideState extends State<SlideAnimation>
       end: Offset(-widget.xScale * 0.01, -widget.yScale * 0.01),
     ).animate(
       CurvedAnimation(
-        curve: Interval(
-          0,
-          1,
-          curve: widget.openAnimationCurve,
-        ),
-        reverseCurve: Interval(
-          0,
-          1,
-          curve: widget.closeAnimationCurve,
-        ),
+        curve: Interval(0, 1, curve: widget.openAnimationCurve),
+        reverseCurve: Interval(0, 1, curve: widget.closeAnimationCurve),
         parent: _animationController,
       ),
     );
@@ -238,10 +216,7 @@ class _SlideState extends State<SlideAnimation>
 
   @override
   Widget build(BuildContext context) {
-    return SlideTransition(
-      position: offset,
-      child: widget.child,
-    );
+    return SlideTransition(position: offset, child: widget.child);
   }
 
   @override

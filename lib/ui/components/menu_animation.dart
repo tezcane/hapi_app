@@ -112,35 +112,22 @@ class _MenuAnimationState extends State<MenuAnimation>
     super.initState();
   }
 
-  @override //TODO asdf needed?
-  void didUpdateWidget(MenuAnimation oldWidget) {
-    print("didUpdateWidget didUpdateWidget didUpdateWidget asddfffffffffff");
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.duration != widget.duration) {
-      _animationController.duration = widget.duration;
-    }
-  }
-
   @override
   void dispose() {
-    // TODO asdf
-    print("dispose dispose dispose asddfffffffffff");
     _animationController.dispose();
     super.dispose();
   }
 
   void _displayMenuDragGesture(DragEndDetails endDetails) {
+    print("_displayMenuDragGesture called");
     c.handleOnPressed();
-    print(// TODO asdf
-        "_displayMenuDragGesture _displayMenuDragGesture _displayMenuDragGesture asddfffffffffff");
     final velocity = endDetails.primaryVelocity!;
     if (velocity < 0) _animationReverse();
   }
 
   void _animationReverse() {
+    print("_animationReverse called");
     this.menuShownAlready = true;
-    print(// TODO asdf
-        "_animationReverse _animationReverse _animationReverse asddfffffffffff");
     _animationController.reverse();
   }
 
@@ -202,13 +189,12 @@ class _MenuAnimationState extends State<MenuAnimation>
                           if (i != _selectedIndex) {
                             if (i != widget.items.length - 1) {
                               setState(() {
-                                //_oldSelectedIndex = _selectedIndex;
-                                // _selectedIndex = i - 1;
                                 _selectedIndex = i;
                               });
                             }
-                            widget.onItemSelected(i); // TODO asdf needed?
+                            c.handleOnPressed(); // hide menu
                           }
+                          widget.onItemSelected(i);
                         },
                         child: widget.items[i],
                       ),
