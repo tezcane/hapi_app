@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hapi/controllers/menu_controller.dart';
 
 /// Signature for creating a widget with a `showMenu` callback
 /// for opening the Side Menu.
@@ -8,7 +10,7 @@ import 'package:flutter/material.dart';
 /// * [SideMenuAnimationAppBarBuilder]
 typedef SideMenuAnimationBuilder = Widget Function(VoidCallback showMenu);
 
-const _sideMenuWidth = 100.0;
+const _sideMenuWidth = 117.0;
 const _sideMenuDuration = Duration(milliseconds: 800);
 const _kEdgeDragWidth = 20.0;
 
@@ -113,20 +115,26 @@ class MenuAnimation extends StatefulWidget {
 
 class _MenuAnimationState extends State<MenuAnimation>
     with SingleTickerProviderStateMixin {
+  final MenuController c = Get.find();
+
   late AnimationController _animationController;
 
-  late int _selectedIndex;
+//late int _selectedIndex;
 //late int _oldSelectedIndex;
-  int _selectedColor = 0; // TODO make select home by default
+  late int _selectedColor; // TODO what do we need this for?
 
   late ColorTween _scrimColorTween;
 
   @override
   void initState() {
-    _selectedIndex = widget.indexSelected ?? 0;
+    // select home by default:
+    _selectedColor = widget.indexSelected ?? widget.items.length - 2;
+    //_selectedIndex = widget.indexSelected ?? widget.items.length - 2;
     //_oldSelectedIndex = _selectedIndex;
-    _animationController =
-        AnimationController(vsync: this, duration: widget.duration);
+    _animationController = AnimationController(
+      vsync: this,
+      duration: widget.duration,
+    );
     _animationController.forward(from: 1.0);
     _createColorTween();
     super.initState();
@@ -139,14 +147,14 @@ class _MenuAnimationState extends State<MenuAnimation>
     );
   }
 
-  @override
-  void didUpdateWidget(MenuAnimation oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    if (oldWidget.scrimColor != widget.scrimColor) _createColorTween();
-    if (oldWidget.duration != widget.duration) {
-      _animationController.duration = widget.duration;
-    }
-  }
+  // @override  TODO needed?
+  // void didUpdateWidget(MenuAnimation oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  //   if (oldWidget.scrimColor != widget.scrimColor) _createColorTween();
+  //   if (oldWidget.duration != widget.duration) {
+  //     _animationController.duration = widget.duration;
+  //   }
+  // }
 
   @override
   void dispose() {
@@ -217,14 +225,14 @@ class _MenuAnimationState extends State<MenuAnimation>
                             if (i != widget.items.length - 1) {
                               setState(() {
                                 //_oldSelectedIndex = _selectedIndex;
-                                _selectedIndex = i - 1;
+                                // _selectedIndex = i - 1;
                                 _selectedColor = i;
                               });
                             }
                             widget.onItemSelected(i);
                           }
                         },
-                        child: widget.items[i],
+                        child: widget.items[i], // TODO whats this do?
                       ),
                   ],
                 ),

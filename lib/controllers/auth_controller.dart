@@ -14,9 +14,9 @@ import 'package:hapi/ui/home_ui.dart';
 import 'package:hapi/ui/onboarding_ui.dart';
 
 class AuthController extends GetxController {
+  static AuthController to = Get.find();
   final OnboardingController onboardingController = OnboardingController.to;
 
-  static AuthController to = Get.find();
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();

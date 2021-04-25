@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hapi/constants/app_themes.dart';
+import 'package:hapi/controllers/menu_controller.dart';
 
 class Menu extends StatefulWidget {
   final VoidCallback onPressed;
@@ -17,8 +19,8 @@ class Menu extends StatefulWidget {
 
   const Menu({
     Key? key,
-    this.scaleWidth = 60,
-    this.scaleHeight = 60,
+    this.scaleWidth = 85,
+    this.scaleHeight = 85,
     required this.onPressed,
     required this.columnWidget,
     required this.bottomWidget,
@@ -37,7 +39,7 @@ class Menu extends StatefulWidget {
 }
 
 class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
-  bool opened = false;
+  final MenuController c = Get.find();
   AnimationController? _animationController;
 
   @override
@@ -54,13 +56,18 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   }
 
   void _handleOnPressed() {
-    setState(() {
-      opened = !opened;
-      opened
-          ? _animationController!.forward()
-          : _animationController!.reverse();
+    // shows animated icons only if menu is not open. For case when same menu
+    // was hit twice to show settings, so next time fab is hit, it closes menu.
+    if (!c.isOpen()) {
       widget.onPressed.call();
-    });
+    }
+
+    c.handleOnPressed(); // toggle open/closed menu state
+
+    // TODO is this doing anything?:
+    c.isOpen() // depending if we are open or not we do this animation
+        ? _animationController!.forward()
+        : _animationController!.reverse();
   }
 
   @override
@@ -77,7 +84,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _handleOnPressed(),
+        onPressed: null,
         child: Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -88,7 +95,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                   icon: AnimatedIcons.menu_close,
                   progress: _animationController!,
                 ),
-                onPressed: null,
+                onPressed: () => _handleOnPressed(),
               ),
             ],
           ),
@@ -123,12 +130,17 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
               ],
             ),
           ),
-          SlideAnimation(
-            opened: opened,
-            xScale: _xScale,
-            yScale: _yScale,
-            duration: widget.slideAnimationDuration,
-            child: widget.foregroundPage,
+          GetBuilder<MenuController>(
+            init: c,
+            builder: (controller) {
+              return SlideAnimation(
+                opened: c.isOpen(),
+                xScale: _xScale,
+                yScale: _yScale,
+                duration: widget.slideAnimationDuration,
+                child: widget.foregroundPage,
+              );
+            },
           ),
         ],
       ),
@@ -166,6 +178,8 @@ class SlideAnimation extends StatefulWidget {
 
 class _SlideState extends State<SlideAnimation>
     with SingleTickerProviderStateMixin {
+  final MenuController c = Get.find();
+
   late AnimationController _animationController;
   late Animation<Offset> offset;
 

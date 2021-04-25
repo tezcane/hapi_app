@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hapi/controllers/menu_controller.dart';
 import 'package:hapi/ui/components/menu.dart';
 import 'package:hapi/ui/components/menu_animation.dart';
 import 'package:hapi/ui/tasks_ui.dart';
 
 class HomeUI extends StatelessWidget {
+  final MenuController c = Get.find();
+
   Widget foregroundPage = TasksUI();
   final _index = ValueNotifier<int>(1);
 
@@ -23,19 +27,18 @@ class HomeUI extends StatelessWidget {
         },
         enableEdgeDragGesture: true,
         items: myMenuValue
-            .map((value) => Icon(value.icon, color: Colors.white, size: 50))
+            .map((value) => Icon(value.icon, color: Colors.white, size: 75))
             .toList(),
         selectedColor: Color(0xFFFF595E),
         unselectedColor: Color(0xFF1F2041),
         onItemSelected: (value) {
-          if (value != myMenuValue.length - 1 && value != _index.value) {
+          if (value == myMenuValue.length - 1 || value == _index.value) {
+            print('selected index did not change, is $value');
+          } else {
             _index.value = value;
-            // Get.offNamed(myMenuValue[value].page!);
-            // //AppRoutes.routes[] as Widget;
-            // foregroundWidget =
-            //     //
-            //     print('going to ' + myMenuValue[value].page!);
+            print('selected index changed to $value');
           }
+          c.handleOnPressed(); // hide menu
         },
       ),
     );
