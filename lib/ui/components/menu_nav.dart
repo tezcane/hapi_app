@@ -23,12 +23,8 @@ const Curve _kCurveAnimation = Curves.linear;
 const Color _kButtonColorSelected = Color(0xFFFF595E); // TODO theme
 const Color _kButtonColorUnselected = Color(0xFF1F2041);
 
-/// The [MenuNav] controls the items from the lateral menu
-/// and also can control the circular reveal transition.
+/// The [MenuNav] controls the items from the lateral menu.
 class MenuNav extends StatefulWidget {
-  /// Creates a [MenuNav] with Circular Reveal animation.
-  /// Also it is responsible for updating/changing the [AppBar]
-  /// based on the index we receive.
   const MenuNav({
     Key? key,
     required this.builder,
@@ -59,7 +55,7 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
 
   late int _selectedIndex;
-  bool menuShownAlready = false;
+  bool menuShownAlready = false; // TODO bugs here
 
   @override
   void initState() {
@@ -102,7 +98,7 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
         builder: (context, constraints) {
           // was: constraints.maxHeight / widget.items.length;
           // 88 = 16 + 56 + 16 (fabSize and it's padding)
-          // - 1 since last index (close button) is deleted:
+          // - 1 since last index (close button) is hidden for fab control:
           final itemSize =
               (constraints.maxHeight - 88) / (widget.items.length - 1);
           return Stack(
@@ -112,8 +108,7 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
                 animation: _animationController,
                 builder: (context, child) => Stack(
                   children: [
-                    /// Enables to dismiss the [MenuAnimation] when user taps outside
-                    /// the widget.
+                    /// dismiss the Menu when user taps outside the widget.
                     if (_animationController.value < 1)
                       Align(
                         child: GestureDetector(
@@ -124,7 +119,8 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
                           },
                         ),
                       ),
-                    // handle drag out of menu from right side of screen
+
+                    /// handle drag out of menu from right side of screen
                     if (_enableEdgeDragGesture &&
                         _animationController.isCompleted &&
                         !menuShownAlready)
@@ -137,7 +133,8 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
                           child: Container(width: _kEdgeDragWidth),
                         ),
                       ),
-                    // -1 hide the close button, use fab to close:
+
+                    /// Show Menu, -1 hide the close button, use fab to close:
                     for (int i = 0; i < widget.items.length - 1; i++)
                       MenuItem(
                         index: i,

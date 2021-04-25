@@ -10,8 +10,8 @@ class HomeUI extends StatelessWidget {
 
   final Widget foregroundPage = TasksUI();
 
-  final int selectedIndexAtInit = myMenuValue.length - 2; // defaults to home
-  final _index = ValueNotifier<int>(myMenuValue.length - 2);
+  final int selectedIndexAtInit = _kMenuValues.length - 2; // defaults to home
+  final _index = ValueNotifier<int>(_kMenuValues.length - 2);
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +28,9 @@ class HomeUI extends StatelessWidget {
           );
         },
         selectedIndexAtInit: selectedIndexAtInit,
-        items: myMenuValue
-            .map((value) => Icon(value.icon, color: Colors.white, size: 75))
+        items: _kMenuValues
+            .map((value) =>
+                Icon(value.icon, color: Colors.white, size: 75)) // TODO THEME
             .toList(),
         onItemSelected: (value) {
           if (value == _index.value) {
@@ -45,19 +46,19 @@ class HomeUI extends StatelessWidget {
   }
 }
 
-class MenuValues {
-  const MenuValues({required this.icon, this.page});
+class MenuValue {
+  const MenuValue({required this.icon, this.page});
   final IconData icon;
   final String? page;
 }
 
-const myMenuValue = const [
-  MenuValues(icon: Icons.settings, page: '/settings'),
-  MenuValues(icon: Icons.mood),
-  MenuValues(icon: Icons.cloud),
-  MenuValues(icon: Icons.wifi),
-  MenuValues(icon: Icons.library_add),
-  MenuValues(icon: Icons.book),
-  MenuValues(icon: Icons.home, page: '/home'),
-  MenuValues(icon: Icons.close), // dummy close button hidden on ui
+const _kMenuValues = const [
+  MenuValue(icon: Icons.settings, page: '/settings'),
+  MenuValue(icon: Icons.mood),
+  MenuValue(icon: Icons.cloud),
+  MenuValue(icon: Icons.wifi),
+  MenuValue(icon: Icons.library_add),
+  MenuValue(icon: Icons.book),
+  MenuValue(icon: Icons.home, page: '/home'),
+  MenuValue(icon: Icons.close), // dummy close button hidden on ui
 ];
