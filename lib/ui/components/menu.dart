@@ -39,16 +39,15 @@ class Menu extends StatefulWidget {
 
 class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   final MenuController c = Get.find();
-  AnimationController? _animationController;
+  AnimationController? _fabIconAnimationController;
 
   @override
   void initState() {
-    _animationController =
+    _fabIconAnimationController =
         AnimationController(vsync: this, duration: Duration(milliseconds: 450));
 
-    // Do this so we can change fab button menu/close animation when
-    // menu_nav updates this
-    c.initMenuButtonAnimatedController(_animationController!);
+    // Needed for fab button menu/close animation when menu_nav closes menu
+    c.initMenuButtonAnimatedController(_fabIconAnimationController!);
 
     super.initState();
   }
@@ -56,19 +55,9 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   @override
   void dispose() {
     super.dispose();
-    if (_animationController != null) {
-      _animationController!.dispose();
+    if (_fabIconAnimationController != null) {
+      _fabIconAnimationController!.dispose();
     }
-  }
-
-  void _handleOnPressed() {
-    // shows animated icons only if menu is not open. For case when same menu
-    // was hit twice to show settings, so next time fab is hit, it closes menu.
-    if (!c.isMenuShowing()) {
-      widget.onPressed.call(); // TODO move to controller
-    }
-
-    c.handleOnPressed(); // toggle open/closed menu state
   }
 
   @override
@@ -94,7 +83,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                 // iconSize: 50,
                 icon: AnimatedIcon(
                   icon: AnimatedIcons.menu_close,
-                  progress: _animationController!,
+                  progress: _fabIconAnimationController!,
                 ),
                 onPressed: () => _handleOnPressed(),
               ),
@@ -145,6 +134,16 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
         ],
       ),
     );
+  }
+
+  void _handleOnPressed() {
+    // shows animated icons only if menu is not open. For case when same menu
+    // was hit twice to show settings, so next time fab is hit, it closes menu.
+    if (!c.isMenuShowing()) {
+      widget.onPressed.call(); // TODO move to controller
+    }
+
+    c.handleOnPressed(); // toggle open/closed menu state
   }
 }
 

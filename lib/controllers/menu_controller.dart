@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/animation.dart';
 import 'package:get/get.dart';
 
@@ -48,8 +50,7 @@ class MenuController extends GetxController {
     print('_updateIsMenuShowing = $value');
 
     if (_fabAnimationController != null) {
-      _isMenuShowing
-              .value // depending if we are open or not we do this animation
+      _isMenuShowing.value
           ? _fabAnimationController!.forward()
           : _fabAnimationController!.reverse();
     }
@@ -60,5 +61,21 @@ class MenuController extends GetxController {
   void handleOnPressed() {
     print('handleOnPressed = ${_isMenuShowing.value}');
     _updateIsMenuShowing(!_isMenuShowing.value);
+  }
+
+  // TODO this locks whole UI when using AbsorbPointer, etc.
+  RxBool _ignoreAction = false.obs;
+  bool shouldWeIgnoringAction(int millisecondsToDelay) {
+    if (_ignoreAction.value) {
+      return true; // ignore the action/button press
+    }
+    _ignoreAction.value = true;
+
+    Timer(Duration(milliseconds: millisecondsToDelay), () {
+      _ignoreAction.value = false;
+      update();
+    });
+
+    return false; // ok to proceed with action
   }
 }
