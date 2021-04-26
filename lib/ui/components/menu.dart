@@ -137,13 +137,15 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   }
 
   void _handleOnPressed() {
-    // shows animated icons only if menu is not open. For case when same menu
-    // was hit twice to show settings, so next time fab is hit, it closes menu.
-    if (!c.isMenuShowing()) {
-      widget.onPressed.call(); // TODO move to controller
-    }
+    if (c.isMenuShowing()) {
+      c.hideMenu(); // just hit close on fab
+    } else {
+      // menu is not showing
+      c.showMenu(); // just hit menu on fab
 
-    c.handleOnPressed(); // toggle open/closed menu state
+      // Only show nav menu first time we show menu
+      widget.onPressed.call(); // TODO move to controller?
+    }
   }
 }
 

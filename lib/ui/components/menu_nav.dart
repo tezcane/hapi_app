@@ -55,7 +55,7 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
 
   late int _selectedIndex;
-  bool menuShownAlready = false; // TODO bugs here
+  // bool menuShownAlready = false; // TODO bugs here
 
   @override
   void initState() {
@@ -78,17 +78,19 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
 
   void _displayMenuDragGesture(DragEndDetails endDetails) {
     print("_displayMenuDragGesture called");
-    c.handleOnPressed();
 
-    final velocity = endDetails.primaryVelocity!;
-    if (velocity < 0) _animationReverse();
+    if (!c.isMenuShowing()) {
+      final velocity = endDetails.primaryVelocity!;
+      if (velocity < 0) _animationReverse();
+    }
   }
 
   void _animationReverse() {
     print("_animationReverse called");
 
-    this.menuShownAlready = true;
     _animationController.reverse();
+
+    c.showMenu();
   }
 
   @override
@@ -109,21 +111,23 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
                 builder: (context, child) => Stack(
                   children: [
                     /// dismiss the Menu when user taps outside the widget.
-                    if (_animationController.value < 1)
+                    if (_animationController.value < 1 &&
+                        c.isMenuShowing() &&
+                        c.isMenuShowingNav())
                       Align(
                         child: GestureDetector(
                           onTap: () {
                             _animationController.forward(from: 0.0);
-                            menuShownAlready = false;
-                            c.handleOnPressed();
+                            //menuShownAlready = false;
+                            c.hideMenu();
                           },
                         ),
                       ),
 
                     /// handle drag out of menu from right side of screen
                     if (_enableEdgeDragGesture &&
-                        _animationController.isCompleted &&
-                        !menuShownAlready)
+                        _animationController.isCompleted)
+                      //!c.isMenuShowing()) // hasn't been flagged yet
                       Align(
                         alignment: Alignment.bottomRight, // was centerRight
                         child: GestureDetector(
@@ -149,11 +153,13 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
                         onTap: () {
                           if (i != _selectedIndex) {
                             if (i != widget.items.length - 1) {
+                              c.hideMenu();
                               setState(() {
                                 _selectedIndex = i;
                               });
+                            } else {
+                              c.hideMenuNav();
                             }
-                            c.handleOnPressed(); // hide menu
                           }
                           widget.onItemSelected(i);
                         },

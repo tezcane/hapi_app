@@ -18,15 +18,21 @@ class MenuController extends GetxController {
   RxBool _isSpecialActionReady = false.obs;
 
   RxBool get isMenuShowing => _isMenuShowing;
-  RxBool get isMenuNavShowing => _isMenuShowing;
-  RxBool get isSpecialShowing => _isMenuShowing;
-  RxBool get isSpecialActionReady => _isMenuShowing;
+  RxBool get isMenuShowingNav => _isMenuShowingNav;
+  RxBool get isMenuShowingSpecial => _isMenuShowingSpecial;
+  RxBool get isSpecialActionReady => _isSpecialActionReady;
 
   void showMenu() {
     _isMenuShowing.value = true;
     _isMenuShowingNav.value = true;
     _isMenuShowingSpecial.value = false;
     _isSpecialActionReady.value = false;
+
+    if (_fabAnimationController != null) {
+      _fabAnimationController!.forward();
+    }
+
+    update();
   }
 
   void hideMenu() {
@@ -34,6 +40,12 @@ class MenuController extends GetxController {
     _isMenuShowingNav.value = false;
     _isMenuShowingSpecial.value = false;
     _isSpecialActionReady.value = false;
+
+    if (_fabAnimationController != null) {
+      _fabAnimationController!.reverse();
+    }
+
+    update();
   }
 
   void showSpecialMenu() {
@@ -41,26 +53,12 @@ class MenuController extends GetxController {
   }
 
   void hideMenuNav() {
+    _isMenuShowing.value = true;
     _isMenuShowingNav.value = false;
     _isMenuShowingSpecial.value = true;
-  }
-
-  void _updateIsMenuShowing(bool value) async {
-    _isMenuShowing.value = value;
-    print('_updateIsMenuShowing = $value');
-
-    if (_fabAnimationController != null) {
-      _isMenuShowing.value
-          ? _fabAnimationController!.forward()
-          : _fabAnimationController!.reverse();
-    }
+    _isSpecialActionReady.value = false;
 
     update();
-  }
-
-  void handleOnPressed() {
-    print('handleOnPressed = ${_isMenuShowing.value}');
-    _updateIsMenuShowing(!_isMenuShowing.value);
   }
 
   // TODO this locks whole UI when using AbsorbPointer, etc.
