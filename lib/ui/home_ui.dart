@@ -63,16 +63,17 @@ class HomeUI extends StatelessWidget {
   }
 
   void navigateToPage(int navIdx) {
-    bool foundPage = false;
+    bool didNotFindPage = true;
     for (GetPage getPage in AppRoutes.routes) {
       if (getPage.name == _kNavs[navIdx].page) {
-        foundPage = true;
+        didNotFindPage = false;
         print('Going to ${_kNavs[navIdx].page}');
         foregroundPage = getPage.page(); // set the foreground in homepage
         store.write('lastNavIdx', navIdx); // save so app restarts at this idx
+        break;
       }
     }
-    if (!foundPage) print('ERROR: page not found "${_kNavs[navIdx].page}"');
+    if (didNotFindPage) print('ERROR: page not found "${_kNavs[navIdx].page}"');
   }
 }
 
