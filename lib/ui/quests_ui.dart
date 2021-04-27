@@ -7,7 +7,7 @@ import 'package:hapi/services/database.dart';
 import 'package:hapi/ui/components/task_card.dart';
 import 'package:hapi/ui/settings_ui.dart';
 
-class TasksUI extends StatelessWidget {
+class QuestsUI extends StatelessWidget {
   final TextEditingController _textEditingController = TextEditingController();
 
   @override

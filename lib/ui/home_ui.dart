@@ -4,7 +4,7 @@ import 'package:hapi/constants/app_routes.dart';
 import 'package:hapi/controllers/menu_controller.dart';
 import 'package:hapi/ui/components/menu.dart';
 import 'package:hapi/ui/components/menu_nav.dart';
-import 'package:hapi/ui/tasks_ui.dart';
+import 'package:hapi/ui/quests_ui.dart';
 
 class HomeUI extends StatelessWidget {
   final MenuController c = Get.find();
@@ -12,7 +12,7 @@ class HomeUI extends StatelessWidget {
   final int selectedIndexAtInit = _kNavs.length - 2; // defaults to home
   final _index = ValueNotifier<int>(_kNavs.length - 2);
 
-  Widget foregroundPage = TasksUI();
+  Widget foregroundPage = QuestsUI();
 
   @override
   Widget build(BuildContext context) {
