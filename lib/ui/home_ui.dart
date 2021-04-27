@@ -55,12 +55,12 @@ class HomeUI extends StatelessWidget {
                         ),
                       if (nav.page == '/relic')
                         Positioned(
-                          top: 5.0,
-                          left: 25.0,
+                          top: 6.7,
+                          left: 23.6,
                           //right: 0.0,
                           //bottom: 0.0,
                           child: Transform.rotate(
-                            angle: .65,
+                            angle: .59,
                             child: Icon(Icons.star,
                                 color: Colors.orange, size: 18),
                           ),
