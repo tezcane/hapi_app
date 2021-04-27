@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hapi/constants/app_routes.dart';
 import 'package:hapi/controllers/menu_controller.dart';
 import 'package:hapi/ui/components/menu.dart';
 import 'package:hapi/ui/components/menu_nav.dart';
@@ -8,10 +9,10 @@ import 'package:hapi/ui/tasks_ui.dart';
 class HomeUI extends StatelessWidget {
   final MenuController c = Get.find();
 
-  final Widget foregroundPage = TasksUI();
-
   final int selectedIndexAtInit = _kNavs.length - 2; // defaults to home
   final _index = ValueNotifier<int>(_kNavs.length - 2);
+
+  Widget foregroundPage = TasksUI();
 
   @override
   Widget build(BuildContext context) {
@@ -46,11 +47,24 @@ class HomeUI extends StatelessWidget {
           } else {
             _index.value = value;
             print('selected index changed to $value');
-            // TODO NAVIGATE
+            //foregroundPage.dispose(); //TODO
+            navigateToPage(_index.value);
           }
         },
       ),
     );
+  }
+
+  void navigateToPage(int pageIndex) {
+    for (GetPage getPage in AppRoutes.routes) {
+      if (getPage.name == _kNavs[pageIndex].page) {
+        print('Going to ${_kNavs[pageIndex].page}');
+        foregroundPage = getPage.page();
+        // TODO persist last seen screen
+      } else {
+        print('ERROR: page not found "${_kNavs[pageIndex].page}"');
+      }
+    }
   }
 }
 
@@ -62,14 +76,14 @@ class Nav {
 }
 
 const _kNavs = const [
-//Nav(label: 'Stats', page: '/stats', icon: Icons.assessment_outlined),
-//Nav(label: 'Stats', page: '/stats', icon: Icons.analytics_outlined),
-//Nav(label: 'Stats', page: '/stats', icon: Icons.leaderboard_rounded),
-  Nav(label: 'Stats', page: '/stats', icon: Icons.bar_chart_outlined),
-//Nav(label: 'Tools', page: '/tools', icon: Icons.construction_outlined),
-//Nav(label: 'Tools', page: '/tools', icon: Icons.build_outlined),
-//Nav(label: 'Tools', page: '/tools', icon: Icons.explore),
-  Nav(label: 'Tools', page: '/tools', icon: Icons.explore_outlined),
+//Nav(label: 'Stats', page: '/stat', icon: Icons.assessment_outlined),
+//Nav(label: 'Stats', page: '/stat', icon: Icons.analytics_outlined),
+//Nav(label: 'Stats', page: '/stat', icon: Icons.leaderboard_rounded),
+  Nav(label: 'Stats', page: '/setting', icon: Icons.bar_chart_outlined),
+//Nav(label: 'Tools', page: '/tool', icon: Icons.construction_outlined),
+//Nav(label: 'Tools', page: '/tool', icon: Icons.build_outlined),
+//Nav(label: 'Tools', page: '/tool', icon: Icons.explore),
+  Nav(label: 'Tools', page: '/tool', icon: Icons.explore_outlined),
 //Nav(label: 'Hadith', page: '/hadith', icon: Icons.local_library_outlined),
   Nav(label: 'Hadith', page: '/hadith', icon: Icons.menu_book_outlined),
 //Nav(label: 'Quran', page: '/quran', icon: Icons.menu_book_outlined),
@@ -78,10 +92,9 @@ const _kNavs = const [
 //Nav(label: 'Relics', page: '/relics', icon: Icons.nights_stay_outlined),
 //Nav(label: 'Relics', page: '/relics', icon: Icons.bedtime_outlined),
 //Nav(label: 'Relics', page: '/relics', icon: Icons.brightness_3),
-  Nav(label: 'Relics', page: '/relics', icon: Icons.brightness_3_outlined),
-  Nav(label: 'Quests', page: '/tasks', icon: Icons.how_to_reg_outlined),
-  Nav(label: 'Home', page: '/home', icon: Icons.home_work_outlined),
-//Nav(label: 'Dummy', page: '/home', icon: Icons.close), // doesn't show on UI
+  Nav(label: 'Relics', page: '/relic', icon: Icons.brightness_3_outlined),
+  Nav(label: 'Quests', page: '/quest', icon: Icons.how_to_reg_outlined),
+  Nav(label: 'Quests', page: '/quest', icon: Icons.how_to_reg_outlined), //dummy
 ];
 
 // icons for later:
