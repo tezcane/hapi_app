@@ -38,12 +38,36 @@ class HomeUI extends StatelessWidget {
         selectedIndexAtInit: _navIdx,
         items: _kNavs
             .map(
-              (value) => Column(
+              (nav) => Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Icon(value.icon, color: Colors.white, size: 40), //THEME
-                  Text(value.label), //THEME
+                  Stack(
+                    children: [
+                      if (nav.page != '/relic')
+                        Icon(nav.icon, color: Colors.white, size: 40), //THEME
+                      if (nav.page != '/relic')
+                        Icon(Icons.star, color: Colors.orange, size: 18),
+                      if (nav.page == '/relic')
+                        Transform.rotate(
+                          angle: 2.8,
+                          child: Icon(nav.icon, color: Colors.white, size: 40),
+                        ),
+                      if (nav.page == '/relic')
+                        Positioned(
+                          top: 5.0,
+                          left: 25.0,
+                          //right: 0.0,
+                          //bottom: 0.0,
+                          child: Transform.rotate(
+                            angle: .65,
+                            child: Icon(Icons.star,
+                                color: Colors.orange, size: 18),
+                          ),
+                        ),
+                    ],
+                  ),
+                  Text(nav.label), //THEME
                 ],
               ),
             )
