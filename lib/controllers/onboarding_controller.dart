@@ -16,6 +16,6 @@ class OnboardingController extends GetxController {
     onboarded.value = true;
     await store.write('onboarded', true);
     Get.offAll(() => SignUpUI());
-    //update(); // TODO not needed?
+    //update(); // not needed
   }
 }

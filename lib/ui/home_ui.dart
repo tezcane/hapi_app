@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:hapi/constants/app_routes.dart';
 import 'package:hapi/controllers/menu_controller.dart';
 import 'package:hapi/ui/components/menu.dart';
@@ -8,14 +9,20 @@ import 'package:hapi/ui/quests_ui.dart';
 
 class HomeUI extends StatelessWidget {
   final MenuController c = Get.find();
+  final store = GetStorage();
 
-  final int selectedIndexAtInit = _kNavs.length - 2; // defaults to home
-  final _index = ValueNotifier<int>(_kNavs.length - 2);
-
+  int _navIdx = _kNavs.length - 2;
   Widget foregroundPage = QuestsUI();
+  bool initNeeded = true;
 
   @override
   Widget build(BuildContext context) {
+    if (initNeeded) {
+      _navIdx = store.read('lastNavIdx') ?? _navIdx; //Quests
+      navigateToPage(_navIdx); // set foreground to last opened page
+      initNeeded = false; //TODO this is a hack but who cares
+    }
+
     return Scaffold(
       body: MenuNav(
         builder: (showMenu) {
@@ -28,7 +35,7 @@ class HomeUI extends StatelessWidget {
             ),
           );
         },
-        selectedIndexAtInit: selectedIndexAtInit,
+        selectedIndexAtInit: _navIdx,
         items: _kNavs
             .map(
               (value) => Column(
@@ -42,29 +49,30 @@ class HomeUI extends StatelessWidget {
             )
             .toList(),
         onItemSelected: (value) {
-          if (value == _index.value) {
-            print('selected index did not change, is $value');
+          if (_navIdx == value) {
+            print('navIdx selected index did not change, is $value');
           } else {
-            _index.value = value;
-            print('selected index changed to $value');
+            _navIdx = value;
+            print('selected index changed to $_navIdx');
             //foregroundPage.dispose(); //TODO
-            navigateToPage(_index.value);
+            navigateToPage(_navIdx);
           }
         },
       ),
     );
   }
 
-  void navigateToPage(int pageIndex) {
+  void navigateToPage(int navIdx) {
+    bool foundPage = false;
     for (GetPage getPage in AppRoutes.routes) {
-      if (getPage.name == _kNavs[pageIndex].page) {
-        print('Going to ${_kNavs[pageIndex].page}');
-        foregroundPage = getPage.page();
-        // TODO persist last seen screen
-      } else {
-        print('ERROR: page not found "${_kNavs[pageIndex].page}"');
+      if (getPage.name == _kNavs[navIdx].page) {
+        foundPage = true;
+        print('Going to ${_kNavs[navIdx].page}');
+        foregroundPage = getPage.page(); // set the foreground in homepage
+        store.write('lastNavIdx', navIdx); // save so app restarts at this idx
       }
     }
+    if (!foundPage) print('ERROR: page not found "${_kNavs[navIdx].page}"');
   }
 }
 
@@ -89,9 +97,9 @@ const _kNavs = const [
 //Nav(label: 'Quran', page: '/quran', icon: Icons.menu_book_outlined),
   Nav(label: 'Quran', page: '/quran', icon: Icons.auto_stories),
   Nav(label: 'History', page: '/history', icon: Icons.history_edu_outlined),
-//Nav(label: 'Relics', page: '/relics', icon: Icons.nights_stay_outlined),
-//Nav(label: 'Relics', page: '/relics', icon: Icons.bedtime_outlined),
-//Nav(label: 'Relics', page: '/relics', icon: Icons.brightness_3),
+//Nav(label: 'Relics', page: '/relic', icon: Icons.nights_stay_outlined),
+//Nav(label: 'Relics', page: '/relic', icon: Icons.bedtime_outlined),
+//Nav(label: 'Relics', page: '/relic', icon: Icons.brightness_3),
   Nav(label: 'Relics', page: '/relic', icon: Icons.brightness_3_outlined),
   Nav(label: 'Quests', page: '/quest', icon: Icons.how_to_reg_outlined),
   Nav(label: 'Quests', page: '/quest', icon: Icons.how_to_reg_outlined), //dummy
