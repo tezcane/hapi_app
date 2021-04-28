@@ -11,7 +11,7 @@ import 'package:hapi/controllers/auth_controller.dart';
 import 'package:hapi/controllers/language_controller.dart';
 import 'package:hapi/controllers/menu_controller.dart';
 import 'package:hapi/controllers/onboarding_controller.dart';
-//import 'package:hapi/controllers/task_controller.dart';
+//import 'package:hapi/controllers/quest_controller.dart';
 import 'package:hapi/controllers/theme_controller.dart';
 import 'package:hapi/helpers/localization.g.dart';
 import 'package:hapi/ui/components/loading.dart';
@@ -49,7 +49,7 @@ void main() async {
   Get.put<OnboardingController>(OnboardingController());
   Get.put<AuthController>(AuthController());
   Get.put<MenuController>(MenuController());
-//Get.lazyPut<TaskController>(() => TaskController());
+//Get.lazyPut<QuestController>(() => QuestController());
   Get.put<ThemeController>(ThemeController());
   Get.put<LanguageController>(LanguageController());
   runApp(MyApp());

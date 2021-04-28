@@ -155,10 +155,10 @@ class AppThemes {
 //text theme for dark theme
   /*static final TextStyle _darkScreenHeadingTextStyle =
       _lightScreenHeadingTextStyle.copyWith(color: _darkTextColor);
-  static final TextStyle _darkScreenTaskNameTextStyle =
-      _lightScreenTaskNameTextStyle.copyWith(color: _darkTextColor);
-  static final TextStyle _darkScreenTaskDurationTextStyle =
-      _lightScreenTaskDurationTextStyle;
+  static final TextStyle _darkScreenQuestNameTextStyle =
+      _lightScreenQuestNameTextStyle.copyWith(color: _darkTextColor);
+  static final TextStyle _darkScreenQuestDurationTextStyle =
+      _lightScreenQuestDurationTextStyle;
   static final TextStyle _darkScreenButtonTextStyle = TextStyle(
       fontSize: 14.0, color: _darkTextColor, fontWeight: FontWeight.w500);
   static final TextStyle _darkScreenCaptionTextStyle = TextStyle(

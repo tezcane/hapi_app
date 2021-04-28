@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-enum TaskType {
+enum QUEST {
   IMSAK,
   PRAYER_FAJR_SUNA_MUAKKADAH_2, // SUNA = SUNNAH
   PRAYER_FAJR_FARD_2,
@@ -34,9 +34,9 @@ enum TaskType {
   USER_CUSTOM
 }
 
-class TaskModel {
-  String taskId;
-  TaskType taskType;
+class QuestModel {
+  String questId;
+  QUEST questType;
   String content;
   Timestamp dateCreated;
   Timestamp? dateStart;
@@ -44,9 +44,9 @@ class TaskModel {
   Timestamp? dateDone;
   bool done;
 
-  TaskModel(
-      {required this.taskId,
-      required this.taskType,
+  QuestModel(
+      {required this.questId,
+      required this.questType,
       required this.content,
       required this.dateCreated,
       required this.dateStart,
@@ -54,10 +54,10 @@ class TaskModel {
       required this.dateDone,
       required this.done});
 
-  factory TaskModel.fromMap(String taskId, Map data) {
-    return TaskModel(
-      taskId: taskId,
-      taskType: data['taskType'] ?? TaskType.USER_CUSTOM,
+  factory QuestModel.fromMap(String questId, Map data) {
+    return QuestModel(
+      questId: questId,
+      questType: data['quest'] ?? QUEST.USER_CUSTOM,
       content: data['content'],
       dateCreated: data['dateCreated'],
       dateStart: data['dateStart'] ?? null,

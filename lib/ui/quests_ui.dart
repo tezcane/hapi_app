@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/constants/app_themes.dart';
 import 'package:hapi/controllers/auth_controller.dart';
-import 'package:hapi/controllers/task_controller.dart';
+import 'package:hapi/controllers/quest_controller.dart';
 import 'package:hapi/services/database.dart';
-import 'package:hapi/ui/components/task_card.dart';
+import 'package:hapi/ui/components/quest_card.dart';
 import 'package:hapi/ui/settings_ui.dart';
 
 class QuestsUI extends StatelessWidget {
@@ -37,31 +37,17 @@ class QuestsUI extends StatelessWidget {
             SizedBox(
               height: 20,
             ),
-            Text(
-              "Add Task Here:",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            AddTask(
+            AddQuest(
                 authController: controller,
                 textEditingController: _textEditingController),
-            Text(
-              "Your Tasks",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            GetX<TaskController>(
-              init: Get.put<TaskController>(TaskController()),
-              builder: (TaskController taskController) {
+            GetX<QuestController>(
+              init: Get.put<QuestController>(QuestController()),
+              builder: (QuestController questController) {
                 return Expanded(
                   child: ListView.builder(
-                    itemCount: taskController.tasks.length,
+                    itemCount: questController.quests.length,
                     itemBuilder: (_, index) {
-                      return TaskCard(task: taskController.tasks[index]);
+                      return QuestCard(quest: questController.quests[index]);
                     },
                   ),
                 );
@@ -74,8 +60,8 @@ class QuestsUI extends StatelessWidget {
   }
 }
 
-class AddTask extends StatelessWidget {
-  const AddTask({
+class AddQuest extends StatelessWidget {
+  const AddQuest({
     Key? key,
     required AuthController authController,
     required TextEditingController textEditingController,
@@ -103,7 +89,7 @@ class AddTask extends StatelessWidget {
               icon: Icon(Icons.add),
               onPressed: () {
                 if (_textEditingController.text != "") {
-                  Database().addTask(_textEditingController.text,
+                  Database().addQuest(_textEditingController.text,
                       _authController.firestoreUser.value!.uid);
                   _textEditingController.clear();
                 }

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:hapi/controllers/onboarding_controller.dart';
 import 'package:hapi/helpers/gravatar.dart';
 import 'package:hapi/models/user_model.dart';
@@ -16,6 +17,8 @@ import 'package:hapi/ui/onboarding_ui.dart';
 class AuthController extends GetxController {
   static AuthController to = Get.find();
   final OnboardingController onboardingController = OnboardingController.to;
+
+  final store = GetStorage();
 
   TextEditingController nameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
@@ -33,7 +36,18 @@ class AuthController extends GetxController {
 
     firebaseUser.bindStream(user);
 
+    getLastSignedInEmail();
+
     super.onReady();
+  }
+
+  String getLastSignedInEmail() {
+    emailController.text = store.read('lastSignedInEmail') ?? '';
+    return emailController.text;
+  }
+
+  void storeLastSignedInEmail() {
+    store.write('lastSignedInEmail', emailController.text.trim());
   }
 
   @override
@@ -44,6 +58,19 @@ class AuthController extends GetxController {
     super.onClose();
   }
 
+  /* TODO deleted user can still use app:
+      [GETX] Instance "QuestController" has been created
+      I/flutter ( 4937): Going to /quest
+      I/flutter ( 4937): QuestController.onInit: binding to db with uid=CjuUHwo5iIPWYa878zpsJzGCKev1
+      [GETX] Instance "QuestController" has been initialized
+      W/Firestore( 4937): (22.0.1) [Firestore]: Listen for Query(target=Query(user/CjuUHwo5iIPWYa878zpsJzGCKev1 order by __name__);limitType=LIMIT_TO_FIRST) failed: Status{code=PERMISSION_DENIED, description=Missing or insufficient permissions., cause=null}
+      E/flutter ( 4937): [ERROR:flutter/lib/ui/ui_dart_state.cc(186)] Unhandled Exception: [cloud_firestore/permission-denied] The caller does not have permission to execute the specified operation.
+      E/flutter ( 4937):
+      E/flutter ( 4937): [ERROR:flutter/lib/ui/ui_dart_state.cc(186)] Unhandled Exception: [cloud_firestore/permission-denied] The caller does not have permission to execute the specified operation.
+      E/flutter ( 4937):
+      W/Firestore( 4937): (22.0.1) [Firestore]: Listen for Query(target=Query(user/CjuUHwo5iIPWYa878zpsJzGCKev1/quest order by -dateCreated, -__name__);limitType=LIMIT_TO_FIRST) failed: Status{code=PERMISSION_DENIED, description=Missing or insufficient permissions., cause=null}
+      E/flutter ( 4937): [ERROR:flutter/lib/ui/ui_dart_state.cc(186)] Unhandled Exception: [cloud_firestore/permission-denied] The caller does not have permission to execute the specified operation.
+   */
   handleAuthChanged(_firebaseUser) async {
     //get user data from firestore
     if (_firebaseUser?.uid != null) {
@@ -75,14 +102,14 @@ class AuthController extends GetxController {
     print('streamFirestoreUser()');
 
     return _db
-        .doc('/users/${firebaseUser.value!.uid}')
+        .doc('/user/${firebaseUser.value!.uid}')
         .snapshots()
         .map((snapshot) => UserModel.fromMap(snapshot.data()!));
   }
 
   //get the firestore user from the firestore collection
   Future<UserModel> getFirestoreUser() {
-    return _db.doc('/users/${firebaseUser.value!.uid}').get().then(
+    return _db.doc('/user/${firebaseUser.value!.uid}').get().then(
         (documentSnapshot) => UserModel.fromMap(documentSnapshot.data()!));
   }
 
@@ -93,7 +120,8 @@ class AuthController extends GetxController {
       await _auth.signInWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
-      emailController.clear();
+      storeLastSignedInEmail();
+      //emailController.clear();
       passwordController.clear();
       hideLoadingIndicator();
     } catch (error) {
@@ -112,12 +140,13 @@ class AuthController extends GetxController {
     try {
       await _auth
           .createUserWithEmailAndPassword(
-              email: emailController.text, password: passwordController.text)
+              email: emailController.text.trim(),
+              password: passwordController.text)
           .then((result) async {
         print('uID: ' + result.user!.uid.toString());
         print('email: ' + result.user!.email.toString());
         //get photo url from gravatar if user has one
-        Gravatar gravatar = Gravatar(emailController.text);
+        Gravatar gravatar = Gravatar(emailController.text.trim());
         String gravatarUrl = gravatar.imageUrl(
           size: 200,
           defaultImage: GravatarImage.retro,
@@ -132,7 +161,8 @@ class AuthController extends GetxController {
             photoUrl: gravatarUrl);
         //create the user in firestore
         _createUserFirestore(_newUser, result.user!);
-        emailController.clear();
+        storeLastSignedInEmail();
+        //emailController.clear();
         passwordController.clear();
         hideLoadingIndicator();
       });
@@ -157,6 +187,7 @@ class AuthController extends GetxController {
         _firebaseUser.user!
             .updateEmail(user.email)
             .then((value) => _updateUserFirestore(user, _firebaseUser.user!));
+        storeLastSignedInEmail();
       });
       hideLoadingIndicator();
       Get.snackbar('auth.updateUserSuccessNoticeTitle'.tr,
@@ -189,13 +220,14 @@ class AuthController extends GetxController {
 
   //updates the firestore user in users collection
   void _updateUserFirestore(UserModel user, User _firebaseUser) {
-    _db.doc('/users/${_firebaseUser.uid}').update(user.toJson());
+    _db.doc('/user/${_firebaseUser.uid}').update(user.toJson());
     update();
   }
 
   //create the firestore user in users collection
   void _createUserFirestore(UserModel user, User _firebaseUser) {
-    _db.doc('/users/${_firebaseUser.uid}').set(user.toJson());
+    store.write('lastSignedInEmail', user.email);
+    _db.doc('/user/${_firebaseUser.uid}').set(user.toJson());
     update();
   }
 
@@ -239,7 +271,8 @@ class AuthController extends GetxController {
   // Sign out
   Future<void> signOut() {
     nameController.clear();
-    emailController.clear();
+    //emailController.clear();
+    getLastSignedInEmail(); // show it in case user forgets what email they used
     passwordController.clear();
     return _auth.signOut();
   }

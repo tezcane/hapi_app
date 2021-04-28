@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:hapi/models/task_model.dart';
+import 'package:hapi/models/quest_model.dart';
 import 'package:hapi/services/database.dart';
 
-class TaskCard extends StatelessWidget {
-  final TaskModel task;
+class QuestCard extends StatelessWidget {
+  final QuestModel quest;
 
-  const TaskCard({required this.task})
+  const QuestCard({required this.quest})
       : super(key: null); // TODO was passed in above
 
   @override
@@ -18,7 +18,7 @@ class TaskCard extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                task.content,
+                quest.content,
                 style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
@@ -26,9 +26,9 @@ class TaskCard extends StatelessWidget {
               ),
             ),
             Checkbox(
-              value: task.done,
+              value: quest.done,
               onChanged: (newValue) {
-                Database().updateTask(task.taskId, newValue as bool);
+                Database().updateQuest(quest.questId, newValue as bool);
               },
             ),
           ],
