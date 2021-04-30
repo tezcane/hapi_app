@@ -110,22 +110,10 @@ class Nav {
 
 const _kNavs = const [
   Nav(label: 'Settings', page: '/setting', icon: Icons.settings_outlined),
-//Nav(label: 'Stats', page: '/stat', icon: Icons.assessment_outlined),
-//Nav(label: 'Stats', page: '/stat', icon: Icons.analytics_outlined),
-//Nav(label: 'Stats', page: '/stat', icon: Icons.leaderboard_rounded),
-//Nav(label: 'Stats', page: '/stat', icon: Icons.bar_chart_outlined),
-//Nav(label: 'Tools', page: '/tool', icon: Icons.construction_outlined),
-//Nav(label: 'Tools', page: '/tool', icon: Icons.build_outlined),
-//Nav(label: 'Tools', page: '/tool', icon: Icons.explore),
   Nav(label: 'Tools', page: '/tool', icon: Icons.explore_outlined),
-//Nav(label: 'Hadith', page: '/hadith', icon: Icons.local_library_outlined),
   Nav(label: 'Hadith', page: '/hadith', icon: Icons.menu_book_outlined),
-//Nav(label: 'Quran', page: '/quran', icon: Icons.menu_book_outlined),
   Nav(label: 'Quran', page: '/quran', icon: Icons.auto_stories),
   Nav(label: 'Tarikh', page: '/tarikh', icon: Icons.history_edu_outlined),
-//Nav(label: 'Relics', page: '/relic', icon: Icons.nights_stay_outlined),
-//Nav(label: 'Relics', page: '/relic', icon: Icons.bedtime_outlined),
-//Nav(label: 'Relics', page: '/relic', icon: Icons.brightness_3),
   Nav(label: 'Relics', page: '/relic', icon: Icons.brightness_3_outlined),
   Nav(label: 'Quests', page: '/quest', icon: Icons.how_to_reg_outlined),
   Nav(label: 'Quests', page: '/quest', icon: Icons.how_to_reg_outlined), //dummy
@@ -138,6 +126,7 @@ const _dummy = const [
   Icon(Icons.brightness_2_outlined),
   Icon(Icons.brightness_3),
   Icon(Icons.brightness_3_outlined),
+  Icon(Icons.nights_stay_outlined),
   Icon(Icons.bedtime_outlined),
   Icon(Icons.bedtime_rounded),
   Icon(Icons.star_border),
@@ -154,6 +143,9 @@ const _dummy = const [
   Icon(Icons.verified_user_outlined),
   //Stats
   Icon(Icons.assessment_outlined),
+  Icon(Icons.analytics_outlined),
+  Icon(Icons.leaderboard_rounded),
+  Icon(Icons.bar_chart_outlined),
   //Grid view
   Icon(Icons.view_comfy),
   Icon(Icons.apps_outlined),
@@ -229,6 +221,7 @@ const _dummy = const [
   Icon(Icons.restaurant_menu_outlined),
   Icon(Icons.restaurant_outlined),
   //Sunnah visit sick
+  Icon(Icons.local_library_outlined), // FOR STUDY QURAN/HADITH
   Icon(Icons.sick),
   Icon(Icons.sick_outlined),
   Icon(Icons.spa_outlined),
@@ -285,6 +278,9 @@ const _dummy = const [
   Icon(Icons.search_outlined),
   Icon(Icons.search_off_outlined),
   //Tools
+  Icon(Icons.construction_outlined),
+  Icon(Icons.build_outlined),
+  Icon(Icons.explore),
   Icon(Icons.thermostat_outlined),
   //Sound
   Icon(Icons.volume_down_outlined),
