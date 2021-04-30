@@ -14,6 +14,7 @@ import 'package:hapi/controllers/onboarding_controller.dart';
 //import 'package:hapi/controllers/quest_controller.dart';
 import 'package:hapi/controllers/theme_controller.dart';
 import 'package:hapi/helpers/localization.g.dart';
+import 'package:hapi/tarikh/blocs/bloc_provider.dart';
 import 'package:hapi/ui/components/loading.dart';
 
 void main() async {
@@ -61,19 +62,22 @@ class MyApp extends StatelessWidget {
     ThemeController.to.getThemeModeFromStore();
     return GetBuilder<LanguageController>(
       builder: (languageController) => Loading(
-        child: GetMaterialApp(
-          translations: Localization(),
-          locale: languageController.getLocale, // <- Current locale
-          navigatorObservers: [
-            // FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
-          ],
-          debugShowCheckedModeBanner: false,
-          //defaultTransition: Transition.fade,
-          theme: AppThemes.lightTheme,
-          darkTheme: AppThemes.darkTheme,
-          themeMode: ThemeMode.system,
-          initialRoute: "/",
-          getPages: AppRoutes.routes,
+        // TODO BlocProvider needed for Tarikh to work:
+        child: BlocProvider(
+          child: GetMaterialApp(
+            translations: Localization(),
+            locale: languageController.getLocale, // <- Current locale
+            navigatorObservers: [
+              // FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
+            ],
+            debugShowCheckedModeBanner: false,
+            //defaultTransition: Transition.fade,
+            theme: AppThemes.lightTheme,
+            darkTheme: AppThemes.darkTheme,
+            themeMode: ThemeMode.system,
+            initialRoute: "/",
+            getPages: AppRoutes.routes,
+          ),
         ),
       ),
     );

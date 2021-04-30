@@ -121,7 +121,7 @@ const _kNavs = const [
   Nav(label: 'Hadith', page: '/hadith', icon: Icons.menu_book_outlined),
 //Nav(label: 'Quran', page: '/quran', icon: Icons.menu_book_outlined),
   Nav(label: 'Quran', page: '/quran', icon: Icons.auto_stories),
-  Nav(label: 'History', page: '/history', icon: Icons.history_edu_outlined),
+  Nav(label: 'Tarikh', page: '/tarikh', icon: Icons.history_edu_outlined),
 //Nav(label: 'Relics', page: '/relic', icon: Icons.nights_stay_outlined),
 //Nav(label: 'Relics', page: '/relic', icon: Icons.bedtime_outlined),
 //Nav(label: 'Relics', page: '/relic', icon: Icons.brightness_3),

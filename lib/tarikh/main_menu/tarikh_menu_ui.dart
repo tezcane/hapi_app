@@ -25,14 +25,14 @@ import 'package:hapi/tarikh/timeline/timeline_widget.dart';
 /// the three card-sections for accessing the main events on the Timeline,
 /// and it'll provide on the bottom three links for quick access to your Favorites,
 /// a Share Menu and the About Page.
-class MainMenuWidget extends StatefulWidget {
-  MainMenuWidget({Key? key}) : super(key: key);
+class TarikhMenuUI extends StatefulWidget {
+  TarikhMenuUI({Key? key}) : super(key: key);
 
   @override
-  _MainMenuWidgetState createState() => _MainMenuWidgetState();
+  _TarikhMenuUIState createState() => _TarikhMenuUIState();
 }
 
-class _MainMenuWidgetState extends State<MainMenuWidget> {
+class _TarikhMenuUIState extends State<TarikhMenuUI> {
   /// State is maintained for two reasons:
   ///
   /// 1. Search Functionality:

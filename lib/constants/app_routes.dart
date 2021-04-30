@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:hapi/tarikh/main_menu/tarikh_menu_ui.dart';
 import 'package:hapi/ui/auth/reset_password_ui.dart';
 import 'package:hapi/ui/auth/sign_in_ui.dart';
 import 'package:hapi/ui/auth/sign_up_ui.dart';
@@ -21,5 +22,6 @@ class AppRoutes {
     GetPage(name: '/setting', page: () => SettingsUI()),
     GetPage(name: '/reset-pw', page: () => ResetPasswordUI()),
     GetPage(name: '/update-profile', page: () => UpdateProfileUI()),
+    GetPage(name: '/tarikh', page: () => TarikhMenuUI()),
   ];
 }
