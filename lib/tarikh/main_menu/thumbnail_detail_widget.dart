@@ -7,7 +7,7 @@ import 'thumbnail.dart';
 
 /// Define a custom function for the callback that's passed into this widget by the [MainMenuWidget].
 ///
-/// This callback allows the [MainMenuWidget] to display the [TimelineWidget] and position it
+/// This callback allows the [MainMenuWidget] to display the [TarikhTimelineUI] and position it
 /// to the right start/end time for the [entry].
 typedef TapSearchResultCallback(TimelineEntry entry);
 

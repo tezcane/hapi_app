@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:get/get.dart';
 import 'package:hapi/tarikh/article/timeline_entry_widget.dart';
 import 'package:hapi/tarikh/blocs/bloc_provider.dart';
 import 'package:hapi/tarikh/colors.dart';
@@ -10,20 +11,23 @@ import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
 /// This widget will paint the article page.
 /// It stores a reference to the [TimelineEntry] that contains the relevant information.
-class ArticleWidget extends StatefulWidget {
-  final TimelineEntry article;
-  ArticleWidget({required this.article, required Key? key}) : super(key: key);
+class TarikhArticleUI extends StatefulWidget {
+  TimelineEntry? article;
+
+  TarikhArticleUI() {
+    article = Get.arguments['article'];
+  }
 
   @override
-  _ArticleWidgetState createState() => _ArticleWidgetState();
+  _TarikhArticleUIState createState() => _TarikhArticleUIState();
 }
 
-/// The [State] for the [ArticleWidget] will change based on the [article]
+/// The [State] for the [TarikhArticleUI] will change based on the [article]
 /// parameter that's used to build it.
 /// It is stateful because we rely on some information like the title, subtitle, and the article
 /// contents to change when a new article is displayed. Moreover the [FlareWidget]s that are used
 /// on this page (i.e. the top [TimelineEntryWidget] the favorite button) rely on life-cycle parameters.
-class _ArticleWidgetState extends State<ArticleWidget> {
+class _TarikhArticleUIState extends State<TarikhArticleUI> {
   /// The information for the current page.
   String _articleMarkdown = "";
   String _title = "";
@@ -93,11 +97,11 @@ class _ArticleWidgetState extends State<ArticleWidget> {
       blockquotePadding: EdgeInsets.all(20.0),
     );
     setState(() {
-      _title = widget.article.label!;
-      _subTitle = widget.article.formatYearsAgo();
+      _title = widget.article!.label!;
+      _subTitle = widget.article!.formatYearsAgo();
       _articleMarkdown = "";
-      if (widget.article.articleFilename != null) {
-        loadMarkdown(widget.article.articleFilename!);
+      if (widget.article!.articleFilename != null) {
+        loadMarkdown(widget.article!.articleFilename!);
       }
     });
   }
@@ -139,7 +143,8 @@ class _ArticleWidgetState extends State<ArticleWidget> {
                       padding: EdgeInsets.only(left: 20.0, right: 20.0),
                       color: Colors.black.withOpacity(0.5),
                       onPressed: () {
-                        Navigator.pop(context, true);
+                        //Navigator.pop(context, true);
+                        Get.back();
                       },
                     )),
                 Expanded(
@@ -169,7 +174,7 @@ class _ArticleWidgetState extends State<ArticleWidget> {
                                     height: 280,
                                     child: TimelineEntryWidget(
                                         isActive: true,
-                                        timelineEntry: widget.article,
+                                        timelineEntry: widget.article!,
                                         interactOffset: _interactOffset))),
                             Padding(
                               padding: EdgeInsets.only(top: 30.0),
@@ -222,10 +227,10 @@ class _ArticleWidgetState extends State<ArticleWidget> {
                                       });
                                       if (_isFavorite) {
                                         BlocProvider.favorites(context)
-                                            .addFavorite(widget.article);
+                                            .addFavorite(widget.article!);
                                       } else {
                                         BlocProvider.favorites(context)
-                                            .removeFavorite(widget.article);
+                                            .removeFavorite(widget.article!);
                                       }
                                     })
                               ]),

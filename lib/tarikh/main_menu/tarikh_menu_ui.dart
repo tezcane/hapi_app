@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:get/get.dart';
 import 'package:share/share.dart';
 import 'package:hapi/tarikh/blocs/bloc_provider.dart';
 import 'package:hapi/tarikh/main_menu/collapsible.dart';
@@ -11,13 +12,11 @@ import 'package:hapi/tarikh/main_menu/collapsible.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/main_menu/search_widget.dart';
 import 'package:hapi/tarikh/main_menu/main_menu_section.dart';
-import 'package:hapi/tarikh/main_menu/about_page.dart';
-import 'package:hapi/tarikh/main_menu/favorites_page.dart';
 import 'package:hapi/tarikh/main_menu/thumbnail_detail_widget.dart';
 import 'package:hapi/tarikh/search_manager.dart';
 import 'package:hapi/tarikh/colors.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
-import 'package:hapi/tarikh/timeline/timeline_widget.dart';
+import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
 
 /// The Main Page of the Timeline App.
 ///
@@ -66,21 +65,29 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
     }
   }
 
-  /// Helper function which sets the [MenuItemData] for the [TimelineWidget].
+  /// Helper function which sets the [MenuItemData] for the [TarikhTimelineUI].
   /// This will trigger a transition from the current menu to the Timeline,
   /// thus the push on the [Navigator], and by providing the [item] as
-  /// a parameter to the [TimelineWidget] constructor, this widget will know
+  /// a parameter to the [TarikhTimelineUI] constructor, this widget will know
   /// where to scroll to.
   navigateToTimeline(MenuItemData item) {
     _pauseSection();
-    Navigator.of(context)
-        .push(MaterialPageRoute(
-          builder: (BuildContext context) =>
-              TimelineWidget(item, BlocProvider.getTimeline(context)),
-        ))
-        .then(_restoreSection);
+
+    Get.toNamed('/tarikh/timeline', arguments: {
+      'focusItem': item,
+      'timeline': BlocProvider.getTimeline(context),
+    });
+
+    _restoreSection(null); // TODO working? was below:
+    // Navigator.of(context)
+    //     .push(MaterialPageRoute(
+    //       builder: (BuildContext context) =>
+    //           TarikhTimelineUI(item, BlocProvider.getTimeline(context)),
+    //     ))
+    //     .then(_restoreSection);
   }
 
+  // TODO what is v below:
   _restoreSection(v) => setState(() => _isSectionActive = true);
   _pauseSection() => setState(() => _isSectionActive = false);
 
@@ -141,7 +148,7 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
       });
       return Future(() => false);
     } else {
-      Navigator.of(context).pop(true);
+      Get.back(); // Navigator.of(context).pop(true);
       return Future(() => true);
     }
   }
@@ -189,10 +196,8 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
         ..add(FlatButton(
             onPressed: () {
               _pauseSection();
-              Navigator.of(context)
-                  .push(MaterialPageRoute(
-                      builder: (BuildContext context) => FavoritesPage()))
-                  .then(_restoreSection);
+              Get.toNamed('/tarikh/favorite');
+              _restoreSection(null); // TODO working?
             },
             color: Colors.transparent,
             child:
@@ -240,10 +245,8 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
           child: FlatButton(
               onPressed: () {
                 _pauseSection();
-                Navigator.of(context)
-                    .push(MaterialPageRoute(
-                        builder: (BuildContext context) => AboutPage()))
-                    .then(_restoreSection);
+                Get.toNamed('/about');
+                _restoreSection(null);
               },
               color: Colors.transparent,
               child:

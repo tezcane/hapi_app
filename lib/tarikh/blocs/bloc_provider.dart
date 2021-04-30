@@ -56,7 +56,7 @@ class BlocProvider extends InheritedWidget {
   }
 
   /// static accessor for the [Timeline].
-  /// e.g. [_MainMenuWidgetState.navigateToTimeline] uses this static getter to access build the [TimelineWidget].
+  /// e.g. [_MainMenuWidgetState.navigateToTimeline] uses this static getter to access build the [TarikhTimelineUI].
   static Timeline getTimeline(BuildContext context) {
     BlocProvider bp =
         context.dependOnInheritedWidgetOfExactType<BlocProvider>()!;

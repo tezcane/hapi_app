@@ -19,7 +19,7 @@ class HomeUI extends StatelessWidget {
   Widget build(BuildContext context) {
     if (initNeeded) {
       _navIdx = store.read('lastNavIdx') ?? _navIdx; //Quests
-      navigateToPage(_navIdx); // set foreground to last opened page
+      _navigateToPage(_navIdx); // set foreground to last opened page
       initNeeded = false; //TODO this is a hack but who cares
     }
 
@@ -78,15 +78,15 @@ class HomeUI extends StatelessWidget {
           } else {
             _navIdx = value;
             print('selected index changed to $_navIdx');
-            //foregroundPage.dispose(); //TODO
-            navigateToPage(_navIdx);
+            //foregroundPage.dispose(); //TODO <- LOOKS LIKE NOT NEEDED
+            _navigateToPage(_navIdx);
           }
         },
       ),
     );
   }
 
-  void navigateToPage(int navIdx) {
+  void _navigateToPage(int navIdx) {
     bool didNotFindPage = true;
     for (GetPage getPage in AppRoutes.routes) {
       if (getPage.name == _kNavs[navIdx].page) {

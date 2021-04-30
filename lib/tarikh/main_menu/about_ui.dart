@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hapi/tarikh/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -10,7 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 ///
 /// This page uses the package `url_launcher` available at https://pub.dartlang.org/packages/url_launcher
 /// to open up urls in a WebView on both iOS & Android.
-class AboutPage extends StatelessWidget {
+class AboutUI extends StatelessWidget {
   /// Sanity check before opening up the url.
   _launchUrl(String url) {
     canLaunch(url).then((bool success) {
@@ -34,7 +35,7 @@ class AboutPage extends StatelessWidget {
           padding: EdgeInsets.only(left: 20.0, right: 20.0),
           color: Colors.black.withOpacity(0.5),
           onPressed: () {
-            Navigator.pop(context, true);
+            Get.back(); // had Navigator.pop(context, true);
           },
         ),
         titleSpacing:

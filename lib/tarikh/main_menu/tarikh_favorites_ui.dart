@@ -1,12 +1,12 @@
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hapi/tarikh/blocs/bloc_provider.dart';
 import 'package:hapi/tarikh/colors.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/main_menu/thumbnail_detail_widget.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
-import 'package:hapi/tarikh/timeline/timeline_widget.dart';
 
 /// This widget is displayed when tapping on the Favorites button in the [MainMenuWidget].
 ///
@@ -14,7 +14,7 @@ import 'package:hapi/tarikh/timeline/timeline_widget.dart';
 /// when tapping on one of them.
 ///
 /// To add any item as favorite, go to the [ArticleWidget] and tap on the heart button.
-class FavoritesPage extends StatelessWidget {
+class TarikhFavoritesUI extends StatelessWidget {
   /// This widget displays a [ListView] for all the elements in the favorites.
   @override
   Widget build(BuildContext context) {
@@ -30,9 +30,11 @@ class FavoritesPage extends StatelessWidget {
       favorites.add(ThumbnailDetailWidget(entry, hasDivider: i != 0,
           tapSearchResult: (TimelineEntry entry) {
         MenuItemData item = MenuItemData.fromEntry(entry);
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (BuildContext context) =>
-                TimelineWidget(item, BlocProvider.getTimeline(context))));
+
+        Get.toNamed('/tarikh/timeline', arguments: {
+          'focusItem': item,
+          'timeline': BlocProvider.getTimeline(context),
+        });
       }));
     }
 
@@ -56,7 +58,7 @@ class FavoritesPage extends StatelessWidget {
             padding: EdgeInsets.only(left: 20.0, right: 20.0),
             color: Colors.black.withOpacity(0.5),
             onPressed: () {
-              Navigator.pop(context, true);
+              Get.back(); // Navigator.pop(context, true);
             },
           ),
           titleSpacing: 9.0,

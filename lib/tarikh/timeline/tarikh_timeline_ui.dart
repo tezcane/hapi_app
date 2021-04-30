@@ -4,7 +4,8 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:hapi/tarikh/article/article_widget.dart';
+import 'package:get/get.dart';
+import 'package:hapi/tarikh/article/tarikh_article_ui.dart';
 import 'package:hapi/tarikh/blocs/bloc_provider.dart';
 import 'package:hapi/tarikh/colors.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
@@ -19,16 +20,20 @@ typedef SelectItemCallback(TimelineEntry item);
 /// This is the Stateful Widget associated with the Timeline object.
 /// It is built from a [focusItem], that is the event the [Timeline] should
 /// focus on when it's created.
-class TimelineWidget extends StatefulWidget {
-  final MenuItemData focusItem;
-  final Timeline timeline;
-  TimelineWidget(this.focusItem, this.timeline, {Key? key}) : super(key: key);
+class TarikhTimelineUI extends StatefulWidget {
+  MenuItemData? focusItem;
+  Timeline? timeline;
+
+  TarikhTimelineUI() {
+    focusItem = Get.arguments['focusItem'];
+    timeline = Get.arguments['timeline'];
+  }
 
   @override
-  _TimelineWidgetState createState() => _TimelineWidgetState();
+  _TarikhTimelineUIState createState() => _TarikhTimelineUIState();
 }
 
-class _TimelineWidgetState extends State<TimelineWidget> {
+class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   static const String DefaultEraName = "Birth of the Universe";
   static const double TopOverlap = 56.0;
 
@@ -112,7 +117,7 @@ class _TimelineWidgetState extends State<TimelineWidget> {
   ///
   /// If it is, adjust the layout accordingly.
   /// Otherwise trigger a [Navigator.push()] for the tapped bubble. This moves
-  /// the app into the [ArticleWidget].
+  /// the app into the [TarikhArticleUI].
   void _tapUp(TapUpDetails details) {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
     if (_touchedBubble != null) {
@@ -128,15 +133,20 @@ class _TimelineWidgetState extends State<TimelineWidget> {
         timeline!.setViewport(
             start: target.start!, end: target.end!, animate: true, pad: true);
       } else {
-        widget.timeline.isActive = false;
+        widget.timeline!.isActive = false;
 
-        Navigator.of(context)
-            .push(MaterialPageRoute(
-                builder: (BuildContext context) => ArticleWidget(
-                      article: _touchedBubble!.entry!,
-                      key: null,
-                    )))
-            .then((v) => widget.timeline.isActive = true);
+        Get.toNamed('/tarikh/article', arguments: {
+          'article': _touchedBubble!.entry!,
+        });
+
+        widget.timeline!.isActive = true; // TODO working? was below:
+        // Navigator.of(context)
+        //     .push(MaterialPageRoute(
+        //         builder: (BuildContext context) => TarikhArticleUI(
+        //               article: _touchedBubble!.entry!,
+        //               key: null,
+        //             )))
+        //     .then((v) => widget.timeline!.isActive = true);
       }
     } else if (_touchedEntry != null) {
       MenuItemData target = MenuItemData.fromEntry(_touchedEntry!);
@@ -176,7 +186,7 @@ class _TimelineWidgetState extends State<TimelineWidget> {
   initState() {
     super.initState();
     if (timeline != null) {
-      widget.timeline.isActive = true;
+      widget.timeline!.isActive = true;
       _eraName = timeline!.currentEra != null
           ? timeline!.currentEra!.label!
           : DefaultEraName;
@@ -210,7 +220,7 @@ class _TimelineWidgetState extends State<TimelineWidget> {
 
   /// Update the current view and change the timeline header, color and background color,
   @override
-  void didUpdateWidget(covariant TimelineWidget oldWidget) {
+  void didUpdateWidget(covariant TarikhTimelineUI oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     if (timeline != oldWidget.timeline && timeline != null) {
@@ -276,7 +286,7 @@ class _TimelineWidgetState extends State<TimelineWidget> {
                 timeline: timeline,
                 favorites: BlocProvider.favorites(context).favorites,
                 topOverlap: TopOverlap + devicePadding.top,
-                focusItem: widget.focusItem,
+                focusItem: widget.focusItem!,
                 touchBubble: onTouchBubble,
                 touchEntry: onTouchEntry),
             Column(
@@ -304,8 +314,8 @@ class _TimelineWidgetState extends State<TimelineWidget> {
                               alignment: Alignment.centerLeft,
                               icon: Icon(Icons.arrow_back),
                               onPressed: () {
-                                widget.timeline.isActive = false;
-                                Navigator.of(context).pop();
+                                widget.timeline!.isActive = false;
+                                Get.back();
                                 return; // TODO was returning true?
                               },
                             ),
