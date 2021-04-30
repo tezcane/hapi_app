@@ -109,10 +109,11 @@ class Nav {
 }
 
 const _kNavs = const [
+  Nav(label: 'Settings', page: '/setting', icon: Icons.settings_outlined),
 //Nav(label: 'Stats', page: '/stat', icon: Icons.assessment_outlined),
 //Nav(label: 'Stats', page: '/stat', icon: Icons.analytics_outlined),
 //Nav(label: 'Stats', page: '/stat', icon: Icons.leaderboard_rounded),
-  Nav(label: 'Stats', page: '/setting', icon: Icons.bar_chart_outlined),
+//Nav(label: 'Stats', page: '/stat', icon: Icons.bar_chart_outlined),
 //Nav(label: 'Tools', page: '/tool', icon: Icons.construction_outlined),
 //Nav(label: 'Tools', page: '/tool', icon: Icons.build_outlined),
 //Nav(label: 'Tools', page: '/tool', icon: Icons.explore),
