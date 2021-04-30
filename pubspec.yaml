@@ -13,7 +13,19 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+  # tarikh imports:
+  flare_flutter: # TODO this is showing 1.5.5 in release notes but pub.dev version gives errors
+    path: ./dependencies/Flare-Flutter/flare_flutter
+  nima: ^1.0.5
   cupertino_icons: ^1.0.2
+  flutter_markdown: ^0.6.1
+  share: ^2.0.1
+  intl: ^0.17.0
+  shared_preferences: ^2.0.5
+  rxdart: ^0.26.0
+  url_launcher: ^6.0.3
+  # end tarikh imports
+
   firebase_core: ^1.0.3
   # firebase_analytics: ^7.1.1 no nullsafe... skip it for now
   firebase_auth: ^1.1.0
