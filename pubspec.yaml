@@ -56,7 +56,51 @@ flutter:
   assets:
     - assets/images/
     - assets/images/logo/
+    - assets/tarikh/
+    - assets/tarikh/Articles/
+    - assets/tarikh/Big_Bang/
+    - assets/tarikh/Milky Way/
+    - assets/tarikh/Mammals/
+    - assets/tarikh/Dinosaurs/
+    - assets/tarikh/Insects/
+    - assets/tarikh/Fish_and_Stuff/
+    - assets/tarikh/Cells/
+    - assets/tarikh/Dinosaur_Demise/
+    - assets/tarikh/Reptiles/
+    - assets/tarikh/World_War_I/
+    - assets/tarikh/Moon/
+    - assets/tarikh/Newton/
+    - assets/tarikh/Cold_war/
+    - assets/tarikh/Crusades/
+    - assets/tarikh/Homo_Sapiens_Sapiens/
+    - assets/tarikh/Nelson Mandela_v2/
+    - assets/tarikh/Martin Luther king/
+    - assets/tarikh/Sufraggette_movement/
+    - assets/tarikh/Marie_Curie/
+    - assets/tarikh/Amelia_Earhart/
+    - assets/tarikh/Alan_Turing/
+    - assets/tarikh/World_War_II/
+    - assets/tarikh/Darwin 2/
+    - assets/tarikh/Internet/
+    - assets/tarikh/Agricultural_evolution/
+    - assets/tarikh/Writing/
+    - assets/tarikh/Recorded_history/
+    - assets/tarikh/Pyramid/
+    - assets/tarikh/Roma/
+    - assets/tarikh/Industrialization/
+    - assets/tarikh/Constantinople/
+    - assets/tarikh/BlackPlague/
+    - assets/tarikh/First_Temple/
+    - assets/tarikh/Apes/
+    - assets/tarikh/Constructive_Tools/
+    - assets/tarikh/Fire/
   fonts:
     - family: Lobster
       fonts:
-        - asset: fonts/Lobster-Regular.ttf
+        - asset: assets/fonts/Lobster-Regular.ttf
+    - family: Roboto
+      fonts:
+        - asset: assets/fonts/Roboto-Regular.ttf
+    - family: RobotoMedium
+      fonts:
+        - asset: assets/fonts/Roboto-Medium.ttf
