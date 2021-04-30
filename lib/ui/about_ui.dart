@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hapi/constants/app_themes.dart';
 import 'package:hapi/tarikh/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -27,38 +28,42 @@ class AboutUI extends StatelessWidget {
       appBar: AppBar(
         centerTitle: false,
         backgroundColor: lightGrey,
-        iconTheme: IconThemeData(color: Colors.black.withOpacity(0.54)),
+        iconTheme: IconThemeData(color: Colors.white.withOpacity(0.54)),
         elevation: 0.0,
         leading: IconButton(
           alignment: Alignment.centerLeft,
           icon: Icon(Icons.arrow_back),
           padding: EdgeInsets.only(left: 20.0, right: 20.0),
-          color: Colors.black.withOpacity(0.5),
+          color: Colors.white.withOpacity(0.5),
           onPressed: () {
             Get.back(); // had Navigator.pop(context, true);
           },
         ),
         titleSpacing:
             9.0, // Note that the icon has 20 on the right due to its padding, so we add 10 to get our desired 29
-        title: Text("About",
-            textAlign: TextAlign.left,
-            style: TextStyle(
-                fontFamily: "RobotoMedium",
-                fontSize: 20.0,
-                color: darkText.withOpacity(darkText.opacity * 0.75))),
+        title: Text(
+          'About',
+          textAlign: TextAlign.left,
+          style: TextStyle(
+            fontFamily: 'RobotoMedium',
+            fontSize: 20.0,
+            //color: darkText.withOpacity(darkText.opacity * 0.75),
+          ),
+        ),
       ),
+      backgroundColor: AppThemes.logoBackground,
       body: Padding(
         padding: EdgeInsets.only(top: 30, bottom: 20, left: 20, right: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              // TODO put logo here
-              "hapi",
-              style: TextStyle(
-                  fontFamily: "RobotoMedium",
-                  fontSize: 34.0,
-                  color: darkText.withOpacity(darkText.opacity * 0.75)),
+            Center(
+              // TODO cool animations here
+              child: Image.asset(
+                'assets/images/logo/logo.png',
+                width: 150,
+                height: 150,
+              ),
             ),
             Expanded(
               child: Column(
@@ -66,29 +71,31 @@ class AboutUI extends StatelessWidget {
                   RichText(
                     text: TextSpan(
                       style: TextStyle(
-                          color: darkText.withOpacity(darkText.opacity * 0.75),
-                          fontFamily: "Roboto",
+                          //color: darkText.withOpacity(darkText.opacity * 0.75),
+                          fontFamily: 'Roboto',
                           fontSize: 17.0,
                           height: 1.5),
                       children: [
                         TextSpan(
-                            text: "hapi",
+                            text: 'hapi',
                             style: TextStyle(
+                                fontFamily: 'Lobster',
+                                fontSize: 25.0,
+                                color: AppThemes.logoText,
                                 fontWeight: FontWeight.bold,
                                 decoration: TextDecoration.underline),
                             recognizer: TapGestureRecognizer()
                               ..onTap =
-                                  () => _launchUrl("https://www.hapi.net")),
+                                  () => _launchUrl('https://www.hapi.net')),
                         TextSpan(
-                          text: " is built by volunteer Muslim engineers, "
-                              "scholars and historians."
-                              "\n\n"
-                              "We hope it helps improve your life, in this world "
-                              "and the next. May Allah SWT give us Firdaus. Ameen! "
-                              "This is true hapiness[sic]."
-                              "\n\n"
-                              "Please help us grow this project by telling "
-                              "others and donating.", // TODO link here
+                          text: ' is built by volunteer Muslim engineers, '
+                              'scholars and historians.'
+                              '\n\n'
+                              'We hope it helps improve your hapi-ness, in this world '
+                              'and the next. May Allah SWT give us Firdaus. Ameen! '
+                              '\n\n'
+                              'Please help us grow this project by telling '
+                              'others and donating.', // TODO link here
                         ),
                       ],
                     ),
@@ -99,12 +106,13 @@ class AboutUI extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 17.0, bottom: 14.0),
               child: Text(
-                "hapi app version 0.0.0", // TODO tie to build release version
+                'hapi app version 0.0.0', // TODO tie to build release version
                 style: TextStyle(
-                    fontFamily: "Roboto",
-                    fontSize: 17.0,
-                    height: 1.5,
-                    color: darkText.withOpacity(darkText.opacity * 0.5)),
+                  fontFamily: 'Roboto',
+                  fontSize: 17.0,
+                  height: 1.5,
+                  //color: Color.white; //darkText.withOpacity(darkText.opacity * 0.5),
+                ),
               ),
             ),
           ],

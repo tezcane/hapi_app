@@ -239,34 +239,7 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
                     fontFamily: 'RobotoMedium',
                     color: Colors.black.withOpacity(0.65)),
               )
-            ])))
-        ..add(Padding(
-          padding: const EdgeInsets.only(bottom: 30.0),
-          child: FlatButton(
-              onPressed: () {
-                _pauseSection();
-                Get.toNamed('/about');
-                _restoreSection(null);
-              },
-              color: Colors.transparent,
-              child:
-                  Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                Container(
-                  margin: EdgeInsets.only(right: 15.5),
-                  child: Image.asset('assets/tarikh/info_icon.png',
-                      height: 20.0,
-                      width: 20.0,
-                      color: Colors.black.withOpacity(0.65)),
-                ),
-                Text(
-                  'About',
-                  style: TextStyle(
-                      fontSize: 20.0,
-                      fontFamily: 'RobotoMedium',
-                      color: Colors.black.withOpacity(0.65)),
-                )
-              ])),
-        ));
+            ])));
     }
 
     /// Wrap the menu in a [WillPopScope] to properly handle a pop event while searching.

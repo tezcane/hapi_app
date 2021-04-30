@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:hapi/tarikh/article/tarikh_article_ui.dart';
-import 'package:hapi/tarikh/main_menu/about_ui.dart';
+import 'package:hapi/ui/about_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_favorites_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_menu_ui.dart';
 import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
