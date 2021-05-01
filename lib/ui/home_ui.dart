@@ -6,13 +6,17 @@ import 'package:hapi/controllers/menu_controller.dart';
 import 'package:hapi/ui/components/menu.dart';
 import 'package:hapi/ui/components/menu_nav.dart';
 import 'package:hapi/ui/quests_ui.dart';
+import 'package:share/share.dart';
 
 class HomeUI extends StatelessWidget {
   // final MenuController c = Get.find();
   final store = GetStorage();
 
-  int _navIdx = _kNavs.length - 1; // selects Quests by default
+  int _navIdx = NavPage.QUESTS.index; // selects Quests by default
   Widget foregroundPage = QuestsUI();
+  Widget columnWidget = Column(); // TODO
+  Widget bottomWidget = ShareHapi();
+
   bool initNeeded = true;
 
   @override
@@ -31,11 +35,11 @@ class HomeUI extends StatelessWidget {
               body: Menu(
                 onPressed: showMenu,
                 foregroundPage: IgnorePointer(
-                  ignoring: c.isMenuShowing(),
+                  ignoring: c.isMenuShowing(), // disable UI when menu showing
                   child: foregroundPage, // Main page
                 ),
-                columnWidget: Column(), // preferably Column
-                bottomWidget: Row(), // preferably Row
+                columnWidget: columnWidget, // preferably Column
+                bottomWidget: bottomWidget, // preferably Row
               ),
             );
           },
@@ -109,11 +113,92 @@ class HomeUI extends StatelessWidget {
   }
 }
 
+class ShareHapi extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    const double widthSpacer = 29.0;
+    return Row(
+      children: [
+        SizedBox(width: widthSpacer),
+        Tooltip(
+          message: 'Learn more about hapi and how to contribute',
+          child: GestureDetector(
+            onTap: () => Get.toNamed('/about'),
+            child: Row(
+              children: <Widget>[
+                Image.asset(
+                  'assets/images/logo/logo.png',
+                  fit: BoxFit.contain,
+                ),
+                IconButton(
+                  onPressed: null,
+                  padding: const EdgeInsets.all(0.0), // to center
+                  icon: const Icon(
+                    Icons.info_outline,
+                    color: Colors.white,
+                    size: 36,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        SizedBox(width: widthSpacer),
+        Tooltip(
+          message:
+              'Share hapi with Muslims and earn mountains of good deeds from their actions too!',
+          child: InkWell(
+            onTap: () => Share.share('As-salamu Alaykum, '
+                'hapi is a fun and inspiring app for Muslims, join me today!\n\n'
+                'More Info: https://hapi.net/TODO\n'
+                'Download Android: https://bit.ly/TODO\n'
+                'Download iOS:  https://bit.ly/TODO'),
+            child: Row(
+              children: <Widget>[
+                TextButton(
+                  onPressed: null,
+                  child: Text(
+                    'Share',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontFamily: 'RobotoMedium',
+                      color: Colors.white.withOpacity(0.65),
+                    ),
+                  ),
+                ),
+                IconButton(
+                  onPressed: null,
+                  padding: const EdgeInsets.all(0.0), // to center
+                  icon: const Icon(
+                    Icons.share_outlined,
+                    color: Colors.white,
+                    size: 36,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
 class Nav {
   const Nav({required this.label, required this.page, required this.icon});
   final String label;
   final String page;
   final IconData icon;
+}
+
+// must keep in sync with _kNavs
+enum NavPage {
+  TOOLS,
+  HADITH,
+  QURAN,
+  TARIKH,
+  RELICS,
+  QUESTS,
 }
 
 const _kNavs = const [

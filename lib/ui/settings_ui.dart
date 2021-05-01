@@ -51,35 +51,6 @@ class SettingsUI extends StatelessWidget {
             ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.only(top: 60.0),
-          child: FlatButton(
-            onPressed: () {
-              Get.toNamed('/about');
-            },
-            //color: Colors.transparent,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Container(
-                  margin: EdgeInsets.only(right: 10.0),
-                  child: Image.asset('assets/images/info_icon.png',
-                      height: 20.0,
-                      width: 20.0,
-                      color: Colors.black.withOpacity(0.65)),
-                ),
-                Text(
-                  'About hapi',
-                  style: TextStyle(
-                      fontSize: 20.0,
-                      fontFamily: 'Lobster',
-                      color: AppThemes.logoText),
-                ),
-              ],
-            ),
-          ),
-        ),
       ],
     );
   }

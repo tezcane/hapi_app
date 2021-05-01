@@ -94,8 +94,8 @@ class AboutUI extends StatelessWidget {
                               'We hope it helps improve your hapi-ness, in this world '
                               'and the next. May Allah SWT give us Firdaus. Ameen! '
                               '\n\n'
-                              'Please help us grow this project by telling '
-                              'others and donating.', // TODO link here
+                              'hapi will never track or sell your personal information. '
+                              'Please support us by telling others and donating.',
                         ),
                       ],
                     ),

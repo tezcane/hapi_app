@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:share/share.dart';
 import 'package:hapi/tarikh/blocs/bloc_provider.dart';
 import 'package:hapi/tarikh/main_menu/collapsible.dart';
 
@@ -211,29 +209,6 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
               ),
               Text(
                 'Your Favorites',
-                style: TextStyle(
-                    fontSize: 20.0,
-                    fontFamily: 'RobotoMedium',
-                    color: Colors.black.withOpacity(0.65)),
-              )
-            ])))
-        ..add(FlatButton(
-            onPressed: () => Share.share('Check out The History of Everything! ' +
-                (Platform.isAndroid
-                    ? 'https://play.google.com/store/apps/details?id=net.hapi.app'
-                    : 'itms://itunes.apple.com/us/app/apple-store/id1441257460?mt=8')),
-            color: Colors.transparent,
-            child:
-                Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-              Container(
-                margin: EdgeInsets.only(right: 15.5),
-                child: Image.asset('assets/tarikh/share_icon.png',
-                    height: 20.0,
-                    width: 20.0,
-                    color: Colors.black.withOpacity(0.65)),
-              ),
-              Text(
-                'Share',
                 style: TextStyle(
                     fontSize: 20.0,
                     fontFamily: 'RobotoMedium',

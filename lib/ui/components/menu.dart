@@ -5,9 +5,9 @@ import 'package:hapi/controllers/menu_controller.dart';
 
 class Menu extends StatefulWidget {
   final VoidCallback onPressed;
-  final Widget foregroundPage;
-  final Widget columnWidget;
-  final Widget bottomWidget;
+  final Widget foregroundPage; // where the app/navigation lives
+  final Widget columnWidget; // right column/verticle menu bar
+  final Widget bottomWidget; // bottom row/horizontal menu bar
 
   final IconData buttonIcon;
   final double scaleWidth;
@@ -64,7 +64,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     final double _width = MediaQuery.of(context).size.width;
     final double _height = MediaQuery.of(context).size.height;
-    final double _fabPosition = 16;
+    final double _fabPosition = 16; // TODO apply to other sizes
     final double _fabSize = 56;
 
     final double _xScale =
@@ -107,12 +107,14 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
                   ),
                 ),
                 Positioned(
-                  right: widget.scaleWidth + _fabPosition * 2,
-                  bottom: _fabPosition * 1.5,
+                  //right: widget.scaleWidth + _fabPosition * 2,
+                  //bottom: _fabPosition * 1.5,
+                  bottom: 0, //_fabPosition * 1.5,
                   // height is used as max height to prevent overlap
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
-                      maxHeight: widget.scaleHeight - _fabPosition,
+                      //maxHeight: widget.scaleHeight - _fabPosition,
+                      maxHeight: widget.scaleHeight + 35, // TODO tune
                     ),
                     child: widget.bottomWidget,
                   ),
@@ -139,7 +141,6 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   void _handleOnPressed() {
     if (c.isMenuShowing()) {
       c.hideMenu(); // just hit close on fab
-
     } else {
       c.showMenu(); // just hit menu on fab
     }
