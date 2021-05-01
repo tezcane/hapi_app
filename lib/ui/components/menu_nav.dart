@@ -55,7 +55,6 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
 
   late int _selectedIndex;
-  // bool menuShownAlready = false; // TODO bugs here
 
   @override
   void initState() {
@@ -70,6 +69,15 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
     super.initState();
   }
 
+  // @override
+  // void didUpdateWidget(MenuNav oldWidget) {
+  //   c.isMenuShowing()
+  //       ? _animationController.forward()
+  //       : _animationController.reverse();
+  //
+  //   super.didUpdateWidget(oldWidget);
+  // }
+
   @override
   void dispose() {
     _animationController.dispose();
@@ -77,20 +85,24 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
   }
 
   void _displayMenuDragGesture(DragEndDetails endDetails) {
-    print("_displayMenuDragGesture called");
-
     if (!c.isMenuShowing()) {
       final velocity = endDetails.primaryVelocity!;
-      if (velocity < 0) _animationReverse();
+      if (velocity < 0) {
+        _animationController.reverse();
+        c.showMenu();
+      }
     }
   }
 
   void _animationReverse() {
-    print("_animationReverse called");
+    c.isMenuShowing()
+        ? _animationController.reverse()
+        : _animationController.forward();
+  }
 
-    _animationController.reverse();
-
-    c.showMenu();
+  void _closeMenu() {
+    _animationController.forward(from: 0.0);
+    c.hideMenu();
   }
 
   @override
@@ -98,74 +110,91 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
     return Material(
       child: LayoutBuilder(
         builder: (context, constraints) {
+          print('constraints.maxHeight=${constraints.maxHeight}');
+
+          int sm = 0; // screen multiplier
+          if (constraints.maxHeight > 805) {
+            sm = 4;
+          } else if (constraints.maxHeight > 705) {
+            sm = 3;
+          } else if (constraints.maxHeight > 605) {
+            sm = 2;
+          } else if (constraints.maxHeight > 505) {
+            sm = 1;
+          }
+          print('sm=$sm');
           // was: constraints.maxHeight / widget.items.length;
           // 88 = 16 + 56 + 16 (fabSize and it's padding)
-          // - 1 since last index (close button) is hidden for fab control:
-          final itemSize =
-              (constraints.maxHeight - 88) / (widget.items.length - 1);
+          // +/*  sm since as spacers for big/small screens:
+          final itemSize = // TODO don't +/* 2 in portrait mode
+              (constraints.maxHeight - 88) / (widget.items.length + sm);
           return Stack(
             children: [
               widget.builder(_animationReverse),
-              AnimatedBuilder(
-                animation: _animationController,
-                builder: (context, child) => Stack(
-                  children: [
-                    /// dismiss the Menu when user taps outside the widget.
-                    if (_animationController.value < 1 &&
-                        c.isMenuShowing() &&
-                        c.isMenuShowingNav())
-                      Align(
-                        child: GestureDetector(
+              Padding(
+                // TODO use empty size boxes so we can dismiss on anypart of foregroundWiget
+                // top centers nav buttons, bottom allows tapping verticle bar
+                padding: EdgeInsets.only(top: itemSize * sm, bottom: 88),
+                child: AnimatedBuilder(
+                  animation: _animationController,
+                  builder: (context, child) => Stack(
+                    children: [
+                      /// dismiss the Menu when user taps outside the widget.
+                      if (_animationController.value < 1 &&
+                          c.isMenuShowing() &&
+                          c.isMenuShowingNav())
+                        Align(
+                          child: GestureDetector(
+                            onTap: () {
+                              _closeMenu();
+                            },
+                            onLongPress: () {
+                              _closeMenu();
+                            },
+                          ),
+                        ),
+
+                      /// handle drag out of menu from right side of screen
+                      if (_enableEdgeDragGesture &&
+                          _animationController.isCompleted)
+                        //!c.isMenuShowing()) // hasn't been flagged yet
+                        Align(
+                          alignment: Alignment.bottomRight, // was centerRight
+                          child: GestureDetector(
+                            onHorizontalDragEnd: _displayMenuDragGesture,
+                            behavior: HitTestBehavior.translucent,
+                            excludeFromSemantics: true,
+                            child: Container(width: _kEdgeDragWidth),
+                          ),
+                        ),
+
+                      /// Show Menu:
+                      for (int i = 0; i < widget.items.length; i++)
+                        MenuItem(
+                          index: i,
+                          length: widget.items.length,
+                          width: _kSideMenuWidth,
+                          height: itemSize,
+                          controller: _animationController,
+                          curve: _kCurveAnimation,
+                          color: (i == _selectedIndex)
+                              ? _kButtonColorSelected
+                              : _kButtonColorUnselected,
                           onTap: () {
-                            _animationController.forward(from: 0.0);
-                            //menuShownAlready = false;
-                            c.hideMenu();
-                          },
-                        ),
-                      ),
-
-                    /// handle drag out of menu from right side of screen
-                    if (_enableEdgeDragGesture &&
-                        _animationController.isCompleted)
-                      //!c.isMenuShowing()) // hasn't been flagged yet
-                      Align(
-                        alignment: Alignment.bottomRight, // was centerRight
-                        child: GestureDetector(
-                          onHorizontalDragEnd: _displayMenuDragGesture,
-                          behavior: HitTestBehavior.translucent,
-                          excludeFromSemantics: true,
-                          child: Container(width: _kEdgeDragWidth),
-                        ),
-                      ),
-
-                    /// Show Menu, -1 hide the close button, use fab to close:
-                    for (int i = 0; i < widget.items.length - 1; i++)
-                      MenuItem(
-                        index: i,
-                        length: widget.items.length,
-                        width: _kSideMenuWidth,
-                        height: itemSize,
-                        controller: _animationController,
-                        curve: _kCurveAnimation,
-                        color: (i == _selectedIndex)
-                            ? _kButtonColorSelected
-                            : _kButtonColorUnselected,
-                        onTap: () {
-                          if (i != _selectedIndex) {
-                            if (i != widget.items.length - 1) {
-                              c.hideMenu();
+                            if (i == _selectedIndex) {
+                              c.hideMenuNav(); // TODO show settings!
+                            } else {
+                              c.hideMenu(); // selected new nav page
                               setState(() {
                                 _selectedIndex = i;
                               });
-                            } else {
-                              c.hideMenuNav();
                             }
-                          }
-                          widget.onItemSelected(i);
-                        },
-                        child: widget.items[i],
-                      ),
-                  ],
+                            widget.onItemSelected(i); // notify HomeUI.
+                          },
+                          child: widget.items[i],
+                        ),
+                    ],
+                  ),
                 ),
               ),
             ],

@@ -3,6 +3,7 @@
 import 'package:alquran_cloud/alquran_cloud.dart' as quran_cloud;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hapi/constants/app_routes.dart';
@@ -11,7 +12,6 @@ import 'package:hapi/controllers/auth_controller.dart';
 import 'package:hapi/controllers/language_controller.dart';
 import 'package:hapi/controllers/menu_controller.dart';
 import 'package:hapi/controllers/onboarding_controller.dart';
-//import 'package:hapi/controllers/quest_controller.dart';
 import 'package:hapi/controllers/theme_controller.dart';
 import 'package:hapi/helpers/localization.g.dart';
 import 'package:hapi/tarikh/blocs/bloc_provider.dart';
@@ -60,10 +60,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeController.to.getThemeModeFromStore();
+
+    // TODO test this with landscape Quran/Read mode
+    //SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
     return GetBuilder<LanguageController>(
       builder: (languageController) => Loading(
         // TODO BlocProvider needed for Tarikh to work:
         child: BlocProvider(
+          platform: Theme.of(context).platform, // determine iOS/Android physics
           child: GetMaterialApp(
             translations: Localization(),
             locale: languageController.getLocale, // <- Current locale

@@ -8,10 +8,10 @@ import 'package:hapi/ui/components/menu_nav.dart';
 import 'package:hapi/ui/quests_ui.dart';
 
 class HomeUI extends StatelessWidget {
-  final MenuController c = Get.find();
+  // final MenuController c = Get.find();
   final store = GetStorage();
 
-  int _navIdx = _kNavs.length - 2;
+  int _navIdx = _kNavs.length - 1; // selects Quests by default
   Widget foregroundPage = QuestsUI();
   bool initNeeded = true;
 
@@ -23,70 +23,78 @@ class HomeUI extends StatelessWidget {
       initNeeded = false; //TODO this is a hack but who cares
     }
 
-    return Scaffold(
-      body: MenuNav(
-        builder: (showMenu) {
-          return Scaffold(
-            body: Menu(
-              onPressed: showMenu,
-              foregroundPage: foregroundPage, // Main page
-              columnWidget: Column(), // preferably Column
-              bottomWidget: Row(), // preferably Row
-            ),
-          );
-        },
-        selectedIndexAtInit: _navIdx,
-        items: _kNavs
-            .map(
-              (nav) => Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Stack(
-                    children: [
-                      if (nav.page != '/relic')
-                        Icon(nav.icon, color: Colors.white, size: 40), //THEME
-                      if (nav.page != '/relic')
-                        Icon(Icons.star, color: Colors.orange, size: 18),
-                      if (nav.page == '/relic')
-                        Transform.rotate(
-                          angle: 2.8,
-                          child: Icon(nav.icon, color: Colors.white, size: 40),
-                        ),
-                      if (nav.page == '/relic')
-                        Positioned(
-                          top: 6.7,
-                          left: 23.6,
-                          //right: 0.0,
-                          //bottom: 0.0,
-                          child: Transform.rotate(
-                            angle: .59,
-                            child: Icon(Icons.star,
-                                color: Colors.orange, size: 18),
-                          ),
-                        ),
-                    ],
-                  ),
-                  Text(nav.label), //THEME
-                ],
+    return GetBuilder<MenuController>(
+      builder: (c) => Scaffold(
+        body: MenuNav(
+          builder: (showMenu) {
+            return Scaffold(
+              body: Menu(
+                onPressed: showMenu,
+                foregroundPage: IgnorePointer(
+                  ignoring: c.isMenuShowing(),
+                  child: foregroundPage, // Main page
+                ),
+                columnWidget: Column(), // preferably Column
+                bottomWidget: Row(), // preferably Row
               ),
-            )
-            .toList(),
-        onItemSelected: (value) {
-          if (_navIdx == value) {
-            print('navIdx selected index did not change, is $value');
-          } else {
-            _navIdx = value;
-            print('selected index changed to $_navIdx');
-            //foregroundPage.dispose(); //TODO <- LOOKS LIKE NOT NEEDED
-            _navigateToPage(_navIdx);
-          }
-        },
+            );
+          },
+          selectedIndexAtInit: _navIdx,
+          items: _kNavs
+              .map(
+                (nav) => Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Stack(
+                      children: [
+                        if (nav.page != '/relic')
+                          Icon(nav.icon, color: Colors.white, size: 36), //THEME
+                        if (nav.page != '/relic')
+                          Icon(Icons.star, color: Colors.orange, size: 18),
+                        if (nav.page == '/relic')
+                          Transform.rotate(
+                            angle: 2.8,
+                            child:
+                                Icon(nav.icon, color: Colors.white, size: 36),
+                          ),
+                        if (nav.page == '/relic')
+                          Positioned(
+                            top: 4.7, left: 20.0, // right: 0.0, bottom: 0.0,
+                            child: Transform.rotate(
+                              angle: .59,
+                              child: Icon(Icons.star,
+                                  color: Colors.orange, size: 18),
+                            ),
+                          ),
+                      ],
+                    ),
+                    Text(nav.label), //THEME
+                  ],
+                ),
+              )
+              .toList(),
+          onItemSelected: (value) {
+            if (_navIdx != value) {
+              _navIdx = value;
+              print('selected index changed to $_navIdx');
+              _navigateToPage(_navIdx);
+            } else {
+              print('navIdx selected index did not change, is $value');
+            }
+          },
+        ),
       ),
     );
   }
 
   void _navigateToPage(int navIdx) {
+    if (navIdx > _kNavs.length - 1) {
+      print(
+          'ERROR: navIdx $navIdx, was greater than _kNavs.length ${_kNavs.length}');
+      navIdx = _kNavs.length - 2;
+    }
+
     bool didNotFindPage = true;
     for (GetPage getPage in AppRoutes.routes) {
       if (getPage.name == _kNavs[navIdx].page) {
@@ -109,14 +117,13 @@ class Nav {
 }
 
 const _kNavs = const [
-  Nav(label: 'Settings', page: '/setting', icon: Icons.settings_outlined),
+//Nav(label: 'Settings', page: '/setting', icon: Icons.settings_outlined),
   Nav(label: 'Tools', page: '/tool', icon: Icons.explore_outlined),
   Nav(label: 'Hadith', page: '/hadith', icon: Icons.menu_book_outlined),
   Nav(label: 'Quran', page: '/quran', icon: Icons.auto_stories),
   Nav(label: 'Tarikh', page: '/tarikh', icon: Icons.history_edu_outlined),
   Nav(label: 'Relics', page: '/relic', icon: Icons.brightness_3_outlined),
   Nav(label: 'Quests', page: '/quest', icon: Icons.how_to_reg_outlined),
-  Nav(label: 'Quests', page: '/quest', icon: Icons.how_to_reg_outlined), //dummy
 ];
 
 // icons for later:

@@ -27,7 +27,7 @@ class Menu extends StatefulWidget {
     this.scaleWidth = 56,
     this.scaleHeight = 56, // * Globals.PHI,
     this.slideAnimationDuration = const Duration(milliseconds: 800),
-    this.buttonAnimationDuration = const Duration(milliseconds: 240),
+    this.buttonAnimationDuration = const Duration(milliseconds: 1000),
     this.openAnimationCurve = const ElasticOutCurve(0.9),
     this.closeAnimationCurve = const ElasticInCurve(0.9),
   })  : assert(scaleHeight >= 40),
@@ -43,8 +43,8 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
 
   @override
   void initState() {
-    _fabIconAnimationController =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 450));
+    _fabIconAnimationController = AnimationController(
+        vsync: this, duration: widget.buttonAnimationDuration);
 
     // Needed for fab button menu/close animation when menu_nav closes menu
     c.initMenuButtonAnimatedController(_fabIconAnimationController!);
@@ -139,13 +139,11 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   void _handleOnPressed() {
     if (c.isMenuShowing()) {
       c.hideMenu(); // just hit close on fab
-    } else {
-      // menu is not showing
-      c.showMenu(); // just hit menu on fab
 
-      // Only show nav menu first time we show menu
-      widget.onPressed.call(); // TODO move to controller?
+    } else {
+      c.showMenu(); // just hit menu on fab
     }
+    widget.onPressed.call(); // show/hide nav menu TODO move to controller?
   }
 }
 

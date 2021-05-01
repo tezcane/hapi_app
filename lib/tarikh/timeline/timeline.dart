@@ -775,6 +775,7 @@ class Timeline {
 
       _simulationTime = 0.0;
       if (_platform == TargetPlatform.iOS) {
+        // TODO test this on ios
         _scrollPhysics = BouncingScrollPhysics();
       } else {
         _scrollPhysics = ClampingScrollPhysics();
