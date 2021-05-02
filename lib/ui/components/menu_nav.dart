@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/controllers/menu_controller.dart';
 
-/// Signature for creating widget with `showMenu` callback to open/close Side Menu.
-typedef SideMenuAnimationBuilder = Widget Function(VoidCallback showMenu);
+final MenuController c = Get.find();
+
+/// Signature for creating widget to open/close Side Menu.
+typedef SideMenuAnimationBuilder = Widget Function();
 
 /// Enables swipe from left to right to display the menu, it's `false` by default.
 const bool _enableEdgeDragGesture = true;
@@ -15,7 +17,7 @@ const _kEdgeDragWidth = 20.0;
 const double _kSideMenuWidth = 88.0;
 
 /// Menu animation total duration time, each item has total_duration/items.length
-const Duration _kDuration = Duration(milliseconds: 800);
+const Duration _kDuration = Duration(milliseconds: 600);
 
 /// [Curve] used for the animation
 const Curve _kCurveAnimation = Curves.linear;
@@ -30,11 +32,9 @@ class MenuNav extends StatefulWidget {
     required this.builder,
     required this.selectedIndexAtInit,
     required this.items,
-    required this.onItemSelected,
   }) : super(key: key);
 
   /// `builder` builds a view/page based on the `selectedIndex`.
-  /// It also comes with a `showMenu` callback for opening the Side Menu.
   final SideMenuAnimationBuilder builder;
 
   /// Initial index selected, if nothing to select pass size/count of items[].
@@ -43,44 +43,30 @@ class MenuNav extends StatefulWidget {
   /// List of items that we want to display on the Side Menu.
   final List<Widget> items;
 
-  /// Function where we receive the current index selected.
-  final ValueChanged<int> onItemSelected;
-
   @override
   _MenuNavState createState() => _MenuNavState();
 }
 
 class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
-  final MenuController c = Get.find();
-  late AnimationController _animationController;
-
+  late AnimationController _acNavMenu;
   late int _selectedIndex;
 
   @override
   void initState() {
     _selectedIndex = widget.selectedIndexAtInit;
-
-    _animationController = AnimationController(
+    _acNavMenu = AnimationController(
       vsync: this,
       duration: _kDuration,
     );
-    _animationController.forward(from: 1.0);
+    c.initACNavMenu(_acNavMenu);
+    _acNavMenu.forward(from: 1.0); // needed to hide at init
 
     super.initState();
   }
 
-  // @override
-  // void didUpdateWidget(MenuNav oldWidget) {
-  //   c.isMenuShowing()
-  //       ? _animationController.forward()
-  //       : _animationController.reverse();
-  //
-  //   super.didUpdateWidget(oldWidget);
-  // }
-
   @override
   void dispose() {
-    _animationController.dispose();
+    _acNavMenu.dispose(); // TODO needed?
     super.dispose();
   }
 
@@ -88,21 +74,9 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
     if (!c.isMenuShowing()) {
       final velocity = endDetails.primaryVelocity!;
       if (velocity < 0) {
-        _animationController.reverse();
         c.showMenu();
       }
     }
-  }
-
-  void _animationReverse() {
-    c.isMenuShowing()
-        ? _animationController.reverse()
-        : _animationController.forward();
-  }
-
-  void _closeMenu() {
-    _animationController.forward(from: 0.0);
-    c.hideMenu();
   }
 
   @override
@@ -130,33 +104,28 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
               (constraints.maxHeight - 88) / (widget.items.length + sm);
           return Stack(
             children: [
-              widget.builder(_animationReverse),
+              widget.builder(), // need to embed menu_nav and menu together
               Padding(
                 // TODO use empty size boxes so we can dismiss on anypart of foregroundWiget
                 // top centers nav buttons, bottom allows tapping verticle bar
                 padding: EdgeInsets.only(top: itemSize * sm, bottom: 88),
                 child: AnimatedBuilder(
-                  animation: _animationController,
+                  animation: _acNavMenu,
                   builder: (context, child) => Stack(
                     children: [
                       /// dismiss the Menu when user taps outside the widget.
-                      if (_animationController.value < 1 &&
+                      if (_acNavMenu.value < 1 &&
                           c.isMenuShowing() &&
                           c.isMenuShowingNav())
                         Align(
                           child: GestureDetector(
-                            onTap: () {
-                              _closeMenu();
-                            },
-                            onLongPress: () {
-                              _closeMenu();
-                            },
+                            onTap: () => c.hideMenu(),
+                            onLongPress: () => c.hideMenu(),
                           ),
                         ),
 
                       /// handle drag out of menu from right side of screen
-                      if (_enableEdgeDragGesture &&
-                          _animationController.isCompleted)
+                      if (_enableEdgeDragGesture && _acNavMenu.isCompleted)
                         //!c.isMenuShowing()) // hasn't been flagged yet
                         Align(
                           alignment: Alignment.bottomRight, // was centerRight
@@ -175,21 +144,27 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
                           length: widget.items.length,
                           width: _kSideMenuWidth,
                           height: itemSize,
-                          controller: _animationController,
+                          acNavMenu: _acNavMenu,
                           curve: _kCurveAnimation,
                           color: (i == _selectedIndex)
                               ? _kButtonColorSelected
                               : _kButtonColorUnselected,
                           onTap: () {
                             if (i == _selectedIndex) {
-                              c.hideMenuNav(); // TODO show settings!
+                              if (c.isAboutPageShowing()) {
+                                c.hideMenu(); // selected new nav page
+                                c.navigateToNavPage(_selectedIndex, true);
+                              } else {
+                                c.hideMenuNav(); // TODO show settings!
+                              }
                             } else {
-                              c.hideMenu(); // selected new nav page
                               setState(() {
+                                // TODO needed?
                                 _selectedIndex = i;
+                                c.hideMenu(); // selected new nav page
+                                c.navigateToNavPage(_selectedIndex, true);
                               });
                             }
-                            widget.onItemSelected(i); // notify HomeUI.
                           },
                           child: widget.items[i],
                         ),
@@ -213,7 +188,7 @@ class MenuItem extends StatelessWidget {
     required this.length,
     required this.width,
     required this.height,
-    required this.controller,
+    required this.acNavMenu,
     required this.curve,
     required this.color,
     required this.onTap,
@@ -233,7 +208,7 @@ class MenuItem extends StatelessWidget {
   final double height;
 
   /// [AnimationController] used in the [MenuNav]
-  final AnimationController controller;
+  final AnimationController acNavMenu;
 
   /// Animation [Curve]
   final Curve curve;
@@ -250,12 +225,12 @@ class MenuItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final _intervalGap = 1 / length;
-    final _index = controller.status == AnimationStatus.forward
+    final _index = acNavMenu.status == AnimationStatus.forward
         ? length - 1 - index
         : index;
     final _animation = Tween(begin: 0.0, end: 1.6).animate(
       CurvedAnimation(
-        parent: controller,
+        parent: acNavMenu,
         curve: Interval(
           _intervalGap * _index,
           _intervalGap * (_index + 1),
@@ -279,7 +254,6 @@ class MenuItem extends StatelessWidget {
           color: color,
           child: InkWell(
             onTap: () {
-              controller.forward(from: 0.0);
               onTap();
             },
             child: child,

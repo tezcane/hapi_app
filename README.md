@@ -1,3 +1,8 @@
+## CODE GLOSSARY
+
+C  - Controller
+AC - AnimationController
+
 ## GetX Flutter Firebase Auth Example
 
 ![](https://cdn-images-1.medium.com/max/4776/1*OKSIgkZpss30GYT9TwQcJg.png)

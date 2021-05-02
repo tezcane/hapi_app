@@ -4,7 +4,6 @@ import 'package:hapi/constants/app_themes.dart';
 import 'package:hapi/controllers/menu_controller.dart';
 
 class Menu extends StatefulWidget {
-  final VoidCallback onPressed;
   final Widget foregroundPage; // where the app/navigation lives
   final Widget columnWidget; // right column/verticle menu bar
   final Widget bottomWidget; // bottom row/horizontal menu bar
@@ -19,15 +18,14 @@ class Menu extends StatefulWidget {
 
   const Menu({
     Key? key,
-    required this.onPressed,
     required this.foregroundPage,
     required this.columnWidget,
     required this.bottomWidget,
     this.buttonIcon = Icons.add,
     this.scaleWidth = 56,
     this.scaleHeight = 56, // * Globals.PHI,
-    this.slideAnimationDuration = const Duration(milliseconds: 800),
-    this.buttonAnimationDuration = const Duration(milliseconds: 1000),
+    this.slideAnimationDuration = const Duration(milliseconds: 600),
+    this.buttonAnimationDuration = const Duration(milliseconds: 650),
     this.openAnimationCurve = const ElasticOutCurve(0.9),
     this.closeAnimationCurve = const ElasticInCurve(0.9),
   })  : assert(scaleHeight >= 40),
@@ -39,15 +37,15 @@ class Menu extends StatefulWidget {
 
 class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   final MenuController c = Get.find();
-  AnimationController? _fabIconAnimationController;
+  late AnimationController _acFabIcon;
 
   @override
   void initState() {
-    _fabIconAnimationController = AnimationController(
+    _acFabIcon = AnimationController(
         vsync: this, duration: widget.buttonAnimationDuration);
 
     // Needed for fab button menu/close animation when menu_nav closes menu
-    c.initMenuButtonAnimatedController(_fabIconAnimationController!);
+    c.initACFabIcon(_acFabIcon);
 
     super.initState();
   }
@@ -55,9 +53,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   @override
   void dispose() {
     super.dispose();
-    if (_fabIconAnimationController != null) {
-      _fabIconAnimationController!.dispose();
-    }
+    _acFabIcon.dispose();
   }
 
   @override
@@ -82,8 +78,8 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
               IconButton(
                 // iconSize: 50,
                 icon: AnimatedIcon(
-                  icon: AnimatedIcons.menu_close,
-                  progress: _fabIconAnimationController!,
+                  icon: c.getFabAnimatedIcon(),
+                  progress: _acFabIcon,
                 ),
                 onPressed: () => _handleOnPressed(),
               ),
@@ -139,12 +135,22 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   }
 
   void _handleOnPressed() {
-    if (c.isMenuShowing()) {
-      c.hideMenu(); // just hit close on fab
+    if (c.isFabBackMode()) {
+      print('menu/fab is in back <- mode');
+      if (c.isMenuShowing()) {
+        c.hideMenu(); // TODO menu x here?
+      } else {
+        c.handleBackButtonHit();
+      }
     } else {
-      c.showMenu(); // just hit menu on fab
+      // menu open/close mode
+      print('menu open/close mode');
+      if (c.isMenuShowing()) {
+        c.hideMenu(); // just hit close on fab
+      } else {
+        c.showMenu(); // just hit menu on fab
+      }
     }
-    widget.onPressed.call(); // show/hide nav menu TODO move to controller?
   }
 }
 
@@ -204,6 +210,7 @@ class _SlideState extends State<SlideAnimation>
     super.initState();
   }
 
+  /// This is needed to move/slide the foregroundPage up/down
   @override
   void didUpdateWidget(SlideAnimation oldWidget) {
     widget.opened

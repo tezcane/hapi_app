@@ -1,50 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
-import 'package:hapi/constants/app_routes.dart';
 import 'package:hapi/controllers/menu_controller.dart';
 import 'package:hapi/ui/components/menu.dart';
 import 'package:hapi/ui/components/menu_nav.dart';
-import 'package:hapi/ui/quests_ui.dart';
 import 'package:share/share.dart';
 
+bool initNeeded = true;
+final MenuController c = Get.find();
+
 class HomeUI extends StatelessWidget {
-  // final MenuController c = Get.find();
-  final store = GetStorage();
-
-  int _navIdx = NavPage.QUESTS.index; // selects Quests by default
-  Widget foregroundPage = QuestsUI();
-  Widget columnWidget = Column(); // TODO
-  Widget bottomWidget = ShareHapi();
-
-  bool initNeeded = true;
-
   @override
   Widget build(BuildContext context) {
+    int navIdx = NavPage.QUESTS.index;
+
+    //TODO this is a hack but who cares:
     if (initNeeded) {
-      _navIdx = store.read('lastNavIdx') ?? _navIdx; //Quests
-      _navigateToPage(_navIdx); // set foreground to last opened page
-      initNeeded = false; //TODO this is a hack but who cares
+      navIdx = c.initForegroundPage(false);
+      initNeeded = false;
     }
 
     return GetBuilder<MenuController>(
       builder: (c) => Scaffold(
         body: MenuNav(
-          builder: (showMenu) {
+          builder: () {
+            //TODO anyway to put menu+menu_nav together without needing a builder?
             return Scaffold(
               body: Menu(
-                onPressed: showMenu,
                 foregroundPage: IgnorePointer(
                   ignoring: c.isMenuShowing(), // disable UI when menu showing
-                  child: foregroundPage, // Main page
+                  child: c.getForegroundPage(), // Main page
                 ),
-                columnWidget: columnWidget, // preferably Column
-                bottomWidget: bottomWidget, // preferably Row
+                columnWidget: Column(), // preferably Column
+                bottomWidget: ShareHapi(), // preferably Row
               ),
             );
           },
-          selectedIndexAtInit: _navIdx,
-          items: _kNavs
+          selectedIndexAtInit: navIdx,
+          items: kNavs
               .map(
                 (nav) => Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -78,38 +70,9 @@ class HomeUI extends StatelessWidget {
                 ),
               )
               .toList(),
-          onItemSelected: (value) {
-            if (_navIdx != value) {
-              _navIdx = value;
-              print('selected index changed to $_navIdx');
-              _navigateToPage(_navIdx);
-            } else {
-              print('navIdx selected index did not change, is $value');
-            }
-          },
         ),
       ),
     );
-  }
-
-  void _navigateToPage(int navIdx) {
-    if (navIdx > _kNavs.length - 1) {
-      print(
-          'ERROR: navIdx $navIdx, was greater than _kNavs.length ${_kNavs.length}');
-      navIdx = _kNavs.length - 2;
-    }
-
-    bool didNotFindPage = true;
-    for (GetPage getPage in AppRoutes.routes) {
-      if (getPage.name == _kNavs[navIdx].page) {
-        didNotFindPage = false;
-        print('Going to ${_kNavs[navIdx].page}');
-        foregroundPage = getPage.page(); // set the foreground in homepage
-        store.write('lastNavIdx', navIdx); // save so app restarts at this idx
-        break;
-      }
-    }
-    if (didNotFindPage) print('ERROR: page not found "${_kNavs[navIdx].page}"');
   }
 }
 
@@ -123,7 +86,10 @@ class ShareHapi extends StatelessWidget {
         Tooltip(
           message: 'Learn more about hapi and how to contribute',
           child: GestureDetector(
-            onTap: () => Get.toNamed('/about'),
+            onTap: () {
+              c.pushToPage('/about');
+              c.hideMenu();
+            },
             child: Row(
               children: <Widget>[
                 Image.asset(
@@ -201,7 +167,7 @@ enum NavPage {
   QUESTS,
 }
 
-const _kNavs = const [
+const kNavs = const [
 //Nav(label: 'Settings', page: '/setting', icon: Icons.settings_outlined),
   Nav(label: 'Tools', page: '/tool', icon: Icons.explore_outlined),
   Nav(label: 'Hadith', page: '/hadith', icon: Icons.menu_book_outlined),
@@ -211,6 +177,7 @@ const _kNavs = const [
   Nav(label: 'Quests', page: '/quest', icon: Icons.how_to_reg_outlined),
 ];
 
+/*
 // icons for later:
 const _dummy = const [
   //Moon/Star/Sun
@@ -401,3 +368,4 @@ const _dummy = const [
   Icon(Icons.close),
   Icon(Icons.close),
 ];
+*/
