@@ -8,7 +8,6 @@ class Menu extends StatefulWidget {
   final Widget columnWidget; // right column/verticle menu bar
   final Widget bottomWidget; // bottom row/horizontal menu bar
 
-  final IconData buttonIcon;
   final double scaleWidth;
   final double scaleHeight;
   final Duration slideAnimationDuration;
@@ -21,7 +20,6 @@ class Menu extends StatefulWidget {
     required this.foregroundPage,
     required this.columnWidget,
     required this.bottomWidget,
-    this.buttonIcon = Icons.add,
     this.scaleWidth = 56,
     this.scaleHeight = 56, // * Globals.PHI,
     this.slideAnimationDuration = const Duration(milliseconds: 600),
@@ -185,7 +183,6 @@ class SlideAnimation extends StatefulWidget {
 
 class _SlideState extends State<SlideAnimation>
     with SingleTickerProviderStateMixin {
-  final MenuController c = Get.find();
   late AnimationController _animationController;
   late Animation<Offset> offset;
 

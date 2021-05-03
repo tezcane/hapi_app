@@ -26,6 +26,7 @@ dependencies:
   url_launcher: ^6.0.3
   # end tarikh imports
 
+  flutter_gifimage: ^1.0.1 # TODO null-safety it
   firebase_core: ^1.0.3
   # firebase_analytics: ^7.1.1 no nullsafe... skip it for now
   firebase_auth: ^1.1.0
@@ -56,8 +57,9 @@ flutter:
   assets:
     - assets/images/
     - assets/images/logo/
+    - assets/images/logo/gif/
     - assets/tarikh/
-    - assets/tarikh/Articles/
+    - assets/tarikh/Articles/ # TODO need all these subdirs?
     - assets/tarikh/Big_Bang/
     - assets/tarikh/Milky Way/
     - assets/tarikh/Mammals/

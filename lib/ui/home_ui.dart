@@ -92,9 +92,12 @@ class ShareHapi extends StatelessWidget {
             },
             child: Row(
               children: <Widget>[
-                Image.asset(
-                  'assets/images/logo/logo.png',
-                  fit: BoxFit.contain,
+                Hero(
+                  tag: 'hapiLogo',
+                  child: Image.asset(
+                    'assets/images/logo/logo.png',
+                    fit: BoxFit.contain,
+                  ),
                 ),
                 IconButton(
                   onPressed: null,

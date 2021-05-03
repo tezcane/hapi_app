@@ -33,10 +33,13 @@ class AboutUI extends StatelessWidget {
             children: [
               Center(
                 // TODO cool animations here
-                child: Image.asset(
-                  'assets/images/logo/logo.png',
-                  width: 250,
-                  height: 250,
+                child: Hero(
+                  tag: 'hapiLogo',
+                  child: Image.asset(
+                    'assets/images/logo/logo.png',
+                    width: 250,
+                    height: 250,
+                  ),
                 ),
               ),
               RichText(

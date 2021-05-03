@@ -13,10 +13,13 @@ import 'package:hapi/ui/auth/sign_in_ui.dart';
 import 'package:hapi/ui/components/loading.dart';
 import 'package:hapi/ui/home_ui.dart';
 import 'package:hapi/ui/onboarding_ui.dart';
+import 'package:hapi/ui/splash_ui.dart';
 
 class AuthController extends GetxController {
   static AuthController to = Get.find();
   final OnboardingController onboardingController = OnboardingController.to;
+
+  Stopwatch splashTimer = Stopwatch();
 
   final store = GetStorage();
 
@@ -28,6 +31,27 @@ class AuthController extends GetxController {
   Rxn<User> firebaseUser = Rxn<User>();
   Rxn<UserModel> firestoreUser = Rxn<UserModel>();
   final RxBool admin = false.obs;
+
+  // SplashUI has gif timer is used to swap gif to png for hero animation
+  final RxBool _isGifAnimatingDone = false.obs;
+  bool isGifAnimatingDone() => _isGifAnimatingDone.value;
+  void setGifAnimatingDone() {
+    _isGifAnimatingDone.value = true;
+    update();
+  }
+
+  final RxBool _isSplashScreenDone = false.obs;
+  bool isSplashScreenDone() => _isSplashScreenDone.value;
+  void setSplashScreenToDone() {
+    _isSplashScreenDone.value = true;
+    update();
+  }
+
+  @override
+  void onInit() {
+    splashTimer.start();
+    super.onInit();
+  }
 
   @override
   void onReady() async {
@@ -87,7 +111,22 @@ class AuthController extends GetxController {
         Get.offAll(() => OnboardingUI());
       }
     } else {
-      Get.offAll(() => HomeUI());
+      splashTimer.stop();
+      int msLeftToShowSplash =
+          kSplashShowTimeMs - splashTimer.elapsedMilliseconds;
+      print('msLeftToShowSplash=$msLeftToShowSplash');
+      if (msLeftToShowSplash < 0) {
+        msLeftToShowSplash = 0;
+      }
+
+      Timer(Duration(milliseconds: msLeftToShowSplash), () {
+        setSplashScreenToDone(); // turns off Splash spinner
+        Get.off(
+          () => HomeUI(),
+          transition: Transition.fade,
+          duration: Duration(milliseconds: 2501), // slow hero hide logo
+        );
+      });
     }
   }
 

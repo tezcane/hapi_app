@@ -76,7 +76,8 @@ class MyApp extends StatelessWidget {
               // FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
             ],
             debugShowCheckedModeBanner: false,
-            //defaultTransition: Transition.fade, TODO play with this
+            defaultTransition: Transition.fade,
+            transitionDuration: const Duration(milliseconds: 1000), // TODO tune
             theme: AppThemes.lightTheme,
             darkTheme: AppThemes.darkTheme,
             themeMode: ThemeMode.system,
