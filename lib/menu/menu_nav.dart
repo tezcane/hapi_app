@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hapi/controllers/menu_controller.dart';
+import 'package:hapi/menu/menu_controller.dart';
 
 /// Menu animation total duration time, each item has total_duration/items.length
 const Duration navMenuShowHideMs = Duration(milliseconds: 600);

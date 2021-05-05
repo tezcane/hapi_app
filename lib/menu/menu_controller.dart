@@ -9,10 +9,27 @@ import 'package:hapi/tarikh/main_menu/tarikh_favorites_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_menu_ui.dart';
 import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
 import 'package:hapi/ui/about_ui.dart';
-import 'package:hapi/ui/components/menu_nav.dart';
+import 'package:hapi/menu/menu_nav.dart';
 import 'package:hapi/ui/quests_ui.dart';
 
 final MenuController cMenu = Get.find();
+
+class Nav {
+  const Nav({required this.np, required this.label, required this.icon});
+  final NavPage np;
+  final String label;
+  final IconData icon;
+}
+
+const kNavs = const [
+//Nav(page: '/setting', label: 'Settings', icon: Icons.settings_outlined),
+  Nav(np: NavPage.TOOLS, label: 'Tools', icon: Icons.explore_outlined),
+  Nav(np: NavPage.HADITH, label: 'Hadith', icon: Icons.menu_book_outlined),
+  Nav(np: NavPage.QURAN, label: 'Quran', icon: Icons.auto_stories),
+  Nav(np: NavPage.TARIKH, label: 'Tarikh', icon: Icons.history_edu_outlined),
+  Nav(np: NavPage.RELICS, label: 'Relics', icon: Icons.brightness_3_outlined),
+  Nav(np: NavPage.QUESTS, label: 'Quests', icon: Icons.how_to_reg_outlined),
+];
 
 // must keep in sync with _kNavs
 enum NavPage {

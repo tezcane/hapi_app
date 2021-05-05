@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:hapi/controllers/menu_controller.dart';
+import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/controllers/onboarding_controller.dart';
 import 'package:hapi/helpers/gravatar.dart';
 import 'package:hapi/models/user_model.dart';

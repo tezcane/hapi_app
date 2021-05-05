@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/constants/app_themes.dart';
 import 'package:hapi/controllers/auth_controller.dart';
-import 'package:hapi/controllers/menu_controller.dart';
 import 'package:hapi/controllers/quest_controller.dart';
 import 'package:hapi/services/database.dart';
 import 'package:hapi/ui/components/quest_card.dart';
-import 'package:hapi/ui/home_ui.dart';
+import 'package:hapi/menu/fab_nav_page.dart';
+import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/ui/settings_ui.dart';
 
 class QuestsUI extends StatelessWidget {
@@ -14,7 +14,7 @@ class QuestsUI extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HomeUI(
+    return FabNavPage(
       navIdx: NavPage.QUESTS.index,
       columnWidget: Column(),
       bottomWidget: HapiShare(),

@@ -9,10 +9,10 @@ import 'package:hapi/constants/app_routes.dart';
 import 'package:hapi/constants/app_themes.dart';
 import 'package:hapi/controllers/auth_controller.dart';
 import 'package:hapi/controllers/language_controller.dart';
-import 'package:hapi/controllers/menu_controller.dart';
 import 'package:hapi/controllers/onboarding_controller.dart';
 import 'package:hapi/controllers/theme_controller.dart';
 import 'package:hapi/helpers/localization.g.dart';
+import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/tarikh/blocs/bloc_provider.dart';
 import 'package:hapi/ui/components/loading.dart';
 

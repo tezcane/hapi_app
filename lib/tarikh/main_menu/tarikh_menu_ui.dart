@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:hapi/controllers/menu_controller.dart';
+import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/tarikh/blocs/bloc_provider.dart';
 import 'package:hapi/tarikh/main_menu/collapsible.dart';
 
@@ -16,7 +16,7 @@ import 'package:hapi/tarikh/search_manager.dart';
 import 'package:hapi/tarikh/colors.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
-import 'package:hapi/ui/home_ui.dart';
+import 'package:hapi/menu/fab_nav_page.dart';
 
 /// The Main Page of the Timeline App.
 ///
@@ -223,10 +223,11 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
     /// A [SingleChildScrollView] is used to create a scrollable view for the main menu.
     /// This will contain a [Column] with a [Collapsible] header on top, and a [tail]
     /// that's built according with the state of this widget.
-    return HomeUI(
+    return FabNavPage(
         navIdx: NavPage.TARIKH.index,
         columnWidget: Column(),
         bottomWidget: HapiShare(),
+        // TODO move to FabNavPage?:
         foregroundPage: WillPopScope(
           onWillPop: _popSearch,
           child: Container(

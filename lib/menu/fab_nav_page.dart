@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/controllers/menu_controller.dart';
-import 'package:hapi/ui/components/menu.dart';
-import 'package:hapi/ui/components/menu_nav.dart';
+import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/menu/menu_slide.dart';
+import 'package:hapi/menu/menu_nav.dart';
 import 'package:share/share.dart';
 
-class HomeUI extends StatelessWidget {
-  const HomeUI({
+class FabNavPage extends StatelessWidget {
+  const FabNavPage({
     Key? key,
     required this.navIdx,
     required this.columnWidget,
@@ -169,23 +169,6 @@ class HapiShare extends StatelessWidget {
     );
   }
 }
-
-class Nav {
-  const Nav({required this.np, required this.label, required this.icon});
-  final NavPage np;
-  final String label;
-  final IconData icon;
-}
-
-const kNavs = const [
-//Nav(page: '/setting', label: 'Settings', icon: Icons.settings_outlined),
-  Nav(np: NavPage.TOOLS, label: 'Tools', icon: Icons.explore_outlined),
-  Nav(np: NavPage.HADITH, label: 'Hadith', icon: Icons.menu_book_outlined),
-  Nav(np: NavPage.QURAN, label: 'Quran', icon: Icons.auto_stories),
-  Nav(np: NavPage.TARIKH, label: 'Tarikh', icon: Icons.history_edu_outlined),
-  Nav(np: NavPage.RELICS, label: 'Relics', icon: Icons.brightness_3_outlined),
-  Nav(np: NavPage.QUESTS, label: 'Quests', icon: Icons.how_to_reg_outlined),
-];
 
 /*
 // icons for later:

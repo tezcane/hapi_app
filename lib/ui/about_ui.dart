@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hapi/constants/app_themes.dart';
-import 'package:hapi/ui/components/menu.dart';
+import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// This widget is visible when opening the about page from the [MainMenuWidget].
