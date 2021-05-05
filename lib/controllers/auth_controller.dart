@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:hapi/controllers/menu_controller.dart';
 import 'package:hapi/controllers/onboarding_controller.dart';
 import 'package:hapi/helpers/gravatar.dart';
 import 'package:hapi/models/user_model.dart';
 import 'package:hapi/ui/auth/sign_in_ui.dart';
 import 'package:hapi/ui/components/loading.dart';
-import 'package:hapi/ui/home_ui.dart';
 import 'package:hapi/ui/onboarding_ui.dart';
 import 'package:hapi/ui/splash_ui.dart';
 
@@ -104,28 +104,21 @@ class AuthController extends GetxController {
 
     if (_firebaseUser == null) {
       if (onboardingController.isOnboarded()) {
-        print('Send to signin');
         Get.offAll(() => SignInUI());
       } else {
-        print('Send to onboarding');
         Get.offAll(() => OnboardingUI());
       }
     } else {
       splashTimer.stop();
       int msLeftToShowSplash =
           kSplashShowTimeMs - splashTimer.elapsedMilliseconds;
-      print('msLeftToShowSplash=$msLeftToShowSplash');
-      if (msLeftToShowSplash < 0) {
+      if (cMenu.isFastStartupMode() || msLeftToShowSplash < 0) {
         msLeftToShowSplash = 0;
       }
 
       Timer(Duration(milliseconds: msLeftToShowSplash), () {
-        setSplashScreenToDone(); // turns off Splash spinner
-        Get.off(
-          () => HomeUI(),
-          transition: Transition.fade,
-          duration: Duration(milliseconds: 2501), // slow hero hide logo
-        );
+        setSplashScreenToDone(); // turns off Splash spinner so not in hero fade
+        cMenu.initAppsFirstPage();
       });
     }
   }
@@ -242,7 +235,7 @@ class AuthController extends GetxController {
       print(error.code);
       String authError;
       switch (error.code) {
-        case 'ERROR_WRONG_PASSWORD':
+        case 'ERROR_WRONG_PASSWORD': // TODO other codes here
           authError = 'auth.wrongPasswordNotice'.tr;
           break;
         default:

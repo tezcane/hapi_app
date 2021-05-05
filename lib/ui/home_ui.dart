@@ -5,93 +5,110 @@ import 'package:hapi/ui/components/menu.dart';
 import 'package:hapi/ui/components/menu_nav.dart';
 import 'package:share/share.dart';
 
-bool initNeeded = true;
-final MenuController c = Get.find();
-
 class HomeUI extends StatelessWidget {
+  const HomeUI({
+    Key? key,
+    required this.navIdx,
+    required this.columnWidget,
+    required this.bottomWidget,
+    required this.foregroundPage,
+  }) : super(key: key);
+
+  final int navIdx;
+  final Widget columnWidget;
+  final Widget bottomWidget;
+  final Widget foregroundPage;
+
   @override
   Widget build(BuildContext context) {
-    int navIdx = NavPage.QUESTS.index;
-
-    //TODO this is a hack but who cares:
-    if (initNeeded) {
-      navIdx = c.initForegroundPage(false);
-      initNeeded = false;
-    }
-
     return GetBuilder<MenuController>(
-      builder: (c) => Scaffold(
-        body: MenuNav(
-          builder: () {
-            //TODO anyway to put menu+menu_nav together without needing a builder?
-            return Scaffold(
-              body: Menu(
-                foregroundPage: IgnorePointer(
-                  ignoring: c.isMenuShowing(), // disable UI when menu showing
-                  child: c.getForegroundPage(), // Main page
+      builder: (c) => IgnorePointer(
+        ignoring: c.isScreenDisabled(),
+        child: Scaffold(
+          body: MenuNav(
+            builder: () {
+              //TODO anyway to put menu+menu_nav together without needing a builder?
+              return Scaffold(
+                body: MenuSlide(
+                  foregroundPage: IgnorePointer(
+                    ignoring: c.isMenuShowing(), // disable UI when menu showing
+                    child: foregroundPage, // Main page
+                  ),
+                  columnWidget: columnWidget, // preferably Column
+                  bottomWidget: bottomWidget, // preferably Row
                 ),
-                columnWidget: Column(), // preferably Column
-                bottomWidget: ShareHapi(), // preferably Row
-              ),
-            );
-          },
-          selectedIndexAtInit: navIdx,
-          items: kNavs
-              .map(
-                (nav) => Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Stack(
-                      children: [
-                        if (nav.page != '/relic')
-                          Icon(nav.icon, color: Colors.white, size: 36), //THEME
-                        if (nav.page != '/relic')
-                          Icon(Icons.star, color: Colors.orange, size: 18),
-                        if (nav.page == '/relic')
-                          Transform.rotate(
-                            angle: 2.8,
-                            child:
-                                Icon(nav.icon, color: Colors.white, size: 36),
-                          ),
-                        if (nav.page == '/relic')
-                          Positioned(
-                            top: 4.7, left: 20.0, // right: 0.0, bottom: 0.0,
-                            child: Transform.rotate(
-                              angle: .59,
-                              child: Icon(Icons.star,
-                                  color: Colors.orange, size: 18),
+              );
+            },
+            selectedIndexAtInit: navIdx,
+            items: kNavs
+                .map(
+                  (nav) => Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Stack(
+                        children: [
+                          if (nav.np != NavPage.RELICS)
+                            Icon(nav.icon,
+                                color: Colors.white, size: 36), //THEME
+                          if (nav.np != NavPage.RELICS)
+                            Icon(Icons.star, color: Colors.orange, size: 18),
+
+                          if (nav.np == NavPage.RELICS)
+                            Transform.rotate(
+                              angle: 2.8,
+                              child:
+                                  Icon(nav.icon, color: Colors.white, size: 36),
                             ),
-                          ),
-                      ],
-                    ),
-                    Text(nav.label), //THEME
-                  ],
-                ),
-              )
-              .toList(),
+                          if (nav.np == NavPage.RELICS)
+                            Positioned(
+                              top: 4.7, left: 20.0, // right: 0.0, bottom: 0.0,
+                              child: Transform.rotate(
+                                angle: .59,
+                                child: Icon(Icons.star,
+                                    color: Colors.orange, size: 18),
+                              ),
+                            ),
+                        ],
+                      ),
+                      Text(nav.label), //THEME
+                    ],
+                  ),
+                )
+                .toList(),
+          ),
         ),
       ),
     );
   }
 }
 
-class ShareHapi extends StatelessWidget {
+class HapiShare extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    const double widthSpacer = 29.0;
     return Row(
       children: [
-        SizedBox(width: widthSpacer),
+        SizedBox(width: 10.0),
         Tooltip(
           message: 'Learn more about hapi and how to contribute',
           child: GestureDetector(
             onTap: () {
-              c.pushToPage('/about');
-              c.hideMenu();
+              cMenu.pushSubPage(SubPage.ABOUT);
+              cMenu.hideMenu();
             },
             child: Row(
               children: <Widget>[
+                TextButton(
+                  onPressed: null,
+                  child: Text(
+                    'About',
+                    style: TextStyle(
+                      //fontSize: 20.0,
+                      fontFamily: 'RobotoMedium',
+                      color: Colors.white.withOpacity(0.65),
+                    ),
+                  ),
+                ),
                 Hero(
                   tag: 'hapiLogo',
                   child: Image.asset(
@@ -99,20 +116,20 @@ class ShareHapi extends StatelessWidget {
                     fit: BoxFit.contain,
                   ),
                 ),
-                IconButton(
-                  onPressed: null,
-                  padding: const EdgeInsets.all(0.0), // to center
-                  icon: const Icon(
-                    Icons.info_outline,
-                    color: Colors.white,
-                    size: 36,
-                  ),
-                ),
+                // IconButton(
+                //   onPressed: null,
+                //   padding: const EdgeInsets.all(0.0), // to center
+                //   icon: const Icon(
+                //     Icons.info_outline,
+                //     color: Colors.white,
+                //     size: 36,
+                //   ),
+                // ),
               ],
             ),
           ),
         ),
-        SizedBox(width: widthSpacer),
+        SizedBox(width: 20.0),
         Tooltip(
           message:
               'Share hapi with Muslims and earn mountains of good deeds from their actions too!',
@@ -129,7 +146,7 @@ class ShareHapi extends StatelessWidget {
                   child: Text(
                     'Share',
                     style: TextStyle(
-                      fontSize: 20.0,
+                      //fontSize: 20.0,
                       fontFamily: 'RobotoMedium',
                       color: Colors.white.withOpacity(0.65),
                     ),
@@ -141,7 +158,7 @@ class ShareHapi extends StatelessWidget {
                   icon: const Icon(
                     Icons.share_outlined,
                     color: Colors.white,
-                    size: 36,
+                    size: 25,
                   ),
                 ),
               ],
@@ -154,30 +171,20 @@ class ShareHapi extends StatelessWidget {
 }
 
 class Nav {
-  const Nav({required this.label, required this.page, required this.icon});
+  const Nav({required this.np, required this.label, required this.icon});
+  final NavPage np;
   final String label;
-  final String page;
   final IconData icon;
 }
 
-// must keep in sync with _kNavs
-enum NavPage {
-  TOOLS,
-  HADITH,
-  QURAN,
-  TARIKH,
-  RELICS,
-  QUESTS,
-}
-
 const kNavs = const [
-//Nav(label: 'Settings', page: '/setting', icon: Icons.settings_outlined),
-  Nav(label: 'Tools', page: '/tool', icon: Icons.explore_outlined),
-  Nav(label: 'Hadith', page: '/hadith', icon: Icons.menu_book_outlined),
-  Nav(label: 'Quran', page: '/quran', icon: Icons.auto_stories),
-  Nav(label: 'Tarikh', page: '/tarikh', icon: Icons.history_edu_outlined),
-  Nav(label: 'Relics', page: '/relic', icon: Icons.brightness_3_outlined),
-  Nav(label: 'Quests', page: '/quest', icon: Icons.how_to_reg_outlined),
+//Nav(page: '/setting', label: 'Settings', icon: Icons.settings_outlined),
+  Nav(np: NavPage.TOOLS, label: 'Tools', icon: Icons.explore_outlined),
+  Nav(np: NavPage.HADITH, label: 'Hadith', icon: Icons.menu_book_outlined),
+  Nav(np: NavPage.QURAN, label: 'Quran', icon: Icons.auto_stories),
+  Nav(np: NavPage.TARIKH, label: 'Tarikh', icon: Icons.history_edu_outlined),
+  Nav(np: NavPage.RELICS, label: 'Relics', icon: Icons.brightness_3_outlined),
+  Nav(np: NavPage.QUESTS, label: 'Quests', icon: Icons.how_to_reg_outlined),
 ];
 
 /*

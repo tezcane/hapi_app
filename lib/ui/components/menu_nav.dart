@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:hapi/controllers/menu_controller.dart';
 
-final MenuController c = Get.find();
+/// Menu animation total duration time, each item has total_duration/items.length
+const Duration navMenuShowHideMs = Duration(milliseconds: 600);
 
 /// Signature for creating widget to open/close Side Menu.
 typedef SideMenuAnimationBuilder = Widget Function();
@@ -15,9 +15,6 @@ const _kEdgeDragWidth = 20.0;
 
 /// Menu width for the Side Menu.
 const double _kSideMenuWidth = 88.0;
-
-/// Menu animation total duration time, each item has total_duration/items.length
-const Duration _kDuration = Duration(milliseconds: 600);
 
 /// [Curve] used for the animation
 const Curve _kCurveAnimation = Curves.linear;
@@ -56,9 +53,9 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
     _selectedIndex = widget.selectedIndexAtInit;
     _acNavMenu = AnimationController(
       vsync: this,
-      duration: _kDuration,
+      duration: navMenuShowHideMs,
     );
-    c.initACNavMenu(_acNavMenu);
+    cMenu.initACNavMenu(_acNavMenu);
     _acNavMenu.forward(from: 1.0); // needed to hide at init
 
     super.initState();
@@ -66,15 +63,15 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
 
   @override
   void dispose() {
-    _acNavMenu.dispose(); // TODO needed?
+    _acNavMenu.dispose();
     super.dispose();
   }
 
   void _displayMenuDragGesture(DragEndDetails endDetails) {
-    if (!c.isMenuShowing()) {
+    if (!cMenu.isMenuShowing()) {
       final velocity = endDetails.primaryVelocity!;
       if (velocity < 0) {
-        c.showMenu();
+        cMenu.showMenu();
       }
     }
   }
@@ -115,12 +112,12 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
                     children: [
                       /// dismiss the Menu when user taps outside the widget.
                       if (_acNavMenu.value < 1 &&
-                          c.isMenuShowing() &&
-                          c.isMenuShowingNav())
+                          cMenu.isMenuShowing() &&
+                          cMenu.isMenuShowingNav())
                         Align(
                           child: GestureDetector(
-                            onTap: () => c.hideMenu(),
-                            onLongPress: () => c.hideMenu(),
+                            onTap: () => cMenu.hideMenu(),
+                            onLongPress: () => cMenu.hideMenu(),
                           ),
                         ),
 
@@ -151,18 +148,18 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
                               : _kButtonColorUnselected,
                           onTap: () {
                             if (i == _selectedIndex) {
-                              if (c.isAboutPageShowing()) {
-                                c.hideMenu(); // selected new nav page
-                                c.navigateToNavPage(_selectedIndex, true);
-                              } else {
-                                c.hideMenuNav(); // TODO show settings!
-                              }
+                              // if (cMenu.isAboutPageShowing()) {
+                              //   cMenu.hideMenu(); // selected new nav page
+                              //   cMenu.navigateToNavPage(_selectedIndex);
+                              // } else {
+                              cMenu.hideMenuNav(); // TODO show settings!
+                              // }
                             } else {
                               setState(() {
                                 // TODO needed?
                                 _selectedIndex = i;
-                                c.hideMenu(); // selected new nav page
-                                c.navigateToNavPage(_selectedIndex, true);
+                                cMenu.hideMenu(); // selected new nav page
+                                cMenu.navigateToNavPage(_selectedIndex);
                               });
                             }
                           },

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:hapi/controllers/menu_controller.dart';
 import 'package:hapi/tarikh/blocs/bloc_provider.dart';
 import 'package:hapi/tarikh/main_menu/collapsible.dart';
 
@@ -15,6 +16,7 @@ import 'package:hapi/tarikh/search_manager.dart';
 import 'package:hapi/tarikh/colors.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
+import 'package:hapi/ui/home_ui.dart';
 
 /// The Main Page of the Timeline App.
 ///
@@ -221,38 +223,43 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
     /// A [SingleChildScrollView] is used to create a scrollable view for the main menu.
     /// This will contain a [Column] with a [Collapsible] header on top, and a [tail]
     /// that's built according with the state of this widget.
-    return WillPopScope(
-      onWillPop: _popSearch,
-      child: Container(
-          color: background,
-          child: Padding(
-            padding: EdgeInsets.only(top: devicePadding.top),
-            child: SingleChildScrollView(
-                padding:
-                    EdgeInsets.only(top: 20.0, left: 20, right: 20, bottom: 20),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                          Collapsible(
-                              isCollapsed: _isSearching,
-                              child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: <Widget>[
-                                    Text('Tarikh',
-                                        textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                            color: darkText.withOpacity(
-                                                darkText.opacity * 0.75),
-                                            fontSize: 34.0,
-                                            fontFamily: 'RobotoMedium'))
-                                  ])),
-                          Padding(
-                              padding: EdgeInsets.only(top: 22.0),
-                              child: SearchWidget(
-                                  _searchFocusNode, _searchTextController))
-                        ] +
-                        tail)),
-          )),
-    );
+    return HomeUI(
+        navIdx: NavPage.TARIKH.index,
+        columnWidget: Column(),
+        bottomWidget: HapiShare(),
+        foregroundPage: WillPopScope(
+          onWillPop: _popSearch,
+          child: Container(
+              color: background,
+              child: Padding(
+                padding: EdgeInsets.only(top: devicePadding.top),
+                child: SingleChildScrollView(
+                    padding: EdgeInsets.only(
+                        top: 20.0, left: 20, right: 20, bottom: 20),
+                    child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                              Collapsible(
+                                  isCollapsed: _isSearching,
+                                  child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        Text('Tarikh',
+                                            textAlign: TextAlign.left,
+                                            style: TextStyle(
+                                                color: darkText.withOpacity(
+                                                    darkText.opacity * 0.75),
+                                                fontSize: 34.0,
+                                                fontFamily: 'RobotoMedium'))
+                                      ])),
+                              Padding(
+                                  padding: EdgeInsets.only(top: 22.0),
+                                  child: SearchWidget(
+                                      _searchFocusNode, _searchTextController))
+                            ] +
+                            tail)),
+              )),
+        ));
   }
 }

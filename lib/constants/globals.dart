@@ -1,3 +1,4 @@
+import 'package:get_storage/get_storage.dart';
 import 'package:hapi/models/menu_option_model.dart';
 
 class Globals {
@@ -22,3 +23,5 @@ class Globals {
 
   static const PHI = 1.618033; // GOLDEN RATIO
 }
+
+final GetStorage s = GetStorage(); // TODO have others use this too

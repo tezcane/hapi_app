@@ -1,7 +1,11 @@
 ## CODE GLOSSARY
 
-C  - Controller
 AC - AnimationController
+C  - Controller
+idx - Index
+msg - message
+np - NavPage
+s - storage/Get Storage
 
 ## GetX Flutter Firebase Auth Example
 

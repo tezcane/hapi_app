@@ -5,9 +5,10 @@ import 'package:flutter_gifimage/flutter_gifimage.dart';
 import 'package:get/get.dart';
 import 'package:hapi/controllers/auth_controller.dart';
 
-const int kGifAnimationMs = 1801; //1350; // TODO tune
-const int kSplashShowTimeMs = 4001; //2350;
-const int kLoadingBarShowMs = 3001; // bar will not show up until this time
+// NOTE YOU CAN SKIP THIS WITH isFastStartupMode in MenuController:
+const int kGifAnimationMs = 1501; // time it takes to play animated gif
+const int kSplashShowTimeMs = 3001; // time to show splash screen
+const int kLoadingBarShowMs = 5001; // loading bar won't show until after this
 const int kLoadingBarUpdateMs = 201; // time used to grow/shrink the loading bar
 
 /// splash page gets popped off navigator once app init done in auth controller
@@ -58,13 +59,9 @@ class _SplashUIState extends State<SplashUI> with TickerProviderStateMixin {
   void setupAnimationPlayAndWaitTimer(double gifFrames) {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       // controller1repeat(min: 0, max: 30, period: Duration(milliseconds: 2000)); // how to repeat
-      Stopwatch animationTime = Stopwatch();
-      animationTime.start();
       cGif.animateTo(gifFrames,
           duration: Duration(milliseconds: kGifAnimationMs));
-      animationTime.stop();
-
-      Timer(Duration(milliseconds: kGifAnimationMs),
+      Timer(Duration(milliseconds: kGifAnimationMs + 81),
           () => c.setGifAnimatingDone());
     });
   }
@@ -83,6 +80,11 @@ class _SplashUIState extends State<SplashUI> with TickerProviderStateMixin {
 
   // After updateTimeMs time, refresh the loading bar.
   void updateLoadingMsg(int updateTimeMs, bool isBarGrowing) {
+    if (c.isSplashScreenDone()) {
+      _loadingBar = ''; // hide loading bar so hero/init navigation is cleaner
+      return;
+    }
+
     _loadingBarTimer = Timer(
       Duration(milliseconds: updateTimeMs),
       () => setState(() {
@@ -106,6 +108,7 @@ class _SplashUIState extends State<SplashUI> with TickerProviderStateMixin {
           _loadingBar = '__';
         }
 
+        // show next loading animation/text update
         updateLoadingMsg(kLoadingBarUpdateMs, isBarGrowing);
       }),
     );
@@ -118,31 +121,42 @@ class _SplashUIState extends State<SplashUI> with TickerProviderStateMixin {
       body: Center(
         child: GetBuilder<AuthController>(
           builder: (c) => Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                if (!c.isGifAnimatingDone())
-                  GifImage(
-                    controller: cGif,
-                    image:
-                        AssetImage("assets/images/logo/gif/$gifFilename.gif"),
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(height: 20),
+              if (!c.isGifAnimatingDone())
+                GifImage(
+                  controller: cGif,
+                  image: AssetImage("assets/images/logo/gif/$gifFilename.gif"),
+                  width: 250,
+                  height: 250,
+                ),
+              if (c.isGifAnimatingDone())
+                Hero(
+                  tag: 'hapiLogo',
+                  child: Image.asset(
+                    'assets/images/logo/logo.png',
                     width: 250,
                     height: 250,
                   ),
-                if (c.isGifAnimatingDone())
-                  Hero(
-                    tag: 'hapiLogo',
-                    child: Image.asset(
-                      'assets/images/logo/logo.png',
-                      width: 250,
-                      height: 250,
-                    ),
-                  ),
-                if (!c.isSplashScreenDone())
-                  Text(
-                    _loadingBar,
-                    style: TextStyle(fontSize: 40.0),
-                  ),
-              ]),
+                ),
+              SizedBox(height: 20),
+              Text(
+                'بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ',
+                style: TextStyle(fontSize: 15.0),
+              ),
+              SizedBox(height: 20),
+              Text(
+                'ٱلسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ ٱللَّٰ وَبَرَكَاتُهُ',
+                style: TextStyle(fontSize: 15.0),
+              ),
+              SizedBox(height: 20),
+              Text(
+                _loadingBar,
+                style: TextStyle(fontSize: 30.0),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:hapi/constants/app_themes.dart';
 import 'package:hapi/controllers/menu_controller.dart';
 
-class Menu extends StatefulWidget {
+class MenuSlide extends StatefulWidget {
   final Widget foregroundPage; // where the app/navigation lives
   final Widget columnWidget; // right column/verticle menu bar
   final Widget bottomWidget; // bottom row/horizontal menu bar
@@ -15,7 +15,7 @@ class Menu extends StatefulWidget {
   final Curve openAnimationCurve;
   final Curve closeAnimationCurve;
 
-  const Menu({
+  const MenuSlide({
     Key? key,
     required this.foregroundPage,
     required this.columnWidget,
@@ -30,11 +30,11 @@ class Menu extends StatefulWidget {
         super(key: key);
 
   @override
-  _MenuState createState() => _MenuState();
+  _MenuSlideState createState() => _MenuSlideState();
 }
 
-class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
-  final MenuController c = Get.find();
+class _MenuSlideState extends State<MenuSlide>
+    with SingleTickerProviderStateMixin {
   late AnimationController _acFabIcon;
 
   @override
@@ -43,15 +43,15 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
         vsync: this, duration: widget.buttonAnimationDuration);
 
     // Needed for fab button menu/close animation when menu_nav closes menu
-    c.initACFabIcon(_acFabIcon);
+    cMenu.initACFabIcon(_acFabIcon);
 
     super.initState();
   }
 
   @override
   void dispose() {
-    super.dispose();
     _acFabIcon.dispose();
+    super.dispose(); // must do this last!
   }
 
   @override
@@ -76,7 +76,7 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
               IconButton(
                 // iconSize: 50,
                 icon: AnimatedIcon(
-                  icon: c.getFabAnimatedIcon(),
+                  icon: AnimatedIcons.menu_close, //cMenu.getFabAnimatedIcon(),
                   progress: _acFabIcon,
                 ),
                 onPressed: () => _handleOnPressed(),
@@ -133,22 +133,22 @@ class _MenuState extends State<Menu> with SingleTickerProviderStateMixin {
   }
 
   void _handleOnPressed() {
-    if (c.isFabBackMode()) {
-      print('menu/fab is in back <- mode');
-      if (c.isMenuShowing()) {
-        c.hideMenu(); // TODO menu x here?
-      } else {
-        c.handleBackButtonHit();
-      }
+    // if (cMenu.isFabBackMode()) {
+    //   print('menu/fab is in back <- mode');
+    //   if (cMenu.isMenuShowing()) {
+    //     cMenu.hideMenu(); // TODO menu x here?
+    //   } else {
+    //     cMenu.handleBackButtonHit();
+    //   }
+    // } else {
+    // menu open/close mode
+    // print('menu open/close mode');
+    if (cMenu.isMenuShowing()) {
+      cMenu.hideMenu(); // just hit close on fab
     } else {
-      // menu open/close mode
-      print('menu open/close mode');
-      if (c.isMenuShowing()) {
-        c.hideMenu(); // just hit close on fab
-      } else {
-        c.showMenu(); // just hit menu on fab
-      }
+      cMenu.showMenu(); // just hit menu on fab
     }
+    // }
   }
 }
 
@@ -226,5 +226,31 @@ class _SlideState extends State<SlideAnimation>
   void dispose() {
     _animationController.dispose();
     super.dispose();
+  }
+}
+
+class FabSubPage extends StatelessWidget {
+  final Widget child;
+  const FabSubPage({Key? key, required this.child}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: null,
+        child: Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              IconButton(
+                // iconSize: 50,
+                icon: Icon(Icons.arrow_back),
+                onPressed: () => cMenu.handleBackButtonHit(),
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: child,
+    );
   }
 }

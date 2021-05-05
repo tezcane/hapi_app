@@ -8,7 +8,6 @@ import 'package:hapi/ui/auth/reset_password_ui.dart';
 import 'package:hapi/ui/auth/sign_in_ui.dart';
 import 'package:hapi/ui/auth/sign_up_ui.dart';
 import 'package:hapi/ui/auth/update_profile_ui.dart';
-import 'package:hapi/ui/home_ui.dart';
 import 'package:hapi/ui/onboarding_ui.dart';
 import 'package:hapi/ui/settings_ui.dart';
 import 'package:hapi/ui/splash_ui.dart';
@@ -23,15 +22,14 @@ class AppRoutes {
     GetPage(name: '/onboard', page: () => OnboardingUI()),
     GetPage(name: '/signin', page: () => SignInUI()),
     GetPage(name: '/signup', page: () => SignUpUI()),
-    GetPage(name: '/home', page: () => HomeUI()),
-    GetPage(name: '/about', page: () => AboutUI()),
     GetPage(name: '/quest', page: () => QuestsUI()),
-    GetPage(name: '/setting', page: () => SettingsUI()),
-    GetPage(name: '/reset-pw', page: () => ResetPasswordUI()),
-    GetPage(name: '/update-profile', page: () => UpdateProfileUI()),
     GetPage(name: '/tarikh', page: () => TarikhMenuUI()),
     GetPage(name: '/tarikh/favorite', page: () => TarikhFavoritesUI()),
     GetPage(name: '/tarikh/article', page: () => TarikhArticleUI()),
     GetPage(name: '/tarikh/timeline', page: () => TarikhTimelineUI()),
+    GetPage(name: '/setting', page: () => SettingsUI()),
+    GetPage(name: '/setting/reset-pw', page: () => ResetPasswordUI()),
+    GetPage(name: '/setting/update-profile', page: () => UpdateProfileUI()),
+    GetPage(name: '/about', page: () => AboutUI()),
   ];
 }
