@@ -13,7 +13,7 @@ import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 /// This widget will paint the article page.
 /// It stores a reference to the [TimelineEntry] that contains the relevant information.
 class TarikhArticleUI extends StatefulWidget {
-  TimelineEntry? article;
+  late final TimelineEntry article;
 
   TarikhArticleUI() {
     article = Get.arguments['article'];
@@ -98,11 +98,11 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
       blockquotePadding: EdgeInsets.all(20.0),
     );
     setState(() {
-      _title = widget.article!.label!;
-      _subTitle = widget.article!.formatYearsAgo();
+      _title = widget.article.label!;
+      _subTitle = widget.article.formatYearsAgo();
       _articleMarkdown = "";
-      if (widget.article!.articleFilename != null) {
-        loadMarkdown(widget.article!.articleFilename!);
+      if (widget.article.articleFilename != null) {
+        loadMarkdown(widget.article.articleFilename!);
       }
     });
   }
@@ -138,20 +138,20 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
               Column(
                 children: <Widget>[
                   Container(height: devicePadding.top),
-                  Container(
-                    height: 56.0,
-                    width: double.infinity,
-                    child: IconButton(
-                      alignment: Alignment.centerLeft,
-                      icon: Icon(Icons.arrow_back),
-                      padding: EdgeInsets.only(left: 20.0, right: 20.0),
-                      color: Colors.black.withOpacity(0.5),
-                      onPressed: () {
-                        //Navigator.pop(context, true);
-                        Get.back();
-                      },
-                    ),
-                  ),
+                  // Container(
+                  //   height: 56.0,
+                  //   width: double.infinity,
+                  //   child: IconButton(
+                  //     alignment: Alignment.centerLeft,
+                  //     icon: Icon(Icons.arrow_back),
+                  //     padding: EdgeInsets.only(left: 20.0, right: 20.0),
+                  //     color: Colors.black.withOpacity(0.5),
+                  //     onPressed: () {
+                  //       //Navigator.pop(context, true);
+                  //       Get.back();
+                  //     },
+                  //   ),
+                  // ),
                   Expanded(
                     child: SingleChildScrollView(
                       padding: EdgeInsets.only(left: 20, right: 20, bottom: 30),
@@ -178,7 +178,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                                   height: 280,
                                   child: TimelineEntryWidget(
                                       isActive: true,
-                                      timelineEntry: widget.article!,
+                                      timelineEntry: widget.article,
                                       interactOffset: _interactOffset))),
                           Padding(
                             padding: EdgeInsets.only(top: 30.0),
@@ -237,13 +237,13 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                                     });
                                     if (_isFavorite) {
                                       BlocProvider.favorites(context)
-                                          .addFavorite(widget.article!);
+                                          .addFavorite(widget.article);
                                     } else {
                                       BlocProvider.favorites(context)
-                                          .removeFavorite(widget.article!);
+                                          .removeFavorite(widget.article);
                                     }
                                   },
-                                )
+                                ),
                               ],
                             ),
                           ),

@@ -268,7 +268,7 @@ class Timeline {
     for (dynamic entry in jsonEntries) {
       Map map = entry as Map;
 
-      /// Sanity check.
+      /// Sanity check. // TODO null check prob not needed
       if (map != null) {
         /// Create the current entry and fill in the current date if it's
         /// an `Incident`, or look for the `start` property if it's an `Era` instead.

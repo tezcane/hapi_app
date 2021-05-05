@@ -1,7 +1,6 @@
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/tarikh/blocs/bloc_provider.dart';
@@ -56,34 +55,34 @@ class TarikhFavoritesUI extends StatelessWidget {
     /// Check it out at: https://www.2dimensions.com/a/pollux/files/flare/broken-heart/preview
     return FabSubPage(
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: lightGrey,
-          iconTheme: IconThemeData(
-            color: Colors.black.withOpacity(0.54),
-          ),
-          elevation: 0.0,
-          centerTitle: false,
-          leading: IconButton(
-            alignment: Alignment.centerLeft,
-            icon: Icon(Icons.arrow_back),
-            padding: EdgeInsets.only(left: 20.0, right: 20.0),
-            color: Colors.black.withOpacity(0.5),
-            onPressed: () {
-              Get.back(); // Navigator.pop(context, true);
-            },
-          ),
-          titleSpacing: 9.0,
-
-          /// Note that the icon has 20 on the right due to its padding, so we add 10 to get our desired 29
-          title: Text(
-            "Your Favorites",
-            style: TextStyle(
-              fontFamily: "RobotoMedium",
-              fontSize: 20.0,
-              color: darkText.withOpacity(darkText.opacity * 0.75),
-            ),
-          ),
-        ),
+        // appBar: AppBar(
+        //   backgroundColor: lightGrey,
+        //   iconTheme: IconThemeData(
+        //     color: Colors.black.withOpacity(0.54),
+        //   ),
+        //   elevation: 0.0,
+        //   centerTitle: false,
+        //   leading: IconButton(
+        //     alignment: Alignment.centerLeft,
+        //     icon: Icon(Icons.arrow_back),
+        //     padding: EdgeInsets.only(left: 20.0, right: 20.0),
+        //     color: Colors.black.withOpacity(0.5),
+        //     onPressed: () {
+        //       Get.back(); // Navigator.pop(context, true);
+        //     },
+        //   ),
+        //   titleSpacing: 9.0,
+        //
+        //   /// Note that the icon has 20 on the right due to its padding, so we add 10 to get our desired 29
+        //   title: Text(
+        //     "Your Favorites",
+        //     style: TextStyle(
+        //       fontFamily: "RobotoMedium",
+        //       fontSize: 20.0,
+        //       color: darkText.withOpacity(darkText.opacity * 0.75),
+        //     ),
+        //   ),
+        // ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: favorites.isEmpty
