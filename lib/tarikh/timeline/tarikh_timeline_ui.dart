@@ -78,7 +78,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     /// Update the label for the [Timeline] object.
     widget.timeline.onEraChanged = (TimelineEntry? entry) {
       setState(() {
-        _eraName = 'Era: " + (entry != null ? entry.label! : DefaultEraName);
+        _eraName = 'Era: ' + (entry != null ? entry.label! : DefaultEraName);
       });
     };
 
