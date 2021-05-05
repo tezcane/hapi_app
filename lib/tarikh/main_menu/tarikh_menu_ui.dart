@@ -73,7 +73,7 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
   navigateToTimeline(MenuItemData item) {
     _pauseSection();
 
-    Get.toNamed('/tarikh/timeline', arguments: {
+    cMenu.pushSubPage(SubPage.TARIKH_TIMELINE, arguments: {
       'focusItem': item,
       'timeline': BlocProvider.getTimeline(context),
     });
@@ -188,35 +188,42 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
                   assetId: section.assetId!,
                 )))
             .toList(growable: false))
-        ..add(Container(
-          margin: EdgeInsets.only(top: 40.0, bottom: 22),
-          height: 1.0,
-          color: const Color.fromRGBO(151, 151, 151, 0.29),
-        ))
-        ..add(FlatButton(
+        ..add(
+          Container(
+            margin: EdgeInsets.only(top: 40.0, bottom: 22),
+            height: 1.0,
+            color: const Color.fromRGBO(151, 151, 151, 0.29),
+          ),
+        )
+        ..add(
+          FlatButton(
             onPressed: () {
               _pauseSection();
-              Get.toNamed('/tarikh/favorite');
+              cMenu.pushSubPage(SubPage.TARIKH_FAVORITE);
               _restoreSection(null); // TODO working?
             },
             color: Colors.transparent,
-            child:
-                Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-              Container(
-                margin: EdgeInsets.only(right: 15.5),
-                child: Image.asset('assets/tarikh/heart_icon.png',
-                    height: 20.0,
-                    width: 20.0,
-                    color: Colors.black.withOpacity(0.65)),
-              ),
-              Text(
-                'Your Favorites',
-                style: TextStyle(
-                    fontSize: 20.0,
-                    fontFamily: 'RobotoMedium',
-                    color: Colors.black.withOpacity(0.65)),
-              )
-            ])));
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(right: 15.5),
+                  child: Image.asset('assets/tarikh/heart_icon.png',
+                      height: 20.0,
+                      width: 20.0,
+                      color: Colors.black.withOpacity(0.65)),
+                ),
+                Text(
+                  'Your Favorites',
+                  style: TextStyle(
+                      fontSize: 20.0,
+                      fontFamily: 'RobotoMedium',
+                      color: Colors.black.withOpacity(0.65)),
+                )
+              ],
+            ),
+          ),
+        );
     }
 
     /// Wrap the menu in a [WillPopScope] to properly handle a pop event while searching.
@@ -224,43 +231,50 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
     /// This will contain a [Column] with a [Collapsible] header on top, and a [tail]
     /// that's built according with the state of this widget.
     return FabNavPage(
-        navIdx: NavPage.TARIKH.index,
-        columnWidget: Column(),
-        bottomWidget: HapiShare(),
-        // TODO move to FabNavPage?:
-        foregroundPage: WillPopScope(
-          onWillPop: _popSearch,
-          child: Container(
-              color: background,
-              child: Padding(
-                padding: EdgeInsets.only(top: devicePadding.top),
-                child: SingleChildScrollView(
-                    padding: EdgeInsets.only(
-                        top: 20.0, left: 20, right: 20, bottom: 20),
-                    child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                              Collapsible(
-                                  isCollapsed: _isSearching,
-                                  child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text('Tarikh',
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                                color: darkText.withOpacity(
-                                                    darkText.opacity * 0.75),
-                                                fontSize: 34.0,
-                                                fontFamily: 'RobotoMedium'))
-                                      ])),
-                              Padding(
-                                  padding: EdgeInsets.only(top: 22.0),
-                                  child: SearchWidget(
-                                      _searchFocusNode, _searchTextController))
-                            ] +
-                            tail)),
-              )),
-        ));
+      navIdx: NavPage.TARIKH.index,
+      columnWidget: Column(),
+      bottomWidget: HapiShare(),
+      // TODO move to FabNavPage?:
+      foregroundPage: WillPopScope(
+        onWillPop: _popSearch,
+        child: Container(
+          color: background,
+          child: Padding(
+            padding: EdgeInsets.only(top: devicePadding.top),
+            child: SingleChildScrollView(
+              padding:
+                  EdgeInsets.only(top: 20.0, left: 20, right: 20, bottom: 20),
+              child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                        Collapsible(
+                          isCollapsed: _isSearching,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(
+                                'Tarikh',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                    color: darkText
+                                        .withOpacity(darkText.opacity * 0.75),
+                                    fontSize: 34.0,
+                                    fontFamily: 'RobotoMedium'),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(top: 22.0),
+                          child: SearchWidget(
+                              _searchFocusNode, _searchTextController),
+                        )
+                      ] +
+                      tail),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

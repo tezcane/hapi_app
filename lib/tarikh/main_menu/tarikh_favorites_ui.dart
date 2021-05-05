@@ -2,6 +2,8 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hapi/menu/fab_sub_page.dart';
+import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/tarikh/blocs/bloc_provider.dart';
 import 'package:hapi/tarikh/colors.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
@@ -27,15 +29,23 @@ class TarikhFavoritesUI extends StatelessWidget {
     /// Add all the elements into a [List<Widget>] so that we can pass it to the [ListView] in the [Scaffold] body.
     for (int i = 0; i < entries.length; i++) {
       TimelineEntry entry = entries[i];
-      favorites.add(ThumbnailDetailWidget(entry, hasDivider: i != 0,
+      favorites.add(
+        ThumbnailDetailWidget(
+          entry,
+          hasDivider: i != 0,
           tapSearchResult: (TimelineEntry entry) {
-        MenuItemData item = MenuItemData.fromEntry(entry);
+            MenuItemData item = MenuItemData.fromEntry(entry);
 
-        Get.toNamed('/tarikh/timeline', arguments: {
-          'focusItem': item,
-          'timeline': BlocProvider.getTimeline(context),
-        });
-      }));
+            cMenu.pushSubPage(
+              SubPage.TARIKH_TIMELINE,
+              arguments: {
+                'focusItem': item,
+                'timeline': BlocProvider.getTimeline(context),
+              },
+            );
+          },
+        ),
+      );
     }
 
     /// Use the same style for the top bar, with the usual colors and the correct icons.
@@ -44,7 +54,8 @@ class TarikhFavoritesUI extends StatelessWidget {
     /// If no entry has been added to the favorites yet, a placeholder [Column] is shown with a
     /// a few lines of text and a [FlareActor] animation of a broken heart.
     /// Check it out at: https://www.2dimensions.com/a/pollux/files/flare/broken-heart/preview
-    return Scaffold(
+    return FabSubPage(
+      child: Scaffold(
         appBar: AppBar(
           backgroundColor: lightGrey,
           iconTheme: IconThemeData(
@@ -64,56 +75,68 @@ class TarikhFavoritesUI extends StatelessWidget {
           titleSpacing: 9.0,
 
           /// Note that the icon has 20 on the right due to its padding, so we add 10 to get our desired 29
-          title: Text("Your Favorites",
-              style: TextStyle(
-                  fontFamily: "RobotoMedium",
-                  fontSize: 20.0,
-                  color: darkText.withOpacity(darkText.opacity * 0.75))),
+          title: Text(
+            "Your Favorites",
+            style: TextStyle(
+              fontFamily: "RobotoMedium",
+              fontSize: 20.0,
+              color: darkText.withOpacity(darkText.opacity * 0.75),
+            ),
+          ),
         ),
         body: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: favorites.isEmpty
-                ? Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: favorites.isEmpty
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                     Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisSize: MainAxisSize.max,
-                        children: [
-                          Container(
-                              width: 128.0,
-                              height: 114.0,
-                              margin: EdgeInsets.only(bottom: 30),
-                              child: FlareActor(
-                                  "assets/tarikh/Broken Heart.flr",
-                                  animation: "Heart Break",
-                                  shouldClip: false)),
-                          Container(
-                            padding: EdgeInsets.only(bottom: 21),
-                            width: 250,
-                            child: Text("You haven’t favorited anything yet.",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontFamily: "RobotoMedium",
-                                  fontSize: 25,
-                                  color: darkText
-                                      .withOpacity(darkText.opacity * 0.75),
-                                  height: 1.2,
-                                )),
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Container(
+                          width: 128.0,
+                          height: 114.0,
+                          margin: EdgeInsets.only(bottom: 30),
+                          child: FlareActor("assets/tarikh/Broken Heart.flr",
+                              animation: "Heart Break", shouldClip: false),
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(bottom: 21),
+                          width: 250,
+                          child: Text("You haven’t favorited anything yet.",
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                fontFamily: "RobotoMedium",
+                                fontSize: 25,
+                                color: darkText
+                                    .withOpacity(darkText.opacity * 0.75),
+                                height: 1.2,
+                              )),
+                        ),
+                        Container(
+                          width: 270,
+                          margin: EdgeInsets.only(bottom: 114),
+                          child: Text(
+                            "Browse to an event in the timeline and tap on the heart icon to save something in this list.",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontFamily: "Roboto",
+                              fontSize: 17,
+                              height: 1.5,
+                              color: Colors.black.withOpacity(0.75),
+                            ),
                           ),
-                          Container(
-                            width: 270,
-                            margin: EdgeInsets.only(bottom: 114),
-                            child: Text(
-                                "Browse to an event in the timeline and tap on the heart icon to save something in this list.",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    fontFamily: "Roboto",
-                                    fontSize: 17,
-                                    height: 1.5,
-                                    color: Colors.black.withOpacity(0.75))),
-                          ),
-                        ])
-                  ])
-                : ListView(children: favorites)));
+                        ),
+                      ],
+                    )
+                  ],
+                )
+              // TODO bug here if add to fav on article and back button to here no show:
+              : ListView(children: favorites),
+        ),
+      ),
+    );
   }
 }

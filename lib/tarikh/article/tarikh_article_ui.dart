@@ -4,6 +4,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/widgets.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
+import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:hapi/tarikh/article/timeline_entry_widget.dart';
 import 'package:hapi/tarikh/blocs/bloc_provider.dart';
 import 'package:hapi/tarikh/colors.dart';
@@ -128,13 +129,16 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
     List<TimelineEntry> favs = BlocProvider.favorites(context).favorites;
     bool isFav = favs.any(
         (TimelineEntry te) => te.label!.toLowerCase() == _title.toLowerCase());
-    return Scaffold(
+    return FabSubPage(
+      child: Scaffold(
         body: Container(
-            color: Color.fromRGBO(255, 255, 255, 1),
-            child: Stack(children: <Widget>[
-              Column(children: <Widget>[
-                Container(height: devicePadding.top),
-                Container(
+          color: Color.fromRGBO(255, 255, 255, 1),
+          child: Stack(
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  Container(height: devicePadding.top),
+                  Container(
                     height: 56.0,
                     width: double.infinity,
                     child: IconButton(
@@ -146,106 +150,122 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                         //Navigator.pop(context, true);
                         Get.back();
                       },
-                    )),
-                Expanded(
+                    ),
+                  ),
+                  Expanded(
                     child: SingleChildScrollView(
-                        padding:
-                            EdgeInsets.only(left: 20, right: 20, bottom: 30),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            GestureDetector(
-                                onPanStart: (DragStartDetails details) {
-                                  setState(() {
-                                    _interactOffset = details.globalPosition;
-                                  });
-                                },
-                                onPanUpdate: (DragUpdateDetails details) {
-                                  setState(() {
-                                    _interactOffset = details.globalPosition;
-                                  });
-                                },
-                                onPanEnd: (DragEndDetails details) {
-                                  setState(() {
-                                    _interactOffset = null;
-                                  });
-                                },
-                                child: Container(
-                                    height: 280,
-                                    child: TimelineEntryWidget(
-                                        isActive: true,
-                                        timelineEntry: widget.article!,
-                                        interactOffset: _interactOffset))),
-                            Padding(
-                              padding: EdgeInsets.only(top: 30.0),
-                              child: Row(children: [
+                      padding: EdgeInsets.only(left: 20, right: 20, bottom: 30),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          GestureDetector(
+                              onPanStart: (DragStartDetails details) {
+                                setState(() {
+                                  _interactOffset = details.globalPosition;
+                                });
+                              },
+                              onPanUpdate: (DragUpdateDetails details) {
+                                setState(() {
+                                  _interactOffset = details.globalPosition;
+                                });
+                              },
+                              onPanEnd: (DragEndDetails details) {
+                                setState(() {
+                                  _interactOffset = null;
+                                });
+                              },
+                              child: Container(
+                                  height: 280,
+                                  child: TimelineEntryWidget(
+                                      isActive: true,
+                                      timelineEntry: widget.article!,
+                                      interactOffset: _interactOffset))),
+                          Padding(
+                            padding: EdgeInsets.only(top: 30.0),
+                            child: Row(
+                              children: [
                                 Expanded(
                                   child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(_title,
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                              color: darkText.withOpacity(
-                                                  darkText.opacity * 0.87),
-                                              fontSize: 25.0,
-                                              height: 1.1,
-                                              fontFamily: "Roboto",
-                                            )),
-                                        Text(_subTitle,
-                                            textAlign: TextAlign.left,
-                                            style: TextStyle(
-                                                color: darkText.withOpacity(
-                                                    darkText.opacity * 0.5),
-                                                fontSize: 17.0,
-                                                height: 1.5,
-                                                fontFamily: "Roboto"))
-                                      ]),
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        _title,
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                          color: darkText.withOpacity(
+                                              darkText.opacity * 0.87),
+                                          fontSize: 25.0,
+                                          height: 1.1,
+                                          fontFamily: "Roboto",
+                                        ),
+                                      ),
+                                      Text(
+                                        _subTitle,
+                                        textAlign: TextAlign.left,
+                                        style: TextStyle(
+                                            color: darkText.withOpacity(
+                                                darkText.opacity * 0.5),
+                                            fontSize: 17.0,
+                                            height: 1.5,
+                                            fontFamily: "Roboto"),
+                                      )
+                                    ],
+                                  ),
                                 ),
                                 GestureDetector(
-                                    child: Transform.translate(
-                                        offset: const Offset(15.0, 0.0),
-                                        child: Container(
-                                          height: 60.0,
-                                          width: 60.0,
-                                          padding: EdgeInsets.all(15.0),
-                                          color: Colors.white,
+                                  child: Transform.translate(
+                                    offset: const Offset(15.0, 0.0),
+                                    child: Container(
+                                      height: 60.0,
+                                      width: 60.0,
+                                      padding: EdgeInsets.all(15.0),
+                                      color: Colors.white,
 
-                                          /// Check out the widget at:
-                                          /// https://www.2dimensions.com/a/pollux/files/flare/heart-simple/preview
-                                          child: FlareActor(
-                                              "assets/tarikh/Favorite.flr",
-                                              animation: isFav
-                                                  ? "Favorite"
-                                                  : "Unfavorite",
-                                              shouldClip: false),
-                                        )),
-                                    onTap: () {
-                                      setState(() {
-                                        _isFavorite = !_isFavorite;
-                                      });
-                                      if (_isFavorite) {
-                                        BlocProvider.favorites(context)
-                                            .addFavorite(widget.article!);
-                                      } else {
-                                        BlocProvider.favorites(context)
-                                            .removeFavorite(widget.article!);
-                                      }
-                                    })
-                              ]),
+                                      /// Check out the widget at:
+                                      /// https://www.2dimensions.com/a/pollux/files/flare/heart-simple/preview
+                                      child: FlareActor(
+                                          "assets/tarikh/Favorite.flr",
+                                          animation:
+                                              isFav ? "Favorite" : "Unfavorite",
+                                          shouldClip: false),
+                                    ),
+                                  ),
+                                  onTap: () {
+                                    setState(() {
+                                      _isFavorite = !_isFavorite;
+                                    });
+                                    if (_isFavorite) {
+                                      BlocProvider.favorites(context)
+                                          .addFavorite(widget.article!);
+                                    } else {
+                                      BlocProvider.favorites(context)
+                                          .removeFavorite(widget.article!);
+                                    }
+                                  },
+                                )
+                              ],
                             ),
-                            Container(
-                                margin: EdgeInsets.only(top: 20, bottom: 20),
-                                height: 1,
-                                color: Colors.black.withOpacity(0.11)),
-                            MarkdownBody(
-                                data: _articleMarkdown,
-                                styleSheet: _markdownStyleSheet),
-                            SizedBox(height: 100),
-                          ],
-                        )))
-              ])
-            ])));
+                          ),
+                          Container(
+                            margin: EdgeInsets.only(top: 20, bottom: 20),
+                            height: 1,
+                            color: Colors.black.withOpacity(0.11),
+                          ),
+                          MarkdownBody(
+                              data: _articleMarkdown,
+                              styleSheet: _markdownStyleSheet),
+                          SizedBox(height: 100),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

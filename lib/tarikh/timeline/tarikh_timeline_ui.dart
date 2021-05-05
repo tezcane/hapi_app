@@ -5,6 +5,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
+import 'package:hapi/menu/fab_sub_page.dart';
+import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/tarikh/article/tarikh_article_ui.dart';
 import 'package:hapi/tarikh/blocs/bloc_provider.dart';
 import 'package:hapi/tarikh/colors.dart';
@@ -135,7 +137,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
       } else {
         widget.timeline!.isActive = false;
 
-        Get.toNamed('/tarikh/article', arguments: {
+        cMenu.pushSubPage(SubPage.TARIKH_ARTICLE, arguments: {
           'article': _touchedBubble!.entry!,
         });
 
@@ -162,6 +164,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     }
   }
 
+  // TODO what do you do???
   /// When performing a long-press operation, the viewport will be adjusted so that
   /// the visible start and end times will be updated according to the [TimelineEntry]
   /// information. The long-pressed bubble will float to the top of the viewport,
@@ -272,95 +275,105 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     if (timeline != null) {
       timeline!.devicePadding = devicePadding;
     }
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: GestureDetector(
+    return FabSubPage(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: GestureDetector(
           onLongPress: _longPress,
           onTapDown: _tapDown,
           onScaleStart: _scaleStart,
           onScaleUpdate: _scaleUpdate,
           onScaleEnd: _scaleEnd,
           onTapUp: _tapUp,
-          child: Stack(children: <Widget>[
-            TimelineRenderWidget(
-                timeline: timeline,
-                favorites: BlocProvider.favorites(context).favorites,
-                topOverlap: TopOverlap + devicePadding.top,
-                focusItem: widget.focusItem!,
-                touchBubble: onTouchBubble,
-                touchEntry: onTouchEntry),
-            Column(
+          child: Stack(
+            children: <Widget>[
+              TimelineRenderWidget(
+                  timeline: timeline,
+                  favorites: BlocProvider.favorites(context).favorites,
+                  topOverlap: TopOverlap + devicePadding.top,
+                  focusItem: widget.focusItem!,
+                  touchBubble: onTouchBubble,
+                  touchEntry: onTouchEntry),
+              Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Container(
-                      height: devicePadding.top,
-                      color: _headerBackgroundColor != null
-                          ? _headerBackgroundColor
-                          : Color.fromRGBO(238, 240, 242, 0.81)),
+                    height: devicePadding.top,
+                    color: _headerBackgroundColor != null
+                        ? _headerBackgroundColor
+                        : Color.fromRGBO(238, 240, 242, 0.81),
+                  ),
                   Container(
-                      color: _headerBackgroundColor != null
-                          ? _headerBackgroundColor
-                          : Color.fromRGBO(238, 240, 242, 0.81),
-                      height: 56.0,
-                      width: double.infinity,
-                      child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            IconButton(
-                              padding: EdgeInsets.only(left: 20.0, right: 20.0),
-                              color: _headerTextColor != null
-                                  ? _headerTextColor
-                                  : Colors.black.withOpacity(0.5),
-                              alignment: Alignment.centerLeft,
-                              icon: Icon(Icons.arrow_back),
-                              onPressed: () {
-                                widget.timeline!.isActive = false;
-                                Get.back();
-                                return; // TODO was returning true?
-                              },
+                    color: _headerBackgroundColor != null
+                        ? _headerBackgroundColor
+                        : Color.fromRGBO(238, 240, 242, 0.81),
+                    height: 56.0,
+                    width: double.infinity,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        IconButton(
+                          padding: EdgeInsets.only(left: 20.0, right: 20.0),
+                          color: _headerTextColor != null
+                              ? _headerTextColor
+                              : Colors.black.withOpacity(0.5),
+                          alignment: Alignment.centerLeft,
+                          icon: Icon(Icons.arrow_back),
+                          onPressed: () {
+                            widget.timeline!.isActive = false;
+                            Get.back();
+                            return; // TODO was returning true?
+                          },
+                        ),
+                        Text(
+                          _eraName!,
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontFamily: "RobotoMedium",
+                            fontSize: 20.0,
+                            color: _headerTextColor != null
+                                ? _headerTextColor
+                                : darkText.withOpacity(darkText.opacity * 0.75),
+                          ),
+                        ),
+                        Expanded(
+                          child: GestureDetector(
+                            child: Transform.translate(
+                              offset: const Offset(0.0, 0.0),
+                              child: Container(
+                                height: 60.0,
+                                width: 60.0,
+                                padding: EdgeInsets.all(18.0),
+                                color: Colors.white.withOpacity(0.0),
+                                child: FlareActor(
+                                    "assets/tarikh/heart_toolbar.flr",
+                                    animation: _showFavorites ? "On" : "Off",
+                                    shouldClip: false,
+                                    color: _headerTextColor != null
+                                        ? _headerTextColor
+                                        : darkText.withOpacity(
+                                            darkText.opacity * 0.75),
+                                    alignment: Alignment.centerRight),
+                              ),
                             ),
-                            Text(
-                              _eraName!,
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                  fontFamily: "RobotoMedium",
-                                  fontSize: 20.0,
-                                  color: _headerTextColor != null
-                                      ? _headerTextColor
-                                      : darkText.withOpacity(
-                                          darkText.opacity * 0.75)),
-                            ),
-                            Expanded(
-                                child: GestureDetector(
-                                    child: Transform.translate(
-                                        offset: const Offset(0.0, 0.0),
-                                        child: Container(
-                                          height: 60.0,
-                                          width: 60.0,
-                                          padding: EdgeInsets.all(18.0),
-                                          color: Colors.white.withOpacity(0.0),
-                                          child: FlareActor(
-                                              "assets/tarikh/heart_toolbar.flr",
-                                              animation:
-                                                  _showFavorites ? "On" : "Off",
-                                              shouldClip: false,
-                                              color: _headerTextColor != null
-                                                  ? _headerTextColor
-                                                  : darkText.withOpacity(
-                                                      darkText.opacity * 0.75),
-                                              alignment: Alignment.centerRight),
-                                        )),
-                                    onTap: () {
-                                      timeline!.showFavorites =
-                                          !timeline!.showFavorites;
-                                      setState(() {
-                                        _showFavorites =
-                                            timeline!.showFavorites;
-                                      });
-                                    })),
-                          ]))
-                ])
-          ])),
+                            onTap: () {
+                              timeline!.showFavorites =
+                                  !timeline!.showFavorites;
+                              setState(() {
+                                _showFavorites = timeline!.showFavorites;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

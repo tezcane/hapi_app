@@ -205,7 +205,7 @@ class MenuController extends GetxController {
 
   /// use to push a NavPages sub page (Tarikh Favorites, etc.) on top of menu stack
   /// About page is ok here too
-  void pushSubPage(SubPage subPage) {
+  void pushSubPage(SubPage subPage, {dynamic arguments}) {
     // // TODO option for disallow duplicates so might not need this
     // if (_subPageStack.length != 0) {
     //   if (_subPageStack[_subPageStack.length - 1] == subPage) {
@@ -222,16 +222,16 @@ class MenuController extends GetxController {
 
     switch (subPage) {
       case (SubPage.ABOUT):
-        Get.to(() => AboutUI());
+        Get.to(() => AboutUI(), arguments: arguments);
         break;
       case (SubPage.TARIKH_FAVORITE):
-        Get.to(() => TarikhFavoritesUI());
+        Get.to(() => TarikhFavoritesUI(), arguments: arguments);
         break;
       case (SubPage.TARIKH_TIMELINE):
-        Get.to(() => TarikhTimelineUI());
+        Get.to(() => TarikhTimelineUI(), arguments: arguments);
         break;
       case (SubPage.TARIKH_ARTICLE):
-        Get.to(() => TarikhArticleUI());
+        Get.to(() => TarikhArticleUI(), arguments: arguments);
         break;
       default:
         throw 'Subhanallah!';
