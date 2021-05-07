@@ -61,6 +61,13 @@ class TarikhController extends GetxController {
   }
 
   Timeline get timeline => _timeline;
+  set timeline(Timeline value) {
+    if (_timeline == value) {
+      return;
+    }
+    _timeline = value;
+  }
+
   TargetPlatform get platform => _platform; // TODO belongs in higher level c
 
   /// This method is called during the [BlocProvider] initialization.

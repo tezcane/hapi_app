@@ -97,7 +97,6 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
   void _tapSearchResult(TimelineEntry entry) {
     cMenu.pushSubPage(SubPage.TARIKH_TIMELINE, arguments: {
       'focusItem': MenuItemData.fromEntry(entry),
-      'timeline': cTrkh.timeline,
     });
   }
 

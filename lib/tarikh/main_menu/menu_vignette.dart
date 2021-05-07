@@ -35,9 +35,7 @@ class MenuVignette extends LeafRenderObjectWidget {
   RenderObject createRenderObject(BuildContext context) {
     /// The [BlocProvider] widgets down the tree to access its components
     /// optimizing memory consumption and simplifying the code-base.
-    Timeline t = cTrkh.timeline;
     return MenuVignetteRenderObject()
-      ..timeline = t
       ..assetId = assetId
       ..gradientColor = gradientColor
       ..isActive = isActive;
@@ -49,7 +47,6 @@ class MenuVignette extends LeafRenderObjectWidget {
     /// The [BlocProvider] widgets down the tree to access its components
     /// optimizing memory consumption and simplifying the code-base.
     renderObject
-      ..timeline = cTrkh.timeline
       ..assetId = assetId
       ..gradientColor = gradientColor
       ..isActive = isActive;
@@ -68,7 +65,6 @@ class MenuVignette extends LeafRenderObjectWidget {
 /// Flare/Nima [FlutterActor] where the widget is being placed.
 class MenuVignetteRenderObject extends RenderBox {
   /// The [_timeline] object is used here to retrieve the asset through [getById()].
-  Timeline? _timeline;
   String? _assetId;
 
   /// If this object is not active, stop playing. This optimizes resource consumption
@@ -80,12 +76,11 @@ class MenuVignetteRenderObject extends RenderBox {
   bool _isFrameScheduled = false;
   double opacity = 0.0;
 
-  Timeline? get timeline => _timeline;
-  set timeline(Timeline? value) {
-    if (_timeline == value) {
+  set timeline(Timeline value) {
+    if (cTrkh.timeline == value) {
       return;
     }
-    _timeline = value;
+    cTrkh.timeline = value;
     _firstUpdate = true;
     updateRendering();
   }
@@ -109,10 +104,7 @@ class MenuVignetteRenderObject extends RenderBox {
   }
 
   TimelineEntry? get timelineEntry {
-    if (_timeline == null) {
-      return null;
-    }
-    return _timeline!.getById(_assetId!);
+    return cTrkh.timeline.getById(_assetId!);
   }
 
   @override
@@ -144,19 +136,13 @@ class MenuVignetteRenderObject extends RenderBox {
   void paint(PaintingContext context, Offset offset) {
     final Canvas canvas = context.canvas;
 
-    if (timelineEntry == null) {
-      // TODO check
-      opacity = 0.0;
-      return;
-    }
-
-    TimelineAsset asset = timelineEntry?.asset as TimelineAsset;
-
     /// Don't paint if not needed.
-    if (asset == null) {
+    if (timelineEntry == null || timelineEntry?.asset == null) {
       opacity = 0.0;
       return;
     }
+
+    TimelineAsset asset = timelineEntry!.asset!;
 
     canvas.save();
 
@@ -391,7 +377,7 @@ class MenuVignetteRenderObject extends RenderBox {
     /// Calculate the elapsed time to [advance()] the animations.
     double elapsed = t - _lastFrameTime;
     _lastFrameTime = t;
-    TimelineEntry entry = timelineEntry as TimelineEntry;
+    TimelineEntry? entry = timelineEntry;
     if (entry != null && entry.asset != null) {
       TimelineAsset asset = entry.asset!;
       if (asset is TimelineNima && asset.actor != null) {

@@ -23,13 +23,12 @@ typedef SelectItemCallback(TimelineEntry item);
 /// It is built from a [focusItem], that is the event the [Timeline] should
 /// focus on when it's created.
 class TarikhTimelineUI extends StatefulWidget {
-  late final MenuItemData focusItem;
-  late final Timeline timeline;
-
   TarikhTimelineUI() {
     focusItem = Get.arguments['focusItem'];
-    timeline = cTrkh.timeline;
   }
+
+  late final MenuItemData focusItem;
+  final Timeline timeline = cTrkh.timeline;
 
   @override
   _TarikhTimelineUIState createState() => _TarikhTimelineUIState();
