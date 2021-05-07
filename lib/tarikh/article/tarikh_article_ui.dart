@@ -37,7 +37,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
 
   /// This page uses the `flutter_markdown` package, and thus needs its styles to be defined
   /// with a custom objects. This is created in [initState()].
-  MarkdownStyleSheet? _markdownStyleSheet;
+  late MarkdownStyleSheet _markdownStyleSheet;
 
   /// Whether the [FlareActor] favorite button is active or not.
   /// Triggers a Flare animation upon change.

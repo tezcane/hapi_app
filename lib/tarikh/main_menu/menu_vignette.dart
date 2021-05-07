@@ -58,6 +58,7 @@ class MenuVignette extends LeafRenderObjectWidget {
 
   @override
   didUnmountRenderObject(covariant MenuVignetteRenderObject renderObject) {
+    print('didUnmountRenderObject$renderObject._assetId}');
     renderObject.isActive = false;
   }
 }
