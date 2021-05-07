@@ -3,6 +3,7 @@
 import 'package:alquran_cloud/alquran_cloud.dart' as quran_cloud;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hapi/constants/app_routes.dart';
@@ -64,6 +65,9 @@ class MyApp extends StatelessWidget {
 
     // TODO test this with landscape Quran/Read mode
     //SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+
+    // Make the app full screen:
+    SystemChrome.setEnabledSystemUIOverlays([]);
 
     return GetBuilder<LanguageController>(
       builder: (languageController) => Loading(
