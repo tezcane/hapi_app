@@ -271,6 +271,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     widget.timeline.devicePadding = devicePadding;
 
     return FabSubPage(
+      subPage: SubPage.TARIKH_TIMELINE,
       child: Scaffold(
         backgroundColor: Colors.white,
         body: GestureDetector(

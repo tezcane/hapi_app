@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:hapi/constants/app_themes.dart';
 import 'package:hapi/menu/fab_sub_page.dart';
+import 'package:hapi/menu/menu_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// This widget is visible when opening the about page from the [MainMenuWidget].
@@ -24,6 +25,7 @@ class AboutUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FabSubPage(
+      subPage: SubPage.ABOUT,
       child: Scaffold(
         backgroundColor: AppThemes.logoBackground,
         body: Padding(

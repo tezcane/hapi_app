@@ -4,6 +4,7 @@ import 'package:hapi/tarikh/search_manager.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
+// TODO convert to Get style
 /// This [InheritedWidget] wraps the whole app, and provides access
 /// to the user's favorites through the [FavoritesBloc]
 /// and the [Timeline] object.

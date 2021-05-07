@@ -8,13 +8,13 @@ import 'package:share/share.dart';
 class FabNavPage extends StatelessWidget {
   const FabNavPage({
     Key? key,
-    required this.navIdx,
+    required this.navPage,
     required this.columnWidget,
     required this.bottomWidget,
     required this.foregroundPage,
   }) : super(key: key);
 
-  final int navIdx;
+  final NavPage navPage;
   final Widget columnWidget;
   final Widget bottomWidget;
   final Widget foregroundPage;
@@ -25,6 +25,7 @@ class FabNavPage extends StatelessWidget {
       builder: (c) => IgnorePointer(
         ignoring: c.isScreenDisabled(),
         child: Scaffold(
+          //backgroundColor: background,
           body: MenuNav(
             builder: () {
               //TODO anyway to put menu+menu_nav together without needing a builder?
@@ -39,7 +40,7 @@ class FabNavPage extends StatelessWidget {
                 ),
               );
             },
-            selectedIndexAtInit: navIdx,
+            selectedIndexAtInit: navPage.index,
             items: kNavs
                 .map(
                   (nav) => Column(

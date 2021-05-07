@@ -15,7 +15,7 @@ class QuestsUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FabNavPage(
-      navIdx: NavPage.QUESTS.index,
+      navPage: NavPage.QUESTS,
       columnWidget: Column(),
       bottomWidget: HapiShare(),
       foregroundPage: GetBuilder<AuthController>(

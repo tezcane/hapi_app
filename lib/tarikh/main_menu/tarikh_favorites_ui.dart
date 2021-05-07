@@ -54,35 +54,8 @@ class TarikhFavoritesUI extends StatelessWidget {
     /// a few lines of text and a [FlareActor] animation of a broken heart.
     /// Check it out at: https://www.2dimensions.com/a/pollux/files/flare/broken-heart/preview
     return FabSubPage(
+      subPage: SubPage.TARIKH_FAVORITE,
       child: Scaffold(
-        // appBar: AppBar(
-        //   backgroundColor: lightGrey,
-        //   iconTheme: IconThemeData(
-        //     color: Colors.black.withOpacity(0.54),
-        //   ),
-        //   elevation: 0.0,
-        //   centerTitle: false,
-        //   leading: IconButton(
-        //     alignment: Alignment.centerLeft,
-        //     icon: Icon(Icons.arrow_back),
-        //     padding: EdgeInsets.only(left: 20.0, right: 20.0),
-        //     color: Colors.black.withOpacity(0.5),
-        //     onPressed: () {
-        //       Get.back(); // Navigator.pop(context, true);
-        //     },
-        //   ),
-        //   titleSpacing: 9.0,
-        //
-        //   /// Note that the icon has 20 on the right due to its padding, so we add 10 to get our desired 29
-        //   title: Text(
-        //     "Your Favorites",
-        //     style: TextStyle(
-        //       fontFamily: "RobotoMedium",
-        //       fontSize: 20.0,
-        //       color: darkText.withOpacity(darkText.opacity * 0.75),
-        //     ),
-        //   ),
-        // ),
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: favorites.isEmpty
@@ -104,7 +77,7 @@ class TarikhFavoritesUI extends StatelessWidget {
                         Container(
                           padding: EdgeInsets.only(bottom: 21),
                           width: 250,
-                          child: Text("You haven’t favorited anything yet.",
+                          child: Text("No favorites yet",
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 fontFamily: "RobotoMedium",
@@ -118,7 +91,7 @@ class TarikhFavoritesUI extends StatelessWidget {
                           width: 270,
                           margin: EdgeInsets.only(bottom: 114),
                           child: Text(
-                            "Browse to an event in the timeline and tap on the heart icon to save something in this list.",
+                            "To save favorites, tap on the heart inside timeline events",
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontFamily: "Roboto",

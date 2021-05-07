@@ -21,11 +21,12 @@ class SearchWidget extends StatelessWidget {
     /// and it updates the [_searchController] so that the [MainMenuWidget] can
     /// update the list of results underneath this widget.
     return Container(
+      alignment: Alignment.center,
       decoration: BoxDecoration(
         color: lightGrey,
-        borderRadius: BorderRadius.circular(24.0),
+        borderRadius: BorderRadius.circular(30.0),
       ),
-      height: 40.0,
+      height: 56.0,
       child: Theme(
         data: ThemeData(
           primaryColor: darkText.withOpacity(darkText.opacity * 0.5),
@@ -33,24 +34,31 @@ class SearchWidget extends StatelessWidget {
         child: TextField(
           controller: _searchController,
           focusNode: _searchFocusNode,
+          //textAlignVertical: TextAlignVertical.center, doesn't work
           decoration: InputDecoration(
-              hintText: "Search",
+              hintText: 'Search history',
+
+              // contentPadding: EdgeInsets.only(
+              //   bottom: 56.0 / 2, // HERE THE IMPORTANT PART
+              // ),
               hintStyle: TextStyle(
-                  fontSize: 16.0,
-                  fontFamily: "Roboto",
-                  color: darkText.withOpacity(darkText.opacity * 0.5)),
-              prefixIcon: Icon(Icons.search),
+                fontSize: 16.0,
+                fontFamily: "Roboto",
+                color: darkText.withOpacity(darkText.opacity * 0.5),
+              ),
+              prefixIcon: Icon(Icons.search, size: 40),
               suffixIcon: _searchFocusNode.hasFocus
                   ? IconButton(
-                      icon: Icon(Icons.cancel),
+                      icon: Icon(Icons.cancel, size: 40.0),
                       onPressed: () {
                         _searchFocusNode.unfocus();
                         _searchController.clear();
-                      })
+                      },
+                    )
                   : null,
               border: InputBorder.none),
           style: TextStyle(
-            fontSize: 16.0,
+            fontSize: 20.0,
             fontFamily: "Roboto",
             color: darkText.withOpacity(darkText.opacity),
           ),

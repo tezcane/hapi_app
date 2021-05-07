@@ -5,6 +5,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
 import 'package:hapi/menu/fab_sub_page.dart';
+import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/tarikh/article/timeline_entry_widget.dart';
 import 'package:hapi/tarikh/blocs/bloc_provider.dart';
 import 'package:hapi/tarikh/colors.dart';
@@ -130,6 +131,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
     bool isFav = favs.any(
         (TimelineEntry te) => te.label!.toLowerCase() == _title.toLowerCase());
     return FabSubPage(
+      subPage: SubPage.TARIKH_ARTICLE,
       child: Scaffold(
         body: Container(
           color: Color.fromRGBO(255, 255, 255, 1),
@@ -138,20 +140,6 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
               Column(
                 children: <Widget>[
                   Container(height: devicePadding.top),
-                  // Container(
-                  //   height: 56.0,
-                  //   width: double.infinity,
-                  //   child: IconButton(
-                  //     alignment: Alignment.centerLeft,
-                  //     icon: Icon(Icons.arrow_back),
-                  //     padding: EdgeInsets.only(left: 20.0, right: 20.0),
-                  //     color: Colors.black.withOpacity(0.5),
-                  //     onPressed: () {
-                  //       //Navigator.pop(context, true);
-                  //       Get.back();
-                  //     },
-                  //   ),
-                  // ),
                   Expanded(
                     child: SingleChildScrollView(
                       padding: EdgeInsets.only(left: 20, right: 20, bottom: 30),

@@ -2,13 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:hapi/menu/menu_controller.dart';
 
 class FabSubPage extends StatelessWidget {
+  const FabSubPage({Key? key, required this.subPage, required this.child})
+      : super(key: key);
+
+  final SubPage subPage;
   final Widget child;
-  const FabSubPage({Key? key, required this.child}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //backgroundColor: background,
       floatingActionButton: FloatingActionButton(
+        tooltip: 'Go back to the previous page',
         onPressed: null,
+        heroTag: subPage,
         child: Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,

@@ -51,9 +51,9 @@ class SearchManager {
 
   /// Use the [SplayTreeMap] query function to return the full [Set] of results.
   /// This operation amortized logarithmic time.
-  Set<TimelineEntry>? performSearch(String query) {
+  Set<TimelineEntry> performSearch(String query) {
     if (_queryMap.containsKey(query))
-      return _queryMap[query];
+      return _queryMap[query]!;
     else if (query.isNotEmpty) {
       return Set();
     }
