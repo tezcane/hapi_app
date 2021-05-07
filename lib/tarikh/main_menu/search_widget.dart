@@ -34,22 +34,17 @@ class SearchWidget extends StatelessWidget {
         child: TextField(
           controller: _searchController,
           focusNode: _searchFocusNode,
-          //textAlignVertical: TextAlignVertical.center, doesn't work
           decoration: InputDecoration(
               hintText: 'Search history',
-
-              // contentPadding: EdgeInsets.only(
-              //   bottom: 56.0 / 2, // HERE THE IMPORTANT PART
-              // ),
               hintStyle: TextStyle(
                 fontSize: 16.0,
                 fontFamily: "Roboto",
                 color: darkText.withOpacity(darkText.opacity * 0.5),
               ),
-              prefixIcon: Icon(Icons.search, size: 40),
+              prefixIcon: Icon(Icons.search, size: 30),
               suffixIcon: _searchFocusNode.hasFocus
                   ? IconButton(
-                      icon: Icon(Icons.cancel, size: 40.0),
+                      icon: Icon(Icons.cancel, size: 25.0),
                       onPressed: () {
                         _searchFocusNode.unfocus();
                         _searchController.clear();
