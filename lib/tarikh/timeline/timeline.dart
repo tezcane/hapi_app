@@ -22,6 +22,14 @@ typedef ChangeEraCallback(TimelineEntry? era); // TODO ? prob want to disallow
 typedef ChangeHeaderColorCallback(Color background, Color text);
 
 class Timeline {
+  Timeline(this._platform) {
+    setViewport(start: 1536.0, end: 3072.0); // TODO what is this?
+  }
+
+  /// The current platform is initialized at boot, to properly initialize
+  /// [ScrollPhysics] based on the platform we're on.
+  final TargetPlatform _platform;
+
   /// Some aptly named constants for properly aligning the Timeline view.
   static const double LineWidth = 2.0;
   static const double LineSpacing = 10.0;
@@ -49,10 +57,6 @@ class Timeline {
   static const double ViewportPaddingTop = 120.0;
   static const double ViewportPaddingBottom = 100.0;
   static const int SteadyMilliseconds = 500;
-
-  /// The current platform is initialized at boot, to properly initialize
-  /// [ScrollPhysics] based on the platform we're on.
-  final TargetPlatform _platform;
 
   double _start = 0.0;
   double _end = 0.0;
@@ -143,10 +147,6 @@ class Timeline {
   /// so it can change the appeareance of the top AppBar.
   ChangeEraCallback? onEraChanged;
   ChangeHeaderColorCallback? onHeaderColorsChanged;
-
-  Timeline(this._platform) {
-    setViewport(start: 1536.0, end: 3072.0);
-  }
 
   double get renderOffsetDepth => _renderOffsetDepth;
   double get renderLabelX => _renderLabelX;

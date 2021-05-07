@@ -1,12 +1,17 @@
 ## CODE GLOSSARY
 
-AC - AnimationController
-C  - Controller
-idx - Index
-msg - message
-nav - Navigate/Navigator
-np - NavPage
-s - storage/Get Storage
+AC   - AnimationController
+C    - Controller
+idx  - Index
+msg  - message
+nav  - Navigate/Navigator
+np   - NavPage
+s    - storage/Get Storage
+trkh - Tarikh
+
+## Islamic GLOSSARY
+
+tarikh - history
 
 ## GetX Flutter Firebase Auth Example
 

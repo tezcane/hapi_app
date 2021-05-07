@@ -8,9 +8,9 @@ import 'package:get/get.dart';
 import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/tarikh/article/tarikh_article_ui.dart';
-import 'package:hapi/tarikh/blocs/bloc_provider.dart';
 import 'package:hapi/tarikh/colors.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
+import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 import 'package:hapi/tarikh/timeline/timeline_render_widget.dart';
@@ -23,12 +23,12 @@ typedef SelectItemCallback(TimelineEntry item);
 /// It is built from a [focusItem], that is the event the [Timeline] should
 /// focus on when it's created.
 class TarikhTimelineUI extends StatefulWidget {
-  late MenuItemData focusItem;
-  late Timeline timeline;
+  late final MenuItemData focusItem;
+  late final Timeline timeline;
 
   TarikhTimelineUI() {
     focusItem = Get.arguments['focusItem'];
-    timeline = Get.arguments['timeline'];
+    timeline = cTrkh.timeline;
   }
 
   @override
@@ -285,7 +285,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
             children: <Widget>[
               TimelineRenderWidget(
                   timeline: widget.timeline,
-                  favorites: BlocProvider.favorites(context).favorites,
+                  favorites: cTrkh.favorites,
                   topOverlap: TopOverlap + devicePadding.top,
                   focusItem: widget.focusItem,
                   touchBubble: onTouchBubble,
@@ -309,19 +309,6 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
-                        // IconButton(
-                        //   padding: EdgeInsets.only(left: 20.0, right: 20.0),
-                        //   color: _headerTextColor != null
-                        //       ? _headerTextColor
-                        //       : Colors.black.withOpacity(0.5),
-                        //   alignment: Alignment.centerLeft,
-                        //   icon: Icon(Icons.arrow_back),
-                        //   onPressed: () {
-                        //     widget.widget.timeline.isActive = false;
-                        //     Get.back();
-                        //     return; // TODO was returning true?
-                        //   },
-                        // ),
                         GestureDetector(
                           child: Transform.translate(
                             offset: const Offset(0.0, 0.0),

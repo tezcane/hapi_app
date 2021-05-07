@@ -7,8 +7,8 @@ import 'package:get/get.dart';
 import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/tarikh/article/timeline_entry_widget.dart';
-import 'package:hapi/tarikh/blocs/bloc_provider.dart';
 import 'package:hapi/tarikh/colors.dart';
+import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
 /// This widget will paint the article page.
@@ -127,7 +127,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
   @override
   Widget build(BuildContext context) {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
-    List<TimelineEntry> favs = BlocProvider.favorites(context).favorites;
+    List<TimelineEntry> favs = cTrkh.favorites;
     bool isFav = favs.any(
         (TimelineEntry te) => te.label!.toLowerCase() == _title.toLowerCase());
     return FabSubPage(
@@ -224,11 +224,9 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                                       _isFavorite = !_isFavorite;
                                     });
                                     if (_isFavorite) {
-                                      BlocProvider.favorites(context)
-                                          .addFavorite(widget.article);
+                                      cTrkh.addFavorite(widget.article);
                                     } else {
-                                      BlocProvider.favorites(context)
-                                          .removeFavorite(widget.article);
+                                      cTrkh.removeFavorite(widget.article);
                                     }
                                   },
                                 ),

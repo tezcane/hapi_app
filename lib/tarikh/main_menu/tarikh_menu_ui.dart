@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:hapi/menu/menu_controller.dart';
-import 'package:hapi/tarikh/blocs/bloc_provider.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/main_menu/main_menu_section.dart';
 import 'package:hapi/tarikh/colors.dart';
@@ -42,10 +41,7 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
   navigateToTimeline(MenuItemData item) {
     _pauseSection();
 
-    cMenu.pushSubPage(SubPage.TARIKH_TIMELINE, arguments: {
-      'focusItem': item,
-      'timeline': BlocProvider.getTimeline(context),
-    });
+    cMenu.pushSubPage(SubPage.TARIKH_TIMELINE, arguments: {'focusItem': item});
 
     //_restoreSection(null); // TODO working? was below:
 
@@ -54,16 +50,16 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
     //       builder: (BuildContext context) =>
     //           TarikhTimelineUI(item, BlocProvider.getTimeline(context)),
     //     ))
-    //     .then(_restoreSection);
+    //     .then(_restoreSection); // <- TODO how to do this with Getx?
   }
 
+  // TODO BUG anytime we go two menu deep away from here,
+  //    animation does not resume on return
   // TODO what is v below:
-  //_restoreSection(v) => setState(() => _isSectionActive = true);
+  _restoreSection(v) => setState(() => _isSectionActive = true);
   _pauseSection() => setState(() => _isSectionActive = false);
 
   initState() {
-    super.initState();
-
     /// The [_menu] loads a JSON file that's stored in the assets folder.
     /// This asset provides all the necessary information for the cards,
     /// such as labels, background colors, the background Flare animation asset,
@@ -71,6 +67,8 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
     _menu.loadFromBundle('assets/tarikh/menu.json').then((bool success) {
       if (success) setState(() {}); // Load the menu.
     });
+
+    super.initState();
   }
 
   @override

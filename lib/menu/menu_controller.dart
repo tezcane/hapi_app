@@ -76,9 +76,10 @@ class MenuController extends GetxController {
     return s.read('lastNavIdx') ?? NavPage.QUESTS.index;
   }
 
-  NavPage _getLastNavPage() {
-    return _getNavPage(_getLastNavIdx());
-  }
+  // May use it later:
+  // NavPage _getLastNavPage() {
+  //   return _getNavPage(_getLastNavIdx());
+  // }
 
   bool isFastStartupMode() {
     return s.read('fastStartupMode') ?? true; // TODO write this setting

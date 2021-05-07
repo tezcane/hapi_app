@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
-import 'package:hapi/tarikh/blocs/bloc_provider.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/main_menu/search_widget.dart';
 import 'package:hapi/tarikh/main_menu/thumbnail_detail_widget.dart';
 import 'package:hapi/tarikh/search_manager.dart';
+import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
 class TarikhSearchUI extends StatefulWidget {
@@ -29,29 +29,32 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
   /// Used to scroll to bottom of list view whenever page is rebuilt
   ScrollController _scrollController = ScrollController();
 
+  bool scrollToEnd = false;
+
   initState() {
-    // init list on page:
-    _searchResults = SearchManager.init().performSearch('').toList();
+    _searchResults = getSortedSearchResults(''); // init list on page
 
-    _searchTextController.addListener(() {
-      _updateSearch();
-    });
+    _searchTextController.addListener(() => _updateSearch());
 
-    // _searchFocusNode.addListener(() {
-    //   setState(() {
-    //     _updateSearch();
-    //   });
-    // });
+    //_searchFocusNode.addListener(() => setState(() => _updateSearch()));
 
     // Enable to have keyboard pop up on page init:
     //_searchFocusNode.requestFocus();
 
-    // Not needed since we scroll down on all rebuilds:
-    // if (WidgetsBinding.instance != null) {
-    //   WidgetsBinding.instance!.addPostFrameCallback(_onLayoutDone);
-    // }
-
     super.initState();
+  }
+
+  /// If query is blank it returns all results
+  List<TimelineEntry> getSortedSearchResults(String query) {
+    List<TimelineEntry> searchResult =
+        SearchManager.init().performSearch(query).toList();
+
+    /// Sort by starting time, so the search list is always displayed in ascending order.
+    searchResult.sort((TimelineEntry a, TimelineEntry b) {
+      return a.start!.compareTo(b.start!);
+    });
+
+    return searchResult;
   }
 
   void _scrollToEnd() {
@@ -80,14 +83,13 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
       _searchTimer = null;
     }
 
-    String txt = _searchTextController.text.trim().toLowerCase();
+    String query = _searchTextController.text.trim().toLowerCase();
 
     /// Perform search.
     /// A [Timer] is used to prevent unnecessary searches while the user is typing.
-    _searchTimer = Timer(Duration(milliseconds: txt.isEmpty ? 0 : 350), () {
-      Set<TimelineEntry> res = SearchManager.init().performSearch(txt);
+    _searchTimer = Timer(Duration(milliseconds: query.isEmpty ? 0 : 350), () {
       setState(() {
-        _searchResults = res.toList();
+        _searchResults = getSortedSearchResults(query);
       });
     });
   }
@@ -95,21 +97,33 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
   void _tapSearchResult(TimelineEntry entry) {
     cMenu.pushSubPage(SubPage.TARIKH_TIMELINE, arguments: {
       'focusItem': MenuItemData.fromEntry(entry),
-      'timeline': BlocProvider.getTimeline(context),
+      'timeline': cTrkh.timeline,
     });
+  }
+
+  void _onLayoutDone(_) {
+    if (scrollToEnd) {
+      _scrollToEnd();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     double heightPadding = 0;
 
+    // TODO TUNE THIS, BUT IT WORKS WELL:
     if (_searchResults.length < 10) {
-      // TODO TUNE THIS, BUT IT WORKS:
       heightPadding = MediaQuery.of(context).size.height - 150;
+      scrollToEnd = true;
+    } else {
+      scrollToEnd = false;
     }
 
-    // page isn't built yet so use timer, hack but works TODO, cleaner way?
-    Timer(Duration(milliseconds: 200), () => _scrollToEnd());
+    // TODO Can delete this old hack:
+    //Timer(Duration(milliseconds: 200), () => _scrollToEnd());
+    if (WidgetsBinding.instance != null) {
+      WidgetsBinding.instance!.addPostFrameCallback(_onLayoutDone);
+    }
 
     return FabSubPage(
       subPage: SubPage.TARIKH_SEARCH,

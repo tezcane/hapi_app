@@ -1,7 +1,6 @@
-//import 'package:flutter/cupertino.dart'; TODO what's this for?
+//import 'package:flutter/cupertino.dart'; //TODO what's this for?
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/constants/app_themes.dart';
 import 'package:hapi/constants/globals.dart';
 import 'package:hapi/controllers/auth_controller.dart';
 import 'package:hapi/controllers/language_controller.dart';

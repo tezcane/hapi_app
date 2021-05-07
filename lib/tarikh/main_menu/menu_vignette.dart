@@ -6,8 +6,8 @@ import 'package:flare_dart/math/aabb.dart' as flare;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:nima/nima/math/aabb.dart' as nima;
-import 'package:hapi/tarikh/blocs/bloc_provider.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
@@ -35,7 +35,7 @@ class MenuVignette extends LeafRenderObjectWidget {
   RenderObject createRenderObject(BuildContext context) {
     /// The [BlocProvider] widgets down the tree to access its components
     /// optimizing memory consumption and simplifying the code-base.
-    Timeline t = BlocProvider.getTimeline(context);
+    Timeline t = cTrkh.timeline;
     return MenuVignetteRenderObject()
       ..timeline = t
       ..assetId = assetId
@@ -48,9 +48,8 @@ class MenuVignette extends LeafRenderObjectWidget {
       BuildContext context, covariant MenuVignetteRenderObject renderObject) {
     /// The [BlocProvider] widgets down the tree to access its components
     /// optimizing memory consumption and simplifying the code-base.
-    Timeline t = BlocProvider.getTimeline(context);
     renderObject
-      ..timeline = t
+      ..timeline = cTrkh.timeline
       ..assetId = assetId
       ..gradientColor = gradientColor
       ..isActive = isActive;

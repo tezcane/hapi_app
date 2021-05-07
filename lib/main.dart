@@ -13,7 +13,7 @@ import 'package:hapi/controllers/onboarding_controller.dart';
 import 'package:hapi/controllers/theme_controller.dart';
 import 'package:hapi/helpers/localization.g.dart';
 import 'package:hapi/menu/menu_controller.dart';
-import 'package:hapi/tarikh/blocs/bloc_provider.dart';
+import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/ui/components/loading.dart';
 
 void main() async {
@@ -46,10 +46,12 @@ void main() async {
   await Firebase.initializeApp();
   await GetStorage.init();
 
+  // TODO cleanup/optimize use Getx bindings?
   Get.put<OnboardingController>(OnboardingController());
   Get.put<AuthController>(AuthController());
   Get.put<MenuController>(MenuController());
 //Get.lazyPut<QuestController>(() => QuestController());
+  Get.put<TarikhController>(TarikhController());
   Get.put<ThemeController>(ThemeController());
   Get.put<LanguageController>(LanguageController());
   runApp(MyApp());
@@ -65,24 +67,20 @@ class MyApp extends StatelessWidget {
 
     return GetBuilder<LanguageController>(
       builder: (languageController) => Loading(
-        // TODO BlocProvider needed for Tarikh to work:
-        child: BlocProvider(
-          platform: Theme.of(context).platform, // determine iOS/Android physics
-          child: GetMaterialApp(
-            translations: Localization(),
-            locale: languageController.getLocale, // <- Current locale
-            navigatorObservers: [
-              // FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
-            ],
-            debugShowCheckedModeBanner: false,
-            defaultTransition: Transition.fade,
-            transitionDuration: const Duration(milliseconds: 1000), // TODO tune
-            theme: AppThemes.lightTheme,
-            darkTheme: AppThemes.darkTheme,
-            themeMode: ThemeMode.system,
-            initialRoute: "/",
-            getPages: AppRoutes.routes,
-          ),
+        child: GetMaterialApp(
+          translations: Localization(),
+          locale: languageController.getLocale, // <- Current locale
+          navigatorObservers: [
+            // FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
+          ],
+          debugShowCheckedModeBanner: false,
+          defaultTransition: Transition.fade,
+          transitionDuration: const Duration(milliseconds: 1000), // TODO tune
+          theme: AppThemes.lightTheme,
+          darkTheme: AppThemes.darkTheme,
+          themeMode: ThemeMode.system,
+          initialRoute: "/",
+          getPages: AppRoutes.routes,
         ),
       ),
     );
