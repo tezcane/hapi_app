@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/main_menu/main_menu_section.dart';
@@ -74,6 +73,12 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
 
     super.initState();
   }
+
+  // prob need to do something here to avoid hot reload issue
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
