@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
+import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/main_menu/main_menu_section.dart';
@@ -60,13 +61,16 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
   _pauseSection() => setState(() => _isSectionActive = false);
 
   initState() {
+    //print('tarikh init state 1, isAppInitDone=${cMain.isAppInitDone}');
+
     /// The [_menu] loads a JSON file that's stored in the assets folder.
     /// This asset provides all the necessary information for the cards,
     /// such as labels, background colors, the background Flare animation asset,
     /// and for each element in the expanded card, the relative position on the [Timeline].
     _menu.loadFromBundle('assets/tarikh/menu.json').then((bool success) {
+      //print('tarikh init state 2, isAppInitDone=${cMain.isAppInitDone}');
       if (success) setState(() {}); // Load the menu.
-    });
+    }); // TODO bug here on hot reload breaks auto rotate
 
     super.initState();
   }

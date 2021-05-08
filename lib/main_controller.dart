@@ -41,8 +41,6 @@ class MainController extends GetxController {
   TargetPlatform get platform => _platform;
 
   void setAppInitDone() {
-    isAppInitDone = true;
-
     // Splash animations done, now allow screen rotations for the rest of time:
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -53,6 +51,8 @@ class MainController extends GetxController {
 
     // Disable all OS overlay bars (e.g. top status and bottom navigation bar):
     SystemChrome.setEnabledSystemUIOverlays([]);
+
+    isAppInitDone = true;
   }
 
   void setOrientation(bool isPortrait) {

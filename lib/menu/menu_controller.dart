@@ -146,8 +146,12 @@ class MenuController extends GetxController {
     _navigateToNavPage(navPage);
   }
 
-  void _navigateToNavPage(NavPage navPage,
-      {int transistionMs = 400, Transition transition = Transition.fade}) {
+  void _navigateToNavPage(
+    NavPage navPage, {
+    //dynamic arguments,
+    int transistionMs = 1000,
+    Transition transition = Transition.fade,
+  }) {
     switch (navPage) {
       case (NavPage.TOOLS):
         Get.offAll(
@@ -197,7 +201,12 @@ class MenuController extends GetxController {
 
   /// use to push a NavPages sub page (Tarikh Favorites, etc.) on top of menu stack
   /// About page is ok here too
-  void pushSubPage(SubPage subPage, {dynamic arguments}) {
+  void pushSubPage(
+    SubPage subPage, {
+    dynamic arguments,
+    int transistionMs = 1000,
+    Transition transition = Transition.fade,
+  }) {
     // // TODO option for disallow duplicates so might not need this
     // if (_subPageStack.length != 0) {
     //   if (_subPageStack[_subPageStack.length - 1] == subPage) {
@@ -210,20 +219,45 @@ class MenuController extends GetxController {
 
     switch (subPage) {
       case (SubPage.TARIKH_FAVORITE):
-        Get.to(() => TarikhFavoritesUI(), arguments: arguments);
+        Get.to(
+          () => TarikhFavoritesUI(),
+          arguments: arguments,
+          transition: transition,
+          duration: Duration(milliseconds: transistionMs),
+        );
         break;
       case (SubPage.TARIKH_SEARCH):
-        Get.to(() => TarikhSearchUI(), arguments: arguments);
+        Get.to(
+          () => TarikhSearchUI(),
+          arguments: arguments,
+          transition: transition,
+          duration: Duration(milliseconds: transistionMs),
+        );
         break;
       case (SubPage.TARIKH_TIMELINE):
-        Get.to(() => TarikhTimelineUI(), arguments: arguments);
+        Get.to(
+          () => TarikhTimelineUI(),
+          arguments: arguments,
+          transition: transition,
+          duration: Duration(milliseconds: transistionMs),
+        );
         break;
       case (SubPage.TARIKH_ARTICLE):
-        Get.to(() => TarikhArticleUI(), arguments: arguments);
+        Get.to(
+          () => TarikhArticleUI(),
+          arguments: arguments,
+          transition: transition,
+          duration: Duration(milliseconds: transistionMs),
+        );
         break;
       case (SubPage.ABOUT):
       default:
-        Get.to(() => AboutUI(), arguments: arguments);
+        Get.to(
+          () => AboutUI(),
+          arguments: arguments,
+          transition: transition,
+          duration: Duration(milliseconds: transistionMs),
+        );
         break;
     }
   }
