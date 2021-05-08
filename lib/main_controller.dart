@@ -10,8 +10,7 @@ class MainController extends GetxController {
 
   late final TargetPlatform _platform;
 
-//bool? lastOrientationWasPortrait;
-  RxBool isPortrait = true.obs;
+  RxBool isPortrait = true.obs; // MUST LEAVE TRUE FOR APP TO START
 
   @override
   void onInit() {

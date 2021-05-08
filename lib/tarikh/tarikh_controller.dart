@@ -1,5 +1,3 @@
-import 'dart:io' show Platform;
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/constants/globals.dart';
 import 'package:hapi/tarikh/search_manager.dart';

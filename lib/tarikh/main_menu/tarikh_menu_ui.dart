@@ -56,7 +56,7 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
   // TODO BUG anytime we go two menu deep away from here,
   //    animation does not resume on return
   // TODO what is v below:
-  _restoreSection(v) => setState(() => _isSectionActive = true);
+  //_restoreSection(v) => setState(() => _isSectionActive = true);
   _pauseSection() => setState(() => _isSectionActive = false);
 
   initState() {
