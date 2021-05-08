@@ -55,6 +55,7 @@ OverlayState? get _overlayState {
   return navigator!.overlay;
 }
 
+// TODO use this!
 /// To handle a loader for the application
 Future<void> showLoadingIndicator(
     {bool isModal = true, Color? modalColor}) async {

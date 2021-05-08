@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/widgets.dart';
+import 'package:hapi/main_controller.dart';
 import 'package:nima/nima.dart' as nima;
 import 'package:nima/nima/math/aabb.dart' as nima;
 import 'package:hapi/tarikh/timeline/timeline_utils.dart';
@@ -22,13 +23,14 @@ typedef ChangeEraCallback(TimelineEntry? era); // TODO ? prob want to disallow
 typedef ChangeHeaderColorCallback(Color background, Color text);
 
 class Timeline {
-  Timeline(this._platform) {
+  Timeline() {
+    this._platform = cMain.platform;
     setViewport(start: 1536.0, end: 3072.0); // TODO what is this?
   }
 
   /// The current platform is initialized at boot, to properly initialize
   /// [ScrollPhysics] based on the platform we're on.
-  final TargetPlatform _platform;
+  late final TargetPlatform _platform;
 
   /// Some aptly named constants for properly aligning the Timeline view.
   static const double LineWidth = 2.0;
@@ -774,8 +776,8 @@ class Timeline {
       }
 
       _simulationTime = 0.0;
+      // TODO test this on all platforms
       if (_platform == TargetPlatform.iOS) {
-        // TODO test this on ios
         _scrollPhysics = BouncingScrollPhysics();
       } else {
         _scrollPhysics = ClampingScrollPhysics();

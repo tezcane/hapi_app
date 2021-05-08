@@ -21,7 +21,7 @@ class MenuSlide extends StatefulWidget {
     required this.columnWidget,
     required this.bottomWidget,
     this.scaleWidth = 56,
-    this.scaleHeight = 56, // * Globals.PHI,
+    this.scaleHeight = 56,
     this.slideAnimationDuration = const Duration(milliseconds: 600),
     this.buttonAnimationDuration = const Duration(milliseconds: 650),
     this.openAnimationCurve = const ElasticOutCurve(0.9),
@@ -56,16 +56,6 @@ class _MenuSlideState extends State<MenuSlide>
 
   @override
   Widget build(BuildContext context) {
-    final double _width = MediaQuery.of(context).size.width;
-    final double _height = MediaQuery.of(context).size.height;
-    final double _fabPosition = 16; // TODO apply to other sizes
-    final double _fabSize = 56;
-
-    final double _xScale =
-        (widget.scaleWidth + _fabPosition * 2) * 100 / _width;
-    final double _yScale =
-        (widget.scaleHeight + _fabPosition * 2) * 100 / _height;
-
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: null,
@@ -85,49 +75,63 @@ class _MenuSlideState extends State<MenuSlide>
           ),
         ),
       ),
-      body: Stack(
-        children: <Widget>[
-          Container(
-            color: AppThemes.logoBackground,
-            child: Stack(
-              children: <Widget>[
-                Positioned(
-                  bottom: _fabSize + _fabPosition * 4,
-                  right: _fabPosition,
-                  // width is used as max width to prevent overlap
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(maxWidth: widget.scaleWidth),
-                    child: widget.columnWidget,
-                  ),
-                ),
-                Positioned(
-                  //right: widget.scaleWidth + _fabPosition * 2,
-                  //bottom: _fabPosition * 1.5,
-                  bottom: 0, //_fabPosition * 1.5,
-                  // height is used as max height to prevent overlap
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      //maxHeight: widget.scaleHeight - _fabPosition,
-                      maxHeight: widget.scaleHeight + 35, // TODO tune
+      body: GetBuilder<MenuController>(
+        builder: (c) {
+          final double _width = MediaQuery.of(context).size.width;
+          final double _height = MediaQuery.of(context).size.height;
+          final double _fabPosition = 16;
+          final double _fabSize = 56;
+
+          final double _xScale =
+              (widget.scaleWidth + _fabPosition * 2) * 100 / _width;
+          final double _yScale =
+              (widget.scaleHeight + _fabPosition * 2) * 100 / _height;
+
+          return Stack(
+            children: <Widget>[
+              Container(
+                color: AppThemes.logoBackground,
+                child: Stack(
+                  children: <Widget>[
+                    Positioned(
+                      bottom: _fabSize + _fabPosition * 4,
+                      right: _fabPosition,
+                      // width is used as max width to prevent overlap
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          minWidth: widget.scaleWidth,
+                          maxWidth: widget.scaleWidth,
+                        ),
+                        child: widget.columnWidget,
+                      ),
                     ),
-                    child: widget.bottomWidget,
-                  ),
+                    Positioned(
+                      //right: widget.scaleWidth + _fabPosition * 2,
+                      //bottom: _fabPosition * 1.5,
+                      bottom: 0, //_fabPosition * 1.5,
+                      // height is used as max height to prevent overlap
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          //maxHeight: widget.scaleHeight - _fabPosition,
+                          minHeight: widget.scaleHeight + 35,
+                          maxHeight: widget.scaleHeight + 35, // TODO tune
+                        ),
+                        child: widget.bottomWidget,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-          GetBuilder<MenuController>(
-            builder: (c) {
-              return SlideAnimation(
+              ),
+              SlideAnimation(
                 opened: c.isMenuShowing(),
                 xScale: _xScale,
                 yScale: _yScale,
                 duration: widget.slideAnimationDuration,
                 child: widget.foregroundPage,
-              );
-            },
-          ),
-        ],
+              ),
+            ],
+          );
+        },
       ),
     );
   }

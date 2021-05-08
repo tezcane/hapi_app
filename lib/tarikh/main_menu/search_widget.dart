@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:hapi/tarikh/colors.dart';
 
@@ -46,6 +47,8 @@ class SearchWidget extends StatelessWidget {
                   ? IconButton(
                       icon: Icon(Icons.cancel, size: 25.0),
                       onPressed: () {
+                        // Keyboard causes status and bottom bar to show, TODO better solution?
+                        SystemChrome.setEnabledSystemUIOverlays([]);
                         _searchFocusNode.unfocus();
                         _searchController.clear();
                       },

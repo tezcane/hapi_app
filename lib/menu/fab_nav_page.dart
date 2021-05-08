@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/menu/menu_slide.dart';
@@ -6,13 +7,15 @@ import 'package:hapi/menu/menu_nav.dart';
 import 'package:share/share.dart';
 
 class FabNavPage extends StatelessWidget {
-  const FabNavPage({
+  FabNavPage({
     Key? key,
     required this.navPage,
     required this.columnWidget,
     required this.bottomWidget,
     required this.foregroundPage,
-  }) : super(key: key);
+  }) : super(key: key) {
+    SystemChrome.setEnabledSystemUIOverlays([]);
+  }
 
   final NavPage navPage;
   final Widget columnWidget;
@@ -28,7 +31,6 @@ class FabNavPage extends StatelessWidget {
           //backgroundColor: background,
           body: MenuNav(
             builder: () {
-              //TODO anyway to put menu+menu_nav together without needing a builder?
               return Scaffold(
                 body: MenuSlide(
                   foregroundPage: IgnorePointer(
@@ -40,7 +42,7 @@ class FabNavPage extends StatelessWidget {
                 ),
               );
             },
-            selectedIndexAtInit: navPage.index,
+            initNavPage: navPage,
             items: kNavs
                 .map(
                   (nav) => Column(

@@ -13,6 +13,7 @@ import 'package:hapi/controllers/language_controller.dart';
 import 'package:hapi/controllers/onboarding_controller.dart';
 import 'package:hapi/controllers/theme_controller.dart';
 import 'package:hapi/helpers/localization.g.dart';
+import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/ui/components/loading.dart';
@@ -48,6 +49,7 @@ void main() async {
   await GetStorage.init();
 
   // TODO cleanup/optimize use Getx bindings?
+  Get.put<MainController>(MainController());
   Get.put<OnboardingController>(OnboardingController());
   Get.put<AuthController>(AuthController());
   Get.put<MenuController>(MenuController());
@@ -63,29 +65,32 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     ThemeController.to.getThemeModeFromStore();
 
-    // TODO test this with landscape Quran/Read mode
-    //SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-
-    // Make the app full screen:
-    SystemChrome.setEnabledSystemUIOverlays([]);
+    SystemChrome.setEnabledSystemUIOverlays([]); // Make app full screen
 
     return GetBuilder<LanguageController>(
-      builder: (languageController) => Loading(
-        child: GetMaterialApp(
-          translations: Localization(),
-          locale: languageController.getLocale, // <- Current locale
-          navigatorObservers: [
-            // FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
-          ],
-          debugShowCheckedModeBanner: false,
-          defaultTransition: Transition.fade,
-          transitionDuration: const Duration(milliseconds: 1000), // TODO tune
-          theme: AppThemes.lightTheme,
-          darkTheme: AppThemes.darkTheme,
-          themeMode: ThemeMode.system,
-          initialRoute: "/",
-          getPages: AppRoutes.routes,
-        ),
+      builder: (c) => OrientationBuilder(
+        builder: (context, orientation) {
+          cMain.setOrientation(orientation == Orientation.portrait);
+
+          return Loading(
+            child: GetMaterialApp(
+              translations: Localization(),
+              locale: c.getLocale, // <- Current locale
+              navigatorObservers: [
+                // FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
+              ],
+              debugShowCheckedModeBanner: false,
+              defaultTransition: Transition.fade,
+              transitionDuration:
+                  const Duration(milliseconds: 1000), // TODO tune
+              theme: AppThemes.lightTheme,
+              darkTheme: AppThemes.darkTheme,
+              themeMode: ThemeMode.system,
+              initialRoute: "/",
+              getPages: AppRoutes.routes,
+            ),
+          );
+        },
       ),
     );
   }

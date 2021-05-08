@@ -59,15 +59,6 @@ class MenuController extends GetxController {
   void initACFabIcon(AnimationController ac) => _acFabIcon = ac;
   void initACNavMenu(AnimationController navMenuAC) => _acNavMenu = navMenuAC;
 
-  // use to control fab animation depending if it as a root or deeper page
-  // final AnimatedIconData animatedIconMenuClose = AnimatedIcons.menu_close;
-  // final AnimatedIconData animatedIconMenuArrow = AnimatedIcons.arrow_menu;
-  // AnimatedIconData _fabAnimatedIcon = AnimatedIcons.menu_close;
-  // AnimatedIconData getFabAnimatedIcon() => _fabAnimatedIcon;
-
-  // RxBool _isFabBackMode = false.obs;
-  // RxBool get isFabBackMode => _isFabBackMode;
-
   /// Track pushed pages so we can backtrack to main nav menu page
   // TODO Persist this, where possible, pass in arguments to classes to rebuild:
   List<SubPage> _subPageStack = [];
@@ -76,10 +67,9 @@ class MenuController extends GetxController {
     return s.read('lastNavIdx') ?? NavPage.QUESTS.index;
   }
 
-  // May use it later:
-  // NavPage _getLastNavPage() {
-  //   return _getNavPage(_getLastNavIdx());
-  // }
+  NavPage getLastNavPage() {
+    return _getNavPage(_getLastNavIdx());
+  }
 
   bool isFastStartupMode() {
     return s.read('fastStartupMode') ?? true; // TODO write this setting
@@ -101,8 +91,9 @@ class MenuController extends GetxController {
     int hideMenuAfterFullInitMs = 2000;
 
     if (!isFastStartupMode()) {
-      heroLogoTransistionMs = 0;
       _disableScreenTouch();
+    } else {
+      heroLogoTransistionMs = 0;
     }
 
     _navigateToNavPage(lastNavPage, transistionMs: heroLogoTransistionMs);
@@ -140,19 +131,14 @@ class MenuController extends GetxController {
   }
 
   /// Use to switch to a high level nav page only (e.g. Quests, Quran, etc.)
-  void navigateToNavPage(int navIdx, {bool offAll = false}) {
-    NavPage navPage = _getNavPage(navIdx);
-
+  void navigateToNavPage(NavPage navPage, {bool offAll = false}) {
     // clear stack in case we jump to this next nav menu
     if (_subPageStack.length > 0) {
       _subPageStack = [];
     }
-    // if (isFabBackMode.value == true) {
-    //   _setFabBackMode(false);
-    // }
 
     // save so app restarts at this idx
-    s.write('lastNavIdx', navIdx);
+    s.write('lastNavIdx', navPage.index);
 
     _navigateToNavPage(navPage);
   }
@@ -217,10 +203,6 @@ class MenuController extends GetxController {
     //   }
     // }
 
-    // if (!_isFabBackMode.value) {
-    //   _setFabBackMode(true);
-    // }
-
     _subPageStack.add(subPage);
 
     switch (subPage) {
@@ -243,38 +225,31 @@ class MenuController extends GetxController {
     }
   }
 
-  // void _setFabBackMode(bool newfabBackMode) {
-  //   _isFabBackMode.value = newfabBackMode;
-  //   // TODO smooth back<->menu<->close transitions
-  //   if (_isFabBackMode.value) {
-  //     _fabAnimatedIcon = animatedIconMenuArrow;
-  //   } else {
-  //     _fabAnimatedIcon = animatedIconMenuClose;
-  //   }
-  //   update();
-  // }
-
   void handleBackButtonHit() {
-    // // paranoid check
-    // if (_subPageStack.length > 0) {
-    //   print('ERROR: handleBackButtonHit paranoid check hit');
-    //   _subPageStack.removeLast();
-    // }
-
     if (_subPageStack.length == 1) {
-      navigateToNavPage(_getLastNavIdx()); // this clears out fab back mode
+      navigateToNavPage(getLastNavPage()); // this clears out fab back mode
       // TODO animate back button
     } else {
+      if (_subPageStack.length > 1) {
+        _subPageStack.removeLast();
+      }
       Get.back(); // pop the sub menu stack
     }
   }
 
-  // bool isAboutPageShowing() {
-  //   if (_subPageStack.length != 0) {
-  //     return _subPageStack[_subPageStack.length - 1] == SubPage.ABOUT;
-  //   }
-  //   return false;
-  // }
+  bool isAnySubPageShowing() {
+    if (_subPageStack.length != 0) {
+      return true;
+    }
+    return false;
+  }
+
+  bool isSubPageShowing(SubPage subPage) {
+    if (_subPageStack.length != 0) {
+      return _subPageStack[_subPageStack.length - 1] == subPage;
+    }
+    return false;
+  }
 
   RxBool _isScreenDisabled = false.obs;
   RxBool _isMenuShowing = false.obs;

@@ -27,15 +27,15 @@ class MenuNav extends StatefulWidget {
   const MenuNav({
     Key? key,
     required this.builder,
-    required this.selectedIndexAtInit,
+    required this.initNavPage,
     required this.items,
   }) : super(key: key);
 
   /// `builder` builds a view/page based on the `selectedIndex`.
   final SideMenuAnimationBuilder builder;
 
-  /// Initial index selected, if nothing to select pass size/count of items[].
-  final int selectedIndexAtInit;
+  /// NavPage to know what is selected in nav menu.
+  final NavPage initNavPage;
 
   /// List of items that we want to display on the Side Menu.
   final List<Widget> items;
@@ -46,11 +46,9 @@ class MenuNav extends StatefulWidget {
 
 class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
   late AnimationController _acNavMenu;
-  late int _selectedIndex;
 
   @override
   void initState() {
-    _selectedIndex = widget.selectedIndexAtInit;
     _acNavMenu = AnimationController(
       vsync: this,
       duration: navMenuShowHideMs,
@@ -135,35 +133,28 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
                         ),
 
                       /// Show Menu:
-                      for (int i = 0; i < widget.items.length; i++)
+                      for (NavPage navPage in NavPage.values)
                         MenuItem(
-                          index: i,
-                          length: widget.items.length,
+                          index: navPage.index,
+                          length: NavPage.values.length,
                           width: _kSideMenuWidth,
                           height: itemSize,
                           acNavMenu: _acNavMenu,
                           curve: _kCurveAnimation,
-                          color: (i == _selectedIndex)
+                          color: (navPage == widget.initNavPage)
                               ? _kButtonColorSelected
                               : _kButtonColorUnselected,
                           onTap: () {
-                            if (i == _selectedIndex) {
-                              // if (cMenu.isAboutPageShowing()) {
-                              //   cMenu.hideMenu(); // selected new nav page
-                              //   cMenu.navigateToNavPage(_selectedIndex);
-                              // } else {
-                              cMenu.hideMenuNav(); // TODO show settings!
-                              // }
+                            if (navPage == widget.initNavPage) {
+                              cMenu.hideMenuNav();
+                              // TODO show settings
                             } else {
-                              setState(() {
-                                // TODO needed?
-                                _selectedIndex = i;
-                                cMenu.hideMenu(); // selected new nav page
-                                cMenu.navigateToNavPage(_selectedIndex);
-                              });
+                              // selected new nav page
+                              cMenu.hideMenu();
+                              cMenu.navigateToNavPage(navPage);
                             }
                           },
-                          child: widget.items[i],
+                          child: widget.items[navPage.index],
                         ),
                     ],
                   ),

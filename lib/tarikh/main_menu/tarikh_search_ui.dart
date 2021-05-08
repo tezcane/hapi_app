@@ -1,13 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/main_menu/search_widget.dart';
 import 'package:hapi/tarikh/main_menu/thumbnail_detail_widget.dart';
 import 'package:hapi/tarikh/search_manager.dart';
-import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
 class TarikhSearchUI extends StatefulWidget {
@@ -31,6 +31,7 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
 
   bool scrollToEnd = false;
 
+  @override
   initState() {
     _searchResults = getSortedSearchResults(''); // init list on page
 
@@ -42,6 +43,13 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
     //_searchFocusNode.requestFocus();
 
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    // if keyboard showed, must hide status/bottom bar:
+    SystemChrome.setEnabledSystemUIOverlays([]);
+    super.dispose();
   }
 
   /// If query is blank it returns all results

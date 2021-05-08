@@ -41,13 +41,14 @@ class _SplashUIState extends State<SplashUI> with TickerProviderStateMixin {
 
   @override
   void initState() {
+    cGif = GifController(vsync: this); // do fast for dipose()
+
     stopwatch.start();
 
     // handle logo gif playback stuff
     int gifIndex = Random().nextInt(gifs.length);
     double gifFrames = gifs[gifIndex][0].toDouble();
     gifFilename = gifs[gifIndex][1];
-    cGif = GifController(vsync: this);
 
     setupAnimationPlayAndWaitTimer(gifFrames);
 
@@ -69,6 +70,7 @@ class _SplashUIState extends State<SplashUI> with TickerProviderStateMixin {
   @override
   void dispose() {
     stopwatch.stop();
+    cGif.dispose(); // needed for fast startup mode
 
     // Loading is complete so stop timers
     if (_loadingBarTimer != null && _loadingBarTimer!.isActive) {
@@ -79,6 +81,7 @@ class _SplashUIState extends State<SplashUI> with TickerProviderStateMixin {
   }
 
   // After updateTimeMs time, refresh the loading bar.
+  // TODO use Loading() progress bar instead?
   void updateLoadingMsg(int updateTimeMs, bool isBarGrowing) {
     if (c.isSplashScreenDone()) {
       _loadingBar = ''; // hide loading bar so hero/init navigation is cleaner

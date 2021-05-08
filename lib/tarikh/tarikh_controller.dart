@@ -16,29 +16,10 @@ class TarikhController extends GetxController {
   final List<TimelineEntry> _favorites = [];
 
   late final Timeline _timeline;
-  late final TargetPlatform _platform;
 
   @override
   void onInit() {
-    // TODO test all these platforms and add web
-    if (Platform.isAndroid) {
-      _platform = TargetPlatform.android;
-    } else if (Platform.isIOS) {
-      _platform = TargetPlatform.iOS;
-    } else if (Platform.isWindows) {
-      _platform = TargetPlatform.windows;
-    } else if (Platform.isMacOS) {
-      _platform = TargetPlatform.macOS;
-    } else if (Platform.isLinux) {
-      _platform = TargetPlatform.linux;
-    } else if (Platform.isFuchsia) {
-      _platform = TargetPlatform.fuchsia;
-    } else {
-      print('Unknown platform, defaulting to android');
-      _platform = TargetPlatform.android;
-    }
-
-    _timeline = Timeline(_platform);
+    _timeline = Timeline();
     _timeline
         .loadFromBundle('assets/tarikh/timeline.json')
         .then((List<TimelineEntry> entries) {
@@ -67,8 +48,6 @@ class TarikhController extends GetxController {
     }
     _timeline = value;
   }
-
-  TargetPlatform get platform => _platform; // TODO belongs in higher level c
 
   /// This method is called during the [BlocProvider] initialization.
   /// It receives as input the full list of [TimelineEntry], so that it can
