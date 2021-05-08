@@ -7,6 +7,7 @@ msg  - message
 nav  - Navigate/Navigator
 np   - NavPage
 s    - storage/Get Storage
+t    - timeline
 trkh - Tarikh
 
 ## Islamic GLOSSARY

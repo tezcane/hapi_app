@@ -28,7 +28,7 @@ class TarikhTimelineUI extends StatefulWidget {
   }
 
   late final MenuItemData focusItem;
-  final Timeline timeline = cTrkh.timeline;
+  final Timeline timeline = cTrkh.timeline; // needed for widget update detect?
 
   @override
   _TarikhTimelineUIState createState() => _TarikhTimelineUIState();
@@ -61,13 +61,14 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   /// showing the favorite elements already on the timeline.
   bool _showFavorites = false;
 
+  // Syntactic sugar for getting timeline since used so much here
+  Timeline get t => cTrkh.timeline;
+
   @override
   initState() {
-    widget.timeline.isActive = true;
-    _eraName = widget.timeline.currentEra != null
-        ? widget.timeline.currentEra!.label!
-        : DefaultEraName;
-    widget.timeline.onHeaderColorsChanged = (Color background, Color text) {
+    t.isActive = true;
+    _eraName = t.currentEra != null ? t.currentEra!.label! : DefaultEraName;
+    t.onHeaderColorsChanged = (Color background, Color text) {
       setState(() {
         _headerTextColor = text;
         _headerBackgroundColor = background;
@@ -75,23 +76,23 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     };
 
     /// Update the label for the [Timeline] object.
-    widget.timeline.onEraChanged = (TimelineEntry? entry) {
+    t.onEraChanged = (TimelineEntry? entry) {
       setState(() {
         _eraName = 'Era: ' + (entry != null ? entry.label! : DefaultEraName);
       });
     };
 
-    if (widget.timeline.headerTextColor != null) {
-      _headerTextColor = widget.timeline.headerTextColor!;
+    if (t.headerTextColor != null) {
+      _headerTextColor = t.headerTextColor!;
     } else {
       // _headerTextColor = null; // TODO
     }
-    if (widget.timeline.headerBackgroundColor != null) {
-      _headerBackgroundColor = widget.timeline.headerBackgroundColor!;
+    if (t.headerBackgroundColor != null) {
+      _headerBackgroundColor = t.headerBackgroundColor!;
     } else {
       // _headerBackgroundColor = null; // TODO
     }
-    _showFavorites = widget.timeline.showFavorites;
+    _showFavorites = t.showFavorites;
 
     super.initState();
   }
@@ -104,10 +105,10 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   /// all the relevant information properly.
   void _scaleStart(ScaleStartDetails details) {
     _lastFocalPoint = details.focalPoint;
-    _scaleStartYearStart = widget.timeline.start;
-    _scaleStartYearEnd = widget.timeline.end;
-    widget.timeline.isInteracting = true;
-    widget.timeline.setViewport(velocity: 0.0, animate: true);
+    _scaleStartYearStart = t.start;
+    _scaleStartYearEnd = t.end;
+    t.isInteracting = true;
+    t.setViewport(velocity: 0.0, animate: true);
   }
 
   void _scaleUpdate(ScaleUpdateDetails details) {
@@ -118,7 +119,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     double focus = _scaleStartYearStart + details.focalPoint.dy * scale;
     double focalDiff =
         (_scaleStartYearStart + _lastFocalPoint!.dy * scale) - focus;
-    widget.timeline.setViewport(
+    t.setViewport(
         start: focus + (_scaleStartYearStart - focus) / changeScale + focalDiff,
         end: focus + (_scaleStartYearEnd - focus) / changeScale + focalDiff,
         height: context.size!.height,
@@ -126,9 +127,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   }
 
   void _scaleEnd(ScaleEndDetails details) {
-    widget.timeline.isInteracting = false;
-    widget.timeline.setViewport(
-        velocity: details.velocity.pixelsPerSecond.dy, animate: true);
+    t.isInteracting = false;
+    t.setViewport(velocity: details.velocity.pixelsPerSecond.dy, animate: true);
   }
 
   /// The following two callbacks are passed down to the [TimelineRenderWidget] so
@@ -142,7 +142,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   }
 
   void _tapDown(TapDownDetails details) {
-    widget.timeline.setViewport(velocity: 0.0, animate: true);
+    t.setViewport(velocity: 0.0, animate: true);
   }
 
   /// If the [TimelineRenderWidget] has set the [_touchedBubble] to the currently
@@ -158,45 +158,44 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
       if (_touchedBubble!.zoom) {
         MenuItemData target = MenuItemData.fromEntry(_touchedBubble!.entry!);
 
-        widget.timeline.padding = EdgeInsets.only(
+        t.padding = EdgeInsets.only(
             top: TopOverlap +
                 devicePadding.top +
                 target.padTop +
                 Timeline.Parallax,
             bottom: target.padBottom);
-        widget.timeline.setViewport(
+        t.setViewport(
             start: target.start!, end: target.end!, animate: true, pad: true);
       } else {
-        widget.timeline.isActive = false;
+        t.isActive = false;
 
         cMenu.pushSubPage(SubPage.TARIKH_ARTICLE, arguments: {
           'article': _touchedBubble!.entry!,
         });
 
-        widget.timeline.isActive = true; // TODO working? was below:
+        t.isActive = true; // TODO working? was below:
         // Navigator.of(context)
         //     .push(MaterialPageRoute(
         //         builder: (BuildContext context) => TarikhArticleUI(
         //               article: _touchedBubble!.entry!,
         //               key: null,
         //             )))
-        //     .then((v) => widget.widget.timeline.isActive = true);
+        //     .then((v) => widget.t.isActive = true);
       }
     } else if (_touchedEntry != null) {
       MenuItemData target = MenuItemData.fromEntry(_touchedEntry!);
 
-      widget.timeline.padding = EdgeInsets.only(
+      t.padding = EdgeInsets.only(
           top: TopOverlap +
               devicePadding.top +
               target.padTop +
               Timeline.Parallax,
           bottom: target.padBottom);
-      widget.timeline.setViewport(
+      t.setViewport(
           start: target.start!, end: target.end!, animate: true, pad: true);
     }
   }
 
-  // TODO what do you do???
   /// When performing a long-press operation, the viewport will be adjusted so that
   /// the visible start and end times will be updated according to the [TimelineEntry]
   /// information. The long-pressed bubble will float to the top of the viewport,
@@ -206,45 +205,48 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     if (_touchedBubble != null) {
       MenuItemData target = MenuItemData.fromEntry(_touchedBubble!.entry!);
 
-      widget.timeline.padding = EdgeInsets.only(
+      t.padding = EdgeInsets.only(
           top: TopOverlap +
               devicePadding.top +
               target.padTop +
               Timeline.Parallax,
           bottom: target.padBottom);
-      widget.timeline.setViewport(
+      t.setViewport(
           start: target.start!, end: target.end!, animate: true, pad: true);
     }
   }
 
+  // TODO needed? never saw it called
   /// Update the current view and change the timeline header, color and background color,
   @override
   void didUpdateWidget(covariant TarikhTimelineUI oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget.timeline != oldWidget.timeline) {
+    if (t != oldWidget.timeline) {
+      print('Timeline: didUpdateWidget true');
       setState(() {
-        _headerTextColor = widget.timeline.headerTextColor;
-        _headerBackgroundColor = widget.timeline.headerBackgroundColor;
+        _headerTextColor = t.headerTextColor;
+        _headerBackgroundColor = t.headerBackgroundColor;
       });
 
-      widget.timeline.onHeaderColorsChanged = (Color background, Color text) {
+      t.onHeaderColorsChanged = (Color background, Color text) {
         setState(() {
           _headerTextColor = text;
           _headerBackgroundColor = background;
         });
       };
-      widget.timeline.onEraChanged = (TimelineEntry? entry) {
+      t.onEraChanged = (TimelineEntry? entry) {
         setState(() {
           _eraName = entry != null ? entry.label! : DefaultEraName;
         });
       };
       setState(() {
-        _eraName = widget.timeline.currentEra != null
-            ? widget.timeline.currentEra as String
-            : DefaultEraName;
-        _showFavorites = widget.timeline.showFavorites;
+        _eraName =
+            t.currentEra != null ? t.currentEra as String : DefaultEraName;
+        _showFavorites = t.showFavorites;
       });
+    } else {
+      print('Timeline: didUpdateWidget false');
     }
   }
 
@@ -254,8 +256,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   deactivate() {
     super.deactivate();
 
-    widget.timeline.onHeaderColorsChanged = null;
-    widget.timeline.onEraChanged = null;
+    t.onHeaderColorsChanged = null;
+    t.onEraChanged = null;
   }
 
   /// This widget is wrapped in a [Scaffold] to have the classic Material Design visual layout structure.
@@ -267,7 +269,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   @override
   Widget build(BuildContext context) {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
-    widget.timeline.devicePadding = devicePadding;
+    t.devicePadding = devicePadding;
 
     return FabSubPage(
       subPage: SubPage.TARIKH_TIMELINE,
@@ -283,7 +285,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
           child: Stack(
             children: <Widget>[
               TimelineRenderWidget(
-                  timeline: widget.timeline,
+                  timeline: t,
                   favorites: cTrkh.favorites,
                   topOverlap: TopOverlap + devicePadding.top,
                   focusItem: widget.focusItem,
@@ -328,10 +330,9 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                             ),
                           ),
                           onTap: () {
-                            widget.timeline.showFavorites =
-                                !widget.timeline.showFavorites;
+                            t.showFavorites = !t.showFavorites;
                             setState(() {
-                              _showFavorites = widget.timeline.showFavorites;
+                              _showFavorites = t.showFavorites;
                             });
                           },
                         ),
