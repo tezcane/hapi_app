@@ -35,25 +35,38 @@ class SearchWidget extends StatelessWidget {
         child: TextField(
           controller: _searchController,
           focusNode: _searchFocusNode,
+          textAlign: TextAlign.center, // align UI & better for arabic support
           decoration: InputDecoration(
               hintText: 'Search history',
               hintStyle: TextStyle(
-                fontSize: 16.0,
+                fontSize: 20.0,
                 fontFamily: "Roboto",
                 color: darkText.withOpacity(darkText.opacity * 0.5),
               ),
               prefixIcon: Icon(Icons.search, size: 30),
               suffixIcon: _searchFocusNode.hasFocus
-                  ? IconButton(
-                      icon: Icon(Icons.cancel, size: 25.0),
-                      onPressed: () {
-                        // Keyboard causes status and bottom bar to show, TODO better solution?
-                        SystemChrome.setEnabledSystemUIOverlays([]);
-                        _searchFocusNode.unfocus();
-                        _searchController.clear();
-                      },
+                  ? Visibility(
+                      visible: _searchController.text.isNotEmpty,
+                      child: IconButton(
+                        icon: Icon(Icons.cancel, size: 30.0),
+                        onPressed: () {
+                          // clear text then bring down keyboard
+                          _searchController.clear();
+                          _searchFocusNode.unfocus();
+                        },
+                      ),
                     )
-                  : null,
+                  : Visibility(
+                      visible: _searchController.text.isNotEmpty,
+                      child: IconButton(
+                        icon: Icon(Icons.cancel, size: 30.0),
+                        onPressed: () {
+                          // clear text then bring up keyboard
+                          _searchController.clear();
+                          _searchFocusNode.requestFocus();
+                        },
+                      ),
+                    ),
               border: InputBorder.none),
           style: TextStyle(
             fontSize: 20.0,

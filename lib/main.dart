@@ -65,33 +65,38 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     ThemeController.to.getThemeModeFromStore();
 
+    // Must be in portrait at init, for splash, onboarding and orientation init
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     SystemChrome.setEnabledSystemUIOverlays([]); // Make app full screen
 
-    return GetBuilder<LanguageController>(
-      builder: (c) => OrientationBuilder(
-        builder: (context, orientation) {
-          cMain.setOrientation(orientation == Orientation.portrait);
-
-          return Loading(
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        cMain.setOrientation(orientation == Orientation.portrait);
+        return GetBuilder<LanguageController>(
+          builder: (c) => Loading(
             child: GetMaterialApp(
               translations: Localization(),
               locale: c.getLocale, // <- Current locale
-              navigatorObservers: [
-                // FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
-              ],
+              // navigatorObservers: [
+              //   // FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
+              // ],
               debugShowCheckedModeBanner: false,
-              defaultTransition: Transition.fade,
-              transitionDuration:
-                  const Duration(milliseconds: 1000), // TODO tune
+              // TODO these should be controlled in MenuController
+              // defaultTransition: Transition.fade,
+              // transitionDuration:
+              //     const Duration(milliseconds: 1000),
               theme: AppThemes.lightTheme,
               darkTheme: AppThemes.darkTheme,
-              themeMode: ThemeMode.system,
+              themeMode: ThemeMode.system, // TODO test this
               initialRoute: "/",
               getPages: AppRoutes.routes,
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

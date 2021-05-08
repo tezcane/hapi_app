@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hapi/constants/globals.dart';
 import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
@@ -9,6 +10,7 @@ import 'package:hapi/tarikh/main_menu/search_widget.dart';
 import 'package:hapi/tarikh/main_menu/thumbnail_detail_widget.dart';
 import 'package:hapi/tarikh/search_manager.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
+import 'package:keyboard_visibility/keyboard_visibility.dart';
 
 class TarikhSearchUI extends StatefulWidget {
   const TarikhSearchUI({Key? key}) : super(key: key);
@@ -33,11 +35,32 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
 
   @override
   initState() {
-    _searchResults = getSortedSearchResults(''); // init list on page
+    // init list search on page
+    String lastHistorySearch = s.read('lastHistorySearch') ?? '';
+    _searchTextController.text = lastHistorySearch;
+    _updateSearch();
 
     _searchTextController.addListener(() => _updateSearch());
 
-    //_searchFocusNode.addListener(() => setState(() => _updateSearch()));
+    // _searchFocusNode.addListener(() => Timer(const Duration(milliseconds: 300),
+    //     () => SystemChrome.setEnabledSystemUIOverlays([])));
+
+    // if keyboard showed, must hide status/bottom bar:
+    KeyboardVisibilityNotification().addNewListener(
+      onChange: (bool visible) {
+        print('KeyboardVisibilityNotification: visible: $visible');
+
+        // Put in timer or status bar won't become transparent 100% of the time
+        if (visible) {
+          Timer(
+            const Duration(milliseconds: 300),
+            () => SystemChrome.setEnabledSystemUIOverlays([]),
+          );
+        } else {
+          SystemChrome.setEnabledSystemUIOverlays([]);
+        }
+      },
+    );
 
     // Enable to have keyboard pop up on page init:
     //_searchFocusNode.requestFocus();
@@ -49,6 +72,13 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
   void dispose() {
     // if keyboard showed, must hide status/bottom bar:
     SystemChrome.setEnabledSystemUIOverlays([]);
+
+    //_searchResults = [];
+    cancelSearch();
+    _searchFocusNode.dispose();
+    _scrollController.dispose();
+    KeyboardVisibilityNotification().dispose();
+
     super.dispose();
   }
 
@@ -81,23 +111,28 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
     }
   }
 
-  /// Used by the [_searchTextController] to properly update the state of this widget,
-  /// and consequently the layout of the current view.
-  _updateSearch() {
-    // cancelSearch:
+  void cancelSearch() {
     if (_searchTimer != null && _searchTimer!.isActive) {
       /// Remove old timer.
       _searchTimer!.cancel();
       _searchTimer = null;
     }
+  }
+
+  /// Used by the [_searchTextController] to properly update the state of this widget,
+  /// and consequently the layout of the current view.
+  _updateSearch() {
+    cancelSearch();
 
     String query = _searchTextController.text.trim().toLowerCase();
 
     /// Perform search.
     /// A [Timer] is used to prevent unnecessary searches while the user is typing.
     _searchTimer = Timer(Duration(milliseconds: query.isEmpty ? 0 : 350), () {
+      s.write('lastHistorySearch', _searchTextController.text);
+      List<TimelineEntry> searchResults = getSortedSearchResults(query);
       setState(() {
-        _searchResults = getSortedSearchResults(query);
+        _searchResults = searchResults;
       });
     });
   }

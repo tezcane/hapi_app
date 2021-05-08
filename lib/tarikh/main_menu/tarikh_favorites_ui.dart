@@ -59,19 +59,19 @@ class TarikhFavoritesUI extends StatelessWidget {
                                     fontSize: 25,
                                     color: darkText
                                         .withOpacity(darkText.opacity * 0.75),
-                                    height: 1.2,
+                                    //height: 1.2,
                                   )),
                             ),
                             Container(
-                              width: 270,
+                              //width: 270,
                               margin: EdgeInsets.only(bottom: 114),
                               child: Text(
-                                "To save favorites, tap the heart inside timeline events",
+                                'Add favorites in timeline events',
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontFamily: "Roboto",
-                                  fontSize: 17,
-                                  height: 1.5,
+                                  fontSize: 19,
+                                  //height: 1.5,
                                   color: Colors.black.withOpacity(0.75),
                                 ),
                               ),

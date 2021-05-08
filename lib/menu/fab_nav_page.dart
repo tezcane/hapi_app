@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/menu/menu_slide.dart';
@@ -7,15 +6,13 @@ import 'package:hapi/menu/menu_nav.dart';
 import 'package:share/share.dart';
 
 class FabNavPage extends StatelessWidget {
-  FabNavPage({
+  const FabNavPage({
     Key? key,
     required this.navPage,
     required this.columnWidget,
     required this.bottomWidget,
     required this.foregroundPage,
-  }) : super(key: key) {
-    SystemChrome.setEnabledSystemUIOverlays([]);
-  }
+  }) : super(key: key);
 
   final NavPage navPage;
   final Widget columnWidget;
@@ -34,7 +31,8 @@ class FabNavPage extends StatelessWidget {
               return Scaffold(
                 body: MenuSlide(
                   foregroundPage: IgnorePointer(
-                    ignoring: c.isMenuShowing(), // disable UI when menu showing
+                    ignoring: c.isMenuShowing(),
+                    // disable UI when menu showing
                     child: foregroundPage, // Main page
                   ),
                   columnWidget: columnWidget, // preferably Column
@@ -65,7 +63,9 @@ class FabNavPage extends StatelessWidget {
                             ),
                           if (nav.np == NavPage.RELICS)
                             Positioned(
-                              top: 4.7, left: 20.0, // right: 0.0, bottom: 0.0,
+                              top: 4.7,
+                              left: 20.0,
+                              // right: 0.0, bottom: 0.0,
                               child: Transform.rotate(
                                 angle: .59,
                                 child: Icon(Icons.star,

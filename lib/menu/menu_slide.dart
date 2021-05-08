@@ -58,6 +58,7 @@ class _MenuSlideState extends State<MenuSlide>
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
+        tooltip: 'Show or hide the main menu',
         onPressed: null,
         child: Center(
           child: Row(

@@ -4,6 +4,7 @@ import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/constants/globals.dart';
+import 'package:hapi/main_controller.dart';
 import 'package:hapi/tarikh/article/tarikh_article_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_favorites_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_menu_ui.dart';
@@ -94,6 +95,7 @@ class MenuController extends GetxController {
       _disableScreenTouch();
     } else {
       heroLogoTransistionMs = 0;
+      cMain.setAppInitDone();
     }
 
     _navigateToNavPage(lastNavPage, transistionMs: heroLogoTransistionMs);
@@ -105,6 +107,7 @@ class MenuController extends GetxController {
           hideMenu(); // logo should be in menu by now
           Timer(navMenuShowHideMs, () {
             _enableScreenTouch(); // give time for menu to close
+            cMain.setAppInitDone();
           });
         });
       });

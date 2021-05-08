@@ -1,5 +1,6 @@
 import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hapi/menu/menu_controller.dart';
 
@@ -9,6 +10,8 @@ class MainController extends GetxController {
   static MainController get to => Get.find();
 
   late final TargetPlatform _platform;
+
+  bool isAppInitDone = false;
 
   RxBool isPortrait = true.obs; // MUST LEAVE TRUE FOR APP TO START
 
@@ -28,22 +31,37 @@ class MainController extends GetxController {
     } else if (Platform.isFuchsia) {
       _platform = TargetPlatform.fuchsia;
     } else {
-      print('Unknown platform, defaulting to android');
+      print('ERROR: Unknown platform, defaulting to Android');
       _platform = TargetPlatform.android;
     }
-
-    ///lastState = MediaQuery.of(context).orientation == Orientation.portrait;
 
     super.onInit();
   }
 
   TargetPlatform get platform => _platform;
 
-  // void initOrientation(bool isPortrait) {
-  //   lastOrientationWasPortrait = isPortrait;
-  // }
+  void setAppInitDone() {
+    isAppInitDone = true;
+
+    // Splash animations done, now allow screen rotations for the rest of time:
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+      DeviceOrientation.landscapeRight,
+      DeviceOrientation.landscapeLeft,
+    ]);
+
+    // Disable all OS overlay bars (e.g. top status and bottom navigation bar):
+    SystemChrome.setEnabledSystemUIOverlays([]);
+  }
 
   void setOrientation(bool isPortrait) {
+    // don't proceed with any auto-orientation yet
+    if (!isAppInitDone) {
+      print('ORIENTATION: App is not initialized yet.');
+      return;
+    }
+
     bool lastModeWasPortait = this.isPortrait.value;
 
     if (lastModeWasPortait && isPortrait) {

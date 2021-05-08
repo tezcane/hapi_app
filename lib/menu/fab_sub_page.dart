@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hapi/menu/menu_controller.dart';
 
 class FabSubPage extends StatelessWidget {
-  FabSubPage({Key? key, required this.subPage, required this.child})
-      : super(key: key) {
-    SystemChrome.setEnabledSystemUIOverlays([]);
-  }
+  const FabSubPage({Key? key, required this.subPage, required this.child})
+      : super(key: key);
 
   final SubPage subPage;
   final Widget child;
