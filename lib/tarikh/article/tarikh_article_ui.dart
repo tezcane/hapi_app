@@ -192,12 +192,13 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                                         _subTitle,
                                         textAlign: TextAlign.left,
                                         style: TextStyle(
-                                            color: darkText.withOpacity(
-                                                darkText.opacity * 0.5),
-                                            fontSize: 17.0,
-                                            height: 1.5,
-                                            fontFamily: "Roboto"),
-                                      )
+                                          color: darkText.withOpacity(
+                                              darkText.opacity * 0.5),
+                                          fontSize: 17.0,
+                                          height: 1.5,
+                                          fontFamily: "Roboto",
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
