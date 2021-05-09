@@ -1,7 +1,9 @@
 ## CODE GLOSSARY
 
 AC   - AnimationController
+btn  - Button
 C    - Controller
+dn   - down (use with up: up/dn)
 idx  - Index
 msg  - message
 nav  - Navigate/Navigator
