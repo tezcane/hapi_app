@@ -124,6 +124,7 @@ class _SectionState extends State<MenuSection>
                         left: 0,
                         top: 0,
                         child: MenuVignette(
+                          needsRepaint: true,
                           gradientColor: widget.backgroundColor,
                           isActive: widget.isActive,
                           assetId: widget.assetId,

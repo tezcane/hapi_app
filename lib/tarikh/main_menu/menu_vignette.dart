@@ -8,9 +8,10 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:nima/nima/math/aabb.dart' as nima;
-import 'package:hapi/tarikh/timeline/timeline.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
+/// This controls the collapsable tarikh menu vinettes animations.
+///
 /// This widget renders a Flare/Nima [FlutterActor]. It relies on a [LeafRenderObjectWidget]
 /// so it can implement a custom [RenderObject] and update it accordingly.
 class MenuVignette extends LeafRenderObjectWidget {
@@ -24,8 +25,13 @@ class MenuVignette extends LeafRenderObjectWidget {
   /// Also makes the sub-section more readable.
   final Color gradientColor;
 
+  // TODO this is needed or good to have MAYBE?, but not used anywhere now
+  // Replaced old way of using timeline null checks
+  final bool needsRepaint;
+
   MenuVignette(
       {Key? key,
+      required this.needsRepaint,
       required this.gradientColor,
       required this.isActive,
       required this.assetId})
@@ -38,10 +44,17 @@ class MenuVignette extends LeafRenderObjectWidget {
     return MenuVignetteRenderObject()
       ..assetId = assetId
       ..gradientColor = gradientColor
-      ..isActive = isActive;
+      ..isActive = isActive
+      ..needsRepaint = needsRepaint;
   }
 
   @override
+
+  // TODO who and when is this called?  needsRepaint needed then?
+  // Need this like timeline_render_widget.dart too?:
+  //   cTrkh.t.onNeedPaint = markNeedsPaint;
+  //   markNeedsPaint();
+  //   markNeedsLayout();
   void updateRenderObject(
       BuildContext context, covariant MenuVignetteRenderObject renderObject) {
     /// The [BlocProvider] widgets down the tree to access its components
@@ -49,12 +62,12 @@ class MenuVignette extends LeafRenderObjectWidget {
     renderObject
       ..assetId = assetId
       ..gradientColor = gradientColor
-      ..isActive = isActive;
+      ..isActive = isActive
+      ..needsRepaint = needsRepaint;
   }
 
   @override
   didUnmountRenderObject(covariant MenuVignetteRenderObject renderObject) {
-    print('didUnmountRenderObject$renderObject._assetId}');
     renderObject.isActive = false;
   }
 }
@@ -76,11 +89,14 @@ class MenuVignetteRenderObject extends RenderBox {
   bool _isFrameScheduled = false;
   double opacity = 0.0;
 
-  set timeline(Timeline value) {
-    if (cTrkh.timeline == value) {
+  bool _needsRepaint = false;
+
+  set needsRepaint(bool value) {
+    if (_needsRepaint == value) {
       return;
     }
-    cTrkh.timeline = value;
+    _needsRepaint = value;
+
     _firstUpdate = true;
     updateRendering();
   }
@@ -103,8 +119,8 @@ class MenuVignetteRenderObject extends RenderBox {
     updateRendering();
   }
 
-  TimelineEntry? get timelineEntry {
-    return cTrkh.timeline.getById(_assetId!);
+  TimelineEntry? get _timelineEntry {
+    return cTrkh.t.getById(_assetId!);
   }
 
   @override
@@ -120,6 +136,11 @@ class MenuVignetteRenderObject extends RenderBox {
 
   /// Uses the [SchedulerBinding] to trigger a new paint for this widget.
   void updateRendering() {
+    // if (!_needsRepaint) { // will stop animation from happening
+    //   return;
+    // }
+    // _needsRepaint = false;
+
     if (_isActive) {
       markNeedsPaint();
       if (!_isFrameScheduled) {
@@ -136,13 +157,13 @@ class MenuVignetteRenderObject extends RenderBox {
   void paint(PaintingContext context, Offset offset) {
     final Canvas canvas = context.canvas;
 
-    /// Don't paint if not needed.
-    if (timelineEntry == null || timelineEntry?.asset == null) {
+    /// Don't paint if not needed. TODO test
+    if (_timelineEntry == null || _timelineEntry?.asset == null) {
       opacity = 0.0;
       return;
     }
 
-    TimelineAsset asset = timelineEntry!.asset!;
+    TimelineAsset asset = _timelineEntry!.asset!;
 
     canvas.save();
 
@@ -377,7 +398,7 @@ class MenuVignetteRenderObject extends RenderBox {
     /// Calculate the elapsed time to [advance()] the animations.
     double elapsed = t - _lastFrameTime;
     _lastFrameTime = t;
-    TimelineEntry? entry = timelineEntry;
+    TimelineEntry? entry = _timelineEntry;
     if (entry != null && entry.asset != null) {
       TimelineAsset asset = entry.asset!;
       if (asset is TimelineNima && asset.actor != null) {
