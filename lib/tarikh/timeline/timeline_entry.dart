@@ -151,10 +151,29 @@ class TimelineEntry {
   }
 
   /// Helper method.
+  /// Dart int supports -9223372036854775808 - 9223372036854775807
   static String formatYears(double start) {
     String label;
     int valueAbs = start.round().abs();
-    if (valueAbs > 1000000000) {
+    if (valueAbs > 1000000000000000000) {
+      double v = (valueAbs / 100000000000000000.0).floorToDouble() / 10.0;
+
+      label = (valueAbs / 1000000000000000000)
+              .toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
+          " Quintillion ";
+    } else if (valueAbs > 1000000000000000) {
+      double v = (valueAbs / 100000000000000.0).floorToDouble() / 10.0;
+
+      label = (valueAbs / 1000000000000000)
+              .toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
+          " Quadrillion ";
+    } else if (valueAbs > 1000000000000) {
+      double v = (valueAbs / 100000000000.0).floorToDouble() / 10.0;
+
+      label = (valueAbs / 1000000000000)
+              .toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
+          " Trillion ";
+    } else if (valueAbs > 1000000000) {
       double v = (valueAbs / 100000000.0).floorToDouble() / 10.0;
 
       label = (valueAbs / 1000000000)
