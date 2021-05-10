@@ -248,8 +248,8 @@ class Timeline {
   ///
   /// This function will load and decode `timline.json` from disk,
   /// decode the JSON file, and populate all the [TimelineEntry]s.
-  Future<List<TimelineEntry>> loadFromBundle(String filename) async {
-    String data = await rootBundle.loadString(filename);
+  Future<List<TimelineEntry>> loadFromBundle() async {
+    String data = await rootBundle.loadString('assets/tarikh/timeline.json');
     List jsonEntries = json.decode(data) as List;
 
     List<TimelineEntry> allEntries = []; // was List<TimelineEntry>();
@@ -260,357 +260,353 @@ class Timeline {
     /// The JSON decode doesn't provide strong typing, so we'll iterate
     /// on the dynamic entries in the [jsonEntries] list.
     for (dynamic entry in jsonEntries) {
-      Map map = entry as Map;
+      Map map = entry!;
 
-      /// Sanity check. // TODO null check prob not needed
-      if (map != null) {
-        /// Create the current entry and fill in the current date if it's
-        /// an `Incident`, or look for the `start` property if it's an `Era` instead.
-        /// Some entries will have a `start` element, but not an `end` specified.
-        /// These entries specify a particular event such as the appeareance of
-        /// "Humans" in history, which hasn't come to an end -- yet.
-        TimelineEntry timelineEntry = TimelineEntry();
-        if (map.containsKey("date")) {
-          timelineEntry.type = TimelineEntryType.Incident;
-          dynamic date = map["date"];
-          timelineEntry.start = date is int ? date.toDouble() : date;
-        } else if (map.containsKey("start")) {
-          timelineEntry.type = TimelineEntryType.Era;
-          dynamic start = map["start"];
+      /// Create the current entry and fill in the current date if it's
+      /// an `Incident`, or look for the `start` property if it's an `Era` instead.
+      /// Some entries will have a `start` element, but not an `end` specified.
+      /// These entries specify a particular event such as the appeareance of
+      /// "Humans" in history, which hasn't come to an end -- yet.
+      TimelineEntry timelineEntry = TimelineEntry();
+      if (map.containsKey("date")) {
+        timelineEntry.type = TimelineEntryType.Incident;
+        dynamic date = map["date"];
+        timelineEntry.start = date is int ? date.toDouble() : date;
+      } else if (map.containsKey("start")) {
+        timelineEntry.type = TimelineEntryType.Era;
+        dynamic start = map["start"];
 
-          timelineEntry.start = start is int ? start.toDouble() : start;
-        } else {
-          continue;
-        }
-
-        /// If a custom background color for this [TimelineEntry] is specified,
-        /// extract its RGB values and save them for reference, along with the starting
-        /// date of the current entry.
-        if (map.containsKey("background")) {
-          dynamic bg = map["background"];
-          if (bg is List && bg.length >= 3) {
-            _backgroundColors!.add(TimelineBackgroundColor()
-              ..color =
-                  Color.fromARGB(255, bg[0] as int, bg[1] as int, bg[2] as int)
-              ..start = timelineEntry.start);
-          }
-        }
-
-        /// An accent color is also specified at times.
-        dynamic accent = map["accent"];
-        if (accent is List && accent.length >= 3) {
-          timelineEntry.accent = Color.fromARGB(
-              accent.length > 3 ? accent[3] as int : 255,
-              accent[0] as int,
-              accent[1] as int,
-              accent[2] as int);
-        }
-
-        /// [Ticks] can also have custom colors, so that everything's is visible
-        /// even with custom colored backgrounds.
-        if (map.containsKey("ticks")) {
-          dynamic ticks = map["ticks"];
-          if (ticks is Map) {
-            Color bgColor = Colors.black;
-            Color longColor = Colors.black;
-            Color shortColor = Colors.black;
-            Color textColor = Colors.black;
-
-            dynamic bg = ticks["background"];
-            if (bg is List && bg.length >= 3) {
-              bgColor = Color.fromARGB(bg.length > 3 ? bg[3] as int : 255,
-                  bg[0] as int, bg[1] as int, bg[2] as int);
-            }
-            dynamic long = ticks["long"];
-            if (long is List && long.length >= 3) {
-              longColor = Color.fromARGB(long.length > 3 ? long[3] as int : 255,
-                  long[0] as int, long[1] as int, long[2] as int);
-            }
-            dynamic short = ticks["short"];
-            if (short is List && short.length >= 3) {
-              shortColor = Color.fromARGB(
-                  short.length > 3 ? short[3] as int : 255,
-                  short[0] as int,
-                  short[1] as int,
-                  short[2] as int);
-            }
-            dynamic text = ticks["text"];
-            if (text is List && text.length >= 3) {
-              textColor = Color.fromARGB(text.length > 3 ? text[3] as int : 255,
-                  text[0] as int, text[1] as int, text[2] as int);
-            }
-
-            _tickColors!.add(TickColors()
-              ..background = bgColor
-              ..long = longColor
-              ..short = shortColor
-              ..text = textColor
-              ..start = timelineEntry.start
-              ..screenY = 0.0);
-          }
-        }
-
-        /// If a `header` element is present, de-serialize the colors for it too.
-        if (map.containsKey("header")) {
-          dynamic header = map["header"];
-          if (header is Map) {
-            Color bgColor = Colors.black;
-            Color textColor = Colors.black;
-
-            dynamic bg = header["background"];
-            if (bg is List && bg.length >= 3) {
-              bgColor = Color.fromARGB(bg.length > 3 ? bg[3] as int : 255,
-                  bg[0] as int, bg[1] as int, bg[2] as int);
-            }
-            dynamic text = header["text"];
-            if (text is List && text.length >= 3) {
-              textColor = Color.fromARGB(text.length > 3 ? text[3] as int : 255,
-                  text[0] as int, text[1] as int, text[2] as int);
-            }
-
-            _headerColors!.add(HeaderColors()
-              ..background = bgColor
-              ..text = textColor
-              ..start = timelineEntry.start
-              ..screenY = 0.0);
-          }
-        }
-
-        /// Some elements will have an `end` time specified.
-        /// If not `end` key is present in this entry, create the value based
-        /// on the type of the event:
-        /// - Eras use the current year as an end time.
-        /// - Other entries are just single points in time (start == end).
-        if (map.containsKey("end")) {
-          dynamic end = map["end"];
-          timelineEntry.end = end is int ? end.toDouble() : end;
-        } else if (timelineEntry.type == TimelineEntryType.Era) {
-          timelineEntry.end = DateTime.now().year.toDouble() * 10.0;
-        } else {
-          timelineEntry.end = timelineEntry.start;
-        }
-
-        /// The label is a brief description for the current entry.
-        if (map.containsKey("label")) {
-          timelineEntry.label = map["label"] as String;
-        }
-
-        /// Some entries will also have an id
-        if (map.containsKey("id")) {
-          timelineEntry.id = map["id"] as String;
-          _entriesById[timelineEntry.id!] = timelineEntry;
-        }
-        if (map.containsKey("article")) {
-          timelineEntry.articleFilename = map["article"] as String;
-        }
-
-        /// The `asset` key in the current entry contains all the information
-        /// for the nima/flare animation file that'll be played on the timeline.
-        ///
-        /// `asset` is a JSON object thus made:
-        /// {
-        ///   - source: the name of the nima/flare file in the assets folder;
-        ///   - width/height/offset/bounds/gap: sizes of the animation to properly align it in the timeline, together with its Axis-Aligned Bounding Box container.
-        ///   - intro: some files have an 'intro' animation, to be played before idling.
-        ///   - idle: some files have one or more idle animations, and these are their names.
-        ///   - loop: some animations shouldn't loop (e.g. Big Bang) but just settle onto their idle animation. If that's the case, this flag is raised.
-        ///   - scale: a custom scale value.
-        /// }
-        if (map.containsKey("asset")) {
-          TimelineAsset asset;
-          Map assetMap = map["asset"] as Map;
-          String source = assetMap["source"];
-          String filename = "assets/tarikh/" + source;
-          String extension = getExtension(source)!;
-
-          /// Instantiate the correct object based on the file extension.
-          switch (extension) {
-            case "flr":
-              TimelineFlare flareAsset = TimelineFlare();
-              asset = flareAsset;
-              flare.FlutterActor? actor = _flareResources[filename];
-              if (actor == null) {
-                actor = flare.FlutterActor();
-
-                /// Flare library function to load the [FlutterActor]
-                bool success = await actor.loadFromBundle(rootBundle, filename);
-                if (success) {
-                  /// Populate the Map.
-                  _flareResources[filename] = actor;
-                }
-              }
-              if (actor != null) {
-                /// Distinguish between the actual actor, and its intance.
-                flareAsset.actorStatic =
-                    actor.artboard as flare.FlutterActorArtboard;
-                flareAsset.actorStatic!.initializeGraphics();
-                flareAsset.actor =
-                    actor.artboard.makeInstance() as flare.FlutterActorArtboard;
-                flareAsset.actor!.initializeGraphics();
-
-                /// and the reference to their first animation is grabbed.
-                flareAsset.animation = actor.artboard.animations[0];
-
-                dynamic name = assetMap["idle"];
-                if (name is String) {
-                  if ((flareAsset.idle =
-                          flareAsset.actor!.getAnimation(name)) !=
-                      null) {
-                    flareAsset.animation = flareAsset.idle!;
-                  }
-                } else if (name is List) {
-                  for (String animationName in name) {
-                    flare.ActorAnimation animation =
-                        flareAsset.actor!.getAnimation(animationName);
-                    if (animation != null) {
-                      if (flareAsset.idleAnimations == null) {
-                        flareAsset.idleAnimations =
-                            []; // was List<flare.ActorAnimation>();
-                      }
-                      flareAsset.idleAnimations!.add(animation);
-                      flareAsset.animation = animation;
-                    }
-                  }
-                }
-
-                name = assetMap["intro"];
-                if (name is String) {
-                  if ((flareAsset.intro =
-                          flareAsset.actor!.getAnimation(name)) !=
-                      null) {
-                    flareAsset.animation = flareAsset.intro!;
-                  }
-                }
-
-                /// Make sure that all the initial values are set for the actor and for the actor instance.
-                flareAsset.animationTime = 0.0;
-                flareAsset.actor!.advance(0.0);
-                flareAsset.setupAABB = flareAsset.actor!.computeAABB();
-                flareAsset.animation!
-                    .apply(flareAsset.animationTime, flareAsset.actor, 1.0);
-                flareAsset.animation!.apply(flareAsset.animation!.duration,
-                    flareAsset.actorStatic, 1.0);
-                flareAsset.actor!.advance(0.0);
-                flareAsset.actorStatic!.advance(0.0);
-
-                dynamic loop = assetMap["loop"];
-                flareAsset.loop = loop is bool ? loop : true;
-                dynamic offset = assetMap["offset"];
-                flareAsset.offset = offset == null
-                    ? 0.0
-                    : offset is int
-                        ? offset.toDouble()
-                        : offset;
-                dynamic gap = assetMap["gap"];
-                flareAsset.gap = gap == null
-                    ? 0.0
-                    : gap is int
-                        ? gap.toDouble()
-                        : gap;
-
-                dynamic bounds = assetMap["bounds"];
-                if (bounds is List) {
-                  /// Override the AABB for this entry with custom values.
-                  flareAsset.setupAABB = flare.AABB.fromValues(
-                      bounds[0] is int ? bounds[0].toDouble() : bounds[0],
-                      bounds[1] is int ? bounds[1].toDouble() : bounds[1],
-                      bounds[2] is int ? bounds[2].toDouble() : bounds[2],
-                      bounds[3] is int ? bounds[3].toDouble() : bounds[3]);
-                }
-              }
-              break;
-            case "nma":
-              TimelineNima nimaAsset = TimelineNima();
-              asset = nimaAsset;
-              nima.FlutterActor? actor = _nimaResources[filename];
-              if (actor == null) {
-                actor = nima.FlutterActor();
-
-                bool success = await actor.loadFromBundle(filename);
-                if (success) {
-                  _nimaResources[filename] = actor;
-                }
-              }
-              if (actor != null) {
-                nimaAsset.actorStatic = actor;
-                nimaAsset.actor = actor.makeInstance() as nima.FlutterActor;
-
-                dynamic name = assetMap["idle"];
-                if (name is String) {
-                  nimaAsset.animation = nimaAsset.actor!.getAnimation(name);
-                } else {
-                  nimaAsset.animation = actor.animations[0];
-                }
-                nimaAsset.animationTime = 0.0;
-                nimaAsset.actor!.advance(0.0);
-
-                nimaAsset.setupAABB = nimaAsset.actor!.computeAABB();
-                nimaAsset.animation!
-                    .apply(nimaAsset.animationTime, nimaAsset.actor, 1.0);
-                nimaAsset.animation!.apply(
-                    nimaAsset.animation!.duration, nimaAsset.actorStatic, 1.0);
-                nimaAsset.actor!.advance(0.0);
-                nimaAsset.actorStatic!.advance(0.0);
-                dynamic loop = assetMap["loop"];
-                nimaAsset.loop = loop is bool ? loop : true;
-                dynamic offset = assetMap["offset"];
-                nimaAsset.offset = offset == null
-                    ? 0.0
-                    : offset is int
-                        ? offset.toDouble()
-                        : offset;
-                dynamic gap = assetMap["gap"];
-                nimaAsset.gap = gap == null
-                    ? 0.0
-                    : gap is int
-                        ? gap.toDouble()
-                        : gap;
-                dynamic bounds = assetMap["bounds"];
-                if (bounds is List) {
-                  nimaAsset.setupAABB = nima.AABB.fromValues(
-                      bounds[0] is int ? bounds[0].toDouble() : bounds[0],
-                      bounds[1] is int ? bounds[1].toDouble() : bounds[1],
-                      bounds[2] is int ? bounds[2].toDouble() : bounds[2],
-                      bounds[3] is int ? bounds[3].toDouble() : bounds[3]);
-                }
-              }
-              break;
-
-            default:
-
-              /// Legacy fallback case: some elements could have been just images.
-              TimelineImage imageAsset = TimelineImage();
-              asset = imageAsset;
-
-              ByteData data = await rootBundle.load(filename);
-              Uint8List list = Uint8List.view(data.buffer);
-              ui.Codec codec = await ui.instantiateImageCodec(list);
-              ui.FrameInfo frame = await codec.getNextFrame();
-              imageAsset.image = frame.image;
-
-              break;
-          }
-
-          double scale = 1.0;
-          if (assetMap.containsKey("scale")) {
-            dynamic s = assetMap["scale"];
-            scale = s is int ? s.toDouble() : s;
-          }
-
-          dynamic width = assetMap["width"];
-          asset.width = (width is int ? width.toDouble() : width) * scale;
-
-          dynamic height = assetMap["height"];
-          asset.height = (height is int ? height.toDouble() : height) * scale;
-          asset.entry = timelineEntry;
-          asset.filename = filename;
-          timelineEntry.asset = asset;
-        }
-
-        /// Add this entry to the list.
-        allEntries.add(timelineEntry);
+        timelineEntry.start = start is int ? start.toDouble() : start;
+      } else {
+        continue;
       }
+
+      /// If a custom background color for this [TimelineEntry] is specified,
+      /// extract its RGB values and save them for reference, along with the starting
+      /// date of the current entry.
+      if (map.containsKey("background")) {
+        dynamic bg = map["background"];
+        if (bg is List && bg.length >= 3) {
+          _backgroundColors!.add(TimelineBackgroundColor()
+            ..color =
+                Color.fromARGB(255, bg[0] as int, bg[1] as int, bg[2] as int)
+            ..start = timelineEntry.start);
+        }
+      }
+
+      /// An accent color is also specified at times.
+      dynamic accent = map["accent"];
+      if (accent is List && accent.length >= 3) {
+        timelineEntry.accent = Color.fromARGB(
+            accent.length > 3 ? accent[3] as int : 255,
+            accent[0] as int,
+            accent[1] as int,
+            accent[2] as int);
+      }
+
+      /// [Ticks] can also have custom colors, so that everything's is visible
+      /// even with custom colored backgrounds.
+      if (map.containsKey("ticks")) {
+        dynamic ticks = map["ticks"];
+        if (ticks is Map) {
+          Color bgColor = Colors.black;
+          Color longColor = Colors.black;
+          Color shortColor = Colors.black;
+          Color textColor = Colors.black;
+
+          dynamic bg = ticks["background"];
+          if (bg is List && bg.length >= 3) {
+            bgColor = Color.fromARGB(bg.length > 3 ? bg[3] as int : 255,
+                bg[0] as int, bg[1] as int, bg[2] as int);
+          }
+          dynamic long = ticks["long"];
+          if (long is List && long.length >= 3) {
+            longColor = Color.fromARGB(long.length > 3 ? long[3] as int : 255,
+                long[0] as int, long[1] as int, long[2] as int);
+          }
+          dynamic short = ticks["short"];
+          if (short is List && short.length >= 3) {
+            shortColor = Color.fromARGB(
+                short.length > 3 ? short[3] as int : 255,
+                short[0] as int,
+                short[1] as int,
+                short[2] as int);
+          }
+          dynamic text = ticks["text"];
+          if (text is List && text.length >= 3) {
+            textColor = Color.fromARGB(text.length > 3 ? text[3] as int : 255,
+                text[0] as int, text[1] as int, text[2] as int);
+          }
+
+          _tickColors!.add(TickColors()
+            ..background = bgColor
+            ..long = longColor
+            ..short = shortColor
+            ..text = textColor
+            ..start = timelineEntry.start
+            ..screenY = 0.0);
+        }
+      }
+
+      /// If a `header` element is present, de-serialize the colors for it too.
+      if (map.containsKey("header")) {
+        dynamic header = map["header"];
+        if (header is Map) {
+          Color bgColor = Colors.black;
+          Color textColor = Colors.black;
+
+          dynamic bg = header["background"];
+          if (bg is List && bg.length >= 3) {
+            bgColor = Color.fromARGB(bg.length > 3 ? bg[3] as int : 255,
+                bg[0] as int, bg[1] as int, bg[2] as int);
+          }
+          dynamic text = header["text"];
+          if (text is List && text.length >= 3) {
+            textColor = Color.fromARGB(text.length > 3 ? text[3] as int : 255,
+                text[0] as int, text[1] as int, text[2] as int);
+          }
+
+          _headerColors!.add(HeaderColors()
+            ..background = bgColor
+            ..text = textColor
+            ..start = timelineEntry.start
+            ..screenY = 0.0);
+        }
+      }
+
+      /// Some elements will have an `end` time specified.
+      /// If not `end` key is present in this entry, create the value based
+      /// on the type of the event:
+      /// - Eras use the current year as an end time.
+      /// - Other entries are just single points in time (start == end).
+      if (map.containsKey("end")) {
+        dynamic end = map["end"];
+        timelineEntry.end = end is int ? end.toDouble() : end;
+      } else if (timelineEntry.type == TimelineEntryType.Era) {
+        timelineEntry.end = DateTime.now().year.toDouble() * 10.0;
+      } else {
+        timelineEntry.end = timelineEntry.start;
+      }
+
+      /// The label is a brief description for the current entry.
+      if (map.containsKey("label")) {
+        timelineEntry.label = map["label"] as String;
+      }
+
+      /// Some entries will also have an id
+      if (map.containsKey("id")) {
+        timelineEntry.id = map["id"] as String;
+        _entriesById[timelineEntry.id!] = timelineEntry;
+      }
+      if (map.containsKey("article")) {
+        timelineEntry.articleFilename = map["article"] as String;
+      }
+
+      /// The `asset` key in the current entry contains all the information
+      /// for the nima/flare animation file that'll be played on the timeline.
+      ///
+      /// `asset` is a JSON object thus made:
+      /// {
+      ///   - source: the name of the nima/flare file in the assets folder;
+      ///   - width/height/offset/bounds/gap: sizes of the animation to properly align it in the timeline, together with its Axis-Aligned Bounding Box container.
+      ///   - intro: some files have an 'intro' animation, to be played before idling.
+      ///   - idle: some files have one or more idle animations, and these are their names.
+      ///   - loop: some animations shouldn't loop (e.g. Big Bang) but just settle onto their idle animation. If that's the case, this flag is raised.
+      ///   - scale: a custom scale value.
+      /// }
+      if (map.containsKey("asset")) {
+        TimelineAsset asset;
+        Map assetMap = map["asset"] as Map;
+        String source = assetMap["source"];
+        String filename = "assets/tarikh/" + source;
+        String extension = getExtension(source)!;
+
+        /// Instantiate the correct object based on the file extension.
+        switch (extension) {
+          case "flr":
+            TimelineFlare flareAsset = TimelineFlare();
+            asset = flareAsset;
+            flare.FlutterActor? actor = _flareResources[filename];
+            if (actor == null) {
+              actor = flare.FlutterActor();
+
+              /// Flare library function to load the [FlutterActor]
+              bool success = await actor.loadFromBundle(rootBundle, filename);
+              if (success) {
+                /// Populate the Map.
+                _flareResources[filename] = actor;
+              }
+            }
+            if (actor != null) {
+              /// Distinguish between the actual actor, and its intance.
+              flareAsset.actorStatic =
+                  actor.artboard as flare.FlutterActorArtboard;
+              flareAsset.actorStatic!.initializeGraphics();
+              flareAsset.actor =
+                  actor.artboard.makeInstance() as flare.FlutterActorArtboard;
+              flareAsset.actor!.initializeGraphics();
+
+              /// and the reference to their first animation is grabbed.
+              flareAsset.animation = actor.artboard.animations[0];
+
+              dynamic name = assetMap["idle"];
+              if (name is String) {
+                if ((flareAsset.idle = flareAsset.actor!.getAnimation(name)) !=
+                    null) {
+                  flareAsset.animation = flareAsset.idle!;
+                }
+              } else if (name is List) {
+                for (String animationName in name) {
+                  flare.ActorAnimation animation =
+                      flareAsset.actor!.getAnimation(animationName);
+                  if (animation != null) {
+                    if (flareAsset.idleAnimations == null) {
+                      flareAsset.idleAnimations =
+                          []; // was List<flare.ActorAnimation>();
+                    }
+                    flareAsset.idleAnimations!.add(animation);
+                    flareAsset.animation = animation;
+                  }
+                }
+              }
+
+              name = assetMap["intro"];
+              if (name is String) {
+                if ((flareAsset.intro = flareAsset.actor!.getAnimation(name)) !=
+                    null) {
+                  flareAsset.animation = flareAsset.intro!;
+                }
+              }
+
+              /// Make sure that all the initial values are set for the actor and for the actor instance.
+              flareAsset.animationTime = 0.0;
+              flareAsset.actor!.advance(0.0);
+              flareAsset.setupAABB = flareAsset.actor!.computeAABB();
+              flareAsset.animation!
+                  .apply(flareAsset.animationTime, flareAsset.actor, 1.0);
+              flareAsset.animation!.apply(
+                  flareAsset.animation!.duration, flareAsset.actorStatic, 1.0);
+              flareAsset.actor!.advance(0.0);
+              flareAsset.actorStatic!.advance(0.0);
+
+              dynamic loop = assetMap["loop"];
+              flareAsset.loop = loop is bool ? loop : true;
+              dynamic offset = assetMap["offset"];
+              flareAsset.offset = offset == null
+                  ? 0.0
+                  : offset is int
+                      ? offset.toDouble()
+                      : offset;
+              dynamic gap = assetMap["gap"];
+              flareAsset.gap = gap == null
+                  ? 0.0
+                  : gap is int
+                      ? gap.toDouble()
+                      : gap;
+
+              dynamic bounds = assetMap["bounds"];
+              if (bounds is List) {
+                /// Override the AABB for this entry with custom values.
+                flareAsset.setupAABB = flare.AABB.fromValues(
+                    bounds[0] is int ? bounds[0].toDouble() : bounds[0],
+                    bounds[1] is int ? bounds[1].toDouble() : bounds[1],
+                    bounds[2] is int ? bounds[2].toDouble() : bounds[2],
+                    bounds[3] is int ? bounds[3].toDouble() : bounds[3]);
+              }
+            }
+            break;
+          case "nma":
+            TimelineNima nimaAsset = TimelineNima();
+            asset = nimaAsset;
+            nima.FlutterActor? actor = _nimaResources[filename];
+            if (actor == null) {
+              actor = nima.FlutterActor();
+
+              bool success = await actor.loadFromBundle(filename);
+              if (success) {
+                _nimaResources[filename] = actor;
+              }
+            }
+            if (actor != null) {
+              nimaAsset.actorStatic = actor;
+              nimaAsset.actor = actor.makeInstance() as nima.FlutterActor;
+
+              dynamic name = assetMap["idle"];
+              if (name is String) {
+                nimaAsset.animation = nimaAsset.actor!.getAnimation(name);
+              } else {
+                nimaAsset.animation = actor.animations[0];
+              }
+              nimaAsset.animationTime = 0.0;
+              nimaAsset.actor!.advance(0.0);
+
+              nimaAsset.setupAABB = nimaAsset.actor!.computeAABB();
+              nimaAsset.animation!
+                  .apply(nimaAsset.animationTime, nimaAsset.actor, 1.0);
+              nimaAsset.animation!.apply(
+                  nimaAsset.animation!.duration, nimaAsset.actorStatic, 1.0);
+              nimaAsset.actor!.advance(0.0);
+              nimaAsset.actorStatic!.advance(0.0);
+              dynamic loop = assetMap["loop"];
+              nimaAsset.loop = loop is bool ? loop : true;
+              dynamic offset = assetMap["offset"];
+              nimaAsset.offset = offset == null
+                  ? 0.0
+                  : offset is int
+                      ? offset.toDouble()
+                      : offset;
+              dynamic gap = assetMap["gap"];
+              nimaAsset.gap = gap == null
+                  ? 0.0
+                  : gap is int
+                      ? gap.toDouble()
+                      : gap;
+              dynamic bounds = assetMap["bounds"];
+              if (bounds is List) {
+                nimaAsset.setupAABB = nima.AABB.fromValues(
+                    bounds[0] is int ? bounds[0].toDouble() : bounds[0],
+                    bounds[1] is int ? bounds[1].toDouble() : bounds[1],
+                    bounds[2] is int ? bounds[2].toDouble() : bounds[2],
+                    bounds[3] is int ? bounds[3].toDouble() : bounds[3]);
+              }
+            }
+            break;
+
+          default:
+
+            /// Legacy fallback case: some elements could have been just images.
+            TimelineImage imageAsset = TimelineImage();
+            asset = imageAsset;
+
+            ByteData data = await rootBundle.load(filename);
+            Uint8List list = Uint8List.view(data.buffer);
+            ui.Codec codec = await ui.instantiateImageCodec(list);
+            ui.FrameInfo frame = await codec.getNextFrame();
+            imageAsset.image = frame.image;
+
+            break;
+        }
+
+        double scale = 1.0;
+        if (assetMap.containsKey("scale")) {
+          dynamic s = assetMap["scale"];
+          scale = s is int ? s.toDouble() : s;
+        }
+
+        dynamic width = assetMap["width"];
+        asset.width = (width is int ? width.toDouble() : width) * scale;
+
+        dynamic height = assetMap["height"];
+        asset.height = (height is int ? height.toDouble() : height) * scale;
+        asset.entry = timelineEntry;
+        asset.filename = filename;
+        timelineEntry.asset = asset;
+      }
+
+      /// Add this entry to the list.
+      allEntries.add(timelineEntry);
     }
+    //}
 
     /// sort the full list so they are in order of oldest to newest
     allEntries.sort((TimelineEntry a, TimelineEntry b) {
@@ -1398,9 +1394,9 @@ class Timeline {
   }
 
   TimeBtn getTimeBtn(TimelineEntry? entry, double opacity) {
-    String title = '';
-    String timeUntil = '';
-    String pageScrolls = '';
+    String title = ' '; // these can't be blank because of FittedBox
+    String timeUntil = ' ';
+    String pageScrolls = ' ';
 
     if (entry != null && opacity > 0.0) {
       title = entry.label!;
