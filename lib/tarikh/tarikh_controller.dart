@@ -54,7 +54,7 @@ class TarikhController extends GetxController {
     int lastGutterModeIdx = s.read('lastGutterModeIdx') ?? GutterMode.OFF.index;
     gutterMode = GutterMode.values[lastGutterModeIdx];
 
-    t.loadFromBundle('assets/tarikh/timeline.json').then(
+    t.loadFromBundle().then(
       (List<TimelineEntry> entries) {
         t.setViewport(
           start: entries.first.start! * 2.0,
