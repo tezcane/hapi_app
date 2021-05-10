@@ -11,25 +11,17 @@ class FabSubPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //backgroundColor: background,
-      floatingActionButton: FloatingActionButton(
-        tooltip: 'Go back to the previous page',
-        onPressed: null,
-        heroTag: subPage,
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              IconButton(
-                // iconSize: 50,
-                icon: Icon(Icons.arrow_back),
-                onPressed: () => cMenu.handleBackButtonHit(),
-              ),
-            ],
-          ),
+      //floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: Align(
+        alignment: Alignment.bottomRight,
+        child: FloatingActionButton(
+          tooltip: 'Go back to the previous page',
+          onPressed: () => cMenu.handleBackButtonHit(),
+          heroTag: subPage,
+          child: Icon(Icons.arrow_back),
         ),
       ),
-      body: child,
+      body: child, // <- SubPages go here
     );
   }
 }
