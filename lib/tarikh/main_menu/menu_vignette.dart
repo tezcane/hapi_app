@@ -120,7 +120,7 @@ class MenuVignetteRenderObject extends RenderBox {
   }
 
   TimelineEntry? get _timelineEntry {
-    return cTrkh.t.getById(_assetId!);
+    return TarikhController.t.getById(_assetId!);
   }
 
   @override

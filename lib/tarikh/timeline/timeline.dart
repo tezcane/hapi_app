@@ -12,11 +12,12 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/widgets.dart';
 import 'package:hapi/main_controller.dart';
+import 'package:hapi/tarikh/tarikh_controller.dart';
+import 'package:hapi/tarikh/timeline/timeline_entry.dart';
+import 'package:hapi/tarikh/timeline/timeline_utils.dart';
+import 'package:intl/intl.dart';
 import 'package:nima/nima.dart' as nima;
 import 'package:nima/nima/math/aabb.dart' as nima;
-import 'package:hapi/tarikh/timeline/timeline_utils.dart';
-
-import 'timeline_entry.dart';
 
 typedef PaintCallback();
 typedef ChangeEraCallback(TimelineEntry? era); // TODO ? prob want to disallow
@@ -32,6 +33,8 @@ class Timeline {
   /// [ScrollPhysics] based on the platform we're on.
   late final TargetPlatform _platform;
 
+  static final NumberFormat formatter = NumberFormat.compact();
+
   /// Some aptly named constants for properly aligning the Timeline view.
   static const double LineWidth = 2.0;
   static const double LineSpacing = 10.0;
@@ -41,8 +44,8 @@ class Timeline {
   static const double MoveSpeed = 10.0;
   static const double MoveSpeedInteracting = 40.0;
   static const double Deceleration = 3.0;
-  static const double GutterLeft = 45.0;
-  static const double GutterLeftExpanded = 75.0;
+  static const double GutterLeft = 64.0; //was 45.0;
+  static const double GutterLeftExpanded = 90.0; //was 75.0
 
   static const double EdgeRadius = 4.0;
   static const double MinChildLength = 50.0;
@@ -83,7 +86,6 @@ class Timeline {
   double _timeMax = 0.0;
   double _gutterWidth = GutterLeft;
 
-  bool _showFavorites = false;
   bool _isFrameScheduled = false;
   bool _isInteracting = false;
   bool _isScaling = false;
@@ -160,7 +162,6 @@ class Timeline {
   double get nextEntryOpacity => _nextEntryOpacity;
   double get prevEntryOpacity => _prevEntryOpacity;
   bool get isInteracting => _isInteracting;
-  bool get showFavorites => _showFavorites;
   bool get isActive => _isActive;
   Color? get headerTextColor => _headerTextColor;
   Color? get headerBackgroundColor => _headerBackgroundColor;
@@ -172,15 +173,6 @@ class Timeline {
   List<TimelineBackgroundColor>? get backgroundColors => _backgroundColors;
   List<TickColors>? get tickColors => _tickColors;
   List<TimelineAsset>? get renderAssets => _renderAssets;
-
-  /// Setter for toggling the gutter on the left side of the timeline with
-  /// quick references to the favorites on the timeline.
-  set showFavorites(bool value) {
-    if (_showFavorites != value) {
-      _showFavorites = value;
-      _startRendering();
-    }
-  }
 
   /// When a scale operation is detected, this setter is called:
   /// e.g. [_TimelineWidgetState.scaleStart()].
@@ -810,17 +802,17 @@ class Timeline {
   /// according to the current state of the timeline.
   void beginFrame(Duration timeStamp) {
     _isFrameScheduled = false;
-    final double t =
+    final double time =
         timeStamp.inMicroseconds / Duration.microsecondsPerMillisecond / 1000.0;
     if (_lastFrameTime == 0.0) {
-      _lastFrameTime = t;
+      _lastFrameTime = time;
       _isFrameScheduled = true;
       SchedulerBinding.instance!.scheduleFrameCallback(beginFrame);
       return;
     }
 
-    double elapsed = t - _lastFrameTime;
-    _lastFrameTime = t;
+    double elapsed = time - _lastFrameTime;
+    _lastFrameTime = time;
 
     if (!advance(elapsed, true) && !_isFrameScheduled) {
       _isFrameScheduled = true;
@@ -897,7 +889,8 @@ class Timeline {
 
     /// Check if the left-hand side gutter has been toggled.
     /// If visible, make room for it .
-    double targetGutterWidth = _showFavorites ? GutterLeftExpanded : GutterLeft;
+    double targetGutterWidth =
+        cTrkh.isGutterModeOff() ? GutterLeft : GutterLeftExpanded;
     double dgw = targetGutterWidth - _gutterWidth;
     if (!animate || dgw.abs() < 1) {
       _gutterWidth = targetGutterWidth;
@@ -1402,6 +1395,40 @@ class Timeline {
       }
     }
     return stillAnimating;
+  }
+
+  TimeBtn getTimeBtn(TimelineEntry? entry, double opacity) {
+    String title = '';
+    String timeUntil = '';
+    String pageScrolls = '';
+
+    if (entry != null && opacity > 0.0) {
+      title = entry.label!;
+
+      double pageReference = this.renderEnd;
+      double timeUntilDouble = entry.start! - pageReference;
+      timeUntil = TimelineEntry.formatYears(timeUntilDouble).toLowerCase();
+
+      double pageSize = this.renderEnd - this.renderStart;
+      double pages = timeUntilDouble / pageSize;
+      pageScrolls = '${formatter.format(pages.abs())} pages away';
+    }
+
+    return TimeBtn(
+      title: title,
+      timeUntil: timeUntil,
+      pageScrolls: pageScrolls,
+      entry: entry,
+    );
+  }
+
+  // We have to do update() in another thread or there is a render/build error
+  void updateTimeUpDnBtns() {
+    Timer(const Duration(microseconds: 0), () {
+      cTrkh.setTBtnUp(this.getTimeBtn(this.prevEntry, this.prevEntryOpacity));
+      cTrkh.setTBtnDn(this.getTimeBtn(this.nextEntry, this.nextEntryOpacity));
+      cTrkh.update(); //TODO test more
+    });
   }
 }
 // TODO way too many nullables in here

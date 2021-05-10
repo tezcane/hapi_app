@@ -1,6 +1,5 @@
 import 'dart:ui';
 
-import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -28,16 +27,19 @@ class TarikhTimelineUI extends StatefulWidget {
   }
 
   late final MenuItemData focusItem;
-  final Timeline timeline = cTrkh.timeline; // needed for widget update detect?
+  final Timeline timeline =
+      TarikhController.t; // TODO needed for widget update detect?
 
   @override
   _TarikhTimelineUIState createState() => _TarikhTimelineUIState();
 }
 
 class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
+  static final Timeline t = TarikhController.t;
+
   // TODO fix shows anytime no era on timeline, should be blank or something like "Unnamed Era"
   static const String DefaultEraName = "Birth of the Universe";
-  static const double TopOverlap = 56.0;
+  static const double TopOverlap = 0.0; //56.0;
 
   /// These variables are used to calculate the correct viewport for the timeline
   /// when performing a scaling operation as in [_scaleStart], [_scaleUpdate], [_scaleEnd].
@@ -52,17 +54,10 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
 
   /// Which era the Timeline is currently focused on.
   /// Defaults to [DefaultEraName].
-  late String _eraName;
+  String _eraName = '';
 
   Color? _headerTextColor;
-  Color? _headerBackgroundColor;
-
-  /// This state variable toggles the rendering of the left sidebar
-  /// showing the favorite elements already on the timeline.
-  bool _showFavorites = false;
-
-  // Syntactic sugar for getting timeline since used so much here
-  Timeline get t => cTrkh.timeline;
+  Color? _headerBackgroundColor; // TODO should we delete?
 
   @override
   initState() {
@@ -92,7 +87,6 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     } else {
       // _headerBackgroundColor = null; // TODO
     }
-    _showFavorites = t.showFavorites;
 
     super.initState();
   }
@@ -145,6 +139,17 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     t.setViewport(velocity: 0.0, animate: true);
   }
 
+  void _navigateToTimeline(TimelineEntry entry, double devicePaddingTop) {
+    MenuItemData target = MenuItemData.fromEntry(entry);
+
+    t.padding = EdgeInsets.only(
+      top: TopOverlap + devicePaddingTop + target.padTop + Timeline.Parallax,
+      bottom: target.padBottom,
+    );
+    t.setViewport(
+        start: target.start!, end: target.end!, animate: true, pad: true);
+  }
+
   /// If the [TimelineRenderWidget] has set the [_touchedBubble] to the currently
   /// touched bubble on the timeline, upon removing the finger from the screen,
   /// the app will check if the touch operation consists of a zooming operation.
@@ -156,16 +161,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
     if (_touchedBubble != null) {
       if (_touchedBubble!.zoom) {
-        MenuItemData target = MenuItemData.fromEntry(_touchedBubble!.entry!);
-
-        t.padding = EdgeInsets.only(
-            top: TopOverlap +
-                devicePadding.top +
-                target.padTop +
-                Timeline.Parallax,
-            bottom: target.padBottom);
-        t.setViewport(
-            start: target.start!, end: target.end!, animate: true, pad: true);
+        _navigateToTimeline(_touchedEntry!, devicePadding.top);
       } else {
         t.isActive = false;
 
@@ -183,16 +179,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
         //     .then((v) => widget.t.isActive = true);
       }
     } else if (_touchedEntry != null) {
-      MenuItemData target = MenuItemData.fromEntry(_touchedEntry!);
-
-      t.padding = EdgeInsets.only(
-          top: TopOverlap +
-              devicePadding.top +
-              target.padTop +
-              Timeline.Parallax,
-          bottom: target.padBottom);
-      t.setViewport(
-          start: target.start!, end: target.end!, animate: true, pad: true);
+      _navigateToTimeline(_touchedEntry!, devicePadding.top);
     }
   }
 
@@ -203,16 +190,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   void _longPress() {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
     if (_touchedBubble != null) {
-      MenuItemData target = MenuItemData.fromEntry(_touchedBubble!.entry!);
-
-      t.padding = EdgeInsets.only(
-          top: TopOverlap +
-              devicePadding.top +
-              target.padTop +
-              Timeline.Parallax,
-          bottom: target.padBottom);
-      t.setViewport(
-          start: target.start!, end: target.end!, animate: true, pad: true);
+      _navigateToTimeline(_touchedBubble!.entry!, devicePadding.top);
     }
   }
 
@@ -222,6 +200,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   void didUpdateWidget(covariant TarikhTimelineUI oldWidget) {
     super.didUpdateWidget(oldWidget);
 
+    // TODO what is this doing?:
     if (t != oldWidget.timeline) {
       print('Timeline: didUpdateWidget true');
       setState(() {
@@ -243,7 +222,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
       setState(() {
         _eraName =
             t.currentEra != null ? t.currentEra as String : DefaultEraName;
-        _showFavorites = t.showFavorites;
+        //t.isActive = true; //TODO old showFavirts called _startRendering(), but i think was for heart flare animation
       });
     } else {
       print('Timeline: didUpdateWidget false');
@@ -271,9 +250,160 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
     t.devicePadding = devicePadding;
 
+    Color? color = _headerTextColor != null
+        ? _headerTextColor
+        : darkText.withOpacity(darkText.opacity * 0.75);
+
     return FabSubPage(
       subPage: SubPage.TARIKH_TIMELINE,
       child: Scaffold(
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.miniCenterDocked,
+        floatingActionButton: GetBuilder<TarikhController>(
+            init: TarikhController(),
+            builder: (c) {
+              TimeBtn btnUp = c.timeBtnUp();
+              TimeBtn btnDn = c.timeBtnDn();
+              return Align(
+                alignment: Alignment.bottomLeft,
+                child: Row(
+                  //mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    // Column dummy to easily verticle align up/down fabs:
+                    Padding(
+                      padding: const EdgeInsets.only(left: 4),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        //mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          FloatingActionButton(
+                            tooltip: 'Show/hide favorite or all events',
+                            heroTag: SubPage.TARIKH_FAVORITE,
+                            onPressed: () {
+                              if (c.isGutterModeOff()) {
+                                c.gutterMode = GutterMode.FAV;
+                              } else if (c.isGutterModeFav()) {
+                                c.gutterMode = GutterMode.ALL;
+                              } else /* if (c.isGutterModeAll) */ {
+                                c.gutterMode = GutterMode.OFF;
+                              }
+                            },
+                            materialTapTargetSize: MaterialTapTargetSize.padded,
+                            child: c.isGutterModeOff()
+                                ? const Icon(Icons.favorite_border_outlined,
+                                    size: 36.0)
+                                : c.isGutterModeFav()
+                                    ? Icon(Icons.favorite_outlined, size: 36.0)
+                                    : Icon(Icons.close, size: 36.0),
+                          ),
+                          Text(''),
+                          SizedBox(height: 1.8),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding:
+                          EdgeInsets.only(left: c.isGutterModeOff() ? 0 : 45),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        //mainAxisAlignment: MainAxisAlignment.center,
+                        //crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          FittedBox(
+                            fit: BoxFit.contain,
+                            child: Text(
+                              btnUp.title,
+                              style: TextStyle(color: color),
+                            ),
+                          ),
+                          FittedBox(
+                            fit: BoxFit.contain,
+                            child: Text(
+                              btnUp.timeUntil,
+                              style: TextStyle(color: color),
+                            ),
+                          ),
+                          FloatingActionButton(
+                            tooltip: 'Navigate to past',
+                            heroTag: null, // needed
+                            onPressed: () {
+                              if (btnUp.entry != null) {
+                                print(
+                                    'Navigate to past: ' + btnUp.entry!.label!);
+                                _navigateToTimeline(
+                                    btnUp.entry!, devicePadding.top);
+                              }
+                            },
+                            materialTapTargetSize: MaterialTapTargetSize.padded,
+                            child: Icon(Icons.expand_less_outlined, size: 36.0),
+                          ),
+                          FittedBox(
+                            fit: BoxFit.contain,
+                            child: Text(
+                              btnUp.pageScrolls,
+                              style: TextStyle(color: color),
+                            ),
+                          ),
+                          SizedBox(height: 1.8),
+                        ],
+                      ),
+                    ),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        FittedBox(
+                          fit: BoxFit.contain,
+                          child: Text(
+                            btnDn.title,
+                            style: TextStyle(color: color),
+                          ),
+                        ),
+                        FittedBox(
+                          fit: BoxFit.contain,
+                          child: Text(
+                            btnDn.timeUntil,
+                            style: TextStyle(color: color),
+                          ),
+                        ),
+                        FloatingActionButton(
+                          tooltip: 'Navigate to future',
+                          heroTag: null, // needed
+                          onPressed: () {
+                            if (btnDn.entry != null) {
+                              print(
+                                  'Navigate to future: ' + btnDn.entry!.label!);
+                              _navigateToTimeline(
+                                  btnDn.entry!, devicePadding.top);
+                            }
+                          },
+                          materialTapTargetSize: MaterialTapTargetSize.padded,
+                          child: Icon(Icons.expand_more_outlined, size: 36.0),
+                        ),
+                        FittedBox(
+                          fit: BoxFit.contain,
+                          child: Text(
+                            btnDn.pageScrolls,
+                            style: TextStyle(color: color),
+                          ),
+                        ),
+                        SizedBox(height: 1.8),
+                      ],
+                    ),
+                    Container(
+                        constraints: BoxConstraints(
+                          minWidth: 61,
+                          maxWidth: 61,
+                          minHeight: 63,
+                          maxHeight: 63,
+                        ),
+                        child: SizedBox(width: 56)),
+                  ],
+                ),
+              );
+            }),
         backgroundColor: Colors.white,
         body: GestureDetector(
           onLongPress: _longPress,
@@ -285,76 +415,32 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
           child: Stack(
             children: <Widget>[
               TimelineRenderWidget(
-                  timeline: t,
-                  favorites: cTrkh.favorites,
-                  topOverlap: TopOverlap + devicePadding.top,
-                  focusItem: widget.focusItem,
-                  touchBubble: onTouchBubble,
-                  touchEntry: onTouchEntry),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Container(
-                    height: devicePadding.top,
-                    color: _headerBackgroundColor != null
-                        ? _headerBackgroundColor
-                        : Color.fromRGBO(238, 240, 242, 0.81),
-                  ),
-                  Container(
-                    color: _headerBackgroundColor != null
-                        ? _headerBackgroundColor
-                        : Color.fromRGBO(238, 240, 242, 0.81),
-                    height: 56.0,
-                    width: double.infinity,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        GestureDetector(
-                          child: Transform.translate(
-                            offset: const Offset(0.0, 0.0),
-                            child: Container(
-                              height: 60.0,
-                              width: 60.0,
-                              padding: EdgeInsets.all(18.0),
-                              color: Colors.white.withOpacity(0.0),
-                              child: FlareActor(
-                                  "assets/tarikh/heart_toolbar.flr",
-                                  animation: _showFavorites ? "On" : "Off",
-                                  shouldClip: false,
-                                  color: _headerTextColor != null
-                                      ? _headerTextColor
-                                      : darkText
-                                          .withOpacity(darkText.opacity * 0.75),
-                                  alignment: Alignment.centerLeft),
-                            ),
-                          ),
-                          onTap: () {
-                            t.showFavorites = !t.showFavorites;
-                            setState(() {
-                              _showFavorites = t.showFavorites;
-                            });
-                          },
-                        ),
-                        Padding(
-                          padding: EdgeInsets.only(left: 20),
-                          child: Text(
-                            _eraName,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontFamily: "RobotoMedium",
-                              fontSize: 20.0,
-                              color: _headerTextColor != null
-                                  ? _headerTextColor
-                                  : darkText
-                                      .withOpacity(darkText.opacity * 0.75),
-                            ),
-                          ),
-                        ),
-                      ],
+                needsRepaint: true,
+                topOverlap: TopOverlap + devicePadding.top,
+                focusItem: widget.focusItem,
+                touchBubble: onTouchBubble,
+                touchEntry: onTouchEntry,
+              ),
+              Align(
+                alignment: Alignment.topCenter,
+                // FYI used to have container and background:
+                // color: _headerBackgroundColor != null
+                //     ? _headerBackgroundColor
+                //     : Color.fromRGBO(238, 240, 242, 0.81),
+                child: Padding(
+                  padding: EdgeInsets.only(top: 20, left: 40),
+                  child: Text(
+                    _eraName,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: "RobotoMedium",
+                      fontSize: 20.0,
+                      color: _headerTextColor != null
+                          ? _headerTextColor
+                          : darkText.withOpacity(darkText.opacity * 0.75),
                     ),
                   ),
-                ],
+                ),
               ),
             ],
           ),

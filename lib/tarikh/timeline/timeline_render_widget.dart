@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:nima/nima/math/aabb.dart' as nima;
 import 'package:hapi/tarikh/colors.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
+import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/ticks.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
@@ -24,49 +25,48 @@ typedef TouchEntryCallback(TimelineEntry? entry);
 /// This widget's fields are accessible from the [RenderBox] so that it can
 /// be aligned with the current state.
 class TimelineRenderWidget extends LeafRenderObjectWidget {
-  TimelineRenderWidget(
-      {Key? key,
-      required this.focusItem,
-      required this.touchBubble,
-      required this.touchEntry,
-      required this.topOverlap,
-      required this.timeline,
-      required this.favorites})
-      : super(key: key);
+  TimelineRenderWidget({
+    Key? key,
+    required this.topOverlap,
+    required this.focusItem,
+    required this.touchBubble,
+    required this.touchEntry,
+    required this.needsRepaint,
+  }) : super(key: key);
 
   final double topOverlap;
-  final Timeline? timeline;
   final MenuItemData focusItem;
-  final List<TimelineEntry> favorites;
   final TouchBubbleCallback touchBubble;
   final TouchEntryCallback touchEntry;
+  // TODO this is needed or good to have MAYBE?, but not used anywhere now
+  // Replaced old way of using timeline null checks
+  final bool needsRepaint;
 
   @override
   RenderObject createRenderObject(BuildContext context) {
     return TimelineRenderObject()
-      ..timeline = timeline
       ..touchBubble = touchBubble
       ..touchEntry = touchEntry
       ..focusItem = focusItem
-      ..favorites = favorites
-      ..topOverlap = topOverlap;
+      ..topOverlap = topOverlap
+      ..needsRepaint = needsRepaint;
   }
 
   @override
+  // TODO who and when is this called?  needsRepaint needed then?
   void updateRenderObject(
       BuildContext context, covariant TimelineRenderObject renderObject) {
     renderObject
-      ..timeline = timeline
       ..focusItem = focusItem
       ..touchBubble = touchBubble
       ..touchEntry = touchEntry
-      ..favorites = favorites
-      ..topOverlap = topOverlap;
+      ..topOverlap = topOverlap
+      ..needsRepaint = needsRepaint;
   }
 
   @override
   didUnmountRenderObject(covariant TimelineRenderObject renderObject) {
-    renderObject.timeline!.isActive = false;
+    TarikhController.t.isActive = false;
   }
 }
 
@@ -76,6 +76,8 @@ class TimelineRenderWidget extends LeafRenderObjectWidget {
 /// The core method of this object is [paint()]: this is where all the elements
 /// are actually drawn to screen.
 class TimelineRenderObject extends RenderBox {
+  static final Timeline t = TarikhController.t;
+
   static const List<Color> LineColors = [
     Color.fromARGB(255, 125, 195, 184),
     Color.fromARGB(255, 190, 224, 146),
@@ -84,22 +86,28 @@ class TimelineRenderObject extends RenderBox {
     Color.fromARGB(255, 128, 28, 15)
   ];
 
-  double _topOverlap = 0.0;
+  double _topOverlap = 0.01; //.01 since check below, we use 0.0 by default now
   Ticks _ticks = Ticks();
-  Timeline? _timeline;
   MenuItemData? _focusItem;
   MenuItemData? _processedFocusItem;
   List<TapTarget> _tapTargets = []; // was List<TapTarget>();
-  List<TimelineEntry>? _favorites;
   TouchBubbleCallback? touchBubble;
   TouchEntryCallback? touchEntry;
+
+  bool _needsRepaint = false;
+  List<TimelineEntry>? _gutterEventsFav;
+  List<TimelineEntry>? _gutterEventsAll;
+
+  // TODO asdf use these
+  static const double GutterPadTop = 0.0; // set gutter all the way to top
+  static const double GutterPadBottom = 80.0; // set gutter above fab
 
   @override
   bool get sizedByParent => true;
 
   double get topOverlap => _topOverlap;
-  Timeline? get timeline => _timeline;
-  List<TimelineEntry>? get favorites => _favorites;
+  List<TimelineEntry>? get gutterEventsFav => _gutterEventsFav;
+  List<TimelineEntry>? get gutterEventsAll => _gutterEventsAll;
   MenuItemData? get focusItem => _focusItem;
 
   set topOverlap(double value) {
@@ -112,25 +120,36 @@ class TimelineRenderObject extends RenderBox {
     markNeedsLayout();
   }
 
-  set timeline(Timeline? value) {
-    if (_timeline == value) {
+  //was set timeline(Timeline? value) TODO search old code of any usage of this
+  set needsRepaint(bool value) {
+    if (_needsRepaint == value) {
       return;
     }
-    _timeline = value;
+    _needsRepaint = value;
     updateFocusItem();
-    _timeline!.onNeedPaint = markNeedsPaint;
+    t.onNeedPaint = markNeedsPaint;
     markNeedsPaint();
     markNeedsLayout();
   }
 
-  set favorites(List<TimelineEntry>? value) {
-    if (_favorites == value) {
+  set gutterEventsFav(List<TimelineEntry>? value) {
+    if (gutterEventsFav == value) {
       return;
     }
-    _favorites = value;
+    _gutterEventsFav = value;
     markNeedsPaint();
     markNeedsLayout();
   }
+
+  // This should be static (UNTIL WE DOWNLOAD NEW HISTORY FROM ONLINE) TODO asdf
+  // set gutterEventsAll(List<TimelineEntry>? value) {
+  //   if (gutterEventsAll == value) {
+  //     return;
+  //   }
+  //   _gutterEventsAll = value;
+  //   markNeedsPaint();
+  //   markNeedsLayout();
+  // }
 
   set focusItem(MenuItemData? value) {
     if (_focusItem == value) {
@@ -143,26 +162,28 @@ class TimelineRenderObject extends RenderBox {
 
   /// If [_focusItem] has been updated with a new value, update the current view.
   void updateFocusItem() {
+    // TODO asdf btn action here?
     if (_processedFocusItem == _focusItem) {
       return;
     }
-    if (_focusItem == null || timeline == null || topOverlap == 0.0) {
+    // TODO was also checking timeline == null:
+    if (_focusItem == null || topOverlap == 0.0) {
       return;
     }
 
     /// Adjust the current timeline padding and consequentely the viewport.
     if (_focusItem!.pad) {
-      timeline!.padding = EdgeInsets.only(
+      t.padding = EdgeInsets.only(
           top: topOverlap + _focusItem!.padTop + Timeline.Parallax,
           bottom: _focusItem!.padBottom);
-      timeline!.setViewport(
+      t.setViewport(
           start: _focusItem!.start!,
           end: _focusItem!.end!,
           animate: true,
           pad: true);
     } else {
-      timeline!.padding = EdgeInsets.zero;
-      timeline!.setViewport(
+      t.padding = EdgeInsets.zero;
+      t.setViewport(
           start: _focusItem!.start!, end: _focusItem!.end!, animate: true);
     }
     _processedFocusItem = _focusItem;
@@ -193,21 +214,23 @@ class TimelineRenderObject extends RenderBox {
   /// Adjust the viewport when needed.
   @override
   void performLayout() {
-    if (_timeline != null) {
-      _timeline!.setViewport(height: size.height, animate: true);
-    }
+    // TODO was under if (_timeline != null) {
+    t.setViewport(height: size.height, animate: true);
   }
 
   @override
   void paint(PaintingContext context, Offset offset) {
     final Canvas canvas = context.canvas;
-    if (_timeline == null) {
-      return;
-    }
+    // if (_timeline == null) {  // TODO looks important optimization here too
+    //   return;
+    // }
+    // if (!_needsRepaint) { // THIS BROKE UI, white screen
+    //   return;
+    // }
+    // _needsRepaint = false;
 
     /// Fetch the background colors from the [Timeline] and compute the fill.
-    List<TimelineBackgroundColor>? backgroundColors =
-        timeline!.backgroundColors;
+    List<TimelineBackgroundColor>? backgroundColors = t.backgroundColors;
     ui.Paint? backgroundPaint;
     if (backgroundColors != null && backgroundColors.length > 0) {
       double rangeStart = backgroundColors.first.start!;
@@ -219,10 +242,9 @@ class TimelineRenderObject extends RenderBox {
         colors.add(bg.color!);
         stops.add((bg.start! - rangeStart) / range);
       }
-      double s =
-          timeline!.computeScale(timeline!.renderStart, timeline!.renderEnd);
-      double y1 = (backgroundColors.first.start! - timeline!.renderStart) * s;
-      double y2 = (backgroundColors.last.start! - timeline!.renderStart) * s;
+      double s = t.computeScale(t.renderStart, t.renderEnd);
+      double y1 = (backgroundColors.first.start! - t.renderStart) * s;
+      double y2 = (backgroundColors.last.start! - t.renderStart) * s;
 
       /// Fill Background.
       backgroundPaint = ui.Paint()
@@ -243,14 +265,14 @@ class TimelineRenderObject extends RenderBox {
     }
 
     _tapTargets.clear();
-    double renderStart = _timeline!.renderStart;
-    double renderEnd = _timeline!.renderEnd;
+    double renderStart = t.renderStart;
+    double renderEnd = t.renderEnd;
     double scale = size.height / (renderEnd - renderStart);
 
-    if (timeline!.renderAssets != null) {
+    if (t.renderAssets != null) {
       canvas.save();
       canvas.clipRect(offset & size);
-      for (TimelineAsset asset in timeline!.renderAssets!) {
+      for (TimelineAsset asset in t.renderAssets!) {
         if (asset.opacity > 0) {
           double rs = 0.2 + asset.scale * 0.8;
 
@@ -460,206 +482,211 @@ class TimelineRenderObject extends RenderBox {
     canvas.save();
     canvas.clipRect(Rect.fromLTWH(
         offset.dx, offset.dy + topOverlap, size.width, size.height));
-    _ticks.paint(
-        context, offset, -renderStart * scale, scale, size.height, timeline!);
+    _ticks.paint(context, offset, -renderStart * scale, scale, size.height, t);
     canvas.restore();
 
     /// And then draw the rest of the timeline.
-    if (_timeline!.entries != null) {
+    if (t.entries != null) {
       canvas.save();
-      canvas.clipRect(Rect.fromLTWH(offset.dx + _timeline!.gutterWidth,
-          offset.dy, size.width - _timeline!.gutterWidth, size.height));
+      canvas.clipRect(Rect.fromLTWH(offset.dx + t.gutterWidth, offset.dy,
+          size.width - t.gutterWidth, size.height));
       drawItems(
           context,
           offset,
-          _timeline!.entries!,
-          _timeline!.gutterWidth +
+          t.entries!,
+          t.gutterWidth +
               Timeline.LineSpacing -
-              Timeline.DepthOffset * _timeline!.renderOffsetDepth,
+              Timeline.DepthOffset * t.renderOffsetDepth,
           scale,
           0);
       canvas.restore();
     }
 
+    // TODO asdf
+    // Replace below two if statement logic with this:
+    t.updateTimeUpDnBtns();
+
     /// After a few moments of inaction on the timeline, if there's enough space,
-    /// an arrow pointing to the next event on the timeline will appear on the bottom of the screen.
-    /// Draw it, and add it as another [TapTarget].
-    if (_timeline!.nextEntry != null && _timeline!.nextEntryOpacity > 0.0) {
-      double x = offset.dx + _timeline!.gutterWidth - Timeline.GutterLeft;
-      double opacity = _timeline!.nextEntryOpacity;
-      Color color = Color.fromRGBO(69, 211, 197, opacity);
-      double pageSize = (_timeline!.renderEnd - _timeline!.renderStart);
-      double pageReference = _timeline!.renderEnd;
+    /// an arrow pointing to the next event on the timeline will appear on the
+    /// bottom of the screen. Draw it, and add it as another [TapTarget].
+    // if (t.nextEntry != null && t.nextEntryOpacity > 0.0) {
+    //   double x = offset.dx + t.gutterWidth - Timeline.GutterLeft;
+    //   double opacity = t.nextEntryOpacity;
+    //   Color color = Color.fromRGBO(69, 211, 197, opacity);
+    //   double pageSize = (t.renderEnd - t.renderStart);
+    //   double pageReference = t.renderEnd;
+    //
+    //   /// Use a Paragraph to draw the arrow's label and page scrolls on canvas:
+    //   /// 1. Create a [ParagraphBuilder] that'll be initialized with the correct styling information;
+    //   /// 2. Add some text to the builder;
+    //   /// 3. Build the [Paragraph];
+    //   /// 4. Lay out the text with custom [ParagraphConstraints].
+    //   /// 5. Draw the Paragraph at the right offset.
+    //   const double MaxLabelWidth = 1200.0;
+    //   ui.ParagraphBuilder builder = ui.ParagraphBuilder(ui.ParagraphStyle(
+    //       textAlign: TextAlign.start, fontFamily: "Roboto", fontSize: 20.0))
+    //     ..pushStyle(ui.TextStyle(color: color));
+    //
+    //   builder.addText(t.nextEntry!.label!);
+    //   ui.Paragraph labelParagraph = builder.build();
+    //   labelParagraph.layout(ui.ParagraphConstraints(width: MaxLabelWidth));
+    //
+    //   double y = offset.dy + size.height - 200.0;
+    //   double labelX =
+    //       x + size.width / 2.0 - labelParagraph.maxIntrinsicWidth / 2.0;
+    //   canvas.drawParagraph(labelParagraph, Offset(labelX, y));
+    //   y += labelParagraph.height;
+    //
+    //   /// Calculate the boundaries of the arrow icon.
+    //   Rect nextEntryRect = Rect.fromLTWH(labelX, y,
+    //       labelParagraph.maxIntrinsicWidth, offset.dy + size.height - y);
+    //
+    //   const double radius = 25.0;
+    //   labelX = x + size.width / 2.0;
+    //   y += 15 + radius;
+    //
+    //   /// Draw the background circle.
+    //   canvas.drawCircle(
+    //       Offset(labelX, y),
+    //       radius,
+    //       Paint()
+    //         ..color = color
+    //         ..style = PaintingStyle.fill);
+    //   nextEntryRect.expandToInclude(Rect.fromLTWH(
+    //       labelX - radius, y - radius, radius * 2.0, radius * 2.0));
+    //   Path path = Path();
+    //   double arrowSize = 6.0;
+    //   double arrowOffset = 1.0;
+    //
+    //   /// Draw the stylized arrow on top of the circle.
+    //   path.moveTo(x + size.width / 2.0 - arrowSize,
+    //       y - arrowSize + arrowSize / 2.0 + arrowOffset);
+    //   path.lineTo(x + size.width / 2.0, y + arrowSize / 2.0 + arrowOffset);
+    //   path.lineTo(x + size.width / 2.0 + arrowSize,
+    //       y - arrowSize + arrowSize / 2.0 + arrowOffset);
+    //   canvas.drawPath(
+    //       path,
+    //       Paint()
+    //         ..color = Colors.white.withOpacity(opacity)
+    //         ..style = PaintingStyle.stroke
+    //         ..strokeWidth = 2.0);
+    //   y += 15 + radius;
+    //
+    //   builder = ui.ParagraphBuilder(ui.ParagraphStyle(
+    //       textAlign: TextAlign.center,
+    //       fontFamily: "Roboto",
+    //       fontSize: 14.0,
+    //       height: 1.3))
+    //     ..pushStyle(ui.TextStyle(color: color));
+    //
+    //   double timeUntil = t.nextEntry!.start! - pageReference;
+    //   double pages = timeUntil / pageSize;
+    //   NumberFormat formatter = NumberFormat.compact();
+    //   String pagesFormatted = formatter.format(pages);
+    //   String until = "in " +
+    //       TimelineEntry.formatYears(timeUntil).toLowerCase() +
+    //       "\n($pagesFormatted page scrolls)";
+    //   builder.addText(until);
+    //   labelParagraph = builder.build();
+    //   labelParagraph.layout(ui.ParagraphConstraints(width: size.width));
+    //
+    //   /// Draw the Paragraph beneath the circle.
+    //   canvas.drawParagraph(labelParagraph, Offset(x, y));
+    //   y += labelParagraph.height;
+    //
+    //   /// Add this to the list of *tappable* elements.
+    //   _tapTargets.add(TapTarget()
+    //     ..entry = t.nextEntry!
+    //     ..rect = nextEntryRect
+    //     ..zoom = true);
+    // }
+    //
+    // /// Repeat the same procedure as above for the arrow pointing to the previous event on the timeline.
+    // if (t.prevEntry != null && t.prevEntryOpacity > 0.0) {
+    //   double x = offset.dx + t.gutterWidth - Timeline.GutterLeft;
+    //   double opacity = t.prevEntryOpacity;
+    //   Color color = Color.fromRGBO(69, 211, 197, opacity);
+    //   double pageSize = (t.renderEnd - t.renderStart);
+    //   double pageReference = t.renderEnd;
+    //
+    //   const double MaxLabelWidth = 1200.0;
+    //   ui.ParagraphBuilder builder = ui.ParagraphBuilder(ui.ParagraphStyle(
+    //       textAlign: TextAlign.start, fontFamily: "Roboto", fontSize: 20.0))
+    //     ..pushStyle(ui.TextStyle(color: color));
+    //
+    //   builder.addText(t.prevEntry!.label!);
+    //   ui.Paragraph labelParagraph = builder.build();
+    //   labelParagraph.layout(ui.ParagraphConstraints(width: MaxLabelWidth));
+    //
+    //   double y = offset.dy + topOverlap + 20.0;
+    //   double labelX =
+    //       x + size.width / 2.0 - labelParagraph.maxIntrinsicWidth / 2.0;
+    //   canvas.drawParagraph(labelParagraph, Offset(labelX, y));
+    //   y += labelParagraph.height;
+    //
+    //   Rect prevEntryRect = Rect.fromLTWH(labelX, y,
+    //       labelParagraph.maxIntrinsicWidth, offset.dy + size.height - y);
+    //
+    //   const double radius = 25.0;
+    //   labelX = x + size.width / 2.0;
+    //   y += 15 + radius;
+    //   canvas.drawCircle(
+    //       Offset(labelX, y),
+    //       radius,
+    //       Paint()
+    //         ..color = color
+    //         ..style = PaintingStyle.fill);
+    //   prevEntryRect.expandToInclude(Rect.fromLTWH(
+    //       labelX - radius, y - radius, radius * 2.0, radius * 2.0));
+    //   Path path = Path();
+    //   double arrowSize = 6.0;
+    //   double arrowOffset = 1.0;
+    //   path.moveTo(
+    //       x + size.width / 2.0 - arrowSize, y + arrowSize / 2.0 + arrowOffset);
+    //   path.lineTo(x + size.width / 2.0, y - arrowSize / 2.0 + arrowOffset);
+    //   path.lineTo(
+    //       x + size.width / 2.0 + arrowSize, y + arrowSize / 2.0 + arrowOffset);
+    //   canvas.drawPath(
+    //       path,
+    //       Paint()
+    //         ..color = Colors.white.withOpacity(opacity)
+    //         ..style = PaintingStyle.stroke
+    //         ..strokeWidth = 2.0);
+    //   y += 15 + radius;
+    //
+    //   builder = ui.ParagraphBuilder(ui.ParagraphStyle(
+    //       textAlign: TextAlign.center,
+    //       fontFamily: "Roboto",
+    //       fontSize: 14.0,
+    //       height: 1.3))
+    //     ..pushStyle(ui.TextStyle(color: color));
+    //
+    //   double timeUntil = t.prevEntry!.start! - pageReference;
+    //   double pages = timeUntil / pageSize;
+    //   NumberFormat formatter = NumberFormat.compact();
+    //   String pagesFormatted = formatter.format(pages.abs());
+    //   String until = TimelineEntry.formatYears(timeUntil).toLowerCase() +
+    //       " ago\n($pagesFormatted page scrolls)";
+    //   builder.addText(until);
+    //   labelParagraph = builder.build();
+    //   labelParagraph.layout(ui.ParagraphConstraints(width: size.width));
+    //   canvas.drawParagraph(labelParagraph, Offset(x, y));
+    //   y += labelParagraph.height;
+    //
+    //   _tapTargets.add(TapTarget()
+    //     ..entry = t.prevEntry!
+    //     ..rect = prevEntryRect
+    //     ..zoom = true);
+    // }
 
-      /// Use a Paragraph to draw the arrow's label and page scrolls on canvas:
-      /// 1. Create a [ParagraphBuilder] that'll be initialized with the correct styling information;
-      /// 2. Add some text to the builder;
-      /// 3. Build the [Paragraph];
-      /// 4. Lay out the text with custom [ParagraphConstraints].
-      /// 5. Draw the Paragraph at the right offset.
-      const double MaxLabelWidth = 1200.0;
-      ui.ParagraphBuilder builder = ui.ParagraphBuilder(ui.ParagraphStyle(
-          textAlign: TextAlign.start, fontFamily: "Roboto", fontSize: 20.0))
-        ..pushStyle(ui.TextStyle(color: color));
-
-      builder.addText(_timeline!.nextEntry!.label!);
-      ui.Paragraph labelParagraph = builder.build();
-      labelParagraph.layout(ui.ParagraphConstraints(width: MaxLabelWidth));
-
-      double y = offset.dy + size.height - 200.0;
-      double labelX =
-          x + size.width / 2.0 - labelParagraph.maxIntrinsicWidth / 2.0;
-      canvas.drawParagraph(labelParagraph, Offset(labelX, y));
-      y += labelParagraph.height;
-
-      /// Calculate the boundaries of the arrow icon.
-      Rect nextEntryRect = Rect.fromLTWH(labelX, y,
-          labelParagraph.maxIntrinsicWidth, offset.dy + size.height - y);
-
-      const double radius = 25.0;
-      labelX = x + size.width / 2.0;
-      y += 15 + radius;
-
-      /// Draw the background circle.
-      canvas.drawCircle(
-          Offset(labelX, y),
-          radius,
-          Paint()
-            ..color = color
-            ..style = PaintingStyle.fill);
-      nextEntryRect.expandToInclude(Rect.fromLTWH(
-          labelX - radius, y - radius, radius * 2.0, radius * 2.0));
-      Path path = Path();
-      double arrowSize = 6.0;
-      double arrowOffset = 1.0;
-
-      /// Draw the stylized arrow on top of the circle.
-      path.moveTo(x + size.width / 2.0 - arrowSize,
-          y - arrowSize + arrowSize / 2.0 + arrowOffset);
-      path.lineTo(x + size.width / 2.0, y + arrowSize / 2.0 + arrowOffset);
-      path.lineTo(x + size.width / 2.0 + arrowSize,
-          y - arrowSize + arrowSize / 2.0 + arrowOffset);
-      canvas.drawPath(
-          path,
-          Paint()
-            ..color = Colors.white.withOpacity(opacity)
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = 2.0);
-      y += 15 + radius;
-
-      builder = ui.ParagraphBuilder(ui.ParagraphStyle(
-          textAlign: TextAlign.center,
-          fontFamily: "Roboto",
-          fontSize: 14.0,
-          height: 1.3))
-        ..pushStyle(ui.TextStyle(color: color));
-
-      double timeUntil = _timeline!.nextEntry!.start! - pageReference;
-      double pages = timeUntil / pageSize;
-      NumberFormat formatter = NumberFormat.compact();
-      String pagesFormatted = formatter.format(pages);
-      String until = "in " +
-          TimelineEntry.formatYears(timeUntil).toLowerCase() +
-          "\n($pagesFormatted page scrolls)";
-      builder.addText(until);
-      labelParagraph = builder.build();
-      labelParagraph.layout(ui.ParagraphConstraints(width: size.width));
-
-      /// Draw the Paragraph beneath the circle.
-      canvas.drawParagraph(labelParagraph, Offset(x, y));
-      y += labelParagraph.height;
-
-      /// Add this to the list of *tappable* elements.
-      _tapTargets.add(TapTarget()
-        ..entry = _timeline!.nextEntry!
-        ..rect = nextEntryRect
-        ..zoom = true);
-    }
-
-    /// Repeat the same procedure as above for the arrow pointing to the previous event on the timeline.
-    if (_timeline!.prevEntry != null && _timeline!.prevEntryOpacity > 0.0) {
-      double x = offset.dx + _timeline!.gutterWidth - Timeline.GutterLeft;
-      double opacity = _timeline!.prevEntryOpacity;
-      Color color = Color.fromRGBO(69, 211, 197, opacity);
-      double pageSize = (_timeline!.renderEnd - _timeline!.renderStart);
-      double pageReference = _timeline!.renderEnd;
-
-      const double MaxLabelWidth = 1200.0;
-      ui.ParagraphBuilder builder = ui.ParagraphBuilder(ui.ParagraphStyle(
-          textAlign: TextAlign.start, fontFamily: "Roboto", fontSize: 20.0))
-        ..pushStyle(ui.TextStyle(color: color));
-
-      builder.addText(_timeline!.prevEntry!.label!);
-      ui.Paragraph labelParagraph = builder.build();
-      labelParagraph.layout(ui.ParagraphConstraints(width: MaxLabelWidth));
-
-      double y = offset.dy + topOverlap + 20.0;
-      double labelX =
-          x + size.width / 2.0 - labelParagraph.maxIntrinsicWidth / 2.0;
-      canvas.drawParagraph(labelParagraph, Offset(labelX, y));
-      y += labelParagraph.height;
-
-      Rect prevEntryRect = Rect.fromLTWH(labelX, y,
-          labelParagraph.maxIntrinsicWidth, offset.dy + size.height - y);
-
-      const double radius = 25.0;
-      labelX = x + size.width / 2.0;
-      y += 15 + radius;
-      canvas.drawCircle(
-          Offset(labelX, y),
-          radius,
-          Paint()
-            ..color = color
-            ..style = PaintingStyle.fill);
-      prevEntryRect.expandToInclude(Rect.fromLTWH(
-          labelX - radius, y - radius, radius * 2.0, radius * 2.0));
-      Path path = Path();
-      double arrowSize = 6.0;
-      double arrowOffset = 1.0;
-      path.moveTo(
-          x + size.width / 2.0 - arrowSize, y + arrowSize / 2.0 + arrowOffset);
-      path.lineTo(x + size.width / 2.0, y - arrowSize / 2.0 + arrowOffset);
-      path.lineTo(
-          x + size.width / 2.0 + arrowSize, y + arrowSize / 2.0 + arrowOffset);
-      canvas.drawPath(
-          path,
-          Paint()
-            ..color = Colors.white.withOpacity(opacity)
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = 2.0);
-      y += 15 + radius;
-
-      builder = ui.ParagraphBuilder(ui.ParagraphStyle(
-          textAlign: TextAlign.center,
-          fontFamily: "Roboto",
-          fontSize: 14.0,
-          height: 1.3))
-        ..pushStyle(ui.TextStyle(color: color));
-
-      double timeUntil = _timeline!.prevEntry!.start! - pageReference;
-      double pages = timeUntil / pageSize;
-      NumberFormat formatter = NumberFormat.compact();
-      String pagesFormatted = formatter.format(pages.abs());
-      String until = TimelineEntry.formatYears(timeUntil).toLowerCase() +
-          " ago\n($pagesFormatted page scrolls)";
-      builder.addText(until);
-      labelParagraph = builder.build();
-      labelParagraph.layout(ui.ParagraphConstraints(width: size.width));
-      canvas.drawParagraph(labelParagraph, Offset(x, y));
-      y += labelParagraph.height;
-
-      _tapTargets.add(TapTarget()
-        ..entry = _timeline!.prevEntry!
-        ..rect = prevEntryRect
-        ..zoom = true);
-    }
-
-    /// When the user presses the heart button on the top right corner of the timeline
-    /// a gutter on the left side shows up so that favorite elements are quickly accessible.
+    // TODO asdf
+    /// When the user presses the heart outline/heart/close button on the bottom
+    /// left corner of the timeline, a gutter on the left side shows up so that
+    /// favorite or all history elements are quickly accessible.
     ///
-    /// Here the gutter gets drawn, and the elements are added as *tappable* targets.
-    double favoritesGutter = _timeline!.gutterWidth - Timeline.GutterLeft;
-    if (_favorites != null && _favorites!.length > 0 && favoritesGutter > 0.0) {
+    /// Here the gutter is drawn and elements are added as *tappable* targets.
+    double favoritesGutter = t.gutterWidth - Timeline.GutterLeft;
+    if (cTrkh.favorites.length > 0 && favoritesGutter > 0.0) {
       Paint accentPaint = Paint()
         ..color = favoritesGutterAccent
         ..style = PaintingStyle.stroke
@@ -668,8 +695,7 @@ class TimelineRenderObject extends RenderBox {
         ..color = favoritesGutterAccent
         ..style = PaintingStyle.fill;
       Paint whitePaint = Paint()..color = Colors.white;
-      double scale =
-          timeline!.computeScale(timeline!.renderStart, timeline!.renderEnd);
+      double scale = t.computeScale(t.renderStart, t.renderEnd);
       double fullMargin = 50.0;
       double favoritesRadius = 20.0;
       double fullMarginOffset = fullMargin + favoritesRadius + 11.0;
@@ -683,9 +709,8 @@ class TimelineRenderObject extends RenderBox {
 
       /// Order favorites by distance from mid.
       List<TimelineEntry> nearbyFavorites =
-          List<TimelineEntry>.from(_favorites!);
-      double mid = timeline!.renderStart +
-          (timeline!.renderEnd - timeline!.renderStart) / 2.0;
+          List<TimelineEntry>.from(cTrkh.favorites);
+      double mid = t.renderStart + (t.renderEnd - t.renderStart) / 2.0;
       nearbyFavorites.sort((TimelineEntry a, TimelineEntry b) {
         return (a.start! - mid).abs().compareTo((b.start! - mid).abs());
       });
@@ -693,8 +718,8 @@ class TimelineRenderObject extends RenderBox {
       /// layout favorites.
       for (int i = 0; i < nearbyFavorites.length; i++) {
         TimelineEntry favorite = nearbyFavorites[i];
-        double y = ((favorite.start! - timeline!.renderStart) * scale).clamp(
-            offset.dy + topOverlap + favoritesRadius + padFavorites,
+        double y = ((favorite.start! - t.renderStart) * scale).clamp(
+            offset.dy + favoritesRadius + padFavorites, //was also + topOverlap
             offset.dy + size.height - favoritesRadius - padFavorites);
         favorite.favoriteY = y;
 
@@ -885,8 +910,9 @@ class TimelineRenderObject extends RenderBox {
       ///
       /// Uses same [ui.ParagraphBuilder] logic as seen above.
       TimelineEntry? previous;
-      for (TimelineEntry favorite in _favorites!) {
+      for (TimelineEntry favorite in cTrkh.favorites) {
         if (favorite.isFavoriteOccluded) {
+          // TODO what's this?
           continue;
         }
         if (previous != null) {
@@ -987,7 +1013,7 @@ class TimelineRenderObject extends RenderBox {
       const double BubblePadding = 20.0;
 
       /// Let the timeline calculate the height for the current item's bubble.
-      double bubbleHeight = timeline!.bubbleHeight(item);
+      double bubbleHeight = t.bubbleHeight(item);
 
       /// Use [ui.ParagraphBuilder] to construct the label for canvas.
       ui.ParagraphBuilder builder = ui.ParagraphBuilder(ui.ParagraphStyle(
@@ -1001,8 +1027,8 @@ class TimelineRenderObject extends RenderBox {
 
       double textWidth =
           labelParagraph.maxIntrinsicWidth * item.opacity * item.labelOpacity;
-      double bubbleX = _timeline!.renderLabelX -
-          Timeline.DepthOffset * _timeline!.renderOffsetDepth;
+      double bubbleX =
+          t.renderLabelX - Timeline.DepthOffset * t.renderOffsetDepth;
       double bubbleY = item.labelY - bubbleHeight / 2.0;
 
       canvas.save();
