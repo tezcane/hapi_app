@@ -1401,11 +1401,11 @@ class Timeline {
     if (entry != null && opacity > 0.0) {
       title = entry.label!;
 
-      double pageReference = this.renderEnd;
+      double pageReference = renderEnd;
       double timeUntilDouble = entry.start! - pageReference;
       timeUntil = TimelineEntry.formatYears(timeUntilDouble).toLowerCase();
 
-      double pageSize = this.renderEnd - this.renderStart;
+      double pageSize = renderEnd - renderStart;
       double pages = timeUntilDouble / pageSize;
       pageScrolls = '${formatter.format(pages.abs())} pages away';
     }
@@ -1421,8 +1421,8 @@ class Timeline {
   // We have to do update() in another thread or there is a render/build error
   void updateTimeUpDnBtns() {
     Timer(const Duration(microseconds: 0), () {
-      cTrkh.setTBtnUp(this.getTimeBtn(this.prevEntry, this.prevEntryOpacity));
-      cTrkh.setTBtnDn(this.getTimeBtn(this.nextEntry, this.nextEntryOpacity));
+      cTrkh.setTBtnUp(getTimeBtn(prevEntry, prevEntryOpacity));
+      cTrkh.setTBtnDn(getTimeBtn(nextEntry, nextEntryOpacity));
       cTrkh.update(); //TODO test more
     });
   }

@@ -46,8 +46,10 @@ class TarikhController extends GetxController {
     update();
   }
 
-  late final Rx<TimeBtn> timeBtnUp;
-  late final Rx<TimeBtn> timeBtnDn;
+  final Rx<TimeBtn> timeBtnUp =
+      TimeBtn(title: ' ', timeUntil: ' ', pageScrolls: ' ').obs;
+  final Rx<TimeBtn> timeBtnDn =
+      TimeBtn(title: ' ', timeUntil: ' ', pageScrolls: ' ').obs;
 
   @override
   void onInit() {
@@ -65,15 +67,15 @@ class TarikhController extends GetxController {
         /// Advance the timeline to its starting position.
         t.advance(0.0, false);
 
-        /// initialize up down buttons
-        timeBtnUp = t.getTimeBtn(t.prevEntry, t.prevEntryOpacity).obs;
-        timeBtnDn = t.getTimeBtn(t.nextEntry, t.nextEntryOpacity).obs;
-
         /// All the entries are loaded, we can fill in the [favoritesBloc]...
         initFavorites(entries);
 
         /// ...and initialize the [SearchManager].
         SearchManager.init(entries);
+
+        /// initialize up down buttons
+        timeBtnUp.value = t.getTimeBtn(t.prevEntry, t.prevEntryOpacity);
+        timeBtnDn.value = t.getTimeBtn(t.nextEntry, t.nextEntryOpacity);
       },
     );
 
