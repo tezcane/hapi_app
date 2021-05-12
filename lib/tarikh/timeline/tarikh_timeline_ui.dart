@@ -143,8 +143,9 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     MenuItemData target = MenuItemData.fromEntry(entry);
 
     t.padding = EdgeInsets.only(
-      top: TopOverlap + devicePaddingTop + target.padTop + Timeline.Parallax,
-      bottom: target.padBottom,
+      top: MediaQuery.of(context).size.height, //TODO WHY DOES THIS CENTER EVENT
+      //was: TopOverlap + devicePaddingTop + target.padTop + Timeline.Parallax,
+      //bottom: target.padBottom,
     );
     t.setViewport(
         start: target.start!, end: target.end!, animate: true, pad: true);
@@ -273,7 +274,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                   children: [
                     // Column dummy to easily verticle align up/down fabs:
                     Padding(
-                      padding: const EdgeInsets.only(left: 4),
+                      padding: const EdgeInsets.only(left: 14.5),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         //mainAxisAlignment: MainAxisAlignment.start,
@@ -296,7 +297,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                     size: 36.0)
                                 : c.isGutterModeFav()
                                     ? Icon(Icons.favorite_outlined, size: 36.0)
-                                    : Icon(Icons.close, size: 36.0),
+                                    : Icon(Icons.history_edu_outlined,
+                                        size: 36.0),
                           ),
                           Text(''),
                           SizedBox(height: 1.8),
@@ -304,8 +306,10 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                       ),
                     ),
                     Padding(
-                      padding:
-                          EdgeInsets.only(left: c.isGutterModeOff() ? 0 : 45),
+                      padding: EdgeInsets.only(
+                        left: c.isGutterModeOff() ? 0 : 45,
+                        right: 5, // TODO
+                      ),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         //mainAxisAlignment: MainAxisAlignment.center,
@@ -332,8 +336,12 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               if (btnUp.entry != null) {
                                 print(
                                     'Navigate to past: ' + btnUp.entry!.label!);
+                                cTrkh.setTBtnUp(cTrkh.getTimeBtn(
+                                    btnUp.entry!.previous, 1.0));
                                 _navigateToTimeline(
                                     btnUp.entry!, devicePadding.top);
+                                cTrkh.setTBtnDn(
+                                    cTrkh.getTimeBtn(btnUp.entry, 1.0));
                               }
                             },
                             materialTapTargetSize: MaterialTapTargetSize.padded,
@@ -375,8 +383,12 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                             if (btnDn.entry != null) {
                               print(
                                   'Navigate to future: ' + btnDn.entry!.label!);
+                              cTrkh.setTBtnDn(
+                                  cTrkh.getTimeBtn(btnDn.entry!.next, 1.0));
                               _navigateToTimeline(
                                   btnDn.entry!, devicePadding.top);
+                              cTrkh.setTBtnUp(
+                                  cTrkh.getTimeBtn(btnDn.entry, 1.0));
                             }
                           },
                           materialTapTargetSize: MaterialTapTargetSize.padded,

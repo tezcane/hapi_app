@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'dart:ui';
 import 'dart:ui' as ui;
 
 import 'package:flare_dart/math/aabb.dart' as flare;
@@ -502,9 +501,32 @@ class TimelineRenderObject extends RenderBox {
       canvas.restore();
     }
 
-    // TODO asdf
-    // Replace below two if statement logic with this:
-    t.updateTimeUpDnBtns();
+    // Replace two commented out (very large) if statement logic with these two:
+    if (t.nextEntry != null && t.nextEntryOpacity > 0.0) {
+      cTrkh.setTBtnDn(cTrkh.getTimeBtn(t.nextEntry, t.nextEntryOpacity));
+    } else {
+      TimeBtn trkhTimeBtn = cTrkh.timeBtnDn.value;
+      TimeBtn timeBtnTemp = cTrkh.getTimeBtn(trkhTimeBtn.entry, 1.0);
+
+      // don't update unless we have a new value
+      if (trkhTimeBtn.timeUntil != timeBtnTemp.timeUntil ||
+          trkhTimeBtn.pageScrolls != timeBtnTemp.pageScrolls) {
+        cTrkh.updateTBtnDn(timeBtnTemp.timeUntil, timeBtnTemp.pageScrolls);
+      }
+    }
+
+    if (t.prevEntry != null && t.prevEntryOpacity > 0.0) {
+      cTrkh.setTBtnUp(cTrkh.getTimeBtn(t.prevEntry, t.prevEntryOpacity));
+    } else {
+      TimeBtn trkhTimeBtn = cTrkh.timeBtnUp.value;
+      TimeBtn timeBtnTemp = cTrkh.getTimeBtn(trkhTimeBtn.entry, 1.0);
+
+      // don't update unless we have a new value
+      if (trkhTimeBtn.timeUntil != timeBtnTemp.timeUntil ||
+          trkhTimeBtn.pageScrolls != timeBtnTemp.pageScrolls) {
+        cTrkh.updateTBtnUp(timeBtnTemp.timeUntil, timeBtnTemp.pageScrolls);
+      }
+    }
 
     /// After a few moments of inaction on the timeline, if there's enough space,
     /// an arrow pointing to the next event on the timeline will appear on the
@@ -679,7 +701,6 @@ class TimelineRenderObject extends RenderBox {
     //     ..zoom = true);
     // }
 
-    // TODO asdf
     /// When the user presses the heart outline/heart/close button on the bottom
     /// left corner of the timeline, a gutter on the left side shows up so that
     /// favorite or all history elements are quickly accessible.
@@ -697,8 +718,8 @@ class TimelineRenderObject extends RenderBox {
       Paint whitePaint = Paint()..color = Colors.white;
       double scale = t.computeScale(t.renderStart, t.renderEnd);
       double fullMargin = 50.0;
-      double favoritesRadius = 20.0;
-      double fullMarginOffset = fullMargin + favoritesRadius + 11.0;
+      double favoritesRadius = 26.0; //was 20
+      double fullMarginOffset = fullMargin + favoritesRadius + 16.5; //was 11.0
       double x = offset.dx -
           fullMargin +
           favoritesGutter /

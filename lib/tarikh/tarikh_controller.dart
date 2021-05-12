@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:get/get.dart';
 import 'package:hapi/constants/globals.dart';
 import 'package:hapi/tarikh/search_manager.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
+import 'package:intl/intl.dart';
 
 final TarikhController cTrkh = Get.find();
 
@@ -12,7 +15,7 @@ enum GutterMode {
   ALL,
 }
 
-/// Timeline Up Down Button
+/// Used for Timeline Up/Down Button data
 class TimeBtn {
   TimeBtn({
     required this.title,
@@ -21,8 +24,8 @@ class TimeBtn {
     this.entry,
   });
   final String title;
-  final String timeUntil;
-  final String pageScrolls;
+  String timeUntil; // not final to allow updating these as page scrolls
+  String pageScrolls;
   final TimelineEntry? entry;
 }
 
@@ -32,6 +35,8 @@ class TarikhController extends GetxController {
   static final Timeline t = Timeline();
 
   static const String FAVORITES_KEY = "TARIKH_FAVS";
+
+  static final NumberFormat formatter = NumberFormat.compact();
 
   /// List of favorites shown on Tarikh_Favorites page
   final List<TimelineEntry> _favorites = [];
@@ -74,8 +79,8 @@ class TarikhController extends GetxController {
         SearchManager.init(entries);
 
         /// initialize up down buttons
-        timeBtnUp.value = t.getTimeBtn(t.prevEntry, t.prevEntryOpacity);
-        timeBtnDn.value = t.getTimeBtn(t.nextEntry, t.nextEntryOpacity);
+        timeBtnUp.value = getTimeBtn(t.prevEntry, t.prevEntryOpacity);
+        timeBtnDn.value = getTimeBtn(t.nextEntry, t.nextEntryOpacity);
       },
     );
 
@@ -143,6 +148,58 @@ class TarikhController extends GetxController {
   bool isGutterModeFav() => _gutterMode.value == GutterMode.FAV;
   bool isGutterModeAll() => _gutterMode.value == GutterMode.ALL;
 
-  void setTBtnUp(TimeBtn timeBtn) => this.timeBtnUp.value = timeBtn;
-  void setTBtnDn(TimeBtn timeBtn) => this.timeBtnDn.value = timeBtn;
+  void setTBtnUp(TimeBtn timeBtn) {
+    timeBtnUp.value = timeBtn;
+    updateOnThread();
+  }
+
+  void setTBtnDn(TimeBtn timeBtn) {
+    timeBtnDn.value = timeBtn;
+    updateOnThread();
+  }
+
+  void updateTBtnUp(String timeUntil, String pageScrolls) {
+    timeBtnUp.value.timeUntil = timeUntil;
+    timeBtnUp.value.pageScrolls = pageScrolls;
+    updateOnThread();
+  }
+
+  void updateTBtnDn(String timeUntil, String pageScrolls) {
+    timeBtnDn.value.timeUntil = timeUntil;
+    timeBtnDn.value.pageScrolls = pageScrolls;
+    updateOnThread();
+  }
+
+  // TODO We update() in another thread or there is a render/build error:
+  void updateOnThread() => Timer(const Duration(seconds: 0), () => update());
+
+  int count = 0;
+  TimeBtn getTimeBtn(TimelineEntry? entry, double opacity) {
+    if (entry == null) {
+      count++;
+    }
+    String title = '$count'; // these can't be blank because of FittedBox
+    String timeUntil = ' ';
+    String pageScrolls = ' ';
+
+    if (entry != null && opacity > 0.0) {
+      title = entry.label!;
+
+      //was t.renderEnd, had 'page away 0' at bottom page edge, now in middle:
+      double pageReference = (t.renderStart + t.renderEnd) / 2.0;
+      double timeUntilDouble = entry.start! - pageReference;
+      timeUntil = TimelineEntry.formatYears(timeUntilDouble).toLowerCase();
+
+      double pageSize = t.renderEnd - t.renderStart;
+      double pages = timeUntilDouble / pageSize;
+      pageScrolls = '${formatter.format(pages.abs())} pages away';
+    }
+
+    return TimeBtn(
+      title: title,
+      timeUntil: timeUntil,
+      pageScrolls: pageScrolls,
+      entry: entry,
+    );
+  }
 }

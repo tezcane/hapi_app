@@ -15,7 +15,6 @@ import 'package:hapi/main_controller.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 import 'package:hapi/tarikh/timeline/timeline_utils.dart';
-import 'package:intl/intl.dart';
 import 'package:nima/nima.dart' as nima;
 import 'package:nima/nima/math/aabb.dart' as nima;
 
@@ -33,8 +32,6 @@ class Timeline {
   /// [ScrollPhysics] based on the platform we're on.
   late final TargetPlatform _platform;
 
-  static final NumberFormat formatter = NumberFormat.compact();
-
   /// Some aptly named constants for properly aligning the Timeline view.
   static const double LineWidth = 2.0;
   static const double LineSpacing = 10.0;
@@ -44,20 +41,20 @@ class Timeline {
   static const double MoveSpeed = 10.0;
   static const double MoveSpeedInteracting = 40.0;
   static const double Deceleration = 3.0;
-  static const double GutterLeft = 64.0; //was 45.0;
-  static const double GutterLeftExpanded = 90.0; //was 75.0
+  static const double GutterLeft = 45.0; //was 45.0;
+  static const double GutterLeftExpanded = 110.0; //was 75.0
 
   static const double EdgeRadius = 4.0;
   static const double MinChildLength = 50.0;
   static const double BubbleHeight = 50.0;
-  static const double BubbleArrowSize = 19.0;
+//static const double BubbleArrowSize = 19.0;
   static const double BubblePadding = 20.0;
   static const double BubbleTextHeight = 20.0;
   static const double AssetPadding = 30.0;
   static const double Parallax = 100.0;
   static const double AssetScreenScale = 0.3;
-  static const double InitialViewportPadding = 100.0;
-  static const double TravelViewportPaddingTop = 400.0;
+//static const double InitialViewportPadding = 100.0; // TODO cleanup
+//static const double TravelViewportPaddingTop = 400.0;
 
   static const double ViewportPaddingTop = 120.0;
   static const double ViewportPaddingBottom = 100.0;
@@ -1203,6 +1200,7 @@ class Timeline {
       if (y > _height + itemBubbleHeight) {
         item.labelY = y;
         if (_nextEntry == null) {
+          // TODO asdf intercept up/dn btn here?
           _nextEntry = item;
           _distanceToNextEntry = (y - _height) / _height;
         }
@@ -1391,40 +1389,6 @@ class Timeline {
       }
     }
     return stillAnimating;
-  }
-
-  TimeBtn getTimeBtn(TimelineEntry? entry, double opacity) {
-    String title = ' '; // these can't be blank because of FittedBox
-    String timeUntil = ' ';
-    String pageScrolls = ' ';
-
-    if (entry != null && opacity > 0.0) {
-      title = entry.label!;
-
-      double pageReference = renderEnd;
-      double timeUntilDouble = entry.start! - pageReference;
-      timeUntil = TimelineEntry.formatYears(timeUntilDouble).toLowerCase();
-
-      double pageSize = renderEnd - renderStart;
-      double pages = timeUntilDouble / pageSize;
-      pageScrolls = '${formatter.format(pages.abs())} pages away';
-    }
-
-    return TimeBtn(
-      title: title,
-      timeUntil: timeUntil,
-      pageScrolls: pageScrolls,
-      entry: entry,
-    );
-  }
-
-  // We have to do update() in another thread or there is a render/build error
-  void updateTimeUpDnBtns() {
-    Timer(const Duration(microseconds: 0), () {
-      cTrkh.setTBtnUp(getTimeBtn(prevEntry, prevEntryOpacity));
-      cTrkh.setTBtnDn(getTimeBtn(nextEntry, nextEntryOpacity));
-      cTrkh.update(); //TODO test more
-    });
   }
 }
 // TODO way too many nullables in here

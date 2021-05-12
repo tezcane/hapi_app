@@ -53,10 +53,9 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
     //     .then(_restoreSection); // <- TODO how to do this with Getx?
   }
 
-  // TODO BUG anytime we go two menu deep away from here,
   //    animation does not resume on return
-  // TODO what is v below:
-  //_restoreSection(v) => setState(() => _isSectionActive = true);
+  // TODO what was v below used for?, dummy value passed back i think from future:
+  _restoreSection(v) => setState(() => _isSectionActive = true);
   _pauseSection() => setState(() => _isSectionActive = false);
 
   initState() {
