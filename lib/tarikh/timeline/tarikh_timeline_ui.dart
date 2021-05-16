@@ -265,12 +265,11 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
           builder: (c) {
             TimeBtn btnUp = c.timeBtnUp();
             TimeBtn btnDn = c.timeBtnDn();
-            return Align(
-              alignment: Alignment.bottomLeft,
-              // use stack to prevent up/down btns from jiggling on text update
-              child: Stack(
-                children: [
-                  Row(
+            return Stack(
+              children: [
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Row(
                     //mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -282,7 +281,15 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                           mainAxisSize: MainAxisSize.min,
                           //mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            SizedBox(width: 56, height: 56),
+                            Container(
+                              constraints: BoxConstraints(
+                                minWidth: 56,
+                                maxWidth: 56,
+                                minHeight: 56,
+                                maxHeight: 56,
+                              ),
+                              child: SizedBox(width: 56, height: 56),
+                            ),
                             Text(''),
                             SizedBox(height: 1.8),
                           ],
@@ -291,7 +298,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                       Padding(
                         padding: EdgeInsets.only(
                           left: c.isGutterModeOff() ? 0 : 45,
-                          right: 5, // TODO
+                          right: 9, // gap between text
                         ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -302,6 +309,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               fit: BoxFit.contain,
                               child: Text(
                                 btnUp.title,
+                                textAlign: TextAlign.center,
                                 style: TextStyle(color: color),
                               ),
                             ),
@@ -309,14 +317,24 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               fit: BoxFit.contain,
                               child: Text(
                                 btnUp.timeUntil,
+                                textAlign: TextAlign.center,
                                 style: TextStyle(color: color),
                               ),
                             ),
-                            SizedBox(width: 56, height: 56),
+                            Container(
+                              constraints: BoxConstraints(
+                                minWidth: 56,
+                                maxWidth: 56,
+                                minHeight: 56,
+                                maxHeight: 56,
+                              ),
+                              child: SizedBox(width: 56, height: 56),
+                            ),
                             FittedBox(
                               fit: BoxFit.contain,
                               child: Text(
                                 btnUp.pageScrolls,
+                                textAlign: TextAlign.center,
                                 style: TextStyle(color: color),
                               ),
                             ),
@@ -332,6 +350,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                             fit: BoxFit.contain,
                             child: Text(
                               btnDn.title,
+                              textAlign: TextAlign.center,
                               style: TextStyle(color: color),
                             ),
                           ),
@@ -339,14 +358,24 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                             fit: BoxFit.contain,
                             child: Text(
                               btnDn.timeUntil,
+                              textAlign: TextAlign.center,
                               style: TextStyle(color: color),
                             ),
                           ),
-                          SizedBox(width: 56, height: 56),
+                          Container(
+                            constraints: BoxConstraints(
+                              minWidth: 56,
+                              maxWidth: 56,
+                              minHeight: 56,
+                              maxHeight: 56,
+                            ),
+                            child: SizedBox(width: 56, height: 56),
+                          ),
                           FittedBox(
                             fit: BoxFit.contain,
                             child: Text(
                               btnDn.pageScrolls,
+                              textAlign: TextAlign.center,
                               style: TextStyle(color: color),
                             ),
                           ),
@@ -364,7 +393,10 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                       ),
                     ],
                   ),
-                  Row(
+                ),
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Row(
                     //mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -407,7 +439,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                       Padding(
                         padding: EdgeInsets.only(
                           left: c.isGutterModeOff() ? 0 : 45,
-                          right: 5, // TODO
+                          right: 9,
                         ),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -443,6 +475,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                       ),
                       Column(
                         mainAxisSize: MainAxisSize.min,
+                        //mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Text(''),
@@ -480,8 +513,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                       ),
                     ],
                   ),
-                ],
-              ),
+                ),
+              ],
             );
           },
         ),
