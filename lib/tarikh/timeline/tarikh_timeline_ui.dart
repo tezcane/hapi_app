@@ -261,161 +261,230 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
         floatingActionButtonLocation:
             FloatingActionButtonLocation.miniCenterDocked,
         floatingActionButton: GetBuilder<TarikhController>(
-            init: TarikhController(),
-            builder: (c) {
-              TimeBtn btnUp = c.timeBtnUp();
-              TimeBtn btnDn = c.timeBtnDn();
-              return Align(
-                alignment: Alignment.bottomLeft,
-                child: Row(
-                  //mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    // Column dummy to easily verticle align up/down fabs:
-                    Padding(
-                      padding: const EdgeInsets.only(left: 14.5),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        //mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          FloatingActionButton(
-                            tooltip: 'Show/hide favorite or all events',
-                            heroTag: SubPage.TARIKH_FAVORITE,
-                            onPressed: () {
-                              if (c.isGutterModeOff()) {
-                                c.gutterMode = GutterMode.FAV;
-                              } else if (c.isGutterModeFav()) {
-                                c.gutterMode = GutterMode.ALL;
-                              } else /* if (c.isGutterModeAll) */ {
-                                c.gutterMode = GutterMode.OFF;
-                              }
-                            },
-                            materialTapTargetSize: MaterialTapTargetSize.padded,
-                            child: c.isGutterModeOff()
-                                ? const Icon(Icons.favorite_border_outlined,
-                                    size: 36.0)
-                                : c.isGutterModeFav()
-                                    ? Icon(Icons.favorite_outlined, size: 36.0)
-                                    : Icon(Icons.history_edu_outlined,
-                                        size: 36.0),
-                          ),
-                          Text(''),
-                          SizedBox(height: 1.8),
-                        ],
+          init: TarikhController(),
+          builder: (c) {
+            TimeBtn btnUp = c.timeBtnUp();
+            TimeBtn btnDn = c.timeBtnDn();
+            return Align(
+              alignment: Alignment.bottomLeft,
+              // use stack to prevent up/down btns from jiggling on text update
+              child: Stack(
+                children: [
+                  Row(
+                    //mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      // Column dummy to easily vertical align up/down fabs:
+                      Padding(
+                        padding: const EdgeInsets.only(left: 14.5),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          //mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(width: 56, height: 56),
+                            Text(''),
+                            SizedBox(height: 1.8),
+                          ],
+                        ),
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                        left: c.isGutterModeOff() ? 0 : 45,
-                        right: 5, // TODO
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: c.isGutterModeOff() ? 0 : 45,
+                          right: 5, // TODO
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          //mainAxisAlignment: MainAxisAlignment.center,
+                          //crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            FittedBox(
+                              fit: BoxFit.contain,
+                              child: Text(
+                                btnUp.title,
+                                style: TextStyle(color: color),
+                              ),
+                            ),
+                            FittedBox(
+                              fit: BoxFit.contain,
+                              child: Text(
+                                btnUp.timeUntil,
+                                style: TextStyle(color: color),
+                              ),
+                            ),
+                            SizedBox(width: 56, height: 56),
+                            FittedBox(
+                              fit: BoxFit.contain,
+                              child: Text(
+                                btnUp.pageScrolls,
+                                style: TextStyle(color: color),
+                              ),
+                            ),
+                            SizedBox(height: 1.8),
+                          ],
+                        ),
                       ),
-                      child: Column(
+                      Column(
                         mainAxisSize: MainAxisSize.min,
-                        //mainAxisAlignment: MainAxisAlignment.center,
-                        //crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           FittedBox(
                             fit: BoxFit.contain,
                             child: Text(
-                              btnUp.title,
+                              btnDn.title,
                               style: TextStyle(color: color),
                             ),
                           ),
                           FittedBox(
                             fit: BoxFit.contain,
                             child: Text(
-                              btnUp.timeUntil,
+                              btnDn.timeUntil,
                               style: TextStyle(color: color),
                             ),
                           ),
-                          FloatingActionButton(
-                            tooltip: 'Navigate to past',
-                            heroTag: null, // needed
-                            onPressed: () {
-                              if (btnUp.entry != null) {
-                                print(
-                                    'Navigate to past: ' + btnUp.entry!.label!);
-                                cTrkh.setTBtnUp(cTrkh.getTimeBtn(
-                                    btnUp.entry!.previous, 1.0));
-                                _navigateToTimeline(
-                                    btnUp.entry!, devicePadding.top);
-                                cTrkh.setTBtnDn(
-                                    cTrkh.getTimeBtn(btnUp.entry, 1.0));
-                              }
-                            },
-                            materialTapTargetSize: MaterialTapTargetSize.padded,
-                            child: Icon(Icons.expand_less_outlined, size: 36.0),
-                          ),
+                          SizedBox(width: 56, height: 56),
                           FittedBox(
                             fit: BoxFit.contain,
                             child: Text(
-                              btnUp.pageScrolls,
+                              btnDn.pageScrolls,
                               style: TextStyle(color: color),
                             ),
                           ),
                           SizedBox(height: 1.8),
                         ],
                       ),
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        FittedBox(
-                          fit: BoxFit.contain,
-                          child: Text(
-                            btnDn.title,
-                            style: TextStyle(color: color),
-                          ),
-                        ),
-                        FittedBox(
-                          fit: BoxFit.contain,
-                          child: Text(
-                            btnDn.timeUntil,
-                            style: TextStyle(color: color),
-                          ),
-                        ),
-                        FloatingActionButton(
-                          tooltip: 'Navigate to future',
-                          heroTag: null, // needed
-                          onPressed: () {
-                            if (btnDn.entry != null) {
-                              print(
-                                  'Navigate to future: ' + btnDn.entry!.label!);
-                              cTrkh.setTBtnDn(
-                                  cTrkh.getTimeBtn(btnDn.entry!.next, 1.0));
-                              _navigateToTimeline(
-                                  btnDn.entry!, devicePadding.top);
-                              cTrkh.setTBtnUp(
-                                  cTrkh.getTimeBtn(btnDn.entry, 1.0));
-                            }
-                          },
-                          materialTapTargetSize: MaterialTapTargetSize.padded,
-                          child: Icon(Icons.expand_more_outlined, size: 36.0),
-                        ),
-                        FittedBox(
-                          fit: BoxFit.contain,
-                          child: Text(
-                            btnDn.pageScrolls,
-                            style: TextStyle(color: color),
-                          ),
-                        ),
-                        SizedBox(height: 1.8),
-                      ],
-                    ),
-                    Container(
+                      Container(
                         constraints: BoxConstraints(
                           minWidth: 61,
                           maxWidth: 61,
                           minHeight: 63,
                           maxHeight: 63,
                         ),
-                        child: SizedBox(width: 56)),
-                  ],
-                ),
-              );
-            }),
+                        child: SizedBox(width: 56),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    //mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      // Column dummy to easily vertical align up/down fabs:
+                      Padding(
+                        padding: const EdgeInsets.only(left: 14.5),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          //mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            FloatingActionButton(
+                              tooltip: 'Show/hide favorite or all events',
+                              heroTag: SubPage.TARIKH_FAVORITE,
+                              onPressed: () {
+                                if (c.isGutterModeOff()) {
+                                  c.gutterMode = GutterMode.FAV;
+                                } else if (c.isGutterModeFav()) {
+                                  c.gutterMode = GutterMode.ALL;
+                                } else /* if (c.isGutterModeAll) */ {
+                                  c.gutterMode = GutterMode.OFF;
+                                }
+                              },
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.padded,
+                              child: c.isGutterModeOff()
+                                  ? const Icon(Icons.favorite_border_outlined,
+                                      size: 36.0)
+                                  : c.isGutterModeFav()
+                                      ? Icon(Icons.favorite_outlined,
+                                          size: 36.0)
+                                      : Icon(Icons.history_edu_outlined,
+                                          size: 36.0),
+                            ),
+                            Text(''),
+                            SizedBox(height: 1.8),
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: c.isGutterModeOff() ? 0 : 45,
+                          right: 5, // TODO
+                        ),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          //mainAxisAlignment: MainAxisAlignment.center,
+                          //crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(''),
+                            Text(''),
+                            FloatingActionButton(
+                              tooltip: 'Navigate to past',
+                              heroTag: null, // needed
+                              onPressed: () {
+                                if (btnUp.entry != null) {
+                                  print('Navigate to past: ' +
+                                      btnUp.entry!.label!);
+                                  cTrkh.setTBtnUp(cTrkh.getTimeBtn(
+                                      btnUp.entry!.previous, 1.0));
+                                  _navigateToTimeline(
+                                      btnUp.entry!, devicePadding.top);
+                                  cTrkh.setTBtnDn(
+                                      cTrkh.getTimeBtn(btnUp.entry, 1.0));
+                                }
+                              },
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.padded,
+                              child:
+                                  Icon(Icons.expand_less_outlined, size: 36.0),
+                            ),
+                            Text(''),
+                            SizedBox(height: 1.8),
+                          ],
+                        ),
+                      ),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(''),
+                          Text(''),
+                          FloatingActionButton(
+                            tooltip: 'Navigate to future',
+                            heroTag: null, // needed
+                            onPressed: () {
+                              if (btnDn.entry != null) {
+                                print('Navigate to future: ' +
+                                    btnDn.entry!.label!);
+                                cTrkh.setTBtnDn(
+                                    cTrkh.getTimeBtn(btnDn.entry!.next, 1.0));
+                                _navigateToTimeline(
+                                    btnDn.entry!, devicePadding.top);
+                                cTrkh.setTBtnUp(
+                                    cTrkh.getTimeBtn(btnDn.entry, 1.0));
+                              }
+                            },
+                            materialTapTargetSize: MaterialTapTargetSize.padded,
+                            child: Icon(Icons.expand_more_outlined, size: 36.0),
+                          ),
+                          Text(''),
+                          SizedBox(height: 1.8),
+                        ],
+                      ),
+                      Container(
+                        constraints: BoxConstraints(
+                          minWidth: 61,
+                          maxWidth: 61,
+                          minHeight: 63,
+                          maxHeight: 63,
+                        ),
+                        child: SizedBox(width: 56),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
         backgroundColor: Colors.white,
         body: GestureDetector(
           onLongPress: _longPress,
