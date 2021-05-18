@@ -97,9 +97,9 @@ class TimelineRenderObject extends RenderBox {
   List<TimelineEntry>? _gutterEventsFav;
   List<TimelineEntry>? _gutterEventsAll;
 
-  // TODO asdf use these
+  // Adjust event top/bottom favorite gutter padding here:
   static const double GutterPadTop = 0.0; // set gutter all the way to top
-  static const double GutterPadBottom = 80.0; // set gutter above fab
+  static const double GutterPadBottom = 60.0; // set gutter above fab
 
   @override
   bool get sizedByParent => true;
@@ -740,8 +740,15 @@ class TimelineRenderObject extends RenderBox {
       for (int i = 0; i < nearbyFavorites.length; i++) {
         TimelineEntry favorite = nearbyFavorites[i];
         double y = ((favorite.start! - t.renderStart) * scale).clamp(
-            offset.dy + favoritesRadius + padFavorites, //was also + topOverlap
-            offset.dy + size.height - favoritesRadius - padFavorites);
+            offset.dy +
+                favoritesRadius +
+                padFavorites +
+                GutterPadTop, //was also + topOverlap
+            offset.dy +
+                size.height -
+                favoritesRadius -
+                padFavorites -
+                GutterPadBottom);
         favorite.favoriteY = y;
 
         /// Check all closer events to see if this one is occluded by a previous closer one.
