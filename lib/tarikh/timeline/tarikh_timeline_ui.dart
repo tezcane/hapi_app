@@ -90,6 +90,9 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     }
 
     super.initState();
+
+    // Timer(Duration(milliseconds: 2000),
+    //     () => _tapUp(new TapUpDetails(kind: PointerDeviceKind.values[0])));
   }
 
   /// The following three functions define are the callbacks used by the
@@ -163,7 +166,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
     if (_touchedBubble != null) {
       if (_touchedBubble!.zoom) {
-        _navigateToTimeline(_touchedEntry!, devicePadding.top);
+        _navigateToTimeline(_touchedBubble!.entry!, devicePadding.top);
       } else {
         t.isActive = false;
 
