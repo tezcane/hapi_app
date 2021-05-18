@@ -38,9 +38,13 @@ class TarikhController extends GetxController {
 
   static final NumberFormat formatter = NumberFormat.compact();
 
-  /// List of favorites shown on Tarikh_Favorites page
+  /// List of favorite events shown on Tarikh_Favorites page and timeline gutter
   final List<TimelineEntry> _favorites = [];
   List<TimelineEntry> get favorites => _favorites;
+
+  /// List of all history events for timeline gutter retrieval
+  final List<TimelineEntry> _allEvents = [];
+  List<TimelineEntry> get allEvents => _allEvents;
 
   /// Turn timeline gutter off/show favorites/show all history:
   final Rx<GutterMode> _gutterMode = GutterMode.OFF.obs;
@@ -100,6 +104,7 @@ class TarikhController extends GetxController {
     Map<String, TimelineEntry> entriesMap = Map();
     for (TimelineEntry entry in entries) {
       entriesMap.putIfAbsent(entry.label!, () => entry);
+      _allEvents.add(entry); // TODO sort this needed? being done in paint...
     }
 
     if (favs != null) {

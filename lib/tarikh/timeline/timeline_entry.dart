@@ -1,9 +1,9 @@
 import 'dart:ui' as ui;
 import 'dart:ui';
 
-import 'package:flare_flutter/flare.dart' as flare;
 import 'package:flare_dart/animation/actor_animation.dart' as flare;
 import 'package:flare_dart/math/aabb.dart' as flare;
+import 'package:flare_flutter/flare.dart' as flare;
 import 'package:nima/nima.dart' as nima;
 import 'package:nima/nima/animation/actor_animation.dart' as nima;
 import 'package:nima/nima/math/aabb.dart' as nima;
@@ -109,8 +109,10 @@ class TimelineEntry {
   double legOpacity = 0.0;
   double labelY = 0.0;
   double labelVelocity = 0.0;
-  double favoriteY = 0.0;
-  bool isFavoriteOccluded = false;
+  double gutterEventY = 0.0;
+
+  /// I think it is true when one gutter event hides another
+  bool isGutterEventOccluded = false;
 
   TimelineAsset? asset;
 

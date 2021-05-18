@@ -94,8 +94,6 @@ class TimelineRenderObject extends RenderBox {
   TouchEntryCallback? touchEntry;
 
   bool _needsRepaint = false;
-  List<TimelineEntry>? _gutterEventsFav;
-  List<TimelineEntry>? _gutterEventsAll;
 
   // Adjust event top/bottom favorite gutter padding here:
   static const double GutterPadTop = 0.0; // set gutter all the way to top
@@ -105,8 +103,6 @@ class TimelineRenderObject extends RenderBox {
   bool get sizedByParent => true;
 
   double get topOverlap => _topOverlap;
-  List<TimelineEntry>? get gutterEventsFav => _gutterEventsFav;
-  List<TimelineEntry>? get gutterEventsAll => _gutterEventsAll;
   MenuItemData? get focusItem => _focusItem;
 
   set topOverlap(double value) {
@@ -130,25 +126,6 @@ class TimelineRenderObject extends RenderBox {
     markNeedsPaint();
     markNeedsLayout();
   }
-
-  set gutterEventsFav(List<TimelineEntry>? value) {
-    if (gutterEventsFav == value) {
-      return;
-    }
-    _gutterEventsFav = value;
-    markNeedsPaint();
-    markNeedsLayout();
-  }
-
-  // This should be static (UNTIL WE DOWNLOAD NEW HISTORY FROM ONLINE) TODO asdf
-  // set gutterEventsAll(List<TimelineEntry>? value) {
-  //   if (gutterEventsAll == value) {
-  //     return;
-  //   }
-  //   _gutterEventsAll = value;
-  //   markNeedsPaint();
-  //   markNeedsLayout();
-  // }
 
   set focusItem(MenuItemData? value) {
     if (_focusItem == value) {
@@ -220,9 +197,6 @@ class TimelineRenderObject extends RenderBox {
   @override
   void paint(PaintingContext context, Offset offset) {
     final Canvas canvas = context.canvas;
-    // if (_timeline == null) {  // TODO looks important optimization here too
-    //   return;
-    // }
     // if (!_needsRepaint) { // THIS BROKE UI, white screen
     //   return;
     // }
@@ -706,81 +680,84 @@ class TimelineRenderObject extends RenderBox {
     /// favorite or all history elements are quickly accessible.
     ///
     /// Here the gutter is drawn and elements are added as *tappable* targets.
-    double favoritesGutter = t.gutterWidth - Timeline.GutterLeft;
-    if (cTrkh.favorites.length > 0 && favoritesGutter > 0.0) {
+    List<TimelineEntry> events = cTrkh.favorites;
+    if (cTrkh.isGutterModeAll()) {
+      events = cTrkh.allEvents;
+    }
+
+    if (!cTrkh.isGutterModeOff() && events.length > 0) {
       Paint accentPaint = Paint()
-        ..color = favoritesGutterAccent
+        ..color = eventsGutterAccent
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2.0;
       Paint accentFill = Paint()
-        ..color = favoritesGutterAccent
+        ..color = eventsGutterAccent
         ..style = PaintingStyle.fill;
       Paint whitePaint = Paint()..color = Colors.white;
       double scale = t.computeScale(t.renderStart, t.renderEnd);
       double fullMargin = 50.0;
-      double favoritesRadius = 26.0; //was 20
-      double fullMarginOffset = fullMargin + favoritesRadius + 16.5; //was 11.0
+      double eventRadius = 26.0; //was 20
+      double fullMarginOffset = fullMargin + eventRadius + 16.5; //was 11.0
       double x = offset.dx -
           fullMargin +
-          favoritesGutter /
+          (t.gutterWidth - Timeline.GutterLeft) /
               (Timeline.GutterLeftExpanded - Timeline.GutterLeft) *
               fullMarginOffset;
 
-      double padFavorites = 20.0;
+      double padEvents = 20.0;
 
-      /// Order favorites by distance from mid.
-      List<TimelineEntry> nearbyFavorites =
-          List<TimelineEntry>.from(cTrkh.favorites);
+      /// Order events by distance from mid.
+      List<TimelineEntry> nearbyEvents = List<TimelineEntry>.from(events);
       double mid = t.renderStart + (t.renderEnd - t.renderStart) / 2.0;
-      nearbyFavorites.sort((TimelineEntry a, TimelineEntry b) {
+      nearbyEvents.sort((TimelineEntry a, TimelineEntry b) {
         return (a.start! - mid).abs().compareTo((b.start! - mid).abs());
       });
 
-      /// layout favorites.
-      for (int i = 0; i < nearbyFavorites.length; i++) {
-        TimelineEntry favorite = nearbyFavorites[i];
-        double y = ((favorite.start! - t.renderStart) * scale).clamp(
+      /// layout events.
+      for (int i = 0; i < nearbyEvents.length; i++) {
+        TimelineEntry event = nearbyEvents[i];
+        double y = ((event.start! - t.renderStart) * scale).clamp(
             offset.dy +
-                favoritesRadius +
-                padFavorites +
+                eventRadius +
+                padEvents +
                 GutterPadTop, //was also + topOverlap
             offset.dy +
                 size.height -
-                favoritesRadius -
-                padFavorites -
+                eventRadius -
+                padEvents -
                 GutterPadBottom);
-        favorite.favoriteY = y;
+        event.gutterEventY = y;
 
         /// Check all closer events to see if this one is occluded by a previous closer one.
         /// Works because we sorted by distance.
-        favorite.isFavoriteOccluded = false;
+        event.isGutterEventOccluded = false;
         for (int j = 0; j < i; j++) {
-          TimelineEntry closer = nearbyFavorites[j];
-          if ((favorite.favoriteY - closer.favoriteY).abs() <= 1.0) {
-            favorite.isFavoriteOccluded = true;
+          TimelineEntry closer = nearbyEvents[j];
+          if ((event.gutterEventY - closer.gutterEventY).abs() <= 1.0) {
+            event.isGutterEventOccluded = true;
             break;
           }
         }
       }
 
       /// Iterate the list from the bottom.
-      for (TimelineEntry favorite in nearbyFavorites.reversed) {
-        if (favorite.isFavoriteOccluded) {
+      for (TimelineEntry event in nearbyEvents.reversed) {
+        if (event.isGutterEventOccluded) {
           continue;
         }
-        double y = favorite.favoriteY;
+        double y = event.gutterEventY;
 
-        /// Draw the favorite circle in the gutter for this item.
+        /// Draw the event circle in the gutter for this item.
         canvas.drawCircle(
             Offset(x, y),
-            favoritesRadius,
+            eventRadius,
             backgroundPaint != null ? backgroundPaint : Paint()
               ..color = Colors.white
               ..style = PaintingStyle.fill);
-        canvas.drawCircle(Offset(x, y), favoritesRadius, accentPaint);
-        canvas.drawCircle(Offset(x, y), favoritesRadius - 4.0, whitePaint);
+        canvas.drawCircle(Offset(x, y), eventRadius, accentPaint);
+        canvas.drawCircle(Offset(x, y), eventRadius - 4.0, whitePaint);
 
-        TimelineAsset asset = favorite.asset!;
+        TimelineAsset asset = event.asset!;
         double assetSize = 40.0 - 8.0;
         Size renderSize = Size(assetSize, assetSize);
         Offset renderOffset = Offset(x - assetSize / 2.0, y - assetSize / 2.0);
@@ -807,7 +784,7 @@ class TimelineRenderObject extends RenderBox {
 
           canvas.save();
           canvas.clipRRect(RRect.fromRectAndRadius(
-              renderOffset & renderSize, Radius.circular(favoritesRadius)));
+              renderOffset & renderSize, Radius.circular(eventRadius)));
 
           switch (fit) {
             case BoxFit.fill:
@@ -874,7 +851,7 @@ class TimelineRenderObject extends RenderBox {
 
           canvas.save();
           canvas.clipRRect(RRect.fromRectAndRadius(
-              renderOffset & renderSize, Radius.circular(favoritesRadius)));
+              renderOffset & renderSize, Radius.circular(eventRadius)));
 
           switch (fit) {
             case BoxFit.fill:
@@ -927,31 +904,31 @@ class TimelineRenderObject extends RenderBox {
             ..zoom = true);
         } else {
           _tapTargets.add(TapTarget()
-            ..entry = favorite
+            ..entry = event
             ..rect = renderOffset & renderSize
             ..zoom = true);
         }
       }
 
-      /// If there are two or more favorites in the gutter, show a line connecting
-      /// the two circles, with the time between those two favorites as a label within a bubble.
+      /// If there are two or more events in the gutter, show a line connecting
+      /// the two circles, with the time between those two events as a label
+      /// within a bubble.
       ///
       /// Uses same [ui.ParagraphBuilder] logic as seen above.
       TimelineEntry? previous;
-      for (TimelineEntry favorite in cTrkh.favorites) {
-        if (favorite.isFavoriteOccluded) {
-          // TODO what's this?
+      for (TimelineEntry event in events) {
+        if (event.isGutterEventOccluded) {
           continue;
         }
         if (previous != null) {
-          double distance = (favorite.favoriteY - previous.favoriteY);
-          if (distance > favoritesRadius * 2.0) {
-            canvas.drawLine(Offset(x, previous.favoriteY + favoritesRadius),
-                Offset(x, favorite.favoriteY - favoritesRadius), accentPaint);
-            double labelY = previous.favoriteY + distance / 2.0;
+          double distance = (event.gutterEventY - previous.gutterEventY);
+          if (distance > eventRadius * 2.0) {
+            canvas.drawLine(Offset(x, previous.gutterEventY + eventRadius),
+                Offset(x, event.gutterEventY - eventRadius), accentPaint);
+            double labelY = previous.gutterEventY + distance / 2.0;
             double labelWidth = 37.0;
             double labelHeight = 8.5 * 2.0;
-            if (distance - favoritesRadius * 2.0 > labelHeight) {
+            if (distance - eventRadius * 2.0 > labelHeight) {
               ui.ParagraphBuilder builder = ui.ParagraphBuilder(
                   ui.ParagraphStyle(
                       textAlign: TextAlign.center,
@@ -959,7 +936,7 @@ class TimelineRenderObject extends RenderBox {
                       fontSize: 10.0))
                 ..pushStyle(ui.TextStyle(color: Colors.white));
 
-              int value = (favorite.start! - previous.start!).round().abs();
+              int value = (event.start! - previous.start!).round().abs();
               String label;
               if (value < 9000) {
                 label = value.toStringAsFixed(0);
@@ -986,7 +963,7 @@ class TimelineRenderObject extends RenderBox {
             }
           }
         }
-        previous = favorite;
+        previous = event;
       }
     }
   }

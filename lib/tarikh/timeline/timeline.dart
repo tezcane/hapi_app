@@ -881,7 +881,7 @@ class Timeline {
     }
 
     /// Check if the left-hand side gutter has been toggled.
-    /// If visible, make room for it .
+    /// If visible, make room for it.
     double targetGutterWidth =
         cTrkh.isGutterModeOff() ? GutterLeft : GutterLeftExpanded;
     double dgw = targetGutterWidth - _gutterWidth;
