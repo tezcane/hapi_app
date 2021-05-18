@@ -78,9 +78,9 @@ class TarikhController extends GetxController {
         /// ...and initialize the [SearchManager].
         SearchManager.init(entries);
 
-        /// initialize up down buttons
-        timeBtnUp.value = getTimeBtn(t.prevEntry, t.prevEntryOpacity);
-        timeBtnDn.value = getTimeBtn(t.nextEntry, t.nextEntryOpacity);
+        // /// initialize up down buttons
+        // timeBtnUp.value = getTimeBtn(t.prevEntry, t.prevEntryOpacity);
+        // timeBtnDn.value = getTimeBtn(t.nextEntry, t.nextEntryOpacity);
       },
     );
 

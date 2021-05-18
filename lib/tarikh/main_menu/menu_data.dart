@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
+
 import "package:flutter/services.dart" show rootBundle;
+import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
@@ -22,6 +25,7 @@ class MenuItemData {
   bool pad = false;
   double padTop = 0.0;
   double padBottom = 0.0;
+  TimelineEntry? entry;
 
   MenuItemData();
 
@@ -30,6 +34,12 @@ class MenuItemData {
   /// a [label], a [start] and [end] times.
   /// Padding is built depending on the type of the [entry] provided.
   MenuItemData.fromEntry(TimelineEntry entry) {
+    // put in timer so btns updates after navigation
+    Timer(Duration(milliseconds: 500), () {
+      cTrkh.setTBtnUp(cTrkh.getTimeBtn(entry.previous, 1.0));
+      cTrkh.setTBtnDn(cTrkh.getTimeBtn(entry.next, 1.0));
+    });
+
     label = entry.label;
 
     /// Pad the edges of the screen.

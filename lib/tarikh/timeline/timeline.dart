@@ -4,9 +4,9 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-import 'package:flare_flutter/flare.dart' as flare;
 import 'package:flare_dart/animation/actor_animation.dart' as flare;
 import 'package:flare_dart/math/aabb.dart' as flare;
+import 'package:flare_flutter/flare.dart' as flare;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart' show rootBundle;
@@ -454,7 +454,7 @@ class Timeline {
                 }
               } else if (name is List) {
                 for (String animationName in name) {
-                  flare.ActorAnimation animation =
+                  flare.ActorAnimation? animation =
                       flareAsset.actor!.getAnimation(animationName);
                   if (animation != null) {
                     if (flareAsset.idleAnimations == null) {

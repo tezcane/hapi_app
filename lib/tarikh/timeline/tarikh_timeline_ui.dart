@@ -23,6 +23,7 @@ typedef SelectItemCallback(TimelineEntry item);
 /// focus on when it's created.
 class TarikhTimelineUI extends StatefulWidget {
   TarikhTimelineUI() {
+    //TODO this must also set time up/dn btns:
     focusItem = Get.arguments['focusItem'];
   }
 
@@ -455,12 +456,12 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                 if (btnUp.entry != null) {
                                   print('Navigate to past: ' +
                                       btnUp.entry!.label!);
-                                  cTrkh.setTBtnUp(cTrkh.getTimeBtn(
-                                      btnUp.entry!.previous, 1.0));
+                                  // cTrkh.setTBtnUp(cTrkh.getTimeBtn(
+                                  //     btnUp.entry!.previous, 1.0));
                                   _navigateToTimeline(
                                       btnUp.entry!, devicePadding.top);
-                                  cTrkh.setTBtnDn(
-                                      cTrkh.getTimeBtn(btnUp.entry, 1.0));
+                                  // cTrkh.setTBtnDn(
+                                  //     cTrkh.getTimeBtn(btnUp.entry, 1.0));
                                 }
                               },
                               materialTapTargetSize:
@@ -487,12 +488,12 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               if (btnDn.entry != null) {
                                 print('Navigate to future: ' +
                                     btnDn.entry!.label!);
-                                cTrkh.setTBtnDn(
-                                    cTrkh.getTimeBtn(btnDn.entry!.next, 1.0));
+                                // cTrkh.setTBtnDn(
+                                //     cTrkh.getTimeBtn(btnDn.entry!.next, 1.0));
                                 _navigateToTimeline(
                                     btnDn.entry!, devicePadding.top);
-                                cTrkh.setTBtnUp(
-                                    cTrkh.getTimeBtn(btnDn.entry, 1.0));
+                                // cTrkh.setTBtnUp(
+                                //     cTrkh.getTimeBtn(btnDn.entry, 1.0));
                               }
                             },
                             materialTapTargetSize: MaterialTapTargetSize.padded,

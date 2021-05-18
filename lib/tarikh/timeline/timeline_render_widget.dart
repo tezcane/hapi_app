@@ -170,7 +170,7 @@ class TimelineRenderObject extends RenderBox {
       return;
     }
 
-    /// Adjust the current timeline padding and consequentely the viewport.
+    /// Adjust the current timeline padding and consequently the viewport.
     if (_focusItem!.pad) {
       t.padding = EdgeInsets.only(
           top: topOverlap + _focusItem!.padTop + Timeline.Parallax,
