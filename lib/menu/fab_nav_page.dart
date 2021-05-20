@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/menu/menu_controller.dart';
-import 'package:hapi/menu/menu_slide.dart';
 import 'package:hapi/menu/menu_nav.dart';
+import 'package:hapi/menu/menu_slide.dart';
 import 'package:share/share.dart';
 
 class FabNavPage extends StatelessWidget {

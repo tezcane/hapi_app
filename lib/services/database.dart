@@ -54,7 +54,8 @@ class Database {
         .map((QuerySnapshot query) {
       List<QuestModel> retVal = [];
       query.docs.forEach((element) {
-        retVal.add(QuestModel.fromMap(element.id, element.data()));
+        retVal.add(QuestModel.fromMap(
+            element.id, element.data() as Map<dynamic, dynamic>));
       });
       return retVal;
     });

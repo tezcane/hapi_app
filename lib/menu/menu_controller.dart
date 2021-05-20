@@ -5,13 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/constants/globals.dart';
 import 'package:hapi/main_controller.dart';
+import 'package:hapi/menu/menu_nav.dart';
 import 'package:hapi/tarikh/article/tarikh_article_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_favorites_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_menu_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_search_ui.dart';
 import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
 import 'package:hapi/ui/about_ui.dart';
-import 'package:hapi/menu/menu_nav.dart';
 import 'package:hapi/ui/quests_ui.dart';
 
 final MenuController cMenu = Get.find();
