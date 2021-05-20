@@ -255,9 +255,9 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
     t.devicePadding = devicePadding;
 
-    Color? color = _headerTextColor != null
-        ? _headerTextColor
-        : darkText.withOpacity(darkText.opacity * 0.75);
+    // Color? color = _headerTextColor != null
+    //     ? _headerTextColor
+    //     : darkText.withOpacity(darkText.opacity * 0.75);
 
     return FabSubPage(
       subPage: SubPage.TARIKH_TIMELINE,
@@ -267,6 +267,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
         floatingActionButton: GetBuilder<TarikhController>(
           init: TarikhController(),
           builder: (c) {
+            const Color aqua = Color.fromRGBO(69, 211, 197, 1.0);
             TimeBtn btnUp = c.timeBtnUp();
             TimeBtn btnDn = c.timeBtnDn();
             return Stack(
@@ -275,33 +276,33 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                   alignment: Alignment.bottomLeft,
                   child: Row(
                     //mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       // Column dummy to easily vertical align up/down fabs:
-                      Padding(
-                        padding: const EdgeInsets.only(left: 14.5),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          //mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              constraints: BoxConstraints(
-                                minWidth: 56,
-                                maxWidth: 56,
-                                minHeight: 56,
-                                maxHeight: 56,
-                              ),
-                              child: SizedBox(width: 56, height: 56),
-                            ),
-                            Text(''),
-                            SizedBox(height: 1.8),
-                          ],
-                        ),
-                      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.only(left: 14.5),
+                      //   child: Column(
+                      //     mainAxisSize: MainAxisSize.min,
+                      //     //mainAxisAlignment: MainAxisAlignment.start,
+                      //     children: [
+                      //       Container(
+                      //         constraints: BoxConstraints(
+                      //           minWidth: 56,
+                      //           maxWidth: 56,
+                      //           minHeight: 56,
+                      //           maxHeight: 56,
+                      //         ),
+                      //         child: SizedBox(width: 56, height: 56),
+                      //       ),
+                      //       Text(''),
+                      //       SizedBox(height: 1.8),
+                      //     ],
+                      //   ),
+                      // ),
                       Padding(
                         padding: EdgeInsets.only(
-                          left: c.isGutterModeOff() ? 0 : 45,
+                          left: c.isGutterModeOff() ? 10 : 55,
                           right: 9, // gap between text
                         ),
                         child: Column(
@@ -314,7 +315,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               child: Text(
                                 btnUp.title,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(color: color),
+                                style: TextStyle(color: aqua),
                               ),
                             ),
                             FittedBox(
@@ -322,13 +323,13 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               child: Text(
                                 btnUp.timeUntil,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(color: color),
+                                style: TextStyle(color: aqua),
                               ),
                             ),
                             Container(
                               constraints: BoxConstraints(
-                                minWidth: 56,
-                                maxWidth: 56,
+                                minWidth: 88,
+                                maxWidth: 88,
                                 minHeight: 56,
                                 maxHeight: 56,
                               ),
@@ -339,62 +340,65 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               child: Text(
                                 btnUp.pageScrolls,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(color: color),
+                                style: TextStyle(color: aqua),
                               ),
                             ),
                             SizedBox(height: 1.8),
                           ],
                         ),
                       ),
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          FittedBox(
-                            fit: BoxFit.contain,
-                            child: Text(
-                              btnDn.title,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: color),
+                      Padding(
+                        padding: const EdgeInsets.only(right: 10),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            FittedBox(
+                              fit: BoxFit.contain,
+                              child: Text(
+                                btnDn.title,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: aqua),
+                              ),
                             ),
-                          ),
-                          FittedBox(
-                            fit: BoxFit.contain,
-                            child: Text(
-                              btnDn.timeUntil,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: color),
+                            FittedBox(
+                              fit: BoxFit.contain,
+                              child: Text(
+                                btnDn.timeUntil,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: aqua),
+                              ),
                             ),
-                          ),
-                          Container(
-                            constraints: BoxConstraints(
-                              minWidth: 56,
-                              maxWidth: 56,
-                              minHeight: 56,
-                              maxHeight: 56,
+                            Container(
+                              constraints: BoxConstraints(
+                                minWidth: 88,
+                                maxWidth: 88,
+                                minHeight: 56,
+                                maxHeight: 56,
+                              ),
+                              child: SizedBox(width: 56, height: 56),
                             ),
-                            child: SizedBox(width: 56, height: 56),
-                          ),
-                          FittedBox(
-                            fit: BoxFit.contain,
-                            child: Text(
-                              btnDn.pageScrolls,
-                              textAlign: TextAlign.center,
-                              style: TextStyle(color: color),
+                            FittedBox(
+                              fit: BoxFit.contain,
+                              child: Text(
+                                btnDn.pageScrolls,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(color: aqua),
+                              ),
                             ),
-                          ),
-                          SizedBox(height: 1.8),
-                        ],
-                      ),
-                      Container(
-                        constraints: BoxConstraints(
-                          minWidth: 61,
-                          maxWidth: 61,
-                          minHeight: 63,
-                          maxHeight: 63,
+                            SizedBox(height: 1.8),
+                          ],
                         ),
-                        child: SizedBox(width: 56),
                       ),
+                      // Container(
+                      //   constraints: BoxConstraints(
+                      //     minWidth: 61,
+                      //     maxWidth: 61,
+                      //     minHeight: 63,
+                      //     maxHeight: 63,
+                      //   ),
+                      //   child: SizedBox(width: 56),
+                      // ),
                     ],
                   ),
                 ),
