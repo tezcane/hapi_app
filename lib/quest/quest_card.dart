@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hapi/models/quest_model.dart';
+import 'package:hapi/quest/quest_model.dart';
 import 'package:hapi/services/database.dart';
 
 class QuestCard extends StatelessWidget {
