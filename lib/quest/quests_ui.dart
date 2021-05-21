@@ -18,49 +18,63 @@ class QuestsUI extends StatelessWidget {
       navPage: NavPage.QUESTS,
       columnWidget: Column(),
       bottomWidget: HapiShare(),
-      foregroundPage: GetBuilder<AuthController>(
-        init: AuthController(), // TODO why init AuthController here?
-        builder: (controller) => Scaffold(
-          appBar: AppBar(
-            title: Text(
-              'hapi',
-              style: TextStyle(
-                fontFamily: 'Lobster',
-                color: AppThemes.logoText,
-                fontSize: 28,
-              ),
+      foregroundPage: UserQuest(textEditingController: _textEditingController),
+    );
+  }
+}
+
+class UserQuest extends StatelessWidget {
+  const UserQuest({
+    Key? key,
+    required TextEditingController textEditingController,
+  }) : _textEditingController = textEditingController, super(key: key);
+
+  final TextEditingController _textEditingController;
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<AuthController>(
+      init: AuthController(), // TODO why init AuthController here?
+      builder: (controller) => Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'hapi',
+            style: TextStyle(
+              fontFamily: 'Lobster',
+              color: AppThemes.logoText,
+              fontSize: 28,
             ),
-            actions: [
-              IconButton(
-                  icon: Icon(Icons.settings),
-                  onPressed: () {
-                    Get.to(() => SettingsUI());
-                  }),
-            ],
           ),
-          body: Column(
-            children: <Widget>[
-              SizedBox(
-                height: 20,
-              ),
-              AddQuest(
-                  authController: controller,
-                  textEditingController: _textEditingController),
-              GetX<QuestController>(
-                init: Get.put<QuestController>(QuestController()),
-                builder: (QuestController questController) {
-                  return Expanded(
-                    child: ListView.builder(
-                      itemCount: questController.quests.length,
-                      itemBuilder: (_, index) {
-                        return QuestCard(quest: questController.quests[index]);
-                      },
-                    ),
-                  );
-                },
-              )
-            ],
-          ),
+          actions: [
+            IconButton(
+                icon: Icon(Icons.settings),
+                onPressed: () {
+                  Get.to(() => SettingsUI());
+                }),
+          ],
+        ),
+        body: Column(
+          children: <Widget>[
+            SizedBox(
+              height: 20,
+            ),
+            AddQuest(
+                authController: controller,
+                textEditingController: _textEditingController),
+            GetX<QuestController>(
+              init: Get.put<QuestController>(QuestController()),
+              builder: (QuestController questController) {
+                return Expanded(
+                  child: ListView.builder(
+                    itemCount: questController.quests.length,
+                    itemBuilder: (_, index) {
+                      return QuestCard(quest: questController.quests[index]);
+                    },
+                  ),
+                );
+              },
+            )
+          ],
         ),
       ),
     );
