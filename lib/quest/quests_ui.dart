@@ -27,7 +27,8 @@ class UserQuest extends StatelessWidget {
   const UserQuest({
     Key? key,
     required TextEditingController textEditingController,
-  }) : _textEditingController = textEditingController, super(key: key);
+  })   : _textEditingController = textEditingController,
+        super(key: key);
 
   final TextEditingController _textEditingController;
 
