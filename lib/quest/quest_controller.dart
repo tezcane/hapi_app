@@ -1,9 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
+import 'package:hapi/controllers/auth_controller.dart';
 import 'package:hapi/quest/quest_model.dart';
 import 'package:hapi/services/database.dart';
-
-import '../controllers/auth_controller.dart';
 
 class QuestController extends GetxController {
   Rx<List<QuestModel>> questList = Rx<List<QuestModel>>([]);

@@ -65,7 +65,7 @@ class _MenuSlideState extends State<MenuSlide>
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
               IconButton(
-                // iconSize: 50,
+                iconSize: 30.0,
                 icon: AnimatedIcon(
                   icon: AnimatedIcons.menu_close, //cMenu.getFabAnimatedIcon(),
                   progress: _acFabIcon,

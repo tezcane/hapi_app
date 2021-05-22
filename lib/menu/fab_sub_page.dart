@@ -18,7 +18,7 @@ class FabSubPage extends StatelessWidget {
           tooltip: 'Go back to the previous page',
           onPressed: () => cMenu.handleBackButtonHit(),
           heroTag: subPage,
-          child: Icon(Icons.arrow_back),
+          child: Icon(Icons.arrow_forward_outlined, size: 30),
         ),
       ),
       body: child, // <- SubPages go here

@@ -474,7 +474,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               materialTapTargetSize:
                                   MaterialTapTargetSize.padded,
                               child:
-                                  Icon(Icons.expand_less_outlined, size: 36.0),
+                                  Icon(Icons.arrow_upward_outlined, size: 30.0),
                             ),
                             Text(''),
                             SizedBox(height: 1.8),
@@ -504,7 +504,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               }
                             },
                             materialTapTargetSize: MaterialTapTargetSize.padded,
-                            child: Icon(Icons.expand_more_outlined, size: 36.0),
+                            child:
+                                Icon(Icons.arrow_downward_outlined, size: 30.0),
                           ),
                           Text(''),
                           SizedBox(height: 1.8),

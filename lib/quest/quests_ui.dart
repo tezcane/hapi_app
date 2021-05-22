@@ -40,8 +40,8 @@ class _QuestBottomBarState extends State<QuestBottomBar> {
         children: [
           Container(color: Colors.black),
           Container(color: Colors.greenAccent.shade700),
+          Container(color: Colors.orange),
           Container(color: Colors.red),
-          //Container(color: Colors.orange),
           UserQuest(textEditingController: _textEditingController),
         ],
         onPageChanged: (index) {
@@ -59,12 +59,18 @@ class _QuestBottomBarState extends State<QuestBottomBar> {
             items: [
               BottomBarItem(
                 icon: Icon(Icons.how_to_reg_outlined),
-                title: Text('Active Quests'),
+                title: Text('Active'),
                 activeColor: Colors.blue,
               ),
               BottomBarItem(
                 icon: Icon(Icons.brightness_high_outlined),
-                title: Text('Daily Quests'),
+                title: Text('Daily'),
+                activeColor: Colors.greenAccent.shade700,
+                darkActiveColor: Colors.greenAccent.shade400,
+              ),
+              BottomBarItem(
+                icon: Icon(Icons.timer_outlined),
+                title: Text('Time'),
                 activeColor: Colors.greenAccent.shade700,
                 darkActiveColor: Colors.greenAccent.shade400,
               ),
@@ -73,13 +79,13 @@ class _QuestBottomBarState extends State<QuestBottomBar> {
                   angle: 2.8,
                   child: Icon(Icons.brightness_3_outlined),
                 ),
-                title: Text('hapi Quests'),
+                title: Text('hapi'),
                 activeColor: Colors.red,
                 darkActiveColor: Colors.red.shade400,
               ),
               BottomBarItem(
                 icon: Icon(Icons.add_circle_outline),
-                title: Text('Add Quest'),
+                title: Text('Add'),
                 activeColor: Colors.orange,
               ),
             ],
