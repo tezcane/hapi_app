@@ -46,6 +46,7 @@ dependencies:
   alquran_cloud: ^0.0.1
   quran: ^1.0.3
 
+  bottom_bar: ^1.2.0+1
 
 # dependency_overrides:
 #  analyzer: 1.4.0

@@ -1,3 +1,4 @@
+import 'package:bottom_bar/bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/constants/app_themes.dart';
@@ -10,15 +11,82 @@ import 'package:hapi/services/database.dart';
 import 'package:hapi/ui/settings_ui.dart';
 
 class QuestsUI extends StatelessWidget {
-  final TextEditingController _textEditingController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
     return FabNavPage(
       navPage: NavPage.QUESTS,
       columnWidget: Column(),
       bottomWidget: HapiShare(),
-      foregroundPage: UserQuest(textEditingController: _textEditingController),
+      foregroundPage: QuestBottomBar(),
+    );
+  }
+}
+
+class QuestBottomBar extends StatefulWidget {
+  @override
+  _QuestBottomBarState createState() => _QuestBottomBarState();
+}
+
+class _QuestBottomBarState extends State<QuestBottomBar> {
+  final TextEditingController _textEditingController = TextEditingController();
+  int _currentPage = 0;
+  final _pageController = PageController();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: PageView(
+        controller: _pageController,
+        children: [
+          Container(color: Colors.black),
+          Container(color: Colors.greenAccent.shade700),
+          Container(color: Colors.red),
+          //Container(color: Colors.orange),
+          UserQuest(textEditingController: _textEditingController),
+        ],
+        onPageChanged: (index) {
+          setState(() => _currentPage = index);
+        },
+      ),
+      bottomNavigationBar: Row(
+        children: [
+          BottomBar(
+            selectedIndex: _currentPage,
+            onTap: (int index) {
+              _pageController.jumpToPage(index);
+              setState(() => _currentPage = index);
+            },
+            items: [
+              BottomBarItem(
+                icon: Icon(Icons.how_to_reg_outlined),
+                title: Text('Active Quests'),
+                activeColor: Colors.blue,
+              ),
+              BottomBarItem(
+                icon: Icon(Icons.brightness_high_outlined),
+                title: Text('Daily Quests'),
+                activeColor: Colors.greenAccent.shade700,
+                darkActiveColor: Colors.greenAccent.shade400,
+              ),
+              BottomBarItem(
+                icon: Transform.rotate(
+                  angle: 2.8,
+                  child: Icon(Icons.brightness_3_outlined),
+                ),
+                title: Text('hapi Quests'),
+                activeColor: Colors.red,
+                darkActiveColor: Colors.red.shade400,
+              ),
+              BottomBarItem(
+                icon: Icon(Icons.add_circle_outline),
+                title: Text('Add Quest'),
+                activeColor: Colors.orange,
+              ),
+            ],
+          ),
+          SizedBox(width: 40),
+        ],
+      ),
     );
   }
 }
