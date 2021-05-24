@@ -71,3 +71,89 @@ main() {
   print('\n***** Qibla Direction');
   print('qibla:  \t$qiblaDirection');
 }
+
+// main() {
+//   String text = "asdf";
+//   String text2 = 'asdf';
+//
+//   int number = 0;
+//   double number2 = 0;
+//
+//   //List<int> numbers = [number, number + 1, number + 2];
+//
+//   // for (int num in numbers) {
+//   //   print('num=$num');
+//   // }
+//   //
+//   // for (int idx = 0; idx <= 10; idx++) {
+//   //   print('num=$idx');
+//   // }
+//
+//   // for (int idx = 10; idx >= 0; idx--) {
+//   //   print('num=$idx');
+//   // }
+//
+//   // int num = 0;
+//   // while (true) {
+//   //   //print(num);
+//   //   num++;
+//   //   // num += 1;
+//   //   // num = num + 1;
+//   //   if (num == 10) {
+//   //     break;
+//   //   } else if (num == 3) {
+//   //     //print('not at ten, got $num');
+//   //     num++;
+//   //   } else {
+//   //     print('not at ten, got $num');
+//   //   }
+//   // }
+//
+//   //print(num);
+//
+//   List<Animal> animals = [Cat(), Snake(), Cat()];
+//
+//   for (Animal animal in animals) {
+//   print('Animal is ${animal.name} and hasLegs=${animal.hasLegs()}');
+//   }
+//
+//   print('Animal is ${animals[0].name} and hasLegs=${animals[0].hasLegs()}');
+//   print('Animal is ${animals[1].name} and hasLegs=${animals[1].hasLegs()}');
+//
+//   for (int i = 0; i < animals.length; i++) {
+//   print('Animal is ${animals[i].name} and hasLegs=${animals[i].hasLegs()}');
+//   }
+//   }
+//
+//   class Animal {
+//     Animal(this.name);
+//
+//     String name;
+//
+//     String getName() {
+//       return name;
+//     }
+//
+//     bool hasLegs() {
+//       return true;
+//     }
+//   }
+//
+//   class Cat extends Animal {
+//     Cat() : super("cat");
+//
+//   // @override
+//   // bool hasLegs() {
+//   //   return true;
+//   // }
+//   }
+//
+//   class Snake extends Animal {
+//     Snake() : super("snake");
+//
+//     @override
+//     bool hasLegs() {
+//       return false;
+//     }
+//   }
+// }

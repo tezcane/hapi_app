@@ -49,6 +49,7 @@ dependencies:
   timezone: ^0.7.0
 
   bottom_bar: ^1.2.0+1
+  flutter_swiper: ^1.1.6
 
 # dependency_overrides:
 #  analyzer: 1.4.0
@@ -63,6 +64,7 @@ flutter:
     - assets/images/
     - assets/images/logo/
     - assets/images/logo/gif/
+    - assets/images/quests/
     - assets/tarikh/
     - assets/tarikh/Articles/ # TODO need all these subdirs?
     - assets/tarikh/Big_Bang/

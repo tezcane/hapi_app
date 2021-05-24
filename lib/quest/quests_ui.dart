@@ -1,5 +1,8 @@
+import 'dart:math' as math;
+
 import 'package:bottom_bar/bottom_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:get/get.dart';
 import 'package:hapi/constants/app_themes.dart';
 import 'package:hapi/controllers/auth_controller.dart';
@@ -38,11 +41,11 @@ class _QuestBottomBarState extends State<QuestBottomBar> {
       body: PageView(
         controller: _pageController,
         children: [
-          Container(color: Colors.black),
+          QuestsActive(),
           Container(color: Colors.greenAccent.shade700),
           Container(color: Colors.orange),
           Container(color: Colors.red),
-          UserQuest(textEditingController: _textEditingController),
+          // UserQuest(textEditingController: _textEditingController),
         ],
         onPageChanged: (index) {
           setState(() => _currentPage = index);
@@ -59,18 +62,18 @@ class _QuestBottomBarState extends State<QuestBottomBar> {
             items: [
               BottomBarItem(
                 icon: Icon(Icons.how_to_reg_outlined),
-                title: Text('Active'),
+                title: Text('Active Quests'),
                 activeColor: Colors.blue,
               ),
               BottomBarItem(
                 icon: Icon(Icons.brightness_high_outlined),
-                title: Text('Daily'),
+                title: Text('Daily Quests'),
                 activeColor: Colors.greenAccent.shade700,
                 darkActiveColor: Colors.greenAccent.shade400,
               ),
               BottomBarItem(
                 icon: Icon(Icons.timer_outlined),
-                title: Text('Time'),
+                title: Text('Time Quests'),
                 activeColor: Colors.greenAccent.shade700,
                 darkActiveColor: Colors.greenAccent.shade400,
               ),
@@ -79,18 +82,18 @@ class _QuestBottomBarState extends State<QuestBottomBar> {
                   angle: 2.8,
                   child: Icon(Icons.brightness_3_outlined),
                 ),
-                title: Text('hapi'),
+                title: Text('hapi Quests'),
                 activeColor: Colors.red,
                 darkActiveColor: Colors.red.shade400,
               ),
-              BottomBarItem(
-                icon: Icon(Icons.add_circle_outline),
-                title: Text('Add'),
-                activeColor: Colors.orange,
-              ),
+              // BottomBarItem(
+              //   icon: Icon(Icons.add_circle_outline),
+              //   title: Text('Add'),
+              //   activeColor: Colors.orange,
+              // ),
             ],
           ),
-          SizedBox(width: 40),
+          SizedBox(width: 10),
         ],
       ),
     );
@@ -195,5 +198,319 @@ class AddQuest extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+enum FARD_SALAH {
+  Maghrib,
+  Isha,
+  Fajr,
+  Dhuhr,
+  Asr,
+}
+
+class QuestsActive extends StatelessWidget {
+  FARD_SALAH activeSalah = FARD_SALAH.Isha;
+
+  SliverPersistentHeader SalahHeader(FARD_SALAH fardSalah) {
+    return SliverPersistentHeader(
+      pinned: fardSalah == activeSalah,
+      delegate: _SliverAppBarDelegate(
+        minHeight: fardSalah == activeSalah ? 80.0 : 60,
+        maxHeight: fardSalah == activeSalah ? 80.0 : 60,
+        child: Container(
+          color: Colors.black, // hide slivers scrolling behind
+          child: ClipRRect(
+            borderRadius: BorderRadius.only(
+              topRight: const Radius.circular(15.0),
+              topLeft: const Radius.circular(15.0),
+            ),
+            child: Container(
+              color: Colors.lightBlue.shade200,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // SizedBox(height: 10),
+                  Text(fardSalah.toString().split('.').last,
+                      style: TextStyle(
+                          color: Colors.blue.shade700, fontSize: 20.0)),
+                  SizedBox(height: 5),
+                  Text('8:31-9:47PM', style: TextStyle(color: Colors.black)),
+                  if (fardSalah == activeSalah) SizedBox(height: 5),
+                  if (fardSalah == activeSalah)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('100', style: TextStyle(color: Colors.black)),
+                        SizedBox(width: 10),
+                        Text('=================================='),
+                      ],
+                    ),
+                  // SizedBox(width: 10),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  SliverPersistentHeader SalahActions(FARD_SALAH fardSalah) {
+    double boxHeight = 50;
+
+    int sunnahBefore = 0;
+    int sunnahAfter = 0;
+
+    int fardFlex = 1000;
+
+    if (fardSalah == FARD_SALAH.Maghrib) {
+      sunnahAfter = 2;
+      fardFlex = 2000;
+    } else if (fardSalah == FARD_SALAH.Isha) {
+      sunnahAfter = 2;
+      fardFlex = 2000;
+    } else if (fardSalah == FARD_SALAH.Fajr) {
+      sunnahBefore = 2;
+      fardFlex = 2000;
+    } else if (fardSalah == FARD_SALAH.Dhuhr) {
+      sunnahBefore = 4;
+      sunnahAfter = 2;
+      fardFlex = 1000;
+    } else if (fardSalah == FARD_SALAH.Asr) {
+      fardFlex = 3000;
+    }
+
+    return SliverPersistentHeader(
+      pinned: fardSalah == activeSalah,
+      delegate: _SliverAppBarDelegate(
+        minHeight: boxHeight,
+        maxHeight: boxHeight,
+        child: Row(
+          //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Expanded(
+              flex: 1000,
+              child: Container(
+                color: Colors.black, // hide slivers scrolling behind
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: const Radius.circular(15.0),
+                  ),
+                  child: Container(
+                    color: Colors.yellow,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [Icon(Icons.alarm)],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            if (sunnahBefore != 0)
+              Expanded(
+                flex: 1000,
+                child: Container(
+                  color: Colors.green,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Sunnah"),
+                      SizedBox(height: 5),
+                      Text("$sunnahBefore Rakat"),
+                    ],
+                  ),
+                ),
+              ),
+            Expanded(
+              flex: fardFlex,
+              child: Container(
+                color: Colors.red,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Fard"),
+                    SizedBox(height: 5),
+                    Text("3 Rakat"),
+                  ],
+                ),
+              ),
+            ),
+            if (sunnahAfter != 0)
+              Expanded(
+                flex: 1000,
+                child: Container(
+                  color: Colors.green,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Sunnah"),
+                      SizedBox(height: 5),
+                      Text("$sunnahAfter Rakat"),
+                    ],
+                  ),
+                ),
+              ),
+            Expanded(
+              flex: 1000,
+              child: Container(
+                color: Colors.purple,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Dhikr"),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(
+              flex: 1000,
+              child: Container(
+                color: Colors.black, // hide slivers scrolling behind
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    bottomRight: const Radius.circular(15.0),
+                  ),
+                  child: Container(
+                    color: Colors.orange,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("Dua"),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  SliverPersistentHeader spacingHeader(FARD_SALAH fardSalah) {
+    return SliverPersistentHeader(
+      pinned: fardSalah == activeSalah,
+      delegate: _SliverAppBarDelegate(
+        minHeight: 5.0,
+        maxHeight: 5.0,
+        child: Container(
+          color: Colors.black,
+          child: Center(
+            child: Text(' '),
+          ),
+        ),
+      ),
+    );
+  }
+
+  SliverPersistentHeader sliverSpaceHeader(bool pinned) {
+    return SliverPersistentHeader(
+      pinned: pinned,
+      delegate: _SliverAppBarDelegate(
+        minHeight: 5.0,
+        maxHeight: 5.0,
+        child: Container(
+          color: Colors.black,
+          child: Center(
+            child: Text(' '),
+          ),
+        ),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.black,
+      child: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            expandedHeight: 150.0,
+            floating: true,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+                centerTitle: true,
+                title: Text("Salah",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16.0,
+                    )),
+                background: Swiper(
+                  itemCount: 1,
+                  itemBuilder: (BuildContext context, int index) => Image.asset(
+                    'assets/images/quests/active$index.jpg', //TODO add more images
+                    fit: BoxFit.cover,
+                  ),
+                  autoplay: true,
+                  autoplayDelay: 10000,
+                )),
+          ),
+          sliverSpaceHeader(true),
+          SalahHeader(FARD_SALAH.Maghrib),
+          SalahActions(FARD_SALAH.Maghrib),
+          spacingHeader(FARD_SALAH.Maghrib),
+          SalahHeader(FARD_SALAH.Isha),
+          SalahActions(FARD_SALAH.Isha),
+          spacingHeader(FARD_SALAH.Isha),
+          SalahHeader(FARD_SALAH.Fajr),
+          SalahActions(FARD_SALAH.Fajr),
+          spacingHeader(FARD_SALAH.Fajr),
+          SalahHeader(FARD_SALAH.Dhuhr),
+          SalahActions(FARD_SALAH.Dhuhr),
+          spacingHeader(FARD_SALAH.Dhuhr),
+          SalahHeader(FARD_SALAH.Asr),
+          SalahActions(FARD_SALAH.Asr),
+          spacingHeader(FARD_SALAH.Asr),
+          SliverGrid(
+            gridDelegate: new SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 200.0,
+              mainAxisSpacing: 10.0,
+              crossAxisSpacing: 10.0,
+              childAspectRatio: 4.0,
+            ),
+            delegate: new SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                return new Container(
+                  alignment: Alignment.center,
+                  color: Colors.teal[100 * (index % 9)],
+                  child: new Text('grid item $index'),
+                );
+              },
+              childCount: 20,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  _SliverAppBarDelegate({
+    required this.minHeight,
+    required this.maxHeight,
+    required this.child,
+  });
+  final double minHeight;
+  final double maxHeight;
+  final Widget child;
+  @override
+  double get minExtent => minHeight;
+  @override
+  double get maxExtent => math.max(maxHeight, minHeight);
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return new SizedBox.expand(child: child);
+  }
+
+  @override
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
+    return maxHeight != oldDelegate.maxHeight ||
+        minHeight != oldDelegate.minHeight ||
+        child != oldDelegate.child;
   }
 }
