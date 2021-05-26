@@ -253,7 +253,8 @@ class QuestsActive extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.hourglass_bottom_outlined),
+                          Icon(Icons.hourglass_top_outlined, // TODO animate
+                              color: Colors.green.shade500),
                           Text('1:31:45', style: topTitlesTextStyle),
                           SizedBox(width: 65), // TODO hack push frm show sunnah
                         ],
@@ -280,7 +281,8 @@ class QuestsActive extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 19.0),
                       child: Text(
-                        'Salah',
+                        '',
+                        //'Salah',
                         textAlign: TextAlign.center,
                         style: columnTitlesTextStyle,
                       ),
@@ -294,7 +296,7 @@ class QuestsActive extends StatelessWidget {
                         //mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            'Start',
+                            'Begin',
                             textAlign: TextAlign.center,
                             style: columnTitlesTextStyle,
                           ),
@@ -322,12 +324,12 @@ class QuestsActive extends StatelessWidget {
                         child: Column(
                           children: [
                             Text(
-                              'Sunnah',
+                              'Before',
                               textAlign: TextAlign.center,
                               style: columnTitlesTextStyle,
                             ),
                             Text(
-                              'Before',
+                              'Fard',
                               textAlign: TextAlign.center,
                               style: columnTitlesTextStyle,
                             ),
@@ -339,10 +341,20 @@ class QuestsActive extends StatelessWidget {
                     flex: fardFlex,
                     child: Padding(
                       padding: const EdgeInsets.only(top: 19.0),
-                      child: Text(
-                        'Fard',
-                        textAlign: TextAlign.center,
-                        style: columnTitlesTextStyle,
+                      child: Column(
+                        children: [
+                          Text(
+                            showSunnahColumns ? 'Fard' : 'Fard Rakat',
+                            textAlign: TextAlign.center,
+                            style: columnTitlesTextStyle,
+                          ),
+                          if (showSunnahColumns)
+                            Text(
+                              'Rakat',
+                              textAlign: TextAlign.center,
+                              style: columnTitlesTextStyle,
+                            ),
+                        ],
                       ),
                     ),
                   ),
@@ -354,12 +366,12 @@ class QuestsActive extends StatelessWidget {
                         child: Column(
                           children: [
                             Text(
-                              'Sunnah',
+                              'After',
                               textAlign: TextAlign.center,
                               style: columnTitlesTextStyle,
                             ),
                             Text(
-                              'After',
+                              'Fard',
                               textAlign: TextAlign.center,
                               style: columnTitlesTextStyle,
                             ),
@@ -457,7 +469,7 @@ class QuestsActive extends StatelessWidget {
     const double boxHeight = 75;
     const Color textColor = Colors.white;
     TextStyle actionTextStyle = const TextStyle(
-        color: textColor, fontSize: 10.0, fontWeight: FontWeight.bold);
+        color: textColor, fontSize: 12.0, fontWeight: FontWeight.bold);
 
     bool isActiveSalah = fardSalah == activeSalah;
 
@@ -518,7 +530,9 @@ class QuestsActive extends StatelessWidget {
                               style: actionTextStyle,
                               textAlign: TextAlign.center,
                             ),
-                            Icon(Icons.alarm, size: 20),
+                            SizedBox(height: 10),
+                            Icon(Icons.alarm_outlined,
+                                size: 25, color: Colors.white),
                           ],
                         ),
                       ),
