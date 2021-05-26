@@ -9,6 +9,7 @@ idx  - Index
 msg  - message
 nav  - Navigate/Navigator
 np   - NavPage
+qust - Quest
 s    - storage/Get Storage
 t    - timeline
 trkh - Tarikh

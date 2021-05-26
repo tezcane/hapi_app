@@ -203,314 +203,471 @@ class AddQuest extends StatelessWidget {
 }
 
 enum FARD_SALAH {
-  Maghrib,
-  Isha,
   Fajr,
   Dhuhr,
   Asr,
+  Maghrib,
+  Isha,
 }
 
 class QuestsActive extends StatelessWidget {
   FARD_SALAH activeSalah = FARD_SALAH.Maghrib;
 
-  // SliverPersistentHeader SalahHeader(FARD_SALAH fardSalah) {
-  //   return SliverPersistentHeader(
-  //     pinned: true,
-  //     delegate: _SliverAppBarDelegate(
-  //       minHeight: 60,
-  //       maxHeight: 60,
-  //       child: Container(
-  //         color: Colors.black, // hide slivers scrolling behind
-  //         child: ClipRRect(
-  //           borderRadius: BorderRadius.all(const Radius.circular(15.0)),
-  //           child: Container(
-  //             color: Colors.lightBlue.shade200,
-  //             child: Row(
-  //               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //               crossAxisAlignment: CrossAxisAlignment.center,
-  //               children: [
-  //                 // SizedBox(height: 10),
-  //                 Container(
-  //                   child: Row(
-  //                     //mainAxisAlignment: MainAxisAlignment.start,
-  //                     children: [
-  //                       SizedBox(width: 20),
-  //                       Text(fardSalah.toString().split('.').last,
-  //                           style: TextStyle(
-  //                               color: Colors.blue.shade700, fontSize: 20.0)),
-  //                       SizedBox(width: 20),
-  //                       Text('8:31 - 9:47 PM',
-  //                           style: TextStyle(color: Colors.white)),
-  //                       if (fardSalah == activeSalah)
-  //                         Row(
-  //                           children: [
-  //                             SizedBox(width: 20),
-  //                             Icon(Icons.hourglass_bottom_outlined),
-  //                             Text('1:31:45',
-  //                                 style: TextStyle(color: Colors.white)),
-  //                           ],
-  //                         ),
-  //                     ],
-  //                   ),
-  //                 ),
-  //                 Container(
-  //                   child: Row(
-  //                     //mainAxisAlignment: MainAxisAlignment.end,
-  //                     children: [
-  //                       Icon(Icons.alarm),
-  //                       SizedBox(width: 20),
-  //                       Icon(Icons.push_pin_outlined),
-  //                       SizedBox(width: 10),
-  //                     ],
-  //                   ),
-  //                 ),
-  //               ],
-  //             ),
-  //           ),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
+  TextStyle topTitlesTextStyle =
+      const TextStyle(color: Colors.white, fontSize: 20.0);
+  TextStyle columnTitlesTextStyle =
+      const TextStyle(color: Colors.white, fontSize: 10.0);
 
-  Column SalahAppBar(FARD_SALAH fardSalah) {
-    return Column(
-      //mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.end,
-      //crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SizedBox(height: 15),
-        Container(
-          child: ClipRRect(
-            borderRadius: BorderRadius.all(const Radius.circular(15.0)),
-            child: Container(
-              //: Colors.lightBlue.shade200.withOpacity(0.50),
+  GetBuilder SalahAppBar(FARD_SALAH fardSalah) {
+    return GetBuilder<QuestController>(
+      init: QuestController(),
+      builder: (c) {
+        return Column(
+          //mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.end,
+          //crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            //SizedBox(height: 15),
+            Container(
+              child: ClipRRect(
+                borderRadius: BorderRadius.all(const Radius.circular(15.0)),
+                child: Container(
+                  //: Colors.lightBlue.shade200.withOpacity(0.50),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // SizedBox(height: 10),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          //SizedBox(width: 15),
+                          Text(fardSalah.toString().split('.').last,
+                              style: topTitlesTextStyle),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          //SizedBox(width: 20),
+                          Icon(Icons.hourglass_bottom_outlined),
+                          Text('1:31:45', style: topTitlesTextStyle),
+                        ],
+                      ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.end,
+                      //   children: [
+                      //     Icon(Icons.push_pin_outlined),
+                      //     SizedBox(width: 15),
+                      //   ],
+                      // ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: 15),
+            Container(
+              //color: Colors.lightBlue.shade200.withOpacity(0.50),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  // SizedBox(height: 10),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(width: 15),
-                      Text(fardSalah.toString().split('.').last,
-                          style:
-                              TextStyle(color: Colors.white, fontSize: 20.0)),
-                    ],
+                  Expanded(
+                    flex: 1000,
+                    child: Text(
+                      'Salah',
+                      textAlign: TextAlign.center,
+                      style: columnTitlesTextStyle,
+                    ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      //SizedBox(width: 20),
-                      Icon(Icons.hourglass_bottom_outlined),
-                      Text('1:31:45',
-                          style:
-                              TextStyle(color: Colors.white, fontSize: 20.0)),
-                    ],
+                  Expanded(
+                    flex: 1000,
+                    child: Column(
+                      //mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Start',
+                          textAlign: TextAlign.center,
+                          style: columnTitlesTextStyle,
+                        ),
+                        Divider(
+                          height: 2,
+                          thickness: 1,
+                          color: Colors.white,
+                          indent: 6,
+                          endIndent: 6,
+                        ),
+                        Text(
+                          'End',
+                          textAlign: TextAlign.center,
+                          style: columnTitlesTextStyle,
+                        ),
+                      ],
+                    ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Icon(Icons.push_pin_outlined),
-                      SizedBox(width: 15),
-                    ],
+                  Expanded(
+                    flex: 1000,
+                    child: Column(
+                      children: [
+                        Text(
+                          'Sunnah',
+                          textAlign: TextAlign.center,
+                          style: columnTitlesTextStyle,
+                        ),
+                        Text(
+                          'Before',
+                          textAlign: TextAlign.center,
+                          style: columnTitlesTextStyle,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1000,
+                    child: Text(
+                      'Fard',
+                      textAlign: TextAlign.center,
+                      style: columnTitlesTextStyle,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1000,
+                    child: Column(
+                      children: [
+                        Text(
+                          'Sunnah',
+                          textAlign: TextAlign.center,
+                          style: columnTitlesTextStyle,
+                        ),
+                        Text(
+                          'After',
+                          textAlign: TextAlign.center,
+                          style: columnTitlesTextStyle,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    flex: 2000,
+                    child: Column(
+                      children: [
+                        // Checkbox(
+                        //   value: c.showSunnahMuak,
+                        //   onChanged: (bool? value) {
+                        //     c.setShowSunnahMuak(value!);
+                        //   },
+                        // ),
+                        Text(
+                          "Show Sunnah?:",
+                          style: TextStyle(fontSize: 8),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            c.toggleShowSunnahMuak();
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                            child: Container(
+                              color: Colors.green
+                                  .withOpacity(c.showSunnahMuak ? 1 : 0),
+                              child: Center(
+                                child: Text(
+                                  "Muakkadah",
+                                  style: TextStyle(fontSize: 8),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        InkWell(
+                          onTap: () {
+                            c.toggleShowSunnahNafl();
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                            child: Container(
+                              color: Colors.amber.shade700
+                                  .withOpacity(c.showSunnahNafl ? 1 : 0),
+                              child: Center(
+                                child: Text(
+                                  "Nafl",
+                                  style: TextStyle(fontSize: 8),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
-            ),
-          ),
-        ),
-        SizedBox(height: 15),
-        Container(
-          //color: Colors.lightBlue.shade200.withOpacity(0.50),
-          child: Row(
-            children: [
-              Expanded(
-                flex: 1000,
-                child: Center(
-                    child: Text('Salah', style: TextStyle(fontSize: 12.0))),
-              ),
-              Expanded(
-                flex: 1000,
-                child: Column(
-                  children: [
-                    Text('Start', style: TextStyle(fontSize: 12.0)),
-                    Divider(
-                      height: 2,
-                      thickness: 1,
-                      color: Colors.white,
-                      indent: 8,
-                      endIndent: 8,
-                    ),
-                    Text('End', style: TextStyle(fontSize: 12.0)),
-                  ],
-                ),
-              ),
-              Expanded(
-                flex: 1000,
-                child: Text(
-                  'Sunnah\nBefore',
-                  style: TextStyle(fontSize: 12.0),
-                ),
-              ),
-              Expanded(
-                flex: 1000,
-                child: Text(
-                  '\nFard',
-                  style: TextStyle(fontSize: 12.0),
-                ),
-              ),
-              Expanded(
-                flex: 1000,
-                child: Text(
-                  'Sunnah\nAfter',
-                  style: TextStyle(fontSize: 12.0),
-                ),
-              ),
-              Expanded(
-                flex: 1000,
-                child: Text(' '),
-              ),
-            ],
-          ),
-        )
-      ],
+            )
+          ],
+        );
+      },
     );
   }
 
   SliverPersistentHeader SalahActions(
     final FARD_SALAH fardSalah,
-    final fardFlex,
-    final rakatNalfBefore,
-    final rakatMuakBefore,
-    final rakatFard,
-    final rakatMuakAfter,
-    final rakatNalfAfter,
+    final String rakatNaflBefore,
+    final String rakatMuakBefore,
+    final String rakatFard,
+    final String rakatMuakAfter,
+    final String rakatNaflAfter,
   ) {
-    const double boxHeight = 65;
+    const double boxHeight = 75;
     const Color textColor = Colors.white;
 
     bool isActiveSalah = fardSalah == activeSalah;
+
+    List<String> startTimeList = [
+      '05:21:31',
+      '12:21:31',
+      '17:21:31',
+      '19:21:31',
+      '21:21:31'
+    ];
+    List<String> endTimeList = [
+      '06:21:31',
+      '13:21:31',
+      '18:21:31',
+      '21:21:31',
+      '05:21:31'
+    ];
+
+    final String startTime = startTimeList[fardSalah.index];
+    final String endTime = endTimeList[fardSalah.index];
+
+    TextStyle actionTextStyle = TextStyle(
+        color: Colors.white, fontSize: 10.0, fontWeight: FontWeight.bold);
+
+    int fardFlex = 3000;
+
+    bool showSunnahColumns = false;
 
     return SliverPersistentHeader(
       pinned: fardSalah == activeSalah,
       delegate: _SliverAppBarDelegate(
         minHeight: boxHeight,
         maxHeight: boxHeight,
-        child: Row(
-          //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Expanded(
-              flex: 1000,
-              child: Container(
-                color: isActiveSalah
-                    ? Colors.green // make active salah stand out
-                    : Colors.black, // hide slivers scrolling behind
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topLeft: const Radius.circular(15.0),
-                    bottomLeft: const Radius.circular(15.0),
-                  ),
+        child: GetBuilder<QuestController>(
+          init: QuestController(),
+          builder: (c) {
+            if (c.showSunnahMuak || c.showSunnahNafl) {
+              showSunnahColumns = true;
+              fardFlex = 1000;
+            }
+            return Row(
+              //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Expanded(
+                  flex: 1000,
                   child: Container(
-                    color: Colors.yellow,
+                    color: isActiveSalah
+                        ? Colors.green // make active salah stand out
+                        : Colors.black, // hide slivers scrolling behind
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: const Radius.circular(15.0),
+                        bottomLeft: const Radius.circular(15.0),
+                      ),
+                      child: Container(
+                        color: Colors.lightBlue.shade800,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              fardSalah.toString().split('.').last,
+                              style: actionTextStyle,
+                              textAlign: TextAlign.center,
+                            ),
+                            Icon(Icons.alarm, size: 20),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 1000,
+                  child: Container(
+                    color: Colors.lightBlue.shade700,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Text(
+                          startTime,
+                          style: actionTextStyle,
+                          textAlign: TextAlign.center,
+                        ),
+                        Divider(
+                          height: 2,
+                          thickness: 1,
+                          color: Colors.white,
+                          // indent: 8,
+                          // endIndent: 8,
+                        ),
+                        Text(
+                          endTime,
+                          style: actionTextStyle,
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                if (showSunnahColumns)
+                  Expanded(
+                    flex: 1000,
+                    child: Container(
+                      color: Colors.green,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          if (c.showSunnahMuak && rakatMuakBefore != '')
+                            Text(
+                              rakatMuakBefore,
+                              style: actionTextStyle,
+                              textAlign: TextAlign.center,
+                            ),
+                          if (c.showSunnahNafl && rakatNaflBefore != '')
+                            Text(
+                              rakatNaflBefore,
+                              style: actionTextStyle,
+                              textAlign: TextAlign.center,
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                Expanded(
+                  flex: fardFlex,
+                  child: Container(
+                    color: Colors.red,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(rakatFard, style: actionTextStyle),
+                      ],
+                    ),
+                  ),
+                ),
+                if (showSunnahColumns)
+                  Expanded(
+                    flex: 1000,
+                    child: Column(
+                      //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        if (showSunnahColumns &&
+                            rakatMuakAfter == '' &&
+                            rakatNaflAfter == '')
+                          Expanded(
+                            child: Container(
+                              color: Colors.grey.shade800,
+                              child: Center(
+                                child: Text(
+                                  '-',
+                                  style: actionTextStyle,
+                                  //textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          ),
+                        if (c.showSunnahMuak && rakatMuakAfter != '')
+                          Expanded(
+                            child: Container(
+                              color: Colors.green,
+                              child: Center(
+                                child: Text(
+                                  rakatMuakAfter,
+                                  style: actionTextStyle,
+                                ),
+                              ),
+                            ),
+                          ),
+                        if (c.showSunnahNafl && fardSalah == FARD_SALAH.Isha)
+                          Expanded(
+                            child: Container(
+                              color: Colors.amber.shade700,
+                              child: Center(
+                                child: Text(
+                                  '2',
+                                  style: actionTextStyle,
+                                ),
+                              ),
+                            ),
+                          ),
+                        if (c.showSunnahMuak && fardSalah == FARD_SALAH.Isha)
+                          Expanded(
+                            child: Container(
+                              color: Colors.blue.shade700,
+                              child: Center(
+                                child: Text(
+                                  '3 Witr',
+                                  style: actionTextStyle,
+                                ),
+                              ),
+                            ),
+                          ),
+                        if (c.showSunnahNafl && rakatNaflAfter != '')
+                          Expanded(
+                            child: Container(
+                              color: Colors.amber.shade700,
+                              child: Center(
+                                child: Text(
+                                  rakatNaflAfter,
+                                  style: actionTextStyle,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                Expanded(
+                  flex: 1000,
+                  child: Container(
+                    color: Colors.purple,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          fardSalah.toString().split('.').last,
-                          style: TextStyle(color: Colors.blue.shade700),
+                          "Zikr",
+                          style: actionTextStyle,
+                          textAlign: TextAlign.center,
                         ),
-                        Icon(Icons.alarm, size: 20),
                       ],
                     ),
                   ),
                 ),
-              ),
-            ),
-            if (rakatMuakBefore != 0)
-              Expanded(
-                flex: 1000,
-                child: Container(
-                  color: Colors.green,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Sunnah", style: TextStyle(color: textColor)),
-                      SizedBox(height: 5),
-                      Text("$rakatMuakBefore Rakat",
-                          style: TextStyle(color: textColor)),
-                    ],
-                  ),
-                ),
-              ),
-            Expanded(
-              flex: fardFlex,
-              child: Container(
-                color: Colors.red,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Fard", style: TextStyle(color: textColor)),
-                    SizedBox(height: 5),
-                    Text("$rakatFard Rakat",
-                        style: TextStyle(color: textColor)),
-                  ],
-                ),
-              ),
-            ),
-            if (rakatMuakAfter != 0)
-              Expanded(
-                flex: 1000,
-                child: Container(
-                  color: Colors.green,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Sunnah", style: TextStyle(color: textColor)),
-                      SizedBox(height: 5),
-                      Text("$rakatMuakAfter Rakat",
-                          style: TextStyle(color: textColor)),
-                    ],
-                  ),
-                ),
-              ),
-            Expanded(
-              flex: 1000,
-              child: Container(
-                color: Colors.purple,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Dhikr", style: TextStyle(color: textColor)),
-                  ],
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 1000,
-              child: Container(
-                color: isActiveSalah
-                    ? Colors.green // make active salah stand out
-                    : Colors.black, // hide slivers scrolling behind
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.only(
-                    topRight: const Radius.circular(15.0),
-                    bottomRight: const Radius.circular(15.0),
-                  ),
+                Expanded(
+                  flex: 1000,
                   child: Container(
-                    color: Colors.orange,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text("Dua", style: TextStyle(color: textColor)),
-                      ],
+                    color: isActiveSalah
+                        ? Colors.green // make active salah stand out
+                        : Colors.black, // hide slivers scrolling behind
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topRight: const Radius.circular(15.0),
+                        bottomRight: const Radius.circular(15.0),
+                      ),
+                      child: Container(
+                        color: Colors.cyan,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text('Dua', style: actionTextStyle),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ),
-          ],
+              ],
+            );
+          },
         ),
       ),
     );
@@ -524,9 +681,9 @@ class QuestsActive extends StatelessWidget {
         maxHeight: 5.0,
         child: Container(
           color: Colors.black,
-          child: Center(
-            child: Text(' '),
-          ),
+          // child: Center(
+          //   child: Text(''),
+          // ),
         ),
       ),
     );
@@ -540,9 +697,9 @@ class QuestsActive extends StatelessWidget {
         maxHeight: 5.0,
         child: Container(
           color: Colors.black,
-          child: Center(
-            child: Text(' '),
-          ),
+          // child: Center(
+          //   child: Text(''),
+          // ),
         ),
       ),
     );
@@ -550,60 +707,68 @@ class QuestsActive extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.black,
-      child: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            backgroundColor: Colors.lightBlue.shade200,
-            expandedHeight: 300.0,
-            collapsedHeight: 100.0,
-            floating: true,
-            pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
-                centerTitle: true,
-                title: SalahAppBar(activeSalah),
-                background: Swiper(
-                  itemCount: 1,
-                  itemBuilder: (BuildContext context, int index) => Image.asset(
-                    'assets/images/quests/active$index.jpg', //TODO add more images
-                    fit: BoxFit.cover,
-                  ),
-                  autoplay: true,
-                  autoplayDelay: 10000,
-                )),
-          ),
-          sliverSpaceHeader(true),
-          //SalahHeader(activeSalah),
-          SalahActions(FARD_SALAH.Fajr, 2000, 0, 2, 2, 0, 0),
-          spacingHeader(FARD_SALAH.Fajr),
-          SalahActions(FARD_SALAH.Dhuhr, 1000, 0, 4, 4, 2, 2),
-          spacingHeader(FARD_SALAH.Dhuhr),
-          SalahActions(FARD_SALAH.Asr, 3000, 4, 0, 4, 0, 0),
-          spacingHeader(FARD_SALAH.Asr),
-          SalahActions(FARD_SALAH.Maghrib, 2000, 0, 0, 3, 2, 2),
-          spacingHeader(FARD_SALAH.Maghrib),
-          SalahActions(FARD_SALAH.Isha, 2000, 4, 0, 4, 2, 2),
-          spacingHeader(FARD_SALAH.Isha),
-          SliverGrid(
-            gridDelegate: new SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 200.0,
-              mainAxisSpacing: 10.0,
-              crossAxisSpacing: 10.0,
-              childAspectRatio: 4.0,
+    bool isJummah = true;
+
+    return GetBuilder<QuestController>(
+      init: QuestController(),
+      builder: (c) => Container(
+        color: Colors.black,
+        child: CustomScrollView(
+          slivers: <Widget>[
+            SliverAppBar(
+              backgroundColor: Colors.lightBlue.shade900,
+              expandedHeight: 300.0,
+              collapsedHeight: 100.0,
+              floating: true,
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                  centerTitle: true,
+                  title: SalahAppBar(activeSalah),
+                  background: Swiper(
+                    itemCount: 1,
+                    itemBuilder: (BuildContext context, int index) =>
+                        Image.asset(
+                      'assets/images/quests/active$index.jpg', //TODO add more images
+                      fit: BoxFit.cover,
+                    ),
+                    autoplay: true,
+                    autoplayDelay: 10000,
+                  )),
             ),
-            delegate: new SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return new Container(
-                  alignment: Alignment.center,
-                  color: Colors.teal[100 * (index % 9)],
-                  child: new Text('grid item $index'),
-                );
-              },
-              childCount: 20,
+            sliverSpaceHeader(true),
+            //SalahHeader(activeSalah),
+            SalahActions(FARD_SALAH.Fajr, '', '2', '2', '', ''),
+            spacingHeader(FARD_SALAH.Fajr),
+            isJummah
+                ? SalahActions(FARD_SALAH.Dhuhr, '', '4', '4', '2', '2')
+                : SalahActions(FARD_SALAH.Dhuhr, '', '4', '2', '4+2', '2'),
+            spacingHeader(FARD_SALAH.Dhuhr),
+            SalahActions(FARD_SALAH.Asr, '4', '', '4', '', ''),
+            spacingHeader(FARD_SALAH.Asr),
+            SalahActions(FARD_SALAH.Maghrib, '', '', '3', '2', '2'),
+            spacingHeader(FARD_SALAH.Maghrib),
+            SalahActions(FARD_SALAH.Isha, '4', '', '4', '2', '2'),
+            spacingHeader(FARD_SALAH.Isha),
+            SliverGrid(
+              gridDelegate: new SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 200.0,
+                mainAxisSpacing: 10.0,
+                crossAxisSpacing: 10.0,
+                childAspectRatio: 4.0,
+              ),
+              delegate: new SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  return new Container(
+                    alignment: Alignment.center,
+                    color: Colors.teal[100 * (index % 9)],
+                    child: new Text('grid item $index'),
+                  );
+                },
+                childCount: 20,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
