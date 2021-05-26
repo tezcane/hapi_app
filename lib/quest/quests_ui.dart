@@ -222,12 +222,17 @@ class QuestsActive extends StatelessWidget {
     return GetBuilder<QuestController>(
       init: QuestController(),
       builder: (c) {
+        bool showSunnahColumns = false;
+        int fardFlex = 3000;
+
+        if (c.showSunnahMuak || c.showSunnahNafl) {
+          showSunnahColumns = true;
+          fardFlex = 1000;
+        }
         return Column(
-          //mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.end,
-          //crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            //SizedBox(height: 15),
             Container(
               child: ClipRRect(
                 borderRadius: BorderRadius.all(const Radius.circular(15.0)),
@@ -237,7 +242,6 @@ class QuestsActive extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      // SizedBox(height: 10),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -249,9 +253,9 @@ class QuestsActive extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          //SizedBox(width: 20),
                           Icon(Icons.hourglass_bottom_outlined),
                           Text('1:31:45', style: topTitlesTextStyle),
+                          SizedBox(width: 65), // TODO hack push frm show sunnah
                         ],
                       ),
                       // Row(
@@ -266,100 +270,112 @@ class QuestsActive extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 15),
+            //SizedBox(height: 3),
             Container(
               //color: Colors.lightBlue.shade200.withOpacity(0.50),
               child: Row(
                 children: [
                   Expanded(
                     flex: 1000,
-                    child: Text(
-                      'Salah',
-                      textAlign: TextAlign.center,
-                      style: columnTitlesTextStyle,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 19.0),
+                      child: Text(
+                        'Salah',
+                        textAlign: TextAlign.center,
+                        style: columnTitlesTextStyle,
+                      ),
                     ),
                   ),
                   Expanded(
                     flex: 1000,
-                    child: Column(
-                      //mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Start',
-                          textAlign: TextAlign.center,
-                          style: columnTitlesTextStyle,
-                        ),
-                        Divider(
-                          height: 2,
-                          thickness: 1,
-                          color: Colors.white,
-                          indent: 6,
-                          endIndent: 6,
-                        ),
-                        Text(
-                          'End',
-                          textAlign: TextAlign.center,
-                          style: columnTitlesTextStyle,
-                        ),
-                      ],
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 19.0),
+                      child: Column(
+                        //mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'Start',
+                            textAlign: TextAlign.center,
+                            style: columnTitlesTextStyle,
+                          ),
+                          Divider(
+                            height: 2,
+                            thickness: 1,
+                            color: Colors.white,
+                            indent: 6,
+                            endIndent: 6,
+                          ),
+                          Text(
+                            'End',
+                            textAlign: TextAlign.center,
+                            style: columnTitlesTextStyle,
+                          ),
+                        ],
+                      ),
                     ),
                   ),
+                  if (showSunnahColumns)
+                    Expanded(
+                      flex: 1000,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 19.0),
+                        child: Column(
+                          children: [
+                            Text(
+                              'Sunnah',
+                              textAlign: TextAlign.center,
+                              style: columnTitlesTextStyle,
+                            ),
+                            Text(
+                              'Before',
+                              textAlign: TextAlign.center,
+                              style: columnTitlesTextStyle,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   Expanded(
-                    flex: 1000,
-                    child: Column(
-                      children: [
-                        Text(
-                          'Sunnah',
-                          textAlign: TextAlign.center,
-                          style: columnTitlesTextStyle,
-                        ),
-                        Text(
-                          'Before',
-                          textAlign: TextAlign.center,
-                          style: columnTitlesTextStyle,
-                        ),
-                      ],
+                    flex: fardFlex,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 19.0),
+                      child: Text(
+                        'Fard',
+                        textAlign: TextAlign.center,
+                        style: columnTitlesTextStyle,
+                      ),
                     ),
                   ),
-                  Expanded(
-                    flex: 1000,
-                    child: Text(
-                      'Fard',
-                      textAlign: TextAlign.center,
-                      style: columnTitlesTextStyle,
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1000,
-                    child: Column(
-                      children: [
-                        Text(
-                          'Sunnah',
-                          textAlign: TextAlign.center,
-                          style: columnTitlesTextStyle,
+                  if (showSunnahColumns)
+                    Expanded(
+                      flex: 1000,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 19.0),
+                        child: Column(
+                          children: [
+                            Text(
+                              'Sunnah',
+                              textAlign: TextAlign.center,
+                              style: columnTitlesTextStyle,
+                            ),
+                            Text(
+                              'After',
+                              textAlign: TextAlign.center,
+                              style: columnTitlesTextStyle,
+                            ),
+                          ],
                         ),
-                        Text(
-                          'After',
-                          textAlign: TextAlign.center,
-                          style: columnTitlesTextStyle,
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
                   Expanded(
                     flex: 2000,
                     child: Column(
                       children: [
-                        // Checkbox(
-                        //   value: c.showSunnahMuak,
-                        //   onChanged: (bool? value) {
-                        //     c.setShowSunnahMuak(value!);
-                        //   },
-                        // ),
                         Text(
-                          "Show Sunnah?:",
+                          "Show Sunnah?",
                           style: TextStyle(fontSize: 8),
                         ),
+                        //SizedBox(height: 1),
                         InkWell(
                           onTap: () {
                             c.toggleShowSunnahMuak();
@@ -367,17 +383,28 @@ class QuestsActive extends StatelessWidget {
                           child: Padding(
                             padding: EdgeInsets.only(left: 10.0, right: 10.0),
                             child: Container(
+                              height: 15,
                               color: Colors.green
                                   .withOpacity(c.showSunnahMuak ? 1 : 0),
-                              child: Center(
-                                child: Text(
-                                  "Muakkadah",
-                                  style: TextStyle(fontSize: 8),
-                                ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  c.showSunnahMuak
+                                      ? Icon(Icons.check_box_outlined, size: 10)
+                                      : Icon(
+                                          Icons
+                                              .check_box_outline_blank_outlined,
+                                          size: 10),
+                                  Text(
+                                    "Muakkadah",
+                                    style: TextStyle(fontSize: 8),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
                         ),
+                        SizedBox(height: 2),
                         InkWell(
                           onTap: () {
                             c.toggleShowSunnahNafl();
@@ -385,13 +412,24 @@ class QuestsActive extends StatelessWidget {
                           child: Padding(
                             padding: EdgeInsets.only(left: 10.0, right: 10.0),
                             child: Container(
+                              height: 15,
                               color: Colors.amber.shade700
                                   .withOpacity(c.showSunnahNafl ? 1 : 0),
-                              child: Center(
-                                child: Text(
-                                  "Nafl",
-                                  style: TextStyle(fontSize: 8),
-                                ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  c.showSunnahNafl
+                                      ? Icon(Icons.check_box_outlined, size: 10)
+                                      : Icon(
+                                          Icons
+                                              .check_box_outline_blank_outlined,
+                                          size: 10),
+                                  Text(
+                                    "Nafl"
+                                    "              ", // TODO fix center hack
+                                    style: TextStyle(fontSize: 8),
+                                  ),
+                                ],
                               ),
                             ),
                           ),
@@ -418,6 +456,8 @@ class QuestsActive extends StatelessWidget {
   ) {
     const double boxHeight = 75;
     const Color textColor = Colors.white;
+    TextStyle actionTextStyle = const TextStyle(
+        color: textColor, fontSize: 10.0, fontWeight: FontWeight.bold);
 
     bool isActiveSalah = fardSalah == activeSalah;
 
@@ -439,13 +479,6 @@ class QuestsActive extends StatelessWidget {
     final String startTime = startTimeList[fardSalah.index];
     final String endTime = endTimeList[fardSalah.index];
 
-    TextStyle actionTextStyle = TextStyle(
-        color: Colors.white, fontSize: 10.0, fontWeight: FontWeight.bold);
-
-    int fardFlex = 3000;
-
-    bool showSunnahColumns = false;
-
     return SliverPersistentHeader(
       pinned: fardSalah == activeSalah,
       delegate: _SliverAppBarDelegate(
@@ -454,6 +487,9 @@ class QuestsActive extends StatelessWidget {
         child: GetBuilder<QuestController>(
           init: QuestController(),
           builder: (c) {
+            bool showSunnahColumns = false;
+            int fardFlex = 3000;
+
             if (c.showSunnahMuak || c.showSunnahNafl) {
               showSunnahColumns = true;
               fardFlex = 1000;
@@ -504,7 +540,7 @@ class QuestsActive extends StatelessWidget {
                         Divider(
                           height: 2,
                           thickness: 1,
-                          color: Colors.white,
+                          color: textColor,
                           // indent: 8,
                           // endIndent: 8,
                         ),
@@ -520,25 +556,54 @@ class QuestsActive extends StatelessWidget {
                 if (showSunnahColumns)
                   Expanded(
                     flex: 1000,
-                    child: Container(
-                      color: Colors.green,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          if (c.showSunnahMuak && rakatMuakBefore != '')
-                            Text(
-                              rakatMuakBefore,
-                              style: actionTextStyle,
-                              textAlign: TextAlign.center,
+                    child: Column(
+                      //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        if ((rakatMuakBefore == '' && rakatNaflBefore == '') ||
+                            (c.showSunnahMuak &&
+                                !c.showSunnahNafl &&
+                                rakatMuakBefore == '') ||
+                            (c.showSunnahNafl &&
+                                !c.showSunnahMuak &&
+                                rakatNaflBefore == ''))
+                          Expanded(
+                            child: Container(
+                              color: Colors.grey.shade800,
+                              child: Center(
+                                child: Text(
+                                  '-',
+                                  style: actionTextStyle,
+                                  //textAlign: TextAlign.center,
+                                ),
+                              ),
                             ),
-                          if (c.showSunnahNafl && rakatNaflBefore != '')
-                            Text(
-                              rakatNaflBefore,
-                              style: actionTextStyle,
-                              textAlign: TextAlign.center,
+                          ),
+                        if (c.showSunnahMuak && rakatMuakBefore != '')
+                          Expanded(
+                            child: Container(
+                              color: Colors.green,
+                              child: Center(
+                                child: Text(
+                                  rakatMuakBefore,
+                                  style: actionTextStyle,
+                                ),
+                              ),
                             ),
-                        ],
-                      ),
+                          ),
+                        if (c.showSunnahNafl && rakatNaflBefore != '')
+                          Expanded(
+                            child: Container(
+                              color: Colors.amber.shade700,
+                              child: Center(
+                                child: Text(
+                                  rakatNaflBefore,
+                                  style: actionTextStyle,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 Expanded(
@@ -597,6 +662,16 @@ class QuestsActive extends StatelessWidget {
                                 ),
                               ),
                             ),
+                          ),
+                        if (c.showSunnahNafl &&
+                            !c.showSunnahMuak &&
+                            fardSalah == FARD_SALAH.Isha)
+                          Divider(
+                            height: 1,
+                            thickness: 1,
+                            color: textColor,
+                            // indent: 8,
+                            // endIndent: 8,
                           ),
                         if (c.showSunnahMuak && fardSalah == FARD_SALAH.Isha)
                           Expanded(
