@@ -237,7 +237,7 @@ class QuestsActive extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.all(const Radius.circular(15.0)),
                 child: Container(
-                  //: Colors.lightBlue.shade200.withOpacity(0.50),
+                  color: Colors.lightBlue.shade900.withOpacity(0.25),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -273,11 +273,11 @@ class QuestsActive extends StatelessWidget {
             ),
             //SizedBox(height: 3),
             Container(
-              //color: Colors.lightBlue.shade200.withOpacity(0.50),
+              color: Colors.lightBlue.shade900.withOpacity(0.25),
               child: Row(
                 children: [
                   Expanded(
-                    flex: 1000,
+                    flex: 2000,
                     child: Padding(
                       padding: const EdgeInsets.only(top: 19.0),
                       child: Text(
@@ -288,34 +288,34 @@ class QuestsActive extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Expanded(
-                    flex: 1000,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 19.0),
-                      child: Column(
-                        //mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Begin',
-                            textAlign: TextAlign.center,
-                            style: columnTitlesTextStyle,
-                          ),
-                          Divider(
-                            height: 2,
-                            thickness: 1,
-                            color: Colors.white,
-                            indent: 6,
-                            endIndent: 6,
-                          ),
-                          Text(
-                            'End',
-                            textAlign: TextAlign.center,
-                            style: columnTitlesTextStyle,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  // Expanded(
+                  //   flex: 1000,
+                  //   child: Padding(
+                  //     padding: const EdgeInsets.only(top: 19.0),
+                  //     child: Column(
+                  //       //mainAxisAlignment: MainAxisAlignment.center,
+                  //       children: [
+                  //         Text(
+                  //           'Begin',
+                  //           textAlign: TextAlign.center,
+                  //           style: columnTitlesTextStyle,
+                  //         ),
+                  //         Divider(
+                  //           height: 2,
+                  //           thickness: 1,
+                  //           color: Colors.white,
+                  //           indent: 6,
+                  //           endIndent: 6,
+                  //         ),
+                  //         Text(
+                  //           'End',
+                  //           textAlign: TextAlign.center,
+                  //           style: columnTitlesTextStyle,
+                  //         ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
                   if (showSunnahColumns)
                     Expanded(
                       flex: 1000,
@@ -384,7 +384,7 @@ class QuestsActive extends StatelessWidget {
                     child: Column(
                       children: [
                         Text(
-                          "Show Sunnah?",
+                          "Show Sunnah:",
                           style: TextStyle(fontSize: 8),
                         ),
                         //SizedBox(height: 1),
@@ -510,11 +510,12 @@ class QuestsActive extends StatelessWidget {
               //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 Expanded(
-                  flex: 1000,
+                  flex: 2000,
                   child: Container(
-                    color: isActiveSalah
-                        ? Colors.green // make active salah stand out
-                        : Colors.black, // hide slivers scrolling behind
+                    color: Colors.black,
+                    // color: isActiveSalah
+                    //     ? Colors.green // make active salah stand out
+                    //     : Colors.black, // hide slivers scrolling behind
                     child: ClipRRect(
                       borderRadius: const BorderRadius.only(
                         topLeft: const Radius.circular(15.0),
@@ -525,48 +526,74 @@ class QuestsActive extends StatelessWidget {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              fardSalah.toString().split('.').last,
-                              style: actionTextStyle,
-                              textAlign: TextAlign.center,
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text(
+                                  fardSalah.toString().split('.').last,
+                                  style: actionTextStyle,
+                                  textAlign: TextAlign.center,
+                                ),
+                                //SizedBox(height: 10),
+                                Icon(Icons.alarm_outlined,
+                                    size: 25, color: Colors.white),
+                              ],
                             ),
                             SizedBox(height: 10),
-                            Icon(Icons.alarm_outlined,
-                                size: 25, color: Colors.white),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  startTime,
+                                  style: actionTextStyle,
+                                  textAlign: TextAlign.center,
+                                ),
+                                Text(
+                                  '-',
+                                  style: actionTextStyle,
+                                  textAlign: TextAlign.center,
+                                ),
+                                Text(
+                                  endTime,
+                                  style: actionTextStyle,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
                           ],
                         ),
                       ),
                     ),
                   ),
                 ),
-                Expanded(
-                  flex: 1000,
-                  child: Container(
-                    color: Colors.lightBlue.shade700,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Text(
-                          startTime,
-                          style: actionTextStyle,
-                          textAlign: TextAlign.center,
-                        ),
-                        Divider(
-                          height: 2,
-                          thickness: 1,
-                          color: textColor,
-                          // indent: 8,
-                          // endIndent: 8,
-                        ),
-                        Text(
-                          endTime,
-                          style: actionTextStyle,
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+                // Expanded(
+                //   flex: 1000,
+                //   child: Container(
+                //     color: Colors.lightBlue.shade700,
+                //     child: Column(
+                //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //       children: [
+                //         Text(
+                //           startTime,
+                //           style: actionTextStyle,
+                //           textAlign: TextAlign.center,
+                //         ),
+                //         Divider(
+                //           height: 2,
+                //           thickness: 1,
+                //           color: textColor,
+                //           // indent: 8,
+                //           // endIndent: 8,
+                //         ),
+                //         Text(
+                //           endTime,
+                //           style: actionTextStyle,
+                //           textAlign: TextAlign.center,
+                //         ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
                 if (showSunnahColumns)
                   Expanded(
                     flex: 1000,
@@ -723,7 +750,7 @@ class QuestsActive extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          "Zikr",
+                          "Thikr",
                           style: actionTextStyle,
                           textAlign: TextAlign.center,
                         ),
@@ -734,9 +761,10 @@ class QuestsActive extends StatelessWidget {
                 Expanded(
                   flex: 1000,
                   child: Container(
-                    color: isActiveSalah
-                        ? Colors.green // make active salah stand out
-                        : Colors.black, // hide slivers scrolling behind
+                    color: Colors.black,
+                    // color: isActiveSalah
+                    //     ? Colors.green // make active salah stand out
+                    //     : Colors.black, // hide slivers scrolling behind
                     child: ClipRRect(
                       borderRadius: const BorderRadius.only(
                         topRight: const Radius.circular(15.0),
@@ -796,7 +824,7 @@ class QuestsActive extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isJummah = true;
+    bool isJummah = false;
 
     return GetBuilder<QuestController>(
       init: QuestController(),
@@ -829,8 +857,8 @@ class QuestsActive extends StatelessWidget {
             SalahActions(FARD_SALAH.Fajr, '', '2', '2', '', ''),
             spacingHeader(FARD_SALAH.Fajr),
             isJummah
-                ? SalahActions(FARD_SALAH.Dhuhr, '', '4', '4', '2', '2')
-                : SalahActions(FARD_SALAH.Dhuhr, '', '4', '2', '4+2', '2'),
+                ? SalahActions(FARD_SALAH.Dhuhr, '', '4', '2', '4+2', '2')
+                : SalahActions(FARD_SALAH.Dhuhr, '', '4', '4', '2', '2'),
             spacingHeader(FARD_SALAH.Dhuhr),
             SalahActions(FARD_SALAH.Asr, '4', '', '4', '', ''),
             spacingHeader(FARD_SALAH.Asr),
