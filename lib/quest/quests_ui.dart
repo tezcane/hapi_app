@@ -204,9 +204,9 @@ class AddQuest extends StatelessWidget {
 
 class QuestsActive extends StatelessWidget {
   TextStyle topTitlesTextStyle =
-      const TextStyle(color: Colors.white, fontSize: 20.0);
+      const TextStyle(color: Colors.white, fontSize: 25.0);
   TextStyle columnTitlesTextStyle =
-      const TextStyle(color: Colors.white, fontSize: 10.0);
+      const TextStyle(color: Colors.white, fontSize: 14.0);
 
   GetBuilder SalahAppBar(FARD_SALAH fardSalah) {
     return GetBuilder<QuestController>(
@@ -219,276 +219,233 @@ class QuestsActive extends StatelessWidget {
           showSunnahColumns = true;
           fardFlex = 1000;
         }
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.end,
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            Container(
-              child: ClipRRect(
-                borderRadius: BorderRadius.all(const Radius.circular(15.0)),
-                child: Container(
-                  color: Colors.lightBlue.shade900.withOpacity(0.25),
-                  child: Row(
+            Expanded(
+              flex: 5000,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           //SizedBox(width: 15),
                           Text(fardSalah.toString().split('.').last,
                               style: topTitlesTextStyle),
                         ],
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.hourglass_top_outlined, // TODO animate
-                              color: Colors.green.shade500),
-                          Text('1:31:45', style: topTitlesTextStyle),
-                          SizedBox(width: 65), // TODO hack push frm show sunnah
-                        ],
+                      InkWell(
+                        onTap: () {
+                          c.initLocation(); //TODO
+                        },
+                        child: Row(
+                          children: [
+                            Icon(Icons.hourglass_top_outlined, // TODO animate
+                                color: Colors.green.shade500),
+                            Text(c.timeToNextPrayer, style: topTitlesTextStyle),
+                          ],
+                        ),
                       ),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.end,
-                      //   children: [
-                      //     Icon(Icons.push_pin_outlined),
-                      //     SizedBox(width: 15),
-                      //   ],
-                      // ),
                     ],
                   ),
-                ),
+                  SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Expanded(
+                        flex: 2000,
+                        child: Text(
+                          '',
+                          //'Salah',
+                          textAlign: TextAlign.center,
+                          style: columnTitlesTextStyle,
+                        ),
+                      ),
+                      if (showSunnahColumns)
+                        Expanded(
+                          flex: 1000,
+                          child: Column(
+                            children: [
+                              Text(
+                                'Before',
+                                textAlign: TextAlign.center,
+                                style: columnTitlesTextStyle,
+                              ),
+                              Text(
+                                'Fard',
+                                textAlign: TextAlign.center,
+                                style: columnTitlesTextStyle,
+                              ),
+                            ],
+                          ),
+                        ),
+                      Expanded(
+                        flex: fardFlex,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(
+                                  top: showSunnahColumns ? 0.0 : 12.0),
+                              child: Text(
+                                showSunnahColumns ? 'Fard' : 'Fard Rakat',
+                                textAlign: TextAlign.center,
+                                style: columnTitlesTextStyle,
+                              ),
+                            ),
+                            if (showSunnahColumns)
+                              Text(
+                                'Rakat',
+                                textAlign: TextAlign.center,
+                                style: columnTitlesTextStyle,
+                              ),
+                          ],
+                        ),
+                      ),
+                      if (showSunnahColumns)
+                        Expanded(
+                          flex: 1000,
+                          child: Column(
+                            children: [
+                              Text(
+                                'After',
+                                textAlign: TextAlign.center,
+                                style: columnTitlesTextStyle,
+                              ),
+                              Text(
+                                'Fard',
+                                textAlign: TextAlign.center,
+                                style: columnTitlesTextStyle,
+                              ),
+                            ],
+                          ),
+                        ),
+                      //Expanded(flex: 2000, child: Text('')),
+                    ],
+                  )
+                ],
               ),
             ),
-            //SizedBox(height: 3),
-            Container(
-              color: Colors.lightBlue.shade900.withOpacity(0.25),
-              child: Row(
+            Expanded(
+              flex: 2000,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.end,
+                //crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Expanded(
-                    flex: 2000,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 19.0),
-                      child: Text(
-                        '',
-                        //'Salah',
-                        textAlign: TextAlign.center,
-                        style: columnTitlesTextStyle,
+                  Text(
+                    "Show Salah:",
+                    style: TextStyle(fontSize: 13),
+                  ),
+                  if (c.isFriday())
+                    InkWell(
+                      onTap: () {
+                        c.toggleShowSunnahJummah();
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.only(left: 2.0, right: 2.0),
+                        child: Container(
+                          height: 15,
+                          color: Colors.lightBlue.shade800
+                              .withOpacity(c.showSunnahJummah ? 1 : 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              c.showSunnahJummah
+                                  ? Icon(
+                                      Icons.check_box_outlined,
+                                      size: 10,
+                                      color: Colors.white,
+                                    )
+                                  : Icon(
+                                      Icons.check_box_outline_blank_outlined,
+                                      size: 10,
+                                      color: Colors.white,
+                                    ),
+                              Text(
+                                'Jummah'
+                                '     ',
+                                style: TextStyle(fontSize: 12),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                  // Expanded(
-                  //   flex: 1000,
-                  //   child: Padding(
-                  //     padding: const EdgeInsets.only(top: 19.0),
-                  //     child: Column(
-                  //       //mainAxisAlignment: MainAxisAlignment.center,
-                  //       children: [
-                  //         Text(
-                  //           'Begin',
-                  //           textAlign: TextAlign.center,
-                  //           style: columnTitlesTextStyle,
-                  //         ),
-                  //         Divider(
-                  //           height: 2,
-                  //           thickness: 1,
-                  //           color: Colors.white,
-                  //           indent: 6,
-                  //           endIndent: 6,
-                  //         ),
-                  //         Text(
-                  //           'End',
-                  //           textAlign: TextAlign.center,
-                  //           style: columnTitlesTextStyle,
-                  //         ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
-                  if (showSunnahColumns)
-                    Expanded(
-                      flex: 1000,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 19.0),
-                        child: Column(
+                  if (c.isFriday()) SizedBox(height: 2),
+                  InkWell(
+                    onTap: () {
+                      c.toggleShowSunnahMuak();
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 2.0, right: 2.0),
+                      child: Container(
+                        height: 15,
+                        color:
+                            Colors.green.withOpacity(c.showSunnahMuak ? 1 : 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            c.showSunnahMuak
+                                ? Icon(
+                                    Icons.check_box_outlined,
+                                    size: 10,
+                                    color: Colors.white,
+                                  )
+                                : Icon(
+                                    Icons.check_box_outline_blank_outlined,
+                                    size: 10,
+                                    color: Colors.white,
+                                  ),
                             Text(
-                              'Before',
-                              textAlign: TextAlign.center,
-                              style: columnTitlesTextStyle,
-                            ),
-                            Text(
-                              'Fard',
-                              textAlign: TextAlign.center,
-                              style: columnTitlesTextStyle,
+                              'Muakkadah',
+                              style: TextStyle(fontSize: 12),
                             ),
                           ],
                         ),
                       ),
                     ),
-                  Expanded(
-                    flex: fardFlex,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 19.0),
-                      child: Column(
-                        children: [
-                          Text(
-                            showSunnahColumns ? 'Fard' : 'Fard Rakat',
-                            textAlign: TextAlign.center,
-                            style: columnTitlesTextStyle,
-                          ),
-                          if (showSunnahColumns)
-                            Text(
-                              'Rakat',
-                              textAlign: TextAlign.center,
-                              style: columnTitlesTextStyle,
-                            ),
-                        ],
-                      ),
-                    ),
                   ),
-                  if (showSunnahColumns)
-                    Expanded(
-                      flex: 1000,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 19.0),
-                        child: Column(
+                  SizedBox(height: 2),
+                  InkWell(
+                    onTap: () {
+                      c.toggleShowSunnahNafl();
+                    },
+                    child: Padding(
+                      padding: EdgeInsets.only(left: 2.0, right: 2.0),
+                      child: Container(
+                        height: 15,
+                        color: Colors.amber.shade700
+                            .withOpacity(c.showSunnahNafl ? 1 : 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            c.showSunnahNafl
+                                ? Icon(
+                                    Icons.check_box_outlined,
+                                    size: 10,
+                                    color: Colors.white,
+                                  )
+                                : Icon(
+                                    Icons.check_box_outline_blank_outlined,
+                                    size: 10,
+                                    color: Colors.white,
+                                  ),
                             Text(
-                              'After',
-                              textAlign: TextAlign.center,
-                              style: columnTitlesTextStyle,
-                            ),
-                            Text(
-                              'Fard',
-                              textAlign: TextAlign.center,
-                              style: columnTitlesTextStyle,
+                              'Nafl'
+                              '              ', // TODO fix center hack
+                              style: TextStyle(fontSize: 12),
                             ),
                           ],
                         ),
                       ),
-                    ),
-                  Expanded(
-                    flex: 2000,
-                    child: Column(
-                      children: [
-                        Text(
-                          "Show Salah:",
-                          style: TextStyle(fontSize: 8),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            c.toggleShowSunnahJummah();
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                            child: Container(
-                              height: 15,
-                              color: Colors.lightBlue.shade800
-                                  .withOpacity(c.showSunnahJummah ? 1 : 0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  c.showSunnahJummah
-                                      ? Icon(
-                                          Icons.check_box_outlined,
-                                          size: 10,
-                                          color: Colors.white,
-                                        )
-                                      : Icon(
-                                          Icons
-                                              .check_box_outline_blank_outlined,
-                                          size: 10,
-                                          color: Colors.white,
-                                        ),
-                                  Text(
-                                    'Jummah'
-                                    '     ',
-                                    style: TextStyle(fontSize: 8),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 2),
-                        InkWell(
-                          onTap: () {
-                            c.toggleShowSunnahMuak();
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                            child: Container(
-                              height: 15,
-                              color: Colors.green
-                                  .withOpacity(c.showSunnahMuak ? 1 : 0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  c.showSunnahMuak
-                                      ? Icon(
-                                          Icons.check_box_outlined,
-                                          size: 10,
-                                          color: Colors.white,
-                                        )
-                                      : Icon(
-                                          Icons
-                                              .check_box_outline_blank_outlined,
-                                          size: 10,
-                                          color: Colors.white,
-                                        ),
-                                  Text(
-                                    'Muakkadah',
-                                    style: TextStyle(fontSize: 8),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 2),
-                        InkWell(
-                          onTap: () {
-                            c.toggleShowSunnahNafl();
-                          },
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                            child: Container(
-                              height: 15,
-                              color: Colors.amber.shade700
-                                  .withOpacity(c.showSunnahNafl ? 1 : 0),
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  c.showSunnahNafl
-                                      ? Icon(
-                                          Icons.check_box_outlined,
-                                          size: 10,
-                                          color: Colors.white,
-                                        )
-                                      : Icon(
-                                          Icons
-                                              .check_box_outline_blank_outlined,
-                                          size: 10,
-                                          color: Colors.white,
-                                        ),
-                                  Text(
-                                    'Nafl'
-                                    '              ', // TODO fix center hack
-                                    style: TextStyle(fontSize: 8),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
                     ),
                   ),
                 ],
               ),
-            )
+            ),
           ],
         );
       },
@@ -556,7 +513,7 @@ class QuestsActive extends StatelessWidget {
     const double boxHeight = 75;
     const Color textColor = Colors.white;
     TextStyle actionTextStyle = const TextStyle(
-        color: textColor, fontSize: 12.0, fontWeight: FontWeight.bold);
+        color: textColor, fontSize: 17.0, fontWeight: FontWeight.bold);
 
     return SliverPersistentHeader(
       pinned: fardSalah == cQust.activeSalah, // TODO cQust needed i believe
@@ -603,7 +560,7 @@ class QuestsActive extends StatelessWidget {
                                       : fardSalah.toString().split('.').last,
                                   style: const TextStyle(
                                       color: textColor,
-                                      fontSize: 15.0,
+                                      fontSize: 28.0,
                                       fontWeight: FontWeight.bold),
                                   textAlign: TextAlign.center,
                                 ),
@@ -917,7 +874,7 @@ class QuestsActive extends StatelessWidget {
                   centerTitle: true,
                   title: SalahAppBar(c.activeSalah),
                   background: Swiper(
-                    itemCount: 1,
+                    itemCount: 3,
                     itemBuilder: (BuildContext context, int index) =>
                         Image.asset(
                       'assets/images/quests/active$index.jpg', //TODO add more images

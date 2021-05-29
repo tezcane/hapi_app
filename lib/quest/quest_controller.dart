@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:adhan_dart/adhan_dart.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
@@ -75,6 +77,7 @@ class QuestController extends GetxController {
   DateTime? _middleOfTheNight;
   DateTime? _lastThirdOfTheNight;
   double? _qiblaDirection;
+  RxString _timeToNextPrayer = '-'.obs;
 
   DateTime? get fajr => _fajr;
   DateTime? get sunrise => _sunrise;
@@ -91,6 +94,11 @@ class QuestController extends GetxController {
   DateTime? get middleOfTheNight => _middleOfTheNight;
   DateTime? get lastThirdOfTheNight => _lastThirdOfTheNight;
   double? get qiblaDirection => _qiblaDirection;
+  String get timeToNextPrayer => _timeToNextPrayer.value;
+
+  Location? _location;
+//Coordinates _coordinates = Coordinates(37.3382, -121.8863);
+  Coordinates _coordinates = Coordinates(36.950663449472, -122.05716133118);
 
   @override
   void onInit() {
@@ -148,11 +156,51 @@ class QuestController extends GetxController {
     String timeZone = await FlutterNativeTimezone.getLocalTimezone();
     print('***** Time Zone: "$timeZone"');
 
-    Location location = getLocation(timeZone); // 'America/Los_Angeles'
+    _location = getLocation(timeZone); // 'America/Los_Angeles'
 
-    Coordinates coordinates = Coordinates(37.3382, -121.8863);
+    //Coordinates _coordinates = Coordinates(37.3382, -121.8863); // TODO
 
-    initSalahTimes(location, coordinates);
+    initSalahTimes(_location!, _coordinates);
+
+    startRecursiveNextPrayerTimer();
+  }
+
+  // TODO rename me
+  String _printDuration(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "${duration.inHours}:$twoDigitMinutes:$twoDigitSeconds";
+  }
+
+  // TODO tune this, put timer in another controller for optimization?
+  void startRecursiveNextPrayerTimer() {
+    Timer(Duration(seconds: 1), () {
+      DateTime date = TZDateTime.from(DateTime.now(), _location!);
+      CalculationParameters params = CalculationMethod.NorthAmerica();
+      params.madhab = Madhab.Hanafi;
+      PrayerTimes prayerTimes =
+          PrayerTimes(_coordinates, date, params, precision: false);
+
+      // Convenience Utilities
+      _currentPrayerName = prayerTimes.currentPrayer(date: date);
+      _currentPrayer = TZDateTime.from(
+        prayerTimes.timeForPrayer(_currentPrayerName!)!,
+        _location!,
+      );
+
+      _nextPrayerName = prayerTimes.nextPrayer();
+      _nextPrayer = TZDateTime.from(
+        prayerTimes.timeForPrayer(_nextPrayerName!)!,
+        _location!,
+      );
+
+      _timeToNextPrayer.value = _printDuration(_nextPrayer!.difference(date));
+
+      update();
+
+      startRecursiveNextPrayerTimer();
+    });
   }
 
   initSalahTimes(Location location, Coordinates coordinates) async {
@@ -178,14 +226,38 @@ class QuestController extends GetxController {
 
     // Convenience Utilities
     _currentPrayerName = prayerTimes.currentPrayer(date: date);
+    _currentPrayer = TZDateTime.from(
+      prayerTimes.timeForPrayer(_currentPrayerName!)!,
+      location,
+    );
+
+    _nextPrayerName = prayerTimes.nextPrayer();
+    _nextPrayer = TZDateTime.from(
+      prayerTimes.timeForPrayer(_nextPrayerName!)!,
+      location,
+    );
+
+    _timeToNextPrayer.value = _printDuration(_nextPrayer!.difference(date));
+
+    // Sunnah Times
+    SunnahTimes sunnahTimes = SunnahTimes(prayerTimes);
+    _middleOfTheNight = TZDateTime.from(sunnahTimes.middleOfTheNight, location);
+    _lastThirdOfTheNight =
+        TZDateTime.from(sunnahTimes.lastThirdOfTheNight, location);
+
+    // Qibla Direction
+    _qiblaDirection = Qibla.qibla(coordinates);
 
     switch (_currentPrayerName) {
       // TODO what to do with these?
-      // static String Sunrise = 'sunrise';
-      // static String IshaBefore = 'ishabefore';
-      // static String FajrAfter = 'fajrafter';
-      // static String None = 'none';
+      // 'sunrise';
+      // 'ishabefore';
+      // 'fajrafter';
+      // 'none';
+      case ('none'):
       case ('fajr'):
+      case ('sunrise'):
+      case ('fajrafter'):
         {
           _activeSalah.value = FARD_SALAH.Fajr;
           break;
@@ -206,24 +278,12 @@ class QuestController extends GetxController {
           break;
         }
       case ('isha'):
+      case ('ishabefore'):
         {
           _activeSalah.value = FARD_SALAH.Isha;
           break;
         }
     }
-
-    _currentPrayer = prayerTimes.timeForPrayer(_currentPrayerName!);
-    _nextPrayerName = prayerTimes.nextPrayer();
-    _nextPrayer = prayerTimes.timeForPrayer(_nextPrayerName!);
-
-    // Sunnah Times
-    SunnahTimes sunnahTimes = SunnahTimes(prayerTimes);
-    _middleOfTheNight = TZDateTime.from(sunnahTimes.middleOfTheNight, location);
-    _lastThirdOfTheNight =
-        TZDateTime.from(sunnahTimes.lastThirdOfTheNight, location);
-
-    // Qibla Direction
-    _qiblaDirection = Qibla.qibla(coordinates);
 
     print('***** Current Local Time: $date');
     print('***** Time Zone: "${date.timeZoneName}"');
@@ -248,5 +308,7 @@ class QuestController extends GetxController {
 
     print('***** Qibla Direction:');
     print('qibla: $_qiblaDirection');
+
+    update();
   }
 }
