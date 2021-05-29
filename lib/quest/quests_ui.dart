@@ -202,17 +202,7 @@ class AddQuest extends StatelessWidget {
   }
 }
 
-enum FARD_SALAH {
-  Fajr,
-  Dhuhr,
-  Asr,
-  Maghrib,
-  Isha,
-}
-
 class QuestsActive extends StatelessWidget {
-  FARD_SALAH activeSalah = FARD_SALAH.Maghrib;
-
   TextStyle topTitlesTextStyle =
       const TextStyle(color: Colors.white, fontSize: 20.0);
   TextStyle columnTitlesTextStyle =
@@ -384,10 +374,45 @@ class QuestsActive extends StatelessWidget {
                     child: Column(
                       children: [
                         Text(
-                          "Show Sunnah:",
+                          "Show Salah:",
                           style: TextStyle(fontSize: 8),
                         ),
-                        //SizedBox(height: 1),
+                        InkWell(
+                          onTap: () {
+                            c.toggleShowSunnahJummah();
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                            child: Container(
+                              height: 15,
+                              color: Colors.lightBlue.shade800
+                                  .withOpacity(c.showSunnahJummah ? 1 : 0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  c.showSunnahJummah
+                                      ? Icon(
+                                          Icons.check_box_outlined,
+                                          size: 10,
+                                          color: Colors.white,
+                                        )
+                                      : Icon(
+                                          Icons
+                                              .check_box_outline_blank_outlined,
+                                          size: 10,
+                                          color: Colors.white,
+                                        ),
+                                  Text(
+                                    'Jummah'
+                                    '     ',
+                                    style: TextStyle(fontSize: 8),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 2),
                         InkWell(
                           onTap: () {
                             c.toggleShowSunnahMuak();
@@ -402,13 +427,19 @@ class QuestsActive extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   c.showSunnahMuak
-                                      ? Icon(Icons.check_box_outlined, size: 10)
+                                      ? Icon(
+                                          Icons.check_box_outlined,
+                                          size: 10,
+                                          color: Colors.white,
+                                        )
                                       : Icon(
                                           Icons
                                               .check_box_outline_blank_outlined,
-                                          size: 10),
+                                          size: 10,
+                                          color: Colors.white,
+                                        ),
                                   Text(
-                                    "Muakkadah",
+                                    'Muakkadah',
                                     style: TextStyle(fontSize: 8),
                                   ),
                                 ],
@@ -431,14 +462,20 @@ class QuestsActive extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   c.showSunnahNafl
-                                      ? Icon(Icons.check_box_outlined, size: 10)
+                                      ? Icon(
+                                          Icons.check_box_outlined,
+                                          size: 10,
+                                          color: Colors.white,
+                                        )
                                       : Icon(
                                           Icons
                                               .check_box_outline_blank_outlined,
-                                          size: 10),
+                                          size: 10,
+                                          color: Colors.white,
+                                        ),
                                   Text(
-                                    "Nafl"
-                                    "              ", // TODO fix center hack
+                                    'Nafl'
+                                    '              ', // TODO fix center hack
                                     style: TextStyle(fontSize: 8),
                                   ),
                                 ],
@@ -458,6 +495,53 @@ class QuestsActive extends StatelessWidget {
     );
   }
 
+  String getSalahTimes(DateTime? startTime, DateTime? endTime) {
+    if (startTime == null) {
+      return '-';
+    }
+
+    //"${d.year.toString()}-${d.month.toString().padLeft(2,'0')}-${d.day.toString().padLeft(2,'0')} ${d.hour.toString()}-${d.minute.toString()}";
+
+    int startHour = startTime.hour;
+    int startMinute = startTime.minute;
+    String startAmPm = '';
+    if (cQust.show12HourClock) {
+      if (startHour > 12) {
+        startHour -= 12;
+        startAmPm = ' PM';
+      } else {
+        startAmPm = ' AM';
+      }
+    }
+
+    String endTimeString = '';
+    if (endTime != null) {
+      int endHour = endTime.hour;
+      int endMinute = endTime.minute;
+      String endAmPm = '';
+
+      if (cQust.show12HourClock) {
+        if (endHour > 12) {
+          endHour -= 12;
+          endAmPm = ' PM';
+        } else {
+          endAmPm = ' AM';
+        }
+        endTimeString =
+            '-${endHour.toString()}:${endMinute.toString().padLeft(2, '0')}$endAmPm';
+
+        if (startAmPm == endAmPm) {
+          startAmPm = ''; // if AM/PM are same, don't show twice
+        }
+      } else {
+        endTimeString =
+            '-${endHour.toString()}:${endMinute.toString().padLeft(2, '0')}';
+      }
+    }
+
+    return '${startHour.toString()}:${startMinute.toString().padLeft(2, '0')}$startAmPm$endTimeString';
+  }
+
   SliverPersistentHeader SalahActions(
     final FARD_SALAH fardSalah,
     final String rakatNaflBefore,
@@ -465,34 +549,17 @@ class QuestsActive extends StatelessWidget {
     final String rakatFard,
     final String rakatMuakAfter,
     final String rakatNaflAfter,
-  ) {
+    final DateTime? salahTimeStart, {
+    final DateTime? salahTimeEnd,
+    final bool isFriday = false,
+  }) {
     const double boxHeight = 75;
     const Color textColor = Colors.white;
     TextStyle actionTextStyle = const TextStyle(
         color: textColor, fontSize: 12.0, fontWeight: FontWeight.bold);
 
-    bool isActiveSalah = fardSalah == activeSalah;
-
-    List<String> startTimeList = [
-      '05:21:31',
-      '12:21:31',
-      '17:21:31',
-      '19:21:31',
-      '21:21:31'
-    ];
-    List<String> endTimeList = [
-      '06:21:31',
-      '13:21:31',
-      '18:21:31',
-      '21:21:31',
-      '05:21:31'
-    ];
-
-    final String startTime = startTimeList[fardSalah.index];
-    final String endTime = endTimeList[fardSalah.index];
-
     return SliverPersistentHeader(
-      pinned: fardSalah == activeSalah,
+      pinned: fardSalah == cQust.activeSalah, // TODO cQust needed i believe
       delegate: _SliverAppBarDelegate(
         minHeight: boxHeight,
         maxHeight: boxHeight,
@@ -527,36 +594,41 @@ class QuestsActive extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              // TODO Row not needed can remove
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  fardSalah.toString().split('.').last,
-                                  style: actionTextStyle,
+                                  isFriday
+                                      ? 'Jummah'
+                                      : fardSalah.toString().split('.').last,
+                                  style: const TextStyle(
+                                      color: textColor,
+                                      fontSize: 15.0,
+                                      fontWeight: FontWeight.bold),
                                   textAlign: TextAlign.center,
                                 ),
-                                //SizedBox(height: 10),
-                                Icon(Icons.alarm_outlined,
-                                    size: 25, color: Colors.white),
                               ],
                             ),
                             SizedBox(height: 10),
                             Row(
-                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Text(
-                                  startTime,
-                                  style: actionTextStyle,
-                                  textAlign: TextAlign.center,
+                                InkWell(
+                                  onTap: () {
+                                    c.toggleShow12HourClock();
+                                  },
+                                  child: Text(
+                                    getSalahTimes(salahTimeStart, salahTimeEnd),
+                                    style: actionTextStyle,
+                                    textAlign: TextAlign.center,
+                                  ),
                                 ),
-                                Text(
-                                  '-',
-                                  style: actionTextStyle,
-                                  textAlign: TextAlign.center,
-                                ),
-                                Text(
-                                  endTime,
-                                  style: actionTextStyle,
-                                  textAlign: TextAlign.center,
+                                InkWell(
+                                  onTap: () {
+                                    c.toggleSalahAlarm(fardSalah);
+                                  },
+                                  child: Icon(Icons.alarm_outlined,
+                                      size: 20, color: Colors.white),
                                 ),
                               ],
                             ),
@@ -566,34 +638,6 @@ class QuestsActive extends StatelessWidget {
                     ),
                   ),
                 ),
-                // Expanded(
-                //   flex: 1000,
-                //   child: Container(
-                //     color: Colors.lightBlue.shade700,
-                //     child: Column(
-                //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                //       children: [
-                //         Text(
-                //           startTime,
-                //           style: actionTextStyle,
-                //           textAlign: TextAlign.center,
-                //         ),
-                //         Divider(
-                //           height: 2,
-                //           thickness: 1,
-                //           color: textColor,
-                //           // indent: 8,
-                //           // endIndent: 8,
-                //         ),
-                //         Text(
-                //           endTime,
-                //           style: actionTextStyle,
-                //           textAlign: TextAlign.center,
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ),
                 if (showSunnahColumns)
                   Expanded(
                     flex: 1000,
@@ -687,6 +731,32 @@ class QuestsActive extends StatelessWidget {
                               child: Center(
                                 child: Text(
                                   rakatMuakAfter,
+                                  style: actionTextStyle,
+                                ),
+                              ),
+                            ),
+                          ),
+                        if (c.isFriday() &&
+                            c.showSunnahJummah &&
+                            c.showSunnahMuak &&
+                            fardSalah == FARD_SALAH.Dhuhr)
+                          Divider(
+                            height: 1,
+                            thickness: 1,
+                            color: textColor,
+                            // indent: 8,
+                            // endIndent: 8,
+                          ),
+                        if (c.isFriday() &&
+                            c.showSunnahJummah &&
+                            c.showSunnahMuak &&
+                            fardSalah == FARD_SALAH.Dhuhr)
+                          Expanded(
+                            child: Container(
+                              color: Colors.green,
+                              child: Center(
+                                child: Text(
+                                  '2',
                                   style: actionTextStyle,
                                 ),
                               ),
@@ -792,15 +862,12 @@ class QuestsActive extends StatelessWidget {
 
   SliverPersistentHeader spacingHeader(FARD_SALAH fardSalah) {
     return SliverPersistentHeader(
-      pinned: fardSalah == activeSalah,
+      pinned: fardSalah == cQust.activeSalah,
       delegate: _SliverAppBarDelegate(
         minHeight: 5.0,
         maxHeight: 5.0,
         child: Container(
           color: Colors.black,
-          // child: Center(
-          //   child: Text(''),
-          // ),
         ),
       ),
     );
@@ -814,9 +881,6 @@ class QuestsActive extends StatelessWidget {
         maxHeight: 5.0,
         child: Container(
           color: Colors.black,
-          // child: Center(
-          //   child: Text(''),
-          // ),
         ),
       ),
     );
@@ -824,8 +888,6 @@ class QuestsActive extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isJummah = false;
-
     return GetBuilder<QuestController>(
       init: QuestController(),
       builder: (c) => Container(
@@ -840,7 +902,7 @@ class QuestsActive extends StatelessWidget {
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
-                  title: SalahAppBar(activeSalah),
+                  title: SalahAppBar(c.activeSalah),
                   background: Swiper(
                     itemCount: 1,
                     itemBuilder: (BuildContext context, int index) =>
@@ -854,17 +916,21 @@ class QuestsActive extends StatelessWidget {
             ),
             sliverSpaceHeader(true),
             //SalahHeader(activeSalah),
-            SalahActions(FARD_SALAH.Fajr, '', '2', '2', '', ''),
+            SalahActions(FARD_SALAH.Fajr, '', '2', '2', '', '', c.fajr,
+                salahTimeEnd: c.sunrise),
             spacingHeader(FARD_SALAH.Fajr),
-            isJummah
-                ? SalahActions(FARD_SALAH.Dhuhr, '', '4', '2', '4+2', '2')
-                : SalahActions(FARD_SALAH.Dhuhr, '', '4', '4', '2', '2'),
+            c.isFriday() && c.showSunnahJummah
+                ? SalahActions(
+                    FARD_SALAH.Dhuhr, '', '4', '2', '4', '2', c.dhuhr,
+                    isFriday: true)
+                : SalahActions(
+                    FARD_SALAH.Dhuhr, '', '4', '4', '2', '2', c.dhuhr),
             spacingHeader(FARD_SALAH.Dhuhr),
-            SalahActions(FARD_SALAH.Asr, '4', '', '4', '', ''),
+            SalahActions(FARD_SALAH.Asr, '4', '', '4', '', '', c.asr),
             spacingHeader(FARD_SALAH.Asr),
-            SalahActions(FARD_SALAH.Maghrib, '', '', '3', '2', '2'),
+            SalahActions(FARD_SALAH.Maghrib, '', '', '3', '2', '2', c.maghrib),
             spacingHeader(FARD_SALAH.Maghrib),
-            SalahActions(FARD_SALAH.Isha, '4', '', '4', '2', '2'),
+            SalahActions(FARD_SALAH.Isha, '4', '', '4', '2', '2', c.isha),
             spacingHeader(FARD_SALAH.Isha),
             SliverGrid(
               gridDelegate: new SliverGridDelegateWithMaxCrossAxisExtent(
