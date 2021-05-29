@@ -886,6 +886,19 @@ class QuestsActive extends StatelessWidget {
     );
   }
 
+  SliverPersistentHeader sliverSpaceHeader2(bool pinned) {
+    return SliverPersistentHeader(
+      pinned: pinned,
+      delegate: _SliverAppBarDelegate(
+        minHeight: 100.0,
+        maxHeight: 100.0,
+        child: Container(
+          color: Colors.black,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<QuestController>(
@@ -932,24 +945,32 @@ class QuestsActive extends StatelessWidget {
             spacingHeader(FARD_SALAH.Maghrib),
             SalahActions(FARD_SALAH.Isha, '4', '', '4', '2', '2', c.isha),
             spacingHeader(FARD_SALAH.Isha),
-            SliverGrid(
-              gridDelegate: new SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 200.0,
-                mainAxisSpacing: 10.0,
-                crossAxisSpacing: 10.0,
-                childAspectRatio: 4.0,
-              ),
-              delegate: new SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return new Container(
-                    alignment: Alignment.center,
-                    color: Colors.teal[100 * (index % 9)],
-                    child: new Text('grid item $index'),
-                  );
-                },
-                childCount: 20,
-              ),
-            ),
+            sliverSpaceHeader2(false),
+            sliverSpaceHeader2(false),
+            sliverSpaceHeader2(false),
+            sliverSpaceHeader2(false),
+            sliverSpaceHeader2(false),
+            sliverSpaceHeader2(false),
+            sliverSpaceHeader2(false),
+            sliverSpaceHeader2(false),
+            // SliverGrid(
+            //   gridDelegate: new SliverGridDelegateWithMaxCrossAxisExtent(
+            //     maxCrossAxisExtent: 200.0,
+            //     mainAxisSpacing: 10.0,
+            //     crossAxisSpacing: 10.0,
+            //     childAspectRatio: 4.0,
+            //   ),
+            //   delegate: new SliverChildBuilderDelegate(
+            //     (BuildContext context, int index) {
+            //       return new Container(
+            //         alignment: Alignment.center,
+            //         color: Colors.teal[100 * (index % 9)],
+            //         child: new Text('grid item $index'),
+            //       );
+            //     },
+            //     childCount: 20,
+            //   ),
+            // ),
           ],
         ),
       ),
