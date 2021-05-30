@@ -770,43 +770,55 @@ class QuestsActive extends StatelessWidget {
                     ),
                   ),
                 Expanded(
-                  flex: 1000,
-                  child: Container(
-                    color: Colors.purple,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "Thikr",
-                          style: actionTextStyle,
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 1000,
-                  child: Container(
-                    color: Colors.black,
-                    // color: isActiveSalah
-                    //     ? Colors.green // make active salah stand out
-                    //     : Colors.black, // hide slivers scrolling behind
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topRight: const Radius.circular(15.0),
-                        bottomRight: const Radius.circular(15.0),
-                      ),
-                      child: Container(
-                        color: Colors.cyan,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text('Dua', style: actionTextStyle),
-                          ],
+                  flex: 800,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(
+                        child: Container(
+                          color: Colors.black,
+                          // color: isActiveSalah
+                          //     ? Colors.green // make active salah stand out
+                          //     : Colors.black, // hide slivers scrolling behind
+                          child: ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                              topRight: const Radius.circular(15.0),
+                            ),
+                            child: Container(
+                              color: Colors.purple,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text('Thikr', style: actionTextStyle),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
+                      Expanded(
+                        child: Container(
+                          color: Colors.black,
+                          // color: isActiveSalah
+                          //     ? Colors.green // make active salah stand out
+                          //     : Colors.black, // hide slivers scrolling behind
+                          child: ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                              bottomRight: const Radius.circular(15.0),
+                            ),
+                            child: Container(
+                              color: Colors.cyan,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text('Dua', style: actionTextStyle),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],
