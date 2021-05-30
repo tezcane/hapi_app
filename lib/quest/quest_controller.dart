@@ -189,11 +189,11 @@ class QuestController extends GetxController {
     _fajrAfter = TZDateTime.from(prayerTimes.fajrafter!, tz);
 
     // Convenience Utilities
-    _currPrayerName = prayerTimes.currentPrayer(date: date);
+    _currPrayerName = prayerTimes.currentPrayer(date);
     _currPrayer =
         TZDateTime.from(prayerTimes.timeForPrayer(_currPrayerName!)!, tz);
 
-    _nextPrayerName = prayerTimes.nextPrayer();
+    _nextPrayerName = prayerTimes.nextPrayer(date);
     _nextPrayer =
         TZDateTime.from(prayerTimes.timeForPrayer(_nextPrayerName!)!, tz);
 

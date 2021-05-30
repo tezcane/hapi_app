@@ -1,11 +1,9 @@
-import 'dart:math';
-
 double degreesToRadians(double degrees) {
-  return (degrees * pi) / 180.0;
+  return (degrees * 3.1415926535897932) / 180.0;
 }
 
 double radiansToDegrees(double radians) {
-  return (radians * 180.0) / pi;
+  return (radians * 180.0) / 3.1415926535897932;
 }
 
 double normalizeToScale(double number, double max) {

@@ -1,9 +1,6 @@
 class Coordinates {
-  late double latitude;
-  late double longitude;
+  final double latitude;
+  final double longitude;
 
-  Coordinates(latitude, longitude) {
-    this.latitude = latitude;
-    this.longitude = longitude;
-  }
+  Coordinates(this.latitude, this.longitude);
 }

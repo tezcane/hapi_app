@@ -8,9 +8,9 @@ import 'package:hapi/quest/athan/SolarTime.dart';
 import 'package:hapi/quest/athan/TimeComponents.dart';
 
 class PrayerTimes {
-  late Coordinates coordinates;
-  late DateTime date;
-  late CalculationParameters calculationParameters;
+  final Coordinates coordinates;
+  final DateTime date;
+  final CalculationParameters calculationParameters;
 
   DateTime? fajr;
   DateTime? sunrise;
@@ -23,13 +23,12 @@ class PrayerTimes {
 
   // TODO: added precision
   // rounded nightfraction
-  PrayerTimes(Coordinates coordinates, DateTime date,
-      CalculationParameters calculationParameters,
-      {precision: false}) {
-    this.coordinates = coordinates;
-    this.date = date;
-    this.calculationParameters = calculationParameters;
-
+  PrayerTimes(
+    this.coordinates,
+    this.date,
+    this.calculationParameters, {
+    precision: false,
+  }) {
     DateTime dateBefore = date.subtract(Duration(days: 1));
     DateTime dateAfter = date.add(Duration(days: 1));
     // todo
@@ -98,25 +97,23 @@ class PrayerTimes {
       }
     }
 
-    DateTime safeFajrAfter() {
-      if (calculationParameters.method == "MoonsightingCommittee") {
-        return Astronomical.seasonAdjustedMorningTwilight(
-            coordinates.latitude, dayOfYear(date), date.year, sunriseTime);
-      } else {
-        var portion = calculationParameters.nightPortions()["fajr"];
-        nightFraction = portion * night;
-        return dateByAddingSeconds(sunriseTime, -nightFraction!.round());
-      }
-    }
+    // DateTime safeFajrAfter() {
+    //   if (calculationParameters.method == "MoonsightingCommittee") {
+    //     return Astronomical.seasonAdjustedMorningTwilight(
+    //         coordinates.latitude, dayOfYear(date), date.year, sunriseTime);
+    //   } else {
+    //     var portion = calculationParameters.nightPortions()["fajr"];
+    //     nightFraction = portion * night;
+    //     return dateByAddingSeconds(sunriseTime, -nightFraction!.round());
+    //   }
+    // }
 
-    if (fajrTime == null ||
-        fajrTime.millisecondsSinceEpoch == double.nan ||
+    if (fajrTime.millisecondsSinceEpoch == double.nan ||
         safeFajr().isAfter(fajrTime)) {
       fajrTime = safeFajr();
     }
 
-    if (fajrafterTime == null ||
-        fajrafterTime.millisecondsSinceEpoch == double.nan ||
+    if (fajrafterTime.millisecondsSinceEpoch == double.nan ||
         safeFajr().isAfter(fajrafterTime)) {
       fajrafterTime = safeFajr();
     }
@@ -165,14 +162,12 @@ class PrayerTimes {
         }
       }
 
-      if (ishaTime == null ||
-          ishaTime.millisecondsSinceEpoch == double.nan ||
+      if (ishaTime.millisecondsSinceEpoch == double.nan ||
           safeIsha().isBefore(ishaTime)) {
         ishaTime = safeIsha();
       }
 
-      if (ishabeforeTime == null ||
-          ishabeforeTime.millisecondsSinceEpoch == double.nan ||
+      if (ishabeforeTime.millisecondsSinceEpoch == double.nan ||
           safeIshaBefore().isBefore(ishabeforeTime)) {
         ishabeforeTime = safeIshaBefore();
       }
@@ -250,7 +245,7 @@ class PrayerTimes {
     }
   }
 
-  currentPrayer({required DateTime date}) {
+  currentPrayer(DateTime date) {
     // if (date == null) {
     //   date = DateTime.now();
     // }
@@ -271,10 +266,10 @@ class PrayerTimes {
     }
   }
 
-  nextPrayer({DateTime? date}) {
-    if (date == null) {
-      date = DateTime.now();
-    }
+  nextPrayer(DateTime date) {
+    // if (date == null) {
+    //   date = DateTime.now();
+    // }
     if (date.isAfter(this.isha!)) {
       return Prayer.FajrAfter;
     } else if (date.isAfter(this.maghrib!)) {

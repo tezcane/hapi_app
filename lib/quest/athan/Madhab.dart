@@ -1,18 +1,16 @@
-class Madhab {
-  // Madhab(){}
-  static const String Shafi = 'shafi';
-  static const String Hanafi = 'hanafi';
+enum Madhab {
+  Hanafi,
+  Hanbali,
+  Jafari,
+  Maliki,
+  Shafi,
 }
 
-shadowLength(madhab) {
-  const shafi = Madhab.Shafi;
-  const hanafi = Madhab.Hanafi;
+int shadowLength(Madhab madhab) {
   switch (madhab) {
-    case shafi:
-      return 1;
-    case hanafi:
+    case Madhab.Hanafi:
       return 2;
     default:
-      throw "Invalid Madhab";
+      return 1;
   }
 }

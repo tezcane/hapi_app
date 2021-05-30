@@ -7,9 +7,10 @@ class CalculationParameters {
   late double ishaAngle;
   double? ishaInterval;
   double? maghribAngle;
-  String? madhab;
 
-  String? highLatitudeRule;
+  Madhab madhab = Madhab.Hanafi;
+  HighLatitudeRule highLatitudeRule = HighLatitudeRule.MiddleOfTheNight;
+
   late Map adjustments;
   late Map methodAdjustments;
 
@@ -19,9 +20,9 @@ class CalculationParameters {
     this.fajrAngle = fajrAngle;
     this.ishaAngle = ishaAngle;
     this.ishaInterval = ishaInterval ?? 0.0;
-    this.maghribAngle = maghribAngle;
-    this.madhab = Madhab.Shafi;
-    this.highLatitudeRule = HighLatitudeRule.MiddleOfTheNight;
+    this.maghribAngle = maghribAngle; // TODO default?
+    //this.madhab = Madhab.Hanafi;
+    //this.highLatitudeRule = HighLatitudeRule.MiddleOfTheNight;
     this.adjustments = {
       'fajr': 0,
       'sunrise': 0,
