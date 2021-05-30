@@ -70,14 +70,15 @@ class QuestController extends GetxController {
   DateTime? _isha;
   DateTime? _ishaBefore;
   DateTime? _fajrAfter;
-  String? _currentPrayerName;
-  DateTime? _currentPrayer;
+  String? _currPrayerName;
+  DateTime? _currPrayer;
   String? _nextPrayerName;
   DateTime? _nextPrayer;
   DateTime? _middleOfTheNight;
   DateTime? _lastThirdOfTheNight;
   double? _qiblaDirection;
-  RxString _timeToNextPrayer = '-'.obs;
+  RxString _nextPrayerTime = '-'.obs;
+  int _secsToNextPrayer = 86401; // make big so first call doesn' retrigger init
 
   DateTime? get fajr => _fajr;
   DateTime? get sunrise => _sunrise;
@@ -87,18 +88,17 @@ class QuestController extends GetxController {
   DateTime? get isha => _isha;
   DateTime? get ishaBefore => _ishaBefore;
   DateTime? get fajrAfter => _fajrAfter;
-  String? get currentPrayerName => _currentPrayerName;
-  DateTime? get currentPrayer => _currentPrayer;
+  String? get currentPrayerName => _currPrayerName;
+  DateTime? get currentPrayer => _currPrayer;
   String? get nextPrayerName => _nextPrayerName;
   DateTime? get nextPrayer => _nextPrayer;
   DateTime? get middleOfTheNight => _middleOfTheNight;
   DateTime? get lastThirdOfTheNight => _lastThirdOfTheNight;
   double? get qiblaDirection => _qiblaDirection;
-  String get timeToNextPrayer => _timeToNextPrayer.value;
+  String get timeToNextPrayer => _nextPrayerTime.value;
 
-  Location? _location;
-//Coordinates _coordinates = Coordinates(37.3382, -121.8863);
-  Coordinates _coordinates = Coordinates(36.950663449472, -122.05716133118);
+  Location? _timeZone;
+  Coordinates _gps = Coordinates(36.950663449472, -122.05716133118);
 
   @override
   void onInit() {
@@ -156,99 +156,47 @@ class QuestController extends GetxController {
     String timeZone = await FlutterNativeTimezone.getLocalTimezone();
     print('***** Time Zone: "$timeZone"');
 
-    _location = getLocation(timeZone); // 'America/Los_Angeles'
+    _timeZone = getLocation(timeZone); // 'America/Los_Angeles'
+    _gps = Coordinates(37.3382, -121.8863); // San Jose // TODO
 
-    //Coordinates _coordinates = Coordinates(37.3382, -121.8863); // TODO
+    _qiblaDirection = Qibla.qibla(_gps); // Qibla Direction TODO
 
-    initSalahTimes(_location!, _coordinates);
-
-    startRecursiveNextPrayerTimer();
-  }
-
-  // TODO rename me
-  String _printDuration(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, "0");
-    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
-    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
-    return "${duration.inHours}:$twoDigitMinutes:$twoDigitSeconds";
-  }
-
-  // TODO tune this, put timer in another controller for optimization?
-  void startRecursiveNextPrayerTimer() {
-    Timer(Duration(seconds: 1), () {
-      DateTime date = TZDateTime.from(DateTime.now(), _location!);
-      CalculationParameters params = CalculationMethod.NorthAmerica();
-      params.madhab = Madhab.Hanafi;
-      PrayerTimes prayerTimes =
-          PrayerTimes(_coordinates, date, params, precision: false);
-
-      // Convenience Utilities
-      _currentPrayerName = prayerTimes.currentPrayer(date: date);
-      _currentPrayer = TZDateTime.from(
-        prayerTimes.timeForPrayer(_currentPrayerName!)!,
-        _location!,
-      );
-
-      _nextPrayerName = prayerTimes.nextPrayer();
-      _nextPrayer = TZDateTime.from(
-        prayerTimes.timeForPrayer(_nextPrayerName!)!,
-        _location!,
-      );
-
-      _timeToNextPrayer.value = _printDuration(_nextPrayer!.difference(date));
-
-      update();
-
-      startRecursiveNextPrayerTimer();
-    });
-  }
-
-  initSalahTimes(Location location, Coordinates coordinates) async {
-    // Definitions
-    DateTime date = TZDateTime.from(DateTime.now(), location);
-
-    // Parameters
+    // TODO precision and salah settings
+    DateTime date = TZDateTime.from(DateTime.now(), _timeZone!);
     CalculationParameters params = CalculationMethod.NorthAmerica();
     params.madhab = Madhab.Hanafi;
-    PrayerTimes prayerTimes =
-        PrayerTimes(coordinates, date, params, precision: false);
+    PrayerTimes prayerTimes = PrayerTimes(_gps, date, params, precision: false);
 
+    initSalahTimes(date, prayerTimes, _timeZone!);
+  }
+
+  initSalahTimes(DateTime date, PrayerTimes prayerTimes, Location tz) async {
     // Prayer times
-    _fajr = TZDateTime.from(prayerTimes.fajr!, location);
-    _sunrise = TZDateTime.from(prayerTimes.sunrise!, location);
-    _dhuhr = TZDateTime.from(prayerTimes.dhuhr!, location);
-    _asr = TZDateTime.from(prayerTimes.asr!, location);
-    _maghrib = TZDateTime.from(prayerTimes.maghrib!, location);
-    _isha = TZDateTime.from(prayerTimes.isha!, location);
+    _fajr = TZDateTime.from(prayerTimes.fajr!, tz);
+    _sunrise = TZDateTime.from(prayerTimes.sunrise!, tz);
+    _dhuhr = TZDateTime.from(prayerTimes.dhuhr!, tz);
+    _asr = TZDateTime.from(prayerTimes.asr!, tz);
+    _maghrib = TZDateTime.from(prayerTimes.maghrib!, tz);
+    _isha = TZDateTime.from(prayerTimes.isha!, tz);
 
-    _ishaBefore = TZDateTime.from(prayerTimes.ishabefore!, location);
-    _fajrAfter = TZDateTime.from(prayerTimes.fajrafter!, location);
+    _ishaBefore = TZDateTime.from(prayerTimes.ishabefore!, tz);
+    _fajrAfter = TZDateTime.from(prayerTimes.fajrafter!, tz);
 
     // Convenience Utilities
-    _currentPrayerName = prayerTimes.currentPrayer(date: date);
-    _currentPrayer = TZDateTime.from(
-      prayerTimes.timeForPrayer(_currentPrayerName!)!,
-      location,
-    );
+    _currPrayerName = prayerTimes.currentPrayer(date: date);
+    _currPrayer =
+        TZDateTime.from(prayerTimes.timeForPrayer(_currPrayerName!)!, tz);
 
     _nextPrayerName = prayerTimes.nextPrayer();
-    _nextPrayer = TZDateTime.from(
-      prayerTimes.timeForPrayer(_nextPrayerName!)!,
-      location,
-    );
-
-    _timeToNextPrayer.value = _printDuration(_nextPrayer!.difference(date));
+    _nextPrayer =
+        TZDateTime.from(prayerTimes.timeForPrayer(_nextPrayerName!)!, tz);
 
     // Sunnah Times
     SunnahTimes sunnahTimes = SunnahTimes(prayerTimes);
-    _middleOfTheNight = TZDateTime.from(sunnahTimes.middleOfTheNight, location);
-    _lastThirdOfTheNight =
-        TZDateTime.from(sunnahTimes.lastThirdOfTheNight, location);
+    _middleOfTheNight = TZDateTime.from(sunnahTimes.middleOfTheNight, tz);
+    _lastThirdOfTheNight = TZDateTime.from(sunnahTimes.lastThirdOfTheNight, tz);
 
-    // Qibla Direction
-    _qiblaDirection = Qibla.qibla(coordinates);
-
-    switch (_currentPrayerName) {
+    switch (_currPrayerName) {
       // TODO what to do with these?
       // 'sunrise';
       // 'ishabefore';
@@ -299,7 +247,7 @@ class QuestController extends GetxController {
     print('fajr after:  $_fajrAfter');
 
     print('***** Convenience Utilities:');
-    print('current: $_currentPrayer ($_currentPrayerName)');
+    print('current: $_currPrayer ($_currPrayerName)');
     print('next:    $_nextPrayer ($_nextPrayerName)');
 
     print('***** Sunnah Times:');
@@ -309,6 +257,34 @@ class QuestController extends GetxController {
     print('***** Qibla Direction:');
     print('qibla: $_qiblaDirection');
 
-    update();
+    update(); // update UI with above changes (needed at app init)
+
+    startNextPrayerCountdownTimer();
+  }
+
+  // TODO put timer in another controller for optimization?
+  void startNextPrayerCountdownTimer() {
+    Timer(Duration(seconds: 1), () {
+      DateTime date = TZDateTime.from(DateTime.now(), _timeZone!);
+      Duration nextPrayerDuration = _nextPrayer!.difference(date);
+
+      // if we hit the end of a timer we recalculate all prayer times
+      if (nextPrayerDuration.inSeconds > _secsToNextPrayer) {
+        _secsToNextPrayer = nextPrayerDuration.inSeconds;
+        initLocation(); // does startNextPrayerCountdownTimer();
+      } else {
+        _secsToNextPrayer = nextPrayerDuration.inSeconds;
+        _nextPrayerTime.value = _printHourMinuteSeconds(nextPrayerDuration);
+        update();
+        startNextPrayerCountdownTimer();
+      }
+    });
+  }
+
+  String _printHourMinuteSeconds(Duration duration) {
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+    return "${duration.inHours}:$twoDigitMinutes:$twoDigitSeconds";
   }
 }

@@ -3,6 +3,7 @@
 AC   - AnimationController
 btn  - Button
 C    - Controller
+curr - Current
 dn   - down (use with up: up/dn)
 e    - exception
 idx  - Index
@@ -12,6 +13,7 @@ np   - NavPage
 qust - Quest
 s    - storage/Get Storage
 t    - timeline
+tz   - time zone
 trkh - Tarikh
 
 ## Islamic GLOSSARY
