@@ -1,11 +1,17 @@
 import 'dart:async';
 
-import 'package:adhan_dart/adhan_dart.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:get/get.dart';
 import 'package:hapi/constants/globals.dart';
 import 'package:hapi/controllers/auth_controller.dart';
+import 'package:hapi/quest/athan/CalculationMethod.dart';
+import 'package:hapi/quest/athan/CalculationParameters.dart';
+import 'package:hapi/quest/athan/Coordinates.dart';
+import 'package:hapi/quest/athan/Madhab.dart';
+import 'package:hapi/quest/athan/PrayerTimes.dart';
+import 'package:hapi/quest/athan/Qibla.dart';
+import 'package:hapi/quest/athan/SunnahTimes.dart';
 import 'package:hapi/quest/quest_model.dart';
 import 'package:hapi/services/database.dart';
 import 'package:intl/intl.dart';
