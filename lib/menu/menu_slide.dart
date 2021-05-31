@@ -5,8 +5,8 @@ import 'package:hapi/menu/menu_controller.dart';
 
 class MenuSlide extends StatefulWidget {
   final Widget foregroundPage; // where the app/navigation lives
-  final Widget columnWidget; // right column/verticle menu bar
   final Widget bottomWidget; // bottom row/horizontal menu bar
+  final Widget? settingsWidget; // right column/verticle menu bar
 
   final double scaleWidth;
   final double scaleHeight;
@@ -18,9 +18,9 @@ class MenuSlide extends StatefulWidget {
   const MenuSlide({
     Key? key,
     required this.foregroundPage,
-    required this.columnWidget,
     required this.bottomWidget,
-    this.scaleWidth = 56,
+    this.settingsWidget,
+    this.scaleWidth = 100,
     this.scaleHeight = 56,
     this.slideAnimationDuration = const Duration(milliseconds: 600),
     this.buttonAnimationDuration = const Duration(milliseconds: 650),
@@ -103,7 +103,9 @@ class _MenuSlideState extends State<MenuSlide>
                           minWidth: widget.scaleWidth,
                           maxWidth: widget.scaleWidth,
                         ),
-                        child: widget.columnWidget,
+                        child: Visibility(
+                            visible: cMenu.isMenuShowingSettings(),
+                            child: widget.settingsWidget ?? Column()),
                       ),
                     ),
                     Positioned(

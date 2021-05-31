@@ -6,18 +6,23 @@ import 'package:hapi/menu/menu_slide.dart';
 import 'package:share/share.dart';
 
 class FabNavPage extends StatelessWidget {
-  const FabNavPage({
+  FabNavPage({
     Key? key,
     required this.navPage,
-    required this.columnWidget,
-    required this.bottomWidget,
     required this.foregroundPage,
-  }) : super(key: key);
+    required this.bottomWidget,
+    this.settingsWidget,
+  }) : super(key: key) {
+    hasSettings = settingsWidget != null;
+    cMenu.setShowNavSettings(hasSettings);
+  }
 
   final NavPage navPage;
-  final Widget columnWidget;
-  final Widget bottomWidget;
   final Widget foregroundPage;
+  final Widget bottomWidget;
+  final Widget? settingsWidget;
+
+  late final bool hasSettings; // class var so settings don't show on switch
 
   @override
   Widget build(BuildContext context) {
@@ -35,46 +40,66 @@ class FabNavPage extends StatelessWidget {
                     // disable UI when menu showing
                     child: foregroundPage, // Main page
                   ),
-                  columnWidget: columnWidget, // preferably Column
                   bottomWidget: bottomWidget, // preferably Row
+                  settingsWidget: settingsWidget, // preferably Column
                 ),
               );
             },
             initNavPage: navPage,
             items: kNavs
                 .map(
-                  (nav) => Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  (nav) => Stack(
                     children: [
-                      Stack(
-                        children: [
-                          if (nav.np != NavPage.RELICS)
-                            Icon(nav.icon,
-                                color: Colors.white, size: 36), //THEME
-                          if (nav.np != NavPage.RELICS)
-                            Icon(Icons.star, color: Colors.orange, size: 18),
-
-                          if (nav.np == NavPage.RELICS)
-                            Transform.rotate(
-                              angle: 2.8,
-                              child:
-                                  Icon(nav.icon, color: Colors.white, size: 36),
+                      Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Stack(
+                              children: [
+                                Transform.rotate(
+                                  angle: nav.np == NavPage.RELICS ? 2.8 : 0,
+                                  child: Icon(
+                                    nav.icon,
+                                    color: Colors.white,
+                                    size: 40,
+                                  ),
+                                ),
+                                if (c.getShowBadge(navPage))
+                                  Positioned(
+                                    top: nav.np == NavPage.RELICS ? 8.6 : -2.0,
+                                    right: -2.0,
+                                    child: Transform.rotate(
+                                      angle: nav.np == NavPage.RELICS ? .59 : 0,
+                                      child: Icon(
+                                        Icons.star,
+                                        color: Colors.orange,
+                                        size: 18,
+                                      ),
+                                    ),
+                                  ),
+                              ],
                             ),
-                          if (nav.np == NavPage.RELICS)
-                            Positioned(
-                              top: 4.7,
-                              left: 20.0,
-                              // right: 0.0, bottom: 0.0,
-                              child: Transform.rotate(
-                                angle: .59,
-                                child: Icon(Icons.star,
-                                    color: Colors.orange, size: 18),
+                            Text(
+                              nav.label,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.normal,
                               ),
                             ),
-                        ],
+                          ],
+                        ),
                       ),
-                      Text(nav.label), //THEME
+                      if (hasSettings && nav.np == navPage)
+                        Align(
+                          alignment: Alignment.topRight,
+                          child: Icon(
+                            Icons.settings_applications_outlined,
+                            color: Colors.orange,
+                            size: 27,
+                          ),
+                        ),
                     ],
                   ),
                 )
@@ -106,8 +131,8 @@ class HapiShare extends StatelessWidget {
                   child: Text(
                     'About',
                     style: TextStyle(
-                      //fontSize: 20.0,
-                      fontFamily: 'RobotoMedium',
+                      fontSize: 20.0,
+                      //fontFamily: 'RobotoMedium',
                       color: Colors.white.withOpacity(0.65),
                     ),
                   ),
@@ -149,8 +174,8 @@ class HapiShare extends StatelessWidget {
                   child: Text(
                     'Share',
                     style: TextStyle(
-                      //fontSize: 20.0,
-                      fontFamily: 'RobotoMedium',
+                      fontSize: 20.0,
+                      //fontFamily: 'RobotoMedium',
                       color: Colors.white.withOpacity(0.65),
                     ),
                   ),

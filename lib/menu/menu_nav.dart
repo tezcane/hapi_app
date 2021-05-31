@@ -14,7 +14,7 @@ const bool _enableEdgeDragGesture = true;
 const _kEdgeDragWidth = 20.0;
 
 /// Menu width for the Side Menu.
-const double _kSideMenuWidth = 88.0;
+const double _kSideMenuWidth = 132.0;
 
 /// [Curve] used for the animation
 const Curve _kCurveAnimation = Curves.linear;
@@ -79,19 +79,20 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
     return Material(
       child: LayoutBuilder(
         builder: (context, constraints) {
-          print('constraints.maxHeight=${constraints.maxHeight}');
+          //print('constraints.maxHeight=${constraints.maxHeight}');
 
           int sm = 0; // screen multiplier
           if (constraints.maxHeight > 805) {
-            sm = 4;
-          } else if (constraints.maxHeight > 705) {
-            sm = 3;
-          } else if (constraints.maxHeight > 605) {
-            sm = 2;
-          } else if (constraints.maxHeight > 505) {
             sm = 1;
           }
-          print('sm=$sm');
+          // else if (constraints.maxHeight > 705) {
+          //   sm = 0;
+          // } else if (constraints.maxHeight > 605) {
+          //   sm = 0;
+          // } else if (constraints.maxHeight > 505) {
+          //   sm = 0;
+          // }
+          // print('sm=$sm');
           // was: constraints.maxHeight / widget.items.length;
           // 88 = 16 + 56 + 16 (fabSize and it's padding)
           // +/*  sm since as spacers for big/small screens:
@@ -145,9 +146,11 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
                               ? _kButtonColorSelected
                               : _kButtonColorUnselected,
                           onTap: () {
-                            if (navPage == widget.initNavPage) {
-                              cMenu.hideMenuNav();
-                              // TODO show settings
+                            if (navPage == widget.initNavPage &&
+                                cMenu.getShowNavSettings()) {
+                              cMenu.hideMenuNav(); // shows settings
+                            } else if (navPage == widget.initNavPage) {
+                              cMenu.hideMenu(); // same page selected
                             } else {
                               // selected new nav page
                               cMenu.hideMenu();

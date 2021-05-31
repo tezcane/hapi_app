@@ -24,8 +24,9 @@ class Nav {
 }
 
 const kNavs = const [
-//Nav(page: '/setting', label: 'Settings', icon: Icons.settings_outlined),
+  Nav(np: NavPage.STATS, label: 'Stats', icon: Icons.leaderboard_rounded),
   Nav(np: NavPage.TOOLS, label: 'Tools', icon: Icons.explore_outlined),
+  Nav(np: NavPage.DUA, label: 'Dua', icon: Icons.volunteer_activism),
   Nav(np: NavPage.HADITH, label: 'Hadith', icon: Icons.menu_book_outlined),
   Nav(np: NavPage.QURAN, label: 'Quran', icon: Icons.auto_stories),
   Nav(np: NavPage.TARIKH, label: 'Tarikh', icon: Icons.history_edu_outlined),
@@ -35,7 +36,9 @@ const kNavs = const [
 
 // must keep in sync with _kNavs
 enum NavPage {
+  STATS,
   TOOLS,
+  DUA,
   HADITH,
   QURAN,
   TARIKH,
@@ -59,6 +62,23 @@ class MenuController extends GetxController {
 
   void initACFabIcon(AnimationController ac) => _acFabIcon = ac;
   void initACNavMenu(AnimationController navMenuAC) => _acNavMenu = navMenuAC;
+
+  // TODO looks like a bug in getx for this: https://github.com/jonataslaw/getx/issues/1027
+  // list aligns with enum NavPage above.
+  final RxList<bool> _showBadge =
+      RxList([false, true, true, false, false, false, true, false]);
+  bool getShowBadge(NavPage navPage) => _showBadge[navPage.index];
+  void setShowBadge(NavPage navPage, bool value) {
+    _showBadge[navPage.index] = value;
+    update();
+  }
+
+  RxBool _showNavSettings = false.obs;
+  bool getShowNavSettings() => _showNavSettings.value;
+  void setShowNavSettings(bool value) {
+    _showNavSettings.value = value;
+    Timer(const Duration(seconds: 0), () => update()); // requires new thread
+  }
 
   /// Track pushed pages so we can backtrack to main nav menu page
   // TODO Persist this, where possible, pass in arguments to classes to rebuild:
@@ -152,8 +172,24 @@ class MenuController extends GetxController {
     int transistionMs = 1000,
     Transition transition = Transition.fade,
   }) {
+    _showNavSettings.value = false; // clear last setting icon if was showing
+
     switch (navPage) {
+      case (NavPage.STATS):
+        Get.offAll(
+          () => QuestsUI(),
+          transition: transition,
+          duration: Duration(milliseconds: transistionMs),
+        );
+        break;
       case (NavPage.TOOLS):
+        Get.offAll(
+          () => QuestsUI(),
+          transition: transition,
+          duration: Duration(milliseconds: transistionMs),
+        );
+        break;
+      case (NavPage.DUA):
         Get.offAll(
           () => QuestsUI(),
           transition: transition,
@@ -291,20 +327,17 @@ class MenuController extends GetxController {
   RxBool _isScreenDisabled = false.obs;
   RxBool _isMenuShowing = false.obs;
   RxBool _isMenuShowingNav = false.obs;
-  RxBool _isMenuShowingSpecial = false.obs; // TODO
-  RxBool _isSpecialActionReady = false.obs;
+  RxBool _isMenuShowingSettings = false.obs;
 
   RxBool get isScreenDisabled => _isScreenDisabled;
   RxBool get isMenuShowing => _isMenuShowing;
   RxBool get isMenuShowingNav => _isMenuShowingNav;
-  RxBool get isMenuShowingSpecial => _isMenuShowingSpecial;
-  RxBool get isSpecialActionReady => _isSpecialActionReady;
+  RxBool get isMenuShowingSettings => _isMenuShowingSettings;
 
   void showMenu() {
     _isMenuShowing.value = true;
     _isMenuShowingNav.value = true;
-    _isMenuShowingSpecial.value = false;
-    _isSpecialActionReady.value = false;
+    _isMenuShowingSettings.value = false;
 
     _acFabIcon.forward();
     _acNavMenu.reverse();
@@ -315,8 +348,7 @@ class MenuController extends GetxController {
   void hideMenu() {
     _isMenuShowing.value = false;
     _isMenuShowingNav.value = false;
-    _isMenuShowingSpecial.value = false;
-    _isSpecialActionReady.value = false;
+    _isMenuShowingSettings.value = false;
 
     _acFabIcon.reverse();
     _acNavMenu.forward();
@@ -327,8 +359,7 @@ class MenuController extends GetxController {
   void hideMenuNav() {
     _isMenuShowing.value = true;
     _isMenuShowingNav.value = false;
-    _isMenuShowingSpecial.value = true;
-    _isSpecialActionReady.value = false;
+    _isMenuShowingSettings.value = true;
 
     _acNavMenu.forward();
 

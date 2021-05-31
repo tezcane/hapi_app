@@ -2,12 +2,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:hapi/menu/menu_controller.dart';
-import 'package:hapi/tarikh/main_menu/menu_data.dart';
-import 'package:hapi/tarikh/main_menu/main_menu_section.dart';
-import 'package:hapi/tarikh/colors.dart';
-import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
 import 'package:hapi/menu/fab_nav_page.dart';
+import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/tarikh/colors.dart';
+import 'package:hapi/tarikh/main_menu/main_menu_section.dart';
+import 'package:hapi/tarikh/main_menu/menu_data.dart';
+import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
 
 /// The Main Page of the Timeline App.
 ///
@@ -160,7 +160,7 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
         ),
         body: FabNavPage(
           navPage: NavPage.TARIKH,
-          columnWidget: Column(),
+          settingsWidget: null,
           bottomWidget: HapiShare(),
           foregroundPage: Container(
             color: background, //AppThemes.logoBackground, //background,
