@@ -27,120 +27,118 @@ class QuestsUI extends StatelessWidget {
 }
 
 class ActiveQuestSettings extends StatelessWidget {
+  final TextStyle textStyleTitle =
+      TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14);
+  final TextStyle textStyleBtn =
+      TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14);
   @override
   Widget build(BuildContext context) {
     return GetBuilder<QuestController>(
       init: QuestController(),
       builder: (c) {
         return Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.end,
-          //crossAxisAlignment: CrossAxisAlignment.center,
+          //mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              "Show Salah:",
-              style: TextStyle(fontSize: 13),
+              "Show Sunnah:",
+              style: textStyleTitle,
             ),
-            if (c.isFriday())
-              InkWell(
-                onTap: () {
-                  c.toggleShowSunnahJummah();
-                },
-                child: Padding(
-                  padding: EdgeInsets.only(left: 2.0, right: 2.0),
-                  child: Container(
-                    height: 15,
-                    color: Colors.lightBlue.shade800
-                        .withOpacity(c.showSunnahJummah ? 1 : 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        c.showSunnahJummah
-                            ? Icon(
-                                Icons.check_box_outlined,
-                                size: 10,
-                                color: Colors.white,
-                              )
-                            : Icon(
-                                Icons.check_box_outline_blank_outlined,
-                                size: 10,
-                                color: Colors.white,
-                              ),
-                        Text(
-                          'Jummah'
-                          '     ',
-                          style: TextStyle(fontSize: 12),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            if (c.isFriday()) SizedBox(height: 2),
+            const SizedBox(height: 3),
             InkWell(
               onTap: () {
                 c.toggleShowSunnahMuak();
               },
-              child: Padding(
-                padding: EdgeInsets.only(left: 2.0, right: 2.0),
-                child: Container(
-                  height: 15,
-                  color: Colors.green.withOpacity(c.showSunnahMuak ? 1 : 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      c.showSunnahMuak
-                          ? Icon(
-                              Icons.check_box_outlined,
-                              size: 10,
-                              color: Colors.white,
-                            )
-                          : Icon(
-                              Icons.check_box_outline_blank_outlined,
-                              size: 10,
-                              color: Colors.white,
-                            ),
-                      Text(
-                        'Muakkadah',
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ],
-                  ),
+              child: Container(
+                height: 40,
+                color: Colors.green.withOpacity(c.showSunnahMuak ? 1 : 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    c.showSunnahMuak
+                        ? Icon(
+                            Icons.check_box_outlined,
+                            size: 20,
+                            color: Colors.white,
+                          )
+                        : Icon(
+                            Icons.check_box_outline_blank_outlined,
+                            size: 20,
+                            color: Colors.white,
+                          ),
+                    Text(
+                      'Muakkadah',
+                      style: textStyleBtn,
+                    ),
+                  ],
                 ),
               ),
             ),
-            SizedBox(height: 2),
+            const SizedBox(height: 5),
             InkWell(
               onTap: () {
                 c.toggleShowSunnahNafl();
               },
-              child: Padding(
-                padding: EdgeInsets.only(left: 2.0, right: 2.0),
-                child: Container(
-                  height: 15,
-                  color: Colors.amber.shade700
-                      .withOpacity(c.showSunnahNafl ? 1 : 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      c.showSunnahNafl
-                          ? Icon(
-                              Icons.check_box_outlined,
-                              size: 10,
-                              color: Colors.white,
-                            )
-                          : Icon(
-                              Icons.check_box_outline_blank_outlined,
-                              size: 10,
-                              color: Colors.white,
-                            ),
-                      Text(
-                        'Nafl'
-                        '              ', // TODO fix center hack
-                        style: TextStyle(fontSize: 12),
-                      ),
-                    ],
-                  ),
+              child: Container(
+                height: 40,
+                color:
+                    Colors.amber.shade700.withOpacity(c.showSunnahNafl ? 1 : 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    c.showSunnahNafl
+                        ? Icon(
+                            Icons.check_box_outlined,
+                            size: 20,
+                            color: Colors.white,
+                          )
+                        : Icon(
+                            Icons.check_box_outline_blank_outlined,
+                            size: 20,
+                            color: Colors.white,
+                          ),
+                    Text(
+                      'Nafl',
+                      style: textStyleBtn,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 50),
+            Text(
+              "Show on Friday:",
+              style: textStyleTitle,
+            ),
+            const SizedBox(height: 3),
+            InkWell(
+              onTap: () {
+                c.toggleShowSunnahJummah();
+              },
+              child: Container(
+                height: 40,
+                color: Colors.lightBlue.shade800
+                    .withOpacity(c.showSunnahJummah ? 1 : 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    c.showSunnahJummah
+                        ? Icon(
+                            Icons.check_box_outlined,
+                            size: 20,
+                            color: Colors.white,
+                          )
+                        : Icon(
+                            Icons.check_box_outline_blank_outlined,
+                            size: 20,
+                            color: Colors.white,
+                          ),
+                    Text(
+                      'Jummah',
+                      style: textStyleBtn,
+                    ),
+                  ],
                 ),
               ),
             ),
