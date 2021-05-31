@@ -546,17 +546,15 @@ class QuestsActive extends StatelessWidget {
                 Expanded(
                   flex: 2200,
                   child: Container(
-                    color: Colors.black,
-                    // color: isActiveSalah
-                    //     ? Colors.green // make active salah stand out
-                    //     : Colors.black, // hide slivers scrolling behind
                     child: ClipRRect(
                       borderRadius: const BorderRadius.only(
                         topLeft: const Radius.circular(15.0),
                         bottomLeft: const Radius.circular(15.0),
                       ),
                       child: Container(
-                        color: Colors.lightBlue.shade800,
+                        color: fardSalah == cQust.activeSalah
+                            ? Color(0xFF268E0D)
+                            : Colors.lightBlue.shade800,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [

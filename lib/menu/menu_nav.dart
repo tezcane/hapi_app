@@ -19,8 +19,8 @@ const double _kSideMenuWidth = 132.0;
 /// [Curve] used for the animation
 const Curve _kCurveAnimation = Curves.linear;
 
-const Color _kButtonColorSelected = Color(0xFFFF595E); // TODO theme
-const Color _kButtonColorUnselected = Color(0xFF1F2041);
+const Color _kButtonColorSelected = Color(0xFF268E0D); // TODO theme
+const Color _kButtonColorUnselected = Color(0xFF1D1E33);
 
 /// The [MenuNav] controls the items from the lateral menu.
 class MenuNav extends StatefulWidget {
