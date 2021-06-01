@@ -8,11 +8,13 @@ dn   - down (use with up: up/dn)
 e    - exception
 idx  - Index
 msg  - message
+muak - Muakkadah
 nav  - Navigate/Navigator
 np   - NavPage
 qust - Quest
 s    - storage/Get Storage
 t    - timeline
+thjd - Tahajjud
 tz   - time zone
 trkh - Tarikh
 

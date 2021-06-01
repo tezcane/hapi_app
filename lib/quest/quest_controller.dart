@@ -61,7 +61,10 @@ class QuestController extends GetxController {
   bool isFriday() => _dayOfWeek.value == DAY_OF_WEEK.Friday;
 
   RxBool _showSunnahMuak = true.obs;
-  RxBool _showSunnahNafl = false.obs;
+  RxBool _showSunnahWitr = true.obs;
+  RxBool _showSunnahThjd = true.obs;
+  RxBool _showSunnahDuha = true.obs;
+  RxBool _showSunnahNafl = true.obs;
   RxBool _showJummahOnFriday = true.obs; // if friday and true, shows jummah
   RxBool _show12HourClock = true.obs; // false = 24 hour clock/military time
 
@@ -113,7 +116,10 @@ class QuestController extends GetxController {
     initLocation();
 
     _showSunnahMuak.value = s.read('showSunnahMuak') ?? true;
-    _showSunnahNafl.value = s.read('showSunnahNafl') ?? false;
+    _showSunnahWitr.value = s.read('showSunnahWitr') ?? true;
+    _showSunnahThjd.value = s.read('showSunnahThjd') ?? true;
+    _showSunnahDuha.value = s.read('showSunnahDuha') ?? true;
+    _showSunnahNafl.value = s.read('showSunnahNafl') ?? true;
     _showJummahOnFriday.value = s.read('showJummahOnFriday') ?? true;
     _show12HourClock.value = s.read('show12HourClock') ?? true;
 
@@ -126,13 +132,42 @@ class QuestController extends GetxController {
   }
 
   bool get showSunnahMuak => _showSunnahMuak.value;
+  bool get showSunnahWitr => _showSunnahWitr.value;
+  bool get showSunnahThjd => _showSunnahThjd.value;
+  bool get showSunnahDuha => _showSunnahDuha.value;
   bool get showSunnahNafl => _showSunnahNafl.value;
   bool get showJummahOnFriday => _showJummahOnFriday.value;
   bool get show12HourClock => _show12HourClock.value;
 
   void toggleShowSunnahMuak() {
     _showSunnahMuak.value = !_showSunnahMuak.value;
+
+    // since witr and tahajjud is sunnah muak, enable it when muak is hit
+    if (_showSunnahMuak.value == true) {
+      _showSunnahWitr.value = true;
+      s.write('showSunnahWitr', _showSunnahWitr.value);
+      _showSunnahThjd.value = true;
+      s.write('showSunnahThjd', _showSunnahThjd.value);
+    }
     s.write('showSunnahMuak', _showSunnahMuak.value);
+    update();
+  }
+
+  void toggleShowSunnahWitr() {
+    _showSunnahWitr.value = !_showSunnahWitr.value;
+    s.write('showSunnahWitr', _showSunnahWitr.value);
+    update();
+  }
+
+  void toggleShowSunnahThjd() {
+    _showSunnahThjd.value = !_showSunnahThjd.value;
+    s.write('showSunnahThjd', _showSunnahThjd.value);
+    update();
+  }
+
+  void toggleShowSunnahDuha() {
+    _showSunnahDuha.value = !_showSunnahDuha.value;
+    s.write('showSunnahDuha', _showSunnahDuha.value);
     update();
   }
 

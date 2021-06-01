@@ -82,6 +82,100 @@ class ActiveQuestSettings extends StatelessWidget {
             const SizedBox(height: 5),
             InkWell(
               onTap: () {
+                c.toggleShowSunnahWitr();
+              },
+              child: Container(
+                height: 40,
+                color: Colors.blue.withOpacity(c.showSunnahWitr ? 1 : 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(width: 3),
+                    c.showSunnahWitr
+                        ? Icon(
+                            Icons.check_box_outlined,
+                            size: 20,
+                            color: Colors.white,
+                          )
+                        : Icon(
+                            Icons.check_box_outline_blank_outlined,
+                            size: 20,
+                            color: Colors.white,
+                          ),
+                    Text(
+                      'Witr',
+                      style: textStyleBtn,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 5),
+            InkWell(
+              onTap: () {
+                c.toggleShowSunnahThjd();
+              },
+              child: Container(
+                height: 40,
+                color: Colors.pinkAccent.withOpacity(c.showSunnahThjd ? 1 : 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(width: 3),
+                    c.showSunnahThjd
+                        ? Icon(
+                            Icons.check_box_outlined,
+                            size: 20,
+                            color: Colors.white,
+                          )
+                        : Icon(
+                            Icons.check_box_outline_blank_outlined,
+                            size: 20,
+                            color: Colors.white,
+                          ),
+                    Text(
+                      'Tahajjud',
+                      style: textStyleBtn,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 5),
+            InkWell(
+              onTap: () {
+                c.toggleShowSunnahDuha();
+              },
+              child: Container(
+                height: 40,
+                color: Colors.deepOrangeAccent
+                    .withOpacity(c.showSunnahDuha ? 1 : 0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(width: 3),
+                    c.showSunnahDuha
+                        ? Icon(
+                            Icons.check_box_outlined,
+                            size: 20,
+                            color: Colors.white,
+                          )
+                        : Icon(
+                            Icons.check_box_outline_blank_outlined,
+                            size: 20,
+                            color: Colors.white,
+                          ),
+                    Text(
+                      'Duha',
+                      style: textStyleBtn,
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: 5),
+            InkWell(
+              onTap: () {
                 c.toggleShowSunnahNafl();
               },
               child: Container(
