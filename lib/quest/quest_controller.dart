@@ -45,7 +45,7 @@ DAY_OF_WEEK getDayOfWeek() {
       return dayOfWeek;
     }
   }
-  return DAY_OF_WEEK.Friday; // TODO throw e?
+  return DAY_OF_WEEK.Friday;
 }
 
 class QuestController extends GetxController {
@@ -62,7 +62,7 @@ class QuestController extends GetxController {
 
   RxBool _showSunnahMuak = true.obs;
   RxBool _showSunnahNafl = false.obs;
-  RxBool _showSunnahJummah = true.obs; // switches between dhur and jummah view
+  RxBool _showJummahOnFriday = true.obs; // if friday and true, shows jummah
   RxBool _show12HourClock = true.obs; // false = 24 hour clock/military time
 
   Rx<FARD_SALAH> _activeSalah = FARD_SALAH.Maghrib.obs;
@@ -114,7 +114,7 @@ class QuestController extends GetxController {
 
     _showSunnahMuak.value = s.read('showSunnahMuak') ?? true;
     _showSunnahNafl.value = s.read('showSunnahNafl') ?? false;
-    _showSunnahJummah.value = s.read('showSunnahJummah') ?? true;
+    _showJummahOnFriday.value = s.read('showJummahOnFriday') ?? true;
     _show12HourClock.value = s.read('show12HourClock') ?? true;
 
     // TODO this looks unreliable:
@@ -127,7 +127,7 @@ class QuestController extends GetxController {
 
   bool get showSunnahMuak => _showSunnahMuak.value;
   bool get showSunnahNafl => _showSunnahNafl.value;
-  bool get showSunnahJummah => _showSunnahJummah.value;
+  bool get showJummahOnFriday => _showJummahOnFriday.value;
   bool get show12HourClock => _show12HourClock.value;
 
   void toggleShowSunnahMuak() {
@@ -142,14 +142,14 @@ class QuestController extends GetxController {
     update();
   }
 
-  void toggleShowSunnahJummah() {
-    _showSunnahJummah.value = !_showSunnahJummah.value;
-    s.write('showSunnahJummah', _showSunnahJummah.value);
+  set showJummahOnFriday(bool value) {
+    _showJummahOnFriday.value = value;
+    s.write('showJummahOnFriday', _showJummahOnFriday.value);
     update();
   }
 
-  void toggleShow12HourClock() {
-    _show12HourClock.value = !_show12HourClock.value;
+  set show12HourClock(bool value) {
+    _show12HourClock.value = value;
     s.write('show12HourClock', _show12HourClock.value);
     update();
   }
