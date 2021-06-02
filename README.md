@@ -7,6 +7,7 @@ curr - Current
 dn   - down (use with up: up/dn)
 e    - exception
 idx  - Index
+lr   - left right
 msg  - message
 muak - Muakkadah
 nav  - Navigate/Navigator

@@ -65,6 +65,7 @@ class QuestController extends GetxController {
   RxBool _showSunnahThjd = true.obs;
   RxBool _showSunnahDuha = true.obs;
   RxBool _showSunnahNafl = true.obs;
+  RxBool _showSunnahKey = true.obs;
   RxBool _showJummahOnFriday = true.obs; // if friday and true, shows jummah
   RxBool _show12HourClock = true.obs; // false = 24 hour clock/military time
 
@@ -120,6 +121,7 @@ class QuestController extends GetxController {
     _showSunnahThjd.value = s.read('showSunnahThjd') ?? true;
     _showSunnahDuha.value = s.read('showSunnahDuha') ?? true;
     _showSunnahNafl.value = s.read('showSunnahNafl') ?? true;
+    _showSunnahKey.value = s.read('showSunnahKey') ?? true;
     _showJummahOnFriday.value = s.read('showJummahOnFriday') ?? true;
     _show12HourClock.value = s.read('show12HourClock') ?? true;
 
@@ -136,6 +138,7 @@ class QuestController extends GetxController {
   bool get showSunnahThjd => _showSunnahThjd.value;
   bool get showSunnahDuha => _showSunnahDuha.value;
   bool get showSunnahNafl => _showSunnahNafl.value;
+  bool get showSunnahKey => _showSunnahKey.value;
   bool get showJummahOnFriday => _showJummahOnFriday.value;
   bool get show12HourClock => _show12HourClock.value;
 
@@ -174,6 +177,12 @@ class QuestController extends GetxController {
   void toggleShowSunnahNafl() {
     _showSunnahNafl.value = !_showSunnahNafl.value;
     s.write('showSunnahNafl', _showSunnahNafl.value);
+    update();
+  }
+
+  void toggleShowSunnahKey() {
+    _showSunnahKey.value = !_showSunnahKey.value;
+    s.write('showSunnahKey', _showSunnahKey.value);
     update();
   }
 

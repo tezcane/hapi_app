@@ -44,166 +44,11 @@ class ActiveQuestSettings extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           //crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              "Show Sunnah:",
-              style: textStyleTitle,
-            ),
-            const SizedBox(height: 3),
-            InkWell(
-              onTap: () {
-                c.toggleShowSunnahMuak();
-              },
-              child: Container(
-                height: 40,
-                color: Colors.green.withOpacity(c.showSunnahMuak ? 1 : 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(width: 3),
-                    c.showSunnahMuak
-                        ? Icon(
-                            Icons.check_box_outlined,
-                            size: 20,
-                            color: Colors.white,
-                          )
-                        : Icon(
-                            Icons.check_box_outline_blank_outlined,
-                            size: 20,
-                            color: Colors.white,
-                          ),
-                    Text(
-                      'Muakkadah',
-                      style: textStyleBtn,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 5),
-            InkWell(
-              onTap: () {
-                c.toggleShowSunnahWitr();
-              },
-              child: Container(
-                height: 40,
-                color: Colors.blue.withOpacity(c.showSunnahWitr ? 1 : 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(width: 3),
-                    c.showSunnahWitr
-                        ? Icon(
-                            Icons.check_box_outlined,
-                            size: 20,
-                            color: Colors.white,
-                          )
-                        : Icon(
-                            Icons.check_box_outline_blank_outlined,
-                            size: 20,
-                            color: Colors.white,
-                          ),
-                    Text(
-                      'Witr',
-                      style: textStyleBtn,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 5),
-            InkWell(
-              onTap: () {
-                c.toggleShowSunnahThjd();
-              },
-              child: Container(
-                height: 40,
-                color: Colors.pinkAccent.withOpacity(c.showSunnahThjd ? 1 : 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(width: 3),
-                    c.showSunnahThjd
-                        ? Icon(
-                            Icons.check_box_outlined,
-                            size: 20,
-                            color: Colors.white,
-                          )
-                        : Icon(
-                            Icons.check_box_outline_blank_outlined,
-                            size: 20,
-                            color: Colors.white,
-                          ),
-                    Text(
-                      'Tahajjud',
-                      style: textStyleBtn,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 5),
-            InkWell(
-              onTap: () {
-                c.toggleShowSunnahDuha();
-              },
-              child: Container(
-                height: 40,
-                color: Colors.deepOrangeAccent
-                    .withOpacity(c.showSunnahDuha ? 1 : 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(width: 3),
-                    c.showSunnahDuha
-                        ? Icon(
-                            Icons.check_box_outlined,
-                            size: 20,
-                            color: Colors.white,
-                          )
-                        : Icon(
-                            Icons.check_box_outline_blank_outlined,
-                            size: 20,
-                            color: Colors.white,
-                          ),
-                    Text(
-                      'Duha',
-                      style: textStyleBtn,
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const SizedBox(height: 5),
-            InkWell(
-              onTap: () {
-                c.toggleShowSunnahNafl();
-              },
-              child: Container(
-                height: 40,
-                color:
-                    Colors.amber.shade700.withOpacity(c.showSunnahNafl ? 1 : 0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(width: 3),
-                    c.showSunnahNafl
-                        ? Icon(
-                            Icons.check_box_outlined,
-                            size: 20,
-                            color: Colors.white,
-                          )
-                        : Icon(
-                            Icons.check_box_outline_blank_outlined,
-                            size: 20,
-                            color: Colors.white,
-                          ),
-                    Text(
-                      'Nafl',
-                      style: textStyleBtn,
-                    ),
-                  ],
-                ),
-              ),
+            ShowSunnahSettings(
+              btnHeight: 25,
+              btnGap: 5,
+              fontSize: 14,
+              lrPadding: 0,
             ),
             const SizedBox(height: 45),
             Text(
@@ -254,6 +99,218 @@ class ActiveQuestSettings extends StatelessWidget {
                   c.show12HourClock = false;
                 }
               },
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class ShowSunnahSettings extends StatelessWidget {
+  ShowSunnahSettings({
+    required this.btnHeight,
+    required this.btnGap,
+    required this.fontSize,
+    required this.lrPadding, // left right padding
+  });
+  final double btnHeight;
+  final double btnGap;
+  final double fontSize;
+  final double lrPadding;
+
+  @override
+  Widget build(BuildContext context) {
+    final TextStyle textStyleTitle = TextStyle(
+        color: Colors.white, fontWeight: FontWeight.bold, fontSize: fontSize);
+    final TextStyle textStyleBtn = TextStyle(
+        color: Colors.white, fontWeight: FontWeight.bold, fontSize: fontSize);
+
+    return GetBuilder<QuestController>(
+      init: QuestController(),
+      builder: (c) {
+        return Column(
+          // TODO tune
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          //crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(
+              "Show Sunnah:",
+              style: textStyleTitle,
+            ),
+            SizedBox(height: btnGap > 2 ? btnGap - 2 : 0),
+            InkWell(
+              onTap: () {
+                c.toggleShowSunnahMuak();
+              },
+              child: Padding(
+                padding: EdgeInsets.only(left: lrPadding, right: lrPadding),
+                child: Container(
+                  height: btnHeight,
+                  color: Colors.green.withOpacity(c.showSunnahMuak ? 1 : 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(width: 3),
+                      c.showSunnahMuak
+                          ? Icon(
+                              Icons.check_box_outlined,
+                              size: 12,
+                              color: Colors.white,
+                            )
+                          : Icon(
+                              Icons.check_box_outline_blank_outlined,
+                              size: 12,
+                              color: Colors.white,
+                            ),
+                      Text(
+                        'Muakkadah',
+                        style: textStyleBtn,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: btnGap),
+            InkWell(
+              onTap: () {
+                c.toggleShowSunnahWitr();
+              },
+              child: Padding(
+                padding: EdgeInsets.only(left: lrPadding, right: lrPadding),
+                child: Container(
+                  height: btnHeight,
+                  color: Colors.blue.withOpacity(c.showSunnahWitr ? 1 : 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(width: 3),
+                      c.showSunnahWitr
+                          ? Icon(
+                              Icons.check_box_outlined,
+                              size: 12,
+                              color: Colors.white,
+                            )
+                          : Icon(
+                              Icons.check_box_outline_blank_outlined,
+                              size: 12,
+                              color: Colors.white,
+                            ),
+                      Text(
+                        'Witr',
+                        style: textStyleBtn,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: btnGap),
+            InkWell(
+              onTap: () {
+                c.toggleShowSunnahThjd();
+              },
+              child: Padding(
+                padding: EdgeInsets.only(left: lrPadding, right: lrPadding),
+                child: Container(
+                  height: btnHeight,
+                  color:
+                      Colors.pinkAccent.withOpacity(c.showSunnahThjd ? 1 : 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(width: 3),
+                      c.showSunnahThjd
+                          ? Icon(
+                              Icons.check_box_outlined,
+                              size: 12,
+                              color: Colors.white,
+                            )
+                          : Icon(
+                              Icons.check_box_outline_blank_outlined,
+                              size: 12,
+                              color: Colors.white,
+                            ),
+                      Text(
+                        'Tahajjud',
+                        style: textStyleBtn,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: btnGap),
+            InkWell(
+              onTap: () {
+                c.toggleShowSunnahDuha();
+              },
+              child: Padding(
+                padding: EdgeInsets.only(left: lrPadding, right: lrPadding),
+                child: Container(
+                  height: btnHeight,
+                  color: Colors.deepOrangeAccent
+                      .withOpacity(c.showSunnahDuha ? 1 : 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(width: 3),
+                      c.showSunnahDuha
+                          ? Icon(
+                              Icons.check_box_outlined,
+                              size: 12,
+                              color: Colors.white,
+                            )
+                          : Icon(
+                              Icons.check_box_outline_blank_outlined,
+                              size: 12,
+                              color: Colors.white,
+                            ),
+                      Text(
+                        'Duha',
+                        style: textStyleBtn,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(height: btnGap),
+            InkWell(
+              onTap: () {
+                c.toggleShowSunnahNafl();
+              },
+              child: Padding(
+                padding: EdgeInsets.only(left: lrPadding, right: lrPadding),
+                child: Container(
+                  height: btnHeight,
+                  color: Colors.amber.shade700
+                      .withOpacity(c.showSunnahNafl ? 1 : 0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(width: 3),
+                      c.showSunnahNafl
+                          ? Icon(
+                              Icons.check_box_outlined,
+                              size: 12,
+                              color: Colors.white,
+                            )
+                          : Icon(
+                              Icons.check_box_outline_blank_outlined,
+                              size: 12,
+                              color: Colors.white,
+                            ),
+                      Text(
+                        'Nafl',
+                        style: textStyleBtn,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ),
           ],
         );
@@ -440,9 +497,9 @@ class AddQuest extends StatelessWidget {
 
 class QuestsActive extends StatelessWidget {
   TextStyle topTitlesTextStyle =
-      const TextStyle(color: Colors.white, fontSize: 25.0);
+      const TextStyle(color: Colors.white, fontSize: 22.0);
   TextStyle columnTitlesTextStyle =
-      const TextStyle(color: Colors.white, fontSize: 14.0);
+      const TextStyle(color: Colors.white, fontSize: 11.5);
 
   static const double SALAH_ACTIONS_HEIGHT = 75;
 
@@ -451,7 +508,7 @@ class QuestsActive extends StatelessWidget {
       init: QuestController(),
       builder: (c) {
         bool showSunnahColumns = false;
-        int fardFlex = 3000;
+        int fardFlex = 2000;
 
         if (c.showSunnahMuak || c.showSunnahNafl) {
           showSunnahColumns = true;
@@ -559,6 +616,11 @@ class QuestsActive extends StatelessWidget {
                             ],
                           ),
                         ),
+                      if (!showSunnahColumns)
+                        Expanded(
+                          flex: fardFlex,
+                          child: Text(''),
+                        ),
                       //Expanded(flex: 2000, child: Text('')),
                     ],
                   )
@@ -566,8 +628,15 @@ class QuestsActive extends StatelessWidget {
               ),
             ),
             Expanded(
-              flex: 800,
-              child: Text(''), // TODO ActiveQuestSettings(),
+              flex: 2000,
+              child: c.showSunnahKey
+                  ? ShowSunnahSettings(
+                      btnHeight: 19,
+                      btnGap: 0,
+                      fontSize: 9,
+                      lrPadding: 5,
+                    )
+                  : Text(''),
             ),
           ],
         );
@@ -575,7 +644,11 @@ class QuestsActive extends StatelessWidget {
     );
   }
 
-  String getSalahTimes(DateTime? startTime, DateTime? endTime) {
+  String getTime(DateTime? time) {
+    return getTimeRange(time, null);
+  }
+
+  String getTimeRange(DateTime? startTime, DateTime? endTime) {
     if (startTime == null) {
       return '-';
     }
@@ -677,14 +750,26 @@ class QuestsActive extends StatelessWidget {
         const Color textColor = Colors.white;
         TextStyle actionTextStyle = const TextStyle(
             color: textColor, fontSize: 17.0, fontWeight: FontWeight.bold);
+        // TextStyle sunStyle = const TextStyle(
+        //     color: textColor, fontSize: 12.0, fontWeight: FontWeight.bold);
 
+        //bool showRightColumnOnly = false; TODO cleanup
         bool showSunnahColumns = false;
-        int fardFlex = 3000;
+        int fardFlex = 2000;
 
         if (c.showSunnahMuak || c.showSunnahNafl) {
           showSunnahColumns = true;
           fardFlex = 1000;
         }
+        // } else {
+        //   showRightColumnOnly = true;
+        // }
+        // if(
+        // c.showSunnahWitr ||
+        // c.showSunnahThjd ||
+        // c.showSunnahDuha) {
+        // }
+
         return Row(
           //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
@@ -718,7 +803,7 @@ class QuestsActive extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
                             Text(
-                              getSalahTimes(salahTimeStart, salahTimeEnd),
+                              getTime(salahTimeStart),
                               style: actionTextStyle,
                               textAlign: TextAlign.center,
                             ),
@@ -801,149 +886,235 @@ class QuestsActive extends StatelessWidget {
                 ),
               ),
             ),
-            if (showSunnahColumns)
-              Expanded(
-                flex: 1000,
-                child: Column(
-                  //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    if (showSunnahColumns &&
-                        rakatMuakAfter == '' &&
-                        rakatNaflAfter == '')
-                      Expanded(
-                        child: Container(
-                          color: Colors.grey.shade800,
-                          child: Center(
-                            child: Text(
-                              '-',
-                              style: actionTextStyle,
-                              //textAlign: TextAlign.center,
-                            ),
+            //if (showSunnahColumns)
+            Expanded(
+              flex: 2000,
+              child: Row(
+                //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  if (fardSalah == FARD_SALAH.Fajr)
+                    Expanded(
+                      child: Container(
+                        color: Colors.grey.shade800,
+                        child: Center(
+                          child: Stack(
+                            children: [
+                              Transform.rotate(
+                                //angle: 1.5708,
+                                angle: 4.71239,
+                                child: Icon(
+                                  Icons.brightness_medium_outlined,
+                                  color: Colors.yellow,
+                                  size: 18,
+                                ),
+                              ),
+                              Positioned(
+                                top: 9,
+                                left: 0,
+                                child: Container(
+                                  color: Colors.grey.shade800,
+                                  height: 10,
+                                  width: 20,
+                                ),
+                              ),
+                              Positioned(
+                                top: 5.5,
+                                left: .9,
+                                child: Icon(Icons.arrow_drop_up_outlined,
+                                    color: Colors.yellow, size: 16),
+                              )
+                            ],
                           ),
                         ),
                       ),
-                    if (c.showSunnahMuak && rakatMuakAfter != '')
-                      Expanded(
-                        child: Container(
-                          color: Colors.green,
-                          child: Center(
-                            child: Text(
-                              rakatMuakAfter,
-                              style: actionTextStyle,
-                            ),
+                    ),
+                  if (fardSalah == FARD_SALAH.Asr)
+                    Expanded(
+                      child: Container(
+                        color: Colors.grey.shade800,
+                        child: Center(
+                          child: Stack(
+                            children: [
+                              Transform.rotate(
+                                //angle: 1.5708,
+                                angle: 4.71239,
+                                child: Icon(
+                                  Icons.brightness_medium_outlined,
+                                  color: Colors.yellow,
+                                  size: 18,
+                                ),
+                              ),
+                              Positioned(
+                                top: 9,
+                                left: 0,
+                                child: Container(
+                                  color: Colors.grey.shade800,
+                                  height: 10,
+                                  width: 20,
+                                  //child: SizedBox(height: 10),
+                                ),
+                              ),
+                              Positioned(
+                                top: 5.5,
+                                left: .9,
+                                child: Icon(Icons.arrow_drop_down_outlined,
+                                    color: Colors.yellow, size: 16),
+                              )
+                            ],
                           ),
                         ),
                       ),
-                    if (c.showSunnahMuak &&
-                        rakatMuakAfter2 != '' &&
-                        rakatNaflAfter == '')
-                      Divider(
-                        height: 0.6,
-                        thickness: 0.3,
-                        color: textColor,
-                        // indent: 8,
-                        // endIndent: 8,
-                      ),
-                    if (c.showSunnahNafl && rakatNaflAfter != '')
-                      Expanded(
-                        child: Container(
-                          color: Colors.amber.shade700,
-                          child: Center(
-                            child: Text(
-                              rakatNaflAfter,
-                              style: actionTextStyle,
-                            ),
+                    ),
+                  if (fardSalah != FARD_SALAH.Asr &&
+                      showSunnahColumns &&
+                      rakatMuakAfter == '' &&
+                      rakatNaflAfter == '')
+                    Expanded(
+                      child: Container(
+                        color: Colors.grey.shade800,
+                        child: Center(
+                          child: Text(
+                            '-',
+                            style: actionTextStyle,
                           ),
                         ),
                       ),
-                    if (c.showSunnahMuak && rakatMuakAfter2 != '')
-                      Expanded(
-                        child: Container(
-                          color: Colors.green,
-                          child: Center(
-                            child: Text(
-                              rakatMuakAfter2,
-                              style: actionTextStyle,
-                            ),
+                    ),
+                  if (c.showSunnahMuak && rakatMuakAfter != '')
+                    Expanded(
+                      child: Container(
+                        color: Colors.green,
+                        child: Center(
+                          child: Text(
+                            rakatMuakAfter,
+                            style: actionTextStyle,
                           ),
                         ),
                       ),
-                    if (c.showSunnahNafl &&
-                        !c.showSunnahMuak &&
-                        fardSalah == FARD_SALAH.Isha)
-                      Divider(
-                        height: 0.6,
-                        thickness: 0.3,
-                        color: textColor,
-                        // indent: 8,
-                        // endIndent: 8,
-                      ),
-                    if (c.showSunnahNafl && rakatNaflAfter2 != '')
-                      Expanded(
-                        child: Container(
-                          color: Colors.amber.shade700,
-                          child: Center(
-                            child: Text(
-                              rakatNaflAfter2,
-                              style: actionTextStyle,
-                              textAlign: TextAlign.center,
-                            ),
+                    ),
+                  if (c.showSunnahMuak &&
+                      rakatMuakAfter2 != '' &&
+                      rakatNaflAfter == '')
+                    Divider(
+                      height: 0.6,
+                      thickness: 0.3,
+                      color: textColor,
+                      // indent: 8,
+                      // endIndent: 8,
+                    ),
+                  if ((c.showSunnahNafl &&
+                          rakatNaflAfter != '' &&
+                          fardSalah != FARD_SALAH.Fajr) ||
+                      fardSalah == FARD_SALAH.Fajr && c.showSunnahDuha)
+                    Expanded(
+                      child: Container(
+                        color: fardSalah == FARD_SALAH.Fajr
+                            ? Colors.deepOrangeAccent
+                            : Colors.amber.shade700,
+                        child: Center(
+                          child: Text(
+                            rakatNaflAfter,
+                            style: actionTextStyle,
                           ),
                         ),
                       ),
-                  ],
+                    ),
+                  if ( //(c.showSunnahMuak && rakatMuakAfter2 != '') ||
+                  (c.showSunnahWitr && fardSalah == FARD_SALAH.Isha))
+                    Expanded(
+                      child: Container(
+                        color: fardSalah == FARD_SALAH.Isha
+                            ? Colors.blue
+                            : Colors.green,
+                        child: Center(
+                          child: Text(
+                            rakatMuakAfter2,
+                            style: actionTextStyle,
+                          ),
+                        ),
+                      ),
+                    ),
+                  if (c.showSunnahNafl &&
+                      !c.showSunnahMuak &&
+                      fardSalah == FARD_SALAH.Isha)
+                    Divider(
+                      height: 0.6,
+                      thickness: 0.3,
+                      color: textColor,
+                      // indent: 8,
+                      // endIndent: 8,
+                    ),
+                  if (c.showSunnahThjd &&
+                      rakatNaflAfter2 != '' &&
+                      fardSalah == FARD_SALAH.Isha)
+                    Expanded(
+                      child: Container(
+                        color: Colors.pinkAccent,
+                        child: Center(
+                          child: Text(
+                            rakatNaflAfter2,
+                            style: actionTextStyle,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ),
+                    ),
+                  if (fardSalah == FARD_SALAH.Fajr)
+                    Expanded(
+                      child: Container(
+                        color: Colors.grey.shade800,
+                        child: Center(
+                          child: Icon(
+                            Icons.brightness_7_outlined,
+                            color: Colors.yellow,
+                            size: 18,
+                          ),
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 1000,
+              child: Container(
+                color: Colors.black,
+                // color: isActiveSalah
+                //     ? Colors.green // make active salah stand out
+                //     : Colors.black, // hide slivers scrolling behind
+                child: Container(
+                  color: Colors.purple,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text('Thikr', style: actionTextStyle),
+                    ],
+                  ),
                 ),
               ),
+            ),
             Expanded(
-              flex: 800,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Expanded(
-                    child: Container(
-                      color: Colors.black,
-                      // color: isActiveSalah
-                      //     ? Colors.green // make active salah stand out
-                      //     : Colors.black, // hide slivers scrolling behind
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          topRight: const Radius.circular(15.0),
-                        ),
-                        child: Container(
-                          color: Colors.purple,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('Thikr', style: actionTextStyle),
-                            ],
-                          ),
-                        ),
-                      ),
+              flex: 1000,
+              child: Container(
+                color: Colors.black,
+                // color: isActiveSalah
+                //     ? Colors.green // make active salah stand out
+                //     : Colors.black, // hide slivers scrolling behind
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topRight: const Radius.circular(15.0),
+                    bottomRight: const Radius.circular(15.0),
+                  ),
+                  child: Container(
+                    color: Colors.cyan,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text('Dua', style: actionTextStyle),
+                      ],
                     ),
                   ),
-                  Expanded(
-                    child: Container(
-                      color: Colors.black,
-                      // color: isActiveSalah
-                      //     ? Colors.green // make active salah stand out
-                      //     : Colors.black, // hide slivers scrolling behind
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          bottomRight: const Radius.circular(15.0),
-                        ),
-                        child: Container(
-                          color: Colors.cyan,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('Dua', style: actionTextStyle),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
           ],
@@ -1002,7 +1173,7 @@ class QuestsActive extends StatelessWidget {
             SliverAppBar(
               backgroundColor: Colors.lightBlue.shade900,
               expandedHeight: 300.0,
-              collapsedHeight: 100.0,
+              collapsedHeight: 130.0,
               floating: true,
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
@@ -1027,11 +1198,11 @@ class QuestsActive extends StatelessWidget {
               rakatNaflBefore: '',
               rakatFard: '2',
               rakatMuakAfter: '',
-              rakatNaflAfter: '',
+              rakatNaflAfter: '2', //duha
               salahTimeStart: c.fajr,
               salahTimeEnd: c.sunrise,
               rakatMuakAfter2: '',
-              rakatNaflAfter2: '2', // TODO Duha
+              rakatNaflAfter2: '',
             ),
             spacingHeader(FARD_SALAH.Fajr),
             c.isFriday() && c.showJummahOnFriday
@@ -1151,8 +1322,8 @@ class QuestsActive extends StatelessWidget {
               rakatNaflAfter: '2',
               salahTimeStart: c.isha,
               salahTimeEnd: null,
-              rakatMuakAfter2: '3', // TODO witr
-              rakatNaflAfter2: '2', // TODO tahajud
+              rakatMuakAfter2: '3', // witr
+              rakatNaflAfter2: '2', // tahajjud
             ),
             spacingHeader(FARD_SALAH.Isha),
             sliverSpaceHeader2(false),
