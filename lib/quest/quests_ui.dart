@@ -44,10 +44,13 @@ class ActiveQuestSettings extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           //crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              'Show Sunnah:',
-              textAlign: TextAlign.center,
-              style: textStyleTitle,
+            Tooltip(
+              message: 'Show/Hide Sunnah actions',
+              child: Text(
+                'Show Sunnah:',
+                textAlign: TextAlign.center,
+                style: textStyleTitle,
+              ),
             ),
             ShowSunnahSettings(
               btnHeight: 25,
@@ -56,10 +59,13 @@ class ActiveQuestSettings extends StatelessWidget {
               lrPadding: 0,
             ),
             const SizedBox(height: 25),
-            Text(
-              'Sunnah Key',
-              textAlign: TextAlign.center,
-              style: textStyleTitle,
+            Tooltip(
+              message: 'Show/Hide Sunnah Key',
+              child: Text(
+                'Sunnah Key',
+                textAlign: TextAlign.center,
+                style: textStyleTitle,
+              ),
             ),
             const SizedBox(height: 3),
             ToggleSwitch(
@@ -82,10 +88,14 @@ class ActiveQuestSettings extends StatelessWidget {
               },
             ),
             const SizedBox(height: 25),
-            Text(
-              'Asr Start',
-              textAlign: TextAlign.center,
-              style: textStyleTitle,
+            Tooltip(
+              message:
+                  "Ulema opinions on Asr start time are either when an object's shadow is 2 lengths or 1 length",
+              child: Text(
+                'Asr Start Time Object Shadow',
+                textAlign: TextAlign.center,
+                style: textStyleTitle,
+              ),
             ),
             const SizedBox(height: 3),
             ToggleSwitch(
@@ -93,7 +103,7 @@ class ActiveQuestSettings extends StatelessWidget {
               minHeight: 50.0,
               fontSize: 14,
               initialLabelIndex: c.salahAsrSafe ? 0 : 1,
-              labels: ['2 shadow length', '1 shadow length'],
+              labels: ['2 length', '1 length'],
               //cornerRadius: 20.0,
               activeBgColor: const Color(0xFF268E0D),
               activeFgColor: Colors.white,
@@ -108,10 +118,14 @@ class ActiveQuestSettings extends StatelessWidget {
               },
             ),
             const SizedBox(height: 25),
-            Text(
-              'Kerahat Times (Minutes)',
-              textAlign: TextAlign.center,
-              style: textStyleTitle,
+            Tooltip(
+              message:
+                  "Ulema opinions on kerahat times are around 40 or 20 for sunset and sunrise kerahat times and 20 or 10 minutes for the noon kerahat time",
+              child: Text(
+                'Kerahat Times (Minutes)',
+                textAlign: TextAlign.center,
+                style: textStyleTitle,
+              ),
             ),
             const SizedBox(height: 3),
             ToggleSwitch(
@@ -119,7 +133,7 @@ class ActiveQuestSettings extends StatelessWidget {
               minHeight: 50.0,
               fontSize: 14,
               initialLabelIndex: c.salahKerahatSafe ? 0 : 1,
-              labels: ['45/30/45', '20/10/20'],
+              labels: ['40/20/40', '20/10/20'],
               //cornerRadius: 20.0,
               activeBgColor: const Color(0xFF268E0D),
               activeFgColor: Colors.white,
@@ -134,10 +148,14 @@ class ActiveQuestSettings extends StatelessWidget {
               },
             ),
             const SizedBox(height: 25),
-            Text(
-              'Friday Default',
-              textAlign: TextAlign.center,
-              style: textStyleTitle,
+            Tooltip(
+              message:
+                  "Choice between showing Jummah Salah on Friday (if you go to Jummah) or if set to Dhuhr will act like other non-Jummah days",
+              child: Text(
+                'Friday Default',
+                textAlign: TextAlign.center,
+                style: textStyleTitle,
+              ),
             ),
             const SizedBox(height: 3),
             ToggleSwitch(
@@ -160,10 +178,14 @@ class ActiveQuestSettings extends StatelessWidget {
               },
             ),
             const SizedBox(height: 25),
-            Text(
-              'Clock Type',
-              textAlign: TextAlign.center,
-              style: textStyleTitle,
+            Tooltip(
+              message:
+                  "Gives choice between 12 hour clock (AM/PM) or 24 hour clock (military time)",
+              child: Text(
+                'Clock Type',
+                textAlign: TextAlign.center,
+                style: textStyleTitle,
+              ),
             ),
             const SizedBox(height: 3),
             ToggleSwitch(
