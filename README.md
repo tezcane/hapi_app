@@ -12,6 +12,7 @@ msg  - message
 muak - Muakkadah
 nav  - Navigate/Navigator
 np   - NavPage
+qyam - Qiyam
 qust - Quest
 s    - storage/Get Storage
 t    - timeline
