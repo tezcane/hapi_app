@@ -44,6 +44,11 @@ class ActiveQuestSettings extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           //crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            Text(
+              'Show Sunnah:',
+              textAlign: TextAlign.center,
+              style: textStyleTitle,
+            ),
             ShowSunnahSettings(
               btnHeight: 25,
               btnGap: 5,
@@ -52,13 +57,14 @@ class ActiveQuestSettings extends StatelessWidget {
             ),
             const SizedBox(height: 25),
             Text(
-              'Sunnah Key:',
+              'Sunnah Key',
+              textAlign: TextAlign.center,
               style: textStyleTitle,
             ),
             const SizedBox(height: 3),
             ToggleSwitch(
               minWidth: 100.0,
-              minHeight: 80.0,
+              minHeight: 50.0,
               fontSize: 14,
               initialLabelIndex: c.showSunnahKeys ? 0 : 1,
               labels: ['Show', 'Hide'],
@@ -77,13 +83,66 @@ class ActiveQuestSettings extends StatelessWidget {
             ),
             const SizedBox(height: 25),
             Text(
-              'Friday Default:',
+              'Asr Start',
+              textAlign: TextAlign.center,
               style: textStyleTitle,
             ),
             const SizedBox(height: 3),
             ToggleSwitch(
               minWidth: 100.0,
-              minHeight: 80.0,
+              minHeight: 50.0,
+              fontSize: 14,
+              initialLabelIndex: c.salahAsrSafe ? 0 : 1,
+              labels: ['2 shadow length', '1 shadow length'],
+              //cornerRadius: 20.0,
+              activeBgColor: const Color(0xFF268E0D),
+              activeFgColor: Colors.white,
+              inactiveBgColor: Colors.grey, //const Color(0xFF1D1E33),
+              inactiveFgColor: Colors.white,
+              onToggle: (index) {
+                if (index == 0) {
+                  c.salahAsrSafe = true;
+                } else {
+                  c.salahAsrSafe = false;
+                }
+              },
+            ),
+            const SizedBox(height: 25),
+            Text(
+              'Kerahat Times (Minutes)',
+              textAlign: TextAlign.center,
+              style: textStyleTitle,
+            ),
+            const SizedBox(height: 3),
+            ToggleSwitch(
+              minWidth: 100.0,
+              minHeight: 50.0,
+              fontSize: 14,
+              initialLabelIndex: c.salahKerahatSafe ? 0 : 1,
+              labels: ['45/30/45', '20/10/20'],
+              //cornerRadius: 20.0,
+              activeBgColor: const Color(0xFF268E0D),
+              activeFgColor: Colors.white,
+              inactiveBgColor: Colors.grey, //const Color(0xFF1D1E33),
+              inactiveFgColor: Colors.white,
+              onToggle: (index) {
+                if (index == 0) {
+                  c.salahKerahatSafe = true;
+                } else {
+                  c.salahKerahatSafe = false;
+                }
+              },
+            ),
+            const SizedBox(height: 25),
+            Text(
+              'Friday Default',
+              textAlign: TextAlign.center,
+              style: textStyleTitle,
+            ),
+            const SizedBox(height: 3),
+            ToggleSwitch(
+              minWidth: 100.0,
+              minHeight: 50.0,
               fontSize: 14,
               initialLabelIndex: c.showJummahOnFriday ? 0 : 1,
               labels: ['Jummah', 'Dhuhr'],
@@ -102,13 +161,14 @@ class ActiveQuestSettings extends StatelessWidget {
             ),
             const SizedBox(height: 25),
             Text(
-              'Clock Type:',
+              'Clock Type',
+              textAlign: TextAlign.center,
               style: textStyleTitle,
             ),
             const SizedBox(height: 3),
             ToggleSwitch(
               minWidth: 100.0,
-              minHeight: 80.0,
+              minHeight: 50.0,
               fontSize: 14,
               initialLabelIndex: c.show12HourClock ? 0 : 1,
               labels: ['12 hour', '24 hour'],
@@ -160,10 +220,10 @@ class ShowSunnahSettings extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           //crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(
-              "Sunnah Key:",
-              style: textStyleTitle,
-            ),
+            // Text(
+            //   "Sunnah Key:",
+            //   style: textStyleTitle,
+            // ),
             SizedBox(height: btnGap > 2 ? btnGap - 2 : 0),
             InkWell(
               onTap: () {

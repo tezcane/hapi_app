@@ -67,6 +67,8 @@ class QuestController extends GetxController {
   RxBool _showSunnahKeys = true.obs;
   RxBool _showJummahOnFriday = true.obs; // if friday and true, shows jummah
   RxBool _show12HourClock = true.obs; // false = 24 hour clock/military time
+  RxBool _salahAsrSafe = true.obs; // true hanafi, false other
+  RxBool _salahKerahatSafe = true.obs; // true hanafi, false other
 
   Rx<FARD_SALAH> _activeSalah = FARD_SALAH.Maghrib.obs;
   FARD_SALAH get activeSalah => _activeSalah.value;
@@ -122,6 +124,8 @@ class QuestController extends GetxController {
     _showSunnahKeys.value = s.read('showSunnahKeys') ?? true;
     _showJummahOnFriday.value = s.read('showJummahOnFriday') ?? true;
     _show12HourClock.value = s.read('show12HourClock') ?? true;
+    _salahAsrSafe.value = s.read('salahAsrSafe') ?? true;
+    _salahKerahatSafe.value = s.read('salahKerahatSafe') ?? true;
 
     // TODO this looks unreliable:
     String uid = Get.find<AuthController>().firebaseUser.value!.uid;
@@ -138,6 +142,8 @@ class QuestController extends GetxController {
   bool get showSunnahKeys => _showSunnahKeys.value;
   bool get showJummahOnFriday => _showJummahOnFriday.value;
   bool get show12HourClock => _show12HourClock.value;
+  bool get salahAsrSafe => _salahAsrSafe.value;
+  bool get salahKerahatSafe => _salahKerahatSafe.value;
 
   void toggleShowSunnahMuak() {
     _showSunnahMuak.value = !_showSunnahMuak.value;
@@ -165,19 +171,31 @@ class QuestController extends GetxController {
 
   set showSunnahKeys(bool value) {
     _showSunnahKeys.value = value;
-    s.write('showSunnahKeys', _showSunnahKeys.value);
+    s.write('showSunnahKeys', value);
     update();
   }
 
   set showJummahOnFriday(bool value) {
     _showJummahOnFriday.value = value;
-    s.write('showJummahOnFriday', _showJummahOnFriday.value);
+    s.write('showJummahOnFriday', value);
     update();
   }
 
   set show12HourClock(bool value) {
     _show12HourClock.value = value;
-    s.write('show12HourClock', _show12HourClock.value);
+    s.write('show12HourClock', value);
+    update();
+  }
+
+  set salahAsrSafe(bool value) {
+    _salahAsrSafe.value = value;
+    s.write('salahAsrSafe', value);
+    update();
+  }
+
+  set salahKerahatSafe(bool value) {
+    _salahKerahatSafe.value = value;
+    s.write('salahKerahatSafe', value);
     update();
   }
 
