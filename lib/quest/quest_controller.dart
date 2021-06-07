@@ -61,8 +61,8 @@ class QuestController extends GetxController {
   bool isFriday() => _dayOfWeek.value == DAY_OF_WEEK.Friday;
 
   RxBool _showSunnahMuak = true.obs;
-  RxBool _showSunnahNafl = true.obs;
-  RxBool _showSunnahDuha = true.obs;
+  RxBool _showSunnahNafl = false.obs;
+  RxBool _showSunnahDuha = false.obs;
   RxBool _showSunnahLayl = true.obs;
   RxBool _showSunnahKeys = true.obs;
   RxBool _showJummahOnFriday = true.obs; // if friday and true, shows jummah
@@ -118,8 +118,8 @@ class QuestController extends GetxController {
     initLocation();
 
     _showSunnahMuak.value = s.read('showSunnahMuak') ?? true;
-    _showSunnahNafl.value = s.read('showSunnahNafl') ?? true;
-    _showSunnahDuha.value = s.read('showSunnahDuha') ?? true;
+    _showSunnahNafl.value = s.read('showSunnahNafl') ?? false;
+    _showSunnahDuha.value = s.read('showSunnahDuha') ?? false;
     _showSunnahLayl.value = s.read('showSunnahLayl') ?? true;
     _showSunnahKeys.value = s.read('showSunnahKeys') ?? true;
     _showJummahOnFriday.value = s.read('showJummahOnFriday') ?? true;
