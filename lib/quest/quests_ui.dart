@@ -90,9 +90,9 @@ class ActiveQuestSettings extends StatelessWidget {
             const SizedBox(height: 25),
             Tooltip(
               message:
-                  "Ulema opinions on Asr start time are either when an object's shadow is 2 lengths or 1 length",
+                  "Ulema opinions on Asr start time are when an object's shadow is 2 lengths or 1 length",
               child: Text(
-                'Asr Start Time Object Shadow',
+                'Asr Start (Object Shadow)',
                 textAlign: TextAlign.center,
                 style: textStyleTitle,
               ),
@@ -120,7 +120,7 @@ class ActiveQuestSettings extends StatelessWidget {
             const SizedBox(height: 25),
             Tooltip(
               message:
-                  "Ulema opinions on kerahat times are around 40 or 20 for sunset and sunrise kerahat times and 20 or 10 minutes for the noon kerahat time",
+                  "Ulema opinions on kerahat times are around 40 or 20 for sunset and sunrise kerahat times and around 30 or 15 minutes for the noon kerahat time",
               child: Text(
                 'Kerahat Times (Minutes)',
                 textAlign: TextAlign.center,
@@ -133,7 +133,7 @@ class ActiveQuestSettings extends StatelessWidget {
               minHeight: 50.0,
               fontSize: 14,
               initialLabelIndex: c.salahKerahatSafe ? 0 : 1,
-              labels: ['40/20/40', '20/10/20'],
+              labels: ['40/30/40', '20/15/20'],
               //cornerRadius: 20.0,
               activeBgColor: const Color(0xFF268E0D),
               activeFgColor: Colors.white,
@@ -150,7 +150,7 @@ class ActiveQuestSettings extends StatelessWidget {
             const SizedBox(height: 25),
             Tooltip(
               message:
-                  "Choice between showing Jummah Salah on Friday (if you go to Jummah) or if set to Dhuhr will act like other non-Jummah days",
+                  "Choice between showing Jummah Salah on Friday (if you go to Jummah) or set to Dhuhr which acts like non-Jummah days",
               child: Text(
                 'Friday Default',
                 textAlign: TextAlign.center,
@@ -472,7 +472,7 @@ class UserQuest extends StatelessWidget {
   const UserQuest({
     Key? key,
     required TextEditingController textEditingController,
-  })   : _textEditingController = textEditingController,
+  })  : _textEditingController = textEditingController,
         super(key: key);
 
   final TextEditingController _textEditingController;
@@ -532,7 +532,7 @@ class AddQuest extends StatelessWidget {
     Key? key,
     required AuthController authController,
     required TextEditingController textEditingController,
-  })   : _authController = authController,
+  })  : _authController = authController,
         _textEditingController = textEditingController,
         super(key: key);
 
