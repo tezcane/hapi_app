@@ -54,8 +54,7 @@ void main() async {
   Get.put<OnboardingController>(OnboardingController());
   Get.put<AuthController>(AuthController());
   Get.put<MenuController>(MenuController());
-//Get.put<QuestController>(QuestController()); // TODO why do you crash?
-  Get.lazyPut<QuestController>(() => QuestController());
+  Get.put<QuestController>(QuestController());
   Get.put<TarikhController>(TarikhController());
   Get.put<ThemeController>(ThemeController());
   Get.put<LanguageController>(LanguageController());

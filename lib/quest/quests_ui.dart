@@ -11,6 +11,7 @@ import 'package:hapi/controllers/auth_controller.dart';
 import 'package:hapi/menu/fab_nav_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/menu/toggle_switch.dart';
+import 'package:hapi/quest/athan/Prayer.dart';
 import 'package:hapi/quest/quest_card.dart';
 import 'package:hapi/quest/quest_controller.dart';
 import 'package:hapi/services/database.dart';
@@ -36,7 +37,6 @@ class ActiveQuestSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<QuestController>(
-      init: QuestController(),
       builder: (c) {
         return Column(
           // TODO tune
@@ -234,7 +234,6 @@ class ShowSunnahSettings extends StatelessWidget {
         color: Colors.white, fontWeight: FontWeight.bold, fontSize: fontSize);
 
     return GetBuilder<QuestController>(
-      init: QuestController(),
       builder: (c) {
         return Column(
           // TODO tune
@@ -480,7 +479,6 @@ class UserQuest extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AuthController>(
-      init: AuthController(), // TODO why init AuthController here?
       builder: (controller) => Scaffold(
         appBar: AppBar(
           title: Text(
@@ -508,13 +506,12 @@ class UserQuest extends StatelessWidget {
                 authController: controller,
                 textEditingController: _textEditingController),
             GetX<QuestController>(
-              init: Get.put<QuestController>(QuestController()),
-              builder: (QuestController questController) {
+              builder: (QuestController c) {
                 return Expanded(
                   child: ListView.builder(
-                    itemCount: questController.quests.length,
+                    itemCount: c.quests.length,
                     itemBuilder: (_, index) {
-                      return QuestCard(quest: questController.quests[index]);
+                      return QuestCard(quest: c.quests[index]);
                     },
                   ),
                 );
@@ -577,9 +574,14 @@ class QuestsActive extends StatelessWidget {
   final TextStyle columnTitlesTextStyle =
       const TextStyle(color: Colors.white, fontSize: 11.5);
 
-  GetBuilder SalahAppBar(FARD_SALAH fardSalah) {
+  static const Color textColor = Colors.white;
+  static const TextStyle actionTextStyle = const TextStyle(
+      color: textColor, fontSize: 17.0, fontWeight: FontWeight.bold);
+  static const TextStyle adhkarTextStyle = const TextStyle(
+      color: textColor, fontSize: 12.0, fontWeight: FontWeight.normal);
+
+  GetBuilder SalahAppBar() {
     return GetBuilder<QuestController>(
-      init: QuestController(),
       builder: (c) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -595,7 +597,13 @@ class QuestsActive extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Text(fardSalah.toString().split('.').last,
+                          Text(
+                              c.prayerTimes != null
+                                  ? c.prayerTimes!.currentPrayerName
+                                      .toString()
+                                      .split('.')
+                                      .last
+                                  : '',
                               style: topTitlesTextStyle),
                         ],
                       ),
@@ -748,7 +756,7 @@ class QuestsActive extends StatelessWidget {
   /// Used by Fajr, Asr, Maghrib, Isha (All but dhur/jummah must pass in here)
   SliverPersistentHeader actionsSalah({
     required final String rakatFard,
-    required final FARD_SALAH fardSalah,
+    required final Prayer fardSalah,
     final DateTime? salahTimeStart,
     final DateTime? salahTimeEnd,
     final String rakatMuakBefore = '',
@@ -757,7 +765,8 @@ class QuestsActive extends StatelessWidget {
     final String rakatNaflAfter = '',
   }) {
     return SliverPersistentHeader(
-      pinned: fardSalah == cQust.activeSalah, // TODO cQust needed i believe
+      pinned: fardSalah ==
+          cQust.prayerTimes!.currentPrayerName, // TODO cQust needed i believe
       delegate: _SliverAppBarDelegate(
         minHeight: SALAH_ACTIONS_HEIGHT,
         maxHeight: SALAH_ACTIONS_HEIGHT,
@@ -779,7 +788,7 @@ class QuestsActive extends StatelessWidget {
   /// Used by dhur/jummah directly (others use through salahActions())
   GetBuilder<QuestController> actionsSalahRow({
     required final String rakatFard,
-    required final FARD_SALAH fardSalah,
+    required final Prayer fardSalah,
     final DateTime? salahTimeStart,
     final DateTime? salahTimeEnd,
     final String rakatMuakBefore = '',
@@ -789,12 +798,7 @@ class QuestsActive extends StatelessWidget {
     required final bool isJummahMode,
   }) {
     return GetBuilder<QuestController>(
-      init: QuestController(),
       builder: (c) {
-        const Color textColor = Colors.white;
-        const TextStyle actionTextStyle = const TextStyle(
-            color: textColor, fontSize: 17.0, fontWeight: FontWeight.bold);
-
         return Column(
           children: [
             ///
@@ -812,7 +816,7 @@ class QuestsActive extends StatelessWidget {
                         topRight: const Radius.circular(15.0),
                       ),
                       child: Container(
-                        color: fardSalah == cQust.activeSalah
+                        color: fardSalah == c.prayerTimes!.currentPrayerName
                             ? Color(0xFF268E0D)
                             : Colors.lightBlue.shade800,
                         child: Row(
@@ -833,11 +837,8 @@ class QuestsActive extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text(
-                                  getTimeRange(
-                                    salahTimeStart,
-                                    // if duha showing, it has sunrise already
-                                    c.showSunnahDuha ? null : salahTimeEnd,
-                                  ),
+                                  getTime(salahTimeStart),
+                                  // c.showSunnahDuha ? null : salahTimeEnd,
                                   style: actionTextStyle,
                                   textAlign: TextAlign.center,
                                 ),
@@ -916,7 +917,7 @@ class QuestsActive extends StatelessWidget {
                               ),
                             ),
                           ),
-                        if (fardSalah == FARD_SALAH.Maghrib)
+                        if (fardSalah == Prayer.Maghrib)
                           Expanded(
                             child: Container(
                               color: Colors.black,
@@ -926,39 +927,6 @@ class QuestsActive extends StatelessWidget {
                                 ),
                                 child: Container(
                                   color: Colors.grey.shade800,
-                                  child: Center(
-                                    child: Stack(
-                                      children: [
-                                        Transform.rotate(
-                                          //angle: 1.5708,
-                                          angle: 4.71239,
-                                          child: Icon(
-                                            Icons.brightness_medium_outlined,
-                                            color: Colors.yellow,
-                                            size: 18,
-                                          ),
-                                        ),
-                                        Positioned(
-                                          top: 9,
-                                          left: 0,
-                                          child: Container(
-                                            color: Colors.grey.shade800,
-                                            height: 10,
-                                            width: 20,
-                                            //child: SizedBox(height: 10),
-                                          ),
-                                        ),
-                                        Positioned(
-                                          top: 5.5,
-                                          left: .9,
-                                          child: Icon(
-                                              Icons.arrow_drop_down_outlined,
-                                              color: Colors.yellow,
-                                              size: 16),
-                                        )
-                                      ],
-                                    ),
-                                  ),
                                 ),
                               ),
                             ),
@@ -991,21 +959,66 @@ class QuestsActive extends StatelessWidget {
                     child: Row(
                       //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        if (fardSalah == FARD_SALAH.Fajr)
+                        if (fardSalah == Prayer.Fajr || fardSalah == Prayer.Asr)
                           Expanded(
                             child: Container(
                               color: Colors.grey.shade800,
-                              child: Center(
-                                child: Text('Morning Adhkar'),
-                              ),
-                            ),
-                          ),
-                        if (fardSalah == FARD_SALAH.Asr)
-                          Expanded(
-                            child: Container(
-                              color: Colors.grey.shade800,
-                              child: Center(
-                                child: Text('Evening Adhkar'),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Stack(
+                                        children: [
+                                          Transform.rotate(
+                                            //angle: 1.5708,
+                                            angle: 4.71239,
+                                            child: Icon(
+                                              Icons.brightness_medium_outlined,
+                                              color: Colors.yellow,
+                                              size: 18,
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: 9,
+                                            left: 0,
+                                            child: Container(
+                                              color: Colors.grey.shade800,
+                                              height: 10,
+                                              width: 20,
+                                              //child: SizedBox(height: 10),
+                                            ),
+                                          ),
+                                          Positioned(
+                                            top: 5.5,
+                                            left: .9,
+                                            child: Icon(
+                                                fardSalah == Prayer.Fajr
+                                                    ? Icons
+                                                        .arrow_drop_up_outlined
+                                                    : Icons
+                                                        .arrow_drop_down_outlined,
+                                                color: Colors.yellow,
+                                                size: 16),
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(width: 3),
+                                      Text(
+                                          fardSalah == Prayer.Fajr
+                                              ? getTime(c.prayerTimes!.rising)
+                                              : getTimeRange(
+                                                  c.prayerTimes!.setting,
+                                                  c.prayerTimes!.maghrib),
+                                          style: adhkarTextStyle),
+                                    ],
+                                  ),
+                                  Text(
+                                      fardSalah == Prayer.Fajr
+                                          ? 'Morning Adhkar'
+                                          : 'Evening Adhkar',
+                                      style: adhkarTextStyle),
+                                ],
                               ),
                             ),
                           ),
@@ -1107,101 +1120,99 @@ class QuestsActive extends StatelessWidget {
     );
   }
 
-  SliverPersistentHeader actionsDuha({
-    required final FARD_SALAH fardSalah,
-    final DateTime? timeStart,
-  }) {
+  SliverPersistentHeader actionsDuha(QuestController c) {
     return SliverPersistentHeader(
-      pinned: fardSalah == cQust.activeSalah, // TODO cQust needed i believe
+      // TODO cQust needed i believe
+      pinned: Prayer.Rising == c.prayerTimes!.currentPrayerName ||
+          Prayer.Duha == c.prayerTimes!.currentPrayerName ||
+          Prayer.Peaking == c.prayerTimes!.currentPrayerName,
       delegate: _SliverAppBarDelegate(
         minHeight: SALAH_ACTIONS_HEIGHT,
         maxHeight: SALAH_ACTIONS_HEIGHT,
-        child: GetBuilder<QuestController>(
-          init: QuestController(),
-          builder: (c) {
-            const Color textColor = Colors.white;
-            TextStyle actionTextStyle = const TextStyle(
-                color: textColor, fontSize: 17.0, fontWeight: FontWeight.bold);
-            // TextStyle sunStyle = const TextStyle(
-            //     color: textColor, fontSize: 12.0, fontWeight: FontWeight.bold);
-
-            return Column(
+        child: Column(
+          children: [
+            ///
+            /// First row is title with times, etc.
+            ///
+            Row(
               children: [
-                ///
-                /// First row is title with times, etc.
-                ///
-                Row(
-                  children: [
-                    Expanded(
-                      //flex: 7000,
+                Expanded(
+                  //flex: 7000,
+                  child: Container(
+                    color: Colors.black, // hide scroll of items behind
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: const Radius.circular(15.0),
+                        topRight: const Radius.circular(15.0),
+                      ),
                       child: Container(
-                        color: Colors.black, // hide scroll of items behind
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: const Radius.circular(15.0),
-                            topRight: const Radius.circular(15.0),
-                          ),
-                          child: Container(
-                            color: fardSalah == cQust.activeSalah
-                                ? Color(0xFF268E0D)
-                                : Colors.lightBlue.shade800,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                        color: Prayer.Rising ==
+                                    cQust.prayerTimes!.currentPrayerName ||
+                                Prayer.Duha ==
+                                    cQust.prayerTimes!.currentPrayerName ||
+                                Prayer.Peaking ==
+                                    cQust.prayerTimes!.currentPrayerName
+                            ? Color(0xFF268E0D)
+                            : Colors.lightBlue.shade800,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'Duha',
+                              style: const TextStyle(
+                                  color: textColor,
+                                  fontSize: 20.0,
+                                  fontWeight: FontWeight.bold),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(width: 10),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
                                 Text(
-                                  'Duha',
-                                  style: const TextStyle(
-                                      color: textColor,
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold),
+                                  getTimeRange(c.prayerTimes!.duha, null),
+                                  //c.prayerTimes!.peaking!),
+                                  style: actionTextStyle,
                                   textAlign: TextAlign.center,
                                 ),
-                                SizedBox(width: 10),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Text(
-                                      getTime(timeStart),
-                                      style: actionTextStyle,
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        c.toggleSalahAlarm(fardSalah);
-                                      },
-                                      child: Icon(Icons.alarm_outlined,
-                                          size: 20, color: Colors.white),
-                                    ),
-                                  ],
+                                InkWell(
+                                  onTap: () {
+                                    //c.toggleSalahAlarm(fardSalah); TODO
+                                  },
+                                  child: Icon(Icons.alarm_outlined,
+                                      size: 20, color: Colors.white),
                                 ),
                               ],
                             ),
-                          ),
+                          ],
                         ),
                       ),
                     ),
-                  ],
+                  ),
                 ),
-                Expanded(
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Expanded(
-                        //flex: 7000,
-                        child: Row(
-                          children: [
-                            Expanded(
+              ],
+            ),
+            Expanded(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Expanded(
+                    //flex: 7000,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            color: Colors.black, // hide scroll of items behind
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: const Radius.circular(15.0),
+                              ),
                               child: Container(
-                                color:
-                                    Colors.black, // hide scroll of items behind
-                                child: ClipRRect(
-                                  borderRadius: const BorderRadius.only(
-                                    bottomLeft: const Radius.circular(15.0),
-                                  ),
-                                  child: Container(
-                                    color: Colors.grey.shade800,
-                                    child: Center(
+                                color: Colors.grey.shade800,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Center(
                                       child: Stack(
                                         children: [
                                           Transform.rotate(
@@ -1233,68 +1244,82 @@ class QuestsActive extends StatelessWidget {
                                         ],
                                       ),
                                     ),
-                                  ),
+                                    SizedBox(width: 3),
+                                    Text(
+                                        getTimeRange(c.prayerTimes!.rising,
+                                            c.prayerTimes!.duha),
+                                        style: adhkarTextStyle),
+                                  ],
                                 ),
                               ),
                             ),
-                            Expanded(
-                              child: Container(
-                                color: Colors.deepOrangeAccent,
-                                child: Center(
-                                  child: Text(
-                                    'Duha',
-                                    style: actionTextStyle,
-                                  ),
-                                ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            color: Colors.deepOrangeAccent,
+                            child: Center(
+                              child: Text(
+                                'Duha',
+                                style: actionTextStyle,
                               ),
                             ),
-                            Expanded(
+                          ),
+                        ),
+                        Expanded(
+                          child: Container(
+                            color: Colors.black, // hide scroll of items behind
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.only(
+                                bottomRight: const Radius.circular(15.0),
+                              ),
                               child: Container(
-                                color:
-                                    Colors.black, // hide scroll of items behind
-                                child: ClipRRect(
-                                  borderRadius: const BorderRadius.only(
-                                    bottomRight: const Radius.circular(15.0),
-                                  ),
-                                  child: Container(
-                                    color: Colors.grey.shade800,
-                                    child: Center(
+                                color: Colors.grey.shade800,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Center(
                                       child: Icon(
                                         Icons.brightness_7_outlined,
                                         color: Colors.yellow,
                                         size: 18,
                                       ),
                                     ),
-                                  ),
+                                    SizedBox(width: 3),
+                                    Text(
+                                        getTimeRange(c.prayerTimes!.peaking,
+                                            c.prayerTimes!.dhuhr),
+                                        style: adhkarTextStyle),
+                                  ],
                                 ),
                               ),
                             ),
-                          ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            );
-          },
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
   SliverPersistentHeader actionsLaylIbadah({
-    required final FARD_SALAH fardSalah,
+    required final Prayer fardSalah,
     final DateTime? salahTimeStart, // TODO
     final DateTime? salahTimeEnd,
   }) {
     return SliverPersistentHeader(
-      pinned: fardSalah == cQust.activeSalah, // TODO cQust needed i believe
+      pinned: fardSalah ==
+          cQust.prayerTimes!.currentPrayerName, // TODO cQust needed i believe
       delegate: _SliverAppBarDelegate(
         minHeight: SALAH_ACTIONS_HEIGHT,
         maxHeight: SALAH_ACTIONS_HEIGHT,
         child: GetBuilder<QuestController>(
-          init: QuestController(),
           builder: (c) {
             const Color textColor = Colors.white;
             TextStyle actionTextStyle = const TextStyle(
@@ -1319,7 +1344,7 @@ class QuestsActive extends StatelessWidget {
                             topRight: const Radius.circular(15.0),
                           ),
                           child: Container(
-                            color: fardSalah == cQust.activeSalah
+                            color: fardSalah == c.prayerTimes!.currentPrayerName
                                 ? Color(0xFF268E0D)
                                 : Colors.lightBlue.shade800,
                             child: Row(
@@ -1486,9 +1511,9 @@ class QuestsActive extends StatelessWidget {
     );
   }
 
-  SliverPersistentHeader spacingHeader(FARD_SALAH fardSalah) {
+  SliverPersistentHeader spacingHeader(Prayer fardSalah) {
     return SliverPersistentHeader(
-      pinned: fardSalah == cQust.activeSalah,
+      pinned: fardSalah == cQust.prayerTimes!.currentPrayerName,
       delegate: _SliverAppBarDelegate(
         minHeight: 5.0,
         maxHeight: 5.0,
@@ -1527,9 +1552,11 @@ class QuestsActive extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<QuestController>(
-      init: QuestController(),
-      builder: (c) => Container(
+    return GetBuilder<QuestController>(builder: (c) {
+      if (c.prayerTimes == null) {
+        return Container(); // TODO show spinner
+      }
+      return Container(
         color: Colors.black,
         child: CustomScrollView(
           slivers: <Widget>[
@@ -1540,34 +1567,34 @@ class QuestsActive extends StatelessWidget {
               floating: true,
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
-                  centerTitle: true,
-                  title: SalahAppBar(c.activeSalah),
-                  background: Swiper(
-                    itemCount: 3,
-                    itemBuilder: (BuildContext context, int index) =>
-                        Image.asset(
-                      'assets/images/quests/active$index.jpg', //TODO add more images
-                      fit: BoxFit.cover,
-                    ),
-                    autoplay: true,
-                    autoplayDelay: 10000,
-                  )),
+                centerTitle: true,
+                title: SalahAppBar(),
+                background: Swiper(
+                  itemCount: 3,
+                  itemBuilder: (BuildContext context, int index) => Image.asset(
+                    'assets/images/quests/active$index.jpg',
+                    //TODO add more images
+                    fit: BoxFit.cover,
+                  ),
+                  autoplay: true,
+                  autoplayDelay: 10000,
+                ),
+              ),
             ),
             sliverSpaceHeader(true),
             actionsSalah(
               rakatFard: '2',
-              fardSalah: FARD_SALAH.Fajr,
-              salahTimeStart: c.fajr,
-              salahTimeEnd: c.sunrise,
+              fardSalah: Prayer.Fajr,
+              salahTimeStart: c.prayerTimes!.fajr,
+              salahTimeEnd: c.prayerTimes!.rising,
               rakatMuakBefore: '2',
             ),
-            spacingHeader(FARD_SALAH.Fajr),
-            if (c.showSunnahDuha)
-              actionsDuha(fardSalah: FARD_SALAH.Fajr, timeStart: c.sunrise),
-            if (c.showSunnahDuha) spacingHeader(FARD_SALAH.Fajr),
+            spacingHeader(Prayer.Fajr),
+            if (c.showSunnahDuha) actionsDuha(c),
+            if (c.showSunnahDuha) spacingHeader(Prayer.Rising),
             c.isFriday() && c.showJummahOnFriday
                 ? SliverPersistentHeader(
-                    pinned: c.activeSalah == FARD_SALAH.Dhuhr,
+                    pinned: c.prayerTimes!.currentPrayerName == Prayer.Dhuhr,
                     delegate: _SliverAppBarDelegate(
                       minHeight: SALAH_ACTIONS_HEIGHT,
                       maxHeight: SALAH_ACTIONS_HEIGHT,
@@ -1576,8 +1603,8 @@ class QuestsActive extends StatelessWidget {
                         front: Container(
                           child: actionsSalahRow(
                             rakatFard: '2', // Jummah Mode
-                            fardSalah: FARD_SALAH.Dhuhr,
-                            salahTimeStart: c.dhuhr,
+                            fardSalah: Prayer.Dhuhr,
+                            salahTimeStart: c.prayerTimes!.dhuhr,
                             rakatMuakBefore: '4',
                             rakatMuakAfter: '6',
                             rakatNaflAfter: '2',
@@ -1587,8 +1614,8 @@ class QuestsActive extends StatelessWidget {
                         back: Container(
                           child: actionsSalahRow(
                             rakatFard: '4',
-                            fardSalah: FARD_SALAH.Dhuhr,
-                            salahTimeStart: c.dhuhr,
+                            fardSalah: Prayer.Dhuhr,
+                            salahTimeStart: c.prayerTimes!.dhuhr,
                             rakatMuakBefore: '4',
                             rakatMuakAfter: '2',
                             rakatNaflAfter: '2',
@@ -1599,7 +1626,7 @@ class QuestsActive extends StatelessWidget {
                     ),
                   )
                 : SliverPersistentHeader(
-                    pinned: c.activeSalah == FARD_SALAH.Dhuhr,
+                    pinned: c.prayerTimes!.currentPrayerName == Prayer.Dhuhr,
                     delegate: _SliverAppBarDelegate(
                       minHeight: SALAH_ACTIONS_HEIGHT,
                       maxHeight: SALAH_ACTIONS_HEIGHT,
@@ -1608,8 +1635,8 @@ class QuestsActive extends StatelessWidget {
                         front: Container(
                           child: actionsSalahRow(
                             rakatFard: '4',
-                            fardSalah: FARD_SALAH.Dhuhr,
-                            salahTimeStart: c.dhuhr,
+                            fardSalah: Prayer.Dhuhr,
+                            salahTimeStart: c.prayerTimes!.dhuhr,
                             rakatMuakBefore: '4',
                             rakatMuakAfter: '2',
                             rakatNaflAfter: '2',
@@ -1619,8 +1646,8 @@ class QuestsActive extends StatelessWidget {
                         back: Container(
                           child: actionsSalahRow(
                             rakatFard: '2', // Jummah Mode
-                            fardSalah: FARD_SALAH.Dhuhr,
-                            salahTimeStart: c.dhuhr,
+                            fardSalah: Prayer.Dhuhr,
+                            salahTimeStart: c.prayerTimes!.dhuhr,
                             rakatMuakBefore: '4',
                             rakatMuakAfter: '6',
                             rakatNaflAfter: '2',
@@ -1630,33 +1657,33 @@ class QuestsActive extends StatelessWidget {
                       ),
                     ),
                   ),
-            spacingHeader(FARD_SALAH.Dhuhr),
+            spacingHeader(Prayer.Dhuhr),
             actionsSalah(
               rakatFard: '4',
-              fardSalah: FARD_SALAH.Asr,
-              salahTimeStart: c.asr,
+              fardSalah: Prayer.Asr,
+              salahTimeStart: c.prayerTimes!.asr,
               rakatNaflBefore: '4',
             ),
-            spacingHeader(FARD_SALAH.Asr),
+            spacingHeader(Prayer.Asr),
             actionsSalah(
               rakatFard: '3',
-              fardSalah: FARD_SALAH.Maghrib,
-              salahTimeStart: c.maghrib,
+              fardSalah: Prayer.Maghrib,
+              salahTimeStart: c.prayerTimes!.maghrib,
               rakatMuakAfter: '2',
               rakatNaflAfter: '2',
             ),
-            spacingHeader(FARD_SALAH.Maghrib),
+            spacingHeader(Prayer.Maghrib),
             actionsSalah(
               rakatFard: '4',
-              fardSalah: FARD_SALAH.Isha,
-              salahTimeStart: c.isha,
+              fardSalah: Prayer.Isha,
+              salahTimeStart: c.prayerTimes!.isha,
               rakatNaflBefore: '4',
               rakatMuakAfter: '2',
               rakatNaflAfter: '2',
             ),
-            spacingHeader(FARD_SALAH.Isha),
-            if (c.showSunnahLayl) actionsLaylIbadah(fardSalah: FARD_SALAH.Isha),
-            if (c.showSunnahLayl) spacingHeader(FARD_SALAH.Isha),
+            spacingHeader(Prayer.Isha),
+            if (c.showSunnahLayl) actionsLaylIbadah(fardSalah: Prayer.Isha),
+            if (c.showSunnahLayl) spacingHeader(Prayer.Isha),
             sliverSpaceHeader(true),
             sliverSpaceHeader2(false),
             sliverSpaceHeader2(false),
@@ -1668,8 +1695,8 @@ class QuestsActive extends StatelessWidget {
             sliverSpaceHeader2(false),
           ],
         ),
-      ),
-    );
+      );
+    });
   }
 }
 

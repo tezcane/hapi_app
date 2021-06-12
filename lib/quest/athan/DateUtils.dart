@@ -11,9 +11,10 @@ DateTime dateByAddingSeconds(DateTime date, int seconds) {
 }
 
 DateTime roundedMinute(DateTime date, {bool precision = true}) {
+  if (precision) return date;
+
   int seconds = date.toUtc().second % 60;
   int offset = seconds >= 30 ? 60 - seconds : -1 * seconds;
-  if (precision) return date;
 
   return dateByAddingSeconds(date, offset);
 }

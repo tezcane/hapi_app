@@ -11,12 +11,13 @@ import 'package:hapi/quest/athan/Coordinates.dart';
 import 'package:hapi/quest/athan/Madhab.dart';
 import 'package:hapi/quest/athan/PrayerTimes.dart';
 import 'package:hapi/quest/athan/Qibla.dart';
-import 'package:hapi/quest/athan/SunnahTimes.dart';
 import 'package:hapi/quest/quest_model.dart';
 import 'package:hapi/services/database.dart';
 import 'package:intl/intl.dart';
 import 'package:timezone/data/latest.dart' show initializeTimeZones;
 import 'package:timezone/timezone.dart' show Location, TZDateTime, getLocation;
+
+import 'athan/Prayer.dart';
 
 final QuestController cQust = Get.find();
 
@@ -30,22 +31,15 @@ enum DAY_OF_WEEK {
   Sunday
 }
 
-enum FARD_SALAH {
-  Fajr,
-  Dhuhr,
-  Asr,
-  Maghrib,
-  Isha,
-}
-
 DAY_OF_WEEK getDayOfWeek() {
+  // TODO test in other locales
   String day = DateFormat('EEEE').format(DateTime.now());
   for (var dayOfWeek in DAY_OF_WEEK.values) {
     if (day == dayOfWeek.toString().split('.').last) {
       return dayOfWeek;
     }
   }
-  return DAY_OF_WEEK.Friday;
+  return DAY_OF_WEEK.Monday;
 }
 
 class QuestController extends GetxController {
@@ -70,46 +64,20 @@ class QuestController extends GetxController {
   RxBool _salahAsrSafe = true.obs; // true hanafi, false other
   RxBool _salahKerahatSafe = true.obs; // true hanafi, false other
 
-  Rx<FARD_SALAH> _activeSalah = FARD_SALAH.Maghrib.obs;
-  FARD_SALAH get activeSalah => _activeSalah.value;
+  PrayerTimes? _prayerTimes;
+  PrayerTimes? get prayerTimes => _prayerTimes;
 
-  DateTime? _fajr;
-  DateTime? _sunrise;
-  DateTime? _dhuhr;
-  DateTime? _asr;
-  DateTime? _maghrib;
-  DateTime? _isha;
-  DateTime? _ishaBefore;
-  DateTime? _fajrAfter;
-  String? _currPrayerName;
-  DateTime? _currPrayer;
-  String? _nextPrayerName;
-  DateTime? _nextPrayer;
-  DateTime? _middleOfTheNight;
-  DateTime? _lastThirdOfTheNight;
-  double? _qiblaDirection;
   RxString _nextPrayerTime = '-'.obs;
   int _secsToNextPrayer = 86401; // make big so first call doesn' retrigger init
 
-  DateTime? get fajr => _fajr;
-  DateTime? get sunrise => _sunrise;
-  DateTime? get dhuhr => _dhuhr;
-  DateTime? get asr => _asr;
-  DateTime? get maghrib => _maghrib;
-  DateTime? get isha => _isha;
-  DateTime? get ishaBefore => _ishaBefore;
-  DateTime? get fajrAfter => _fajrAfter;
-  String? get currentPrayerName => _currPrayerName;
-  DateTime? get currentPrayer => _currPrayer;
-  String? get nextPrayerName => _nextPrayerName;
-  DateTime? get nextPrayer => _nextPrayer;
-  DateTime? get middleOfTheNight => _middleOfTheNight;
-  DateTime? get lastThirdOfTheNight => _lastThirdOfTheNight;
-  double? get qiblaDirection => _qiblaDirection;
   String get timeToNextPrayer => _nextPrayerTime.value;
 
   Location? _timeZone;
   Coordinates _gps = Coordinates(36.950663449472, -122.05716133118);
+  double? _qiblaDirection;
+  double? get qiblaDirection => _qiblaDirection;
+
+  bool forceSalahRecalculation = false;
 
   @override
   void onInit() {
@@ -127,12 +95,29 @@ class QuestController extends GetxController {
     _salahAsrSafe.value = s.read('salahAsrSafe') ?? true;
     _salahKerahatSafe.value = s.read('salahKerahatSafe') ?? true;
 
-    // TODO this looks unreliable:
-    String uid = Get.find<AuthController>().firebaseUser.value!.uid;
-    print('QuestController.onInit: binding to db with uid=$uid');
-    questList.bindStream(Database().questStream(uid)); //stream from firebase
+    initQuestList();
 
     super.onInit();
+  }
+
+  // TODO test this:
+  void initQuestList() async {
+    int sleepBackoffSecs = 1;
+
+    // No internet needed to init, but we put a back off just in case:
+    while (Get.find<AuthController>().firebaseUser.value == null) {
+      print(
+          'QuestController.initQuestList: not ready, try again after sleeping $sleepBackoffSecs Secs...');
+      await Future.delayed(Duration(seconds: sleepBackoffSecs));
+      if (sleepBackoffSecs < 10) {
+        sleepBackoffSecs++;
+      }
+    }
+
+    // TODO asdf fdsa move this to TODO logic controller? this looks unreliable:
+    String uid = Get.find<AuthController>().firebaseUser.value!.uid;
+    print('QuestController.initQuestList: binding to db with uid=$uid');
+    questList.bindStream(Database().questStream(uid)); //stream from firebase
   }
 
   bool get showSunnahMuak => _showSunnahMuak.value;
@@ -190,20 +175,23 @@ class QuestController extends GetxController {
   set salahAsrSafe(bool value) {
     _salahAsrSafe.value = value;
     s.write('salahAsrSafe', value);
+    forceSalahRecalculation = true;
     update();
   }
 
   set salahKerahatSafe(bool value) {
     _salahKerahatSafe.value = value;
     s.write('salahKerahatSafe', value);
+    forceSalahRecalculation = true;
     update();
   }
 
-  void toggleSalahAlarm(FARD_SALAH fardSalah) {
+  void toggleSalahAlarm(Prayer fardSalah) {
     // TODO asdf
   }
 
   initLocation() async {
+    // TODO detect and report bad timezones
     String timeZone = await FlutterNativeTimezone.getLocalTimezone();
     print('***** Time Zone: "$timeZone"');
 
@@ -211,102 +199,29 @@ class QuestController extends GetxController {
     _gps = Coordinates(37.3382, -121.8863); // San Jose // TODO
 
     _qiblaDirection = Qibla.qibla(_gps); // Qibla Direction TODO
+    print('***** Qibla Direction:');
+    print('qibla: $_qiblaDirection');
 
     // TODO precision and salah settings
     DateTime date = TZDateTime.from(DateTime.now(), _timeZone!);
     CalculationParameters params = CalculationMethod.NorthAmerica();
-    params.madhab = Madhab.Hanafi;
-    PrayerTimes prayerTimes = PrayerTimes(_gps, date, params, precision: false);
 
-    initSalahTimes(date, prayerTimes, _timeZone!);
-  }
-
-  initSalahTimes(DateTime date, PrayerTimes prayerTimes, Location tz) async {
-    // Prayer times
-    _fajr = TZDateTime.from(prayerTimes.fajr!, tz);
-    _sunrise = TZDateTime.from(prayerTimes.sunrise!, tz);
-    _dhuhr = TZDateTime.from(prayerTimes.dhuhr!, tz);
-    _asr = TZDateTime.from(prayerTimes.asr!, tz);
-    _maghrib = TZDateTime.from(prayerTimes.maghrib!, tz);
-    _isha = TZDateTime.from(prayerTimes.isha!, tz);
-
-    _ishaBefore = TZDateTime.from(prayerTimes.ishabefore!, tz);
-    _fajrAfter = TZDateTime.from(prayerTimes.fajrafter!, tz);
-
-    // Convenience Utilities
-    _currPrayerName = prayerTimes.currentPrayer(date);
-    _currPrayer =
-        TZDateTime.from(prayerTimes.timeForPrayer(_currPrayerName!)!, tz);
-
-    _nextPrayerName = prayerTimes.nextPrayer(date);
-    _nextPrayer =
-        TZDateTime.from(prayerTimes.timeForPrayer(_nextPrayerName!)!, tz);
-
-    // Sunnah Times
-    SunnahTimes sunnahTimes = SunnahTimes(prayerTimes);
-    _middleOfTheNight = TZDateTime.from(sunnahTimes.middleOfTheNight, tz);
-    _lastThirdOfTheNight = TZDateTime.from(sunnahTimes.lastThirdOfTheNight, tz);
-
-    switch (_currPrayerName) {
-      // TODO what to do with these?
-      // 'sunrise';
-      // 'ishabefore';
-      // 'fajrafter';
-      // 'none';
-      case ('none'):
-      case ('fajr'):
-      case ('sunrise'):
-      case ('fajrafter'):
-        {
-          _activeSalah.value = FARD_SALAH.Fajr;
-          break;
-        }
-      case ('dhuhr'):
-        {
-          _activeSalah.value = FARD_SALAH.Dhuhr;
-          break;
-        }
-      case ('asr'):
-        {
-          _activeSalah.value = FARD_SALAH.Asr;
-          break;
-        }
-      case ('maghrib'):
-        {
-          _activeSalah.value = FARD_SALAH.Maghrib;
-          break;
-        }
-      case ('isha'):
-      case ('ishabefore'):
-        {
-          _activeSalah.value = FARD_SALAH.Isha;
-          break;
-        }
+    if (cQust.salahAsrSafe) {
+      params.madhab = Madhab.Hanafi;
+    } else {
+      params.madhab = Madhab.Shafi;
     }
 
-    print('***** Current Local Time: $date');
-    print('***** Time Zone: "${date.timeZoneName}"');
-
-    print('***** Prayer Times:');
-    print('fajr:        $_fajr');
-    print('sunrise:     $_sunrise');
-    print('dhuhr:       $_dhuhr');
-    print('asr:         $_asr');
-    print('maghrib:     $_maghrib');
-    print('isha:        $_isha');
-    print('isha before: $_ishaBefore');
-    print('fajr after:  $_fajrAfter');
-
-    print('***** Convenience Utilities:');
-    print('current: $_currPrayer ($_currPrayerName)');
-    print('next:    $_nextPrayer ($_nextPrayerName)');
-
-    print('***** Sunnah Times:');
-    print('middleOfTheNight:    $_middleOfTheNight');
-    print('lastThirdOfTheNight: $_lastThirdOfTheNight');
-
-    print('***** Qibla Direction:');
-    print('qibla: $_qiblaDirection');
+    if (cQust.salahKerahatSafe) {
+      params.kerahatSunRisingMins = 40;
+      params.kerahatSunPeakingMins = 40;
+      params.kerahatSunSettingMins = 40;
+    } else {
+      params.kerahatSunRisingMins = 20;
+      params.kerahatSunPeakingMins = 15;
+      params.kerahatSunSettingMins = 20;
+    }
+    _prayerTimes = PrayerTimes(_gps, date, params, _timeZone!, false);
 
     update(); // update UI with above changes (needed at app init)
 
@@ -317,10 +232,13 @@ class QuestController extends GetxController {
   void startNextPrayerCountdownTimer() {
     Timer(Duration(seconds: 1), () {
       DateTime date = TZDateTime.from(DateTime.now(), _timeZone!);
-      Duration nextPrayerDuration = _nextPrayer!.difference(date);
+      Duration nextPrayerDuration =
+          _prayerTimes!.nextPrayerDate!.difference(date);
 
       // if we hit the end of a timer we recalculate all prayer times
-      if (nextPrayerDuration.inSeconds > _secsToNextPrayer) {
+      if (forceSalahRecalculation ||
+          nextPrayerDuration.inSeconds > _secsToNextPrayer) {
+        forceSalahRecalculation = false;
         _secsToNextPrayer = nextPrayerDuration.inSeconds;
         initLocation(); // does startNextPrayerCountdownTimer();
       } else {

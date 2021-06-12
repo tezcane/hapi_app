@@ -2,44 +2,47 @@ import 'package:hapi/quest/athan/HighLatitudeRule.dart';
 import 'package:hapi/quest/athan/Madhab.dart';
 
 class CalculationParameters {
-  String? method;
-  late double fajrAngle;
-  late double ishaAngle;
-  double? ishaInterval;
+  final String method;
+  final double fajrAngle;
+  final double ishaAngle;
+  Madhab madhab;
+  int kerahatSunRisingMins;
+  int kerahatSunPeakingMins;
+  int kerahatSunSettingMins;
+  HighLatitudeRule highLatitudeRule;
+  double ishaInterval;
   double? maghribAngle;
 
-  Madhab madhab = Madhab.Hanafi;
-  HighLatitudeRule highLatitudeRule = HighLatitudeRule.MiddleOfTheNight;
+  Map adjustments = {
+    'fajr': 0,
+    'sunrise': 0,
+    'dhuhr': 0,
+    'asr': 0,
+    'maghrib': 0,
+    'isha': 0
+  };
 
-  late Map adjustments;
-  late Map methodAdjustments;
+  Map methodAdjustments = {
+    'fajr': 0,
+    'sunrise': 0,
+    'dhuhr': 0,
+    'asr': 0,
+    'maghrib': 0,
+    'isha': 0
+  };
 
-  CalculationParameters(String methodName, double fajrAngle, double ishaAngle,
-      {double? ishaInterval, double? maghribAngle}) {
-    this.method = methodName;
-    this.fajrAngle = fajrAngle;
-    this.ishaAngle = ishaAngle;
-    this.ishaInterval = ishaInterval ?? 0.0;
-    this.maghribAngle = maghribAngle; // TODO default?
-    //this.madhab = Madhab.Hanafi;
-    //this.highLatitudeRule = HighLatitudeRule.MiddleOfTheNight;
-    this.adjustments = {
-      'fajr': 0,
-      'sunrise': 0,
-      'dhuhr': 0,
-      'asr': 0,
-      'maghrib': 0,
-      'isha': 0
-    };
-    this.methodAdjustments = {
-      'fajr': 0,
-      'sunrise': 0,
-      'dhuhr': 0,
-      'asr': 0,
-      'maghrib': 0,
-      'isha': 0
-    };
-  }
+  CalculationParameters(
+    this.method,
+    this.fajrAngle,
+    this.ishaAngle, {
+    this.madhab = Madhab.Hanafi,
+    this.kerahatSunRisingMins = 40,
+    this.kerahatSunPeakingMins = 30,
+    this.kerahatSunSettingMins = 40,
+    this.ishaInterval = 0.0,
+    this.highLatitudeRule = HighLatitudeRule.MiddleOfTheNight,
+    this.maghribAngle, // expected to be null when not in use
+  });
 
   nightPortions() {
     switch (this.highLatitudeRule) {

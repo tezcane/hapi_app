@@ -81,7 +81,7 @@ class CalculationMethod {
     return params;
   }
 
-  // Dianet
+  // Diyanet
   static Turkey() {
     CalculationParameters params = CalculationParameters("Turkey", 18, 17);
     params.methodAdjustments = {
