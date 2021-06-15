@@ -99,7 +99,7 @@ class ActiveQuestSettings extends StatelessWidget {
             ),
             const SizedBox(height: 15),
             Tooltip(
-              message: 'Show/Hide Sunnah Key',
+              message: 'Show/Hide Labels and Sunnah Key',
               child: Text(
                 'Labels/Key',
                 textAlign: TextAlign.center,
