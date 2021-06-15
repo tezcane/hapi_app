@@ -1,18 +1,21 @@
+import 'package:hapi/quest/athan/CalculationMethod.dart';
 import 'package:hapi/quest/athan/HighLatitudeRule.dart';
 import 'package:hapi/quest/athan/Madhab.dart';
 
 class CalculationParameters {
-  final String method;
+  final SalahMethod salahMethod;
   final double fajrAngle;
   final double ishaAngle;
+  final Map methodAdjustments; // Different calculation methods adjust times.
   Madhab madhab;
   int kerahatSunRisingMins;
   int kerahatSunPeakingMins;
   int kerahatSunSettingMins;
+  int ishaInterval;
   HighLatitudeRule highLatitudeRule;
-  double ishaInterval;
   double? maghribAngle;
 
+  // TODO user to customize +/- minutes to salah times
   Map adjustments = {
     'fajr': 0,
     'sunrise': 0,
@@ -22,24 +25,16 @@ class CalculationParameters {
     'isha': 0
   };
 
-  Map methodAdjustments = {
-    'fajr': 0,
-    'sunrise': 0,
-    'dhuhr': 0,
-    'asr': 0,
-    'maghrib': 0,
-    'isha': 0
-  };
-
   CalculationParameters(
-    this.method,
+    this.salahMethod,
     this.fajrAngle,
-    this.ishaAngle, {
+    this.ishaAngle,
+    this.methodAdjustments, {
     this.madhab = Madhab.Hanafi,
     this.kerahatSunRisingMins = 40,
     this.kerahatSunPeakingMins = 30,
     this.kerahatSunSettingMins = 40,
-    this.ishaInterval = 0.0,
+    this.ishaInterval = 0,
     this.highLatitudeRule = HighLatitudeRule.MiddleOfTheNight,
     this.maghribAngle, // expected to be null when not in use
   });

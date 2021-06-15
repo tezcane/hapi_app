@@ -61,6 +61,7 @@ class QuestController extends GetxController {
   RxBool _showSunnahKeys = true.obs;
   RxBool _showJummahOnFriday = true.obs; // if friday and true, shows jummah
   RxBool _show12HourClock = true.obs; // false = 24 hour clock/military time
+  RxInt _salahMethod = 0.obs; // 0 = America (ISNA)
   RxBool _salahAsrSafe = true.obs; // true hanafi, false other
   RxBool _salahKerahatSafe = true.obs; // true hanafi, false other
 
@@ -81,10 +82,6 @@ class QuestController extends GetxController {
 
   @override
   void onInit() {
-    initializeTimeZones();
-
-    initLocation();
-
     _showSunnahMuak.value = s.read('showSunnahMuak') ?? true;
     _showSunnahNafl.value = s.read('showSunnahNafl') ?? false;
     _showSunnahDuha.value = s.read('showSunnahDuha') ?? false;
@@ -94,6 +91,11 @@ class QuestController extends GetxController {
     _show12HourClock.value = s.read('show12HourClock') ?? true;
     _salahAsrSafe.value = s.read('salahAsrSafe') ?? true;
     _salahKerahatSafe.value = s.read('salahKerahatSafe') ?? true;
+    _salahMethod.value = s.read('salahMethod') ?? 0;
+
+    initializeTimeZones();
+
+    initLocation();
 
     initQuestList();
 
@@ -129,6 +131,7 @@ class QuestController extends GetxController {
   bool get show12HourClock => _show12HourClock.value;
   bool get salahAsrSafe => _salahAsrSafe.value;
   bool get salahKerahatSafe => _salahKerahatSafe.value;
+  int get salahMethod => _salahMethod.value;
 
   void toggleShowSunnahMuak() {
     _showSunnahMuak.value = !_showSunnahMuak.value;
@@ -186,6 +189,13 @@ class QuestController extends GetxController {
     update();
   }
 
+  set salahMethod(int value) {
+    _salahMethod.value = value;
+    s.write('salahMethod', value);
+    forceSalahRecalculation = true;
+    update();
+  }
+
   void toggleSalahAlarm(Prayer fardSalah) {
     // TODO asdf
   }
@@ -204,7 +214,8 @@ class QuestController extends GetxController {
 
     // TODO precision and salah settings
     DateTime date = TZDateTime.from(DateTime.now(), _timeZone!);
-    CalculationParameters params = CalculationMethod.NorthAmerica();
+    CalculationParameters params =
+        CalculationMethod.getMethod(SalahMethod.values[salahMethod]);
 
     if (cQust.salahAsrSafe) {
       params.madhab = Madhab.Hanafi;

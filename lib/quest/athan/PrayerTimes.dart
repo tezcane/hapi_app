@@ -1,4 +1,5 @@
 import 'package:hapi/quest/athan/Astronomical.dart';
+import 'package:hapi/quest/athan/CalculationMethod.dart';
 import 'package:hapi/quest/athan/CalculationParameters.dart';
 import 'package:hapi/quest/athan/Coordinates.dart';
 import 'package:hapi/quest/athan/DateUtils.dart';
@@ -112,7 +113,7 @@ class PrayerTimes {
         .utcDate(dateAfter.year, dateAfter.month, dateAfter.day);
 
     // special case for moonsighting committee above latitude 55
-    if (calculationParameters.method == "MoonsightingCommittee" &&
+    if (calculationParameters.salahMethod == SalahMethod.Moonsight_Committee &&
         coordinates.latitude >= 55) {
       nightFraction = night / 7;
       fajrTime = dateByAddingSeconds(sunriseTime, -nightFraction.round());
@@ -121,7 +122,8 @@ class PrayerTimes {
     }
 
     DateTime safeFajr() {
-      if (calculationParameters.method == "MoonsightingCommittee") {
+      if (calculationParameters.salahMethod ==
+          SalahMethod.Moonsight_Committee) {
         return Astronomical.seasonAdjustedMorningTwilight(
             coordinates.latitude, dayOfYear(date), date.year, sunriseTime);
       } else {
@@ -154,7 +156,8 @@ class PrayerTimes {
               -1 * calculationParameters.ishaAngle, true))
           .utcDate(dateBefore.year, dateBefore.month, dateBefore.day);
       // special case for moonsighting committee above latitude 55
-      if (calculationParameters.method == "MoonsightingCommittee" &&
+      if (calculationParameters.salahMethod ==
+              SalahMethod.Moonsight_Committee &&
           coordinates.latitude >= 55) {
         nightFraction = night / 7;
         ishaTime = dateByAddingSeconds(sunsetTime, nightFraction!.round());
@@ -163,7 +166,8 @@ class PrayerTimes {
       }
 
       DateTime safeIsha() {
-        if (calculationParameters.method == "MoonsightingCommittee") {
+        if (calculationParameters.salahMethod ==
+            SalahMethod.Moonsight_Committee) {
           return Astronomical.seasonAdjustedEveningTwilight(
               coordinates.latitude, dayOfYear(date), date.year, sunsetTime);
         } else {
@@ -174,7 +178,8 @@ class PrayerTimes {
       }
 
       DateTime safeIshaBefore() {
-        if (calculationParameters.method == "MoonsightingCommittee") {
+        if (calculationParameters.salahMethod ==
+            SalahMethod.Moonsight_Committee) {
           return Astronomical.seasonAdjustedEveningTwilight(
               coordinates.latitude, dayOfYear(date), date.year, sunsetTime);
         } else {

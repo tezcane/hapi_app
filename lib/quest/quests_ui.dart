@@ -11,6 +11,7 @@ import 'package:hapi/controllers/auth_controller.dart';
 import 'package:hapi/menu/fab_nav_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/menu/toggle_switch.dart';
+import 'package:hapi/quest/athan/CalculationMethod.dart';
 import 'package:hapi/quest/athan/Prayer.dart';
 import 'package:hapi/quest/quest_card.dart';
 import 'package:hapi/quest/quest_controller.dart';
@@ -45,6 +46,44 @@ class ActiveQuestSettings extends StatelessWidget {
           //crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Tooltip(
+              message: 'Select the salah time calculation method',
+              child: Text(
+                'Calculation Method',
+                textAlign: TextAlign.center,
+                style: textStyleTitle,
+              ),
+            ),
+            DropdownButton<int>(
+              isExpanded: true,
+              value: c.salahMethod,
+              //icon: const Icon(Icons.arrow_downward),
+              iconEnabledColor: Colors.white,
+              //iconSize: 24,
+              //elevation: 16,
+              style: textStyleBtn,
+              dropdownColor: Colors.black,
+              underline: Container(
+                height: 0,
+                color: Colors.black,
+              ),
+              onChanged: (int? newValue) {
+                c.salahMethod = newValue!;
+              },
+              items: List<int>.generate(SalahMethod.values.length - 1, (i) => i)
+                  .map<DropdownMenuItem<int>>(
+                (int value) {
+                  return DropdownMenuItem<int>(
+                    value: value,
+                    child: Text(
+                      SalahMethod.values[value].name(),
+                      //textAlign: TextAlign.center,
+                    ),
+                  );
+                },
+              ).toList(),
+            ),
+            const SizedBox(height: 15),
+            Tooltip(
               message: 'Show/Hide Sunnah actions',
               child: Text(
                 'Show Sunnah:',
@@ -54,15 +93,15 @@ class ActiveQuestSettings extends StatelessWidget {
             ),
             ShowSunnahSettings(
               btnHeight: 25,
-              btnGap: 5,
+              btnGap: 0,
               fontSize: 14,
               lrPadding: 0,
             ),
-            const SizedBox(height: 25),
+            const SizedBox(height: 15),
             Tooltip(
               message: 'Show/Hide Sunnah Key',
               child: Text(
-                'Sunnah Key',
+                'Labels/Key',
                 textAlign: TextAlign.center,
                 style: textStyleTitle,
               ),
@@ -87,12 +126,12 @@ class ActiveQuestSettings extends StatelessWidget {
                 }
               },
             ),
-            const SizedBox(height: 25),
+            const SizedBox(height: 15),
             Tooltip(
               message:
                   "Ulema opinions on Asr start time are when an object's shadow is 2 lengths or 1 length",
               child: Text(
-                'Asr Start (Object Shadow)',
+                'Asr Start',
                 textAlign: TextAlign.center,
                 style: textStyleTitle,
               ),
@@ -117,7 +156,7 @@ class ActiveQuestSettings extends StatelessWidget {
                 }
               },
             ),
-            const SizedBox(height: 25),
+            const SizedBox(height: 15),
             Tooltip(
               message:
                   "Ulema opinions on kerahat times are around 40 or 20 for sunset and sunrise kerahat times and around 30 or 15 minutes for the noon kerahat time",
@@ -147,7 +186,7 @@ class ActiveQuestSettings extends StatelessWidget {
                 }
               },
             ),
-            const SizedBox(height: 25),
+            const SizedBox(height: 15),
             Tooltip(
               message:
                   "Choice between showing Jummah Salah on Friday (if you go to Jummah) or set to Dhuhr which acts like non-Jummah days",
@@ -177,7 +216,7 @@ class ActiveQuestSettings extends StatelessWidget {
                 }
               },
             ),
-            const SizedBox(height: 25),
+            const SizedBox(height: 15),
             Tooltip(
               message:
                   "Gives choice between 12 hour clock (AM/PM) or 24 hour clock (military time)",
@@ -228,8 +267,8 @@ class ShowSunnahSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle textStyleTitle = TextStyle(
-        color: Colors.white, fontWeight: FontWeight.bold, fontSize: fontSize);
+    // final TextStyle textStyleTitle = TextStyle(
+    //     color: Colors.white, fontWeight: FontWeight.bold, fontSize: fontSize);
     final TextStyle textStyleBtn = TextStyle(
         color: Colors.white, fontWeight: FontWeight.bold, fontSize: fontSize);
 
@@ -570,7 +609,7 @@ class QuestsActive extends StatelessWidget {
   static const double SALAH_ACTIONS_HEIGHT = 55;
 
   final TextStyle topTitlesTextStyle =
-      const TextStyle(color: Colors.white, fontSize: 21.0);
+      const TextStyle(color: Colors.white, fontSize: 19.0);
   final TextStyle columnTitlesTextStyle =
       const TextStyle(color: Colors.white, fontSize: 11.5);
 
@@ -597,6 +636,7 @@ class QuestsActive extends StatelessWidget {
                     children: [
                       Row(
                         children: [
+                          SizedBox(width: 10),
                           Text(
                               c.prayerTimes != null
                                   ? c.prayerTimes!.currentPrayerName
@@ -621,72 +661,73 @@ class QuestsActive extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 1000,
-                        child: Column(
-                          children: [
-                            Text(
-                              'Before',
-                              textAlign: TextAlign.center,
-                              style: columnTitlesTextStyle,
-                            ),
-                            Text(
-                              'Sunnah',
-                              textAlign: TextAlign.center,
-                              style: columnTitlesTextStyle,
-                            ),
-                          ],
+                  if (c.showSunnahKeys) SizedBox(height: 8),
+                  if (c.showSunnahKeys)
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 1000,
+                          child: Column(
+                            children: [
+                              Text(
+                                'Before',
+                                textAlign: TextAlign.center,
+                                style: columnTitlesTextStyle,
+                              ),
+                              Text(
+                                'Sunnah',
+                                textAlign: TextAlign.center,
+                                style: columnTitlesTextStyle,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        flex: 1000,
-                        child: Column(
-                          children: [
-                            Text(
-                              'Fard',
-                              textAlign: TextAlign.center,
-                              style: columnTitlesTextStyle,
-                            ),
-                            Text(
-                              'Rakat',
-                              textAlign: TextAlign.center,
-                              style: columnTitlesTextStyle,
-                            ),
-                          ],
+                        Expanded(
+                          flex: 1000,
+                          child: Column(
+                            children: [
+                              Text(
+                                'Fard',
+                                textAlign: TextAlign.center,
+                                style: columnTitlesTextStyle,
+                              ),
+                              Text(
+                                'Rakat',
+                                textAlign: TextAlign.center,
+                                style: columnTitlesTextStyle,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      Expanded(
-                        flex: 2000,
-                        child: Column(
-                          children: [
-                            Text(
-                              'After',
-                              textAlign: TextAlign.center,
-                              style: columnTitlesTextStyle,
-                            ),
-                            Text(
-                              'Sunnah',
-                              textAlign: TextAlign.center,
-                              style: columnTitlesTextStyle,
-                            ),
-                          ],
+                        Expanded(
+                          flex: 2000,
+                          child: Column(
+                            children: [
+                              Text(
+                                'After',
+                                textAlign: TextAlign.center,
+                                style: columnTitlesTextStyle,
+                              ),
+                              Text(
+                                'Sunnah',
+                                textAlign: TextAlign.center,
+                                style: columnTitlesTextStyle,
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      // Expanded(
-                      //   flex: fardFlex,
-                      //   child: Text(''),
-                      // ),
-                      //Expanded(flex: 2000, child: Text('')),
-                    ],
-                  )
+                        // Expanded(
+                        //   flex: fardFlex,
+                        //   child: Text(''),
+                        // ),
+                        //Expanded(flex: 2000, child: Text('')),
+                      ],
+                    )
                 ],
               ),
             ),
             Expanded(
-              flex: 2000,
+              flex: c.showSunnahKeys ? 2000 : 0,
               child: c.showSunnahKeys
                   ? ShowSunnahSettings(
                       btnHeight: 19,

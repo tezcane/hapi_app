@@ -52,6 +52,7 @@ dependencies:
   flutter_swiper: ^1.1.6
   flutter_native_timezone: ^1.1.0
   flip_card: ^0.5.0
+#  flutter_picker: ^2.0.1
 
 # dependency_overrides:
 #  analyzer: 1.4.0

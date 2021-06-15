@@ -1,107 +1,130 @@
 import 'package:hapi/quest/athan/CalculationParameters.dart';
 
+enum SalahMethod {
+  America____ISNA___,
+  Dubai,
+  Egypt, // Egyptian General Authority of Survey
+  Karachi, // University of Islamic Sciences, Karachi
+  Kuwait,
+  Moonsight_Committee,
+  Morocco, // Moroccan ministry of Habous and Islamic Affairs
+  Muslim_World_League,
+  Qatar,
+  Singapore,
+  Tehran, // Institute of Geophysics, University of Tehran
+  Turkey____Diyanet___,
+  Umm_Al__Qura, // Umm al-Qura University, Makkah
+}
+
+extension enumUtil on SalahMethod {
+  String name() {
+    return this
+        .toString()
+        .split('.')
+        .last
+        .replaceFirst('____', ' (')
+        .replaceFirst('___', ')')
+        .replaceFirst('__', '-')
+        .replaceAll('_', ' ');
+  }
+}
+
 class CalculationMethod {
-  // Muslim World League
-  static MuslimWorldLeague() {
-    CalculationParameters params =
-        CalculationParameters("MuslimWorldLeague", 18, 17);
-    params.methodAdjustments = {'dhuhr': 1};
-    return params;
-  }
-
-  // Egyptian General Authority of Survey
-  static Egyptian() {
-    CalculationParameters params =
-        CalculationParameters("Egyptian", 19.5, 17.5);
-    params.methodAdjustments = {'dhuhr': 1};
-    return params;
-  }
-
-  // University of Islamic Sciences, Karachi
-  static Karachi() {
-    CalculationParameters params = CalculationParameters("Karachi", 18, 18);
-    params.methodAdjustments = {'dhuhr': 1};
-    return params;
-  }
-
-  // Umm al-Qura University, Makkah
-  static UmmAlQura() {
-    return CalculationParameters("UmmAlQura", 18.5, 0, ishaInterval: 90);
-  }
-
-  // Dubai
-  static Dubai() {
-    CalculationParameters params = CalculationParameters("Dubai", 18.2, 18.2);
-    params.methodAdjustments = {
-      'sunrise': -3,
-      'dhuhr': 3,
-      'asr': 3,
-      'maghrib': 3
+  static getMethod(SalahMethod salahMethod) {
+    Map methodAdjustments = {
+      'fajr': 0,
+      'sunrise': 0,
+      'dhuhr': 0,
+      'asr': 0,
+      'maghrib': 0,
+      'isha': 0
     };
-    return params;
-  }
 
-  // Moonsighting Committee
-  static MoonsightingCommittee() {
-    CalculationParameters params =
-        CalculationParameters("MoonsightingCommittee", 18, 18);
-    params.methodAdjustments = {'dhuhr': 5, 'maghrib': 3};
-    return params;
-  }
-
-  // ISNA
-  static NorthAmerica() {
-    CalculationParameters params =
-        CalculationParameters("NorthAmerica", 15, 15);
-    params.methodAdjustments = {'dhuhr': 1};
-    return params;
-  }
-
-  // Kuwait
-  static Kuwait() {
-    return CalculationParameters("Kuwait", 18, 17.5);
-  }
-
-  // Qatar
-  static Qatar() {
-    return CalculationParameters("Qatar", 18, 0, ishaInterval: 90);
-  }
-
-  // Singapore
-  static Singapore() {
-    CalculationParameters params = CalculationParameters("Singapore", 20, 18);
-    params.methodAdjustments = {'dhuhr': 1};
-    return params;
-  }
-
-  // Institute of Geophysics, University of Tehran
-  static Tehran() {
-    CalculationParameters params = CalculationParameters("Tehran", 17.7, 14,
-        ishaInterval: 0, maghribAngle: 4.5);
-    return params;
-  }
-
-  // Diyanet
-  static Turkey() {
-    CalculationParameters params = CalculationParameters("Turkey", 18, 17);
-    params.methodAdjustments = {
-      'sunrise': -7,
-      'dhuhr': 5,
-      'asr': 4,
-      'maghrib': 7
-    };
-    return params;
-  }
-
-  // Moroccan ministry of Habous and Islamic Affairs
-  static Morocco() {
-    CalculationParameters params = CalculationParameters("Morocco", 19, 17);
-    params.methodAdjustments = {'sunrise': -3, 'dhuhr': 5, 'maghrib': 5};
-    return params;
-  }
-
-  // Other
-  static Other() {
-    return CalculationParameters("Other", 0, 0);
+    switch (salahMethod) {
+      case (SalahMethod.America____ISNA___):
+        {
+          Map methodAdjustments = {'dhuhr': 1};
+          return CalculationParameters(salahMethod, 15, 15, methodAdjustments);
+        }
+      case (SalahMethod.Dubai):
+        {
+          Map methodAdjustments = {
+            'sunrise': -3,
+            'dhuhr': 3,
+            'asr': 3,
+            'maghrib': 3
+          };
+          return CalculationParameters(
+              salahMethod, 18.2, 18.2, methodAdjustments);
+        }
+      case (SalahMethod.Egypt):
+        {
+          Map methodAdjustments = {'dhuhr': 1};
+          return CalculationParameters(
+              salahMethod, 19.5, 17.5, methodAdjustments);
+        }
+      case (SalahMethod.Karachi):
+        {
+          Map methodAdjustments = {'dhuhr': 1};
+          return CalculationParameters(salahMethod, 18, 18, methodAdjustments);
+        }
+      case (SalahMethod.Kuwait):
+        {
+          return CalculationParameters(
+              salahMethod, 18, 17.5, methodAdjustments);
+        }
+      case (SalahMethod.Moonsight_Committee):
+        {
+          Map methodAdjustments = {'dhuhr': 5, 'maghrib': 3};
+          return CalculationParameters(salahMethod, 18, 18, methodAdjustments);
+        }
+      case (SalahMethod.Morocco):
+        {
+          Map methodAdjustments = {'sunrise': -3, 'dhuhr': 5, 'maghrib': 5};
+          return CalculationParameters(salahMethod, 19, 17, methodAdjustments);
+        }
+      case (SalahMethod.Muslim_World_League):
+        {
+          Map methodAdjustments = {'dhuhr': 1};
+          return CalculationParameters(salahMethod, 18, 17, methodAdjustments);
+        }
+      case (SalahMethod.Qatar):
+        {
+          return CalculationParameters(salahMethod, 18, 0, methodAdjustments,
+              ishaInterval: 90);
+        }
+      case (SalahMethod.Singapore):
+        {
+          Map methodAdjustments = {'dhuhr': 1};
+          return CalculationParameters(salahMethod, 20, 18, methodAdjustments);
+        }
+      case (SalahMethod.Tehran):
+        {
+          return CalculationParameters(salahMethod, 17.7, 14, methodAdjustments,
+              ishaInterval: 0, maghribAngle: 4.5);
+        }
+      case (SalahMethod.Turkey____Diyanet___):
+        {
+          Map methodAdjustments = {
+            'sunrise': -7,
+            'dhuhr': 5,
+            'asr': 4,
+            'maghrib': 7
+          };
+          return CalculationParameters(salahMethod, 18, 17, methodAdjustments);
+        }
+      case (SalahMethod.Umm_Al__Qura):
+        {
+          return CalculationParameters(salahMethod, 18.5, 0, methodAdjustments,
+              ishaInterval: 90);
+        }
+      // default to America (ISNA)
+      default:
+        {
+          Map methodAdjustments = {'dhuhr': 1};
+          return CalculationParameters(
+              SalahMethod.America____ISNA___, 15, 15, methodAdjustments);
+        }
+    }
   }
 }
