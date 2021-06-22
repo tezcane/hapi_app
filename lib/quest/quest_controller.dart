@@ -61,7 +61,7 @@ class QuestController extends GetxController {
   RxBool _showSunnahKeys = true.obs;
   RxBool _showJummahOnFriday = true.obs; // if friday and true, shows jummah
   RxBool _show12HourClock = true.obs; // false = 24 hour clock/military time
-  RxInt _salahMethod = 0.obs; // 0 = America (ISNA)
+  RxInt _salahCalcMethod = 0.obs; // 0 = America (ISNA)
   RxBool _salahAsrSafe = true.obs; // true hanafi, false other
   RxBool _salahKerahatSafe = true.obs; // true hanafi, false other
 
@@ -91,7 +91,7 @@ class QuestController extends GetxController {
     _show12HourClock.value = s.read('show12HourClock') ?? true;
     _salahAsrSafe.value = s.read('salahAsrSafe') ?? true;
     _salahKerahatSafe.value = s.read('salahKerahatSafe') ?? true;
-    _salahMethod.value = s.read('salahMethod') ?? 0;
+    _salahCalcMethod.value = s.read('salahCalcMethod') ?? 0;
 
     initializeTimeZones();
 
@@ -131,7 +131,7 @@ class QuestController extends GetxController {
   bool get show12HourClock => _show12HourClock.value;
   bool get salahAsrSafe => _salahAsrSafe.value;
   bool get salahKerahatSafe => _salahKerahatSafe.value;
-  int get salahMethod => _salahMethod.value;
+  int get salahCalcMethod => _salahCalcMethod.value;
 
   void toggleShowSunnahMuak() {
     _showSunnahMuak.value = !_showSunnahMuak.value;
@@ -189,9 +189,9 @@ class QuestController extends GetxController {
     update();
   }
 
-  set salahMethod(int value) {
-    _salahMethod.value = value;
-    s.write('salahMethod', value);
+  set salahCalcMethod(int value) {
+    _salahCalcMethod.value = value;
+    s.write('salahCalcMethod', value);
     forceSalahRecalculation = true;
     update();
   }
@@ -215,7 +215,7 @@ class QuestController extends GetxController {
     // TODO precision and salah settings
     DateTime date = TZDateTime.from(DateTime.now(), _timeZone!);
     CalculationParameters params =
-        CalculationMethod.getMethod(SalahMethod.values[salahMethod]);
+        CalculationMethod.getMethod(SalahMethod.values[salahCalcMethod]);
 
     if (cQust.salahAsrSafe) {
       params.madhab = Madhab.Hanafi;

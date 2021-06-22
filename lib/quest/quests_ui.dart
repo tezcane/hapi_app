@@ -55,7 +55,7 @@ class ActiveQuestSettings extends StatelessWidget {
             ),
             DropdownButton<int>(
               isExpanded: true,
-              value: c.salahMethod,
+              value: c.salahCalcMethod,
               //icon: const Icon(Icons.arrow_downward),
               iconEnabledColor: Colors.white,
               //iconSize: 24,
@@ -67,7 +67,7 @@ class ActiveQuestSettings extends StatelessWidget {
                 color: Colors.black,
               ),
               onChanged: (int? newValue) {
-                c.salahMethod = newValue!;
+                c.salahCalcMethod = newValue!;
               },
               items: List<int>.generate(SalahMethod.values.length - 1, (i) => i)
                   .map<DropdownMenuItem<int>>(
@@ -129,7 +129,7 @@ class ActiveQuestSettings extends StatelessWidget {
             const SizedBox(height: 15),
             Tooltip(
               message:
-                  "Ulema opinions on Asr start time are when an object's shadow is 2 lengths or 1 length",
+                  "Ulema opinions on Asr start time are when an object's shadow is either 2 times its lengths (later) or 1 times its length (earlier)",
               child: Text(
                 'Asr Start',
                 textAlign: TextAlign.center,
@@ -142,7 +142,7 @@ class ActiveQuestSettings extends StatelessWidget {
               minHeight: 50.0,
               fontSize: 14,
               initialLabelIndex: c.salahAsrSafe ? 0 : 1,
-              labels: ['2 length', '1 length'],
+              labels: ['Later', 'Earlier'],
               //cornerRadius: 20.0,
               activeBgColor: const Color(0xFF268E0D),
               activeFgColor: Colors.white,
