@@ -303,17 +303,17 @@ class PrayerTimes {
       return _ishaDayBefore!;
     } else if (prayer == Prayer.Fajr) {
       return _fajr!;
-    } else if (prayer == Prayer.Rising) {
+    } else if (prayer == Prayer.Sunrise) {
       return _rising!;
     } else if (prayer == Prayer.Duha) {
       return _duha!;
-    } else if (prayer == Prayer.Peaking) {
+    } else if (prayer == Prayer.Sun_Zenith) {
       return _peaking!;
     } else if (prayer == Prayer.Dhuhr) {
       return _dhuhr!;
     } else if (prayer == Prayer.Asr) {
       return _asr!;
-    } else if (prayer == Prayer.Setting) {
+    } else if (prayer == Prayer.Sunset) {
       return _setting!;
     } else if (prayer == Prayer.Maghrib) {
       return _maghrib!;
@@ -333,17 +333,17 @@ class PrayerTimes {
     } else if (date.isAfter(_maghrib!)) {
       return Prayer.Maghrib;
     } else if (date.isAfter(_setting!)) {
-      return Prayer.Setting;
+      return Prayer.Sunset;
     } else if (date.isAfter(_asr!)) {
       return Prayer.Asr;
     } else if (date.isAfter(_dhuhr!)) {
       return Prayer.Dhuhr;
     } else if (date.isAfter(_peaking!)) {
-      return Prayer.Peaking;
+      return Prayer.Sun_Zenith;
     } else if (date.isAfter(_duha!)) {
       return Prayer.Duha;
     } else if (date.isAfter(_rising!)) {
-      return Prayer.Rising;
+      return Prayer.Sunrise;
     } else if (date.isAfter(_fajr!)) {
       return Prayer.Fajr;
     } else {
@@ -356,14 +356,20 @@ class PrayerTimes {
       return Prayer.FajrDayAfter;
     } else if (date.isAfter(_maghrib!)) {
       return Prayer.Isha;
-    } else if (date.isAfter(_asr!)) {
+    } else if (date.isAfter(_setting!)) {
       return Prayer.Maghrib;
+    } else if (date.isAfter(_asr!)) {
+      return Prayer.Sunset;
     } else if (date.isAfter(_dhuhr!)) {
       return Prayer.Asr;
-    } else if (date.isAfter(_rising!)) {
+    } else if (date.isAfter(_peaking!)) {
       return Prayer.Dhuhr;
+    } else if (date.isAfter(_duha!)) {
+      return Prayer.Sun_Zenith;
+    } else if (date.isAfter(_rising!)) {
+      return Prayer.Duha;
     } else if (date.isAfter(_fajr!)) {
-      return Prayer.Rising;
+      return Prayer.Sunrise;
     } else {
       return Prayer.Fajr;
     }

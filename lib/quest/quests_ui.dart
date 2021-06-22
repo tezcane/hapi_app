@@ -61,10 +61,10 @@ class ActiveQuestSettings extends StatelessWidget {
               //iconSize: 24,
               //elevation: 16,
               style: textStyleBtn,
-              dropdownColor: Colors.black,
+              dropdownColor: AppThemes.logoBackground,
               underline: Container(
                 height: 0,
-                color: Colors.black,
+                color: AppThemes.logoBackground,
               ),
               onChanged: (int? newValue) {
                 c.salahCalcMethod = newValue!;
@@ -269,8 +269,20 @@ class ShowSunnahSettings extends StatelessWidget {
   Widget build(BuildContext context) {
     // final TextStyle textStyleTitle = TextStyle(
     //     color: Colors.white, fontWeight: FontWeight.bold, fontSize: fontSize);
-    final TextStyle textStyleBtn = TextStyle(
-        color: Colors.white, fontWeight: FontWeight.bold, fontSize: fontSize);
+    final TextStyle textStyleBtnMuak = TextStyle(
+        color: Colors.green, fontWeight: FontWeight.bold, fontSize: fontSize);
+    final TextStyle textStyleBtnNafl = TextStyle(
+        color: Colors.amber.shade700,
+        fontWeight: FontWeight.bold,
+        fontSize: fontSize);
+    final TextStyle textStyleBtnDuha = TextStyle(
+        color: Colors.yellow.shade300,
+        fontWeight: FontWeight.bold,
+        fontSize: fontSize);
+    final TextStyle textStyleBtnLayl = TextStyle(
+        color: Colors.pinkAccent,
+        fontWeight: FontWeight.bold,
+        fontSize: fontSize);
 
     return GetBuilder<QuestController>(
       builder: (c) {
@@ -293,7 +305,7 @@ class ShowSunnahSettings extends StatelessWidget {
                 padding: EdgeInsets.only(left: lrPadding, right: lrPadding),
                 child: Container(
                   height: btnHeight,
-                  color: Colors.green.withOpacity(c.showSunnahMuak ? 1 : 0),
+                  //color: Colors.green.withOpacity(c.showSunnahMuak ? 1 : 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -311,7 +323,7 @@ class ShowSunnahSettings extends StatelessWidget {
                             ),
                       Text(
                         'Muakkadah',
-                        style: textStyleBtn,
+                        style: textStyleBtnMuak,
                       ),
                     ],
                   ),
@@ -327,8 +339,8 @@ class ShowSunnahSettings extends StatelessWidget {
                 padding: EdgeInsets.only(left: lrPadding, right: lrPadding),
                 child: Container(
                   height: btnHeight,
-                  color: Colors.amber.shade700
-                      .withOpacity(c.showSunnahNafl ? 1 : 0),
+                  // color: Colors.amber.shade700
+                  //     .withOpacity(c.showSunnahNafl ? 1 : 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -346,7 +358,7 @@ class ShowSunnahSettings extends StatelessWidget {
                             ),
                       Text(
                         'Nafl',
-                        style: textStyleBtn,
+                        style: textStyleBtnNafl,
                       ),
                     ],
                   ),
@@ -362,8 +374,8 @@ class ShowSunnahSettings extends StatelessWidget {
                 padding: EdgeInsets.only(left: lrPadding, right: lrPadding),
                 child: Container(
                   height: btnHeight,
-                  color: Colors.deepOrangeAccent
-                      .withOpacity(c.showSunnahDuha ? 1 : 0),
+                  // color: Colors.yellow.shade300
+                  //     .withOpacity(c.showSunnahDuha ? 1 : 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -381,7 +393,7 @@ class ShowSunnahSettings extends StatelessWidget {
                             ),
                       Text(
                         'Duha',
-                        style: textStyleBtn,
+                        style: textStyleBtnDuha,
                       ),
                     ],
                   ),
@@ -397,9 +409,9 @@ class ShowSunnahSettings extends StatelessWidget {
                 padding: EdgeInsets.only(left: lrPadding, right: lrPadding),
                 child: Container(
                   height: btnHeight,
-                  color: Colors.pinkAccent.withOpacity(
-                    c.showSunnahLayl ? 1 : 0,
-                  ),
+                  // color: Colors.pinkAccent.withOpacity(
+                  //   c.showSunnahLayl ? 1 : 0,
+                  // ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -417,7 +429,7 @@ class ShowSunnahSettings extends StatelessWidget {
                             ),
                       Text(
                         'Layl Ibadah',
-                        style: textStyleBtn,
+                        style: textStyleBtnLayl,
                       ),
                     ],
                   ),
@@ -448,59 +460,66 @@ class _QuestBottomBarState extends State<QuestBottomBar> {
         controller: _pageController,
         children: [
           QuestsActive(),
-          Container(color: Colors.greenAccent.shade700),
-          Container(color: Colors.orange),
-          Container(color: Colors.red),
+          Container(color: AppThemes.logoBackground),
+          Container(color: AppThemes.logoBackground),
+          Container(color: AppThemes.logoBackground),
           // UserQuest(textEditingController: _textEditingController),
         ],
         onPageChanged: (index) {
           setState(() => _currentPage = index);
         },
       ),
-      bottomNavigationBar: Row(
-        children: [
-          BottomBar(
-            selectedIndex: _currentPage,
-            onTap: (int index) {
-              _pageController.jumpToPage(index);
-              setState(() => _currentPage = index);
-            },
-            items: [
-              BottomBarItem(
-                icon: Icon(Icons.how_to_reg_outlined),
-                title: Text('Active Quests'),
-                activeColor: Colors.blue,
-              ),
-              BottomBarItem(
-                icon: Icon(Icons.brightness_high_outlined),
-                title: Text('Daily Quests'),
-                activeColor: Colors.greenAccent.shade700,
-                darkActiveColor: Colors.greenAccent.shade400,
-              ),
-              BottomBarItem(
-                icon: Icon(Icons.timer_outlined),
-                title: Text('Time Quests'),
-                activeColor: Colors.greenAccent.shade700,
-                darkActiveColor: Colors.greenAccent.shade400,
-              ),
-              BottomBarItem(
-                icon: Transform.rotate(
-                  angle: 2.8,
-                  child: Icon(Icons.brightness_3_outlined),
+      bottomNavigationBar: Container(
+        color: AppThemes.logoBackground,
+        child: Row(
+          children: [
+            BottomBar(
+              selectedIndex: _currentPage,
+              onTap: (int index) {
+                _pageController.jumpToPage(index);
+                setState(() => _currentPage = index);
+              },
+              items: [
+                BottomBarItem(
+                  icon: Icon(Icons.how_to_reg_outlined),
+                  title: Text('Active Quests'),
+                  activeColor: Colors.blue,
+                  inactiveColor: Colors.white,
                 ),
-                title: Text('hapi Quests'),
-                activeColor: Colors.red,
-                darkActiveColor: Colors.red.shade400,
-              ),
-              // BottomBarItem(
-              //   icon: Icon(Icons.add_circle_outline),
-              //   title: Text('Add'),
-              //   activeColor: Colors.orange,
-              // ),
-            ],
-          ),
-          SizedBox(width: 10),
-        ],
+                BottomBarItem(
+                  icon: Icon(Icons.brightness_high_outlined),
+                  title: Text('Daily Quests'),
+                  activeColor: Colors.greenAccent.shade700,
+                  //darkActiveColor: Colors.greenAccent.shade400,
+                  inactiveColor: Colors.white,
+                ),
+                BottomBarItem(
+                  icon: Icon(Icons.timer_outlined),
+                  title: Text('Time Quests'),
+                  activeColor: Colors.orange,
+                  //darkActiveColor: Colors.greenAccent.shade400,
+                  inactiveColor: Colors.white,
+                ),
+                BottomBarItem(
+                  icon: Transform.rotate(
+                    angle: 2.8,
+                    child: Icon(Icons.brightness_3_outlined),
+                  ),
+                  title: Text('hapi Quests'),
+                  activeColor: Colors.red,
+                  //darkActiveColor: Colors.red.shade400,
+                  inactiveColor: Colors.white,
+                ),
+                // BottomBarItem(
+                //   icon: Icon(Icons.add_circle_outline),
+                //   title: Text('Add'),
+                //   activeColor: Colors.orange,
+                // ),
+              ],
+            ),
+            SizedBox(width: 10),
+          ],
+        ),
       ),
     );
   }
@@ -609,7 +628,9 @@ class QuestsActive extends StatelessWidget {
   static const double SALAH_ACTIONS_HEIGHT = 55;
 
   final TextStyle topTitlesTextStyle =
-      const TextStyle(color: Colors.white, fontSize: 19.0);
+      const TextStyle(color: Colors.white, fontSize: 10.0);
+  final TextStyle topTitleTimeTextStyle =
+      const TextStyle(color: Colors.white, fontSize: 25.0);
   final TextStyle columnTitlesTextStyle =
       const TextStyle(color: Colors.white, fontSize: 11.5);
 
@@ -654,17 +675,55 @@ class QuestsActive extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      Row(
+                      // Column(
+                      //   crossAxisAlignment: CrossAxisAlignment.start,
+                      //   children: [
+                      //     Row(
+                      //       children: [
+                      //         //SizedBox(width: 10),
+                      //         Text('Time left:', style: topTitlesTextStyle),
+                      //       ],
+                      //     ),
+                      //     Row(
+                      //       children: [
+                      //         //SizedBox(width: 10),
+                      //         Text('Time to:', style: topTitlesTextStyle),
+                      //       ],
+                      //     ),
+                      //   ],
+                      // ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(width: 10),
-                          Text(
-                              c.prayerTimes != null
-                                  ? c.prayerTimes!.currentPrayerName
+                          Row(
+                            children: [
+                              //Text('Time left in ', style: topTitlesTextStyle),
+                              Text(
+                                  c.prayerTimes!.currentPrayerName
                                       .toString()
                                       .split('.')
                                       .last
-                                  : '',
-                              style: topTitlesTextStyle),
+                                      .replaceAll('_', ' '),
+                                  style: topTitlesTextStyle),
+                              // Text(' ends in:', style: topTitlesTextStyle),
+                              // Text(':', style: topTitlesTextStyle),
+                              Text(' ends:', style: topTitlesTextStyle),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              //Text('Time to ', style: topTitlesTextStyle),
+                              Text(
+                                  c.prayerTimes!.nextPrayerName
+                                      .toString()
+                                      .split('.')
+                                      .last
+                                      .replaceAll('_', ' '),
+                                  style: topTitlesTextStyle),
+                              Text(' in:', style: topTitlesTextStyle),
+                              // Text(' starts in:', style: topTitlesTextStyle),
+                            ],
+                          ),
                         ],
                       ),
                       InkWell(
@@ -675,7 +734,8 @@ class QuestsActive extends StatelessWidget {
                           children: [
                             Icon(Icons.hourglass_top_outlined, // TODO animate
                                 color: Colors.green.shade500),
-                            Text(c.timeToNextPrayer, style: topTitlesTextStyle),
+                            Text(c.timeToNextPrayer,
+                                style: topTitleTimeTextStyle),
                           ],
                         ),
                       ),
@@ -753,7 +813,7 @@ class QuestsActive extends StatelessWidget {
                       btnHeight: 19,
                       btnGap: 0,
                       fontSize: 9,
-                      lrPadding: 5,
+                      lrPadding: 0,
                     )
                   : Text(''),
             ),
@@ -870,7 +930,8 @@ class QuestsActive extends StatelessWidget {
                 Expanded(
                   flex: 7000,
                   child: Container(
-                    color: Colors.black, // hide scroll of items behind
+                    color:
+                        AppThemes.logoBackground, // hide scroll of items behind
                     child: ClipRRect(
                       borderRadius: const BorderRadius.only(
                         topLeft: const Radius.circular(15.0),
@@ -934,8 +995,8 @@ class QuestsActive extends StatelessWidget {
                         if (rakatMuakBefore != '')
                           Expanded(
                             child: Container(
-                              color:
-                                  Colors.black, // hide scroll of items behind
+                              color: AppThemes
+                                  .logoBackground, // hide scroll of items behind
                               child: ClipRRect(
                                 borderRadius: const BorderRadius.only(
                                   bottomLeft: const Radius.circular(15.0),
@@ -955,8 +1016,8 @@ class QuestsActive extends StatelessWidget {
                         if (rakatNaflBefore != '')
                           Expanded(
                             child: Container(
-                              color:
-                                  Colors.black, // hide scroll of items behind
+                              color: AppThemes
+                                  .logoBackground, // hide scroll of items behind
                               child: ClipRRect(
                                 borderRadius: const BorderRadius.only(
                                   bottomLeft: const Radius.circular(15.0),
@@ -977,7 +1038,7 @@ class QuestsActive extends StatelessWidget {
                         if (fardSalah == Prayer.Maghrib)
                           Expanded(
                             child: Container(
-                              color: Colors.black,
+                              color: AppThemes.logoBackground,
                               child: ClipRRect(
                                 borderRadius: const BorderRadius.only(
                                   bottomLeft: const Radius.circular(15.0),
@@ -1141,7 +1202,7 @@ class QuestsActive extends StatelessWidget {
                         ),
                         Expanded(
                           child: Container(
-                            color: Colors.black,
+                            color: AppThemes.logoBackground,
                             child: ClipRRect(
                               borderRadius: const BorderRadius.only(
                                 //topRight: const Radius.circular(15.0),
@@ -1176,9 +1237,9 @@ class QuestsActive extends StatelessWidget {
   SliverPersistentHeader actionsDuha(QuestController c) {
     return SliverPersistentHeader(
       // TODO cQust needed i believe
-      pinned: Prayer.Rising == c.prayerTimes!.currentPrayerName ||
+      pinned: Prayer.Sunrise == c.prayerTimes!.currentPrayerName ||
           Prayer.Duha == c.prayerTimes!.currentPrayerName ||
-          Prayer.Peaking == c.prayerTimes!.currentPrayerName,
+          Prayer.Sun_Zenith == c.prayerTimes!.currentPrayerName,
       delegate: _SliverAppBarDelegate(
         minHeight: SALAH_ACTIONS_HEIGHT,
         maxHeight: SALAH_ACTIONS_HEIGHT,
@@ -1192,18 +1253,19 @@ class QuestsActive extends StatelessWidget {
                 Expanded(
                   //flex: 7000,
                   child: Container(
-                    color: Colors.black, // hide scroll of items behind
+                    color:
+                        AppThemes.logoBackground, // hide scroll of items behind
                     child: ClipRRect(
                       borderRadius: const BorderRadius.only(
                         topLeft: const Radius.circular(15.0),
                         topRight: const Radius.circular(15.0),
                       ),
                       child: Container(
-                        color: Prayer.Rising ==
+                        color: Prayer.Sunrise ==
                                     cQust.prayerTimes!.currentPrayerName ||
                                 Prayer.Duha ==
                                     cQust.prayerTimes!.currentPrayerName ||
-                                Prayer.Peaking ==
+                                Prayer.Sun_Zenith ==
                                     cQust.prayerTimes!.currentPrayerName
                             ? Color(0xFF268E0D)
                             : Colors.lightBlue.shade600,
@@ -1255,7 +1317,8 @@ class QuestsActive extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Container(
-                            color: Colors.black, // hide scroll of items behind
+                            color: AppThemes
+                                .logoBackground, // hide scroll of items behind
                             child: ClipRRect(
                               borderRadius: const BorderRadius.only(
                                 bottomLeft: const Radius.circular(15.0),
@@ -1321,7 +1384,8 @@ class QuestsActive extends StatelessWidget {
                         ),
                         Expanded(
                           child: Container(
-                            color: Colors.black, // hide scroll of items behind
+                            color: AppThemes
+                                .logoBackground, // hide scroll of items behind
                             child: ClipRRect(
                               borderRadius: const BorderRadius.only(
                                 bottomRight: const Radius.circular(15.0),
@@ -1384,7 +1448,8 @@ class QuestsActive extends StatelessWidget {
                     Expanded(
                       flex: 7000,
                       child: Container(
-                        color: Colors.black, // hide scroll of items behind
+                        color: AppThemes
+                            .logoBackground, // hide scroll of items behind
                         child: ClipRRect(
                           borderRadius: const BorderRadius.only(
                             topLeft: const Radius.circular(15.0),
@@ -1438,7 +1503,7 @@ class QuestsActive extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Container(
-                          color: Colors.black,
+                          color: AppThemes.logoBackground,
                           child: ClipRRect(
                             borderRadius: const BorderRadius.only(
                               bottomLeft: const Radius.circular(15.0),
@@ -1502,7 +1567,7 @@ class QuestsActive extends StatelessWidget {
                       ///
                       Expanded(
                         child: Container(
-                          color: Colors.black,
+                          color: AppThemes.logoBackground,
                           child: Container(
                             color: Colors.grey.shade800,
                             child: Center(
@@ -1530,7 +1595,7 @@ class QuestsActive extends StatelessWidget {
                       ),
                       Expanded(
                         child: Container(
-                          color: Colors.black,
+                          color: AppThemes.logoBackground,
                           child: ClipRRect(
                             borderRadius: const BorderRadius.only(
                               bottomRight: const Radius.circular(15.0),
@@ -1565,7 +1630,7 @@ class QuestsActive extends StatelessWidget {
         minHeight: 5.0,
         maxHeight: 5.0,
         child: Container(
-          color: Colors.black,
+          color: AppThemes.logoBackground,
         ),
       ),
     );
@@ -1578,7 +1643,7 @@ class QuestsActive extends StatelessWidget {
         minHeight: 5.0,
         maxHeight: 5.0,
         child: Container(
-          color: Colors.black,
+          color: AppThemes.logoBackground,
         ),
       ),
     );
@@ -1591,7 +1656,7 @@ class QuestsActive extends StatelessWidget {
         minHeight: 100.0,
         maxHeight: 100.0,
         child: Container(
-          color: Colors.black,
+          color: AppThemes.logoBackground,
         ),
       ),
     );
@@ -1604,17 +1669,18 @@ class QuestsActive extends StatelessWidget {
         return Container(); // TODO show spinner
       }
       return Container(
-        color: Colors.black,
+        color: AppThemes.logoBackground,
         child: CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
               backgroundColor: Colors.lightBlue.shade900,
               expandedHeight: 300.0,
-              collapsedHeight: 130.0,
+              collapsedHeight: 90.0,
               floating: true,
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
                 centerTitle: true,
+                titlePadding: EdgeInsets.all(7.0),
                 title: SalahAppBar(),
                 background: Swiper(
                   itemCount: 3,
@@ -1638,7 +1704,7 @@ class QuestsActive extends StatelessWidget {
             ),
             spacingHeader(Prayer.Fajr),
             if (c.showSunnahDuha) actionsDuha(c),
-            if (c.showSunnahDuha) spacingHeader(Prayer.Rising),
+            if (c.showSunnahDuha) spacingHeader(Prayer.Sunrise),
             c.isFriday() && c.showJummahOnFriday
                 ? SliverPersistentHeader(
                     pinned: c.prayerTimes!.currentPrayerName == Prayer.Dhuhr,
