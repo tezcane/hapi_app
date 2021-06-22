@@ -615,7 +615,27 @@ class QuestsActive extends StatelessWidget {
 
   static const Color textColor = Colors.white;
   static const TextStyle actionTextStyle = const TextStyle(
-      color: textColor, fontSize: 17.0, fontWeight: FontWeight.bold);
+      fontSize: 17.0, fontWeight: FontWeight.bold, color: Colors.white);
+  static const TextStyle actionFardTextStyle = const TextStyle(
+      fontSize: 17.0, fontWeight: FontWeight.bold, color: Colors.red);
+  static const TextStyle actionMuakTextStyle = const TextStyle(
+      fontSize: 17.0, fontWeight: FontWeight.bold, color: Colors.green);
+  static TextStyle actionNaflTextStyle = TextStyle(
+      fontSize: 17.0,
+      fontWeight: FontWeight.bold,
+      color: Colors.amber.shade700);
+  static TextStyle actionDuhaTextStyle = TextStyle(
+      fontSize: 17.0,
+      fontWeight: FontWeight.bold,
+      color: Colors.yellow.shade300);
+
+  static TextStyle actionQiyamTextStyle = TextStyle(
+      fontSize: 17.0, fontWeight: FontWeight.bold, color: Colors.cyan.shade300);
+  static TextStyle actionTahajjudTextStyle = TextStyle(
+      fontSize: 17.0, fontWeight: FontWeight.bold, color: Colors.blue.shade100);
+  static TextStyle actionWitrTextStyle = TextStyle(
+      fontSize: 17.0, fontWeight: FontWeight.bold, color: Colors.pinkAccent);
+
   static const TextStyle adhkarTextStyle = const TextStyle(
       color: textColor, fontSize: 12.0, fontWeight: FontWeight.normal);
 
@@ -859,7 +879,7 @@ class QuestsActive extends StatelessWidget {
                       child: Container(
                         color: fardSalah == c.prayerTimes!.currentPrayerName
                             ? Color(0xFF268E0D)
-                            : Colors.lightBlue.shade800,
+                            : Colors.lightBlue.shade600,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -921,13 +941,11 @@ class QuestsActive extends StatelessWidget {
                                   bottomLeft: const Radius.circular(15.0),
                                 ),
                                 child: Container(
-                                  color: c.showSunnahMuak
-                                      ? Colors.green
-                                      : Colors.grey.shade800,
+                                  color: Colors.grey.shade800,
                                   child: Center(
                                     child: Text(
                                       c.showSunnahMuak ? rakatMuakBefore : '',
-                                      style: actionTextStyle,
+                                      style: actionMuakTextStyle,
                                     ),
                                   ),
                                 ),
@@ -944,13 +962,11 @@ class QuestsActive extends StatelessWidget {
                                   bottomLeft: const Radius.circular(15.0),
                                 ),
                                 child: Container(
-                                  color: c.showSunnahNafl
-                                      ? Colors.amber.shade700
-                                      : Colors.grey.shade800,
+                                  color: Colors.grey.shade800,
                                   child: Center(
                                     child: Text(
                                       c.showSunnahNafl ? rakatNaflBefore : '',
-                                      style: actionTextStyle,
+                                      style: actionNaflTextStyle,
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
@@ -982,11 +998,11 @@ class QuestsActive extends StatelessWidget {
                   Expanded(
                     flex: 1000,
                     child: Container(
-                      color: Colors.red,
+                      color: Colors.grey.shade800,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Text(rakatFard, style: actionTextStyle),
+                          Text(rakatFard, style: actionFardTextStyle),
                         ],
                       ),
                     ),
@@ -1066,13 +1082,11 @@ class QuestsActive extends StatelessWidget {
                         if (rakatMuakAfter != '')
                           Expanded(
                             child: Container(
-                              color: c.showSunnahMuak
-                                  ? Colors.green
-                                  : Colors.grey.shade800,
+                              color: Colors.grey.shade800,
                               child: Center(
                                 child: Text(
                                   c.showSunnahMuak ? rakatMuakAfter : '',
-                                  style: actionTextStyle,
+                                  style: actionMuakTextStyle,
                                 ),
                               ),
                             ),
@@ -1080,13 +1094,11 @@ class QuestsActive extends StatelessWidget {
                         if (rakatNaflAfter != '')
                           Expanded(
                             child: Container(
-                              color: c.showSunnahNafl
-                                  ? Colors.amber.shade700
-                                  : Colors.grey.shade800,
+                              color: Colors.grey.shade800,
                               child: Center(
                                 child: Text(
                                   c.showSunnahNafl ? rakatNaflAfter : '',
-                                  style: actionTextStyle,
+                                  style: actionNaflTextStyle,
                                 ),
                               ),
                             ),
@@ -1105,7 +1117,7 @@ class QuestsActive extends StatelessWidget {
                       children: [
                         Expanded(
                           child: Container(
-                            color: Colors.purple,
+                            color: Colors.grey.shade800,
                             child: Stack(
                               children: [
                                 //Text('Thikr', style: actionTextStyle),
@@ -1136,7 +1148,7 @@ class QuestsActive extends StatelessWidget {
                                 bottomRight: const Radius.circular(15.0),
                               ),
                               child: Container(
-                                color: Colors.teal,
+                                color: Colors.grey.shade800,
                                 child: //Text('Dua', style: actionTextStyle),
                                     Center(
                                   child: Icon(
@@ -1194,7 +1206,7 @@ class QuestsActive extends StatelessWidget {
                                 Prayer.Peaking ==
                                     cQust.prayerTimes!.currentPrayerName
                             ? Color(0xFF268E0D)
-                            : Colors.lightBlue.shade800,
+                            : Colors.lightBlue.shade600,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -1298,11 +1310,11 @@ class QuestsActive extends StatelessWidget {
                         ),
                         Expanded(
                           child: Container(
-                            color: Colors.deepOrangeAccent,
+                            color: Colors.grey.shade800,
                             child: Center(
                               child: Text(
                                 'Duha',
-                                style: actionTextStyle,
+                                style: actionDuhaTextStyle,
                               ),
                             ),
                           ),
@@ -1362,12 +1374,6 @@ class QuestsActive extends StatelessWidget {
         maxHeight: SALAH_ACTIONS_HEIGHT,
         child: GetBuilder<QuestController>(
           builder: (c) {
-            const Color textColor = Colors.white;
-            TextStyle actionTextStyle = const TextStyle(
-                color: textColor, fontSize: 17.0, fontWeight: FontWeight.bold);
-            // TextStyle sunStyle = const TextStyle(
-            //     color: textColor, fontSize: 12.0, fontWeight: FontWeight.bold);
-
             return Column(
               children: [
                 ///
@@ -1387,7 +1393,7 @@ class QuestsActive extends StatelessWidget {
                           child: Container(
                             color: fardSalah == c.prayerTimes!.currentPrayerName
                                 ? Color(0xFF268E0D)
-                                : Colors.lightBlue.shade800,
+                                : Colors.lightBlue.shade600,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -1438,11 +1444,11 @@ class QuestsActive extends StatelessWidget {
                               bottomLeft: const Radius.circular(15.0),
                             ),
                             child: Container(
-                              color: Colors.cyan,
+                              color: Colors.grey.shade800,
                               child: Center(
                                 child: Text(
                                   'Qiyam',
-                                  style: actionTextStyle,
+                                  style: actionQiyamTextStyle,
                                 ),
                               ),
                             ),
@@ -1455,7 +1461,7 @@ class QuestsActive extends StatelessWidget {
                       ///
                       Expanded(
                         child: Container(
-                          color: Colors.purple,
+                          color: Colors.grey.shade800,
                           child: Stack(
                             children: [
                               //Text('Thikr', style: actionTextStyle),
@@ -1479,7 +1485,7 @@ class QuestsActive extends StatelessWidget {
                       ),
                       Expanded(
                         child: Container(
-                          color: Colors.teal,
+                          color: Colors.grey.shade800,
                           child: //Text('Dua', style: actionTextStyle),
                               Center(
                             child: Icon(
@@ -1507,7 +1513,7 @@ class QuestsActive extends StatelessWidget {
                       ),
                       Expanded(
                         child: Container(
-                          color: Colors.blue,
+                          color: Colors.grey.shade800,
                           child: Center(
                             child: InkWell(
                               onTap: () {
@@ -1515,7 +1521,7 @@ class QuestsActive extends StatelessWidget {
                               },
                               child: Text(
                                 'Tahajjud',
-                                style: actionTextStyle,
+                                style: actionTahajjudTextStyle,
                                 textAlign: TextAlign.center,
                               ),
                             ),
@@ -1530,11 +1536,11 @@ class QuestsActive extends StatelessWidget {
                               bottomRight: const Radius.circular(15.0),
                             ),
                             child: Container(
-                              color: Colors.pinkAccent,
+                              color: Colors.grey.shade800,
                               child: Center(
                                 child: Text(
                                   'Witr',
-                                  style: actionTextStyle,
+                                  style: actionWitrTextStyle,
                                 ),
                               ),
                             ),
