@@ -119,11 +119,11 @@ class PrayerTimes {
           dateByAddingSeconds(sunriseTimeTomorrow, -nightFraction.round());
     }
 
-    DateTime safeFajr() {
+    DateTime safeFajr(DateTime day) {
       if (calculationParameters.salahMethod ==
           SalahMethod.Moonsight_Committee) {
         return Astronomical.seasonAdjustedMorningTwilight(
-            coordinates.latitude, dayOfYear(date), date.year, sunriseTime);
+            coordinates.latitude, dayOfYear(day), day.year, sunriseTime);
       } else {
         var portion = calculationParameters.nightPortions()["fajr"];
         nightFraction = portion * nightDurationInSecs;
@@ -132,13 +132,13 @@ class PrayerTimes {
     }
 
     if (fajrTime.millisecondsSinceEpoch == double.nan ||
-        safeFajr().isAfter(fajrTime)) {
-      fajrTime = safeFajr();
+        safeFajr(date).isAfter(fajrTime)) {
+      fajrTime = safeFajr(date);
     }
 
     if (fajrTomorrowTime.millisecondsSinceEpoch == double.nan ||
-        safeFajr().isAfter(fajrTomorrowTime)) {
-      fajrTomorrowTime = safeFajr();
+        safeFajr(dateTomorrow).isAfter(fajrTomorrowTime)) {
+      fajrTomorrowTime = safeFajr(dateTomorrow);
     }
 
     if (calculationParameters.ishaInterval > 0) {
@@ -163,23 +163,11 @@ class PrayerTimes {
             dateByAddingSeconds(sunsetTimeYesteray, nightFraction!.round());
       }
 
-      DateTime safeIsha() {
+      DateTime safeIsha(DateTime day) {
         if (calculationParameters.salahMethod ==
             SalahMethod.Moonsight_Committee) {
           return Astronomical.seasonAdjustedEveningTwilight(
-              coordinates.latitude, dayOfYear(date), date.year, sunsetTime);
-        } else {
-          var portion = calculationParameters.nightPortions()["isha"];
-          nightFraction = portion * nightDurationInSecs;
-          return dateByAddingSeconds(sunsetTime, nightFraction!.round());
-        }
-      }
-
-      DateTime safeIshaBefore() {
-        if (calculationParameters.salahMethod ==
-            SalahMethod.Moonsight_Committee) {
-          return Astronomical.seasonAdjustedEveningTwilight(
-              coordinates.latitude, dayOfYear(date), date.year, sunsetTime);
+              coordinates.latitude, dayOfYear(day), day.year, sunsetTime);
         } else {
           var portion = calculationParameters.nightPortions()["isha"];
           nightFraction = portion * nightDurationInSecs;
@@ -188,13 +176,13 @@ class PrayerTimes {
       }
 
       if (ishaTime.millisecondsSinceEpoch == double.nan ||
-          safeIsha().isBefore(ishaTime)) {
-        ishaTime = safeIsha();
+          safeIsha(date).isBefore(ishaTime)) {
+        ishaTime = safeIsha(date);
       }
 
       if (ishaYesterdayTime.millisecondsSinceEpoch == double.nan ||
-          safeIshaBefore().isBefore(ishaYesterdayTime)) {
-        ishaYesterdayTime = safeIshaBefore();
+          safeIsha(dateYesterday).isBefore(ishaYesterdayTime)) {
+        ishaYesterdayTime = safeIsha(dateYesterday);
       }
     }
 
@@ -322,6 +310,8 @@ class PrayerTimes {
       return _isha!;
     } else if (prayer == Prayer.Fajr_Tomorrow) {
       return _fajrTomorrow!;
+    } else if (prayer == Prayer.Sunrise_Tomorrow) {
+      return _sunriseTomorrow!;
     } else {
       print('PrayerTimes:timeForPrayer: Error unknown Prayer: "$prayer"');
       return _dhuhr!;
