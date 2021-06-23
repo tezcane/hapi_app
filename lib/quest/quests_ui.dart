@@ -707,7 +707,7 @@ class QuestsActive extends StatelessWidget {
                       //   ],
                       // ),
                       Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Row(
                             children: [
@@ -721,7 +721,9 @@ class QuestsActive extends StatelessWidget {
                                   style: topTitlesTextStyle),
                               // Text(' ends in:', style: topTitlesTextStyle),
                               // Text(':', style: topTitlesTextStyle),
-                              Text(' ends:', style: topTitlesTextStyle),
+                              Text(' ends', style: topTitlesTextStyle),
+                              Icon(Icons.arrow_right_alt_rounded,
+                                  color: Colors.white, size: 12),
                             ],
                           ),
                           Row(
@@ -734,7 +736,9 @@ class QuestsActive extends StatelessWidget {
                                       .last
                                       .replaceAll('_', ' '),
                                   style: topTitlesTextStyle),
-                              Text(' in:', style: topTitlesTextStyle),
+                              Text(' in', style: topTitlesTextStyle),
+                              Icon(Icons.arrow_right_alt_rounded,
+                                  color: Colors.white, size: 12),
                               // Text(' starts in:', style: topTitlesTextStyle),
                             ],
                           ),

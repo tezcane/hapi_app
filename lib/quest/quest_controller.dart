@@ -70,7 +70,6 @@ class QuestController extends GetxController {
   PrayerTimes? get prayerTimes => _prayerTimes;
 
   RxString _nextPrayerTime = '-'.obs;
-  int _secsToNextPrayer = 86401; // make big so first call doesn' retrigger init
 
   String get timeToNextPrayer => _nextPrayerTime.value;
 
@@ -243,18 +242,22 @@ class QuestController extends GetxController {
   // TODO put timer in another controller for optimization?
   void startNextPrayerCountdownTimer() {
     Timer(Duration(seconds: 1), () {
-      Duration nextPrayerDuration = _prayerTimes!.nextPrayerDate!
+      Duration timeToNextPrayer = _prayerTimes!.nextPrayerDate!
           .difference(TZDateTime.from(DateTime.now(), _timeZone!));
 
       // if we hit the end of a timer we recalculate all prayer times
-      if (forceSalahRecalculation ||
-          nextPrayerDuration.inSeconds > _secsToNextPrayer) {
+      if (forceSalahRecalculation || timeToNextPrayer.inSeconds <= 0) {
+        print('This prayer is over, going to next prayer: '
+            '${timeToNextPrayer.inSeconds} secs left');
         forceSalahRecalculation = false;
-        _secsToNextPrayer = nextPrayerDuration.inSeconds;
         initLocation(); // does startNextPrayerCountdownTimer();
       } else {
-        _secsToNextPrayer = nextPrayerDuration.inSeconds;
-        _nextPrayerTime.value = _printHourMinuteSeconds(nextPrayerDuration);
+        if (timeToNextPrayer.inSeconds % 60 == 0) {
+          // print once a minute
+          print('Next Prayer Timer Minute Tick: ${timeToNextPrayer.inSeconds} '
+              'secs left (${timeToNextPrayer.inSeconds / 60} minutes)');
+        }
+        _nextPrayerTime.value = _printHourMinuteSeconds(timeToNextPrayer);
         update();
         startNextPrayerCountdownTimer();
       }
