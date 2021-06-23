@@ -55,16 +55,18 @@ class ActiveQuestSettings extends StatelessWidget {
             ),
             DropdownButton<int>(
               isExpanded: true,
+              isDense: false,
               value: c.salahCalcMethod,
               //icon: const Icon(Icons.arrow_downward),
-              iconEnabledColor: Colors.white,
-              //iconSize: 24,
-              //elevation: 16,
+              iconEnabledColor: Colors.white, //const Color(0xFF268E0D),
+              //focusColor: const Color(0xFF268E0D),
+              iconSize: 25,
               style: textStyleBtn,
-              dropdownColor: AppThemes.logoBackground,
+              dropdownColor: Colors.grey,
+              //itemHeight: 55.0,
+              menuMaxHeight: 700.0,
               underline: Container(
                 height: 0,
-                color: AppThemes.logoBackground,
               ),
               onChanged: (int? newValue) {
                 c.salahCalcMethod = newValue!;
@@ -74,9 +76,16 @@ class ActiveQuestSettings extends StatelessWidget {
                 (int value) {
                   return DropdownMenuItem<int>(
                     value: value,
-                    child: Text(
-                      SalahMethod.values[value].name(),
-                      //textAlign: TextAlign.center,
+                    child: Container(
+                      color: const Color(0xFF268E0D)
+                          .withOpacity(c.salahCalcMethod == value ? 1 : 0),
+                      child: Center(
+                        child: Text(
+                          SalahMethod.values[value].name(),
+                          textAlign: TextAlign.center,
+                          //textAlign: TextAlign.center,
+                        ),
+                      ),
                     ),
                   );
                 },
@@ -938,7 +947,9 @@ class QuestsActive extends StatelessWidget {
                         topRight: const Radius.circular(15.0),
                       ),
                       child: Container(
-                        color: fardSalah == c.prayerTimes!.currentPrayerName
+                        color: fardSalah == c.prayerTimes!.currentPrayerName &&
+                                ((!isJummahMode) ||
+                                    (isJummahMode && c.isFriday()))
                             ? Color(0xFF268E0D)
                             : Colors.lightBlue.shade600,
                         child: Row(
