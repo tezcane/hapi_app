@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:get/get.dart';
 import 'package:hapi/constants/globals.dart';
@@ -55,8 +56,8 @@ class QuestController extends GetxController {
   bool isFriday() => _dayOfWeek.value == DAY_OF_WEEK.Friday;
 
   RxBool _showSunnahMuak = true.obs;
-  RxBool _showSunnahNafl = false.obs;
-  RxBool _showSunnahDuha = false.obs;
+  RxBool _showSunnahNafl = true.obs;
+  RxBool _showSunnahDuha = true.obs;
   RxBool _showSunnahLayl = true.obs;
   RxBool _showSunnahKeys = true.obs;
   RxBool _showJummahOnFriday = true.obs; // if friday and true, shows jummah
@@ -83,8 +84,8 @@ class QuestController extends GetxController {
   @override
   void onInit() {
     _showSunnahMuak.value = s.read('showSunnahMuak') ?? true;
-    _showSunnahNafl.value = s.read('showSunnahNafl') ?? false;
-    _showSunnahDuha.value = s.read('showSunnahDuha') ?? false;
+    _showSunnahNafl.value = s.read('showSunnahNafl') ?? true;
+    _showSunnahDuha.value = s.read('showSunnahDuha') ?? true;
     _showSunnahLayl.value = s.read('showSunnahLayl') ?? true;
     _showSunnahKeys.value = s.read('showSunnahKeys') ?? true;
     _showJummahOnFriday.value = s.read('showJummahOnFriday') ?? true;
@@ -225,11 +226,11 @@ class QuestController extends GetxController {
 
     if (cQust.salahKerahatSafe) {
       params.kerahatSunRisingMins = 40;
-      params.kerahatSunPeakingMins = 40;
+      params.kerahatSunZenithMins = 40;
       params.kerahatSunSettingMins = 40;
     } else {
       params.kerahatSunRisingMins = 20;
-      params.kerahatSunPeakingMins = 15;
+      params.kerahatSunZenithMins = 15;
       params.kerahatSunSettingMins = 20;
     }
     _prayerTimes = PrayerTimes(_gps, date, params, _timeZone!, false);
@@ -242,9 +243,8 @@ class QuestController extends GetxController {
   // TODO put timer in another controller for optimization?
   void startNextPrayerCountdownTimer() {
     Timer(Duration(seconds: 1), () {
-      DateTime date = TZDateTime.from(DateTime.now(), _timeZone!);
-      Duration nextPrayerDuration =
-          _prayerTimes!.nextPrayerDate!.difference(date);
+      Duration nextPrayerDuration = _prayerTimes!.nextPrayerDate!
+          .difference(TZDateTime.from(DateTime.now(), _timeZone!));
 
       // if we hit the end of a timer we recalculate all prayer times
       if (forceSalahRecalculation ||
@@ -266,5 +266,10 @@ class QuestController extends GetxController {
     String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
     String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
     return "${duration.inHours}:$twoDigitMinutes:$twoDigitSeconds";
+  }
+
+  void toggleFlipCard(FlipCardController flipCardController) {
+    flipCardController.toggleCard();
+    update();
   }
 }

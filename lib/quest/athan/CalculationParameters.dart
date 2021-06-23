@@ -9,7 +9,7 @@ class CalculationParameters {
   final Map methodAdjustments; // Different calculation methods adjust times.
   Madhab madhab;
   int kerahatSunRisingMins;
-  int kerahatSunPeakingMins;
+  int kerahatSunZenithMins;
   int kerahatSunSettingMins;
   int ishaInterval;
   HighLatitudeRule highLatitudeRule;
@@ -32,7 +32,7 @@ class CalculationParameters {
     this.methodAdjustments, {
     this.madhab = Madhab.Hanafi,
     this.kerahatSunRisingMins = 40,
-    this.kerahatSunPeakingMins = 30,
+    this.kerahatSunZenithMins = 30,
     this.kerahatSunSettingMins = 40,
     this.ishaInterval = 0,
     this.highLatitudeRule = HighLatitudeRule.MiddleOfTheNight,

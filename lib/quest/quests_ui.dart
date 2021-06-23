@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:bottom_bar/bottom_bar.dart';
 import 'package:flip_card/flip_card.dart';
+import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
@@ -667,7 +668,11 @@ class QuestsActive extends StatelessWidget {
       fontSize: 17.0, fontWeight: FontWeight.bold, color: Colors.pinkAccent);
 
   static const TextStyle adhkarTextStyle = const TextStyle(
-      color: textColor, fontSize: 12.0, fontWeight: FontWeight.normal);
+      color: textColor, fontSize: 11.0, fontWeight: FontWeight.normal);
+
+  static final FlipCardController flipCardControllerFajr = FlipCardController();
+  static final FlipCardController flipCardControllerDhuhr =
+      FlipCardController();
 
   GetBuilder SalahAppBar() {
     return GetBuilder<QuestController>(
@@ -741,8 +746,8 @@ class QuestsActive extends StatelessWidget {
                         },
                         child: Row(
                           children: [
-                            Icon(Icons.hourglass_top_outlined, // TODO animate
-                                color: Colors.green.shade500),
+                            // Icon(Icons.hourglass_top_outlined,
+                            //     color: Colors.green.shade500),
                             Text(c.timeToNextPrayer,
                                 style: topTitleTimeTextStyle),
                           ],
@@ -883,7 +888,7 @@ class QuestsActive extends StatelessWidget {
     return '${startHour.toString()}:${startMinute.toString().padLeft(2, '0')}$startAmPm$endTimeString';
   }
 
-  /// Used by Fajr, Asr, Maghrib, Isha (All but dhur/jummah must pass in here)
+  /// Used by Asr, Maghrib, Isha (All but fajr/dhur/jummah must pass in here)
   SliverPersistentHeader actionsSalah({
     required final String rakatFard,
     required final Prayer fardSalah,
@@ -926,6 +931,7 @@ class QuestsActive extends StatelessWidget {
     final String rakatNaflBefore = '',
     final String rakatNaflAfter = '',
     required final bool isJummahMode,
+    final FlipCardController? flipCardController,
   }) {
     return GetBuilder<QuestController>(
       builder: (c) {
@@ -955,10 +961,23 @@ class QuestsActive extends StatelessWidget {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
+                            if (flipCardController != null)
+                              InkWell(
+                                child: Transform.rotate(
+                                  angle: 1.5708, // <- radian = 90 degrees
+                                  child: Icon(Icons.swap_vert_outlined),
+                                ),
+                                onTap: () =>
+                                    c.toggleFlipCard(flipCardController),
+                              ),
                             Text(
                               isJummahMode
                                   ? 'Jummah'
-                                  : fardSalah.toString().split('.').last,
+                                  : fardSalah
+                                      .toString()
+                                      .split('.')
+                                      .last
+                                      .replaceAll('_', ' '),
                               style: const TextStyle(
                                   color: textColor,
                                   fontSize: 20.0,
@@ -1088,7 +1107,9 @@ class QuestsActive extends StatelessWidget {
                     child: Row(
                       //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
-                        if (fardSalah == Prayer.Fajr || fardSalah == Prayer.Asr)
+                        if (fardSalah == Prayer.Fajr ||
+                            fardSalah == Prayer.Fajr_Tomorrow ||
+                            fardSalah == Prayer.Asr)
                           Expanded(
                             child: Container(
                               color: Colors.grey.shade800,
@@ -1122,7 +1143,9 @@ class QuestsActive extends StatelessWidget {
                                             top: 5.5,
                                             left: .9,
                                             child: Icon(
-                                                fardSalah == Prayer.Fajr
+                                                fardSalah == Prayer.Fajr ||
+                                                        fardSalah ==
+                                                            Prayer.Fajr_Tomorrow
                                                     ? Icons
                                                         .arrow_drop_up_outlined
                                                     : Icons
@@ -1134,16 +1157,19 @@ class QuestsActive extends StatelessWidget {
                                       ),
                                       SizedBox(width: 3),
                                       Text(
-                                          fardSalah == Prayer.Fajr
+                                          fardSalah == Prayer.Fajr ||
+                                                  fardSalah ==
+                                                      Prayer.Fajr_Tomorrow
                                               ? getTime(c.prayerTimes!.rising)
                                               : getTimeRange(
-                                                  c.prayerTimes!.setting,
+                                                  c.prayerTimes!.sunsetting,
                                                   c.prayerTimes!.maghrib),
                                           style: adhkarTextStyle),
                                     ],
                                   ),
                                   Text(
-                                      fardSalah == Prayer.Fajr
+                                      fardSalah == Prayer.Fajr ||
+                                              fardSalah == Prayer.Fajr_Tomorrow
                                           ? 'Morning Adhkar'
                                           : 'Evening Adhkar',
                                       style: adhkarTextStyle),
@@ -1706,12 +1732,35 @@ class QuestsActive extends StatelessWidget {
               ),
             ),
             sliverSpaceHeader(true),
-            actionsSalah(
-              rakatFard: '2',
-              fardSalah: Prayer.Fajr,
-              salahTimeStart: c.prayerTimes!.fajr,
-              salahTimeEnd: c.prayerTimes!.rising,
-              rakatMuakBefore: '2',
+            SliverPersistentHeader(
+              pinned: c.prayerTimes!.currentPrayerName == Prayer.Fajr,
+              delegate: _SliverAppBarDelegate(
+                minHeight: SALAH_ACTIONS_HEIGHT,
+                maxHeight: SALAH_ACTIONS_HEIGHT,
+                child: FlipCard(
+                  flipOnTouch: false,
+                  controller: flipCardControllerFajr,
+                  direction: FlipDirection.HORIZONTAL,
+                  front: actionsSalahRow(
+                    rakatFard: '2',
+                    fardSalah: Prayer.Fajr,
+                    salahTimeStart: c.prayerTimes!.fajr,
+                    salahTimeEnd: c.prayerTimes!.rising,
+                    rakatMuakBefore: '2',
+                    isJummahMode: false,
+                    flipCardController: flipCardControllerFajr,
+                  ),
+                  back: actionsSalahRow(
+                    rakatFard: '2',
+                    fardSalah: Prayer.Fajr_Tomorrow,
+                    salahTimeStart: c.prayerTimes!.fajrTomorrow,
+                    salahTimeEnd: c.prayerTimes!.sunriseTomorrow,
+                    rakatMuakBefore: '2',
+                    isJummahMode: false,
+                    flipCardController: flipCardControllerFajr,
+                  ),
+                ),
+              ),
             ),
             spacingHeader(Prayer.Fajr),
             if (c.showSunnahDuha) actionsDuha(c),
@@ -1723,28 +1772,28 @@ class QuestsActive extends StatelessWidget {
                       minHeight: SALAH_ACTIONS_HEIGHT,
                       maxHeight: SALAH_ACTIONS_HEIGHT,
                       child: FlipCard(
+                        flipOnTouch: false, // TODO flip on icon hit
+                        controller: flipCardControllerDhuhr,
                         direction: FlipDirection.HORIZONTAL,
-                        front: Container(
-                          child: actionsSalahRow(
-                            rakatFard: '2', // Jummah Mode
-                            fardSalah: Prayer.Dhuhr,
-                            salahTimeStart: c.prayerTimes!.dhuhr,
-                            rakatMuakBefore: '4',
-                            rakatMuakAfter: '6',
-                            rakatNaflAfter: '2',
-                            isJummahMode: true,
-                          ),
+                        front: actionsSalahRow(
+                          rakatFard: '2', // Jummah Mode
+                          fardSalah: Prayer.Dhuhr,
+                          salahTimeStart: c.prayerTimes!.dhuhr,
+                          rakatMuakBefore: '4',
+                          rakatMuakAfter: '6',
+                          rakatNaflAfter: '2',
+                          isJummahMode: true,
+                          flipCardController: flipCardControllerDhuhr,
                         ),
-                        back: Container(
-                          child: actionsSalahRow(
-                            rakatFard: '4',
-                            fardSalah: Prayer.Dhuhr,
-                            salahTimeStart: c.prayerTimes!.dhuhr,
-                            rakatMuakBefore: '4',
-                            rakatMuakAfter: '2',
-                            rakatNaflAfter: '2',
-                            isJummahMode: false,
-                          ),
+                        back: actionsSalahRow(
+                          rakatFard: '4',
+                          fardSalah: Prayer.Dhuhr,
+                          salahTimeStart: c.prayerTimes!.dhuhr,
+                          rakatMuakBefore: '4',
+                          rakatMuakAfter: '2',
+                          rakatNaflAfter: '2',
+                          isJummahMode: false,
+                          flipCardController: flipCardControllerDhuhr,
                         ),
                       ),
                     ),
@@ -1755,28 +1804,28 @@ class QuestsActive extends StatelessWidget {
                       minHeight: SALAH_ACTIONS_HEIGHT,
                       maxHeight: SALAH_ACTIONS_HEIGHT,
                       child: FlipCard(
+                        flipOnTouch: false,
+                        controller: flipCardControllerDhuhr,
                         direction: FlipDirection.HORIZONTAL,
-                        front: Container(
-                          child: actionsSalahRow(
-                            rakatFard: '4',
-                            fardSalah: Prayer.Dhuhr,
-                            salahTimeStart: c.prayerTimes!.dhuhr,
-                            rakatMuakBefore: '4',
-                            rakatMuakAfter: '2',
-                            rakatNaflAfter: '2',
-                            isJummahMode: false,
-                          ),
+                        front: actionsSalahRow(
+                          rakatFard: '4',
+                          fardSalah: Prayer.Dhuhr,
+                          salahTimeStart: c.prayerTimes!.dhuhr,
+                          rakatMuakBefore: '4',
+                          rakatMuakAfter: '2',
+                          rakatNaflAfter: '2',
+                          isJummahMode: false,
+                          flipCardController: flipCardControllerDhuhr,
                         ),
-                        back: Container(
-                          child: actionsSalahRow(
-                            rakatFard: '2', // Jummah Mode
-                            fardSalah: Prayer.Dhuhr,
-                            salahTimeStart: c.prayerTimes!.dhuhr,
-                            rakatMuakBefore: '4',
-                            rakatMuakAfter: '6',
-                            rakatNaflAfter: '2',
-                            isJummahMode: true,
-                          ),
+                        back: actionsSalahRow(
+                          rakatFard: '2', // Jummah Mode
+                          fardSalah: Prayer.Dhuhr,
+                          salahTimeStart: c.prayerTimes!.dhuhr,
+                          rakatMuakBefore: '4',
+                          rakatMuakAfter: '6',
+                          rakatNaflAfter: '2',
+                          isJummahMode: true,
+                          flipCardController: flipCardControllerDhuhr,
                         ),
                       ),
                     ),
