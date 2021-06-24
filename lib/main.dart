@@ -16,6 +16,7 @@ import 'package:hapi/helpers/localization.g.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/quest/quest_controller.dart';
+import 'package:hapi/quest/time_controller.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/ui/components/loading.dart';
 
@@ -54,6 +55,7 @@ void main() async {
   Get.put<OnboardingController>(OnboardingController());
   Get.put<AuthController>(AuthController());
   Get.put<MenuController>(MenuController());
+  Get.put<TimeController>(TimeController());
   Get.put<QuestController>(QuestController());
   Get.put<TarikhController>(TarikhController());
   Get.put<ThemeController>(ThemeController());

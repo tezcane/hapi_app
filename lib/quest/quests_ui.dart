@@ -16,8 +16,10 @@ import 'package:hapi/quest/athan/CalculationMethod.dart';
 import 'package:hapi/quest/athan/Prayer.dart';
 import 'package:hapi/quest/quest_card.dart';
 import 'package:hapi/quest/quest_controller.dart';
+import 'package:hapi/quest/time_controller.dart';
 import 'package:hapi/services/database.dart';
 import 'package:hapi/ui/settings_ui.dart';
+import 'package:im_animations/im_animations.dart';
 
 class QuestsUI extends StatelessWidget {
   @override
@@ -638,11 +640,11 @@ class QuestsActive extends StatelessWidget {
   static const double SALAH_ACTIONS_HEIGHT = 55;
 
   final TextStyle topTitlesTextStyle =
-      const TextStyle(color: Colors.white, fontSize: 10.0);
+      const TextStyle(color: Colors.white, fontSize: 9.5);
   final TextStyle topTitleTimeTextStyle =
-      const TextStyle(color: Colors.white, fontSize: 25.0);
+      const TextStyle(color: Colors.white, fontSize: 24.0);
   final TextStyle columnTitlesTextStyle =
-      const TextStyle(color: Colors.white, fontSize: 11.5);
+      const TextStyle(color: Colors.white, fontSize: 9.5);
 
   static const Color textColor = Colors.white;
   static const TextStyle actionTextStyle = const TextStyle(
@@ -711,7 +713,6 @@ class QuestsActive extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              //Text('Time left in ', style: topTitlesTextStyle),
                               Text(
                                   c.prayerTimes!.currentPrayerName
                                       .toString()
@@ -719,8 +720,6 @@ class QuestsActive extends StatelessWidget {
                                       .last
                                       .replaceAll('_', ' '),
                                   style: topTitlesTextStyle),
-                              // Text(' ends in:', style: topTitlesTextStyle),
-                              // Text(':', style: topTitlesTextStyle),
                               Text(' ends', style: topTitlesTextStyle),
                               Icon(Icons.arrow_right_alt_rounded,
                                   color: Colors.white, size: 12),
@@ -728,7 +727,6 @@ class QuestsActive extends StatelessWidget {
                           ),
                           Row(
                             children: [
-                              //Text('Time to ', style: topTitlesTextStyle),
                               Text(
                                   c.prayerTimes!.nextPrayerName
                                       .toString()
@@ -739,24 +737,18 @@ class QuestsActive extends StatelessWidget {
                               Text(' in', style: topTitlesTextStyle),
                               Icon(Icons.arrow_right_alt_rounded,
                                   color: Colors.white, size: 12),
-                              // Text(' starts in:', style: topTitlesTextStyle),
                             ],
                           ),
                         ],
                       ),
-                      InkWell(
-                        onTap: () {
-                          c.initLocation(); //TODO
-                        },
-                        child: Row(
+                      GetX<TimeController>(builder: (TimeController c) {
+                        return Row(
                           children: [
-                            // Icon(Icons.hourglass_top_outlined,
-                            //     color: Colors.green.shade500),
                             Text(c.timeToNextPrayer,
                                 style: topTitleTimeTextStyle),
                           ],
-                        ),
-                      ),
+                        );
+                      }),
                     ],
                   ),
                   if (c.showSunnahKeys) SizedBox(height: 8),
@@ -1027,25 +1019,10 @@ class QuestsActive extends StatelessWidget {
                     child: Row(
                       children: [
                         if (rakatMuakBefore != '')
-                          Expanded(
-                            child: Container(
-                              color: AppThemes
-                                  .logoBackground, // hide scroll of items behind
-                              child: ClipRRect(
-                                borderRadius: const BorderRadius.only(
-                                  bottomLeft: const Radius.circular(15.0),
-                                ),
-                                child: Container(
-                                  color: Colors.grey.shade800,
-                                  child: Center(
-                                    child: Text(
-                                      c.showSunnahMuak ? rakatMuakBefore : '',
-                                      style: actionMuakTextStyle,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
+                          SalahActionCellStart(
+                            c.showSunnahMuak ? rakatMuakBefore : '',
+                            actionMuakTextStyle,
+                            false,
                           ),
                         if (rakatNaflBefore != '')
                           Expanded(
@@ -1901,5 +1878,39 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
     return maxHeight != oldDelegate.maxHeight ||
         minHeight != oldDelegate.minHeight ||
         child != oldDelegate.child;
+  }
+}
+
+class SalahActionCellStart extends StatelessWidget {
+  SalahActionCellStart(this._text, this._textStyle, this._isActive);
+
+  final String _text;
+  final TextStyle _textStyle;
+  final bool _isActive;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Container(
+        color: AppThemes.logoBackground, // hide scroll of items behind
+        child: ClipRRect(
+          borderRadius: const BorderRadius.only(
+            bottomLeft: const Radius.circular(15.0),
+          ),
+          child: Container(
+            color: Colors.grey.shade800,
+            child: Center(
+                // child: AvatarGlow(endRadius: 100.0, showTwoGlows: true, glowColor: const Color(0xFFFFD700),duration: Duration(milliseconds: 1000), //shape: CircleBorder(),child: Text('Duha',style: actionDuhaTextStyle,),),
+                child: _isActive
+                    ? HeartBeat(
+                        beatsPerMinute: 60,
+                        child: Text(_text, style: _textStyle),
+                      )
+                    : Text(_text, style: _textStyle)),
+            //child: AvatarGlow(endRadius: 100.0, showTwoGlows: true, glowColor: const Color(0xFFFFD700), duration: Duration(milliseconds: 1000), //shape: CircleBorder(),child: HeartBeat(beatsPerMinute: 120,//radius: 100,child: Text('Duha',style: actionDuhaTextStyle,),),
+          ),
+        ),
+      ),
+    );
   }
 }
