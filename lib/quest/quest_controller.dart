@@ -5,13 +5,11 @@ import 'package:flip_card/flip_card_controller.dart';
 import 'package:get/get.dart';
 import 'package:hapi/constants/globals.dart';
 import 'package:hapi/controllers/auth_controller.dart';
-import 'package:hapi/quest/athan/Coordinates.dart';
 import 'package:hapi/quest/athan/PrayerTimes.dart';
 import 'package:hapi/quest/quest_model.dart';
 import 'package:hapi/quest/time_controller.dart';
 import 'package:hapi/services/database.dart';
 import 'package:intl/intl.dart';
-import 'package:timezone/timezone.dart' show Location, TZDateTime, getLocation;
 
 import 'athan/Prayer.dart';
 
@@ -68,11 +66,6 @@ class QuestController extends GetxController {
   }
 
   PrayerTimes? get prayerTimes => _prayerTimes;
-
-  Location? _timeZone;
-  Coordinates _gps = Coordinates(36.950663449472, -122.05716133118);
-  double? _qiblaDirection;
-  double? get qiblaDirection => _qiblaDirection;
 
   @override
   void onInit() {
