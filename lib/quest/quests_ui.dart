@@ -1451,8 +1451,11 @@ class QuestsActive extends StatelessWidget {
                       onTap: () {
                         c.toggleSalahAlarm(fardSalah);
                       },
-                      child: Icon(Icons.alarm_outlined,
-                          size: 20, color: Colors.white),
+                      child: Icon(
+                        Icons.alarm_outlined, // TODO
+                        size: 20,
+                        color: Colors.white,
+                      ),
                     ),
                   ],
                 ),
