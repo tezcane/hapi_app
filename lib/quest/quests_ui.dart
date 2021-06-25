@@ -637,7 +637,7 @@ class AddQuest extends StatelessWidget {
 }
 
 class QuestsActive extends StatelessWidget {
-  static const double SALAH_ACTIONS_HEIGHT = 55;
+  static const double SALAH_ACTIONS_HEIGHT = 62;
 
   static const TextStyle textStyleAppBar =
       const TextStyle(fontSize: 9.5, color: Colors.white);
@@ -671,7 +671,7 @@ class QuestsActive extends StatelessWidget {
   static final FlipCardController flipCardControllerDhuhr =
       FlipCardController();
 
-  GetBuilder SalahAppBar() {
+  GetBuilder salahAppBar() {
     return GetBuilder<QuestController>(
       builder: (c) {
         return Row(
@@ -732,7 +732,8 @@ class QuestsActive extends StatelessWidget {
                       }),
                     ],
                   ),
-                  if (c.showSunnahKeys) SizedBox(height: 8),
+                  //if (c.showSunnahKeys) SizedBox(height: 1),
+                  SizedBox(height: 5.5),
                   if (c.showSunnahKeys)
                     Row(
                       children: [
@@ -914,75 +915,12 @@ class QuestsActive extends StatelessWidget {
             ///
             /// First row is title of salah, with times, etc.
             ///
-            Row(
-              children: [
-                Expanded(
-                  flex: 7000,
-                  child: Container(
-                    color:
-                        AppThemes.logoBackground, // hide scroll of items behind
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: const Radius.circular(15.0),
-                        topRight: const Radius.circular(15.0),
-                      ),
-                      child: Container(
-                        color: fardSalah == c.prayerTimes!.currentPrayerName &&
-                                ((!isJummahMode) ||
-                                    (isJummahMode && c.isFriday()))
-                            ? Color(0xFF268E0D)
-                            : Colors.lightBlue.shade600,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            if (flipCardController != null)
-                              InkWell(
-                                child: Transform.rotate(
-                                  angle: 1.5708, // <- radian = 90 degrees
-                                  child: Icon(Icons.swap_vert_outlined),
-                                ),
-                                onTap: () =>
-                                    c.toggleFlipCard(flipCardController),
-                              ),
-                            Text(
-                              isJummahMode
-                                  ? 'Jummah'
-                                  : fardSalah
-                                      .toString()
-                                      .split('.')
-                                      .last
-                                      .replaceAll('_', ' '),
-                              style: const TextStyle(
-                                  color: textColor,
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
-                            ),
-                            SizedBox(width: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text(
-                                  getTime(salahTimeStart),
-                                  style: textStyleWhite,
-                                  textAlign: TextAlign.center,
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    c.toggleSalahAlarm(fardSalah);
-                                  },
-                                  child: Icon(Icons.alarm_outlined,
-                                      size: 20, color: Colors.white),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+            salahHeader(
+              fardSalah,
+              c,
+              isJummahMode,
+              salahTimeStart!,
+              flipCardController,
             ),
             Expanded(
               child: Row(
@@ -1129,63 +1067,12 @@ class QuestsActive extends StatelessWidget {
             ///
             /// First row is title with times, etc.
             ///
-            Row(
-              children: [
-                Expanded(
-                  //flex: 7000,
-                  child: Container(
-                    color:
-                        AppThemes.logoBackground, // hide scroll of items behind
-                    child: ClipRRect(
-                      borderRadius: const BorderRadius.only(
-                        topLeft: const Radius.circular(15.0),
-                        topRight: const Radius.circular(15.0),
-                      ),
-                      child: Container(
-                        color: Prayer.Sunrise ==
-                                    cQust.prayerTimes!.currentPrayerName ||
-                                Prayer.Duha ==
-                                    cQust.prayerTimes!.currentPrayerName ||
-                                Prayer.Sun_Zenith ==
-                                    cQust.prayerTimes!.currentPrayerName
-                            ? Color(0xFF268E0D)
-                            : Colors.lightBlue.shade600,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Duha',
-                              style: const TextStyle(
-                                  color: textColor,
-                                  fontSize: 20.0,
-                                  fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
-                            ),
-                            SizedBox(width: 10),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Text(
-                                  getTime(c.prayerTimes!.duha),
-                                  style: textStyleWhite,
-                                  textAlign: TextAlign.center,
-                                ),
-                                InkWell(
-                                  onTap: () {
-                                    //c.toggleSalahAlarm(fardSalah); TODO
-                                  },
-                                  child: Icon(Icons.alarm_outlined,
-                                      size: 20, color: Colors.white),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
+            salahHeader(
+              Prayer.Duha,
+              c,
+              false,
+              c.prayerTimes!.duha!,
+              null,
             ),
             Expanded(
               child: Row(
@@ -1252,59 +1139,12 @@ class QuestsActive extends StatelessWidget {
                 ///
                 /// First row is title with times, etc.
                 ///
-                Row(
-                  children: [
-                    Expanded(
-                      flex: 7000,
-                      child: Container(
-                        color: AppThemes
-                            .logoBackground, // hide scroll of items behind
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: const Radius.circular(15.0),
-                            topRight: const Radius.circular(15.0),
-                          ),
-                          child: Container(
-                            color: fardSalah == c.prayerTimes!.currentPrayerName
-                                ? Color(0xFF268E0D)
-                                : Colors.lightBlue.shade600,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Layl Ibadah',
-                                  style: const TextStyle(
-                                      color: textColor,
-                                      fontSize: 20.0,
-                                      fontWeight: FontWeight.bold),
-                                  textAlign: TextAlign.center,
-                                ),
-                                SizedBox(width: 10),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    Text(
-                                      getTime(salahTimeStart),
-                                      style: textStyleWhite,
-                                      textAlign: TextAlign.center,
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                        c.toggleSalahAlarm(fardSalah);
-                                      },
-                                      child: Icon(Icons.alarm_outlined,
-                                          size: 20, color: Colors.white),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
+                salahHeader(
+                  Prayer.Isha, // 'Layl Ibadah' TODO
+                  c,
+                  false,
+                  c.prayerTimes!.lastThirdOfTheNight!,
+                  null,
                 ),
                 Expanded(
                   child: Row(
@@ -1392,14 +1232,14 @@ class QuestsActive extends StatelessWidget {
           slivers: <Widget>[
             SliverAppBar(
               backgroundColor: Colors.lightBlue.shade900,
-              expandedHeight: 300.0,
-              collapsedHeight: 90.0,
+              expandedHeight: 260.0,
+              collapsedHeight: c.showSunnahKeys ? 90.0 : 56,
               floating: true,
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
                 centerTitle: true,
                 titlePadding: EdgeInsets.all(7.0),
-                title: SalahAppBar(),
+                title: salahAppBar(),
                 background: Swiper(
                   itemCount: 3,
                   itemBuilder: (BuildContext context, int index) => Image.asset(
@@ -1551,6 +1391,77 @@ class QuestsActive extends StatelessWidget {
         ),
       );
     });
+  }
+
+  Expanded salahHeader(
+    final Prayer fardSalah,
+    final QuestController c,
+    final bool isJummahMode,
+    final DateTime salahTimeStart,
+    final FlipCardController? flipCardController,
+  ) {
+    return Expanded(
+      child: Container(
+        color: AppThemes.logoBackground, // hide scroll of items behind
+        child: ClipRRect(
+          borderRadius: const BorderRadius.only(
+            topLeft: const Radius.circular(15.0),
+            topRight: const Radius.circular(15.0),
+          ),
+          child: Container(
+            color: fardSalah == c.prayerTimes!.currentPrayerName &&
+                    ((!isJummahMode) || (isJummahMode && c.isFriday()))
+                ? Color(0xFF268E0D)
+                : Colors.lightBlue.shade600,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (flipCardController != null)
+                  InkWell(
+                    child: Transform.rotate(
+                      angle: 1.5708, // <- radian = 90 degrees
+                      child: Icon(Icons.swap_vert_outlined),
+                    ),
+                    onTap: () => c.toggleFlipCard(flipCardController),
+                  ),
+                Text(
+                  isJummahMode
+                      ? 'Jummah'
+                      : fardSalah
+                          .toString()
+                          .split('.')
+                          .last
+                          .replaceAll('_', ' '),
+                  style: const TextStyle(
+                      color: textColor,
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(width: 10),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text(
+                      getTime(salahTimeStart),
+                      style: textStyleWhite,
+                      textAlign: TextAlign.center,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        c.toggleSalahAlarm(fardSalah);
+                      },
+                      child: Icon(Icons.alarm_outlined,
+                          size: 20, color: Colors.white),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }
 
