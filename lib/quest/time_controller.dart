@@ -15,9 +15,6 @@ import 'package:timezone/timezone.dart' show Location, TZDateTime, getLocation;
 final TimeController cTime = Get.find();
 
 class TimeController extends GetxController {
-  //PrayerTimes? _prayerTimes;
-  //PrayerTimes? get prayerTimes => _prayerTimes;
-
   RxString _nextPrayerTime = '-'.obs;
   String get timeToNextPrayer => _nextPrayerTime.value;
 
