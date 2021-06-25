@@ -1097,7 +1097,7 @@ class QuestsActive extends StatelessWidget {
                                                       Prayer.Fajr_Tomorrow
                                               ? getTime(c.prayerTimes!.rising)
                                               : getTimeRange(
-                                                  c.prayerTimes!.sunsetting,
+                                                  c.prayerTimes!.sunSetting,
                                                   c.prayerTimes!.maghrib),
                                           style: textStyleAdhkar),
                                     ],

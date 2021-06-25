@@ -16,26 +16,26 @@ class PrayerTimes {
   final Location tz; // timezone
   final bool precision;
 
-  DateTime? _ishaYesterday;
+//DateTime? _ishaYesterday;
   DateTime? _fajr;
   DateTime? _sunrise; // sunrise - kerahat 1
   DateTime? _duha;
   DateTime? _sunZenith; // sun zenith/peak - kerahat 2
   DateTime? _dhuhr;
   DateTime? _asr;
-  DateTime? _sunsetting; // sunset - kerahat 3
+  DateTime? _sunSetting; // sunset - kerahat 3
   DateTime? _maghrib;
   DateTime? _isha;
   DateTime? _fajrTomorrow;
   DateTime? _sunriseTomorrow;
-  DateTime? get ishaYesterday => _ishaYesterday;
+//DateTime? get ishaYesterday => _ishaYesterday;
   DateTime? get fajr => _fajr;
   DateTime? get rising => _sunrise;
   DateTime? get duha => _duha;
   DateTime? get peaking => _sunZenith;
   DateTime? get dhuhr => _dhuhr;
   DateTime? get asr => _asr;
-  DateTime? get sunsetting => _sunsetting;
+  DateTime? get sunSetting => _sunSetting;
   DateTime? get maghrib => _maghrib;
   DateTime? get isha => _isha;
   DateTime? get fajrTomorrow => _fajrTomorrow;
@@ -66,15 +66,15 @@ class PrayerTimes {
   ) {
     SolarTime solarTime = new SolarTime(date, coordinates);
 
-    DateTime dateYesterday = date.subtract(Duration(days: 1));
-    SolarTime solarTimeYesterday = new SolarTime(dateYesterday, coordinates);
+    // DateTime dateYesterday = date.subtract(Duration(days: 1));
+    // SolarTime solarTimeYesterday = new SolarTime(dateYesterday, coordinates);
 
     DateTime dateTomorrow = date.add(Duration(days: 1));
     SolarTime solarTimeTomorrow = new SolarTime(dateTomorrow, coordinates);
 
     // todo
     // print(calculationParameters.ishaAngle);
-    DateTime ishaYesterdayTime;
+    //DateTime ishaYesterdayTime;
     DateTime fajrTime;
     DateTime asrTime;
     DateTime maghribTime;
@@ -92,8 +92,8 @@ class PrayerTimes {
 
     DateTime sunriseTimeTomorrow = new TimeComponents(solarTimeTomorrow.sunrise)
         .utcDate(dateTomorrow.year, dateTomorrow.month, dateTomorrow.day);
-    DateTime sunsetTimeYesteray = new TimeComponents(solarTimeYesterday.sunset)
-        .utcDate(dateYesterday.year, dateYesterday.month, dateYesterday.day);
+    // DateTime sunsetTimeYesteray = new TimeComponents(solarTimeYesterday.sunset)
+    //     .utcDate(dateYesterday.year, dateYesterday.month, dateYesterday.day);
 
     asrTime = new TimeComponents(
             solarTime.afternoon(shadowLength(calculationParameters.madhab)))
@@ -144,23 +144,23 @@ class PrayerTimes {
     if (calculationParameters.ishaInterval > 0) {
       ishaTime =
           dateByAddingMinutes(sunsetTime, calculationParameters.ishaInterval);
-      ishaYesterdayTime = dateByAddingMinutes(
-          sunsetTimeYesteray, calculationParameters.ishaInterval);
+      // ishaYesterdayTime = dateByAddingMinutes(
+      //     sunsetTimeYesteray, calculationParameters.ishaInterval);
     } else {
       ishaTime = new TimeComponents(
               solarTime.hourAngle(-1 * calculationParameters.ishaAngle, true))
           .utcDate(date.year, date.month, date.day);
-      ishaYesterdayTime = new TimeComponents(solarTimeYesterday.hourAngle(
-              -1 * calculationParameters.ishaAngle, true))
-          .utcDate(dateYesterday.year, dateYesterday.month, dateYesterday.day);
+      // ishaYesterdayTime = new TimeComponents(solarTimeYesterday.hourAngle(
+      //         -1 * calculationParameters.ishaAngle, true))
+      //     .utcDate(dateYesterday.year, dateYesterday.month, dateYesterday.day);
       // special case for moonsighting committee above latitude 55
       if (calculationParameters.salahMethod ==
               SalahMethod.Moonsight_Committee &&
           coordinates.latitude >= 55) {
         nightFraction = nightDurationInSecs / 7;
         ishaTime = dateByAddingSeconds(sunsetTime, nightFraction!.round());
-        ishaYesterdayTime =
-            dateByAddingSeconds(sunsetTimeYesteray, nightFraction!.round());
+        // ishaYesterdayTime =
+        //     dateByAddingSeconds(sunsetTimeYesteray, nightFraction!.round());
       }
 
       DateTime safeIsha(DateTime day) {
@@ -180,10 +180,10 @@ class PrayerTimes {
         ishaTime = safeIsha(date);
       }
 
-      if (ishaYesterdayTime.millisecondsSinceEpoch == double.nan ||
-          safeIsha(dateYesterday).isBefore(ishaYesterdayTime)) {
-        ishaYesterdayTime = safeIsha(dateYesterday);
-      }
+      // if (ishaYesterdayTime.millisecondsSinceEpoch == double.nan ||
+      //     safeIsha(dateYesterday).isBefore(ishaYesterdayTime)) {
+      //   ishaYesterdayTime = safeIsha(dateYesterday);
+      // }
     }
 
     maghribTime = sunsetTime;
@@ -212,7 +212,7 @@ class PrayerTimes {
     int ishaAdjustment = (calculationParameters.adjustments["isha"] ?? 0) +
         (calculationParameters.methodAdjustments["isha"] ?? 0);
 
-    _ishaYesterday = getTime(ishaYesterdayTime, ishaAdjustment);
+    // _ishaYesterday = getTime(ishaYesterdayTime, ishaAdjustment);
 
     _fajr = getTime(fajrTime, fajrAdjustment);
     _sunrise = getTime(sunriseTime, sunriseAdjustment);
@@ -225,7 +225,7 @@ class PrayerTimes {
     ));
     _asr = getTime(asrTime, asrAdjustment);
     _maghrib = getTime(maghribTime, maghribAdjustment);
-    _sunsetting = _maghrib!.subtract(
+    _sunSetting = _maghrib!.subtract(
       Duration(minutes: calculationParameters.kerahatSunSettingMins),
     );
     _isha = getTime(ishaTime, ishaAdjustment);
@@ -254,14 +254,14 @@ class PrayerTimes {
     print('***** Time Zone: "${date.timeZoneName}"');
 
     print('***** Prayer Times:');
-    print('isha yesterday:   $_ishaYesterday');
+    //print('isha yesterday:   $_ishaYesterday');
     print('fajr:             $_fajr');
     print('sunrise:          $_sunrise');
     print('duha:             $_duha');
     print('peaking:          $_sunZenith');
     print('dhuhr:            $_dhuhr');
     print('asr:              $_asr');
-    print('setting:          $_sunsetting');
+    print('setting:          $_sunSetting');
     print('maghrib:          $_maghrib');
     print('isha:             $_isha');
     print('fajr tomorrow:    $_fajrTomorrow');
@@ -288,9 +288,10 @@ class PrayerTimes {
   }
 
   DateTime timeForPrayer(Prayer prayer) {
-    if (prayer == Prayer.Isha_Yesterday) {
-      return _ishaYesterday!;
-    } else if (prayer == Prayer.Fajr) {
+    // if (prayer == Prayer.Isha_Yesterday) {
+    //   return _ishaYesterday!;
+    // } else
+    if (prayer == Prayer.Fajr) {
       return _fajr!;
     } else if (prayer == Prayer.Sunrise) {
       return _sunrise!;
@@ -302,8 +303,8 @@ class PrayerTimes {
       return _dhuhr!;
     } else if (prayer == Prayer.Asr) {
       return _asr!;
-    } else if (prayer == Prayer.Sunsetting) {
-      return _sunsetting!;
+    } else if (prayer == Prayer.Sun_Setting) {
+      return _sunSetting!;
     } else if (prayer == Prayer.Maghrib) {
       return _maghrib!;
     } else if (prayer == Prayer.Isha) {
@@ -323,8 +324,8 @@ class PrayerTimes {
       return Prayer.Isha;
     } else if (date.isAfter(_maghrib!)) {
       return Prayer.Maghrib;
-    } else if (date.isAfter(_sunsetting!)) {
-      return Prayer.Sunsetting;
+    } else if (date.isAfter(_sunSetting!)) {
+      return Prayer.Sun_Setting;
     } else if (date.isAfter(_asr!)) {
       return Prayer.Asr;
     } else if (date.isAfter(_dhuhr!)) {
@@ -338,7 +339,8 @@ class PrayerTimes {
     } else if (date.isAfter(_fajr!)) {
       return Prayer.Fajr;
     } else {
-      return Prayer.Isha_Yesterday;
+      return Prayer.Fajr;
+//   return Prayer.Isha_Yesterday;
     }
   }
 
@@ -349,10 +351,10 @@ class PrayerTimes {
       return Prayer.Fajr_Tomorrow;
     } else if (date.isAfter(_maghrib!)) {
       return Prayer.Isha;
-    } else if (date.isAfter(_sunsetting!)) {
+    } else if (date.isAfter(_sunSetting!)) {
       return Prayer.Maghrib;
     } else if (date.isAfter(_asr!)) {
-      return Prayer.Sunsetting;
+      return Prayer.Sun_Setting;
     } else if (date.isAfter(_dhuhr!)) {
       return Prayer.Asr;
     } else if (date.isAfter(_sunZenith!)) {
