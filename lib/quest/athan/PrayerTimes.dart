@@ -30,7 +30,7 @@ class PrayerTimes {
   DateTime? _sunriseTomorrow;
 //DateTime? get ishaYesterday => _ishaYesterday;
   DateTime? get fajr => _fajr;
-  DateTime? get rising => _sunrise;
+  DateTime? get sunrise => _sunrise;
   DateTime? get duha => _duha;
   DateTime? get peaking => _sunZenith;
   DateTime? get dhuhr => _dhuhr;

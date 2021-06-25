@@ -667,9 +667,6 @@ class QuestsActive extends StatelessWidget {
   static const TextStyle textStyleWitr = TextStyle(
       fontSize: 17.0, fontWeight: FontWeight.bold, color: Colors.pinkAccent);
 
-  static const TextStyle textStyleAdhkar = const TextStyle(
-      color: textColor, fontSize: 11.0, fontWeight: FontWeight.normal);
-
   static final FlipCardController flipCardControllerFajr = FlipCardController();
   static final FlipCardController flipCardControllerDhuhr =
       FlipCardController();
@@ -814,11 +811,11 @@ class QuestsActive extends StatelessWidget {
     );
   }
 
-  String getTime(DateTime? time) {
+  static String getTime(DateTime? time) {
     return getTimeRange(time, null);
   }
 
-  String getTimeRange(DateTime? startTime, DateTime? endTime) {
+  static String getTimeRange(DateTime? startTime, DateTime? endTime) {
     if (startTime == null) {
       return '-';
     }
@@ -1042,75 +1039,33 @@ class QuestsActive extends StatelessWidget {
                     flex: 2000,
                     child: Row(
                       children: [
-                        if (fardSalah == Prayer.Fajr ||
-                            fardSalah == Prayer.Fajr_Tomorrow ||
-                            fardSalah == Prayer.Asr)
+                        if (fardSalah == Prayer.Fajr)
                           SalahActionCellCenterWidget(
-                            Container(
-                              color: Colors.grey.shade800,
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Stack(
-                                        children: [
-                                          Transform.rotate(
-                                            //angle: 1.5708,
-                                            angle: 4.71239,
-                                            child: Icon(
-                                              Icons.brightness_medium_outlined,
-                                              color: Colors.yellow,
-                                              size: 18,
-                                            ),
-                                          ),
-                                          Positioned(
-                                            top: 9,
-                                            left: 0,
-                                            child: Container(
-                                              color: Colors.grey.shade800,
-                                              height: 10,
-                                              width: 20,
-                                              //child: SizedBox(height: 10),
-                                            ),
-                                          ),
-                                          Positioned(
-                                            top: 5.5,
-                                            left: .9,
-                                            child: Icon(
-                                                fardSalah == Prayer.Fajr ||
-                                                        fardSalah ==
-                                                            Prayer.Fajr_Tomorrow
-                                                    ? Icons
-                                                        .arrow_drop_up_outlined
-                                                    : Icons
-                                                        .arrow_drop_down_outlined,
-                                                color: Colors.yellow,
-                                                size: 16),
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(width: 3),
-                                      Text(
-                                          fardSalah == Prayer.Fajr ||
-                                                  fardSalah ==
-                                                      Prayer.Fajr_Tomorrow
-                                              ? getTime(c.prayerTimes!.rising)
-                                              : getTimeRange(
-                                                  c.prayerTimes!.sunSetting,
-                                                  c.prayerTimes!.maghrib),
-                                          style: textStyleAdhkar),
-                                    ],
-                                  ),
-                                  Text(
-                                      fardSalah == Prayer.Fajr ||
-                                              fardSalah == Prayer.Fajr_Tomorrow
-                                          ? 'Morning Adhkar'
-                                          : 'Evening Adhkar',
-                                      style: textStyleAdhkar),
-                                ],
-                              ),
+                            SunCell(
+                              IconSunrise(),
+                              'Morning Adhkar',
+                              c.prayerTimes!.sunrise!,
+                              null,
                             ),
+                            true,
+                          ),
+                        if (fardSalah == Prayer.Fajr_Tomorrow)
+                          SalahActionCellCenterWidget(
+                            SunCell(
+                              IconSunrise(),
+                              '',
+                              c.prayerTimes!.sunriseTomorrow!,
+                              null,
+                            ),
+                            true,
+                          ),
+                        if (fardSalah == Prayer.Asr)
+                          SalahActionCellCenterWidget(
+                            SunCell(
+                                IconSunset(),
+                                'Evening Adhkar',
+                                c.prayerTimes!.sunSetting!,
+                                c.prayerTimes!.maghrib!),
                             true,
                           ),
                         if (rakatMuakAfter != '')
@@ -1137,7 +1092,7 @@ class QuestsActive extends StatelessWidget {
                     child: Row(
                       children: [
                         SalahActionCellCenterWidget(
-                          ThikrIcon(),
+                          IconThikr(),
                           true,
                         ),
                         SalahActionCellEndWidget(
@@ -1241,50 +1196,11 @@ class QuestsActive extends StatelessWidget {
                     child: Row(
                       children: [
                         SalahActionCellStartWidget(
-                          Container(
-                            color: Colors.grey.shade800,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Center(
-                                  child: Stack(
-                                    children: [
-                                      Transform.rotate(
-                                        //angle: 1.5708,
-                                        angle: 4.71239,
-                                        child: Icon(
-                                          Icons.brightness_medium_outlined,
-                                          color: Colors.yellow,
-                                          size: 18,
-                                        ),
-                                      ),
-                                      Positioned(
-                                        top: 9,
-                                        left: 0,
-                                        child: Container(
-                                          color: Colors.grey.shade800,
-                                          height: 10,
-                                          width: 20,
-                                        ),
-                                      ),
-                                      Positioned(
-                                        top: 5.5,
-                                        left: .9,
-                                        child: Icon(
-                                            Icons.arrow_drop_up_outlined,
-                                            color: Colors.yellow,
-                                            size: 16),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                SizedBox(width: 3),
-                                Text(
-                                    getTimeRange(c.prayerTimes!.rising,
-                                        c.prayerTimes!.duha),
-                                    style: textStyleAdhkar),
-                              ],
-                            ),
+                          SunCell(
+                            IconSunrise(),
+                            '',
+                            c.prayerTimes!.sunrise!,
+                            c.prayerTimes!.duha!,
                           ),
                           true,
                         ),
@@ -1294,27 +1210,18 @@ class QuestsActive extends StatelessWidget {
                           true,
                         ),
                         SalahActionCellEndWidget(
-                            Container(
-                              color: Colors.grey.shade800,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Center(
-                                    child: Icon(
-                                      Icons.brightness_7_outlined,
-                                      color: Colors.yellow,
-                                      size: 18,
-                                    ),
-                                  ),
-                                  SizedBox(width: 3),
-                                  Text(
-                                      getTimeRange(c.prayerTimes!.peaking,
-                                          c.prayerTimes!.dhuhr),
-                                      style: textStyleAdhkar),
-                                ],
-                              ),
+                          SunCell(
+                            Icon(
+                              Icons.brightness_7_outlined,
+                              color: Colors.yellow,
+                              size: 18,
                             ),
-                            true),
+                            '',
+                            c.prayerTimes!.peaking!,
+                            c.prayerTimes!.dhuhr!,
+                          ),
+                          true,
+                        ),
                       ],
                     ),
                   ),
@@ -1407,7 +1314,7 @@ class QuestsActive extends StatelessWidget {
                       ///
                       /// Thikr and Dua before bed:
                       ///
-                      SalahActionCellCenterWidget(ThikrIcon(), true),
+                      SalahActionCellCenterWidget(IconThikr(), true),
                       SalahActionCellCenterWidget(
                           Icon(
                             Icons.volunteer_activism,
@@ -1519,7 +1426,7 @@ class QuestsActive extends StatelessWidget {
                     rakatFard: '2',
                     fardSalah: Prayer.Fajr,
                     salahTimeStart: c.prayerTimes!.fajr,
-                    salahTimeEnd: c.prayerTimes!.rising,
+                    salahTimeEnd: c.prayerTimes!.sunrise,
                     rakatMuakBefore: '2',
                     isJummahMode: false,
                     flipCardController: flipCardControllerFajr,
@@ -1648,7 +1555,7 @@ class QuestsActive extends StatelessWidget {
 }
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  _SliverAppBarDelegate({
+  const _SliverAppBarDelegate({
     required this.minHeight,
     required this.maxHeight,
     required this.child,
@@ -1675,7 +1582,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 }
 
 class SalahActionCellStart extends StatelessWidget {
-  SalahActionCellStart(this._text, this._textStyle, this._isActive);
+  const SalahActionCellStart(this._text, this._textStyle, this._isActive);
 
   final String _text;
   final TextStyle _textStyle;
@@ -1709,7 +1616,7 @@ class SalahActionCellStart extends StatelessWidget {
 }
 
 class SalahActionCellStartWidget extends StatelessWidget {
-  SalahActionCellStartWidget(this._widget, this._isActive);
+  const SalahActionCellStartWidget(this._widget, this._isActive);
 
   final Widget _widget;
   final bool _isActive;
@@ -1740,7 +1647,7 @@ class SalahActionCellStartWidget extends StatelessWidget {
 }
 
 class SalahActionCellCenter extends StatelessWidget {
-  SalahActionCellCenter(this._text, this._textStyle, this._isActive);
+  const SalahActionCellCenter(this._text, this._textStyle, this._isActive);
 
   final String _text;
   final TextStyle _textStyle;
@@ -1764,7 +1671,7 @@ class SalahActionCellCenter extends StatelessWidget {
 }
 
 class SalahActionCellCenterWidget extends StatelessWidget {
-  SalahActionCellCenterWidget(this._widget, this._isActive);
+  const SalahActionCellCenterWidget(this._widget, this._isActive);
 
   final Widget _widget;
   final bool _isActive;
@@ -1787,7 +1694,7 @@ class SalahActionCellCenterWidget extends StatelessWidget {
 }
 
 class SalahActionCellEnd extends StatelessWidget {
-  SalahActionCellEnd(this._text, this._textStyle, this._isActive);
+  const SalahActionCellEnd(this._text, this._textStyle, this._isActive);
 
   final String _text;
   final TextStyle _textStyle;
@@ -1821,7 +1728,7 @@ class SalahActionCellEnd extends StatelessWidget {
 }
 
 class SalahActionCellEndWidget extends StatelessWidget {
-  SalahActionCellEndWidget(this._widget, this._isActive);
+  const SalahActionCellEndWidget(this._widget, this._isActive);
 
   final Widget _widget;
   final bool _isActive;
@@ -1853,10 +1760,8 @@ class SalahActionCellEndWidget extends StatelessWidget {
   }
 }
 
-class ThikrIcon extends StatelessWidget {
-  const ThikrIcon({
-    Key? key,
-  }) : super(key: key);
+class IconThikr extends StatelessWidget {
+  const IconThikr();
 
   @override
   Widget build(BuildContext context) {
@@ -1877,6 +1782,115 @@ class ThikrIcon extends StatelessWidget {
             size: 21,
           ),
         ),
+      ],
+    );
+  }
+}
+
+class IconSunrise extends StatelessWidget {
+  const IconSunrise();
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Transform.rotate(
+          //angle: 1.5708,
+          angle: 4.71239,
+          child: Icon(
+            Icons.brightness_medium_outlined,
+            color: Colors.yellow,
+            size: 18,
+          ),
+        ),
+        Positioned(
+          top: 9,
+          left: 0,
+          child: Container(
+            color: Colors.grey.shade800,
+            height: 10,
+            width: 20,
+            //child: SizedBox(height: 10),
+          ),
+        ),
+        Positioned(
+          top: 5.5,
+          left: .9,
+          child: Icon(Icons.arrow_drop_up_outlined,
+              color: Colors.yellow, size: 16),
+        )
+      ],
+    );
+  }
+}
+
+class IconSunset extends StatelessWidget {
+  const IconSunset();
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Transform.rotate(
+          //angle: 1.5708,
+          angle: 4.71239,
+          child: Icon(
+            Icons.brightness_medium_outlined,
+            color: Colors.yellow,
+            size: 18,
+          ),
+        ),
+        Positioned(
+          top: 9,
+          left: 0,
+          child: Container(
+            color: Colors.grey.shade800,
+            height: 10,
+            width: 20,
+            //child: SizedBox(height: 10),
+          ),
+        ),
+        Positioned(
+          top: 5.5,
+          left: .9,
+          child: Icon(Icons.arrow_drop_down_outlined,
+              color: Colors.yellow, size: 16),
+        )
+      ],
+    );
+  }
+}
+
+class SunCell extends StatelessWidget {
+  const SunCell(this._sunIcon, this._label, this._time1, this._time2);
+
+  final Widget _sunIcon;
+  final String _label;
+  final DateTime _time1;
+  final DateTime? _time2;
+
+  static const TextStyle _textStyleAdhkar = const TextStyle(
+      color: Colors.white, fontSize: 11.0, fontWeight: FontWeight.normal);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            _sunIcon,
+            SizedBox(width: 3),
+            Text(
+              QuestsActive.getTimeRange(_time1, _time2),
+              style: _textStyleAdhkar,
+            ),
+          ],
+        ),
+        if (_label != '') Text(_label, style: _textStyleAdhkar),
       ],
     );
   }
