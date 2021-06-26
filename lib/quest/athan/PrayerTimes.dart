@@ -7,6 +7,7 @@ import 'package:hapi/quest/athan/Madhab.dart';
 import 'package:hapi/quest/athan/Prayer.dart';
 import 'package:hapi/quest/athan/SolarTime.dart';
 import 'package:hapi/quest/athan/TimeComponents.dart';
+import 'package:hapi/quest/quest_controller.dart';
 import 'package:timezone/timezone.dart';
 
 class PrayerTimes {
@@ -246,11 +247,11 @@ class PrayerTimes {
         precision: precision);
 
     // Convenience Utilities
-    _currPrayerName = currentPrayer(date);
-    _currPrayerDate = timeForPrayer(_currPrayerName);
+    _currPrayerName = getCurrPrayer(date);
+    _currPrayerDate = getTimeOfPrayer(_currPrayerName);
 
-    _nextPrayerName = nextPrayer(date);
-    _nextPrayerDate = timeForPrayer(_nextPrayerName);
+    _nextPrayerName = getNextPrayer(date);
+    _nextPrayerDate = getTimeOfPrayer(_nextPrayerName);
 
     print('***** Current Local Time: $date');
     print('***** Time Zone: "${date.timeZoneName}"');
@@ -276,8 +277,8 @@ class PrayerTimes {
     print('***** Sunnah Times:');
     //print('night duration secs: $nightDurationInSecs');
     print('night duration secs: ${nightDuration.inSeconds}');
-    print('middleOfTheNight:    $_middleOfNight');
-    print('lastThirdOfTheNight: $_last3rdOfNight');
+    print('middleOfight:        $_middleOfNight');
+    print('last3rdOfNight:      $_last3rdOfNight');
   }
 
   DateTime getTime(DateTime date, int adjustment) {
@@ -289,7 +290,7 @@ class PrayerTimes {
     return TZDateTime.from(date, tz);
   }
 
-  DateTime timeForPrayer(Prayer prayer) {
+  DateTime getTimeOfPrayer(Prayer prayer) {
     if (prayer == Prayer.Fajr) {
       return _fajr;
     } else if (prayer == Prayer.Sunrise) {
@@ -310,6 +311,8 @@ class PrayerTimes {
       return _maghrib;
     } else if (prayer == Prayer.Isha) {
       return _isha;
+    } else if (prayer == Prayer.Middle_of_Night) {
+      return _middleOfNight;
     } else if (prayer == Prayer.Last_1__3_of_Night) {
       return _last3rdOfNight;
     } else if (prayer == Prayer.Fajr_Tomorrow) {
@@ -322,13 +325,19 @@ class PrayerTimes {
     }
   }
 
-  Prayer currentPrayer(DateTime date) {
+  Prayer getCurrPrayer(DateTime date) {
     if (date.isAfter(_sunriseTomorrow)) {
       return Prayer.Sunrise_Tomorrow;
     } else if (date.isAfter(_fajrTomorrow)) {
       return Prayer.Fajr_Tomorrow;
-    } else if (date.isAfter(_last3rdOfNight)) {
+    } else if (cQust.showSunnahLayl &&
+        cQust.showLast3rdOfNight &&
+        date.isAfter(_last3rdOfNight)) {
       return Prayer.Last_1__3_of_Night;
+    } else if (cQust.showSunnahLayl &&
+        !cQust.showLast3rdOfNight &&
+        date.isAfter(_middleOfNight)) {
+      return Prayer.Middle_of_Night;
     } else if (date.isAfter(_isha)) {
       return Prayer.Isha;
     } else if (date.isAfter(_maghrib)) {
@@ -354,13 +363,26 @@ class PrayerTimes {
     }
   }
 
-  Prayer nextPrayer(DateTime date) {
+  Prayer getNextPrayer(DateTime date) {
     if (date.isAfter(_fajrTomorrow)) {
       return Prayer.Sunrise_Tomorrow;
-    } else if (date.isAfter(_last3rdOfNight)) {
+    } else if (cQust.showSunnahLayl &&
+        cQust.showLast3rdOfNight &&
+        date.isAfter(_last3rdOfNight)) {
+      return Prayer.Fajr_Tomorrow;
+    } else if (cQust.showSunnahLayl &&
+        !cQust.showLast3rdOfNight &&
+        date.isAfter(_middleOfNight)) {
       return Prayer.Fajr_Tomorrow;
     } else if (date.isAfter(_isha)) {
-      return Prayer.Last_1__3_of_Night;
+      if (cQust.showSunnahLayl) {
+        if (cQust.showLast3rdOfNight) {
+          return Prayer.Last_1__3_of_Night; // 1/3 of night mode
+        } else {
+          return Prayer.Middle_of_Night; // middle of night mode
+        }
+      }
+      return Prayer.Fajr_Tomorrow; // show layl off, just show next fajr
     } else if (date.isAfter(_maghrib)) {
       return Prayer.Isha;
     } else if (date.isAfter(_sunSetting)) {

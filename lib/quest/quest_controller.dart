@@ -50,10 +50,11 @@ class QuestController extends GetxController {
 
   RxBool _showSunnahMuak = true.obs;
   RxBool _showSunnahNafl = true.obs;
-  RxBool _showSunnahDuha = true.obs;
-  RxBool _showSunnahLayl = true.obs;
+  RxBool _showSunnahDuha = false.obs;
+  RxBool _showSunnahLayl = false.obs;
   RxBool _showSunnahKeys = true.obs;
   RxBool _showJummahOnFriday = true.obs; // if friday and true, shows jummah
+  RxBool _show3rdOfNight = true.obs; // true = last 1/3, false = middle of night
   RxBool _show12HourClock = true.obs; // false = 24 hour clock/military time
   RxInt _salahCalcMethod = 0.obs; // 0 = America (ISNA)
   RxBool _salahAsrSafe = true.obs; // true hanafi, false other
@@ -71,10 +72,11 @@ class QuestController extends GetxController {
   void onInit() {
     _showSunnahMuak.value = s.read('showSunnahMuak') ?? true;
     _showSunnahNafl.value = s.read('showSunnahNafl') ?? true;
-    _showSunnahDuha.value = s.read('showSunnahDuha') ?? true;
-    _showSunnahLayl.value = s.read('showSunnahLayl') ?? true;
+    _showSunnahDuha.value = s.read('showSunnahDuha') ?? false;
+    _showSunnahLayl.value = s.read('showSunnahLayl') ?? false;
     _showSunnahKeys.value = s.read('showSunnahKeys') ?? true;
     _showJummahOnFriday.value = s.read('showJummahOnFriday') ?? true;
+    _show3rdOfNight.value = s.read('show3rdOfNight') ?? true;
     _show12HourClock.value = s.read('show12HourClock') ?? true;
     _salahAsrSafe.value = s.read('salahAsrSafe') ?? true;
     _salahKerahatSafe.value = s.read('salahKerahatSafe') ?? true;
@@ -111,6 +113,7 @@ class QuestController extends GetxController {
   bool get showSunnahLayl => _showSunnahLayl.value;
   bool get showSunnahKeys => _showSunnahKeys.value;
   bool get showJummahOnFriday => _showJummahOnFriday.value;
+  bool get showLast3rdOfNight => _show3rdOfNight.value;
   bool get show12HourClock => _show12HourClock.value;
   bool get salahAsrSafe => _salahAsrSafe.value;
   bool get salahKerahatSafe => _salahKerahatSafe.value;
@@ -149,6 +152,12 @@ class QuestController extends GetxController {
   set showJummahOnFriday(bool value) {
     _showJummahOnFriday.value = value;
     s.write('showJummahOnFriday', value);
+    update();
+  }
+
+  set showLast3rdOfNight(bool value) {
+    _show3rdOfNight.value = value;
+    s.write('show3rdOfNight', value);
     update();
   }
 

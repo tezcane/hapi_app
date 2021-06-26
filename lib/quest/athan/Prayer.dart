@@ -9,7 +9,7 @@ enum Prayer {
   Sun_Setting, // begin sunset (kerahat 3), also Evening Adhkar time
   Maghrib,
   Isha,
-  Layl_Ibadah, // TODO needed?
+  Middle_of_Night,
   Last_1__3_of_Night,
   Fajr_Tomorrow,
   Sunrise_Tomorrow,
