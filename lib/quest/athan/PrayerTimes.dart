@@ -20,7 +20,7 @@ class PrayerTimes {
   DateTime? _fajr;
   DateTime? _sunrise; // sunrise - kerahat 1
   DateTime? _duha;
-  DateTime? _sunZenith; // sun zenith/peak - kerahat 2
+  DateTime? _zawal; // sun zenith/peak - kerahat 2
   DateTime? _dhuhr;
   DateTime? _asr;
   DateTime? _sunSetting; // sunset - kerahat 3
@@ -32,7 +32,7 @@ class PrayerTimes {
   DateTime? get fajr => _fajr;
   DateTime? get sunrise => _sunrise;
   DateTime? get duha => _duha;
-  DateTime? get peaking => _sunZenith;
+  DateTime? get zawal => _zawal;
   DateTime? get dhuhr => _dhuhr;
   DateTime? get asr => _asr;
   DateTime? get sunSetting => _sunSetting;
@@ -220,8 +220,8 @@ class PrayerTimes {
       Duration(minutes: calculationParameters.kerahatSunRisingMins),
     ));
     _dhuhr = getTime(dhuhrTime, dhuhrAdjustment);
-    _sunZenith = getTZ(_dhuhr!.subtract(
-      Duration(minutes: calculationParameters.kerahatSunZenithMins),
+    _zawal = getTZ(_dhuhr!.subtract(
+      Duration(minutes: calculationParameters.kerahatSunZawalMins),
     ));
     _asr = getTime(asrTime, asrAdjustment);
     _maghrib = getTime(maghribTime, maghribAdjustment);
@@ -258,7 +258,7 @@ class PrayerTimes {
     print('fajr:             $_fajr');
     print('sunrise:          $_sunrise');
     print('duha:             $_duha');
-    print('peaking:          $_sunZenith');
+    print('zawal:            $_zawal');
     print('dhuhr:            $_dhuhr');
     print('asr:              $_asr');
     print('setting:          $_sunSetting');
@@ -297,8 +297,8 @@ class PrayerTimes {
       return _sunrise!;
     } else if (prayer == Prayer.Duha) {
       return _duha!;
-    } else if (prayer == Prayer.Sun_Zenith) {
-      return _sunZenith!;
+    } else if (prayer == Prayer.Zawal) {
+      return _zawal!;
     } else if (prayer == Prayer.Dhuhr) {
       return _dhuhr!;
     } else if (prayer == Prayer.Asr) {
@@ -330,8 +330,8 @@ class PrayerTimes {
       return Prayer.Asr;
     } else if (date.isAfter(_dhuhr!)) {
       return Prayer.Dhuhr;
-    } else if (date.isAfter(_sunZenith!)) {
-      return Prayer.Sun_Zenith;
+    } else if (date.isAfter(_zawal!)) {
+      return Prayer.Zawal;
     } else if (date.isAfter(_duha!)) {
       return Prayer.Duha;
     } else if (date.isAfter(_sunrise!)) {
@@ -357,10 +357,10 @@ class PrayerTimes {
       return Prayer.Sun_Setting;
     } else if (date.isAfter(_dhuhr!)) {
       return Prayer.Asr;
-    } else if (date.isAfter(_sunZenith!)) {
+    } else if (date.isAfter(_zawal!)) {
       return Prayer.Dhuhr;
     } else if (date.isAfter(_duha!)) {
-      return Prayer.Sun_Zenith;
+      return Prayer.Zawal;
     } else if (date.isAfter(_sunrise!)) {
       return Prayer.Duha;
     } else if (date.isAfter(_fajr!)) {

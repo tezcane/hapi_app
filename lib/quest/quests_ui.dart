@@ -920,6 +920,9 @@ class QuestsActive extends StatelessWidget {
               c,
               isJummahMode,
               salahTimeStart!,
+              !c.showSunnahDuha || fardSalah == Prayer.Fajr_Tomorrow
+                  ? salahTimeEnd
+                  : null,
               flipCardController,
             ),
             Expanded(
@@ -928,122 +931,93 @@ class QuestsActive extends StatelessWidget {
                   ///
                   /// 1 of 4. sunnah before fard column items:
                   ///
-                  Expanded(
-                    flex: 1000,
-                    child: Row(
-                      children: [
-                        if (rakatMuakBefore != '')
-                          SalahActionCellStart(
-                            c.showSunnahMuak ? rakatMuakBefore : '',
-                            textStyleMuak,
-                            true,
-                          ),
-                        if (rakatNaflBefore != '')
-                          SalahActionCellStart(
-                            c.showSunnahNafl ? rakatNaflBefore : '',
-                            textStyleNafl,
-                            true,
-                          ),
-                        if (fardSalah == Prayer.Maghrib)
-                          SalahActionCellStart(
-                            '',
-                            textStyleNafl,
-                            false,
-                          ),
-                      ],
+                  if (rakatMuakBefore != '')
+                    SalahActionCellStart(
+                      c.showSunnahMuak ? rakatMuakBefore : '',
+                      textStyleMuak,
+                      true,
                     ),
-                  ),
+                  if (rakatNaflBefore != '')
+                    SalahActionCellStart(
+                      c.showSunnahNafl ? rakatNaflBefore : '',
+                      textStyleNafl,
+                      true,
+                    ),
+                  if (fardSalah == Prayer.Maghrib)
+                    SalahActionCellStart(
+                      '',
+                      textStyleNafl,
+                      false,
+                    ),
 
                   ///
                   /// 2 of 4. fard column item:
                   ///
-                  Expanded(
-                    flex: 1000,
-                    child: Row(
-                      children: [
-                        SalahActionCellCenter(
-                          rakatFard,
-                          textStyleFard,
-                          true,
-                        ),
-                      ],
-                    ),
+                  SalahActionCellCenter(
+                    rakatFard,
+                    textStyleFard,
+                    true,
                   ),
 
                   ///
-                  /// 3 of 4. sunnah after fard column items:
+                  /// 3 of 4. Option 1: sunnah after fard column items:
                   ///
-                  Expanded(
-                    flex: 2000,
-                    child: Row(
-                      children: [
-                        if (fardSalah == Prayer.Fajr)
-                          SalahActionCellCenterWidget(
-                            SunCell(
-                              IconSunrise(),
-                              'Morning Adhkar',
-                              c.prayerTimes!.sunrise!,
-                              null,
-                            ),
-                            true,
-                          ),
-                        if (fardSalah == Prayer.Fajr_Tomorrow)
-                          SalahActionCellCenterWidget(
-                            SunCell(
-                              IconSunrise(),
-                              '',
-                              c.prayerTimes!.sunriseTomorrow!,
-                              null,
-                            ),
-                            true,
-                          ),
-                        if (fardSalah == Prayer.Asr)
-                          SalahActionCellCenterWidget(
-                            SunCell(
-                                IconSunset(),
-                                'Evening Adhkar',
-                                c.prayerTimes!.sunSetting!,
-                                c.prayerTimes!.maghrib!),
-                            true,
-                          ),
-                        if (rakatMuakAfter != '')
-                          SalahActionCellCenter(
-                            c.showSunnahMuak ? rakatMuakAfter : '',
-                            textStyleMuak,
-                            true,
-                          ),
-                        if (rakatNaflAfter != '')
-                          SalahActionCellCenter(
-                            c.showSunnahNafl ? rakatNaflAfter : '',
-                            textStyleNafl,
-                            true,
-                          ),
-                      ],
+                  if (fardSalah == Prayer.Asr)
+                    SalahActionCellCenterWidget(
+                      IconThikr(),
+                      true,
                     ),
-                  ),
+                  if (fardSalah == Prayer.Asr)
+                    SalahActionCellCenterWidget(
+                      Icon(
+                        Icons.volunteer_activism,
+                        color: Colors.white,
+                        size: 25,
+                      ),
+                      true,
+                    ),
+
+                  ///
+                  /// 3 of 4. Option 2: sunnah after fard column items:
+                  ///
+                  if (fardSalah == Prayer.Asr)
+                    SalahActionCellEndWidget(
+                      SunCell(IconSunset(), 'Evening Adhkar',
+                          c.prayerTimes!.sunSetting!, c.prayerTimes!.maghrib!),
+                      true,
+                      flex: 2000,
+                    ),
+
+                  if (rakatMuakAfter != '' || fardSalah != Prayer.Asr)
+                    SalahActionCellCenter(
+                      c.showSunnahMuak ? rakatMuakAfter : '',
+                      textStyleMuak,
+                      true,
+                    ),
+                  if (rakatNaflAfter != '' || fardSalah != Prayer.Asr)
+                    SalahActionCellCenter(
+                      c.showSunnahNafl ? rakatNaflAfter : '',
+                      textStyleNafl,
+                      true,
+                    ),
 
                   ///
                   /// 4 of 4. Thikr and Dua after fard:
                   ///
-                  Expanded(
-                    flex: 2000,
-                    child: Row(
-                      children: [
-                        SalahActionCellCenterWidget(
-                          IconThikr(),
-                          true,
-                        ),
-                        SalahActionCellEndWidget(
-                          Icon(
-                            Icons.volunteer_activism,
-                            color: Colors.white,
-                            size: 25,
-                          ),
-                          true,
-                        ),
-                      ],
+                  if (fardSalah != Prayer.Asr)
+                    SalahActionCellCenterWidget(
+                      IconThikr(),
+                      true,
                     ),
-                  ),
+                  if (fardSalah != Prayer.Asr)
+                    SalahActionCellEndWidget(
+                      Icon(
+                        Icons.volunteer_activism,
+                        color: Colors.white,
+                        size: 25,
+                      ),
+                      true,
+                    ),
                 ],
               ),
             ),
@@ -1058,7 +1032,7 @@ class QuestsActive extends StatelessWidget {
       // TODO cQust needed i believe
       pinned: Prayer.Sunrise == c.prayerTimes!.currentPrayerName ||
           Prayer.Duha == c.prayerTimes!.currentPrayerName ||
-          Prayer.Sun_Zenith == c.prayerTimes!.currentPrayerName,
+          Prayer.Zawal == c.prayerTimes!.currentPrayerName,
       delegate: _SliverAppBarDelegate(
         minHeight: SALAH_ACTIONS_HEIGHT,
         maxHeight: SALAH_ACTIONS_HEIGHT,
@@ -1071,46 +1045,47 @@ class QuestsActive extends StatelessWidget {
               Prayer.Duha,
               c,
               false,
-              c.prayerTimes!.duha!,
+              c.prayerTimes!.sunrise!,
+              null,
               null,
             ),
             Expanded(
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Expanded(
-                    //flex: 7000,
-                    child: Row(
-                      children: [
-                        SalahActionCellStartWidget(
-                          SunCell(
-                            IconSunrise(),
-                            '',
-                            c.prayerTimes!.sunrise!,
-                            c.prayerTimes!.duha!,
-                          ),
-                          true,
-                        ),
-                        SalahActionCellCenter(
-                          'Duha',
-                          textStyleDuha,
-                          true,
-                        ),
-                        SalahActionCellEndWidget(
-                          SunCell(
-                            Icon(
-                              Icons.brightness_7_outlined,
-                              color: Colors.yellow,
-                              size: 18,
-                            ),
-                            '',
-                            c.prayerTimes!.peaking!,
-                            c.prayerTimes!.dhuhr!,
-                          ),
-                          true,
-                        ),
-                      ],
+                  SalahActionCellStartWidget(
+                    SunCell(
+                      IconSunrise(),
+                      'Morning Adhkar',
+                      c.prayerTimes!.sunrise!,
+                      c.prayerTimes!.duha!,
                     ),
+                    true,
+                    flex: 2000,
+                  ),
+                  SalahActionCellCenter(
+                    'Ishraq',
+                    textStyleDuha,
+                    true,
+                  ),
+                  SalahActionCellCenter(
+                    'Duha',
+                    textStyleDuha,
+                    true,
+                  ),
+                  SalahActionCellEndWidget(
+                    SunCell(
+                      Icon(
+                        Icons.brightness_7_outlined,
+                        color: Colors.yellow,
+                        size: 18,
+                      ),
+                      '',
+                      c.prayerTimes!.zawal!,
+                      c.prayerTimes!.dhuhr!,
+                    ),
+                    true,
+                    flex: 2000,
                   ),
                 ],
               ),
@@ -1144,6 +1119,7 @@ class QuestsActive extends StatelessWidget {
                   c,
                   false,
                   c.prayerTimes!.lastThirdOfTheNight!,
+                  null,
                   null,
                 ),
                 Expanded(
@@ -1398,6 +1374,7 @@ class QuestsActive extends StatelessWidget {
     final QuestController c,
     final bool isJummahMode,
     final DateTime salahTimeStart,
+    final DateTime? salahTimeEnd,
     final FlipCardController? flipCardController,
   ) {
     return Expanded(
@@ -1443,7 +1420,7 @@ class QuestsActive extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
-                      getTime(salahTimeStart),
+                      getTimeRange(salahTimeStart, salahTimeEnd),
                       style: textStyleWhite,
                       textAlign: TextAlign.center,
                     ),
@@ -1505,6 +1482,7 @@ class SalahActionCellStart extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
+      flex: 1000,
       child: Container(
         color: AppThemes.logoBackground, // hide scroll of items behind
         child: ClipRRect(
@@ -1530,14 +1508,17 @@ class SalahActionCellStart extends StatelessWidget {
 }
 
 class SalahActionCellStartWidget extends StatelessWidget {
-  const SalahActionCellStartWidget(this._widget, this._isActive);
+  const SalahActionCellStartWidget(this._widget, this._isActive,
+      {this.flex = 1000});
 
   final Widget _widget;
   final bool _isActive;
+  final int flex;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
+      flex: flex,
       child: Container(
         color: AppThemes.logoBackground, // hide scroll of items behind
         child: ClipRRect(
@@ -1570,6 +1551,7 @@ class SalahActionCellCenter extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
+      flex: 1000,
       child: Container(
         color: Colors.grey.shade800,
         child: Center(
@@ -1585,14 +1567,17 @@ class SalahActionCellCenter extends StatelessWidget {
 }
 
 class SalahActionCellCenterWidget extends StatelessWidget {
-  const SalahActionCellCenterWidget(this._widget, this._isActive);
+  const SalahActionCellCenterWidget(this._widget, this._isActive,
+      {this.flex = 1000});
 
   final Widget _widget;
   final bool _isActive;
+  final int flex;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
+      flex: flex,
       child: Container(
         color: Colors.grey.shade800,
         child: Center(
@@ -1617,6 +1602,7 @@ class SalahActionCellEnd extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
+      flex: 1000,
       child: Container(
         color: AppThemes.logoBackground, // hide scroll of items behind
         child: ClipRRect(
@@ -1642,14 +1628,17 @@ class SalahActionCellEnd extends StatelessWidget {
 }
 
 class SalahActionCellEndWidget extends StatelessWidget {
-  const SalahActionCellEndWidget(this._widget, this._isActive);
+  const SalahActionCellEndWidget(this._widget, this._isActive,
+      {this.flex = 1000});
 
   final Widget _widget;
   final bool _isActive;
+  final int flex;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
+      flex: flex,
       child: Container(
         color: AppThemes.logoBackground, // hide scroll of items behind
         child: ClipRRect(

@@ -59,11 +59,11 @@ class TimeController extends GetxController {
 
     if (cQust.salahKerahatSafe) {
       params.kerahatSunRisingMins = 40;
-      params.kerahatSunZenithMins = 40;
+      params.kerahatSunZawalMins = 40;
       params.kerahatSunSettingMins = 40;
     } else {
       params.kerahatSunRisingMins = 20;
-      params.kerahatSunZenithMins = 15;
+      params.kerahatSunZawalMins = 15;
       params.kerahatSunSettingMins = 20;
     }
     cQust.prayerTimes = PrayerTimes(_gps, date, params, _timeZone!, false);
