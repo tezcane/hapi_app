@@ -6,12 +6,11 @@ import 'package:get/get.dart';
 import 'package:hapi/constants/globals.dart';
 import 'package:hapi/controllers/auth_controller.dart';
 import 'package:hapi/quest/athan/PrayerTimes.dart';
+import 'package:hapi/quest/athan/Zaman.dart';
 import 'package:hapi/quest/quest_model.dart';
-import 'package:hapi/quest/time_controller.dart';
+import 'package:hapi/quest/zaman_controller.dart';
 import 'package:hapi/services/database.dart';
 import 'package:intl/intl.dart';
-
-import 'athan/Prayer.dart';
 
 final QuestController cQust = Get.find();
 
@@ -170,25 +169,25 @@ class QuestController extends GetxController {
   set salahAsrSafe(bool value) {
     _salahAsrSafe.value = value;
     s.write('salahAsrSafe', value);
-    cTime.forceSalahRecalculation = true;
+    cZamn.forceSalahRecalculation = true;
     update();
   }
 
   set salahKerahatSafe(bool value) {
     _salahKerahatSafe.value = value;
     s.write('salahKerahatSafe', value);
-    cTime.forceSalahRecalculation = true;
+    cZamn.forceSalahRecalculation = true;
     update();
   }
 
   set salahCalcMethod(int value) {
     _salahCalcMethod.value = value;
     s.write('salahCalcMethod', value);
-    cTime.forceSalahRecalculation = true;
+    cZamn.forceSalahRecalculation = true;
     update();
   }
 
-  void toggleSalahAlarm(Prayer fardSalah) {
+  void toggleSalahAlarm(Zaman fardSalah) {
     // TODO asdf
   }
 

@@ -1,4 +1,4 @@
-enum Prayer {
+enum Zaman {
   Fajr,
   Sunrise, // begin sunrise (kerahat 1), also Morning Adhkar time
   Ishraq,
@@ -15,7 +15,7 @@ enum Prayer {
   Sunrise_Tomorrow,
 }
 
-extension enumUtil on Prayer {
+extension enumUtil on Zaman {
   String name() {
     return this
         .toString()

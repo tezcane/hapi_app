@@ -12,11 +12,11 @@ import 'package:hapi/quest/quest_controller.dart';
 import 'package:timezone/data/latest.dart' show initializeTimeZones;
 import 'package:timezone/timezone.dart' show Location, TZDateTime, getLocation;
 
-final TimeController cTime = Get.find();
+final ZamanController cZamn = Get.find();
 
-class TimeController extends GetxController {
-  RxString _nextPrayerTime = '-'.obs;
-  String get timeToNextPrayer => _nextPrayerTime.value;
+class ZamanController extends GetxController {
+  RxString _nextZaman = '-'.obs;
+  String get timeToNextZaman => _nextZaman.value;
 
   Location? _timeZone;
   Coordinates _gps = Coordinates(36.950663449472, -122.05716133118);
@@ -59,7 +59,7 @@ class TimeController extends GetxController {
 
     if (cQust.salahKerahatSafe) {
       params.kerahatSunRisingMins = 40;
-      params.kerahatSunZawalMins = 40;
+      params.kerahatSunZawalMins = 30;
       params.kerahatSunSettingMins = 40;
     } else {
       params.kerahatSunRisingMins = 20;
@@ -70,29 +70,29 @@ class TimeController extends GetxController {
 
     update(); // update UI with above changes (needed at app init)
 
-    startNextPrayerCountdownTimer();
+    startNextZamanCountdownTimer();
   }
 
-  void startNextPrayerCountdownTimer() {
+  void startNextZamanCountdownTimer() {
     Timer(Duration(seconds: 1), () {
-      Duration timeToNextPrayer = cQust.prayerTimes!.nextPrayerDate
+      Duration timeToNextZaman = cQust.prayerTimes!.nextZamanTime
           .difference(TZDateTime.from(DateTime.now(), _timeZone!));
 
-      // if we hit the end of a timer we recalculate all prayer times
-      if (forceSalahRecalculation || timeToNextPrayer.inSeconds <= 0) {
-        print('This prayer is over, going to next prayer: '
-            '${timeToNextPrayer.inSeconds} secs left');
+      // if we hit the end of a timer (or forced), recalculate zaman times:
+      if (forceSalahRecalculation || timeToNextZaman.inSeconds <= 0) {
+        print('This zaman is over, going to next zaman: '
+            '${timeToNextZaman.inSeconds} secs left');
         forceSalahRecalculation = false;
-        initLocation(); // does startNextPrayerCountdownTimer();
+        initLocation(); // does eventually call startNextZamanCountdownTimer();
       } else {
-        if (timeToNextPrayer.inSeconds % 60 == 0) {
+        if (timeToNextZaman.inSeconds % 60 == 0) {
           // print once a minute
-          print('Next Prayer Timer Minute Tick: ${timeToNextPrayer.inSeconds} '
-              'secs left (${timeToNextPrayer.inSeconds / 60} minutes)');
+          print('Next Zaman Timer Minute Tick: ${timeToNextZaman.inSeconds} '
+              'secs left (${timeToNextZaman.inSeconds / 60} minutes)');
         }
-        _nextPrayerTime.value = _printHourMinuteSeconds(timeToNextPrayer);
+        _nextZaman.value = _printHourMinuteSeconds(timeToNextZaman);
         update();
-        startNextPrayerCountdownTimer();
+        startNextZamanCountdownTimer();
       }
     });
   }

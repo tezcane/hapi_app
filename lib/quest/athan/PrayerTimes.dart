@@ -4,9 +4,9 @@ import 'package:hapi/quest/athan/CalculationParameters.dart';
 import 'package:hapi/quest/athan/Coordinates.dart';
 import 'package:hapi/quest/athan/DateUtils.dart';
 import 'package:hapi/quest/athan/Madhab.dart';
-import 'package:hapi/quest/athan/Prayer.dart';
 import 'package:hapi/quest/athan/SolarTime.dart';
 import 'package:hapi/quest/athan/TimeComponents.dart';
+import 'package:hapi/quest/athan/Zaman.dart';
 import 'package:hapi/quest/quest_controller.dart';
 import 'package:timezone/timezone.dart';
 
@@ -46,14 +46,14 @@ class PrayerTimes {
   DateTime get fajrTomorrow => _fajrTomorrow;
   DateTime get sunriseTomorrow => _sunriseTomorrow;
 
-  Prayer _currPrayerName = Prayer.Dhuhr;
-  Prayer _nextPrayerName = Prayer.Asr;
-  DateTime _currPrayerDate = DateTime.now();
-  DateTime _nextPrayerDate = DateTime.now();
-  Prayer get currPrayerName => _currPrayerName;
-  Prayer get nextPrayerName => _nextPrayerName;
-  DateTime get currPrayerDate => _currPrayerDate;
-  DateTime get nextPrayerDate => _nextPrayerDate;
+  Zaman _currZaman = Zaman.Dhuhr;
+  Zaman _nextZaman = Zaman.Asr;
+  DateTime _currZamanTime = DateTime.now();
+  DateTime _nextZamanTime = DateTime.now();
+  Zaman get currZaman => _currZaman;
+  Zaman get nextZaman => _nextZaman;
+  DateTime get currZamanTime => _currZamanTime;
+  DateTime get nextZamanTime => _nextZamanTime;
 
   // TODO: added precision
   // rounded nightfraction
@@ -247,11 +247,11 @@ class PrayerTimes {
         precision: precision);
 
     // Convenience Utilities
-    _currPrayerName = getCurrPrayer(date);
-    _currPrayerDate = getTimeOfPrayer(_currPrayerName);
+    _currZaman = getCurrZaman(date);
+    _currZamanTime = getZamanTime(_currZaman);
 
-    _nextPrayerName = getNextPrayer(date);
-    _nextPrayerDate = getTimeOfPrayer(_nextPrayerName);
+    _nextZaman = getNextZaman(date);
+    _nextZamanTime = getZamanTime(_nextZaman);
 
     print('***** Current Local Time: $date');
     print('***** Time Zone: "${date.timeZoneName}"');
@@ -271,8 +271,8 @@ class PrayerTimes {
     print('sunrise tomorrow: $_sunriseTomorrow');
 
     print('***** Convenience Utilities:');
-    print('current: $_currPrayerDate ($_currPrayerName)');
-    print('next:    $_nextPrayerDate ($_nextPrayerName)');
+    print('current: $_currZamanTime ($_currZaman)');
+    print('next:    $_nextZamanTime ($_nextZaman)');
 
     print('***** Sunnah Times:');
     //print('night duration secs: $nightDurationInSecs');
@@ -290,119 +290,119 @@ class PrayerTimes {
     return TZDateTime.from(date, tz);
   }
 
-  DateTime getTimeOfPrayer(Prayer prayer) {
-    if (prayer == Prayer.Fajr) {
+  DateTime getZamanTime(Zaman zaman) {
+    if (zaman == Zaman.Fajr) {
       return _fajr;
-    } else if (prayer == Prayer.Sunrise) {
+    } else if (zaman == Zaman.Sunrise) {
       return _sunrise;
-    } else if (prayer == Prayer.Ishraq) {
+    } else if (zaman == Zaman.Ishraq) {
       return _ishraq;
-    } else if (prayer == Prayer.Duha) {
+    } else if (zaman == Zaman.Duha) {
       return _duha;
-    } else if (prayer == Prayer.Zawal) {
+    } else if (zaman == Zaman.Zawal) {
       return _zawal;
-    } else if (prayer == Prayer.Dhuhr) {
+    } else if (zaman == Zaman.Dhuhr) {
       return _dhuhr;
-    } else if (prayer == Prayer.Asr) {
+    } else if (zaman == Zaman.Asr) {
       return _asr;
-    } else if (prayer == Prayer.Sun_Setting) {
+    } else if (zaman == Zaman.Sun_Setting) {
       return _sunSetting;
-    } else if (prayer == Prayer.Maghrib) {
+    } else if (zaman == Zaman.Maghrib) {
       return _maghrib;
-    } else if (prayer == Prayer.Isha) {
+    } else if (zaman == Zaman.Isha) {
       return _isha;
-    } else if (prayer == Prayer.Middle_of_Night) {
+    } else if (zaman == Zaman.Middle_of_Night) {
       return _middleOfNight;
-    } else if (prayer == Prayer.Last_1__3_of_Night) {
+    } else if (zaman == Zaman.Last_1__3_of_Night) {
       return _last3rdOfNight;
-    } else if (prayer == Prayer.Fajr_Tomorrow) {
+    } else if (zaman == Zaman.Fajr_Tomorrow) {
       return _fajrTomorrow;
-    } else if (prayer == Prayer.Sunrise_Tomorrow) {
+    } else if (zaman == Zaman.Sunrise_Tomorrow) {
       return _sunriseTomorrow;
     } else {
-      print('PrayerTimes:timeForPrayer: Error unknown Prayer: "$prayer"');
+      print('PrayerTimes:getZamanTime: Error unknown zaman: "$zaman"');
       return _dhuhr;
     }
   }
 
-  Prayer getCurrPrayer(DateTime date) {
+  Zaman getCurrZaman(DateTime date) {
     if (date.isAfter(_sunriseTomorrow)) {
-      return Prayer.Sunrise_Tomorrow;
+      return Zaman.Sunrise_Tomorrow;
     } else if (date.isAfter(_fajrTomorrow)) {
-      return Prayer.Fajr_Tomorrow;
+      return Zaman.Fajr_Tomorrow;
     } else if (cQust.showSunnahLayl &&
         cQust.showLast3rdOfNight &&
         date.isAfter(_last3rdOfNight)) {
-      return Prayer.Last_1__3_of_Night;
+      return Zaman.Last_1__3_of_Night;
     } else if (cQust.showSunnahLayl &&
         !cQust.showLast3rdOfNight &&
         date.isAfter(_middleOfNight)) {
-      return Prayer.Middle_of_Night;
+      return Zaman.Middle_of_Night;
     } else if (date.isAfter(_isha)) {
-      return Prayer.Isha;
+      return Zaman.Isha;
     } else if (date.isAfter(_maghrib)) {
-      return Prayer.Maghrib;
+      return Zaman.Maghrib;
     } else if (date.isAfter(_sunSetting)) {
-      return Prayer.Sun_Setting;
+      return Zaman.Sun_Setting;
     } else if (date.isAfter(_asr)) {
-      return Prayer.Asr;
+      return Zaman.Asr;
     } else if (date.isAfter(_dhuhr)) {
-      return Prayer.Dhuhr;
+      return Zaman.Dhuhr;
     } else if (date.isAfter(_zawal)) {
-      return Prayer.Zawal;
+      return Zaman.Zawal;
     } else if (date.isAfter(_duha)) {
-      return Prayer.Duha;
+      return Zaman.Duha;
     } else if (date.isAfter(_ishraq)) {
-      return Prayer.Ishraq;
+      return Zaman.Ishraq;
     } else if (date.isAfter(_sunrise)) {
-      return Prayer.Sunrise;
+      return Zaman.Sunrise;
     } else if (date.isAfter(_fajr)) {
-      return Prayer.Fajr;
+      return Zaman.Fajr;
     } else {
-      return Prayer.Fajr;
+      return Zaman.Fajr;
     }
   }
 
-  Prayer getNextPrayer(DateTime date) {
+  Zaman getNextZaman(DateTime date) {
     if (date.isAfter(_fajrTomorrow)) {
-      return Prayer.Sunrise_Tomorrow;
+      return Zaman.Sunrise_Tomorrow;
     } else if (cQust.showSunnahLayl &&
         cQust.showLast3rdOfNight &&
         date.isAfter(_last3rdOfNight)) {
-      return Prayer.Fajr_Tomorrow;
+      return Zaman.Fajr_Tomorrow;
     } else if (cQust.showSunnahLayl &&
         !cQust.showLast3rdOfNight &&
         date.isAfter(_middleOfNight)) {
-      return Prayer.Fajr_Tomorrow;
+      return Zaman.Fajr_Tomorrow;
     } else if (date.isAfter(_isha)) {
       if (cQust.showSunnahLayl) {
         if (cQust.showLast3rdOfNight) {
-          return Prayer.Last_1__3_of_Night; // 1/3 of night mode
+          return Zaman.Last_1__3_of_Night; // 1/3 of night mode
         } else {
-          return Prayer.Middle_of_Night; // middle of night mode
+          return Zaman.Middle_of_Night; // middle of night mode
         }
       }
-      return Prayer.Fajr_Tomorrow; // show layl off, just show next fajr
+      return Zaman.Fajr_Tomorrow; // show layl off, just show next fajr
     } else if (date.isAfter(_maghrib)) {
-      return Prayer.Isha;
+      return Zaman.Isha;
     } else if (date.isAfter(_sunSetting)) {
-      return Prayer.Maghrib;
+      return Zaman.Maghrib;
     } else if (date.isAfter(_asr)) {
-      return Prayer.Sun_Setting;
+      return Zaman.Sun_Setting;
     } else if (date.isAfter(_dhuhr)) {
-      return Prayer.Asr;
+      return Zaman.Asr;
     } else if (date.isAfter(_zawal)) {
-      return Prayer.Dhuhr;
+      return Zaman.Dhuhr;
     } else if (date.isAfter(_duha)) {
-      return Prayer.Zawal;
+      return Zaman.Zawal;
     } else if (date.isAfter(_ishraq)) {
-      return Prayer.Duha;
+      return Zaman.Duha;
     } else if (date.isAfter(_sunrise)) {
-      return Prayer.Ishraq;
+      return Zaman.Ishraq;
     } else if (date.isAfter(_fajr)) {
-      return Prayer.Sunrise;
+      return Zaman.Sunrise;
     } else {
-      return Prayer.Sunrise;
+      return Zaman.Sunrise;
     }
   }
 }
