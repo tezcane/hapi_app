@@ -75,7 +75,7 @@ class TimeController extends GetxController {
 
   void startNextPrayerCountdownTimer() {
     Timer(Duration(seconds: 1), () {
-      Duration timeToNextPrayer = cQust.prayerTimes!.nextPrayerDate!
+      Duration timeToNextPrayer = cQust.prayerTimes!.nextPrayerDate
           .difference(TZDateTime.from(DateTime.now(), _timeZone!));
 
       // if we hit the end of a timer we recalculate all prayer times
