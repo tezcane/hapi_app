@@ -72,8 +72,7 @@ class AboutUI extends StatelessWidget {
                             'and the next. May Allah SWT give us Firdaus. Ameen! '
                             '\n\n'
                             'hapi will never track or sell your personal information. '
-                            'Please support us by dua, telling others and donating.'
-                            ' (All donations will be spent on a game called lords mobile.)',
+                            'Please support us with your dua and telling others.',
                       ),
                     ],
                   ),
