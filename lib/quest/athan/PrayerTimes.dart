@@ -27,7 +27,7 @@ class PrayerTimes {
   late DateTime _maghrib;
   late DateTime _isha;
   late DateTime _middleOfNight;
-  late DateTime _lastThirdOfNight;
+  late DateTime _last3rdOfNight;
   late DateTime _fajrTomorrow;
   late DateTime _sunriseTomorrow;
   DateTime get fajr => _fajr;
@@ -41,7 +41,7 @@ class PrayerTimes {
   DateTime get maghrib => _maghrib;
   DateTime get isha => _isha;
   DateTime get middleOfNight => _middleOfNight;
-  DateTime get lastThirdOfNight => _lastThirdOfNight;
+  DateTime get last3rdOfNight => _last3rdOfNight;
   DateTime get fajrTomorrow => _fajrTomorrow;
   DateTime get sunriseTomorrow => _sunriseTomorrow;
 
@@ -240,7 +240,7 @@ class PrayerTimes {
     _middleOfNight = roundedMinute(
         dateByAddingSeconds(_maghrib, (nightDuration.inSeconds / 2).floor()),
         precision: precision);
-    _lastThirdOfNight = roundedMinute(
+    _last3rdOfNight = roundedMinute(
         dateByAddingSeconds(
             _maghrib, (nightDuration.inSeconds * (2 / 3)).floor()),
         precision: precision);
@@ -277,7 +277,7 @@ class PrayerTimes {
     //print('night duration secs: $nightDurationInSecs');
     print('night duration secs: ${nightDuration.inSeconds}');
     print('middleOfTheNight:    $_middleOfNight');
-    print('lastThirdOfTheNight: $_lastThirdOfNight');
+    print('lastThirdOfTheNight: $_last3rdOfNight');
   }
 
   DateTime getTime(DateTime date, int adjustment) {
@@ -310,8 +310,8 @@ class PrayerTimes {
       return _maghrib;
     } else if (prayer == Prayer.Isha) {
       return _isha;
-    } else if (prayer == Prayer.Last_Third_Of_Night) {
-      return _lastThirdOfNight;
+    } else if (prayer == Prayer.Last_1__3_of_Night) {
+      return _last3rdOfNight;
     } else if (prayer == Prayer.Fajr_Tomorrow) {
       return _fajrTomorrow;
     } else if (prayer == Prayer.Sunrise_Tomorrow) {
@@ -327,8 +327,8 @@ class PrayerTimes {
       return Prayer.Sunrise_Tomorrow;
     } else if (date.isAfter(_fajrTomorrow)) {
       return Prayer.Fajr_Tomorrow;
-    } else if (date.isAfter(_lastThirdOfNight)) {
-      return Prayer.Last_Third_Of_Night;
+    } else if (date.isAfter(_last3rdOfNight)) {
+      return Prayer.Last_1__3_of_Night;
     } else if (date.isAfter(_isha)) {
       return Prayer.Isha;
     } else if (date.isAfter(_maghrib)) {
@@ -357,10 +357,10 @@ class PrayerTimes {
   Prayer nextPrayer(DateTime date) {
     if (date.isAfter(_fajrTomorrow)) {
       return Prayer.Sunrise_Tomorrow;
-    } else if (date.isAfter(_lastThirdOfNight)) {
+    } else if (date.isAfter(_last3rdOfNight)) {
       return Prayer.Fajr_Tomorrow;
     } else if (date.isAfter(_isha)) {
-      return Prayer.Last_Third_Of_Night;
+      return Prayer.Last_1__3_of_Night;
     } else if (date.isAfter(_maghrib)) {
       return Prayer.Isha;
     } else if (date.isAfter(_sunSetting)) {

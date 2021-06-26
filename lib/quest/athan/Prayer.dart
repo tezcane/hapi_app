@@ -1,5 +1,4 @@
 enum Prayer {
-  //Isha_Yesterday,
   Fajr,
   Sunrise, // begin sunrise (kerahat 1), also Morning Adhkar time
   Ishraq,
@@ -10,7 +9,19 @@ enum Prayer {
   Sun_Setting, // begin sunset (kerahat 3), also Evening Adhkar time
   Maghrib,
   Isha,
-  Last_Third_Of_Night,
+  Layl_Ibadah, // TODO needed?
+  Last_1__3_of_Night,
   Fajr_Tomorrow,
   Sunrise_Tomorrow,
+}
+
+extension enumUtil on Prayer {
+  String name() {
+    return this
+        .toString()
+        .split('.')
+        .last
+        .replaceFirst('__', '/')
+        .replaceAll('_', ' ');
+  }
 }

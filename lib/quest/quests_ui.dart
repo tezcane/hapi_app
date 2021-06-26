@@ -12,6 +12,7 @@ import 'package:hapi/controllers/auth_controller.dart';
 import 'package:hapi/menu/fab_nav_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/menu/toggle_switch.dart';
+import 'package:hapi/quest/ajr_controller.dart';
 import 'package:hapi/quest/athan/CalculationMethod.dart';
 import 'package:hapi/quest/athan/Prayer.dart';
 import 'package:hapi/quest/quest_card.dart';
@@ -690,12 +691,7 @@ class QuestsActive extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Text(
-                                  c.prayerTimes!.currPrayerName
-                                      .toString()
-                                      .split('.')
-                                      .last
-                                      .replaceAll('_', ' '),
+                              Text(c.prayerTimes!.currPrayerName.name(),
                                   style: textStyleAppBar),
                               Text(' ends', style: textStyleAppBar),
                               SizedBox(width: 1),
@@ -706,12 +702,7 @@ class QuestsActive extends StatelessWidget {
                           ),
                           Row(
                             children: [
-                              Text(
-                                  c.prayerTimes!.nextPrayerName
-                                      .toString()
-                                      .split('.')
-                                      .last
-                                      .replaceAll('_', ' '),
+                              Text(c.prayerTimes!.nextPrayerName.name(),
                                   style: textStyleAppBar),
                               Text(' in', style: textStyleAppBar),
                               SizedBox(width: 1),
@@ -868,6 +859,7 @@ class QuestsActive extends StatelessWidget {
   SliverPersistentHeader actionsSalah({
     required final String rakatFard,
     required final Prayer fardSalah,
+    required final bool pinned,
     required final DateTime salahTimeStart,
     final DateTime? salahTimeEnd,
     final String rakatMuakBefore = '',
@@ -876,14 +868,14 @@ class QuestsActive extends StatelessWidget {
     final String rakatNaflAfter = '',
   }) {
     return SliverPersistentHeader(
-      pinned: fardSalah ==
-          cQust.prayerTimes!.currPrayerName, // TODO cQust needed i believe
+      pinned: pinned,
       delegate: _SliverAppBarDelegate(
         minHeight: SALAH_ACTIONS_HEIGHT,
         maxHeight: SALAH_ACTIONS_HEIGHT,
         child: actionsSalahRow(
           rakatFard: rakatFard,
           fardSalah: fardSalah,
+          pinned: pinned,
           salahTimeStart: salahTimeStart,
           salahTimeEnd: salahTimeEnd,
           rakatMuakBefore: rakatMuakBefore,
@@ -901,6 +893,7 @@ class QuestsActive extends StatelessWidget {
   GetBuilder<QuestController> actionsSalahRow({
     required final String rakatFard,
     required final Prayer fardSalah,
+    required final bool pinned,
     required final DateTime salahTimeStart,
     final DateTime? salahTimeEnd,
     final String rakatMuakBefore = '',
@@ -919,6 +912,7 @@ class QuestsActive extends StatelessWidget {
             ///
             salahHeader(
               fardSalah,
+              pinned,
               c,
               isJummahMode,
               salahTimeStart,
@@ -1029,12 +1023,9 @@ class QuestsActive extends StatelessWidget {
     );
   }
 
-  SliverPersistentHeader actionsDuha(QuestController c) {
+  SliverPersistentHeader actionsDuha(QuestController c, bool pinned) {
     return SliverPersistentHeader(
-      // TODO cQust needed i believe
-      pinned: Prayer.Sunrise == c.prayerTimes!.currPrayerName ||
-          Prayer.Duha == c.prayerTimes!.currPrayerName ||
-          Prayer.Zawal == c.prayerTimes!.currPrayerName,
+      pinned: pinned,
       delegate: _SliverAppBarDelegate(
         minHeight: SALAH_ACTIONS_HEIGHT,
         maxHeight: SALAH_ACTIONS_HEIGHT,
@@ -1045,6 +1036,7 @@ class QuestsActive extends StatelessWidget {
             ///
             salahHeader(
               Prayer.Duha,
+              pinned,
               c,
               false,
               c.prayerTimes!.sunrise,
@@ -1098,14 +1090,9 @@ class QuestsActive extends StatelessWidget {
     );
   }
 
-  SliverPersistentHeader actionsLaylIbadah({
-    required final Prayer fardSalah,
-    final DateTime? salahTimeStart, // TODO
-    final DateTime? salahTimeEnd,
-  }) {
+  SliverPersistentHeader actionsLaylIbadah(bool pinned) {
     return SliverPersistentHeader(
-      pinned: fardSalah ==
-          cQust.prayerTimes!.currPrayerName, // TODO cQust needed i believe
+      pinned: pinned,
       delegate: _SliverAppBarDelegate(
         minHeight: SALAH_ACTIONS_HEIGHT,
         maxHeight: SALAH_ACTIONS_HEIGHT,
@@ -1117,10 +1104,11 @@ class QuestsActive extends StatelessWidget {
                 /// First row is title with times, etc.
                 ///
                 salahHeader(
-                  Prayer.Isha, // 'Layl Ibadah' TODO
+                  Prayer.Last_1__3_of_Night, // 'Layl Ibadah' TODO
+                  pinned,
                   c,
                   false,
-                  c.prayerTimes!.lastThirdOfNight,
+                  c.prayerTimes!.last3rdOfNight,
                   null,
                   null,
                 ),
@@ -1159,17 +1147,19 @@ class QuestsActive extends StatelessWidget {
     );
   }
 
-  SliverPersistentHeader spacingHeader(Prayer fardSalah) {
-    return SliverPersistentHeader(
-      pinned: fardSalah == cQust.prayerTimes!.currPrayerName,
-      delegate: _SliverAppBarDelegate(
-        minHeight: 5.0,
-        maxHeight: 5.0,
-        child: Container(
-          color: AppThemes.logoBackground,
-        ),
-      ),
-    );
+  bool isPinned(Prayer fardSalah, List<Prayer>? prayers) {
+    Prayer currPrayerName = cQust.prayerTimes!.currPrayerName;
+    bool pinned = fardSalah == currPrayerName;
+    if (!pinned) {
+      if (prayers != null) {
+        for (Prayer prayer in prayers) {
+          if (prayer == currPrayerName) {
+            return true;
+          }
+        }
+      }
+    }
+    return pinned;
   }
 
   SliverPersistentHeader sliverSpaceHeader(bool pinned) {
@@ -1185,15 +1175,14 @@ class QuestsActive extends StatelessWidget {
     );
   }
 
-  SliverPersistentHeader sliverSpaceHeader2(bool pinned) {
+  /// Use to make scrolling of active salah always pin when scrolling up.
+  SliverPersistentHeader sliverSpaceHeaderFiller() {
     return SliverPersistentHeader(
-      pinned: pinned,
+      pinned: false,
       delegate: _SliverAppBarDelegate(
         minHeight: 100.0,
         maxHeight: 100.0,
-        child: Container(
-          color: AppThemes.logoBackground,
-        ),
+        child: Container(),
       ),
     );
   }
@@ -1232,7 +1221,7 @@ class QuestsActive extends StatelessWidget {
             ),
             sliverSpaceHeader(true),
             SliverPersistentHeader(
-              pinned: c.prayerTimes!.currPrayerName == Prayer.Fajr,
+              pinned: isPinned(Prayer.Fajr, [Prayer.Fajr_Tomorrow]),
               delegate: _SliverAppBarDelegate(
                 minHeight: SALAH_ACTIONS_HEIGHT,
                 maxHeight: SALAH_ACTIONS_HEIGHT,
@@ -1243,6 +1232,7 @@ class QuestsActive extends StatelessWidget {
                   front: actionsSalahRow(
                     rakatFard: '2',
                     fardSalah: Prayer.Fajr,
+                    pinned: isPinned(Prayer.Fajr, null),
                     salahTimeStart: c.prayerTimes!.fajr,
                     salahTimeEnd: c.prayerTimes!.sunrise,
                     rakatMuakBefore: '2',
@@ -1252,6 +1242,7 @@ class QuestsActive extends StatelessWidget {
                   back: actionsSalahRow(
                     rakatFard: '2',
                     fardSalah: Prayer.Fajr_Tomorrow,
+                    pinned: isPinned(Prayer.Fajr_Tomorrow, null),
                     salahTimeStart: c.prayerTimes!.fajrTomorrow,
                     salahTimeEnd: c.prayerTimes!.sunriseTomorrow,
                     rakatMuakBefore: '2',
@@ -1261,12 +1252,25 @@ class QuestsActive extends StatelessWidget {
                 ),
               ),
             ),
-            spacingHeader(Prayer.Fajr),
-            if (c.showSunnahDuha) actionsDuha(c),
-            if (c.showSunnahDuha) spacingHeader(Prayer.Sunrise),
+            sliverSpaceHeader(isPinned(Prayer.Fajr, [Prayer.Fajr_Tomorrow])),
+            if (c.showSunnahDuha)
+              actionsDuha(
+                c,
+                isPinned(
+                  Prayer.Sunrise,
+                  [Prayer.Ishraq, Prayer.Duha, Prayer.Zawal],
+                ),
+              ),
+            if (c.showSunnahDuha)
+              sliverSpaceHeader(
+                isPinned(
+                  Prayer.Sunrise,
+                  [Prayer.Ishraq, Prayer.Duha, Prayer.Zawal],
+                ),
+              ),
             c.isFriday() && c.showJummahOnFriday
                 ? SliverPersistentHeader(
-                    pinned: c.prayerTimes!.currPrayerName == Prayer.Dhuhr,
+                    pinned: isPinned(Prayer.Dhuhr, null),
                     delegate: _SliverAppBarDelegate(
                       minHeight: SALAH_ACTIONS_HEIGHT,
                       maxHeight: SALAH_ACTIONS_HEIGHT,
@@ -1277,6 +1281,7 @@ class QuestsActive extends StatelessWidget {
                         front: actionsSalahRow(
                           rakatFard: '2', // Jummah Mode
                           fardSalah: Prayer.Dhuhr,
+                          pinned: isPinned(Prayer.Dhuhr, null),
                           salahTimeStart: c.prayerTimes!.dhuhr,
                           rakatMuakBefore: '4',
                           rakatMuakAfter: '6',
@@ -1287,6 +1292,7 @@ class QuestsActive extends StatelessWidget {
                         back: actionsSalahRow(
                           rakatFard: '4',
                           fardSalah: Prayer.Dhuhr,
+                          pinned: isPinned(Prayer.Dhuhr, null),
                           salahTimeStart: c.prayerTimes!.dhuhr,
                           rakatMuakBefore: '4',
                           rakatMuakAfter: '2',
@@ -1298,7 +1304,7 @@ class QuestsActive extends StatelessWidget {
                     ),
                   )
                 : SliverPersistentHeader(
-                    pinned: c.prayerTimes!.currPrayerName == Prayer.Dhuhr,
+                    pinned: isPinned(Prayer.Dhuhr, null),
                     delegate: _SliverAppBarDelegate(
                       minHeight: SALAH_ACTIONS_HEIGHT,
                       maxHeight: SALAH_ACTIONS_HEIGHT,
@@ -1309,6 +1315,7 @@ class QuestsActive extends StatelessWidget {
                         front: actionsSalahRow(
                           rakatFard: '4',
                           fardSalah: Prayer.Dhuhr,
+                          pinned: isPinned(Prayer.Dhuhr, null),
                           salahTimeStart: c.prayerTimes!.dhuhr,
                           rakatMuakBefore: '4',
                           rakatMuakAfter: '2',
@@ -1319,6 +1326,7 @@ class QuestsActive extends StatelessWidget {
                         back: actionsSalahRow(
                           rakatFard: '2', // Jummah Mode
                           fardSalah: Prayer.Dhuhr,
+                          pinned: isPinned(Prayer.Dhuhr, null),
                           salahTimeStart: c.prayerTimes!.dhuhr,
                           rakatMuakBefore: '4',
                           rakatMuakAfter: '6',
@@ -1329,42 +1337,59 @@ class QuestsActive extends StatelessWidget {
                       ),
                     ),
                   ),
-            spacingHeader(Prayer.Dhuhr),
+            sliverSpaceHeader(isPinned(Prayer.Dhuhr, null)),
             actionsSalah(
               rakatFard: '4',
               fardSalah: Prayer.Asr,
+              pinned: isPinned(Prayer.Asr, [Prayer.Sun_Setting]),
               salahTimeStart: c.prayerTimes!.asr,
               rakatNaflBefore: '4',
             ),
-            spacingHeader(Prayer.Asr),
+            sliverSpaceHeader(isPinned(Prayer.Asr, [Prayer.Sun_Setting])),
             actionsSalah(
               rakatFard: '3',
               fardSalah: Prayer.Maghrib,
+              pinned: isPinned(Prayer.Maghrib, null),
               salahTimeStart: c.prayerTimes!.maghrib,
               rakatMuakAfter: '2',
               rakatNaflAfter: '2',
             ),
-            spacingHeader(Prayer.Maghrib),
+            sliverSpaceHeader(isPinned(Prayer.Maghrib, null)),
             actionsSalah(
               rakatFard: '4',
+              pinned: isPinned(Prayer.Isha, null),
               fardSalah: Prayer.Isha,
               salahTimeStart: c.prayerTimes!.isha,
               rakatNaflBefore: '4',
               rakatMuakAfter: '2',
               rakatNaflAfter: '2',
             ),
-            spacingHeader(Prayer.Isha),
-            if (c.showSunnahLayl) actionsLaylIbadah(fardSalah: Prayer.Isha),
-            if (c.showSunnahLayl) spacingHeader(Prayer.Isha),
+            sliverSpaceHeader(isPinned(Prayer.Isha, null)),
+            if (c.showSunnahLayl)
+              actionsLaylIbadah(
+                cAjr.isIshaIbadahComplete &&
+                    isPinned(
+                      Prayer.Isha,
+                      [Prayer.Layl_Ibadah, Prayer.Last_1__3_of_Night],
+                    ),
+              ),
+            if (c.showSunnahLayl)
+              sliverSpaceHeader(
+                cAjr.isIshaIbadahComplete &&
+                    isPinned(
+                      Prayer.Isha,
+                      [Prayer.Layl_Ibadah, Prayer.Last_1__3_of_Night],
+                    ),
+              ),
             sliverSpaceHeader(true),
-            sliverSpaceHeader2(false),
-            sliverSpaceHeader2(false),
-            sliverSpaceHeader2(false),
-            sliverSpaceHeader2(false),
-            sliverSpaceHeader2(false),
-            sliverSpaceHeader2(false),
-            sliverSpaceHeader2(false),
-            sliverSpaceHeader2(false),
+            sliverSpaceHeaderFiller(),
+            sliverSpaceHeaderFiller(),
+            sliverSpaceHeaderFiller(),
+            sliverSpaceHeaderFiller(),
+            sliverSpaceHeaderFiller(),
+            sliverSpaceHeaderFiller(),
+            sliverSpaceHeaderFiller(),
+            sliverSpaceHeaderFiller(),
           ],
         ),
       );
@@ -1373,6 +1398,7 @@ class QuestsActive extends StatelessWidget {
 
   Expanded salahHeader(
     final Prayer fardSalah,
+    final bool pinned,
     final QuestController c,
     final bool isJummahMode,
     final DateTime salahTimeStart,
@@ -1388,8 +1414,7 @@ class QuestsActive extends StatelessWidget {
             topRight: const Radius.circular(15.0),
           ),
           child: Container(
-            color: fardSalah == c.prayerTimes!.currPrayerName &&
-                    ((!isJummahMode) || (isJummahMode && c.isFriday()))
+            color: pinned && ((!isJummahMode) || (isJummahMode && c.isFriday()))
                 ? Color(0xFF268E0D)
                 : Colors.lightBlue.shade600,
             child: Row(
@@ -1404,13 +1429,7 @@ class QuestsActive extends StatelessWidget {
                     onTap: () => c.toggleFlipCard(flipCardController),
                   ),
                 Text(
-                  isJummahMode
-                      ? 'Jummah'
-                      : fardSalah
-                          .toString()
-                          .split('.')
-                          .last
-                          .replaceAll('_', ' '),
+                  isJummahMode ? 'Jummah' : fardSalah.name(),
                   style: const TextStyle(
                       color: textColor,
                       fontSize: 20.0,
