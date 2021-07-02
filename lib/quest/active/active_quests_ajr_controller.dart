@@ -1,7 +1,8 @@
 import 'package:get/get.dart';
 import 'package:hapi/constants/globals.dart';
 
-final AjrController cAjr = Get.find();
+// cAjrA = controller ajr active (quests):
+final ActiveQuestsAjrController cAjrA = Get.find();
 
 // ONLY NEW VALUES CAN BE ADDED TO PRESERVE ENUM IN DB:
 enum QUEST {
@@ -49,7 +50,7 @@ enum QUEST {
   LAYL_WITR,
 }
 
-class AjrController extends GetxController {
+class ActiveQuestsAjrController extends GetxController {
 //RxInt _questsAll = 0.obs;
   RxInt _questsCompleted = 0.obs;
   RxInt _questsSkipped = 0.obs;

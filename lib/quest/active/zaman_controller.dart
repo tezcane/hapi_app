@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:get/get.dart';
-import 'package:hapi/quest/athan/CalculationMethod.dart';
-import 'package:hapi/quest/athan/CalculationParameters.dart';
-import 'package:hapi/quest/athan/Coordinates.dart';
-import 'package:hapi/quest/athan/Madhab.dart';
-import 'package:hapi/quest/athan/PrayerTimes.dart';
-import 'package:hapi/quest/athan/Qibla.dart';
-import 'package:hapi/quest/quest_controller.dart';
+import 'package:hapi/quest/active/active_quests_controller.dart';
+import 'package:hapi/quest/active/athan/CalculationMethod.dart';
+import 'package:hapi/quest/active/athan/CalculationParameters.dart';
+import 'package:hapi/quest/active/athan/Coordinates.dart';
+import 'package:hapi/quest/active/athan/Madhab.dart';
+import 'package:hapi/quest/active/athan/PrayerTimes.dart';
+import 'package:hapi/quest/active/athan/Qibla.dart';
 import 'package:timezone/data/latest.dart' show initializeTimeZones;
 import 'package:timezone/timezone.dart' show Location, TZDateTime, getLocation;
 
@@ -49,15 +49,15 @@ class ZamanController extends GetxController {
     // TODO precision and salah settings
     DateTime date = TZDateTime.from(DateTime.now(), _timeZone!);
     CalculationParameters params =
-        CalculationMethod.getMethod(SalahMethod.values[cQust.salahCalcMethod]);
+        CalculationMethod.getMethod(SalahMethod.values[cQstA.salahCalcMethod]);
 
-    if (cQust.salahAsrSafe) {
+    if (cQstA.salahAsrSafe) {
       params.madhab = Madhab.Hanafi;
     } else {
       params.madhab = Madhab.Shafi;
     }
 
-    if (cQust.salahKerahatSafe) {
+    if (cQstA.salahKerahatSafe) {
       params.kerahatSunRisingMins = 40;
       params.kerahatSunZawalMins = 30;
       params.kerahatSunSettingMins = 40;
@@ -66,7 +66,7 @@ class ZamanController extends GetxController {
       params.kerahatSunZawalMins = 15;
       params.kerahatSunSettingMins = 20;
     }
-    cQust.prayerTimes = PrayerTimes(_gps, date, params, _timeZone!, false);
+    cQstA.prayerTimes = PrayerTimes(_gps, date, params, _timeZone!, false);
 
     update(); // update UI with above changes (needed at app init)
 
@@ -75,7 +75,7 @@ class ZamanController extends GetxController {
 
   void startNextZamanCountdownTimer() {
     Timer(Duration(seconds: 1), () {
-      Duration timeToNextZaman = cQust.prayerTimes!.nextZamanTime
+      Duration timeToNextZaman = cQstA.prayerTimes!.nextZamanTime
           .difference(TZDateTime.from(DateTime.now(), _timeZone!));
 
       // if we hit the end of a timer (or forced), recalculate zaman times:

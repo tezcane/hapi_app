@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:hapi/quest/athan/DateUtils.dart';
-import 'package:hapi/quest/athan/MathUtils.dart';
+import 'package:hapi/quest/active/athan/DateUtils.dart';
+import 'package:hapi/quest/active/athan/MathUtils.dart';
 
 class Astronomical {
   /* The geometric mean longitude of the sun in degrees. */

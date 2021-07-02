@@ -111,7 +111,7 @@ class FabNavPage extends StatelessWidget {
   }
 }
 
-class HapiShare extends StatelessWidget {
+class HapiShareUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(

@@ -1,9 +1,9 @@
 import 'dart:math';
 
-import 'package:hapi/quest/athan/Astronomical.dart';
-import 'package:hapi/quest/athan/Coordinates.dart';
-import 'package:hapi/quest/athan/MathUtils.dart';
-import 'package:hapi/quest/athan/SolarCoordinates.dart';
+import 'package:hapi/quest/active/athan/Astronomical.dart';
+import 'package:hapi/quest/active/athan/Coordinates.dart';
+import 'package:hapi/quest/active/athan/MathUtils.dart';
+import 'package:hapi/quest/active/athan/SolarCoordinates.dart';
 
 class SolarTime {
   late Coordinates observer;

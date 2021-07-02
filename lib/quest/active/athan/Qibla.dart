@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:hapi/quest/athan/Coordinates.dart';
-import 'package:hapi/quest/athan/MathUtils.dart';
+import 'package:hapi/quest/active/athan/Coordinates.dart';
+import 'package:hapi/quest/active/athan/MathUtils.dart';
 
 class Qibla {
   static double qibla(coordinates) {

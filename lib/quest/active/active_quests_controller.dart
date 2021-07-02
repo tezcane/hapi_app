@@ -5,14 +5,15 @@ import 'package:flip_card/flip_card_controller.dart';
 import 'package:get/get.dart';
 import 'package:hapi/constants/globals.dart';
 import 'package:hapi/controllers/auth_controller.dart';
-import 'package:hapi/quest/athan/PrayerTimes.dart';
-import 'package:hapi/quest/athan/Zaman.dart';
+import 'package:hapi/quest/active/athan/PrayerTimes.dart';
+import 'package:hapi/quest/active/athan/Zaman.dart';
+import 'package:hapi/quest/active/zaman_controller.dart';
 import 'package:hapi/quest/quest_model.dart';
-import 'package:hapi/quest/zaman_controller.dart';
 import 'package:hapi/services/database.dart';
 import 'package:intl/intl.dart';
 
-final QuestController cQust = Get.find();
+// Controller Quest Active:
+final ActiveQuestsController cQstA = Get.find();
 
 enum DAY_OF_WEEK {
   Monday,
@@ -35,7 +36,7 @@ DAY_OF_WEEK getDayOfWeek() {
   return DAY_OF_WEEK.Monday;
 }
 
-class QuestController extends GetxController {
+class ActiveQuestsController extends GetxController {
   Rx<List<QuestModel>> questList = Rx<List<QuestModel>>([]);
   Rxn<User> firebaseUser = Rxn<User>();
 

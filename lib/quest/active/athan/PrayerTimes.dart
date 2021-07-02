@@ -1,13 +1,13 @@
-import 'package:hapi/quest/athan/Astronomical.dart';
-import 'package:hapi/quest/athan/CalculationMethod.dart';
-import 'package:hapi/quest/athan/CalculationParameters.dart';
-import 'package:hapi/quest/athan/Coordinates.dart';
-import 'package:hapi/quest/athan/DateUtils.dart';
-import 'package:hapi/quest/athan/Madhab.dart';
-import 'package:hapi/quest/athan/SolarTime.dart';
-import 'package:hapi/quest/athan/TimeComponents.dart';
-import 'package:hapi/quest/athan/Zaman.dart';
-import 'package:hapi/quest/quest_controller.dart';
+import 'package:hapi/quest/active/active_quests_controller.dart';
+import 'package:hapi/quest/active/athan/Astronomical.dart';
+import 'package:hapi/quest/active/athan/CalculationMethod.dart';
+import 'package:hapi/quest/active/athan/CalculationParameters.dart';
+import 'package:hapi/quest/active/athan/Coordinates.dart';
+import 'package:hapi/quest/active/athan/DateUtils.dart';
+import 'package:hapi/quest/active/athan/Madhab.dart';
+import 'package:hapi/quest/active/athan/SolarTime.dart';
+import 'package:hapi/quest/active/athan/TimeComponents.dart';
+import 'package:hapi/quest/active/athan/Zaman.dart';
 import 'package:timezone/timezone.dart';
 
 class PrayerTimes {
@@ -330,12 +330,12 @@ class PrayerTimes {
       return Zaman.Sunrise_Tomorrow;
     } else if (date.isAfter(_fajrTomorrow)) {
       return Zaman.Fajr_Tomorrow;
-    } else if (cQust.showSunnahLayl &&
-        cQust.showLast3rdOfNight &&
+    } else if (cQstA.showSunnahLayl &&
+        cQstA.showLast3rdOfNight &&
         date.isAfter(_last3rdOfNight)) {
       return Zaman.Last_1__3_of_Night;
-    } else if (cQust.showSunnahLayl &&
-        !cQust.showLast3rdOfNight &&
+    } else if (cQstA.showSunnahLayl &&
+        !cQstA.showLast3rdOfNight &&
         date.isAfter(_middleOfNight)) {
       return Zaman.Middle_of_Night;
     } else if (date.isAfter(_isha)) {
@@ -366,17 +366,17 @@ class PrayerTimes {
   Zaman getNextZaman(DateTime date) {
     if (date.isAfter(_fajrTomorrow)) {
       return Zaman.Sunrise_Tomorrow;
-    } else if (cQust.showSunnahLayl &&
-        cQust.showLast3rdOfNight &&
+    } else if (cQstA.showSunnahLayl &&
+        cQstA.showLast3rdOfNight &&
         date.isAfter(_last3rdOfNight)) {
       return Zaman.Fajr_Tomorrow;
-    } else if (cQust.showSunnahLayl &&
-        !cQust.showLast3rdOfNight &&
+    } else if (cQstA.showSunnahLayl &&
+        !cQstA.showLast3rdOfNight &&
         date.isAfter(_middleOfNight)) {
       return Zaman.Fajr_Tomorrow;
     } else if (date.isAfter(_isha)) {
-      if (cQust.showSunnahLayl) {
-        if (cQust.showLast3rdOfNight) {
+      if (cQstA.showSunnahLayl) {
+        if (cQstA.showLast3rdOfNight) {
           return Zaman.Last_1__3_of_Night; // 1/3 of night mode
         } else {
           return Zaman.Middle_of_Night; // middle of night mode

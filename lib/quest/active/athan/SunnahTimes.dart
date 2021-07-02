@@ -1,6 +1,6 @@
 // TODO delete
-// import 'package:hapi/quest/athan/DateUtils.dart';
-// import 'package:hapi/quest/athan/PrayerTimes.dart';
+// import 'package:hapi/quest/active/athan/DateUtils.dart';
+// import 'package:hapi/quest/active/athan/PrayerTimes.dart';
 //
 // class SunnahTimes {
 //   late DateTime middleOfTheNight;

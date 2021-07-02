@@ -1,4 +1,4 @@
-import 'package:hapi/quest/athan/CalculationParameters.dart';
+import 'package:hapi/quest/active/athan/CalculationParameters.dart';
 
 enum SalahMethod {
   America____ISNA___,

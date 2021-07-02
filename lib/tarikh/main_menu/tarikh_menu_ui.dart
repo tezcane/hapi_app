@@ -161,7 +161,7 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
         body: FabNavPage(
           navPage: NavPage.TARIKH,
           settingsWidget: null,
-          bottomWidget: HapiShare(),
+          bottomWidget: HapiShareUI(),
           foregroundPage: Container(
             color: background, //AppThemes.logoBackground, //background,
             child: Align(

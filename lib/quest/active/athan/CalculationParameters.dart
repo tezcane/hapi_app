@@ -1,6 +1,6 @@
-import 'package:hapi/quest/athan/CalculationMethod.dart';
-import 'package:hapi/quest/athan/HighLatitudeRule.dart';
-import 'package:hapi/quest/athan/Madhab.dart';
+import 'package:hapi/quest/active/athan/CalculationMethod.dart';
+import 'package:hapi/quest/active/athan/HighLatitudeRule.dart';
+import 'package:hapi/quest/active/athan/Madhab.dart';
 
 class CalculationParameters {
   final SalahMethod salahMethod;

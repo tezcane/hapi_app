@@ -5,8 +5,7 @@ import 'package:hapi/services/database.dart';
 class QuestCard extends StatelessWidget {
   final QuestModel quest;
 
-  const QuestCard({required this.quest})
-      : super(key: null); // TODO was passed in above
+  const QuestCard({required this.quest});
 
   @override
   Widget build(BuildContext context) {
