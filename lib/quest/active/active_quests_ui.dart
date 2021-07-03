@@ -539,8 +539,6 @@ class ActiveQuestsUI extends StatelessWidget {
     );
   }
 
-  /// Needed so fajr/fajr_tomorrow and dhur/jummah can use FlipCard().
-  /// Note: returns GetBuilder.
   SliverPersistentHeader salahRowIsha(final bool pinned) {
     String rakatFard = '4';
     String rakatMuakAfter = '2';
