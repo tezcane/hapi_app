@@ -238,166 +238,99 @@ class ActiveQuestsUI extends StatelessWidget {
     return '${startHour.toString()}:${startMinute.toString().padLeft(2, '0')}$startAmPm$endTimeString';
   }
 
-  /// Used by Asr, Maghrib, Isha (All but fajr/dhur is passed in here).
-  /// Note: returns SliverPersistentHeader.
-  SliverPersistentHeader actionsSalah({
-    required final String rakatFard,
-    required final Zaman zaman,
-    required final bool pinned,
-    required final DateTime salahTimeStart,
-    final DateTime? salahTimeEnd,
-    final String rakatMuakBefore = '',
-    final String rakatMuakAfter = '',
-    final String rakatNaflBefore = '',
-    final String rakatNaflAfter = '',
-  }) {
-    return SliverPersistentHeader(
-      pinned: pinned,
-      delegate: _SliverAppBarDelegate(
-        minHeight: SALAH_ACTIONS_HEIGHT,
-        maxHeight: SALAH_ACTIONS_HEIGHT,
-        child: actionsSalahRow(
-          rakatFard: rakatFard,
-          zaman: zaman,
-          pinned: pinned,
-          salahTimeStart: salahTimeStart,
-          salahTimeEnd: salahTimeEnd,
-          rakatMuakBefore: rakatMuakBefore,
-          rakatMuakAfter: rakatMuakAfter,
-          rakatNaflBefore: rakatNaflBefore,
-          rakatNaflAfter: rakatNaflAfter,
-          isJummahMode: false,
-        ),
-      ),
-    );
-  }
-
-  /// Needed so fajr/fajr_tomorrow and dhur/jummah can use FlipCard().
+  /// Needed for FlipCard on fajr_tomorrow and dhur/jummah.
   /// Note: returns GetBuilder.
-  GetBuilder<ActiveQuestsController> actionsSalahRow({
+  GetBuilder<ActiveQuestsController> salahRow({
     required final String rakatFard,
     required final Zaman zaman,
-    required final bool pinned,
     required final DateTime salahTimeStart,
     final DateTime? salahTimeEnd,
-    final String rakatMuakBefore = '',
-    final String rakatMuakAfter = '',
-    final String rakatNaflBefore = '',
-    final String rakatNaflAfter = '',
+    required String rakatMuakBefore,
+    String rakatMuakAfter = '',
+    String rakatNaflAfter = '',
     required final bool isJummahMode,
-    final FlipCardController? flipCardController,
+    required FlipCardController flipCardController,
   }) {
     return GetBuilder<ActiveQuestsController>(
       builder: (c) {
+        rakatMuakBefore = c.showSunnahMuak ? rakatMuakBefore : '';
+        rakatMuakAfter = c.showSunnahMuak ? rakatMuakAfter : '';
+        rakatNaflAfter = c.showSunnahNafl ? rakatNaflAfter : '';
+
         return Column(
           children: [
-            ///
             /// First row is title of salah, with times, etc.
-            ///
             salahHeader(
               zaman,
-              pinned,
+              false,
               c,
               isJummahMode,
               salahTimeStart,
-              !c.showSunnahDuha || zaman == Zaman.Fajr_Tomorrow
-                  ? salahTimeEnd
-                  : null,
+              zaman == Zaman.Fajr_Tomorrow ? salahTimeEnd : null,
               flipCardController,
             ),
             Expanded(
               child: Row(
                 children: [
-                  ///
                   /// 1 of 4. sunnah before fard column items:
-                  ///
-                  if (rakatMuakBefore != '')
-                    SalahActionCellStart(
-                      c.showSunnahMuak ? rakatMuakBefore : '',
-                      textStyleMuak,
-                      pinned,
-                    ),
-                  if (rakatNaflBefore != '')
-                    SalahActionCellStart(
-                      c.showSunnahNafl ? rakatNaflBefore : '',
-                      textStyleNafl,
-                      pinned,
-                    ),
-                  if (zaman == Zaman.Maghrib)
-                    SalahActionCellStart(
-                      '',
-                      textStyleNafl,
-                      false,
-                    ),
+                  CellStart(rakatMuakBefore, textStyleMuak, false),
 
-                  ///
                   /// 2 of 4. fard column item:
-                  ///
-                  SalahActionCellCenter(
-                    rakatFard,
-                    textStyleFard,
-                    pinned,
-                  ),
+                  CellCenter(rakatFard, textStyleFard, false),
 
-                  ///
-                  /// 3 of 4. Option 1: sunnah after fard column items:
-                  ///
-                  if (zaman == Zaman.Asr)
-                    SalahActionCellCenterWidget(
-                      IconThikr(),
-                      pinned,
-                    ),
-                  if (zaman == Zaman.Asr)
-                    SalahActionCellCenterWidget(
-                      Icon(
-                        Icons.volunteer_activism,
-                        color: Colors.white,
-                        size: 25,
-                      ),
-                      pinned,
-                    ),
+                  /// 3 of 4. sunnah after fard column items:
+                  CellCenter(rakatMuakAfter, textStyleMuak, false),
+                  CellCenter(rakatNaflAfter, textStyleNafl, false),
 
-                  ///
-                  /// 3 of 4. Option 2: sunnah after fard column items:
-                  ///
-                  if (zaman == Zaman.Asr)
-                    SalahActionCellEndWidget(
-                      SunCell(IconSunset(), 'Evening Adhkar',
-                          c.prayerTimes!.sunSetting, c.prayerTimes!.maghrib),
-                      pinned,
-                      flex: 2000,
-                    ),
-
-                  if (zaman != Zaman.Asr)
-                    SalahActionCellCenter(
-                      c.showSunnahMuak ? rakatMuakAfter : '',
-                      textStyleMuak,
-                      pinned,
-                    ),
-                  if (zaman != Zaman.Asr)
-                    SalahActionCellCenter(
-                      c.showSunnahNafl ? rakatNaflAfter : '',
-                      textStyleNafl,
-                      pinned,
-                    ),
-
-                  ///
                   /// 4 of 4. Thikr and Dua after fard:
-                  ///
-                  if (zaman != Zaman.Asr)
-                    SalahActionCellCenterWidget(
-                      IconThikr(),
-                      pinned,
-                    ),
-                  if (zaman != Zaman.Asr)
-                    SalahActionCellEndWidget(
-                      Icon(
-                        Icons.volunteer_activism,
-                        color: Colors.white,
-                        size: 25,
-                      ),
-                      pinned,
-                    ),
+                  CellCenterWidget(IconThikr(), false),
+                  CellEndWidget(IconDua(), false),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  /// Note: returns GetBuilder since has FlipCard()
+  GetBuilder<ActiveQuestsController> salahRowFajr(final bool pinned) {
+    final String rakatFard = '2';
+    String rakatMuakBefore = '2';
+
+    return GetBuilder<ActiveQuestsController>(
+      builder: (c) {
+        rakatMuakBefore = c.showSunnahMuak ? rakatMuakBefore : '';
+
+        return Column(
+          children: [
+            /// First row is title of salah, with times, etc.
+            salahHeader(
+              Zaman.Fajr,
+              pinned,
+              c,
+              false,
+              c.prayerTimes!.fajr,
+              !c.showSunnahDuha ? c.prayerTimes!.sunrise : null,
+              flipCardControllerFajr,
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  /// 1 of 4. sunnah before fard column items:
+                  CellStart(rakatMuakBefore, textStyleMuak, pinned),
+
+                  /// 2 of 4. fard column item:
+                  CellCenter(rakatFard, textStyleFard, pinned),
+
+                  /// 3 of 4. Sunnah after fard column items:
+                  CellCenter('', textStyleMuak, pinned),
+                  CellCenter('', textStyleNafl, pinned),
+
+                  /// 4 of 4. Thikr and Dua after fard:
+                  CellCenterWidget(IconThikr(), pinned),
+                  CellEndWidget(IconDua(), pinned),
                 ],
               ),
             ),
@@ -415,23 +348,14 @@ class ActiveQuestsUI extends StatelessWidget {
         maxHeight: SALAH_ACTIONS_HEIGHT,
         child: Column(
           children: [
-            ///
             /// First row is title with times, etc.
-            ///
-            salahHeader(
-              Zaman.Duha,
-              pinned,
-              c,
-              false,
-              c.prayerTimes!.sunrise,
-              null,
-              null,
-            ),
+            salahHeader(Zaman.Duha, pinned, c, false, c.prayerTimes!.sunrise,
+                null, null),
             Expanded(
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  SalahActionCellStartWidget(
+                  CellStartWidget(
                     SunCell(
                       IconSunrise(),
                       'Morning Adhkar',
@@ -441,17 +365,9 @@ class ActiveQuestsUI extends StatelessWidget {
                     pinned,
                     flex: 2000,
                   ),
-                  SalahActionCellCenter(
-                    'Ishraq',
-                    textStyleDuha,
-                    pinned,
-                  ),
-                  SalahActionCellCenter(
-                    'Duha',
-                    textStyleDuha,
-                    pinned,
-                  ),
-                  SalahActionCellEndWidget(
+                  CellCenter('Ishraq', textStyleDuha, pinned),
+                  CellCenter('Duha', textStyleDuha, pinned),
+                  CellEndWidget(
                     SunCell(
                       Icon(
                         Icons.brightness_7_outlined,
@@ -474,14 +390,213 @@ class ActiveQuestsUI extends StatelessWidget {
     );
   }
 
-  Widget actionsLaylIbadah(Zaman zaman, bool pinned) {
+  /// Note: returns GetBuilder since has FlipCard()
+  GetBuilder<ActiveQuestsController> salahRowDhuhr(
+    final bool pinned, {
+    required final String rakatFard,
+    required String rakatMuakAfter,
+    required final bool isJummahMode,
+  }) {
+    String rakatMuakBefore = '4';
+    String rakatNaflAfter = '2';
+
+    return GetBuilder<ActiveQuestsController>(
+      builder: (c) {
+        rakatMuakBefore = c.showSunnahMuak ? rakatMuakBefore : '';
+        rakatMuakAfter = c.showSunnahMuak ? rakatMuakAfter : '';
+        rakatNaflAfter = c.showSunnahNafl ? rakatNaflAfter : '';
+
+        return Column(
+          children: [
+            /// First row is title of salah, with times, etc.
+            salahHeader(
+              Zaman.Dhuhr,
+              pinned,
+              c,
+              isJummahMode,
+              c.prayerTimes!.dhuhr,
+              null,
+              flipCardControllerDhuhr,
+            ),
+            Expanded(
+              child: Row(
+                children: [
+                  /// 1 of 4. sunnah before fard column items:
+                  CellStart(rakatMuakBefore, textStyleMuak, pinned),
+
+                  /// 2 of 4. fard column item:
+                  CellCenter(rakatFard, textStyleFard, pinned),
+
+                  /// 3 of 4. Option 2: sunnah after fard column items:
+                  CellCenter(rakatMuakAfter, textStyleMuak, pinned),
+                  CellCenter(rakatNaflAfter, textStyleNafl, pinned),
+
+                  /// 4 of 4. Thikr and Dua after fard:
+                  CellCenterWidget(IconThikr(), pinned),
+                  CellEndWidget(IconDua(), pinned),
+                ],
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  SliverPersistentHeader salahRowAsr(final bool pinned) {
+    final String rakatFard = '4';
+    String rakatNaflBefore = '4';
+
+    return SliverPersistentHeader(
+      pinned: pinned,
+      delegate: _SliverAppBarDelegate(
+        minHeight: SALAH_ACTIONS_HEIGHT,
+        maxHeight: SALAH_ACTIONS_HEIGHT,
+        child: GetBuilder<ActiveQuestsController>(
+          builder: (c) {
+            rakatNaflBefore = c.showSunnahNafl ? rakatNaflBefore : '';
+
+            return Column(
+              children: [
+                /// First row is title of salah, with times, etc.
+                salahHeader(Zaman.Asr, pinned, c, false, c.prayerTimes!.asr,
+                    null, null),
+                Expanded(
+                  child: Row(
+                    children: [
+                      /// 1 of 4. sunnah before fard column items:
+                      CellStart(rakatNaflBefore, textStyleNafl, pinned),
+
+                      /// 2 of 4. fard column item:
+                      CellCenter(rakatFard, textStyleFard, pinned),
+
+                      /// 3 of 4. Thikr and Dua after fard:
+                      CellCenterWidget(IconThikr(), pinned),
+                      CellCenterWidget(IconDua(), pinned),
+
+                      /// 4 of 4. Evening adhkar
+                      CellEndWidget(
+                        SunCell(IconSunset(), 'Evening Adhkar',
+                            c.prayerTimes!.sunSetting, c.prayerTimes!.maghrib),
+                        pinned,
+                        flex: 2000,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  SliverPersistentHeader salahRowMaghrib(final bool pinned) {
+    String rakatFard = '3';
+    String rakatMuakAfter = '2';
+    String rakatNaflAfter = '2';
+
+    return SliverPersistentHeader(
+      pinned: pinned,
+      delegate: _SliverAppBarDelegate(
+        minHeight: SALAH_ACTIONS_HEIGHT,
+        maxHeight: SALAH_ACTIONS_HEIGHT,
+        child: GetBuilder<ActiveQuestsController>(
+          builder: (c) {
+            rakatMuakAfter = c.showSunnahMuak ? rakatMuakAfter : '';
+            rakatNaflAfter = c.showSunnahNafl ? rakatNaflAfter : '';
+
+            return Column(
+              children: [
+                /// First row is title of salah, with times, etc.
+                salahHeader(Zaman.Maghrib, pinned, c, false,
+                    c.prayerTimes!.maghrib, null, null),
+                Expanded(
+                  child: Row(
+                    children: [
+                      /// 1 of 4. sunnah before fard column items:
+                      CellStart('', textStyleMuak, pinned),
+
+                      /// 2 of 4. fard column item:
+                      CellCenter(rakatFard, textStyleFard, pinned),
+
+                      /// 3 of 4. Option 2: sunnah after fard column items:
+                      CellCenter(rakatMuakAfter, textStyleMuak, pinned),
+                      CellCenter(rakatNaflAfter, textStyleNafl, pinned),
+
+                      /// 4 of 4. Thikr and Dua after fard:
+                      CellCenterWidget(IconThikr(), pinned),
+                      CellEndWidget(IconDua(), pinned),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  /// Needed so fajr/fajr_tomorrow and dhur/jummah can use FlipCard().
+  /// Note: returns GetBuilder.
+  SliverPersistentHeader salahRowIsha(final bool pinned) {
+    String rakatFard = '4';
+    String rakatMuakAfter = '2';
+    String rakatNaflBefore = '4';
+    String rakatNaflAfter = '2';
+
+    return SliverPersistentHeader(
+      pinned: pinned,
+      delegate: _SliverAppBarDelegate(
+        minHeight: SALAH_ACTIONS_HEIGHT,
+        maxHeight: SALAH_ACTIONS_HEIGHT,
+        child: GetBuilder<ActiveQuestsController>(
+          builder: (c) {
+            rakatMuakAfter = c.showSunnahMuak ? rakatMuakAfter : '';
+            rakatNaflBefore = c.showSunnahNafl ? rakatNaflBefore : '';
+            rakatNaflAfter = c.showSunnahNafl ? rakatNaflAfter : '';
+
+            return Column(
+              children: [
+                /// First row is title of salah, with times, etc.
+                salahHeader(Zaman.Isha, pinned, c, false, c.prayerTimes!.isha,
+                    null, null),
+                Expanded(
+                  child: Row(
+                    children: [
+                      /// 1 of 4. sunnah before fard column items:
+                      CellStart(rakatNaflBefore, textStyleNafl, pinned),
+
+                      /// 2 of 4. fard column item:
+                      CellCenter(rakatFard, textStyleFard, pinned),
+
+                      /// 3 of 4. Option 1: sunnah after fard column items:
+                      CellCenter(rakatMuakAfter, textStyleMuak, pinned),
+                      CellCenter(rakatNaflAfter, textStyleNafl, pinned),
+
+                      /// 4 of 4. Thikr and Dua after fard:
+                      CellCenterWidget(IconThikr(), pinned),
+                      CellEndWidget(IconDua(), pinned),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  /// Note: returns GetBuilder since has FlipCard()
+  GetBuilder actionsLaylIbadah(Zaman zaman, bool pinned) {
     return GetBuilder<ActiveQuestsController>(
       builder: (c) {
         return Column(
           children: [
-            ///
             /// First row is title with times, etc.
-            ///
             salahHeader(
               zaman,
               pinned,
@@ -496,27 +611,16 @@ class ActiveQuestsUI extends StatelessWidget {
             Expanded(
               child: Row(
                 children: [
-                  SalahActionCellStart('Qiyam', textStyleQiyam, pinned),
+                  CellStart('Qiyam', textStyleQiyam, pinned),
 
-                  ///
                   /// Thikr and Dua before bed:
-                  ///
-                  SalahActionCellCenterWidget(IconThikr(), pinned),
-                  SalahActionCellCenterWidget(
-                    Icon(
-                      Icons.volunteer_activism,
-                      color: Colors.white,
-                      size: 25,
-                    ),
-                    pinned,
-                  ),
-                  SalahActionCellCenter('Sleep', textStyleWhite, pinned),
+                  CellCenterWidget(IconThikr(), pinned),
+                  CellCenterWidget(IconDua(), pinned),
+                  CellCenter('Sleep', textStyleWhite, pinned),
 
-                  ///
                   /// Tahhajud and Witr after waking up
-                  ///
-                  SalahActionCellCenter('Tahajjud', textStyleTahajjud, pinned),
-                  SalahActionCellEnd('Witr', textStyleWitr, pinned),
+                  CellCenter('Tahajjud', textStyleTahajjud, pinned),
+                  CellEnd('Witr', textStyleWitr, pinned),
                 ],
               ),
             ),
@@ -524,21 +628,6 @@ class ActiveQuestsUI extends StatelessWidget {
         );
       },
     );
-  }
-
-  bool isPinned(Zaman zaman, List<Zaman>? zamans) {
-    Zaman currPrayerName = cQstA.prayerTimes!.currZaman;
-    bool pinned = zaman == currPrayerName;
-    if (!pinned) {
-      if (zamans != null) {
-        for (Zaman prayer in zamans) {
-          if (prayer == currPrayerName) {
-            return true;
-          }
-        }
-      }
-    }
-    return pinned;
   }
 
   SliverPersistentHeader sliverSpaceHeader(bool pinned) {
@@ -566,16 +655,45 @@ class ActiveQuestsUI extends StatelessWidget {
     );
   }
 
+  bool isPinned(Zaman zaman, List<Zaman>? zamans) {
+    Zaman currPrayerName = cQstA.prayerTimes!.currZaman;
+    bool pinned = zaman == currPrayerName;
+    if (!pinned) {
+      if (zamans != null) {
+        for (Zaman prayer in zamans) {
+          if (prayer == currPrayerName) {
+            return true;
+          }
+        }
+      }
+    }
+    return pinned;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ActiveQuestsController>(builder: (c) {
       if (c.prayerTimes == null) {
-        return Container(); // TODO show spinner
+        return Container(); // TODO show spinner?
       }
+
+      final bool pinnedFajr = isPinned(Zaman.Fajr, [Zaman.Fajr_Tomorrow]);
+      final bool pinnedDuha = c.showSunnahDuha &&
+          isPinned(Zaman.Sunrise, [Zaman.Ishraq, Zaman.Duha, Zaman.Zawal]);
+      final bool pinnedDuhr = isPinned(Zaman.Dhuhr, null);
+      final bool pinnedAsr = isPinned(Zaman.Asr, [Zaman.Sun_Setting]);
+      final bool pinnedMaghrib = isPinned(Zaman.Maghrib, null);
+      final bool pinnedIsha = isPinned(Zaman.Isha, null);
+      final bool pinnedLayl = c.showSunnahLayl &&
+          cAjrA.isIshaIbadahComplete &&
+          isPinned(
+              Zaman.Isha, [Zaman.Middle_of_Night, Zaman.Last_1__3_of_Night]);
+
       return Container(
         color: AppThemes.logoBackground,
         child: CustomScrollView(
           slivers: <Widget>[
+            /// Show Top App Bar
             SliverAppBar(
               backgroundColor: Colors.lightBlue.shade900,
               expandedHeight: 260.0,
@@ -599,8 +717,11 @@ class ActiveQuestsUI extends StatelessWidget {
               ),
             ),
             sliverSpaceHeader(true),
+
+            /// Show rest of sliver list
+            /// Fajr:
             SliverPersistentHeader(
-              pinned: isPinned(Zaman.Fajr, [Zaman.Fajr_Tomorrow]),
+              pinned: pinnedFajr,
               delegate: _SliverAppBarDelegate(
                 minHeight: SALAH_ACTIONS_HEIGHT,
                 maxHeight: SALAH_ACTIONS_HEIGHT,
@@ -608,20 +729,10 @@ class ActiveQuestsUI extends StatelessWidget {
                   flipOnTouch: false,
                   controller: flipCardControllerFajr,
                   direction: FlipDirection.HORIZONTAL,
-                  front: actionsSalahRow(
-                    rakatFard: '2',
-                    zaman: Zaman.Fajr,
-                    pinned: isPinned(Zaman.Fajr, null),
-                    salahTimeStart: c.prayerTimes!.fajr,
-                    salahTimeEnd: c.prayerTimes!.sunrise,
-                    rakatMuakBefore: '2',
-                    isJummahMode: false,
-                    flipCardController: flipCardControllerFajr,
-                  ),
-                  back: actionsSalahRow(
+                  front: salahRowFajr(pinnedFajr),
+                  back: salahRow(
                     rakatFard: '2',
                     zaman: Zaman.Fajr_Tomorrow,
-                    pinned: isPinned(Zaman.Fajr_Tomorrow, null),
                     salahTimeStart: c.prayerTimes!.fajrTomorrow,
                     salahTimeEnd: c.prayerTimes!.sunriseTomorrow,
                     rakatMuakBefore: '2',
@@ -631,25 +742,16 @@ class ActiveQuestsUI extends StatelessWidget {
                 ),
               ),
             ),
-            sliverSpaceHeader(isPinned(Zaman.Fajr, [Zaman.Fajr_Tomorrow])),
-            if (c.showSunnahDuha)
-              actionsDuha(
-                c,
-                isPinned(
-                  Zaman.Sunrise,
-                  [Zaman.Ishraq, Zaman.Duha, Zaman.Zawal],
-                ),
-              ),
-            if (c.showSunnahDuha)
-              sliverSpaceHeader(
-                isPinned(
-                  Zaman.Sunrise,
-                  [Zaman.Ishraq, Zaman.Duha, Zaman.Zawal],
-                ),
-              ),
+            sliverSpaceHeader(pinnedFajr),
+
+            /// Duha:
+            if (c.showSunnahDuha) actionsDuha(c, pinnedDuha),
+            if (c.showSunnahDuha) sliverSpaceHeader(pinnedDuha),
+
+            /// Dhuhr/Jummah:
             c.isFriday() && c.showJummahOnFriday
                 ? SliverPersistentHeader(
-                    pinned: isPinned(Zaman.Dhuhr, null),
+                    pinned: pinnedDuhr,
                     delegate: _SliverAppBarDelegate(
                       minHeight: SALAH_ACTIONS_HEIGHT,
                       maxHeight: SALAH_ACTIONS_HEIGHT,
@@ -657,21 +759,14 @@ class ActiveQuestsUI extends StatelessWidget {
                         flipOnTouch: false,
                         controller: flipCardControllerDhuhr,
                         direction: FlipDirection.HORIZONTAL,
-                        front: actionsSalahRow(
-                          rakatFard: '2', // Jummah Mode
-                          zaman: Zaman.Dhuhr,
-                          pinned: isPinned(Zaman.Dhuhr, null),
-                          salahTimeStart: c.prayerTimes!.dhuhr,
-                          rakatMuakBefore: '4',
-                          rakatMuakAfter: '6',
-                          rakatNaflAfter: '2',
-                          isJummahMode: true,
-                          flipCardController: flipCardControllerDhuhr,
-                        ),
-                        back: actionsSalahRow(
+                        // Jummah Mode:
+                        front: salahRowDhuhr(pinnedDuhr,
+                            rakatFard: '2',
+                            rakatMuakAfter: '6',
+                            isJummahMode: true),
+                        back: salahRow(
                           rakatFard: '4',
                           zaman: Zaman.Dhuhr,
-                          pinned: isPinned(Zaman.Dhuhr, null),
                           salahTimeStart: c.prayerTimes!.dhuhr,
                           rakatMuakBefore: '4',
                           rakatMuakAfter: '2',
@@ -683,7 +778,7 @@ class ActiveQuestsUI extends StatelessWidget {
                     ),
                   )
                 : SliverPersistentHeader(
-                    pinned: isPinned(Zaman.Dhuhr, null),
+                    pinned: pinnedDuhr,
                     delegate: _SliverAppBarDelegate(
                       minHeight: SALAH_ACTIONS_HEIGHT,
                       maxHeight: SALAH_ACTIONS_HEIGHT,
@@ -691,21 +786,15 @@ class ActiveQuestsUI extends StatelessWidget {
                         flipOnTouch: false,
                         controller: flipCardControllerDhuhr,
                         direction: FlipDirection.HORIZONTAL,
-                        front: actionsSalahRow(
+                        front: salahRowDhuhr(
+                          pinnedDuhr,
                           rakatFard: '4',
-                          zaman: Zaman.Dhuhr,
-                          pinned: isPinned(Zaman.Dhuhr, null),
-                          salahTimeStart: c.prayerTimes!.dhuhr,
-                          rakatMuakBefore: '4',
                           rakatMuakAfter: '2',
-                          rakatNaflAfter: '2',
                           isJummahMode: false,
-                          flipCardController: flipCardControllerDhuhr,
                         ),
-                        back: actionsSalahRow(
+                        back: salahRow(
                           rakatFard: '2', // Jummah Mode
                           zaman: Zaman.Dhuhr,
-                          pinned: isPinned(Zaman.Dhuhr, null),
                           salahTimeStart: c.prayerTimes!.dhuhr,
                           rakatMuakBefore: '4',
                           rakatMuakAfter: '6',
@@ -716,42 +805,25 @@ class ActiveQuestsUI extends StatelessWidget {
                       ),
                     ),
                   ),
-            sliverSpaceHeader(isPinned(Zaman.Dhuhr, null)),
-            actionsSalah(
-              rakatFard: '4',
-              zaman: Zaman.Asr,
-              pinned: isPinned(Zaman.Asr, [Zaman.Sun_Setting]),
-              salahTimeStart: c.prayerTimes!.asr,
-              rakatNaflBefore: '4',
-            ),
-            sliverSpaceHeader(isPinned(Zaman.Asr, [Zaman.Sun_Setting])),
-            actionsSalah(
-              rakatFard: '3',
-              zaman: Zaman.Maghrib,
-              pinned: isPinned(Zaman.Maghrib, null),
-              salahTimeStart: c.prayerTimes!.maghrib,
-              rakatMuakAfter: '2',
-              rakatNaflAfter: '2',
-            ),
-            sliverSpaceHeader(isPinned(Zaman.Maghrib, null)),
-            actionsSalah(
-              rakatFard: '4',
-              pinned: isPinned(Zaman.Isha, null),
-              zaman: Zaman.Isha,
-              salahTimeStart: c.prayerTimes!.isha,
-              rakatNaflBefore: '4',
-              rakatMuakAfter: '2',
-              rakatNaflAfter: '2',
-            ),
-            sliverSpaceHeader(isPinned(Zaman.Isha, null)),
+            sliverSpaceHeader(pinnedDuhr),
+
+            /// Asr:
+            salahRowAsr(pinnedAsr),
+            sliverSpaceHeader(pinnedAsr),
+
+            /// Maghrib:
+            salahRowMaghrib(pinnedMaghrib),
+            sliverSpaceHeader(pinnedMaghrib),
+
+            /// Isha:
+            salahRowIsha(pinnedIsha),
+            sliverSpaceHeader(pinnedIsha),
+
+            /// Layl Ibadah:
             if (c.showSunnahLayl)
               c.showLast3rdOfNight
                   ? SliverPersistentHeader(
-                      pinned: cAjrA.isIshaIbadahComplete &&
-                          isPinned(
-                            Zaman.Isha,
-                            [Zaman.Middle_of_Night, Zaman.Last_1__3_of_Night],
-                          ),
+                      pinned: pinnedLayl,
                       delegate: _SliverAppBarDelegate(
                         minHeight: SALAH_ACTIONS_HEIGHT,
                         maxHeight: SALAH_ACTIONS_HEIGHT,
@@ -760,27 +832,9 @@ class ActiveQuestsUI extends StatelessWidget {
                           controller: flipCardControllerLayl,
                           direction: FlipDirection.HORIZONTAL,
                           front: actionsLaylIbadah(
-                            Zaman.Last_1__3_of_Night,
-                            cAjrA.isIshaIbadahComplete &&
-                                isPinned(
-                                  Zaman.Isha,
-                                  [
-                                    Zaman.Middle_of_Night,
-                                    Zaman.Last_1__3_of_Night
-                                  ],
-                                ),
-                          ),
+                              Zaman.Last_1__3_of_Night, pinnedLayl),
                           back: actionsLaylIbadah(
-                            Zaman.Middle_of_Night,
-                            cAjrA.isIshaIbadahComplete &&
-                                isPinned(
-                                  Zaman.Isha,
-                                  [
-                                    Zaman.Middle_of_Night,
-                                    Zaman.Last_1__3_of_Night
-                                  ],
-                                ),
-                          ),
+                              Zaman.Middle_of_Night, pinnedLayl),
                         ),
                       ),
                     )
@@ -794,38 +848,15 @@ class ActiveQuestsUI extends StatelessWidget {
                           controller: flipCardControllerLayl,
                           direction: FlipDirection.HORIZONTAL,
                           front: actionsLaylIbadah(
-                            Zaman.Middle_of_Night,
-                            cAjrA.isIshaIbadahComplete &&
-                                isPinned(
-                                  Zaman.Isha,
-                                  [
-                                    Zaman.Middle_of_Night,
-                                    Zaman.Last_1__3_of_Night
-                                  ],
-                                ),
-                          ),
+                              Zaman.Middle_of_Night, pinnedLayl),
                           back: actionsLaylIbadah(
-                            Zaman.Last_1__3_of_Night,
-                            cAjrA.isIshaIbadahComplete &&
-                                isPinned(
-                                  Zaman.Isha,
-                                  [
-                                    Zaman.Middle_of_Night,
-                                    Zaman.Last_1__3_of_Night
-                                  ],
-                                ),
-                          ),
+                              Zaman.Last_1__3_of_Night, pinnedLayl),
                         ),
                       ),
                     ),
-            if (c.showSunnahLayl)
-              sliverSpaceHeader(
-                cAjrA.isIshaIbadahComplete &&
-                    isPinned(
-                      Zaman.Isha,
-                      [Zaman.Middle_of_Night, Zaman.Last_1__3_of_Night],
-                    ),
-              ),
+            if (c.showSunnahLayl) sliverSpaceHeader(pinnedLayl),
+
+            /// Fillers:
             sliverSpaceHeader(true),
             sliverSpaceHeaderFiller(),
             sliverSpaceHeaderFiller(),
@@ -938,8 +969,8 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   }
 }
 
-class SalahActionCellStart extends StatelessWidget {
-  const SalahActionCellStart(this._text, this._textStyle, this._isActive);
+class CellStart extends StatelessWidget {
+  const CellStart(this._text, this._textStyle, this._isActive);
 
   final String _text;
   final TextStyle _textStyle;
@@ -973,9 +1004,8 @@ class SalahActionCellStart extends StatelessWidget {
   }
 }
 
-class SalahActionCellStartWidget extends StatelessWidget {
-  const SalahActionCellStartWidget(this._widget, this._isActive,
-      {this.flex = 1000});
+class CellStartWidget extends StatelessWidget {
+  const CellStartWidget(this._widget, this._isActive, {this.flex = 1000});
 
   final Widget _widget;
   final bool _isActive;
@@ -1007,8 +1037,8 @@ class SalahActionCellStartWidget extends StatelessWidget {
   }
 }
 
-class SalahActionCellCenter extends StatelessWidget {
-  const SalahActionCellCenter(this._text, this._textStyle, this._isActive);
+class CellCenter extends StatelessWidget {
+  const CellCenter(this._text, this._textStyle, this._isActive);
 
   final String _text;
   final TextStyle _textStyle;
@@ -1032,9 +1062,8 @@ class SalahActionCellCenter extends StatelessWidget {
   }
 }
 
-class SalahActionCellCenterWidget extends StatelessWidget {
-  const SalahActionCellCenterWidget(this._widget, this._isActive,
-      {this.flex = 1000});
+class CellCenterWidget extends StatelessWidget {
+  const CellCenterWidget(this._widget, this._isActive, {this.flex = 1000});
 
   final Widget _widget;
   final bool _isActive;
@@ -1058,8 +1087,8 @@ class SalahActionCellCenterWidget extends StatelessWidget {
   }
 }
 
-class SalahActionCellEnd extends StatelessWidget {
-  const SalahActionCellEnd(this._text, this._textStyle, this._isActive);
+class CellEnd extends StatelessWidget {
+  const CellEnd(this._text, this._textStyle, this._isActive);
 
   final String _text;
   final TextStyle _textStyle;
@@ -1093,9 +1122,8 @@ class SalahActionCellEnd extends StatelessWidget {
   }
 }
 
-class SalahActionCellEndWidget extends StatelessWidget {
-  const SalahActionCellEndWidget(this._widget, this._isActive,
-      {this.flex = 1000});
+class CellEndWidget extends StatelessWidget {
+  const CellEndWidget(this._widget, this._isActive, {this.flex = 1000});
 
   final Widget _widget;
   final bool _isActive;
@@ -1152,6 +1180,19 @@ class IconThikr extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class IconDua extends StatelessWidget {
+  const IconDua();
+
+  @override
+  Widget build(BuildContext context) {
+    return Icon(
+      Icons.volunteer_activism,
+      color: Colors.white,
+      size: 25,
     );
   }
 }
