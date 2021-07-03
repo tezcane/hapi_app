@@ -24,4 +24,26 @@ extension enumUtil on Zaman {
         .replaceFirst('__', '/')
         .replaceAll('_', ' ');
   }
+
+  String salahRow() {
+    switch (this) {
+      case (Zaman.Fajr):
+        return Zaman.Fajr.name().toUpperCase();
+      case (Zaman.Sunrise):
+      case (Zaman.Ishraq):
+      case (Zaman.Duha):
+      case (Zaman.Zawal):
+        return Zaman.Duha.name().toUpperCase();
+      case (Zaman.Dhuhr):
+        return Zaman.Dhuhr.name().toUpperCase();
+      case (Zaman.Asr):
+      case (Zaman.Sun_Setting):
+        return Zaman.Asr.name().toUpperCase();
+      case (Zaman.Maghrib):
+        return Zaman.Maghrib.name().toUpperCase();
+      case (Zaman.Isha):
+      default:
+        return Zaman.Isha.name().toUpperCase();
+    }
+  }
 }

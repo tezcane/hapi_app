@@ -1,6 +1,8 @@
 ## CODE GLOSSARY
 
 AC   - AnimationController
+Aft  - After
+Bef  - Before
 btn  - Button
 C    - Controller
 curr - Current
@@ -12,10 +14,13 @@ msg  - message
 muak - Muakkadah
 nav  - Navigate/Navigator
 np   - NavPage
+P    - placement (start, center, end)
 qyam - Qiyam
 qust - Quest
+Rkt  - Rakat
 s    - storage/Get Storage
 t    - timeline
+ts   - text style
 thjd - Tahajjud
 tz   - time zone
 trkh - Tarikh

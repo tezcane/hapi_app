@@ -56,9 +56,9 @@ void main() async {
   Get.put<OnboardingController>(OnboardingController());
   Get.put<AuthController>(AuthController());
   Get.put<MenuController>(MenuController());
-  Get.put<ActiveQuestsAjrController>(ActiveQuestsAjrController());
   Get.put<ZamanController>(ZamanController());
   Get.put<ActiveQuestsController>(ActiveQuestsController());
+  Get.put<ActiveQuestsAjrController>(ActiveQuestsAjrController());
   Get.put<TarikhController>(TarikhController());
   Get.put<ThemeController>(ThemeController());
   Get.put<LanguageController>(LanguageController());
