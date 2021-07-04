@@ -7,6 +7,7 @@ import 'package:flutter/painting.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:get/get.dart';
 import 'package:hapi/constants/app_themes.dart';
+import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/active_quests_settings_ui.dart';
@@ -257,18 +258,18 @@ class ActiveQuestsUI extends StatelessWidget {
               child: Row(
                 children: [
                   /// 1 of 4. sunnah before fard column item:
-                  Cell(P.S, T(muakBef, tsMuak), false, QUEST.NONE),
+                  Cell(P.S, T(muakBef, tsMuak), false, QUEST.NONE, dis: true),
 
                   /// 2 of 4. fard column item:
-                  Cell(P.C, T(fardRkt, tsFard), false, QUEST.NONE),
+                  Cell(P.C, T(fardRkt, tsFard), false, QUEST.NONE, dis: true),
 
                   /// 3 of 4. sunnah after fard column items:
-                  Cell(P.C, T(muakAft, tsMuak), false, QUEST.NONE),
-                  Cell(P.C, T(naflAft, tsNafl), false, QUEST.NONE),
+                  Cell(P.C, T(muakAft, tsMuak), false, QUEST.NONE, dis: true),
+                  Cell(P.C, T(naflAft, tsNafl), false, QUEST.NONE, dis: true),
 
                   /// 4 of 4. Thikr and Dua after fard:
-                  Cell(P.C, IconThikr(), false, QUEST.NONE),
-                  Cell(P.E, IconDua(), false, QUEST.NONE),
+                  Cell(P.C, IconThikr(), false, QUEST.NONE, dis: true),
+                  Cell(P.E, IconDua(), false, QUEST.NONE, dis: true),
                 ],
               ),
             ),
@@ -577,7 +578,7 @@ class ActiveQuestsUI extends StatelessWidget {
   }
 
   /// Note: returns GetBuilder since has FlipCard()
-  GetBuilder rowLayl(Zaman zaman, bool pinned) {
+  GetBuilder rowLayl(Zaman zaman, bool pinned, bool dis) {
     return GetBuilder<ActiveQuestsController>(
       builder: (c) {
         return Column(
@@ -597,16 +598,20 @@ class ActiveQuestsUI extends StatelessWidget {
             Expanded(
               child: Row(
                 children: [
-                  Cell(P.S, T('Qiyam', tsQyam), pinned, QUEST.LAYL_QIYAM),
+                  Cell(P.S, T('Qiyam', tsQyam), pinned, QUEST.LAYL_QIYAM,
+                      dis: dis),
 
                   /// Thikr and Dua before bed:
-                  Cell(P.C, IconThikr(), pinned, QUEST.LAYL_THIKR),
-                  Cell(P.C, IconDua(), pinned, QUEST.LAYL_DUA),
-                  Cell(P.C, T('Sleep', tsWhite), pinned, QUEST.LAYL_SLEEP),
+                  Cell(P.C, IconThikr(), pinned, QUEST.LAYL_THIKR, dis: dis),
+                  Cell(P.C, IconDua(), pinned, QUEST.LAYL_DUA, dis: dis),
+                  Cell(P.C, T('Sleep', tsWhite), pinned, QUEST.LAYL_SLEEP,
+                      dis: dis),
 
                   /// Tahhajud and Witr after waking up
-                  Cell(P.C, T('Tahajjud', tsThjd), pinned, QUEST.LAYL_TAHAJJUD),
-                  Cell(P.E, T('Witr', tsWitr), pinned, QUEST.LAYL_WITR),
+                  Cell(P.C, T('Tahajjud', tsThjd), pinned, QUEST.LAYL_TAHAJJUD,
+                      dis: dis),
+                  Cell(P.E, T('Witr', tsWitr), pinned, QUEST.LAYL_WITR,
+                      dis: dis),
                 ],
               ),
             ),
@@ -815,8 +820,9 @@ class ActiveQuestsUI extends StatelessWidget {
                           flipOnTouch: false,
                           controller: cflipCardLayl,
                           direction: FlipDirection.HORIZONTAL,
-                          front: rowLayl(Zaman.Last_1__3_of_Night, pinnedLayl),
-                          back: rowLayl(Zaman.Middle_of_Night, false),
+                          front: rowLayl(
+                              Zaman.Last_1__3_of_Night, pinnedLayl, false),
+                          back: rowLayl(Zaman.Middle_of_Night, false, true),
                         ),
                       ),
                     )
@@ -829,8 +835,9 @@ class ActiveQuestsUI extends StatelessWidget {
                           flipOnTouch: false,
                           controller: cflipCardLayl,
                           direction: FlipDirection.HORIZONTAL,
-                          front: rowLayl(Zaman.Middle_of_Night, pinnedLayl),
-                          back: rowLayl(Zaman.Last_1__3_of_Night, false),
+                          front:
+                              rowLayl(Zaman.Middle_of_Night, pinnedLayl, false),
+                          back: rowLayl(Zaman.Last_1__3_of_Night, false, true),
                         ),
                       ),
                     ),
@@ -968,40 +975,101 @@ enum P {
 
 class Cell extends StatelessWidget {
   const Cell(this._cellPlacement, this._widget, this._isActive, this._quest,
-      {this.flex = 1000});
+      {this.flex = 1000, this.dis = false});
 
   final P _cellPlacement; // true = start, false = center, null = end
   final Widget _widget;
   final bool _isActive;
-  final int flex;
   final QUEST _quest;
+  final int flex;
+  final bool dis;
 
   @override
   Widget build(BuildContext context) {
+    final ActionWidget _actionWidget = ActionWidget(
+      isActive: _isActive,
+      quest: _quest,
+      dis: dis,
+      widget: _widget,
+    );
+
     return Expanded(
       flex: flex,
-      child: Container(
-        color: AppThemes.logoBackground, // hide scroll of items behind
-        child: ClipRRect(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(_cellPlacement == P.S ? 15.0 : 0),
-            bottomRight: Radius.circular(_cellPlacement == P.E ? 15.0 : 0),
-          ),
-          child: Container(
-            color: Colors.grey.shade800,
-            child: Center(
-                // child: AvatarGlow(endRadius: 100.0, showTwoGlows: true, glowColor: const Color(0xFFFFD700),duration: Duration(milliseconds: 1000), //shape: CircleBorder(),child: Text('Duha',style: actionDuhaTextStyle,),),
-                child: _isActive && cAjrA.isQuestActive(_quest)
-                    ? HeartBeat(
-                        beatsPerMinute: 60,
-                        child: _widget,
-                      )
-                    : _widget),
-            //child: AvatarGlow(endRadius: 100.0, showTwoGlows: true, glowColor: const Color(0xFFFFD700), duration: Duration(milliseconds: 1000), //shape: CircleBorder(),child: HeartBeat(beatsPerMinute: 120,//radius: 100,child: Text('Duha',style: actionDuhaTextStyle,),),
+      child: InkWell(
+        onTap: () => //_controllerCenter.play(),
+            cMenu.pushSubPage(SubPage.ACTIVE_QUEST_ACTION, arguments: {
+          'quest': _quest,
+          'widget': _widget,
+        }),
+        child: Container(
+          color: AppThemes.logoBackground, // hide scroll of items behind
+          child: ClipRRect(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(_cellPlacement == P.S ? 15.0 : 0),
+              bottomRight: Radius.circular(_cellPlacement == P.E ? 15.0 : 0),
+            ),
+            child: Container(
+              color: Colors.grey.shade800,
+              child: Stack(
+                children: [
+                  _actionWidget,
+                  if (cAjrA.isDone(_quest))
+                    Center(
+                      child: Icon(Icons.tag_faces_outlined,
+                          size: 30, color: Colors.green),
+                    ),
+                  if (cAjrA.isSkip(_quest))
+                    Center(
+                      child: Icon(Icons.redo_outlined,
+                          size: 35, color: Colors.deepOrangeAccent),
+                    ),
+                  if (cAjrA.isMiss(_quest))
+                    Center(
+                      child: Icon(Icons.dnd_forwardslash_outlined,
+                          size: 30, color: Colors.red),
+                    ),
+                ],
+              ),
+              //child: AvatarGlow(endRadius: 100.0, showTwoGlows: true, glowColor: const Color(0xFFFFD700), duration: Duration(milliseconds: 1000), //shape: CircleBorder(),child: HeartBeat(beatsPerMinute: 120,//radius: 100,child: Text('Duha',style: actionDuhaTextStyle,),),
+            ),
           ),
         ),
       ),
     );
+  }
+}
+
+class ActionWidget extends StatelessWidget {
+  const ActionWidget({
+    Key? key,
+    required bool isActive,
+    required QUEST quest,
+    required this.dis,
+    required Widget widget,
+  })  : _isActive = isActive,
+        _quest = quest,
+        _widget = widget,
+        super(key: key);
+
+  final bool _isActive;
+  final QUEST _quest;
+  final bool dis;
+  final Widget _widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+        // child: AvatarGlow(endRadius: 100.0, showTwoGlows: true, glowColor: const Color(0xFFFFD700),duration: Duration(milliseconds: 1000), //shape: CircleBorder(),child: Text('Duha',style: actionDuhaTextStyle,),),
+        child: _isActive && cAjrA.isQuestActive(_quest)
+            ? HeartBeat(
+                beatsPerMinute: 60,
+                child: dis || _quest == QUEST.NONE
+                    ? _widget
+                    : Hero(tag: _quest, child: _widget),
+              )
+            : dis || _quest == QUEST.NONE
+                ? _widget
+                : Hero(tag: _quest, child: _widget));
   }
 }
 
@@ -1084,7 +1152,6 @@ class IconSunset extends StatelessWidget {
             color: Colors.grey.shade800,
             height: 10,
             width: 20,
-            //child: SizedBox(height: 10),
           ),
         ),
         Positioned(
@@ -1119,7 +1186,7 @@ class IconThikr extends StatelessWidget {
     return Stack(
       children: [
         Center(
-          child: Icon(Icons.favorite_outlined, color: Colors.red, size: 33),
+          child: Icon(Icons.favorite_outlined, color: Colors.pink, size: 33),
         ),
         Center(
           child: Icon(Icons.psychology_outlined, color: Colors.brown, size: 21),
@@ -1134,7 +1201,7 @@ class IconDua extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Icon(Icons.volunteer_activism, color: Colors.teal, size: 25);
+    return Icon(Icons.volunteer_activism, color: Colors.grey, size: 25);
   }
 }
 

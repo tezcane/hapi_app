@@ -55,6 +55,7 @@ enum QUEST {
 }
 
 extension enumUtil on QUEST {
+  /// Returns first part enum (must be uppercase), so: FAJR_FARD -> returns FAJR
   String salahRow() {
     return this.toString().split('.').last.split('_').first;
   }
@@ -62,9 +63,9 @@ extension enumUtil on QUEST {
 
 class ActiveQuestsAjrController extends GetxController {
 //RxInt _questsAll = 0.obs;
-  RxInt _questsCompleted = 0.obs;
-  RxInt _questsSkipped = 0.obs;
-  RxInt _questsMissed = 0.obs;
+  RxInt _questsDone = 0.obs;
+  RxInt _questsSkip = 0.obs;
+  RxInt _questsMiss = 0.obs;
 
   RxBool _isIshaIbadahComplete = false.obs;
 
@@ -77,9 +78,9 @@ class ActiveQuestsAjrController extends GetxController {
 
   @override
   void onInit() {
-    _questsCompleted.value = s.read('questsCompleted') ?? 0;
-    _questsSkipped.value = s.read('questsSkipped') ?? 0;
-    _questsMissed.value = s.read('questsMissed') ?? 0;
+    _questsDone.value = s.read('questsDone') ?? 0;
+    _questsSkip.value = s.read('questsSkip') ?? 0;
+    _questsMiss.value = s.read('questsMiss') ?? 0;
 
     initCurrQuest();
 
@@ -90,6 +91,15 @@ class ActiveQuestsAjrController extends GetxController {
 
   void printBinary(int input) {
     print(input.toRadixString(2));
+  }
+
+  printBinaryAll() {
+    print(
+        'questsDone=${_questsDone.value}, questsSkip=${_questsSkip.value}, questsMiss=${_questsMiss.value}, questsAll=${questsAll()}:');
+    printBinary(_questsDone.value);
+    printBinary(_questsSkip.value);
+    printBinary(_questsMiss.value);
+    printBinary(questsAll());
   }
 
   void initCurrQuest() async {
@@ -110,67 +120,64 @@ class ActiveQuestsAjrController extends GetxController {
 
     for (QUEST quest in QUEST.values) {
       if (currSalahRow == quest.salahRow()) {
-        print('Stopping init: $quest = ${_questsMissed.value}');
+        print('Stopping init: $quest = ${_questsMiss.value}');
         break;
       }
 
       int curBitMask = 0x1 << quest.index;
-      if (curBitMask & _questsCompleted.value != 0) continue;
-      if (curBitMask & _questsSkipped.value != 0) continue;
-      if (curBitMask & _questsMissed.value != 0) continue;
+      if (curBitMask & _questsDone.value != 0) continue;
+      if (curBitMask & _questsSkip.value != 0) continue;
+      if (curBitMask & _questsMiss.value != 0) continue;
 
       // user never inputted this value, we assume it is missed:
-      _questsMissed.value = _questsMissed.value | curBitMask;
-      print(
-          'Skipped: $quest (index=${quest.index}) = ${_questsMissed.value} ($curBitMask)');
-      printBinary(_questsMissed.value);
+      setMiss(quest);
     }
   }
 
-  bool isQuestActive(QUEST quest) {
-    return getQuestsAll().toRadixString(2).length == quest.index;
+  bool isQuestActive(QUEST q) => questsAll().toRadixString(2).length == q.index;
 
-    //TODO bitwise operations:
+  int questsAll() => _questsDone.value | _questsSkip.value | _questsMiss.value;
 
-    // int questMask = (1 << quest.index);
-    // if (((questsAll & 0xFFFFFFFFFF) >> quest.index) & 1 == 1) {
-    //   return false;
-    // }
-
-    return false;
-//   11111111111111 <- getQuestsAll()
-//  100000000000000 <- questMask
-//  011111111111111 <- bitMask (~questMask)
-//                0 <- questMask & getQuestsAll()
-    // print('\n\n');
-    // print('\n\n');
-    // print('quest=$quest');
-    // int questMask = (1 << quest.index);
-    // print('questMask=$questMask:');
-    // printBinary(questMask);
-    //
-    // print('\n\n');
-    // int bitMask = (~questMask);
-    // print('bitMask=$bitMask:');
-    // printBinary(bitMask);
-    //
-    // print('\n\n');
-    // print('getQuestsAll=${getQuestsAll()}:');
-    // printBinary(getQuestsAll());
-    //
-    // print('\n\n');
-    // int anded = getQuestsAll() & bitMask;
-    // print('anded=$anded:');
-    // printBinary(anded);
-    //
-    // bool isQuestActive = anded & bitMask == anded;
-    // print('isQuestActive=$isQuestActive');
-    // return isQuestActive;
+  void setDone(QUEST quest) {
+    print('');
+    print('');
+    print('setDone: $quest (index=${quest.index}) = ${_questsMiss.value}');
+    printBinaryAll();
+    _questsDone.value |= 1 << quest.index;
+    cQstA.update(); // refresh UI
+    printBinaryAll();
   }
 
-  int getQuestsAll() {
-    return _questsCompleted.value | _questsSkipped.value | _questsMissed.value;
+  void setSkip(QUEST quest) {
+    print('');
+    print('');
+    print('setSkip: $quest (index=${quest.index}) = ${_questsMiss.value}');
+    printBinaryAll();
+    _questsSkip.value |= 1 << quest.index;
+    cQstA.update(); // refresh UI
+    printBinaryAll();
   }
+
+  void setMiss(QUEST quest) {
+    print('');
+    print('');
+    print('setMiss: $quest (index=${quest.index}) = ${_questsMiss.value}');
+    printBinaryAll();
+    _questsMiss.value |= 1 << quest.index;
+    cQstA.update(); // refresh UI
+    printBinaryAll();
+  }
+
+  /// Call at start of next day
+  void clearQuests() {
+    _questsDone.value = 0;
+    _questsSkip.value = 0;
+    _questsMiss.value = 0;
+  }
+
+  bool isDone(QUEST q) => (_questsDone.value >> q.index) & 1 == 1;
+  bool isSkip(QUEST q) => (_questsSkip.value >> q.index) & 1 == 1;
+  bool isMiss(QUEST q) => (_questsMiss.value >> q.index) & 1 == 1;
 }
 
 // enum QUEST_TYPE {

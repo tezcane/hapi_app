@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:get/get.dart';
+import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/CalculationMethod.dart';
 import 'package:hapi/quest/active/athan/CalculationParameters.dart';
@@ -9,6 +10,7 @@ import 'package:hapi/quest/active/athan/Coordinates.dart';
 import 'package:hapi/quest/active/athan/Madhab.dart';
 import 'package:hapi/quest/active/athan/PrayerTimes.dart';
 import 'package:hapi/quest/active/athan/Qibla.dart';
+import 'package:hapi/quest/active/athan/Zaman.dart';
 import 'package:timezone/data/latest.dart' show initializeTimeZones;
 import 'package:timezone/timezone.dart' show Location, TZDateTime, getLocation;
 
@@ -66,7 +68,15 @@ class ZamanController extends GetxController {
       params.kerahatSunZawalMins = 15;
       params.kerahatSunSettingMins = 20;
     }
+    // TODO fix all this, date should change at FAJR_TOMORROW hit only?
     cQstA.prayerTimes = PrayerTimes(_gps, date, params, _timeZone!, false);
+
+    // reset day:
+    if (cQstA.prayerTimes!.currZaman == Zaman.Fajr_Tomorrow) {
+      cAjrA.clearQuests();
+    }
+    // For next prayer/day, set any missed quests and do other quest setup:
+    cAjrA.initCurrQuest();
 
     update(); // update UI with above changes (needed at app init)
 

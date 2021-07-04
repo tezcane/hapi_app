@@ -1,11 +1,14 @@
 import 'dart:async';
+import 'dart:math';
 
+import 'package:confetti/confetti.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/constants/globals.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/menu_nav.dart';
+import 'package:hapi/quest/active/active_quest_action_ui.dart';
 import 'package:hapi/quest/quests_ui.dart';
 import 'package:hapi/tarikh/article/tarikh_article_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_favorites_ui.dart';
@@ -52,6 +55,7 @@ enum SubPage {
   TARIKH_SEARCH,
   TARIKH_TIMELINE,
   TARIKH_ARTICLE,
+  ACTIVE_QUEST_ACTION,
 }
 
 class MenuController extends GetxController {
@@ -286,6 +290,14 @@ class MenuController extends GetxController {
           duration: Duration(milliseconds: transistionMs),
         );
         break;
+      case (SubPage.ACTIVE_QUEST_ACTION):
+        Get.to(
+          () => ActiveQuestActionUI(),
+          arguments: arguments,
+          transition: transition,
+          duration: Duration(milliseconds: transistionMs),
+        );
+        break;
       case (SubPage.ABOUT):
       default:
         Get.to(
@@ -365,4 +377,42 @@ class MenuController extends GetxController {
 
     update();
   }
+
+  static final ConfettiController _confettiController =
+      ConfettiController(duration: const Duration(seconds: 5));
+
+  /// A custom Path to paint stars.
+  Path drawStar(Size size) {
+    // Method to convert degree to radians
+    double degToRad(double deg) => deg * (pi / 180.0);
+
+    const numberOfPoints = 5;
+    final halfWidth = size.width / 2;
+    final externalRadius = halfWidth;
+    final internalRadius = halfWidth / 2.5;
+    final degreesPerStep = degToRad(360 / numberOfPoints);
+    final halfDegreesPerStep = degreesPerStep / 2;
+    final path = Path();
+    final fullAngle = degToRad(360);
+    path.moveTo(size.width, halfWidth);
+
+    for (double step = 0; step < fullAngle; step += degreesPerStep) {
+      path.lineTo(halfWidth + externalRadius * cos(step),
+          halfWidth + externalRadius * sin(step));
+      path.lineTo(halfWidth + internalRadius * cos(step + halfDegreesPerStep),
+          halfWidth + internalRadius * sin(step + halfDegreesPerStep));
+    }
+    path.close();
+    return path;
+  }
+
+  ConfettiController confettiController() => _confettiController;
+  void playConfetti() => _confettiController.play();
+
+// TODO
+// @override
+// void dispose() {
+//   _confettiController.dispose();
+//   super.dispose();
+// }
 }

@@ -1,3 +1,4 @@
+import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/menu/menu_controller.dart';
@@ -30,15 +31,37 @@ class FabNavPage extends StatelessWidget {
       builder: (c) => IgnorePointer(
         ignoring: c.isScreenDisabled(),
         child: Scaffold(
-          //backgroundColor: background,
+          //backgroundColor: AppThemes.logoBackground,
           body: MenuNav(
             builder: () {
               return Scaffold(
                 body: MenuSlide(
-                  foregroundPage: IgnorePointer(
-                    ignoring: c.isMenuShowing(),
-                    // disable UI when menu showing
-                    child: foregroundPage, // Main page
+                  foregroundPage: Stack(
+                    children: [
+                      IgnorePointer(
+                        // disable UI when menu showing:
+                        ignoring: c.isMenuShowing(),
+                        child: foregroundPage, // Main page
+                      ),
+                      Align(
+                        alignment: Alignment.topCenter,
+                        child: ConfettiWidget(
+                          confettiController: cMenu.confettiController(),
+                          blastDirectionality: BlastDirectionality.explosive,
+                          shouldLoop: false,
+                          maximumSize: Size(50, 50),
+                          minimumSize: Size(30, 30),
+                          colors: const [
+                            Colors.green,
+                            Colors.blue,
+                            Colors.pink,
+                            Colors.orange,
+                            Colors.purple,
+                          ], // manually specify the colors to be used
+                          createParticlePath: cMenu.drawStar,
+                        ),
+                      ),
+                    ],
                   ),
                   bottomWidget: bottomWidget, // preferably Row
                   settingsWidget: settingsWidget, // preferably Column

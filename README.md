@@ -6,6 +6,7 @@ Bef  - Before
 btn  - Button
 C    - Controller
 curr - Current
+dis  - Disabled
 dn   - down (use with up: up/dn)
 e    - exception
 idx  - Index
