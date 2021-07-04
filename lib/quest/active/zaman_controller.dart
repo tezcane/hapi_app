@@ -73,7 +73,7 @@ class ZamanController extends GetxController {
 
     // reset day:
     if (cQstA.prayerTimes!.currZaman == Zaman.Fajr_Tomorrow) {
-      cAjrA.clearQuests();
+      cAjrA.clearAllQuests();
     }
     // For next prayer/day, set any missed quests and do other quest setup:
     cAjrA.initCurrQuest();

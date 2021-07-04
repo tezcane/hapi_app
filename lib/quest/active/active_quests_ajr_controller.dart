@@ -8,7 +8,7 @@ final ActiveQuestsAjrController cAjrA = Get.find();
 
 // ONLY NEW VALUES CAN BE ADDED TO PRESERVE ENUM IN DB:
 enum QUEST {
-  FAJR_MUAK_2,
+  FAJR_MUAKB2, // Muakaddah Before
   FAJR_FARD,
   FAJR_THIKR,
   FAJR_DUA,
@@ -18,29 +18,29 @@ enum QUEST {
   DUHA_DUHA,
   DUHA_ZAWAL,
 
-  DHUHR_MUAK_4,
+  DHUHR_MUAKB4,
   DHUHR_FARD,
-  DHUHR_MUAK_2,
-  DHUHR_NAFL_2,
+  DHUHR_MUAKA2, // Muakaddah After
+  DHUHR_NAFLA2, // Nafl After
   DHUHR_THIKR,
   DHUHR_DUA,
 
-  ASR_NAFL_4,
+  ASR_NAFLB4, // Nafl Before
   ASR_FARD,
   ASR_THIKR,
   ASR_DUA,
   ASR_ADHKAR,
 
   MAGHRIB_FARD,
-  MAGHRIB_MUAK_2,
-  MAGHRIB_NAFL_2,
+  MAGHRIB_MUAKA2,
+  MAGHRIB_NAFLA2,
   MAGHRIB_THIKR,
   MAGHRIB_DUA,
 
-  ISHA_NAFL_4,
+  ISHA_NAFLB4,
   ISHA_FARD,
-  ISHA_MUAK_2,
-  ISHA_NAFL_2,
+  ISHA_MUAKA2,
+  ISHA_NAFLA2,
   ISHA_THIKR,
   ISHA_DUA,
 
@@ -59,6 +59,14 @@ extension enumUtil on QUEST {
   String salahRow() {
     return this.toString().split('.').last.split('_').first;
   }
+
+  bool isFard() => this.toString().split('.').last.endsWith('FARD');
+  bool isMuak() => this.toString().split('.').last.contains('MUAK');
+  bool isNafl() => this.toString().split('.').last.contains('NAFL');
+  bool isMuakBef() => this.toString().split('.').last.contains('MUAKB');
+  bool isMuakAft() => this.toString().split('.').last.contains('MUAKA');
+  bool isNaflBef() => this.toString().split('.').last.contains('NAFLB');
+  bool isNaflAft() => this.toString().split('.').last.contains('NAFLA');
 }
 
 class ActiveQuestsAjrController extends GetxController {
@@ -134,7 +142,15 @@ class ActiveQuestsAjrController extends GetxController {
     }
   }
 
-  bool isQuestActive(QUEST q) => questsAll().toRadixString(2).length == q.index;
+  int getCurrIdx() => questsAll().toRadixString(2).length;
+  QUEST getCurrQuest() => QUEST.values[getCurrIdx()];
+  QUEST getPrevQuest() =>
+      QUEST.values[getCurrIdx() - 1 < 0 ? 0 : getCurrIdx() - 1];
+  QUEST getNextQuest() => QUEST.values[getCurrIdx() + 1 >= QUEST.NONE.index
+      ? QUEST.NONE.index - 1
+      : getCurrIdx() + 1];
+
+  bool isQuestActive(QUEST q) => getCurrIdx() == q.index;
 
   int questsAll() => _questsDone.value | _questsSkip.value | _questsMiss.value;
 
@@ -168,8 +184,20 @@ class ActiveQuestsAjrController extends GetxController {
     printBinaryAll();
   }
 
+  void clearQuest(QUEST quest) {
+    print('');
+    print('');
+    print('clearQuest: $quest (index=${quest.index}) = ${_questsMiss.value}');
+    printBinaryAll();
+    _questsDone.value &= ~(1 << quest.index);
+    _questsSkip.value &= ~(1 << quest.index);
+    _questsMiss.value &= ~(1 << quest.index);
+    cQstA.update(); // refresh UI
+    printBinaryAll();
+  }
+
   /// Call at start of next day
-  void clearQuests() {
+  void clearAllQuests() {
     _questsDone.value = 0;
     _questsSkip.value = 0;
     _questsMiss.value = 0;
