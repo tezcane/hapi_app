@@ -31,7 +31,8 @@ class ActiveQuestsUI extends StatelessWidget {
   static const TS tsFard = const TS(17.0, Colors.red);
   static const TS tsMuak = const TS(17.0, Colors.green);
   static final TS tsNafl = TS(17.0, Colors.amber.shade700);
-  static final TS tsDuha = TS(17.0, Colors.white70);
+  static final TS tsDuha = TS(17.0, Colors.yellow);
+  static final TS tsIshr = TS(17.0, Colors.white70);
   static final TS tsQyam = TS(17.0, Colors.white70);
   static final TS tsThjd = TS(17.0, Colors.white70);
   static const TS tsWitr = const TS(17.0, Colors.pinkAccent);
@@ -354,7 +355,7 @@ class ActiveQuestsUI extends StatelessWidget {
                     QUEST.KERAHAT_ADHKAR_SUNRISE,
                     flex: 2000,
                   ),
-                  Cell(P.C, T('Ishraq', tsDuha), pinned, QUEST.DUHA_ISHRAQ),
+                  Cell(P.C, T('Ishraq', tsIshr), pinned, QUEST.DUHA_ISHRAQ),
                   Cell(P.C, T('Duha', tsDuha), pinned, QUEST.DUHA_DUHA),
                   Cell(
                     P.E,
