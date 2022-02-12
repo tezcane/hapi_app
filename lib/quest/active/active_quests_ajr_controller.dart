@@ -8,7 +8,7 @@ final ActiveQuestsAjrController cAjrA = Get.find();
 
 // ONLY NEW VALUES CAN BE ADDED TO PRESERVE ENUM IN DB:
 enum QUEST {
-  FAJR_MUAKB2, // Muakaddah Before
+  FAJR_MUAKB, // Muakaddah Before
   FAJR_FARD,
   FAJR_THIKR,
   FAJR_DUA,
@@ -20,27 +20,27 @@ enum QUEST {
 
   DHUHR_MUAKB4,
   DHUHR_FARD,
-  DHUHR_MUAKA2, // Muakaddah After
-  DHUHR_NAFLA2, // Nafl After
+  DHUHR_MUAKA, // Muakaddah After
+  DHUHR_NAFLA, // Nafl After
   DHUHR_THIKR,
   DHUHR_DUA,
 
-  ASR_NAFLB4, // Nafl Before
+  ASR_NAFLB, // Nafl Before
   ASR_FARD,
   ASR_THIKR,
   ASR_DUA,
   ASR_ADHKAR,
 
   MAGHRIB_FARD,
-  MAGHRIB_MUAKA2,
-  MAGHRIB_NAFLA2,
+  MAGHRIB_MUAKA,
+  MAGHRIB_NAFLA,
   MAGHRIB_THIKR,
   MAGHRIB_DUA,
 
-  ISHA_NAFLB4,
+  ISHA_NAFLB,
   ISHA_FARD,
-  ISHA_MUAKA2,
-  ISHA_NAFLA2,
+  ISHA_MUAKA,
+  ISHA_NAFLA,
   ISHA_THIKR,
   ISHA_DUA,
 
@@ -63,10 +63,14 @@ extension enumUtil on QUEST {
   bool isFard() => this.toString().split('.').last.endsWith('FARD');
   bool isMuak() => this.toString().split('.').last.contains('MUAK');
   bool isNafl() => this.toString().split('.').last.contains('NAFL');
-  bool isMuakBef() => this.toString().split('.').last.contains('MUAKB');
-  bool isMuakAft() => this.toString().split('.').last.contains('MUAKA');
-  bool isNaflBef() => this.toString().split('.').last.contains('NAFLB');
-  bool isNaflAft() => this.toString().split('.').last.contains('NAFLA');
+
+  bool isMuakBef() => this.toString().split('.').last.endsWith('MUAKB');
+  bool isMuakAft() => this.toString().split('.').last.endsWith('MUAKA');
+  bool isNaflBef() => this.toString().split('.').last.endsWith('NAFLB');
+  bool isNaflAft() => this.toString().split('.').last.endsWith('NAFLA');
+
+  bool isThikr() => this.toString().split('.').last.endsWith('THIKR');
+  bool isDua() => this.toString().split('.').last.endsWith('DUA');
 }
 
 class ActiveQuestsAjrController extends GetxController {

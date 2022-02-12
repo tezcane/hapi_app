@@ -304,7 +304,7 @@ class ActiveQuestsUI extends StatelessWidget {
               child: Row(
                 children: [
                   /// 1 of 4. sunnah before fard column item:
-                  Cell(P.S, T(muakBef, tsMuak), pinned, QUEST.FAJR_MUAKB2),
+                  Cell(P.S, T(muakBef, tsMuak), pinned, QUEST.FAJR_MUAKB),
 
                   /// 2 of 4. fard column item:
                   Cell(P.C, T(fardRkt, tsFard), pinned, QUEST.FAJR_FARD),
@@ -413,8 +413,8 @@ class ActiveQuestsUI extends StatelessWidget {
                   Cell(P.C, T(fardRkt, tsFard), pinned, QUEST.DHUHR_FARD),
 
                   /// 3 of 4. Option 2: sunnah after fard column items:
-                  Cell(P.C, T(muakAft, tsMuak), pinned, QUEST.DHUHR_MUAKA2),
-                  Cell(P.C, T(naflAft, tsNafl), pinned, QUEST.DHUHR_NAFLA2),
+                  Cell(P.C, T(muakAft, tsMuak), pinned, QUEST.DHUHR_MUAKA),
+                  Cell(P.C, T(naflAft, tsNafl), pinned, QUEST.DHUHR_NAFLA),
 
                   /// 4 of 4. Thikr and Dua after fard:
                   Cell(P.C, IconThikr(), pinned, QUEST.DHUHR_THIKR),
@@ -450,7 +450,7 @@ class ActiveQuestsUI extends StatelessWidget {
                   child: Row(
                     children: [
                       /// 1 of 4. sunnah before fard column item:
-                      Cell(P.S, T(naflBef, tsNafl), pinned, QUEST.ASR_NAFLB4),
+                      Cell(P.S, T(naflBef, tsNafl), pinned, QUEST.ASR_NAFLB),
 
                       /// 2 of 4. fard column item:
                       Cell(P.C, T(fardRkt, tsFard), pinned, QUEST.ASR_FARD),
@@ -509,10 +509,10 @@ class ActiveQuestsUI extends StatelessWidget {
                       Cell(P.C, T(fardRkt, tsFard), pinned, QUEST.MAGHRIB_FARD),
 
                       /// 3 of 4. Option 2: sunnah after fard column items:
-                      Cell(P.C, T(muakAft, tsMuak), pinned,
-                          QUEST.MAGHRIB_MUAKA2),
-                      Cell(P.C, T(naflAft, tsNafl), pinned,
-                          QUEST.MAGHRIB_NAFLA2),
+                      Cell(
+                          P.C, T(muakAft, tsMuak), pinned, QUEST.MAGHRIB_MUAKA),
+                      Cell(
+                          P.C, T(naflAft, tsNafl), pinned, QUEST.MAGHRIB_NAFLA),
 
                       /// 4 of 4. Thikr and Dua after fard:
                       Cell(P.C, IconThikr(), pinned, QUEST.MAGHRIB_THIKR),
@@ -554,14 +554,14 @@ class ActiveQuestsUI extends StatelessWidget {
                   child: Row(
                     children: [
                       /// 1 of 4. sunnah before fard column item:
-                      Cell(P.S, T(naflBef, tsNafl), pinned, QUEST.ISHA_NAFLB4),
+                      Cell(P.S, T(naflBef, tsNafl), pinned, QUEST.ISHA_NAFLB),
 
                       /// 2 of 4. fard column item:
                       Cell(P.C, T(fardRkt, tsFard), pinned, QUEST.ISHA_FARD),
 
                       /// 3 of 4. Option 1: sunnah after fard column items:
-                      Cell(P.C, T(muakAft, tsMuak), pinned, QUEST.ISHA_MUAKA2),
-                      Cell(P.C, T(naflAft, tsNafl), pinned, QUEST.ISHA_NAFLA2),
+                      Cell(P.C, T(muakAft, tsMuak), pinned, QUEST.ISHA_MUAKA),
+                      Cell(P.C, T(naflAft, tsNafl), pinned, QUEST.ISHA_NAFLA),
 
                       /// 4 of 4. Thikr and Dua after fard:
                       Cell(P.C, IconThikr(), pinned, QUEST.ISHA_THIKR),
