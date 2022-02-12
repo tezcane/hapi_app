@@ -1198,16 +1198,20 @@ class IconThikr extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Center(
-          child: Icon(Icons.favorite_outlined, color: Colors.grey, size: 33),
-        ),
-        Center(
-          child:
-              Icon(Icons.psychology_outlined, color: Colors.white38, size: 21),
-        ),
-      ],
+    return SizedBox(
+      width: 32,
+      height: 32,
+      child: Stack(
+        children: [
+          Center(
+            child: Icon(Icons.favorite_outlined, color: Colors.grey, size: 33),
+          ),
+          Center(
+            child: Icon(Icons.psychology_outlined,
+                color: Colors.white38, size: 21),
+          ),
+        ],
+      ),
     );
   }
 }
