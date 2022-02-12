@@ -11,7 +11,7 @@ import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/active_quests_settings_ui.dart';
-import 'package:hapi/quest/active/athan/Zaman.dart';
+import 'package:hapi/quest/active/athan/TOD.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
 import 'package:im_animations/im_animations.dart';
 
@@ -54,8 +54,7 @@ class ActiveQuestsUI extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Text(c.prayerTimes!.currZaman.name(),
-                                  style: tsAppBar),
+                              Text(c.tod!.currTOD.name(), style: tsAppBar),
                               Text(' ends', style: tsAppBar),
                               SizedBox(width: 1),
                               Icon(Icons.arrow_right_alt_rounded,
@@ -65,8 +64,7 @@ class ActiveQuestsUI extends StatelessWidget {
                           ),
                           Row(
                             children: [
-                              Text(c.prayerTimes!.nextZaman.name(),
-                                  style: tsAppBar),
+                              Text(c.tod!.nextTOD.name(), style: tsAppBar),
                               Text(' in', style: tsAppBar),
                               SizedBox(width: 1),
                               Icon(Icons.arrow_right_alt_rounded,
@@ -227,7 +225,7 @@ class ActiveQuestsUI extends StatelessWidget {
   /// Note: returns GetBuilder.
   GetBuilder<ActiveQuestsController> rowNoActionFlipCard({
     required final String fardRkt,
-    required final Zaman zaman,
+    required final TOD tod,
     required final DateTime salahTimeStart,
     final DateTime? salahTimeEnd,
     required String muakBef,
@@ -246,12 +244,12 @@ class ActiveQuestsUI extends StatelessWidget {
           children: [
             /// First row is title of salah, with times, etc.
             salahHeader(
-              zaman,
+              tod,
               false,
               c,
               isJummahMode,
               salahTimeStart,
-              zaman == Zaman.Fajr_Tomorrow ? salahTimeEnd : null,
+              tod == TOD.Fajr_Tomorrow ? salahTimeEnd : null,
               flipCardController,
             ),
             Expanded(
@@ -292,12 +290,12 @@ class ActiveQuestsUI extends StatelessWidget {
           children: [
             /// First row is title of salah, with times, etc.
             salahHeader(
-              Zaman.Fajr,
+              TOD.Fajr,
               pinned,
               c,
               false,
-              c.prayerTimes!.fajr,
-              !c.showSunnahDuha ? c.prayerTimes!.sunrise : null,
+              c.tod!.fajr,
+              !c.showSunnahDuha ? c.tod!.sunrise : null,
               cflipCardFajr,
             ),
             Expanded(
@@ -334,8 +332,7 @@ class ActiveQuestsUI extends StatelessWidget {
         child: Column(
           children: [
             /// First row is title with times, etc.
-            salahHeader(Zaman.Duha, pinned, c, false, c.prayerTimes!.sunrise,
-                null, null),
+            salahHeader(TOD.Duha, pinned, c, false, c.tod!.sunrise, null, null),
             Expanded(
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -345,11 +342,11 @@ class ActiveQuestsUI extends StatelessWidget {
                     SunCell(
                       IconSunrise(),
                       'Morning Adhkar',
-                      c.prayerTimes!.sunrise,
-                      c.prayerTimes!.duha,
+                      c.tod!.sunrise,
+                      c.tod!.ishraq,
                     ),
                     pinned,
-                    QUEST.DUHA_ADHKAR,
+                    QUEST.KERAHAT_ADHKAR_SUNRISE,
                     flex: 2000,
                   ),
                   Cell(P.C, T('Ishraq', tsDuha), pinned, QUEST.DUHA_ISHRAQ),
@@ -359,11 +356,11 @@ class ActiveQuestsUI extends StatelessWidget {
                     SunCell(
                       IconSun(),
                       "Zawal",
-                      c.prayerTimes!.zawal,
-                      c.prayerTimes!.dhuhr,
+                      c.tod!.zawal,
+                      c.tod!.dhuhr,
                     ),
                     pinned,
-                    QUEST.DUHA_ZAWAL,
+                    QUEST.KERAHAT_ADHKAR_ZAWAL,
                     flex: 2000,
                   ),
                 ],
@@ -395,11 +392,11 @@ class ActiveQuestsUI extends StatelessWidget {
           children: [
             /// First row is title of salah, with times, etc.
             salahHeader(
-              Zaman.Dhuhr,
+              TOD.Dhuhr,
               pinned,
               c,
               isJummahMode,
-              c.prayerTimes!.dhuhr,
+              c.tod!.dhuhr,
               null,
               cflipCardDhuhr,
             ),
@@ -407,7 +404,7 @@ class ActiveQuestsUI extends StatelessWidget {
               child: Row(
                 children: [
                   /// 1 of 4. sunnah before fard column item:
-                  Cell(P.S, T(muakBef, tsMuak), pinned, QUEST.DHUHR_MUAKB4),
+                  Cell(P.S, T(muakBef, tsMuak), pinned, QUEST.DHUHR_MUAKB),
 
                   /// 2 of 4. fard column item:
                   Cell(P.C, T(fardRkt, tsFard), pinned, QUEST.DHUHR_FARD),
@@ -444,8 +441,7 @@ class ActiveQuestsUI extends StatelessWidget {
             return Column(
               children: [
                 /// First row is title of salah, with times, etc.
-                salahHeader(Zaman.Asr, pinned, c, false, c.prayerTimes!.asr,
-                    null, null),
+                salahHeader(TOD.Asr, pinned, c, false, c.tod!.asr, null, null),
                 Expanded(
                   child: Row(
                     children: [
@@ -463,9 +459,9 @@ class ActiveQuestsUI extends StatelessWidget {
                       Cell(
                         P.E,
                         SunCell(IconSunset(), 'Evening Adhkar',
-                            c.prayerTimes!.sunSetting, c.prayerTimes!.maghrib),
+                            c.tod!.sunSetting, c.tod!.maghrib),
                         pinned,
-                        QUEST.ASR_ADHKAR,
+                        QUEST.KERAHAT_ADHKAR_SUNSET,
                         flex: 2000,
                       ),
                     ],
@@ -497,8 +493,8 @@ class ActiveQuestsUI extends StatelessWidget {
             return Column(
               children: [
                 /// First row is title of salah, with times, etc.
-                salahHeader(Zaman.Maghrib, pinned, c, false,
-                    c.prayerTimes!.maghrib, null, null),
+                salahHeader(
+                    TOD.Maghrib, pinned, c, false, c.tod!.maghrib, null, null),
                 Expanded(
                   child: Row(
                     children: [
@@ -548,8 +544,8 @@ class ActiveQuestsUI extends StatelessWidget {
             return Column(
               children: [
                 /// First row is title of salah, with times, etc.
-                salahHeader(Zaman.Isha, pinned, c, false, c.prayerTimes!.isha,
-                    null, null),
+                salahHeader(
+                    TOD.Isha, pinned, c, false, c.tod!.isha, null, null),
                 Expanded(
                   child: Row(
                     children: [
@@ -578,20 +574,20 @@ class ActiveQuestsUI extends StatelessWidget {
   }
 
   /// Note: returns GetBuilder since has FlipCard()
-  GetBuilder rowLayl(Zaman zaman, bool pinned, bool dis) {
+  GetBuilder rowLayl(TOD tod, bool pinned, bool dis) {
     return GetBuilder<ActiveQuestsController>(
       builder: (c) {
         return Column(
           children: [
             /// First row is title with times, etc.
             salahHeader(
-              zaman,
+              tod,
               pinned,
               c,
               false,
-              zaman == Zaman.Last_1__3_of_Night
-                  ? c.prayerTimes!.last3rdOfNight
-                  : c.prayerTimes!.middleOfNight,
+              tod == TOD.Last_1__3_of_Night
+                  ? c.tod!.last3rdOfNight
+                  : c.tod!.middleOfNight,
               null,
               cflipCardLayl,
             ),
@@ -646,13 +642,13 @@ class ActiveQuestsUI extends StatelessWidget {
     );
   }
 
-  bool isPinned(Zaman zaman, List<Zaman>? zamans) {
-    Zaman currPrayerName = cQstA.prayerTimes!.currZaman;
-    bool pinned = zaman == currPrayerName;
+  bool isPinned(TOD tod, List<TOD>? tods) {
+    TOD currTOD = cQstA.tod!.currTOD;
+    bool pinned = tod == currTOD;
     if (!pinned) {
-      if (zamans != null) {
-        for (Zaman prayer in zamans) {
-          if (prayer == currPrayerName) {
+      if (tods != null) {
+        for (TOD prayer in tods) {
+          if (prayer == currTOD) {
             return true;
           }
         }
@@ -664,21 +660,21 @@ class ActiveQuestsUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ActiveQuestsController>(builder: (c) {
-      if (c.prayerTimes == null) {
+      if (c.tod == null) {
         return Container(); // TODO show spinner?
       }
 
-      final bool pinnedFajr = isPinned(Zaman.Fajr, [Zaman.Fajr_Tomorrow]);
+      final bool pinnedFajr = isPinned(TOD.Fajr, [TOD.Fajr_Tomorrow]);
       final bool pinnedDuha = c.showSunnahDuha &&
-          isPinned(Zaman.Sunrise, [Zaman.Ishraq, Zaman.Duha, Zaman.Zawal]);
-      final bool pinnedDuhr = isPinned(Zaman.Dhuhr, null);
-      final bool pinnedAsr = isPinned(Zaman.Asr, [Zaman.Sun_Setting]);
-      final bool pinnedMaghrib = isPinned(Zaman.Maghrib, null);
-      final bool pinnedIsha = isPinned(Zaman.Isha, null);
+          isPinned(
+              TOD.Kerahat_Sunrise, [TOD.Ishraq, TOD.Duha, TOD.Kerahat_Zawal]);
+      final bool pinnedDuhr = isPinned(TOD.Dhuhr, null);
+      final bool pinnedAsr = isPinned(TOD.Asr, [TOD.Kerahat_Sun_Setting]);
+      final bool pinnedMaghrib = isPinned(TOD.Maghrib, null);
+      final bool pinnedIsha = isPinned(TOD.Isha, null);
       final bool pinnedLayl = c.showSunnahLayl &&
           cAjrA.isIshaIbadahComplete &&
-          isPinned(
-              Zaman.Isha, [Zaman.Middle_of_Night, Zaman.Last_1__3_of_Night]);
+          isPinned(TOD.Isha, [TOD.Middle_of_Night, TOD.Last_1__3_of_Night]);
 
       return Container(
         color: AppThemes.logoBackground,
@@ -723,9 +719,9 @@ class ActiveQuestsUI extends StatelessWidget {
                   front: rowFajr(pinnedFajr),
                   back: rowNoActionFlipCard(
                     fardRkt: '2',
-                    zaman: Zaman.Fajr_Tomorrow,
-                    salahTimeStart: c.prayerTimes!.fajrTomorrow,
-                    salahTimeEnd: c.prayerTimes!.sunriseTomorrow,
+                    tod: TOD.Fajr_Tomorrow,
+                    salahTimeStart: c.tod!.fajrTomorrow,
+                    salahTimeEnd: c.tod!.sunriseTomorrow,
                     muakBef: '2',
                     isJummahMode: false,
                     flipCardController: cflipCardFajr,
@@ -755,8 +751,8 @@ class ActiveQuestsUI extends StatelessWidget {
                             fardRkt: '2', muakAft: '6', isJummahMode: true),
                         back: rowNoActionFlipCard(
                           fardRkt: '4',
-                          zaman: Zaman.Dhuhr,
-                          salahTimeStart: c.prayerTimes!.dhuhr,
+                          tod: TOD.Dhuhr,
+                          salahTimeStart: c.tod!.dhuhr,
                           muakBef: '4',
                           muakAft: '2',
                           naflAft: '2',
@@ -783,8 +779,8 @@ class ActiveQuestsUI extends StatelessWidget {
                         ),
                         back: rowNoActionFlipCard(
                           fardRkt: '2', // Jummah Mode
-                          zaman: Zaman.Dhuhr,
-                          salahTimeStart: c.prayerTimes!.dhuhr,
+                          tod: TOD.Dhuhr,
+                          salahTimeStart: c.tod!.dhuhr,
                           muakBef: '4',
                           muakAft: '6',
                           naflAft: '2',
@@ -821,8 +817,8 @@ class ActiveQuestsUI extends StatelessWidget {
                           controller: cflipCardLayl,
                           direction: FlipDirection.HORIZONTAL,
                           front: rowLayl(
-                              Zaman.Last_1__3_of_Night, pinnedLayl, false),
-                          back: rowLayl(Zaman.Middle_of_Night, false, true),
+                              TOD.Last_1__3_of_Night, pinnedLayl, false),
+                          back: rowLayl(TOD.Middle_of_Night, false, true),
                         ),
                       ),
                     )
@@ -836,8 +832,8 @@ class ActiveQuestsUI extends StatelessWidget {
                           controller: cflipCardLayl,
                           direction: FlipDirection.HORIZONTAL,
                           front:
-                              rowLayl(Zaman.Middle_of_Night, pinnedLayl, false),
-                          back: rowLayl(Zaman.Last_1__3_of_Night, false, true),
+                              rowLayl(TOD.Middle_of_Night, pinnedLayl, false),
+                          back: rowLayl(TOD.Last_1__3_of_Night, false, true),
                         ),
                       ),
                     ),
@@ -860,7 +856,7 @@ class ActiveQuestsUI extends StatelessWidget {
   }
 
   Expanded salahHeader(
-    final Zaman zaman,
+    final TOD tod,
     final bool pinned,
     final ActiveQuestsController c,
     final bool isJummahMode,
@@ -892,7 +888,7 @@ class ActiveQuestsUI extends StatelessWidget {
                     onTap: () => c.toggleFlipCard(flipCardController),
                   ),
                 Text(
-                  isJummahMode ? 'Jummah' : zaman.name(),
+                  isJummahMode ? 'Jummah' : tod.name(),
                   style: const TS(20.0, textColor),
                   textAlign: TextAlign.center,
                 ),
@@ -907,7 +903,7 @@ class ActiveQuestsUI extends StatelessWidget {
                     ),
                     InkWell(
                       onTap: () {
-                        c.toggleSalahAlarm(zaman);
+                        c.toggleSalahAlarm(tod);
                       },
                       child: Icon(
                         Icons.alarm_outlined, // TODO

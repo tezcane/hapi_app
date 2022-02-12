@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:hapi/constants/globals.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
-import 'package:hapi/quest/active/athan/Zaman.dart';
+import 'package:hapi/quest/active/athan/TOD.dart';
 
 // cAjrA = controller ajr active (quests):
 final ActiveQuestsAjrController cAjrA = Get.find();
@@ -13,12 +13,14 @@ enum QUEST {
   FAJR_THIKR,
   FAJR_DUA,
 
-  DUHA_ADHKAR,
+  KERAHAT_ADHKAR_SUNRISE,
+
   DUHA_ISHRAQ,
   DUHA_DUHA,
-  DUHA_ZAWAL,
 
-  DHUHR_MUAKB4,
+  KERAHAT_ADHKAR_ZAWAL, // TODO does this have a adkhar too?
+
+  DHUHR_MUAKB,
   DHUHR_FARD,
   DHUHR_MUAKA, // Muakaddah After
   DHUHR_NAFLA, // Nafl After
@@ -29,7 +31,8 @@ enum QUEST {
   ASR_FARD,
   ASR_THIKR,
   ASR_DUA,
-  ASR_ADHKAR,
+
+  KERAHAT_ADHKAR_SUNSET,
 
   MAGHRIB_FARD,
   MAGHRIB_MUAKA,
@@ -71,6 +74,152 @@ extension enumUtil on QUEST {
 
   bool isThikr() => this.toString().split('.').last.endsWith('THIKR');
   bool isDua() => this.toString().split('.').last.endsWith('DUA');
+
+  bool isQuestCellTimeBound() {
+    switch (this) {
+      case (QUEST.KERAHAT_ADHKAR_SUNRISE):
+      case (QUEST.DUHA_ISHRAQ):
+      case (QUEST.DUHA_DUHA):
+      case (QUEST.KERAHAT_ADHKAR_ZAWAL):
+      case (QUEST.KERAHAT_ADHKAR_SUNSET):
+        return true;
+      default:
+        return false;
+    }
+  }
+
+  TOD getStartZaman() {
+    switch (this) {
+      case (QUEST.FAJR_MUAKB):
+      case (QUEST.FAJR_FARD):
+      case (QUEST.FAJR_THIKR):
+      case (QUEST.FAJR_DUA):
+        return TOD.Fajr;
+      case (QUEST.KERAHAT_ADHKAR_SUNRISE):
+        return TOD.Kerahat_Sunrise;
+      case (QUEST.DUHA_ISHRAQ):
+        return TOD.Ishraq;
+      case (QUEST.DUHA_DUHA):
+        return TOD.Duha;
+      case (QUEST.KERAHAT_ADHKAR_ZAWAL):
+        return TOD.Kerahat_Zawal;
+      case (QUEST.DHUHR_MUAKB):
+      case (QUEST.DHUHR_FARD):
+      case (QUEST.DHUHR_MUAKA):
+      case (QUEST.DHUHR_NAFLA):
+      case (QUEST.DHUHR_THIKR):
+      case (QUEST.DHUHR_DUA):
+        return TOD.Dhuhr;
+      case (QUEST.ASR_NAFLB):
+      case (QUEST.ASR_FARD):
+      case (QUEST.ASR_THIKR):
+      case (QUEST.ASR_DUA):
+        return TOD.Asr;
+      case (QUEST.KERAHAT_ADHKAR_SUNSET):
+        return TOD.Kerahat_Sun_Setting;
+      case (QUEST.MAGHRIB_FARD):
+      case (QUEST.MAGHRIB_MUAKA):
+      case (QUEST.MAGHRIB_NAFLA):
+      case (QUEST.MAGHRIB_THIKR):
+      case (QUEST.MAGHRIB_DUA):
+        return TOD.Maghrib;
+      case (QUEST.ISHA_NAFLB):
+      case (QUEST.ISHA_FARD):
+      case (QUEST.ISHA_MUAKA):
+      case (QUEST.ISHA_NAFLA):
+      case (QUEST.ISHA_THIKR):
+      case (QUEST.ISHA_DUA):
+        return TOD.Isha;
+      case (QUEST.LAYL_QIYAM):
+      case (QUEST.LAYL_THIKR):
+      case (QUEST.LAYL_DUA):
+      case (QUEST.LAYL_SLEEP):
+      case (QUEST.LAYL_TAHAJJUD):
+      case (QUEST.LAYL_WITR):
+        return TOD.Isha; // Note qiyam prayer can occur during isha
+      default:
+        return TOD.Isha;
+    }
+  }
+
+  TOD getEndZaman() {
+    switch (this) {
+      case (QUEST.FAJR_MUAKB):
+        return TOD.Kerahat_Sunrise;
+      case (QUEST.FAJR_FARD):
+        return TOD.Kerahat_Sunrise;
+      case (QUEST.FAJR_THIKR):
+        return TOD.Kerahat_Sunrise;
+      case (QUEST.FAJR_DUA):
+        return TOD.Kerahat_Sunrise;
+      case (QUEST.KERAHAT_ADHKAR_SUNRISE):
+        return TOD.Ishraq;
+      case (QUEST.DUHA_ISHRAQ):
+        return TOD.Duha;
+      case (QUEST.DUHA_DUHA):
+        return TOD.Kerahat_Zawal;
+      case (QUEST.KERAHAT_ADHKAR_ZAWAL):
+        return TOD.Dhuhr;
+      case (QUEST.DHUHR_MUAKB):
+        return TOD.Asr;
+      case (QUEST.DHUHR_FARD):
+        return TOD.Asr;
+      case (QUEST.DHUHR_MUAKA):
+        return TOD.Asr;
+      case (QUEST.DHUHR_NAFLA):
+        return TOD.Asr;
+      case (QUEST.DHUHR_THIKR):
+        return TOD.Asr;
+      case (QUEST.DHUHR_DUA):
+        return TOD.Kerahat_Sun_Setting;
+      case (QUEST.ASR_NAFLB):
+        return TOD.Kerahat_Sun_Setting;
+      case (QUEST.ASR_FARD):
+        return TOD.Kerahat_Sun_Setting;
+      case (QUEST.ASR_THIKR):
+        return TOD.Kerahat_Sun_Setting;
+      case (QUEST.ASR_DUA):
+        return TOD.Kerahat_Sun_Setting;
+      case (QUEST.KERAHAT_ADHKAR_SUNSET):
+        return TOD.Maghrib;
+      case (QUEST.MAGHRIB_FARD):
+        return TOD.Isha;
+      case (QUEST.MAGHRIB_MUAKA):
+        return TOD.Isha;
+      case (QUEST.MAGHRIB_NAFLA):
+        return TOD.Isha;
+      case (QUEST.MAGHRIB_THIKR):
+        return TOD.Isha;
+      case (QUEST.MAGHRIB_DUA):
+        return TOD.Isha;
+      case (QUEST.ISHA_NAFLB):
+        return TOD.Fajr_Tomorrow;
+      case (QUEST.ISHA_FARD):
+        return TOD.Fajr_Tomorrow;
+      case (QUEST.ISHA_MUAKA):
+        return TOD.Fajr_Tomorrow;
+      case (QUEST.ISHA_NAFLA):
+        return TOD.Fajr_Tomorrow;
+      case (QUEST.ISHA_THIKR):
+        return TOD.Fajr_Tomorrow;
+      case (QUEST.ISHA_DUA):
+        return TOD.Fajr_Tomorrow;
+      case (QUEST.LAYL_QIYAM):
+        return TOD.Fajr_Tomorrow;
+      case (QUEST.LAYL_THIKR):
+        return TOD.Fajr_Tomorrow;
+      case (QUEST.LAYL_DUA):
+        return TOD.Fajr_Tomorrow;
+      case (QUEST.LAYL_SLEEP):
+        return TOD.Fajr_Tomorrow;
+      case (QUEST.LAYL_TAHAJJUD):
+        return TOD.Fajr_Tomorrow;
+      case (QUEST.LAYL_WITR):
+        return TOD.Fajr_Tomorrow;
+      default:
+        return TOD.Fajr_Tomorrow;
+    }
+  }
 }
 
 class ActiveQuestsAjrController extends GetxController {
@@ -118,7 +267,7 @@ class ActiveQuestsAjrController extends GetxController {
     int sleepBackoffSecs = 1;
 
     // No internet needed to init, but we put a back off just in case:
-    while (cQstA.prayerTimes == null) {
+    while (cQstA.tod == null) {
       print(
           'ActiveQuestsAjrController.initCurrQuest: not ready, try again after sleeping $sleepBackoffSecs Secs...');
       await Future.delayed(Duration(seconds: sleepBackoffSecs));
@@ -127,11 +276,10 @@ class ActiveQuestsAjrController extends GetxController {
       }
     }
 
-    Zaman currZaman = cQstA.prayerTimes!.currZaman;
-    String currSalahRow = currZaman.salahRow();
+    TOD currZaman = cQstA.tod!.currTOD;
 
     for (QUEST quest in QUEST.values) {
-      if (currSalahRow == quest.salahRow()) {
+      if (quest.index == currZaman.getFirstQuest().index) {
         print('Stopping init: $quest = ${_questsMiss.value}');
         break;
       }
@@ -146,7 +294,12 @@ class ActiveQuestsAjrController extends GetxController {
     }
   }
 
-  int getCurrIdx() => questsAll().toRadixString(2).length;
+  int getCurrIdx() {
+    int guestsAll = questsAll();
+    if (guestsAll == 0) return 0; // "0" also length 1
+    return guestsAll.toRadixString(2).length;
+  }
+
   QUEST getCurrQuest() => QUEST.values[getCurrIdx()];
   QUEST getPrevQuest() =>
       QUEST.values[getCurrIdx() - 1 < 0 ? 0 : getCurrIdx() - 1];

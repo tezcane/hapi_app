@@ -5,8 +5,8 @@ import 'package:flip_card/flip_card_controller.dart';
 import 'package:get/get.dart';
 import 'package:hapi/constants/globals.dart';
 import 'package:hapi/controllers/auth_controller.dart';
-import 'package:hapi/quest/active/athan/PrayerTimes.dart';
-import 'package:hapi/quest/active/athan/Zaman.dart';
+import 'package:hapi/quest/active/athan/TOD.dart';
+import 'package:hapi/quest/active/athan/TimeOfDay.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
 import 'package:hapi/quest/quest_model.dart';
 import 'package:hapi/services/database.dart';
@@ -60,13 +60,13 @@ class ActiveQuestsController extends GetxController {
   RxBool _salahAsrSafe = true.obs; // true hanafi, false other
   RxBool _salahKerahatSafe = true.obs; // true hanafi, false other
 
-  PrayerTimes? _prayerTimes;
-  set prayerTimes(PrayerTimes? prayerTimes) {
-    _prayerTimes = prayerTimes;
+  TimeOfDay? _tod;
+  set tod(TimeOfDay? tod) {
+    _tod = tod;
     update();
   }
 
-  PrayerTimes? get prayerTimes => _prayerTimes;
+  TimeOfDay? get tod => _tod;
 
   @override
   void onInit() {
@@ -188,7 +188,7 @@ class ActiveQuestsController extends GetxController {
     update();
   }
 
-  void toggleSalahAlarm(Zaman fardSalah) {
+  void toggleSalahAlarm(TOD tod) {
     // TODO asdf
   }
 

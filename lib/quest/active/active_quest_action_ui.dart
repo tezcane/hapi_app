@@ -5,6 +5,8 @@ import 'package:hapi/constants/app_themes.dart';
 import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
+import 'package:hapi/quest/active/active_quests_controller.dart';
+import 'package:hapi/quest/active/athan/TOD.dart';
 
 class ActiveQuestActionUI extends StatelessWidget {
   late final QUEST _quest;
@@ -46,23 +48,31 @@ class ActiveQuestActionUI extends StatelessWidget {
         doneEnabled = false;
         noActionMsg = 'Complete other quests first';
       }
+
       if (cAjrA.isMiss(_quest)) {
         skipEnabled = false;
         doneEnabled = false;
         noActionMsg = 'Quest expired, try again tomorrow';
         // if all row quests done, don't allow next row to be started yet
       } else {
-        if (!_pinned && !isPreviousQuest) {
+        TOD currTOD = cQstA.tod!.currTOD;
+        if ((!_pinned && !isPreviousQuest) ||
+            // For Adhkhar/Duha times we don't allow user to start task until
+            // the quest's time comes in:
+            (_quest.isQuestCellTimeBound() &&
+                _quest.index != currTOD.getFirstQuest().index)) {
           skipEnabled = false;
           doneEnabled = false;
           noActionMsg = 'Quest not active yet';
         }
       }
+
       if (cAjrA.isSkip(_quest)) {
         skipEnabled = false;
         doneEnabled = false;
         noActionMsg = 'Quest was skipped';
       }
+
       if (cAjrA.isDone(_quest)) {
         skipEnabled = false;
         doneEnabled = false;

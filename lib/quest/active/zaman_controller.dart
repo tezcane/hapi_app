@@ -8,9 +8,9 @@ import 'package:hapi/quest/active/athan/CalculationMethod.dart';
 import 'package:hapi/quest/active/athan/CalculationParameters.dart';
 import 'package:hapi/quest/active/athan/Coordinates.dart';
 import 'package:hapi/quest/active/athan/Madhab.dart';
-import 'package:hapi/quest/active/athan/PrayerTimes.dart';
 import 'package:hapi/quest/active/athan/Qibla.dart';
-import 'package:hapi/quest/active/athan/Zaman.dart';
+import 'package:hapi/quest/active/athan/TOD.dart';
+import 'package:hapi/quest/active/athan/TimeOfDay.dart';
 import 'package:timezone/data/latest.dart' show initializeTimeZones;
 import 'package:timezone/timezone.dart' show Location, TZDateTime, getLocation;
 
@@ -69,10 +69,10 @@ class ZamanController extends GetxController {
       params.kerahatSunSettingMins = 20;
     }
     // TODO fix all this, date should change at FAJR_TOMORROW hit only?
-    cQstA.prayerTimes = PrayerTimes(_gps, date, params, _timeZone!, false);
+    cQstA.tod = TimeOfDay(_gps, date, params, _timeZone!, false);
 
     // reset day:
-    if (cQstA.prayerTimes!.currZaman == Zaman.Fajr_Tomorrow) {
+    if (cQstA.tod!.currTOD == TOD.Fajr_Tomorrow) {
       cAjrA.clearAllQuests();
     }
     // For next prayer/day, set any missed quests and do other quest setup:
@@ -85,7 +85,7 @@ class ZamanController extends GetxController {
 
   void startNextZamanCountdownTimer() {
     Timer(Duration(seconds: 1), () {
-      Duration timeToNextZaman = cQstA.prayerTimes!.nextZamanTime
+      Duration timeToNextZaman = cQstA.tod!.nextTODTime
           .difference(TZDateTime.from(DateTime.now(), _timeZone!));
 
       // if we hit the end of a timer (or forced), recalculate zaman times:
