@@ -15,20 +15,25 @@ import 'package:hapi/quest/active/athan/TOD.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
 import 'package:im_animations/im_animations.dart';
 
+final Color colorSalahBottom = Colors.grey.shade800;
+
 class ActiveQuestsUI extends StatelessWidget {
   static const double SALAH_ACTIONS_HEIGHT = 62;
 
-  static const TS tsAppBar = const TS(9.5, Colors.white);
-  static const TS tsAppBarTime = const TS(24.0, Colors.white);
+  static const TS tsAppBar = const TS(9.5, Colors.white70);
+  static const TS tsAppBarTime = const TS(24.0, Colors.white70);
 
-  static const Color textColor = Colors.white;
-  static const TS tsWhite = const TS(17.0, Colors.white);
+  static const Color colorSalahTopActive = Color(0xFF268E0D);
+  static final Color colorSalahTopInactive =
+      Colors.grey.shade700; //lightBlue.shade600
+  static const Color textColor = Colors.white70;
+  static const TS tsWhite = const TS(17.0, Colors.white70);
   static const TS tsFard = const TS(17.0, Colors.red);
   static const TS tsMuak = const TS(17.0, Colors.green);
   static final TS tsNafl = TS(17.0, Colors.amber.shade700);
-  static final TS tsDuha = TS(17.0, Colors.yellow.shade300);
-  static final TS tsQyam = TS(17.0, Colors.cyan.shade300);
-  static final TS tsThjd = TS(17.0, Colors.blue.shade100);
+  static final TS tsDuha = TS(17.0, Colors.white70);
+  static final TS tsQyam = TS(17.0, Colors.white70);
+  static final TS tsThjd = TS(17.0, Colors.white70);
   static const TS tsWitr = const TS(17.0, Colors.pinkAccent);
 
   static final FlipCardController cflipCardFajr = FlipCardController();
@@ -58,7 +63,7 @@ class ActiveQuestsUI extends StatelessWidget {
                               Text(' ends', style: tsAppBar),
                               SizedBox(width: 1),
                               Icon(Icons.arrow_right_alt_rounded,
-                                  color: Colors.white, size: 12),
+                                  color: Colors.white70, size: 12),
                               SizedBox(width: 5),
                             ],
                           ),
@@ -68,7 +73,7 @@ class ActiveQuestsUI extends StatelessWidget {
                               Text(' in', style: tsAppBar),
                               SizedBox(width: 1),
                               Icon(Icons.arrow_right_alt_rounded,
-                                  color: Colors.white, size: 12),
+                                  color: Colors.white70, size: 12),
                               SizedBox(width: 5),
                             ],
                           ),
@@ -354,7 +359,7 @@ class ActiveQuestsUI extends StatelessWidget {
                   Cell(
                     P.E,
                     SunCell(
-                      IconSun(),
+                      IconSunBright(),
                       "Zawal",
                       c.tod!.zawal,
                       c.tod!.dhuhr,
@@ -874,8 +879,8 @@ class ActiveQuestsUI extends StatelessWidget {
           ),
           child: Container(
             color: pinned && ((!isJummahMode) || (isJummahMode && c.isFriday()))
-                ? Color(0xFF268E0D)
-                : Colors.lightBlue.shade600,
+                ? colorSalahTopActive
+                : colorSalahTopInactive,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -883,7 +888,8 @@ class ActiveQuestsUI extends StatelessWidget {
                   InkWell(
                     child: Transform.rotate(
                       angle: 1.5708, // <- radian = 90 degrees
-                      child: Icon(Icons.swap_vert_outlined),
+                      child: Icon(Icons.swap_vert_outlined,
+                          size: 21, color: Colors.white38),
                     ),
                     onTap: () => c.toggleFlipCard(flipCardController),
                   ),
@@ -908,7 +914,7 @@ class ActiveQuestsUI extends StatelessWidget {
                       child: Icon(
                         Icons.alarm_outlined, // TODO
                         size: 20,
-                        color: Colors.white,
+                        color: Colors.white70,
                       ),
                     ),
                   ],
@@ -1005,24 +1011,24 @@ class Cell extends StatelessWidget {
               bottomRight: Radius.circular(_cellPlacement == P.E ? 15.0 : 0),
             ),
             child: Container(
-              color: Colors.grey.shade800,
+              color: colorSalahBottom,
               child: Stack(
                 children: [
                   _actionWidget,
                   if (cAjrA.isDone(_quest))
                     Center(
-                      child: Icon(Icons.tag_faces_outlined,
+                      child: Icon(Icons.check_outlined,
                           size: 30, color: Colors.green),
                     ),
                   if (cAjrA.isSkip(_quest))
                     Center(
                       child: Icon(Icons.redo_outlined,
-                          size: 35, color: Colors.deepOrangeAccent),
+                          size: 20, color: Colors.red),
                     ),
                   if (cAjrA.isMiss(_quest))
                     Center(
-                      child: Icon(Icons.dnd_forwardslash_outlined,
-                          size: 30, color: Colors.red),
+                      child: Icon(Icons.close_outlined,
+                          size: 20, color: Colors.red),
                     ),
                 ],
               ),
@@ -1078,7 +1084,7 @@ class SunCell extends StatelessWidget {
   final DateTime? _time2;
 
   static const TS _tsAdhkar =
-      const TS(11.0, Colors.white, fontWeight: FontWeight.normal);
+      const TS(11.0, Colors.white70, fontWeight: FontWeight.normal);
 
   @override
   Widget build(BuildContext context) {
@@ -1116,7 +1122,7 @@ class IconSunrise extends StatelessWidget {
           top: 9,
           left: 0,
           child: Container(
-            color: Colors.grey.shade800,
+            color: colorSalahBottom,
             height: 10,
             width: 20,
             //child: SizedBox(height: 10),
@@ -1126,7 +1132,7 @@ class IconSunrise extends StatelessWidget {
           top: 5.5,
           left: .9,
           child: Icon(Icons.arrow_drop_up_outlined,
-              color: Colors.yellow, size: 16),
+              color: Colors.white38, size: 16),
         )
       ],
     );
@@ -1145,7 +1151,7 @@ class IconSunset extends StatelessWidget {
           top: 9,
           left: 0,
           child: Container(
-            color: Colors.grey.shade800,
+            color: colorSalahBottom,
             height: 10,
             width: 20,
           ),
@@ -1154,7 +1160,7 @@ class IconSunset extends StatelessWidget {
           top: 5.5,
           left: .9,
           child: Icon(Icons.arrow_drop_down_outlined,
-              color: Colors.yellow, size: 16),
+              color: Colors.white38, size: 16),
         )
       ],
     );
@@ -1163,6 +1169,19 @@ class IconSunset extends StatelessWidget {
 
 class IconSun extends StatelessWidget {
   const IconSun();
+
+  @override
+  Widget build(BuildContext context) {
+    return Icon(
+      Icons.brightness_7_outlined,
+      color: Colors.orange,
+      size: 18,
+    );
+  }
+}
+
+class IconSunBright extends StatelessWidget {
+  const IconSunBright();
 
   @override
   Widget build(BuildContext context) {
@@ -1182,10 +1201,11 @@ class IconThikr extends StatelessWidget {
     return Stack(
       children: [
         Center(
-          child: Icon(Icons.favorite_outlined, color: Colors.pink, size: 33),
+          child: Icon(Icons.favorite_outlined, color: Colors.grey, size: 33),
         ),
         Center(
-          child: Icon(Icons.psychology_outlined, color: Colors.brown, size: 21),
+          child:
+              Icon(Icons.psychology_outlined, color: Colors.white38, size: 21),
         ),
       ],
     );
