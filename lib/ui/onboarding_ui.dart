@@ -14,28 +14,32 @@ class OnboardingUI extends StatelessWidget {
           PageModel(
               color: const Color(0xFF0A0E21),
               imageAssetPath: 'assets/images/logo/logo.png',
-              title: 'What is hapi?',
-              body: '\n\nSwipe left or hit "NEXT" to continue',
+              title: '',
+              body:
+                  '\n\n\n\nSwipe left or hit "NEXT" to learn about hapi', // TODO arabic swipe right?
               doAnimateImage: true),
           PageModel(
               color: const Color(0xFF111328),
               imageAssetPath: 'assets/images/logo/logo.png',
-              title: 'Islamic Lifestyle Game',
+              title: 'Earn Rewards and Improve Yourself',
               body:
-                  '\n\nGet rewarded for daily religious and healthy actions to improve your life, in this world and the next.',
+                  '\n\nEarn rewards in hapi by developing religious and healthy habbits.'
+                  '\n\n'
+                  'Rewards are used in game but more importantly, you will collect mountains of good deeds for the Hereafter!',
               doAnimateImage: false),
           PageModel(
               color: const Color(0xFF1D1E33),
               imageAssetPath: 'assets/images/logo/logo.png',
-              title: 'Discover Islam',
+              title: 'Discover Endless Islamic Wisdom',
               body:
-                  '\n\nLearn deep religious and historical knowledge in a beautiful and fun way.',
+                  '\n\nLearn deep religious and historical knowledge in an organized, beautiful and fun way.',
               doAnimateImage: false),
           PageModel(
               color: const Color(0xFF1D1E44),
               imageAssetPath: 'assets/images/logo/logo.png',
-              title: 'Use Islamic Resources',
-              body: '\n\nAthan, Qiblah, Quran, Hadith and much more...',
+              title: 'Use Helpful Resources',
+              body:
+                  '\n\nQuran, Hadith, Athan, Qiblah, TODO list and much more...',
               doAnimateImage: false),
         ],
         skipText: '',

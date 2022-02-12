@@ -65,19 +65,31 @@ class AboutUI extends StatelessWidget {
                           recognizer: TapGestureRecognizer()
                             ..onTap = () => _launchUrl('https://www.hapi.net')),
                       TextSpan(
-                        text: ' is built by volunteer Muslim engineers, '
-                            'scholars and historians.'
-                            '\n\n'
-                            'We hope it helps improve your hapi-ness, in this world '
-                            'and the next. May Allah SWT give us Firdaus. Ameen! '
-                            '\n\n'
-                            'hapi will never track or sell your personal information. '
-                            'Please support us with your dua and telling others.',
-                      ),
+                          text: ' is built by volunteer Muslim engineers, '
+                              'scholars and historians.'
+                              '\n\n'
+                              'We hope it helps improve your hapi-ness, in this life '
+                              'and the next. May Allah SWT give us Firdaus. Ameen! '
+                              '\n\n'
+                              'hapi will never track or sell your personal information. '
+                              'Please support us with your dua, telling others and '
+                              'donations: '
+                              '\n\n'),
+                      TextSpan(
+                          text: 'paypal',
+                          style: TextStyle(
+                              // fontFamily: 'Lobster',
+                              // fontSize: 25.0,
+                              color: AppThemes.logoText,
+                              fontWeight: FontWeight.bold,
+                              decoration: TextDecoration.underline),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () =>
+                                _launchUrl('https://www.paypal.net/hapi')),
                     ],
                   ),
                 ),
-                SizedBox(height: 50.0),
+                SizedBox(height: 80.0),
                 Text(
                   'hapi app version 0.0.0', // TODO tie to build release version
                   style: TextStyle(
