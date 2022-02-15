@@ -1,34 +1,34 @@
-## CODE GLOSSARY
+## CODE GLOSSARY  
 
-AC   - AnimationController
-Aft  - After
-Bef  - Before
-btn  - Button
-C    - Controller
-curr - Current
-dis  - Disabled
-dn   - down (use with up: up/dn)
-e    - exception
-idx  - Index
-lr   - left right
-msg  - message
-muak - Muakkadah
-nav  - Navigate/Navigator
-np   - NavPage
-P    - placement (start, center, end)
-qyam - Qiyam
-qust - Quest
-Rkt  - Rakat
-s    - storage/Get Storage
-t    - timeline
-ts   - text style
-thjd - Tahajjud
-tz   - time zone
-trkh - Tarikh
+AC   - AnimationController  
+Aft  - After  
+Bef  - Before  
+btn  - Button  
+C    - Controller  
+curr - Current  
+dis  - Disabled  
+dn   - down (use with up: up/dn)  
+e    - exception  
+idx  - Index  
+lr   - left right  
+msg  - message  
+muak - Muakkadah  
+nav  - Navigate/Navigator  
+np   - NavPage  
+P    - placement (start, center, end)  
+qyam - Qiyam  
+qust - Quest  
+Rkt  - Rakat  
+s    - storage/Get Storage  
+t    - timeline  
+ts   - text style  
+thjd - Tahajjud  
+tz   - time zone  
+trkh - Tarikh  
 
-## Islamic GLOSSARY
+## Islamic GLOSSARY  
 
-tarikh - history
+tarikh - history  
 
 ## GetX Flutter Firebase Auth Example
 
