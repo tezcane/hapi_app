@@ -14,6 +14,7 @@ import 'package:hapi/tarikh/article/tarikh_article_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_favorites_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_menu_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_search_ui.dart';
+import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
 import 'package:hapi/ui/about_ui.dart';
 
@@ -178,6 +179,8 @@ class MenuController extends GetxController {
   }) {
     _showNavSettings.value = false; // clear last setting icon if was showing
 
+    TarikhController.t.isActive = false; // turn off timeline rendering
+
     switch (navPage) {
       case (NavPage.STATS):
         Get.offAll(
@@ -257,6 +260,11 @@ class MenuController extends GetxController {
 
     _subPageStack.add(subPage);
 
+    // turn off timeline rendering, in case it was previously showing/on
+    if (subPage != SubPage.TARIKH_TIMELINE) {
+      TarikhController.t.isActive = false;
+    }
+
     switch (subPage) {
       case (SubPage.TARIKH_FAVORITE):
         Get.to(
@@ -317,6 +325,11 @@ class MenuController extends GetxController {
     } else {
       if (_subPageStack.length > 1) {
         _subPageStack.removeLast();
+
+        // timeline showing again so turn timeline rendering on
+        if (_subPageStack[0] == SubPage.TARIKH_TIMELINE) {
+          TarikhController.t.isActive = true;
+        }
       }
       Get.back(); // pop the sub menu stack
     }

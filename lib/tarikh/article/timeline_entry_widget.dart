@@ -2,20 +2,20 @@ import 'dart:math';
 import 'dart:ui';
 import "dart:ui" as ui;
 
-import 'package:flare_flutter/flare.dart' as flare;
 import 'package:flare_dart/math/aabb.dart' as flare;
 import 'package:flare_dart/math/vec2d.dart' as flare;
+import 'package:flare_flutter/flare.dart' as flare;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:nima/nima.dart' as nima;
-import 'package:nima/nima/math/aabb.dart' as nima;
-import 'package:nima/nima/math/vec2d.dart' as nima;
 import 'package:hapi/tarikh/article/controllers/amelia_controller.dart';
 import 'package:hapi/tarikh/article/controllers/flare_interaction_controller.dart';
 import 'package:hapi/tarikh/article/controllers/newton_controller.dart';
 import 'package:hapi/tarikh/article/controllers/nima_interaction_controller.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
+import 'package:nima/nima.dart' as nima;
+import 'package:nima/nima/math/aabb.dart' as nima;
+import 'package:nima/nima/math/vec2d.dart' as nima;
 
 /// This widget renders a single [TimelineEntry]. It relies on a [LeafRenderObjectWidget]
 /// so it can implement a custom [RenderObject] and update it accordingly.
@@ -578,8 +578,13 @@ class VignetteRenderObject extends RenderBox {
       }
     }
 
-    /// Invalidate the current widget visual state and let Flutter paint it again.
-    markNeedsPaint();
+    // Tez: fixes exception when hitting back button from history detail page
+    // TODO isActive was not here before, needed to fix exception after upgrading
+    // flutter version:
+    if (isActive) {
+      /// Invalidate the current widget visual state and let Flutter paint it again.
+      markNeedsPaint();
+    }
 
     /// Schedule a new frame to update again - but only if needed.
     if (isActive && !_isFrameScheduled) {

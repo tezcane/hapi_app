@@ -812,7 +812,10 @@ class Timeline {
       SchedulerBinding.instance!.scheduleFrameCallback(beginFrame);
     }
 
-    if (onNeedPaint != null) {
+    // Tez: fixes exception when hitting back button from timeline back to root page
+    // TODO isActive was not here before, needed to fix exception after upgrading
+    // flutter version:
+    if (isActive && onNeedPaint != null) {
       onNeedPaint!();
     }
   }

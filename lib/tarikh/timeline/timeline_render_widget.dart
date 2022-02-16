@@ -63,6 +63,7 @@ class TimelineRenderWidget extends LeafRenderObjectWidget {
       ..needsRepaint = needsRepaint;
   }
 
+  // TODO needed?, was originally here:
   @override
   didUnmountRenderObject(covariant TimelineRenderObject renderObject) {
     TarikhController.t.isActive = false;

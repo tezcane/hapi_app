@@ -60,6 +60,13 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   Color? _headerTextColor;
   Color? _headerBackgroundColor; // TODO should we delete?
 
+  // TODO needed? was originally not here:
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   t.isActive = false;
+  // }
+
   @override
   initState() {
     t.isActive = true;
@@ -168,13 +175,13 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
       if (_touchedBubble!.zoom) {
         _navigateToTimeline(_touchedBubble!.entry!, devicePadding.top);
       } else {
-        t.isActive = false;
+        //t.isActive = false; now done inside menu controller
 
         cMenu.pushSubPage(SubPage.TARIKH_ARTICLE, arguments: {
           'article': _touchedBubble!.entry!,
         });
 
-        t.isActive = true; // TODO working? was below:
+        //t.isActive = true; // TODO working? was below:
         // Navigator.of(context)
         //     .push(MaterialPageRoute(
         //         builder: (BuildContext context) => TarikhArticleUI(
