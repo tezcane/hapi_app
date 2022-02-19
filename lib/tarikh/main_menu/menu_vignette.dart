@@ -450,7 +450,11 @@ class MenuVignetteRenderObject extends RenderBox {
     }
 
     /// Invalidate the current widget visual state and let Flutter paint it again.
-    markNeedsPaint();
+    // Tez: fixes exception when hitting back button from history detail page
+    //     // TODO isActive was not here before, needed to fix exception after upgrading
+    //     // flutter version:
+    //     if (isActive) {
+    if (_isActive) markNeedsPaint();
 
     /// Schedule a new frame to update again - but only if needed.
     if (isActive && !_isFrameScheduled) {
