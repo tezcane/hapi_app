@@ -3,7 +3,6 @@ import 'dart:ui' as ui;
 
 import 'package:flare_dart/math/aabb.dart' as flare;
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:hapi/tarikh/colors.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';

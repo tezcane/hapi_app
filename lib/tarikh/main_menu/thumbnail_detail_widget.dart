@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hapi/tarikh/colors.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';

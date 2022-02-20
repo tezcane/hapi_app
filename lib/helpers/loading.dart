@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-//import 'package:flutter/cupertino.dart';
 
 //loading indicator code is a modified and simplified version of this code
 //https://github.com/fayaz07/ots

@@ -1,4 +1,3 @@
-//import 'package:flutter/cupertino.dart'; //TODO what's this for?
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/components/dropdown_picker.dart';

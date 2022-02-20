@@ -1,7 +1,6 @@
-import 'package:flutter/cupertino.dart';
+import "package:flare_flutter/flare_actor.dart" as flare;
 import 'package:flutter/material.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
-import "package:flare_flutter/flare_actor.dart" as flare;
 import 'package:hapi/tarikh/main_menu/menu_vignette.dart';
 
 typedef NavigateTo(MenuItemData item);

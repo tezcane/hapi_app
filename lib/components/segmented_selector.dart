@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 //import 'package:hapi/components/sliding_segmented_control.dart';
 
 /// a control used to select the theme.
