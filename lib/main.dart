@@ -6,21 +6,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:hapi/constants/app_routes.dart';
-import 'package:hapi/constants/app_themes.dart';
-import 'package:hapi/controllers/auth_controller.dart';
-import 'package:hapi/controllers/language_controller.dart';
-import 'package:hapi/controllers/onboarding_controller.dart';
-import 'package:hapi/controllers/theme_controller.dart';
-import 'package:hapi/helpers/localization.g.dart';
+import 'package:hapi/app_routes.dart';
+import 'package:hapi/helpers/loading.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/onboard/auth/auth_controller.dart';
+import 'package:hapi/onboard/onboarding_controller.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
+import 'package:hapi/settings/language/language_controller.dart';
+import 'package:hapi/settings/language/localization.g.dart';
+import 'package:hapi/settings/theme/app_themes.dart';
+import 'package:hapi/settings/theme/theme_controller.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
-import 'package:hapi/ui/components/loading.dart';
 
+final GetStorage s = GetStorage(); // TODO better place/way to handle this?
+
+/// contains info for maintaining the state of the app for the theme, language
+/// and user. It initializes language and theme settings. Sets up routing.
 void main() async {
   // TODO REMOVE THIS CODE LATER BUT USED TO DETECT ANDROID EMULATOR FAILING NETWORK CONNECTIONS
   /// to enable logs (disabled by default)
@@ -48,8 +52,8 @@ void main() async {
   // print(aya.text); // الْحَمْدُ لِلَّهِ رَبِّ الْعَالَمِينَ
 
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
   await GetStorage.init();
+  await Firebase.initializeApp();
 
   // TODO cleanup/optimize use Getx bindings?
   Get.put<MainController>(MainController());
@@ -62,6 +66,7 @@ void main() async {
   Get.put<TarikhController>(TarikhController());
   Get.put<ThemeController>(ThemeController());
   Get.put<LanguageController>(LanguageController());
+
   runApp(const MyApp());
 }
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/constants/app_themes.dart';
 import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/settings/theme/app_themes.dart';
 
 class MenuSlide extends StatefulWidget {
   final Widget foregroundPage; // where the app/navigation lives

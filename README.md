@@ -56,7 +56,7 @@ There are many other features of GetX to make things simpler, such as working wi
 
 When building an auth project there are a lot of the features you need for a production flutter project. I wanted light and dark mode theming but also the ability to detect and switch themes automatically. I needed the ability to switch between languages easily and automatically detect the user’s language. I wanted a simple way to handle translating from english (the only language I know unfortunately). This is accomplished by running a commandline app to generate the GetX Localization class which pulls from a [google sheet](https://docs.google.com/spreadsheets/d/1oS7iJ6ocrZBA53SxRfKF0CG9HAaXeKtzvsTBhgG4Zzk/edit#gid=0) and easily translate into other languages. Also I needed a way to [do simple user roles](https://medium.com/firebase-developers/patterns-for-security-with-firebase-group-based-permissions-for-cloud-firestore-72859cdec8f6) and it needed to be secure. I see a lot of auth packages including roles in the user’s collection in firestore which is usually editable by that same user. This would make it trivial for the user to assign himself admin privileges. I also wanted to show how to put some basic rules in firestore to secure it. Finally I wanted to have a way the user could alter their profile and change their email or password.
 
-To handle the language translation you need to create a translation for your app in google sheets.  Then open /helpers/update_localizations.dart and replace the docID and sheetId with your own documentId and sheetId.  After doing that your will need to drop to the command line and go into the helpers directory.  Then type: ```dart update_localizations.dart```.  This will create or overwrite the localization.g.dart file with your custom translation.  There should not be a need to edit this file directly.  Everytime you make changes to your translation you will need to re-run this generator.
+To handle the language translation you need to create a translation for your app in google sheets.  Then open /settings/language/update_localizations.dart and replace the docID and sheetId with your own documentId and sheetId.  After doing that your will need to drop to the command line and go into the settings/language directory.  Then type: ```dart update_localizations.dart```.  This will create or overwrite the localization.g.dart file with your custom translation.  There should not be a need to edit this file directly.  Everytime you make changes to your translation you will need to re-run this generator.
 
 ![](https://cdn-images-1.medium.com/max/2000/0*9-A7El_nRDBz-ecK)
 
@@ -74,83 +74,7 @@ The first rule matches any user in the admin collection and allows you to read t
 
 Finally I wanted to explain a little bit about my ui. I try to control as much as possible with the theme. You can change a lot about the look with the user interface by changing the theme. I am still learning about what all can be changed with just the theme. I also break out small ui components into a separate components folder. Then I make a custom widget instead of using the standard widget directly. This allows me to make changes in one spot if I decide to make ui changes to say a form field in my form_input_field.dart instead of changing a bunch of TextFormField widgets spread through a dozen files.
 
-## Overview of project
-
-**main.dart** — contains info for maintaining the state of the app for the theme, language and user. It initializes language and theme settings. Sets up routing.
-
-
-
-## /constants/
-
-**app_themes.dart** — contains info related to our light and dark themes.
-
-**globals.dart** — contains some global app settings
-
-**app_routes.dart** — contains the app routes.
-
-## /controllers/
-
-**auth_controller.dart** — our user and authentication functions for creating, logging in and out our user and saving our user data.
-
-**language_controller.dart** — saves and loads our selected language.
-
-**theme_controller.dart** — saves and loads our selected theme.
-
-## /helpers/
-
-**validator.dart** — contains some validation functions for our form fields.
-**update_localizations.dart** — commandline dart app that generates the localization.g.dart file.
-
-**localizations.g.dart** — this file is generated from our google sheet (do not manually edit this file).
-
-## /models/
-
-**user_model.dart** — contains the model for our user saved in firestore.
-
-**menu_option_model.dart** — contains our model for our language options and theme options in settings.
-
-## /ui/
-
+TODO where did this go?:
 **home_ui.dart** — contains the ui for the home which shows info about the user.
 
-**settings_ui.dart** — contains the settings screen for setting the theme and language and some user settings.
-
-**splash_ui.dart** — contains the initial loading screen, currently just a circular progress indicator.
-
-## /ui/auth/
-
-**reset_password_ui.dart** — sends a password reset email to the user.
-
-**sign_in_ui.dart** — allows user to login with email and password.
-
-**sign_up_ui.dart** — allows user to create a new account.
-
-**update_profile_ui.dart** — allows user to change his email or name.
-
-## /ui/components/
-
-**avatar.dart** — displays a user avatar on the home_ui.
-
-**dropdown_picker.dart** — shows a dropdown list.
-
-**dropdown_picker_with_icon.dart** — shows a dropdown list with icons.
-
-**form_input_field.dart** — handles our form field elements.
-
-**form_input_field_with_icon.dart** — handles our form field elements but has an icon too.
-
-**form_vertical_spacing.dart** — just a space in the ui.
-
-**label_button.dart** — one type of button in ui.
-
-**loading.dart** — circular loading indicator overlay.
-
-**logo_graphic_header.dart** — a graphic displayed in our ui.
-
-**primary_button.dart** — another button in the ui.
-
-**segmented_selector.dart** — a control used to select the theme.
-
-Provider is also a great package and what I was using for Flutter development until I found GetX. Flutter is still new and evolving fast. It is fun to watch it progress so rapidly with the help of the Flutter community!
-
-Anyway hopefully this project will help someone. Feel free to use any of it, I didn’t create all of this code as parts of it came from watching the tutorials and reviewing the projects mentioned above. Make sure you [setup firebase](https://firebase.google.com/docs/flutter/setup?platform=android) with your project.
+Make sure you [setup firebase](https://firebase.google.com/docs/flutter/setup?platform=android) with your project.

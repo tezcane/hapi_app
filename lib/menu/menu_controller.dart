@@ -5,8 +5,9 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/constants/globals.dart';
+import 'package:hapi/main.dart';
 import 'package:hapi/main_controller.dart';
+import 'package:hapi/menu/about_ui.dart';
 import 'package:hapi/menu/menu_nav.dart';
 import 'package:hapi/quest/active/active_quest_action_ui.dart';
 import 'package:hapi/quest/quests_ui.dart';
@@ -16,7 +17,6 @@ import 'package:hapi/tarikh/main_menu/tarikh_menu_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_search_ui.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
-import 'package:hapi/ui/about_ui.dart';
 
 final MenuController cMenu = Get.find();
 

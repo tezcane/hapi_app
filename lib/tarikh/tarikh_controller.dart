@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
-import 'package:hapi/constants/globals.dart';
+import 'package:hapi/main.dart';
 import 'package:hapi/tarikh/search_manager.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';

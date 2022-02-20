@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:hapi/constants/globals.dart';
+import 'package:hapi/main.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/TOD.dart';
 

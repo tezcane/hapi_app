@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:hapi/controllers/auth_controller.dart';
+import 'package:hapi/onboard/auth/auth_controller.dart';
 import 'package:hapi/quest/quest_model.dart';
 
 class Database {

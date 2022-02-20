@@ -2,16 +2,16 @@ import 'package:bottom_bar/bottom_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:get/get.dart';
-import 'package:hapi/constants/app_themes.dart';
-import 'package:hapi/controllers/auth_controller.dart';
 import 'package:hapi/menu/fab_nav_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/onboard/auth/auth_controller.dart';
+import 'package:hapi/settings/settings_ui.dart';
+import 'package:hapi/settings/theme/app_themes.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/active_quests_settings_ui.dart';
 import 'package:hapi/quest/active/active_quests_ui.dart';
 import 'package:hapi/quest/quest_card.dart';
 import 'package:hapi/services/database.dart';
-import 'package:hapi/ui/settings_ui.dart';
 
 class QuestsUI extends StatelessWidget {
   @override
@@ -31,7 +31,7 @@ class QuestBottomBarUI extends StatefulWidget {
 }
 
 class _QuestBottomBarUIState extends State<QuestBottomBarUI> {
-//final TextEditingController _textEditingController = TextEditingController();
+  final TextEditingController _textEditingController = TextEditingController();
   int _currentPage = 0; // TODO turn off settings on other quest pages
   final _pageController = PageController();
 
@@ -42,10 +42,10 @@ class _QuestBottomBarUIState extends State<QuestBottomBarUI> {
         controller: _pageController,
         children: [
           ActiveQuestsUI(),
+          UserQuest(textEditingController: _textEditingController),
           Container(color: AppThemes.logoBackground),
           Container(color: AppThemes.logoBackground),
-          Container(color: AppThemes.logoBackground),
-          // UserQuest(textEditingController: _textEditingController),
+          //Container(color: AppThemes.logoBackground),
         ],
         onPageChanged: (index) {
           setState(() => _currentPage = index);
