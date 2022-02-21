@@ -136,13 +136,13 @@ class AuthController extends GetxController {
     return _db
         .doc('/user/${firebaseUser.value!.uid}')
         .snapshots()
-        .map((snapshot) => UserModel.fromMap(snapshot.data()!));
+        .map((snapshot) => UserModel.fromJson(snapshot.data()!));
   }
 
   //get the firestore user from the firestore collection
   Future<UserModel> getFirestoreUser() {
     return _db.doc('/user/${firebaseUser.value!.uid}').get().then(
-        (documentSnapshot) => UserModel.fromMap(documentSnapshot.data()!));
+        (documentSnapshot) => UserModel.fromJson(documentSnapshot.data()!));
   }
 
   //Method to handle user sign in using email and password
