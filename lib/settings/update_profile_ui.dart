@@ -11,7 +11,6 @@ import 'package:hapi/onboard/auth/auth_controller.dart';
 import 'package:hapi/onboard/user_model.dart';
 import 'package:hapi/settings/reset_password_ui.dart';
 
-// TODO UPDATING profile with wrong password makes spinner forever, bad pass in shell received from firestore but not hanlded
 /// allows user to change his email or name.
 class UpdateProfileUI extends StatelessWidget {
   final AuthController authController = AuthController.to;
@@ -36,7 +35,7 @@ class UpdateProfileUI extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   LogoGraphicHeader(),
-                  SizedBox(height: 48.0),
+                  const SizedBox(height: 48.0),
                   FormInputFieldWithIcon(
                     controller: authController.nameController,
                     iconPrefix: Icons.person,
@@ -91,10 +90,10 @@ class UpdateProfileUI extends StatelessWidget {
   Future<void> _updateUserConfirm(
       BuildContext context, UserModel updatedUser, String oldEmail) async {
     final AuthController authController = AuthController.to;
-    final TextEditingController _password = new TextEditingController();
+    final TextEditingController _password = TextEditingController();
     return Get.dialog(
       AlertDialog(
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(8.0))),
         title: Text(
           'auth.enterPassword'.tr,
@@ -103,28 +102,21 @@ class UpdateProfileUI extends StatelessWidget {
           controller: _password,
           iconPrefix: Icons.lock,
           labelText: 'auth.passwordFormField'.tr,
-          validator: (value) {
-            String pattern = r'^.{6,}$';
-            RegExp regex = RegExp(pattern);
-            if (!regex.hasMatch(value!))
-              return 'validator.password'.tr;
-            else
-              return null;
-          },
+          validator: Validator().password,
           obscureText: true,
           onChanged: (value) => null,
           onSaved: (value) => _password.text = value!,
           maxLines: 1,
         ),
         actions: <Widget>[
-          new TextButton(
-            child: new Text('auth.cancel'.tr.toUpperCase()),
+          TextButton(
+            child: Text('auth.cancel'.tr.toUpperCase()),
             onPressed: () {
               Get.back();
             },
           ),
-          new TextButton(
-            child: new Text('auth.submit'.tr.toUpperCase()),
+          TextButton(
+            child: Text('auth.submit'.tr.toUpperCase()),
             onPressed: () async {
               Get.back();
               await authController.updateUser(

@@ -11,6 +11,7 @@ dis  - Disabled
 dn   - down (use with up: up/dn)  
 e    - exception  
 idx  - Index  
+Lctn - Location (controller)
 lr   - left right  
 msg  - message  
 muak - Muakkadah  

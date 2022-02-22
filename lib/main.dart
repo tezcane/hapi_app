@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hapi/app_routes.dart';
 import 'package:hapi/controllers/connectivity_controller.dart';
-//import 'package:hapi/controllers/location_controller.dart';
+import 'package:hapi/controllers/location_controller.dart';
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/helpers/loading.dart';
 import 'package:hapi/main_controller.dart';
@@ -59,9 +59,9 @@ void main() async {
   await Firebase.initializeApp();
 
   // TODO cleanup/optimize use Getx bindings?
-//Get.put<LocationController>(LocationController());
-  Get.put<TimeController>(TimeController());
+  Get.put<LocationController>(LocationController());
   Get.put<ConnectivityController>(ConnectivityController());
+  Get.put<TimeController>(TimeController());
   Get.put<MainController>(MainController());
   Get.put<OnboardingController>(OnboardingController());
   Get.put<AuthController>(AuthController());
