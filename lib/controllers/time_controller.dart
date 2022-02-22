@@ -38,13 +38,11 @@ class TimeController extends GetxController {
 
   /// Gets NTP time from server when called, if internet is on
   updateNtpTime() async {
-    print('cTime:updateNtpTime: Called');
-
     if (!cConn.isInternetOn) {
-      print('cTime:updateNtpTime: connectivity isInternetOn=false');
+      print('cTime:updateNtpTime: aborting NTP update, no internet connection');
       return;
     }
-
+    print('cTime:updateNtpTime: Called');
     DateTime appTime = DateTime.now().toLocal();
     try {
       _ntpOffset.value = await NTP.getNtpOffset(localTime: appTime);
@@ -71,7 +69,7 @@ class TimeController extends GetxController {
     if (_ntpOffset.value != DEFAULT_NTP_OFFSET) {
       time = time.add(Duration(milliseconds: _ntpOffset.value));
     }
-    print('cTime:now: (ntpOffset=$_ntpOffset) ${time.toLocal()}');
+    // print('cTime:now: (ntpOffset=$_ntpOffset) ${time.toLocal()}');
     return time.toLocal();
   }
 
