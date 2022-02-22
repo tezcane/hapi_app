@@ -180,6 +180,7 @@ class AuthController extends GetxController {
         //get photo url from gravatar if user has one
         Gravatar gravatar = Gravatar(emailController.text.trim());
         String gravatarUrl = gravatar.imageUrl(
+          // TODO tune this, make cooler
           size: 200,
           defaultImage: GravatarImage.retro,
           rating: GravatarRating.pg,
