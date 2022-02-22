@@ -3,6 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 part 'user_model.g.dart';
 
 /// User Model contains the model for our user saved in firestore.
+/// NOTE: Don't modify this as it is closely tied to firestore libraries.
 @JsonSerializable()
 class UserModel {
   final String uid;
