@@ -4,7 +4,8 @@ AC   - AnimationController
 Aft  - After  
 Bef  - Before  
 btn  - Button  
-C    - Controller  
+C    - Controller
+Conn - Connectivity (controller)
 curr - Current  
 dis  - Disabled  
 dn   - down (use with up: up/dn)  

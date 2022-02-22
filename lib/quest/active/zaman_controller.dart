@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:get/get.dart';
+import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/CalculationMethod.dart';
@@ -49,7 +50,7 @@ class ZamanController extends GetxController {
     print('qibla: $_qiblaDirection');
 
     // TODO precision and salah settings
-    DateTime date = TZDateTime.from(DateTime.now(), _timeZone!);
+    DateTime date = TZDateTime.from(await cTime.now(), _timeZone!);
     CalculationParameters params =
         CalculationMethod.getMethod(SalahMethod.values[cQstA.salahCalcMethod]);
 
@@ -84,9 +85,9 @@ class ZamanController extends GetxController {
   }
 
   void startNextZamanCountdownTimer() {
-    Timer(Duration(seconds: 1), () {
+    Timer(const Duration(seconds: 1), () async {
       Duration timeToNextZaman = cQstA.tod!.nextTODTime
-          .difference(TZDateTime.from(DateTime.now(), _timeZone!));
+          .difference(TZDateTime.from(await cTime.now(), _timeZone!));
 
       // if we hit the end of a timer (or forced), recalculate zaman times:
       if (forceSalahRecalculation || timeToNextZaman.inSeconds <= 0) {

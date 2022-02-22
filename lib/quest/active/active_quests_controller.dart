@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:get/get.dart';
+import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/main.dart';
 import 'package:hapi/onboard/auth/auth_controller.dart';
 import 'package:hapi/quest/active/athan/TOD.dart';
@@ -25,9 +26,9 @@ enum DAY_OF_WEEK {
   Sunday
 }
 
-DAY_OF_WEEK getDayOfWeek() {
-  // TODO test in other locales
-  String day = DateFormat('EEEE').format(DateTime.now());
+DAY_OF_WEEK getDayOfWeek(DateTime dateTime) {
+  // TODO test in other locales also // TODO test, used to be DateTime now()
+  String day = DateFormat('EEEE').format(dateTime);
   for (var dayOfWeek in DAY_OF_WEEK.values) {
     if (day == dayOfWeek.toString().split('.').last) {
       return dayOfWeek;
@@ -42,23 +43,23 @@ class ActiveQuestsController extends GetxController {
 
   List<QuestModel> get quests => questList.value;
 
-  Rx<DAY_OF_WEEK> _dayOfWeek = getDayOfWeek().obs;
+  final Rx<DAY_OF_WEEK> _dayOfWeek = getDayOfWeek(DEFAULT_TIME).obs;
   DAY_OF_WEEK get dayOfWeek => _dayOfWeek.value;
-  void updateDayOfWeek() => _dayOfWeek.value = getDayOfWeek();
+  updateDayOfWeek() async => _dayOfWeek.value = getDayOfWeek(await cTime.now());
 
   bool isFriday() => _dayOfWeek.value == DAY_OF_WEEK.Friday;
 
-  RxBool _showSunnahMuak = true.obs;
-  RxBool _showSunnahNafl = true.obs;
-  RxBool _showSunnahDuha = false.obs;
-  RxBool _showSunnahLayl = false.obs;
-  RxBool _showSunnahKeys = true.obs;
-  RxBool _showJummahOnFriday = true.obs; // if friday and true, shows jummah
-  RxBool _show3rdOfNight = true.obs; // true = last 1/3, false = middle of night
-  RxBool _show12HourClock = true.obs; // false = 24 hour clock/military time
-  RxInt _salahCalcMethod = 0.obs; // 0 = America (ISNA)
-  RxBool _salahAsrSafe = true.obs; // true hanafi, false other
-  RxBool _salahKerahatSafe = true.obs; // true hanafi, false other
+  final RxBool _showSunnahMuak = true.obs;
+  final RxBool _showSunnahNafl = true.obs;
+  final RxBool _showSunnahDuha = false.obs;
+  final RxBool _showSunnahLayl = false.obs;
+  final RxBool _showSunnahKeys = true.obs;
+  final RxInt _salahCalcMethod = 0.obs; // 0 = America (ISNA)
+  final RxBool _showJummahOnFriday = true.obs; // if friday=true, shows jummah
+  final RxBool _show3rdOfNight = true.obs; // true=last 1/3, false=middle night
+  final RxBool _show12HourClock = true.obs; // false = 24h clock/military time
+  final RxBool _salahAsrSafe = true.obs; // true hanafi, false other
+  final RxBool _salahKerahatSafe = true.obs; // true hanafi, false other
 
   TimeOfDay? _tod;
   set tod(TimeOfDay? tod) {

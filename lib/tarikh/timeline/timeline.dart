@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/widgets.dart';
+import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
@@ -380,7 +381,7 @@ class Timeline {
         dynamic end = map["end"];
         timelineEntry.end = end is int ? end.toDouble() : end;
       } else if (timelineEntry.type == TimelineEntryType.Era) {
-        timelineEntry.end = DateTime.now().year.toDouble() * 10.0;
+        timelineEntry.end = (await cTime.now()).year.toDouble() * 10.0;
       } else {
         timelineEntry.end = timelineEntry.start;
       }

@@ -1,3 +1,4 @@
+import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/Astronomical.dart';
 import 'package:hapi/quest/active/athan/CalculationMethod.dart';
@@ -48,8 +49,8 @@ class TimeOfDay {
 
   TOD _currTOD = TOD.Dhuhr;
   TOD _nextTOD = TOD.Asr;
-  DateTime _currTODTime = DateTime.now();
-  DateTime _nextTODTime = DateTime.now();
+  DateTime _currTODTime = DEFAULT_TIME;
+  DateTime _nextTODTime = DEFAULT_TIME;
   TOD get currTOD => _currTOD;
   TOD get nextTOD => _nextTOD;
   DateTime get currTODTime => _currTODTime;
