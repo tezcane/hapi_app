@@ -60,6 +60,7 @@ class AuthController extends GetxController {
 
     firebaseUser.bindStream(user);
 
+    getLastSignedInName();
     getLastSignedInEmail();
 
     super.onReady();
@@ -70,9 +71,16 @@ class AuthController extends GetxController {
     return emailController.text;
   }
 
-  void storeLastSignedInEmail() {
-    s.write('lastSignedInEmail', emailController.text.trim());
+  storeLastSignedInEmail() =>
+      s.write('lastSignedInEmail', emailController.text.trim());
+
+  String getLastSignedInName() {
+    nameController.text = s.read('lastSignedInName') ?? '';
+    return nameController.text;
   }
+
+  storeLastSignedInName() =>
+      s.write('lastSignedInName', nameController.text.trim());
 
   @override
   void onClose() {
@@ -152,6 +160,7 @@ class AuthController extends GetxController {
       await _auth.signInWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
+      storeLastSignedInName(); // tez
       storeLastSignedInEmail();
       //emailController.clear();
       passwordController.clear();
@@ -194,6 +203,7 @@ class AuthController extends GetxController {
             photoUrl: gravatarUrl);
         //create the user in firestore
         _createUserFirestore(_newUser, result.user!);
+        storeLastSignedInName(); // tez
         storeLastSignedInEmail();
         //emailController.clear();
         passwordController.clear();
@@ -214,19 +224,38 @@ class AuthController extends GetxController {
       String password) async {
     try {
       showLoadingIndicator();
-      await _auth
-          .signInWithEmailAndPassword(email: oldEmail, password: password)
-          .then((_firebaseUser) {
-        _firebaseUser.user!
-            .updateEmail(user.email)
-            .then((value) => _updateUserFirestore(user, _firebaseUser.user!));
-        storeLastSignedInEmail();
-      });
+      String _authUpdateUserNoticeTitle =
+          'auth.updateUserSuccessNoticeTitle'.tr;
+      String _authUpdateUserNotice = 'auth.updateUserSuccessNotice'.tr;
+      try {
+        await _auth
+            .signInWithEmailAndPassword(email: oldEmail, password: password)
+            .then((_firebaseUser) async {
+          await _firebaseUser.user! // tez
+              .updateEmail(user.email)
+              .then((value) => _updateUserFirestore(user, _firebaseUser.user!));
+          storeLastSignedInName();
+          storeLastSignedInEmail(); // tez
+        });
+      } catch (err) {
+        getLastSignedInName(); // tez restore good name/email
+        getLastSignedInEmail();
+
+        // HAHA, tez can fix it:
+        //not yet working, see this issue https://github.com/delay/flutter_starter/issues/21
+        if (err.toString() ==
+            "[firebase_auth/email-already-in-use] The email address is already in use by another account.") {
+          _authUpdateUserNoticeTitle = user.email;
+          _authUpdateUserNotice = 'auth.updateUserEmailInUse'.tr;
+        } else {
+          _authUpdateUserNoticeTitle = 'auth.wrongPasswordNotice'.tr;
+          _authUpdateUserNotice = ''; //'''auth.wrongPasswordNotice'.tr;
+        }
+      }
       hideLoadingIndicator();
-      Get.snackbar('auth.updateUserSuccessNoticeTitle'.tr,
-          'auth.updateUserSuccessNotice'.tr,
+      Get.snackbar(_authUpdateUserNoticeTitle, _authUpdateUserNotice,
           snackPosition: SnackPosition.BOTTOM,
-          duration: Duration(seconds: 5),
+          duration: const Duration(seconds: 5),
           backgroundColor: Get.theme.snackBarTheme.backgroundColor,
           colorText: Get.theme.snackBarTheme.actionTextColor);
     } on PlatformException catch (error) {

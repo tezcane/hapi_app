@@ -102,7 +102,7 @@ class MyApp extends StatelessWidget {
               //   // FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
               // ],
               debugShowCheckedModeBanner: false,
-              // TODO these should be controlled in MenuController
+              // TODO these should be controlled in MenuController but we should probably enable here too
               // defaultTransition: Transition.fade,
               // transitionDuration:
               //     const Duration(milliseconds: 1000),
