@@ -65,13 +65,13 @@ class TimeOfDay {
     this.tz,
     this.precision,
   ) {
-    SolarTime solarTime = new SolarTime(date, coordinates);
+    SolarTime solarTime = SolarTime(date, coordinates);
 
     // DateTime dateYesterday = date.subtract(Duration(days: 1));
-    // SolarTime solarTimeYesterday = new SolarTime(dateYesterday, coordinates);
+    // SolarTime solarTimeYesterday = SolarTime(dateYesterday, coordinates);
 
-    DateTime dateTomorrow = date.add(Duration(days: 1));
-    SolarTime solarTimeTomorrow = new SolarTime(dateTomorrow, coordinates);
+    DateTime dateTomorrow = date.add(const Duration(days: 1));
+    SolarTime solarTimeTomorrow = SolarTime(dateTomorrow, coordinates);
 
     // todo
     // print(calculationParameters.ishaAngle);
@@ -84,30 +84,30 @@ class TimeOfDay {
 
     double? nightFraction;
 
-    DateTime dhuhrTime = new TimeComponents(solarTime.transit)
+    DateTime dhuhrTime = TimeComponents(solarTime.transit)
         .utcDate(date.year, date.month, date.day);
-    DateTime sunriseTime = new TimeComponents(solarTime.sunrise)
+    DateTime sunriseTime = TimeComponents(solarTime.sunrise)
         .utcDate(date.year, date.month, date.day);
-    DateTime sunsetTime = new TimeComponents(solarTime.sunset)
+    DateTime sunsetTime = TimeComponents(solarTime.sunset)
         .utcDate(date.year, date.month, date.day);
 
-    DateTime sunriseTimeTomorrow = new TimeComponents(solarTimeTomorrow.sunrise)
+    DateTime sunriseTimeTomorrow = TimeComponents(solarTimeTomorrow.sunrise)
         .utcDate(dateTomorrow.year, dateTomorrow.month, dateTomorrow.day);
-    // DateTime sunsetTimeYesteray = new TimeComponents(solarTimeYesterday.sunset)
+    // DateTime sunsetTimeYesteray = TimeComponents(solarTimeYesterday.sunset)
     //     .utcDate(dateYesterday.year, dateYesterday.month, dateYesterday.day);
 
-    asrTime = new TimeComponents(
+    asrTime = TimeComponents(
             solarTime.afternoon(shadowLength(calculationParameters.madhab)))
         .utcDate(date.year, date.month, date.day);
 
     int nightDurationInSecs =
         (sunriseTimeTomorrow.difference(sunsetTime)).inSeconds;
 
-    fajrTime = new TimeComponents(
+    fajrTime = TimeComponents(
             solarTime.hourAngle(-1 * calculationParameters.fajrAngle, false))
         .utcDate(date.year, date.month, date.day);
 
-    fajrTomorrowTime = new TimeComponents(solarTimeTomorrow.hourAngle(
+    fajrTomorrowTime = TimeComponents(solarTimeTomorrow.hourAngle(
             -1 * calculationParameters.fajrAngle, false))
         .utcDate(dateTomorrow.year, dateTomorrow.month, dateTomorrow.day);
 
@@ -148,10 +148,10 @@ class TimeOfDay {
       // ishaYesterdayTime = dateByAddingMinutes(
       //     sunsetTimeYesteray, calculationParameters.ishaInterval);
     } else {
-      ishaTime = new TimeComponents(
+      ishaTime = TimeComponents(
               solarTime.hourAngle(-1 * calculationParameters.ishaAngle, true))
           .utcDate(date.year, date.month, date.day);
-      // ishaYesterdayTime = new TimeComponents(solarTimeYesterday.hourAngle(
+      // ishaYesterdayTime = TimeComponents(solarTimeYesterday.hourAngle(
       //         -1 * calculationParameters.ishaAngle, true))
       //     .utcDate(dateYesterday.year, dateYesterday.month, dateYesterday.day);
       // special case for moonsighting committee above latitude 55
@@ -189,7 +189,7 @@ class TimeOfDay {
 
     maghribTime = sunsetTime;
     if (calculationParameters.maghribAngle != null) {
-      DateTime angleBasedMaghrib = new TimeComponents(solarTime.hourAngle(
+      DateTime angleBasedMaghrib = TimeComponents(solarTime.hourAngle(
               -1 * calculationParameters.maghribAngle!, true))
           .utcDate(date.year, date.month, date.day);
       if (sunsetTime.isBefore(angleBasedMaghrib) &&
@@ -221,7 +221,7 @@ class TimeOfDay {
       Duration(minutes: calculationParameters.kerahatSunRisingMins),
     ));
     _duhaPrayer_04 = getTZ(_ishraqPrayer_03.add(
-      Duration(minutes: 10), // TODO 10 minutes good?
+      const Duration(minutes: 10), // TODO 10 minutes good?
     ));
     _dhuhr_06 = getTime(dhuhrTime, dhuhrAdjustment);
     _kerahatAdkharZawal_05 = getTZ(_dhuhr_06.subtract(
