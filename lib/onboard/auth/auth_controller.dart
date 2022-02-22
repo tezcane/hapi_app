@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hapi/helpers/gravatar.dart';
 import 'package:hapi/helpers/loading.dart';
@@ -32,7 +31,7 @@ class AuthController extends GetxController {
   Rxn<UserModel> firestoreUser = Rxn<UserModel>();
   final RxBool admin = false.obs;
 
-  // SplashUI has gif timer is used to swap gif to png for hero animation
+  /// SplashUI has gif timer is used to swap gif to png for hero animation
   final RxBool _isGifAnimatingDone = false.obs;
   bool isGifAnimatingDone() => _isGifAnimatingDone.value;
   void setGifAnimatingDone() {
@@ -131,13 +130,13 @@ class AuthController extends GetxController {
     }
   }
 
-  // Firebase user one-time fetch
+  /// Firebase user one-time fetch
   Future<User> get getUser async => _auth.currentUser!;
 
-  // Firebase user a realtime stream
+  /// Firebase user a realtime stream
   Stream<User?> get user => _auth.authStateChanges();
 
-  //Streams the firestore user from the firestore collection
+  /// Streams the firestore user from the firestore collection
   Stream<UserModel> streamFirestoreUser() {
     print('streamFirestoreUser()');
 
@@ -147,13 +146,13 @@ class AuthController extends GetxController {
         .map((snapshot) => UserModel.fromJson(snapshot.data()!));
   }
 
-  //get the firestore user from the firestore collection
+  /// get the firestore user from the firestore collection
   Future<UserModel> getFirestoreUser() {
     return _db.doc('/user/${firebaseUser.value!.uid}').get().then(
         (documentSnapshot) => UserModel.fromJson(documentSnapshot.data()!));
   }
 
-  //Method to handle user sign in using email and password
+  /// Method to handle user sign in using email and password
   signInWithEmailAndPassword(BuildContext context) async {
     showLoadingIndicator();
     try {
@@ -175,7 +174,7 @@ class AuthController extends GetxController {
     }
   }
 
-  // User registration using email and password
+  /// User registration using email and password
   registerWithEmailAndPassword(BuildContext context) async {
     showLoadingIndicator();
     try {
@@ -219,81 +218,98 @@ class AuthController extends GetxController {
     }
   }
 
-  //handles updating the user when updating profile
+  /// handles updating the user when updating profile
+  /// Note, this is highly modified by Tez, error reported here but tez fixed it:
+  ///   "not yet working, see this issue https://github.com/delay/flutter_starter/issues/21"
   Future<void> updateUser(BuildContext context, UserModel user, String oldEmail,
       String password) async {
     try {
       showLoadingIndicator();
-      String _authUpdateUserNoticeTitle =
-          'auth.updateUserSuccessNoticeTitle'.tr;
-      String _authUpdateUserNotice = 'auth.updateUserSuccessNotice'.tr;
-      try {
-        await _auth
-            .signInWithEmailAndPassword(email: oldEmail, password: password)
-            .then((_firebaseUser) async {
-          await _firebaseUser.user! // tez
-              .updateEmail(user.email)
-              .then((value) => _updateUserFirestore(user, _firebaseUser.user!));
-          storeLastSignedInName();
-          storeLastSignedInEmail(); // tez
-        });
-      } catch (err) {
-        getLastSignedInName(); // tez restore good name/email
-        getLastSignedInEmail();
 
-        // HAHA, tez can fix it:
-        //not yet working, see this issue https://github.com/delay/flutter_starter/issues/21
-        if (err.toString() ==
-            "[firebase_auth/email-already-in-use] The email address is already in use by another account.") {
-          _authUpdateUserNoticeTitle = user.email;
-          _authUpdateUserNotice = 'auth.updateUserEmailInUse'.tr;
-        } else {
-          _authUpdateUserNoticeTitle = 'auth.wrongPasswordNotice'.tr;
-          _authUpdateUserNotice = ''; //'''auth.wrongPasswordNotice'.tr;
-        }
-      }
+      await _auth
+          .signInWithEmailAndPassword(email: oldEmail, password: password)
+          .then((_firebaseUser) async =>
+              await _firebaseUser.user!.updateEmail(user.email).then(
+                    (value) async =>
+                        await _updateUserFirestore(user, _firebaseUser.user!),
+                  ));
+
       hideLoadingIndicator();
-      Get.snackbar(_authUpdateUserNoticeTitle, _authUpdateUserNotice,
+
+      storeLastSignedInName();
+      storeLastSignedInEmail();
+
+      Get.snackbar('auth.updateUserSuccessNoticeTitle'.tr,
+          'auth.updateUserSuccessNotice'.tr,
           snackPosition: SnackPosition.BOTTOM,
           duration: const Duration(seconds: 5),
           backgroundColor: Get.theme.snackBarTheme.backgroundColor,
           colorText: Get.theme.snackBarTheme.actionTextColor);
-    } on PlatformException catch (error) {
-      //List<String> errors = error.toString().split(',');
-      // print("Error: " + errors[1]);
+    } catch (error) {
+      // "} on  PlatformException catch (error) {" doesn't catch all error types
+
       hideLoadingIndicator();
-      print(error.code);
-      String authError;
-      switch (error.code) {
-        case 'ERROR_WRONG_PASSWORD': // TODO other codes here
-          authError = 'auth.wrongPasswordNotice'.tr;
-          break;
-        default:
-          authError = 'auth.unknownError'.tr;
-          break;
-      }
-      Get.snackbar('auth.wrongPasswordNoticeTitle'.tr, authError,
+
+      // update failed so restore good name/email back to UI
+      getLastSignedInName();
+      getLastSignedInEmail();
+
+      Get.snackbar('auth.updateUserFailNotice'.tr,
+          translateFirestoreAuthFailure(error.toString()),
           snackPosition: SnackPosition.BOTTOM,
-          duration: Duration(seconds: 10),
+          duration: const Duration(seconds: 10),
           backgroundColor: Get.theme.snackBarTheme.backgroundColor,
           colorText: Get.theme.snackBarTheme.actionTextColor);
     }
   }
 
-  //updates the firestore user in users collection
-  void _updateUserFirestore(UserModel user, User _firebaseUser) {
-    _db.doc('/user/${_firebaseUser.uid}').update(user.toJson());
+  /// Convert auth error to translated nice user output.
+  String translateFirestoreAuthFailure(String authError) {
+    // Note: leaves brackets around unknown errors. i.e. "[unknown-err] err msg"
+    authError = authError.replaceFirst("firebase_auth/", "");
+
+    String error = authError.toLowerCase(); // to match below
+    if (error.contains("invalid-email")) {
+      return 'validator.email'.tr;
+    } else if (error.contains("email-already-in-use")) {
+      return 'auth.updateUserEmailInUse'.tr;
+    } else if (error.contains("wrong-password")) {
+      return 'auth.wrongPasswordNotice'.tr;
+    } else if (error.contains("weak-password")) {
+      return 'validator.password'.tr;
+    } else if (error.contains("user-disabled")) {
+      return 'auth.userIsAdminDisabled'.tr;
+    }
+
+    // I don't expect to see these
+    print('Strange/unexpected error: $authError');
+    if (error.contains("user-not-found")) {
+      return 'auth.signInError'.tr;
+    } else if (error.contains("too-many-requests")) {
+      return 'auth.tooManyRequests'.tr;
+    } else if (error.contains("operation-not-allowed")) {
+      return 'auth.operationNotAllowed'.tr;
+    } else if (error.contains("requires-recent-login")) {
+      return 'auth.requiresRecentLogin'.tr;
+    } else {
+      return 'auth.unknownError'.tr + ": " + authError;
+    }
+  }
+
+  /// updates the firestore user in users collection
+  _updateUserFirestore(UserModel user, User _firebaseUser) async {
+    await _db.doc('/user/${_firebaseUser.uid}').update(user.toJson());
     update();
   }
 
-  //create the firestore user in users collection
+  /// create the firestore user in users collection
   void _createUserFirestore(UserModel user, User _firebaseUser) {
     s.write('lastSignedInEmail', user.email);
     _db.doc('/user/${_firebaseUser.uid}').set(user.toJson());
     update();
   }
 
-  //password reset email
+  /// password reset email
   Future<void> sendPasswordResetEmail(BuildContext context) async {
     showLoadingIndicator();
     try {
@@ -315,7 +331,7 @@ class AuthController extends GetxController {
     }
   }
 
-  //check if user is an admin user
+  /// check if user is an admin user
   isAdmin() async {
     await getUser.then((user) async {
       // TODO needed? This fails when the app goes offline:
@@ -330,7 +346,7 @@ class AuthController extends GetxController {
     });
   }
 
-  // Sign out
+  /// Sign out
   Future<void> signOut() {
     nameController.clear();
     //emailController.clear();
