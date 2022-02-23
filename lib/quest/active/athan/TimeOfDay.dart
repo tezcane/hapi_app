@@ -49,8 +49,8 @@ class TimeOfDay {
 
   TOD _currTOD = TOD.Dhuhr;
   TOD _nextTOD = TOD.Asr;
-  DateTime _currTODTime = DEFAULT_TIME;
-  DateTime _nextTODTime = DEFAULT_TIME;
+  DateTime _currTODTime = DUMMY_TIME;
+  DateTime _nextTODTime = DUMMY_TIME;
   TOD get currTOD => _currTOD;
   TOD get nextTOD => _nextTOD;
   DateTime get currTODTime => _currTODTime;

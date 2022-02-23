@@ -43,7 +43,7 @@ class ActiveQuestsController extends GetxController {
 
   List<QuestModel> get quests => questList.value;
 
-  final Rx<DAY_OF_WEEK> _dayOfWeek = getDayOfWeek(DEFAULT_TIME).obs;
+  final Rx<DAY_OF_WEEK> _dayOfWeek = getDayOfWeek(DUMMY_TIME).obs;
   DAY_OF_WEEK get dayOfWeek => _dayOfWeek.value;
   updateDayOfWeek() async => _dayOfWeek.value = getDayOfWeek(await cTime.now());
 

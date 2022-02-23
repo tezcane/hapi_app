@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 
 // TOD = Time Of Day
@@ -18,10 +20,9 @@ enum TOD {
   Sunrise_Tomorrow,
 }
 
-extension enumUtil on TOD {
+extension EnumUtil on TOD {
   String name() {
-    return this
-        .toString()
+    return toString()
         .split('.')
         .last
         .replaceFirst('Kerahat_', '')

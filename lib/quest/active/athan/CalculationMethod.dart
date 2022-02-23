@@ -1,5 +1,6 @@
 import 'package:hapi/quest/active/athan/CalculationParameters.dart';
 
+// ignore_for_file: constant_identifier_names
 enum SalahMethod {
   America____ISNA___,
   Dubai,
@@ -16,10 +17,9 @@ enum SalahMethod {
   Umm_Al__Qura, // Umm al-Qura University, Makkah
 }
 
-extension enumUtil on SalahMethod {
+extension EnumUtil on SalahMethod {
   String name() {
-    return this
-        .toString()
+    return toString()
         .split('.')
         .last
         .replaceFirst('____', ' (')

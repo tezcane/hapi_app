@@ -57,7 +57,7 @@ enum QUEST {
   NONE // used as terminator and no operation, but also stores bit length
 }
 
-extension enumUtil on QUEST {
+extension EnumUtil on QUEST {
   /// Returns first part enum (must be uppercase), so: FAJR_FARD -> returns FAJR
   String salahRow() {
     return this.toString().split('.').last.split('_').first;
