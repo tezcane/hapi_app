@@ -3,11 +3,12 @@ import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:hapi/getx_hapi.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 final ConnectivityController cConn = Get.find();
 
-class ConnectivityController extends GetxController {
+class ConnectivityController extends GetxHapi {
   final Rx<ConnectivityResult> _connResult = ConnectivityResult.none.obs;
   ConnectivityResult get connResult => _connResult.value;
 

@@ -9,8 +9,9 @@ Conn - Connectivity (controller)
 curr - Current  
 dis  - Disabled  
 dn   - down (use with up: up/dn)  
-e    - exception  
+e    - exception/error  
 idx  - Index  
+Loc  - Location
 Lctn - Location (controller)
 lr   - left right  
 msg  - message  

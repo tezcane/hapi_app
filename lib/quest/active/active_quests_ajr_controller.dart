@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/TOD.dart';
@@ -222,13 +223,15 @@ extension EnumUtil on QUEST {
   }
 }
 
-class ActiveQuestsAjrController extends GetxController {
-//RxInt _questsAll = 0.obs;
-  RxInt _questsDone = 0.obs;
-  RxInt _questsSkip = 0.obs;
-  RxInt _questsMiss = 0.obs;
+class ActiveQuestsAjrController extends GetxHapi {
+  final ActiveQuestsController cQstA = Get.find();
 
-  RxBool _isIshaIbadahComplete = false.obs;
+//RxInt _questsAll = 0.obs;
+  final RxInt _questsDone = 0.obs;
+  final RxInt _questsSkip = 0.obs;
+  final RxInt _questsMiss = 0.obs;
+
+  final RxBool _isIshaIbadahComplete = false.obs;
 
   bool get isIshaIbadahComplete => _isIshaIbadahComplete.value;
   set isIshaIbadahComplete(bool value) {
@@ -239,6 +242,8 @@ class ActiveQuestsAjrController extends GetxController {
 
   @override
   void onInit() {
+    super.onInit();
+
     _questsDone.value = s.read('questsDone') ?? 0;
     _questsSkip.value = s.read('questsSkip') ?? 0;
     _questsMiss.value = s.read('questsMiss') ?? 0;
@@ -246,8 +251,6 @@ class ActiveQuestsAjrController extends GetxController {
     initCurrQuest();
 
     //_isIshaIbadahComplete.value = false;
-
-    super.onInit();
   }
 
   void printBinary(int input) {

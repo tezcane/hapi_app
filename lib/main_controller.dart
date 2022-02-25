@@ -1,13 +1,15 @@
 import 'dart:io' show Platform;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/menu/menu_controller.dart';
 
 final MainController cMain = Get.find();
 
-class MainController extends GetxController {
-  static MainController get to => Get.find();
+class MainController extends GetxHapi {
+  //static MainController get to => Get.find();
 
   late final TargetPlatform _platform;
 
@@ -17,6 +19,8 @@ class MainController extends GetxController {
 
   @override
   void onInit() {
+    super.onInit();
+
     // TODO test all these platforms and add web
     if (Platform.isAndroid) {
       _platform = TargetPlatform.android;
@@ -34,8 +38,6 @@ class MainController extends GetxController {
       print('ERROR: Unknown platform, defaulting to Android');
       _platform = TargetPlatform.android;
     }
-
-    super.onInit();
   }
 
   TargetPlatform get platform => _platform;
@@ -50,7 +52,7 @@ class MainController extends GetxController {
     ]);
 
     // Disable all OS overlay bars (e.g. top status and bottom navigation bar):
-    SystemChrome.setEnabledSystemUIOverlays([]);
+    SystemChrome.setEnabledSystemUIOverlays([]); // TODO deprecated
 
     isAppInitDone = true;
   }

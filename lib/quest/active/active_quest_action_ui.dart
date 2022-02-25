@@ -8,6 +8,8 @@ import 'package:hapi/quest/active/athan/TOD.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 
 class ActiveQuestActionUI extends StatelessWidget {
+  final ActiveQuestsController cQstA = Get.find();
+
   late final QUEST _quest;
   late final Widget _callerWidget;
   late final bool _pinned;

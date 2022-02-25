@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main.dart';
 
 // https://gist.github.com/RodBr/37310335c6639f486bb3c8a628052405
-//https://medium.com/swlh/flutter-dynamic-themes-in-3-lines-c3b375f292e3
+// https://medium.com/swlh/flutter-dynamic-themes-in-3-lines-c3b375f292e3
 
 /// saves and loads our selected theme.
-class ThemeController extends GetxController {
+class ThemeController extends GetxHapi {
   static ThemeController get to => Get.find();
   final theme = "system".obs;
   late ThemeMode _themeMode;

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/helpers/gravatar.dart';
 import 'package:hapi/helpers/loading.dart';
 import 'package:hapi/main.dart';
@@ -16,7 +17,7 @@ import 'package:hapi/onboard/user_model.dart';
 
 /// our user and authentication functions for creating, logging in and out our
 /// user and saving our user data.
-class AuthController extends GetxController {
+class AuthController extends GetxHapi {
   static AuthController to = Get.find();
   final OnboardingController onboardingController = OnboardingController.to;
 
@@ -48,8 +49,8 @@ class AuthController extends GetxController {
 
   @override
   void onInit() {
-    splashTimer.start();
     super.onInit();
+    splashTimer.start();
   }
 
   @override

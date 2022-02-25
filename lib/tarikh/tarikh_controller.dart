@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
+import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main.dart';
 import 'package:hapi/tarikh/search_manager.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
@@ -29,8 +30,8 @@ class TimeBtn {
   final TimelineEntry? entry;
 }
 
-class TarikhController extends GetxController {
-  static TarikhController get to => Get.find();
+class TarikhController extends GetxHapi {
+  //static TarikhController get to => Get.find();
 
   static final Timeline t = Timeline();
 
@@ -62,6 +63,8 @@ class TarikhController extends GetxController {
 
   @override
   void onInit() {
+    super.onInit();
+
     int lastGutterModeIdx = s.read('lastGutterModeIdx') ?? GutterMode.OFF.index;
     gutterMode = GutterMode.values[lastGutterModeIdx];
 
@@ -87,8 +90,6 @@ class TarikhController extends GetxController {
         // timeBtnDn.value = getTimeBtn(t.nextEntry, t.nextEntryOpacity);
       },
     );
-
-    super.onInit();
   }
 
   /// This method is called during the [BlocProvider] initialization.

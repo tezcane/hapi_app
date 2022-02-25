@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/Astronomical.dart';
@@ -12,10 +13,12 @@ import 'package:hapi/quest/active/athan/TimeComponents.dart';
 import 'package:timezone/timezone.dart';
 
 class TimeOfDay {
+  final ActiveQuestsController cQstA = Get.find();
+
   final Coordinates coordinates;
   final DateTime date;
   final CalculationParameters calculationParameters;
-  final Location tz; // timezone
+  final Location tzLoc; // timezone
   final bool precision;
 
   late DateTime _fajr_01;
@@ -62,7 +65,7 @@ class TimeOfDay {
     this.coordinates,
     this.date,
     this.calculationParameters,
-    this.tz,
+    this.tzLoc,
     this.precision,
   ) {
     SolarTime solarTime = SolarTime(date, coordinates);
@@ -285,7 +288,7 @@ class TimeOfDay {
   }
 
   DateTime getTZ(DateTime date) {
-    return TZDateTime.from(date, tz);
+    return TZDateTime.from(date, tzLoc);
   }
 
   DateTime getZamanTime(TOD tod) {

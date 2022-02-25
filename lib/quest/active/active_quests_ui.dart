@@ -7,17 +7,19 @@ import 'package:flutter/painting.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:get/get.dart';
 import 'package:hapi/menu/menu_controller.dart';
-import 'package:hapi/settings/theme/app_themes.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/active_quests_settings_ui.dart';
 import 'package:hapi/quest/active/athan/TOD.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
+import 'package:hapi/settings/theme/app_themes.dart';
 import 'package:im_animations/im_animations.dart';
 
 final Color colorSalahBottom = Colors.grey.shade800;
 
 class ActiveQuestsUI extends StatelessWidget {
+  static ActiveQuestsController cQstA = ActiveQuestsController.to;
+
   static const double SALAH_ACTIONS_HEIGHT = 62;
 
   static const TS tsAppBar = const TS(9.5, Colors.white70);
@@ -63,9 +65,9 @@ class ActiveQuestsUI extends StatelessWidget {
                               Text(c.tod!.currTOD.name(), style: tsAppBar),
                               Text(' ends', style: tsAppBar),
                               SizedBox(width: 1),
-                              Icon(Icons.arrow_right_alt_rounded,
+                              const Icon(Icons.arrow_right_alt_rounded,
                                   color: Colors.white70, size: 12),
-                              SizedBox(width: 5),
+                              const SizedBox(width: 5),
                             ],
                           ),
                           Row(
@@ -73,9 +75,9 @@ class ActiveQuestsUI extends StatelessWidget {
                               Text(c.tod!.nextTOD.name(), style: tsAppBar),
                               Text(' in', style: tsAppBar),
                               SizedBox(width: 1),
-                              Icon(Icons.arrow_right_alt_rounded,
+                              const Icon(Icons.arrow_right_alt_rounded,
                                   color: Colors.white70, size: 12),
-                              SizedBox(width: 5),
+                              const SizedBox(width: 5),
                             ],
                           ),
                         ],
@@ -90,7 +92,7 @@ class ActiveQuestsUI extends StatelessWidget {
                     ],
                   ),
                   //if (c.showSunnahKeys) SizedBox(height: 1),
-                  SizedBox(height: 5.5),
+                  const SizedBox(height: 5.5),
                   if (c.showSunnahKeys)
                     Row(
                       children: [
@@ -146,7 +148,7 @@ class ActiveQuestsUI extends StatelessWidget {
                             ],
                           ),
                         ),
-                        Expanded(flex: 400, child: const Text('')),
+                        const Expanded(flex: 400, child: Text('')),
                       ],
                     )
                 ],

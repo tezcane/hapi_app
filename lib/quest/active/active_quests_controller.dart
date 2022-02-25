@@ -14,7 +14,7 @@ import 'package:hapi/services/database.dart';
 import 'package:intl/intl.dart';
 
 // Controller Quest Active:
-final ActiveQuestsController cQstA = Get.find();
+// final ActiveQuestsController cQstA = Get.find();
 
 enum DAY_OF_WEEK {
   Monday,
@@ -38,6 +38,8 @@ DAY_OF_WEEK getDayOfWeek(DateTime dateTime) {
 }
 
 class ActiveQuestsController extends GetxController {
+  static ActiveQuestsController get to => Get.find();
+
   Rx<List<QuestModel>> questList = Rx<List<QuestModel>>([]);
   Rxn<User> firebaseUser = Rxn<User>();
 
@@ -71,6 +73,8 @@ class ActiveQuestsController extends GetxController {
 
   @override
   void onInit() {
+    super.onInit();
+
     _showSunnahMuak.value = s.read('showSunnahMuak') ?? true;
     _showSunnahNafl.value = s.read('showSunnahNafl') ?? true;
     _showSunnahDuha.value = s.read('showSunnahDuha') ?? false;
@@ -84,8 +88,6 @@ class ActiveQuestsController extends GetxController {
     _salahCalcMethod.value = s.read('salahCalcMethod') ?? 0;
 
     initQuestList();
-
-    super.onInit();
   }
 
   // TODO test this:

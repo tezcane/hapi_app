@@ -10,10 +10,11 @@ DateTime dateByAddingSeconds(DateTime date, int seconds) {
   return date.add(Duration(seconds: seconds));
 }
 
+/// If precision true, don't round up time to next minute
 DateTime roundedMinute(DateTime date, {bool precision = true}) {
   if (precision) return date;
 
-  int seconds = date.toUtc().second % 60;
+  int seconds = date.toUtc().second % 60; // TODO why toUtc, not needed?
   int offset = seconds >= 30 ? 60 - seconds : -1 * seconds;
 
   return dateByAddingSeconds(date, offset);

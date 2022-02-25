@@ -1,5 +1,3 @@
-// ignore_for_file: constant_identifier_names
-
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 
 // TOD = Time Of Day

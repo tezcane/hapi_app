@@ -2,9 +2,10 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:confetti/confetti.dart';
-import 'package:flutter/animation.dart';
+import 'package:flutter/animation.dart'; // TODO needed?
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/about_ui.dart';
@@ -27,7 +28,7 @@ class Nav {
   final IconData icon;
 }
 
-const kNavs = const [
+const kNavs = [
   Nav(np: NavPage.STATS, label: 'Stats', icon: Icons.leaderboard_rounded),
   Nav(np: NavPage.TOOLS, label: 'Tools', icon: Icons.explore_outlined),
   Nav(np: NavPage.DUA, label: 'Dua', icon: Icons.volunteer_activism),
@@ -59,8 +60,8 @@ enum SubPage {
   ACTIVE_QUEST_ACTION,
 }
 
-class MenuController extends GetxController {
-  static MenuController to = Get.find();
+class MenuController extends GetxHapi {
+  //static MenuController to = Get.find();
 
   late AnimationController _acFabIcon; // controls fab icon animation
   late AnimationController _acNavMenu; // controls nav menu animation
@@ -78,7 +79,7 @@ class MenuController extends GetxController {
     update();
   }
 
-  RxBool _showNavSettings = false.obs;
+  final RxBool _showNavSettings = false.obs;
   bool getShowNavSettings() => _showNavSettings.value;
   void setShowNavSettings(bool value) {
     _showNavSettings.value = value;

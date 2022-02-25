@@ -1,6 +1,5 @@
 import 'package:hapi/quest/active/athan/CalculationParameters.dart';
 
-// ignore_for_file: constant_identifier_names
 enum SalahMethod {
   America____ISNA___,
   Dubai,

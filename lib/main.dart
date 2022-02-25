@@ -6,23 +6,38 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:hapi/app_routes.dart';
 import 'package:hapi/controllers/connectivity_controller.dart';
 import 'package:hapi/controllers/location_controller.dart';
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/helpers/loading.dart';
 import 'package:hapi/main_controller.dart';
+import 'package:hapi/menu/about_ui.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/onboard/auth/auth_controller.dart';
+import 'package:hapi/onboard/auth/sign_in_ui.dart';
+import 'package:hapi/onboard/auth/sign_up_ui.dart';
 import 'package:hapi/onboard/onboarding_controller.dart';
+import 'package:hapi/onboard/onboarding_ui.dart';
+import 'package:hapi/onboard/splash_ui.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
+import 'package:hapi/quest/quests_ui.dart';
 import 'package:hapi/settings/language/language_controller.dart';
 import 'package:hapi/settings/language/localization.g.dart';
+import 'package:hapi/settings/reset_password_ui.dart';
+import 'package:hapi/settings/settings_ui.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 import 'package:hapi/settings/theme/theme_controller.dart';
+import 'package:hapi/settings/update_profile_ui.dart';
+import 'package:hapi/tarikh/article/tarikh_article_ui.dart';
+import 'package:hapi/tarikh/main_menu/tarikh_favorites_ui.dart';
+import 'package:hapi/tarikh/main_menu/tarikh_menu_ui.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
+import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
+//import 'package:timezone/data/latest.dart' as tz;
+//import 'package:timezone/data/latest_10y.dart' as tz;
+import 'package:timezone/data/latest_all.dart' as tz;
 
 final GetStorage s = GetStorage(); // TODO better place/way to handle this?
 
@@ -58,17 +73,26 @@ void main() async {
   await GetStorage.init();
   await Firebase.initializeApp();
 
+  // TODO use other timezone options to not import as much?
+  // default: doesn't contain deprecated and historical zones with some exceptions like "US/Eastern" and "Etc/UTC"; this is about 75% the size of the all database.
+  // all: contains all data from the IANA time zone database.
+  // 10y: default database truncated to contain historical data from 5 years ago until 5 years in the future; this database is about 25% the size of the default database.
+  tz.initializeTimeZones();
+
   // TODO cleanup/optimize use Getx bindings?
-  Get.put<LocationController>(LocationController());
-  Get.put<ConnectivityController>(ConnectivityController());
-  Get.put<TimeController>(TimeController());
-  Get.put<MainController>(MainController());
+  Get.put<LocationController>(LocationController(), permanent: true);
+  Get.put<ConnectivityController>(ConnectivityController(), permanent: true);
+  Get.put<TimeController>(TimeController(), permanent: true);
+  Get.put<MainController>(MainController(), permanent: true);
+  Get.put<MenuController>(MenuController(), permanent: true);
   Get.put<OnboardingController>(OnboardingController());
-  Get.put<AuthController>(AuthController());
-  Get.put<MenuController>(MenuController());
-  Get.put<ZamanController>(ZamanController());
-  Get.put<ActiveQuestsController>(ActiveQuestsController());
-  Get.put<ActiveQuestsAjrController>(ActiveQuestsAjrController());
+  Get.put<AuthController>(AuthController()); // requires OnboardingController
+  Get.put<ActiveQuestsController>(ActiveQuestsController(),
+      permanent: true); // requires AuthController
+  Get.put<ActiveQuestsAjrController>(ActiveQuestsAjrController(),
+      permanent: true); // requires ActiveQuestsController
+  Get.put<ZamanController>(ZamanController(),
+      permanent: true); // requires ActiveQuestsController
   Get.put<TarikhController>(TarikhController());
   Get.put<ThemeController>(ThemeController());
   Get.put<LanguageController>(LanguageController());
