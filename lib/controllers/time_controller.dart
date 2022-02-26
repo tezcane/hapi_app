@@ -1,43 +1,60 @@
-// ignore_for_file: constant_identifier_names
+import 'dart:core';
 
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:get/get.dart';
 import 'package:hapi/controllers/connectivity_controller.dart';
+import 'package:hapi/getx_hapi.dart';
 import 'package:ntp/ntp.dart';
+import 'package:timezone/timezone.dart'
+    show Location, LocationNotFoundException, getLocation;
 
-final TimeController cTime = Get.find();
+// Params to init values so we don't have to worry about NPE/null checks
+final DateTime DUMMY_TIME = DateTime.utc(2022, 2, 22, 22, 222, 222); // 2's day
+const int DUMMY_NTP_OFFSET = 222222222222222;
+const String DUMMY_TIMEZONE = 'America/Los_Angeles'; // TODO random Antartica?
 
-/// used to know if NTP time is received or not
-const DEFAULT_NTP_OFFSET = -999999;
+/// Used to get accurate server UTC/NTP based time in case user's clock is off
+class TimeController extends GetxHapi {
+  static TimeController get to => Get.find();
 
-/// Tez Birthday, used for init time, should never see this.
-// ignore: non_constant_identifier_names
-final DateTime DEFAULT_TIME = DateTime.parse("1983-09-24T01:02:03.004Z");
+  final ConnectivityController cConn = ConnectivityController.to;
 
-/// Used to get accurate server UTC/NTP based time incase user's clock is off
-class TimeController extends GetxController {
-  final RxInt _ntpOffset = DEFAULT_NTP_OFFSET.obs;
+  // TODO don't need Rx here and other controllers?
+  final RxInt _ntpOffset = DUMMY_NTP_OFFSET.obs;
 
-  final Rx<DateTime> _lastNtpTime = DEFAULT_TIME.obs;
-  final Rx<DateTime> _lastLocTime = DEFAULT_TIME.obs;
+  final Rx<DateTime> _lastNtpTime = DUMMY_TIME.obs;
+  final Rx<DateTime> _lastLocTime = DUMMY_TIME.obs;
   DateTime get lastUtcTime => _lastNtpTime.value;
   DateTime get lastLocTime => _lastLocTime.value;
 
-  // TODO: handle this in geolocation controller and also pass timezone here
-  // Location? _timeZone;
-  // Coordinates _gps = Coordinates(36.950663449472, -122.05716133118);
-  // double? _qiblaDirection;
-  // double? get qiblaDirection => _qiblaDirection;
-
   bool forceSalahRecalculation = false;
+
+  // NOTE: Can run only because tz.initializeTimeZones() completes in main.dart
+  final Rx<Location> _tzLoc = getLocation(DUMMY_TIMEZONE).obs;
+  Location get tzLoc => _tzLoc.value;
 
   @override
   void onInit() async {
+    print('ON_INIT: $runtimeType');
     super.onInit();
-    updateNtpTime();
+
+    await initTime(); // TODO do during splash screen?
   }
 
+  /// Call to update time TODO use to detect irregular clock movement
+  Future<void> initTime() async {
+    print(
+        'initTime called tz=$tzLoc, DateTime=${DateTime.now()}, ntpOffset=${_ntpOffset.value}');
+    await _updateNtpTime();
+    await getTimezoneLocation();
+    print(
+        'initTime done tz=$tzLoc, DateTime=${DateTime.now()}, ntpOffset=${_ntpOffset.value}}');
+  }
+
+  Future<void> reinitTime() async {}
+
   /// Gets NTP time from server when called, if internet is on
-  updateNtpTime() async {
+  Future<void> _updateNtpTime() async {
     if (!cConn.isInternetOn) {
       print('cTime:updateNtpTime: aborting NTP update, no internet connection');
       return;
@@ -45,7 +62,8 @@ class TimeController extends GetxController {
     print('cTime:updateNtpTime: Called');
     DateTime appTime = DateTime.now().toLocal();
     try {
-      _ntpOffset.value = await NTP.getNtpOffset(localTime: appTime);
+      _ntpOffset.value = await NTP.getNtpOffset(
+          localTime: appTime, timeout: const Duration(seconds: 3)); // TODO
       _lastNtpTime.value =
           appTime.add(Duration(milliseconds: _ntpOffset.value));
 
@@ -55,40 +73,71 @@ class TimeController extends GetxController {
       print('cTime:updateNtpTime: ntpTime now=${_lastNtpTime.value.toLocal()}');
     } on Exception catch (e) {
       print(
-          'cTime:updateNtpTime: Exception: Failed to call NTP.getNtpOffset()');
+          'cTime:updateNtpTime: Exception: Failed to call NTP.getNtpOffset(): $e');
     }
   }
 
   /// Get's local time, uses ntp offset to calculate more accurate time
   Future<DateTime> now() async {
-    if (_ntpOffset.value == DEFAULT_NTP_OFFSET) {
+    if (_ntpOffset.value == DUMMY_NTP_OFFSET) {
       print('cTime:now: called but there is no ntp offset');
-      await updateNtpTime();
+      await _updateNtpTime();
     }
     DateTime time = DateTime.now().toLocal();
-    if (_ntpOffset.value != DEFAULT_NTP_OFFSET) {
+    if (_ntpOffset.value != DUMMY_NTP_OFFSET) {
       time = time.add(Duration(milliseconds: _ntpOffset.value));
     }
     // print('cTime:now: (ntpOffset=$_ntpOffset) ${time.toLocal()}');
     return time.toLocal();
   }
 
-  // TODO can delete after checking times more:
-  // Future<double> getUTCTimeDifference() async {
-  //   DateTime _myTime;
-  //   DateTime _ntpTime;
-  //
-  //   /// Or you could get NTP current (It will call DateTime now() and add NTP offset to it)
-  //   _myTime = await getUtcTime();
-  //
-  //   /// Or get NTP offset (in milliseconds) and add it yourself
-  //   final int offset = await NTP.getNtpOffset(localTime: DateTime .now());
-  //   _ntpTime = _myTime.add(Duration(milliseconds: offset));
-  //
-  //   print('My time: $_myTime');
-  //   print('NTP time: $_ntpTime');
-  //   print('Difference: ${_myTime.difference(_ntpTime).inMilliseconds}ms');
-  //
-  //   return _myTime.difference(_ntpTime).inMilliseconds;
-  // }
+  /// TODO Test other platforms:
+  /// Gets the systems timezone, i.e. Android, iOS reported timezone, or null
+  Future<Location?> _getTimezoneLocFromSystem() async {
+    Location? timezoneLoc;
+    try {
+      String tzName = await FlutterNativeTimezone.getLocalTimezone();
+      print('***** _getTimezoneFromSystem Timezone: "$tzName"');
+
+      try {
+        timezoneLoc = getLocation(tzName);
+      } on LocationNotFoundException catch (err) {
+        print('Error: "timezone "$tzName" not found by getLocation: $err');
+      }
+    } on ArgumentError catch (err) {
+      print('failed to get sys timezone: error=$err');
+    }
+
+    return Future<Location?>.value(timezoneLoc);
+  }
+
+  /// Gets the systems timezone from parsing DateTime TODO TEST
+  Future<Location> _getTimezoneLocFromTimeDate() async {
+    Location tzLocation;
+    String tzName = (await now()).toLocal().timeZoneName;
+    print(
+        '***** _getTimezoneFromTimeDate Time Zone: "$tzName"'); // 'America/Los_Angeles'
+
+    try {
+      tzLocation = getLocation(tzName);
+    } on LocationNotFoundException catch (err) {
+      if (tzLoc.name == DUMMY_TIMEZONE) {
+        print(
+            'Error: $err\ntimezone "$tzName" not found by getLocation, using existing: $_tzLoc');
+        tzLocation = tzLoc;
+      } else {
+        print(
+            'Error: $err\ntimezone "$tzName" not found by getLocation, using defualt: $DUMMY_TIMEZONE');
+        tzLocation = getLocation(DUMMY_TIMEZONE);
+      }
+    }
+
+    return Future<Location>.value(tzLocation);
+  }
+
+  Future<Location> getTimezoneLocation() async {
+    Location? tzLocation = await _getTimezoneLocFromSystem();
+    _tzLoc.value = tzLocation ?? await _getTimezoneLocFromTimeDate();
+    return Future<Location>.value(_tzLoc.value);
+  }
 }
