@@ -22,6 +22,7 @@ import 'package:hapi/onboard/splash_ui.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
+import 'package:hapi/quest/daily/daily_quests_controller.dart';
 import 'package:hapi/quest/quests_ui.dart';
 import 'package:hapi/settings/language/language_controller.dart';
 import 'package:hapi/settings/language/localization.g.dart';
@@ -88,6 +89,8 @@ void main() async {
   Get.put<MenuController>(MenuController(), permanent: permOn);
   Get.put<OnboardingController>(OnboardingController());
   Get.put<AuthController>(AuthController()); // requires OnboardingController
+  Get.put<DailyQuestsController>(DailyQuestsController(),
+      permanent: permOn); // requires AuthController
   Get.put<ActiveQuestsController>(ActiveQuestsController(),
       permanent: permOn); // requires AuthController
   Get.put<ActiveQuestsAjrController>(ActiveQuestsAjrController(),

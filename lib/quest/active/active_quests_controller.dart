@@ -1,16 +1,10 @@
-import 'dart:async';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:get/get.dart';
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/main.dart';
-import 'package:hapi/onboard/auth/auth_controller.dart';
 import 'package:hapi/quest/active/athan/TOD.dart';
 import 'package:hapi/quest/active/athan/TimeOfDay.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
-import 'package:hapi/quest/quest_model.dart';
-import 'package:hapi/services/database.dart';
 import 'package:intl/intl.dart';
 
 enum DAY_OF_WEEK {
@@ -35,13 +29,7 @@ DAY_OF_WEEK getDayOfWeek(DateTime dateTime) {
 }
 
 class ActiveQuestsController extends GetxController {
-  // Controller Quest Active cQstA:
-  static ActiveQuestsController get to => Get.find();
-
-  Rx<List<QuestModel>> questList = Rx<List<QuestModel>>([]);
-  Rxn<User> firebaseUser = Rxn<User>();
-
-  List<QuestModel> get quests => questList.value;
+  static ActiveQuestsController get to => Get.find(); // A.K.A. cQstA
 
   final Rx<DAY_OF_WEEK> _dayOfWeek = getDayOfWeek(DUMMY_TIME).obs;
   DAY_OF_WEEK get dayOfWeek => _dayOfWeek.value;
@@ -85,28 +73,6 @@ class ActiveQuestsController extends GetxController {
     _salahAsrSafe.value = s.read('salahAsrSafe') ?? true;
     _salahKerahatSafe.value = s.read('salahKerahatSafe') ?? true;
     _salahCalcMethod.value = s.read('salahCalcMethod') ?? 0;
-
-    initQuestList();
-  }
-
-  // TODO test this:
-  void initQuestList() async {
-    int sleepBackoffSecs = 1;
-
-    // No internet needed to init, but we put a back off just in case:
-    while (AuthController.to.firebaseUser.value == null) {
-      print(
-          'ActiveQuestsController.initQuestList: not ready, try again after sleeping $sleepBackoffSecs Secs...');
-      await Future.delayed(Duration(seconds: sleepBackoffSecs));
-      if (sleepBackoffSecs < 4) {
-        sleepBackoffSecs++;
-      }
-    }
-
-    // TODO asdf fdsa move this to TODO logic controller? this looks unreliable:
-    String uid = AuthController.to.firebaseUser.value!.uid;
-    print('ActiveQuestsController.initQuestList: binding to db with uid=$uid');
-    questList.bindStream(Database().questStream(uid)); //stream from firebase
   }
 
   bool get showSunnahMuak => _showSunnahMuak.value;

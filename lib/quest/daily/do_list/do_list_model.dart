@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class QuestModel {
+class DoListModel {
   String questId;
   //QUEST questType;
   String content;
@@ -10,7 +10,7 @@ class QuestModel {
   Timestamp? dateDone;
   bool done;
 
-  QuestModel(
+  DoListModel(
       {required this.questId,
       //required this.questType,
       required this.content,
@@ -20,8 +20,8 @@ class QuestModel {
       required this.dateDone,
       required this.done});
 
-  factory QuestModel.fromMap(String questId, Map data) {
-    return QuestModel(
+  factory DoListModel.fromMap(String questId, Map data) {
+    return DoListModel(
       questId: questId,
       //questType: data['quest'] ?? QUEST.USER_CUSTOM,
       content: data['content'],

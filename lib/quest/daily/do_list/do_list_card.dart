@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:hapi/quest/quest_model.dart';
+import 'package:hapi/quest/daily/do_list/do_list_model.dart';
 import 'package:hapi/services/database.dart';
 
-class QuestCard extends StatelessWidget {
-  final QuestModel quest;
+class DoListCard extends StatelessWidget {
+  final DoListModel doList;
 
-  const QuestCard({required this.quest});
+  const DoListCard({required this.doList});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class QuestCard extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                quest.content,
+                doList.content,
                 style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
@@ -25,9 +25,9 @@ class QuestCard extends StatelessWidget {
               ),
             ),
             Checkbox(
-              value: quest.done,
+              value: doList.done,
               onChanged: (newValue) {
-                Database().updateQuest(quest.questId, newValue as bool);
+                Database().updateDoList(doList.questId, newValue as bool);
               },
             ),
           ],
