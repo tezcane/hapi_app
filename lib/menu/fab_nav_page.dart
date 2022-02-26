@@ -73,7 +73,7 @@ class FabNavPage extends StatelessWidget {
                               MenuController.to.confettiController(),
                           blastDirectionality: BlastDirectionality.explosive,
                           shouldLoop: false,
-                          numberOfParticles: 200,
+                          numberOfParticles: 75,
                           maximumSize: const Size(10, 10),
                           minimumSize: const Size(3, 3),
                           colors: const [
@@ -99,59 +99,64 @@ class FabNavPage extends StatelessWidget {
             initNavPage: navPage,
             items: kNavs
                 .map(
-                  (nav) => Stack(
-                    children: [
-                      Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Stack(
-                              children: [
-                                Transform.rotate(
-                                  angle: nav.np == NavPage.RELICS ? 2.8 : 0,
-                                  child: Icon(
-                                    nav.icon,
-                                    color: Colors.white,
-                                    size: 40,
-                                  ),
-                                ),
-                                if (c.getShowBadge(navPage))
-                                  Positioned(
-                                    top: nav.np == NavPage.RELICS ? 8.6 : -2.0,
-                                    right: -2.0,
-                                    child: Transform.rotate(
-                                      angle: nav.np == NavPage.RELICS ? .59 : 0,
-                                      child: const Icon(
-                                        Icons.star,
-                                        color: Colors.orange,
-                                        size: 18,
-                                      ),
+                  // resize menu icons/text if keyboard shows
+                  (nav) => SingleChildScrollView(
+                    child: Stack(
+                      children: [
+                        Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Stack(
+                                children: [
+                                  Transform.rotate(
+                                    angle: nav.np == NavPage.RELICS ? 2.8 : 0,
+                                    child: Icon(
+                                      nav.icon,
+                                      color: Colors.white,
+                                      size: 40,
                                     ),
                                   ),
-                              ],
-                            ),
-                            Text(
-                              nav.label,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.normal,
+                                  if (c.getShowBadge(navPage))
+                                    Positioned(
+                                      top:
+                                          nav.np == NavPage.RELICS ? 8.6 : -2.0,
+                                      right: -2.0,
+                                      child: Transform.rotate(
+                                        angle:
+                                            nav.np == NavPage.RELICS ? .59 : 0,
+                                        child: const Icon(
+                                          Icons.star,
+                                          color: Colors.orange,
+                                          size: 18,
+                                        ),
+                                      ),
+                                    ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      if (hasSettings && nav.np == navPage)
-                        const Align(
-                          alignment: Alignment.topRight,
-                          child: Icon(
-                            Icons.settings_applications_outlined,
-                            color: Colors.orange,
-                            size: 27,
+                              Text(
+                                nav.label,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                    ],
+                        if (hasSettings && nav.np == navPage)
+                          const Align(
+                            alignment: Alignment.topRight,
+                            child: Icon(
+                              Icons.settings_applications_outlined,
+                              color: Colors.orange,
+                              size: 27,
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                 )
                 .toList(),
