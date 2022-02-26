@@ -29,8 +29,10 @@ class TimeController extends GetxHapi {
 
   bool forceSalahRecalculation = false;
 
-  // NOTE: Can run only because tz.initializeTimeZones() completes in main.dart
+  /// NOTE: Can run only because tz.initializeTimeZones() completes in main.dart
   final Rx<Location> _tzLoc = getLocation(DUMMY_TIMEZONE).obs;
+
+  /// Used to calculate Zaman times
   Location get tzLoc => _tzLoc.value;
 
   @override
@@ -107,7 +109,6 @@ class TimeController extends GetxHapi {
     } on ArgumentError catch (err) {
       print('failed to get sys timezone: error=$err');
     }
-
     return Future<Location?>.value(timezoneLoc);
   }
 
@@ -126,6 +127,12 @@ class TimeController extends GetxHapi {
             'Error: $err\ntimezone "$tzName" not found by getLocation, using existing: $_tzLoc');
         tzLocation = tzLoc;
       } else {
+        // TODO give prompt to user to enter their timezone:
+        // All time zones are defined as offsets from Coordinated Universal Time
+        // (UTC), ranging from UTC−12:00 to UTC+14:00. The offsets are usually a
+        // whole number of hours, but a few zones are offset by an additional
+        // 30 or 45 minutes, such as in India, South Australia and Nepal.
+
         print(
             'Error: $err\ntimezone "$tzName" not found by getLocation, using defualt: $DUMMY_TIMEZONE');
         tzLocation = getLocation(DUMMY_TIMEZONE);
