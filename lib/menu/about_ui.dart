@@ -29,7 +29,8 @@ class AboutUI extends StatelessWidget {
       child: Scaffold(
         backgroundColor: AppThemes.logoBackground,
         body: Padding(
-          padding: EdgeInsets.only(top: 20, bottom: 20, left: 20, right: 20),
+          padding:
+              const EdgeInsets.only(top: 20, bottom: 20, left: 20, right: 20),
           child: SingleChildScrollView(
             scrollDirection: Axis.vertical,
             child: Column(
@@ -48,7 +49,7 @@ class AboutUI extends StatelessWidget {
                 ),
                 RichText(
                   text: TextSpan(
-                    style: TextStyle(
+                    style: const TextStyle(
                         //color: darkText.withOpacity(darkText.opacity * 0.75),
                         fontFamily: 'Roboto',
                         fontSize: 17.0,
@@ -56,7 +57,7 @@ class AboutUI extends StatelessWidget {
                     children: [
                       TextSpan(
                           text: 'hapi',
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontFamily: 'Lobster',
                               fontSize: 25.0,
                               color: AppThemes.logoText,
@@ -77,7 +78,7 @@ class AboutUI extends StatelessWidget {
                               '\n\n'),
                       TextSpan(
                           text: 'paypal',
-                          style: TextStyle(
+                          style: const TextStyle(
                               // fontFamily: 'Lobster',
                               // fontSize: 25.0,
                               color: AppThemes.logoText,
@@ -89,10 +90,10 @@ class AboutUI extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 80.0),
+                const SizedBox(height: 80.0),
                 Text(
                   'hapi app version 0.0.0', // TODO tie to build release version
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontFamily: 'Roboto',
                     // fontSize: 17.0,
                     // height: 1.5,

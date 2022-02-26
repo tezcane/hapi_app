@@ -29,7 +29,7 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
   Timer? _searchTimer;
 
   /// Used to scroll to bottom of list view whenever page is rebuilt
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
 
   bool scrollToEnd = false;
 
@@ -105,7 +105,7 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
     if (scrollPosition.maxScrollExtent > scrollPosition.minScrollExtent) {
       _scrollController.animateTo(
         scrollPosition.maxScrollExtent,
-        duration: new Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 200),
         curve: Curves.easeOut,
       );
     }
@@ -138,7 +138,7 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
   }
 
   void _tapSearchResult(TimelineEntry entry) {
-    cMenu.pushSubPage(SubPage.TARIKH_TIMELINE, arguments: {
+    MenuController.to.pushSubPage(SubPage.TARIKH_TIMELINE, arguments: {
       'focusItem': MenuItemData.fromEntry(entry),
     });
   }
@@ -172,8 +172,8 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
       child: Scaffold(
         bottomNavigationBar: Container(
           color: Colors.white.withOpacity(0.0),
-          padding:
-              EdgeInsets.only(left: 20, top: 16.0, bottom: 16.0, right: 85),
+          padding: const EdgeInsets.only(
+              left: 20, top: 16.0, bottom: 16.0, right: 85),
           child: SearchWidget(_searchFocusNode, _searchTextController),
         ),
         body: Flex(
@@ -183,7 +183,7 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
               child: ListView.builder(
                 controller: _scrollController,
                 itemCount: _searchResults.length + 1,
-                padding: EdgeInsets.only(left: 20, right: 20, bottom: 0),
+                padding: const EdgeInsets.only(left: 20, right: 20, bottom: 0),
                 itemBuilder: (BuildContext context, int idx) {
                   if (idx == 0) {
                     return SizedBox(height: heightPadding);

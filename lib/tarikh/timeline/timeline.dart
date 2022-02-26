@@ -4,6 +4,7 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+// TODO clean up imports:
 import 'package:flare_dart/animation/actor_animation.dart' as flare;
 import 'package:flare_dart/math/aabb.dart' as flare;
 import 'package:flare_flutter/flare.dart' as flare;
@@ -25,7 +26,7 @@ typedef ChangeHeaderColorCallback(Color background, Color text);
 
 class Timeline {
   Timeline() {
-    this._platform = cMain.platform;
+    _platform = MainController.to.platform;
     setViewport(start: 1536.0, end: 3072.0); // TODO what is this?
   }
 
@@ -135,11 +136,9 @@ class Timeline {
   /// The list of [TimelineAsset], also loaded from disk at boot.
   List<TimelineAsset>? _renderAssets;
 
-  Map<String, TimelineEntry> _entriesById = Map<String, TimelineEntry>();
-  Map<String, nima.FlutterActor> _nimaResources =
-      Map<String, nima.FlutterActor>();
-  Map<String, flare.FlutterActor> _flareResources =
-      Map<String, flare.FlutterActor>();
+  final Map<String, TimelineEntry> _entriesById = {};
+  final Map<String, nima.FlutterActor> _nimaResources = {};
+  final Map<String, flare.FlutterActor> _flareResources = {};
 
   /// Callback set by [TimelineRenderWidget] when adding a reference to this object.
   /// It'll trigger [RenderBox.markNeedsPaint()].
@@ -212,7 +211,8 @@ class Timeline {
 
     if (isIt) {
       /// If another timer is still needed, recreate it.
-      _steadyTimer = Timer(Duration(milliseconds: SteadyMilliseconds), () {
+      _steadyTimer =
+          Timer(const Duration(milliseconds: SteadyMilliseconds), () {
         _steadyTimer = null;
         _isSteady = true;
         _startRendering();
@@ -381,7 +381,8 @@ class Timeline {
         dynamic end = map["end"];
         timelineEntry.end = end is int ? end.toDouble() : end;
       } else if (timelineEntry.type == TimelineEntryType.Era) {
-        timelineEntry.end = (await cTime.now()).year.toDouble() * 10.0;
+        timelineEntry.end =
+            (await TimeController.to.now()).year.toDouble() * 10.0;
       } else {
         timelineEntry.end = timelineEntry.start;
       }
@@ -458,10 +459,8 @@ class Timeline {
                   flare.ActorAnimation? animation =
                       flareAsset.actor!.getAnimation(animationName);
                   if (animation != null) {
-                    if (flareAsset.idleAnimations == null) {
-                      flareAsset.idleAnimations =
-                          []; // was List<flare.ActorAnimation>();
-                    }
+                    flareAsset.idleAnimations ??=
+                        []; // was List<flare.ActorAnimation>();
                     flareAsset.idleAnimations!.add(animation);
                     flareAsset.animation = animation;
                   }
@@ -651,9 +650,7 @@ class Timeline {
       }
       if (parent != null) {
         entry.parent = parent;
-        if (parent.children == null) {
-          parent.children = []; // was List<TimelineEntry>();
-        }
+        parent.children ??= []; // was List<TimelineEntry>();
         parent.children!.add(entry);
       } else {
         /// no parent, so this is a root entry.
@@ -717,7 +714,7 @@ class Timeline {
       bool animate = false}) {
     /// Calculate the current height.
     if (height != double.maxFinite) {
-      if (_height == 0.0 && _entries != null && _entries!.length > 0) {
+      if (_height == 0.0 && _entries != null && _entries!.isNotEmpty) {
         double scale = height / (_end - _start);
         _start = _start - padding.top / scale;
         _end = _end + padding.bottom / scale;
@@ -764,9 +761,9 @@ class Timeline {
       _simulationTime = 0.0;
       // TODO test this on all platforms
       if (_platform == TargetPlatform.iOS) {
-        _scrollPhysics = BouncingScrollPhysics();
+        _scrollPhysics = const BouncingScrollPhysics();
       } else {
-        _scrollPhysics = ClampingScrollPhysics();
+        _scrollPhysics = const ClampingScrollPhysics();
       }
       _scrollMetrics = FixedScrollMetrics(
           minScrollExtent: double.negativeInfinity,
@@ -887,7 +884,7 @@ class Timeline {
     /// Check if the left-hand side gutter has been toggled.
     /// If visible, make room for it.
     double targetGutterWidth =
-        cTrkh.isGutterModeOff() ? GutterLeft : GutterLeftExpanded;
+        TarikhController.to.isGutterModeOff() ? GutterLeft : GutterLeftExpanded;
     double dgw = targetGutterWidth - _gutterWidth;
     if (!animate || dgw.abs() < 1) {
       _gutterWidth = targetGutterWidth;
@@ -918,7 +915,7 @@ class Timeline {
     scale = _height / (_renderEnd - _renderStart);
 
     /// Update color screen positions.
-    if (_tickColors != null && _tickColors!.length > 0) {
+    if (_tickColors != null && _tickColors!.isNotEmpty) {
       double lastStart = _tickColors!.first.start!;
       for (TickColors color in _tickColors!) {
         color.screenY =
@@ -927,7 +924,7 @@ class Timeline {
         lastStart = color.start!;
       }
     }
-    if (_headerColors != null && _headerColors!.length > 0) {
+    if (_headerColors != null && _headerColors!.isNotEmpty) {
       double lastStart = _headerColors!.first.start!;
       for (HeaderColors color in _headerColors!) {
         color.screenY =

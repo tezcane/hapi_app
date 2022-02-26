@@ -42,7 +42,7 @@ class SearchManager {
             Set<TimelineEntry> labels = _queryMap[substring]!;
             labels.add(e);
           } else {
-            _queryMap.putIfAbsent(substring, () => Set.from([e]));
+            _queryMap.putIfAbsent(substring, () => {e});
           }
         }
       }
@@ -52,13 +52,15 @@ class SearchManager {
   /// Use the [SplayTreeMap] query function to return the full [Set] of results.
   /// This operation amortized logarithmic time.
   Set<TimelineEntry> performSearch(String query) {
-    if (_queryMap.containsKey(query))
+    Set<TimelineEntry> res = {};
+
+    if (_queryMap.containsKey(query)) {
       return _queryMap[query]!;
-    else if (query.isNotEmpty) {
-      return Set();
+    } else if (query.isNotEmpty) {
+      return res;
     }
+
     Iterable<String> keys = _queryMap.keys;
-    Set<TimelineEntry> res = Set();
     for (String k in keys) {
       res.addAll(_queryMap[k]!);
     }

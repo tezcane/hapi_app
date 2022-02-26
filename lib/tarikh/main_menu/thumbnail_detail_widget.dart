@@ -18,6 +18,10 @@ typedef TapSearchResultCallback(TimelineEntry entry);
 /// This widget is used while displaying the search results in the [MainMenuWidget], and in the
 /// [FavoritesPage] widget.
 class ThumbnailDetailWidget extends StatelessWidget {
+  const ThumbnailDetailWidget(this.timelineEntry,
+      {this.hasDivider = true, this.tapSearchResult, Key? key})
+      : super(key: key);
+
   final TimelineEntry timelineEntry;
 
   /// Whether to show a divider line on the bottom of this widget. Defaults to `true`.
@@ -25,10 +29,6 @@ class ThumbnailDetailWidget extends StatelessWidget {
 
   /// Callback to navigate to the timeline (see [MainMenuWidget._tapSearchResult()]).
   final TapSearchResultCallback? tapSearchResult;
-
-  ThumbnailDetailWidget(this.timelineEntry,
-      {this.hasDivider = true, this.tapSearchResult, Key? key})
-      : super(key: key);
 
   /// Use [Material] & [InkWell] to show a Material Design ripple effect on the row.
   /// [InkWell] provides also a callback for custom onTap behavior.
@@ -60,7 +60,7 @@ class ThumbnailDetailWidget extends StatelessWidget {
                     ThumbnailWidget(timelineEntry),
                     Expanded(
                         child: Container(
-                      margin: EdgeInsets.only(left: 17.0),
+                      margin: const EdgeInsets.only(left: 17.0),
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [

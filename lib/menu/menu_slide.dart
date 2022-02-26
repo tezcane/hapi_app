@@ -35,6 +35,8 @@ class MenuSlide extends StatefulWidget {
 
 class _MenuSlideState extends State<MenuSlide>
     with SingleTickerProviderStateMixin {
+  final MenuController cMenu = MenuController.to;
+
   late AnimationController _acFabIcon;
 
   @override
@@ -80,8 +82,8 @@ class _MenuSlideState extends State<MenuSlide>
         builder: (c) {
           final double _width = MediaQuery.of(context).size.width;
           final double _height = MediaQuery.of(context).size.height;
-          final double _fabPosition = 16;
-          final double _fabSize = 56;
+          const double _fabPosition = 16;
+          const double _fabSize = 56;
 
           final double _xScale =
               (widget.scaleWidth + _fabPosition * 2) * 100 / _width;
@@ -201,7 +203,7 @@ class _SlideState extends State<SlideAnimation>
     );
 
     offset = Tween<Offset>(
-      begin: Offset(0.0, 0.0),
+      begin: const Offset(0.0, 0.0),
       end: Offset(-widget.xScale * 0.01, -widget.yScale * 0.01),
     ).animate(
       CurvedAnimation(

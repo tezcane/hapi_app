@@ -5,6 +5,7 @@ import 'package:hapi/onboard/auth/sign_up_ui.dart';
 
 class OnboardingController extends GetxHapi {
   static OnboardingController get to => Get.find();
+
   final onboarded = false.obs;
 
   RxBool get isOnboarded {

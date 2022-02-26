@@ -1,4 +1,4 @@
-import 'dart:ui';
+//import 'dart:ui'; TODO needed?
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -175,7 +175,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
       } else {
         //t.isActive = false; now done inside menu controller
 
-        cMenu.pushSubPage(SubPage.TARIKH_ARTICLE, arguments: {
+        MenuController.to.pushSubPage(SubPage.TARIKH_ARTICLE, arguments: {
           'article': _touchedBubble!.entry!,
         });
 
@@ -270,7 +270,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
         floatingActionButtonLocation:
             FloatingActionButtonLocation.miniCenterDocked,
         floatingActionButton: GetBuilder<TarikhController>(
-          init: TarikhController(),
+          //init: TarikhController(), // TODO needed?
           builder: (c) {
             const Color aqua = Color.fromRGBO(69, 211, 197, 1.0);
             TimeBtn btnUp = c.timeBtnUp();
@@ -320,7 +320,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               child: Text(
                                 btnUp.title,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(color: aqua),
+                                style: const TextStyle(color: aqua),
                               ),
                             ),
                             FittedBox(
@@ -328,27 +328,27 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               child: Text(
                                 btnUp.timeUntil,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(color: aqua),
+                                style: const TextStyle(color: aqua),
                               ),
                             ),
                             Container(
-                              constraints: BoxConstraints(
+                              constraints: const BoxConstraints(
                                 minWidth: 88,
                                 maxWidth: 88,
                                 minHeight: 56,
                                 maxHeight: 56,
                               ),
-                              child: SizedBox(width: 56, height: 56),
+                              child: const SizedBox(width: 56, height: 56),
                             ),
                             FittedBox(
                               fit: BoxFit.contain,
                               child: Text(
                                 btnUp.pageScrolls,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(color: aqua),
+                                style: const TextStyle(color: aqua),
                               ),
                             ),
-                            SizedBox(height: 1.8),
+                            const SizedBox(height: 1.8),
                           ],
                         ),
                       ),
@@ -363,7 +363,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               child: Text(
                                 btnDn.title,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(color: aqua),
+                                style: const TextStyle(color: aqua),
                               ),
                             ),
                             FittedBox(
@@ -371,27 +371,27 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               child: Text(
                                 btnDn.timeUntil,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(color: aqua),
+                                style: const TextStyle(color: aqua),
                               ),
                             ),
                             Container(
-                              constraints: BoxConstraints(
+                              constraints: const BoxConstraints(
                                 minWidth: 88,
                                 maxWidth: 88,
                                 minHeight: 56,
                                 maxHeight: 56,
                               ),
-                              child: SizedBox(width: 56, height: 56),
+                              child: const SizedBox(width: 56, height: 56),
                             ),
                             FittedBox(
                               fit: BoxFit.contain,
                               child: Text(
                                 btnDn.pageScrolls,
                                 textAlign: TextAlign.center,
-                                style: TextStyle(color: aqua),
+                                style: const TextStyle(color: aqua),
                               ),
                             ),
-                            SizedBox(height: 1.8),
+                            const SizedBox(height: 1.8),
                           ],
                         ),
                       ),
@@ -439,13 +439,13 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                   ? const Icon(Icons.favorite_border_outlined,
                                       size: 36.0)
                                   : c.isGutterModeFav()
-                                      ? Icon(Icons.favorite_outlined,
+                                      ? const Icon(Icons.favorite_outlined,
                                           size: 36.0)
-                                      : Icon(Icons.history_edu_outlined,
+                                      : const Icon(Icons.history_edu_outlined,
                                           size: 36.0),
                             ),
-                            Text(''),
-                            SizedBox(height: 1.8),
+                            const Text(''),
+                            const SizedBox(height: 1.8),
                           ],
                         ),
                       ),
@@ -459,8 +459,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                           //mainAxisAlignment: MainAxisAlignment.center,
                           //crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(''),
-                            Text(''),
+                            const Text(''),
+                            const Text(''),
                             FloatingActionButton(
                               tooltip: 'Navigate to past',
                               heroTag: null, // needed
@@ -478,11 +478,11 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               },
                               materialTapTargetSize:
                                   MaterialTapTargetSize.padded,
-                              child:
-                                  Icon(Icons.arrow_upward_outlined, size: 30.0),
+                              child: const Icon(Icons.arrow_upward_outlined,
+                                  size: 30.0),
                             ),
-                            Text(''),
-                            SizedBox(height: 1.8),
+                            const Text(''),
+                            const SizedBox(height: 1.8),
                           ],
                         ),
                       ),
@@ -491,8 +491,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                         //mainAxisAlignment: MainAxisAlignment.end,
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(''),
-                          Text(''),
+                          const Text(''),
+                          const Text(''),
                           FloatingActionButton(
                             tooltip: 'Navigate to future',
                             heroTag: null, // needed
@@ -509,21 +509,21 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               }
                             },
                             materialTapTargetSize: MaterialTapTargetSize.padded,
-                            child:
-                                Icon(Icons.arrow_downward_outlined, size: 30.0),
+                            child: const Icon(Icons.arrow_downward_outlined,
+                                size: 30.0),
                           ),
-                          Text(''),
-                          SizedBox(height: 1.8),
+                          const Text(''),
+                          const SizedBox(height: 1.8),
                         ],
                       ),
                       Container(
-                        constraints: BoxConstraints(
+                        constraints: const BoxConstraints(
                           minWidth: 61,
                           maxWidth: 61,
                           minHeight: 63,
                           maxHeight: 63,
                         ),
-                        child: SizedBox(width: 56),
+                        child: const SizedBox(width: 56),
                       ),
                     ],
                   ),
@@ -556,16 +556,15 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                 //     ? _headerBackgroundColor
                 //     : Color.fromRGBO(238, 240, 242, 0.81),
                 child: Padding(
-                  padding: EdgeInsets.only(top: 20, left: 40),
+                  padding: const EdgeInsets.only(top: 20, left: 40),
                   child: Text(
                     _eraName,
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontFamily: "RobotoMedium",
                       fontSize: 20.0,
-                      color: _headerTextColor != null
-                          ? _headerTextColor
-                          : darkText.withOpacity(darkText.opacity * 0.75),
+                      color: _headerTextColor ??
+                          darkText.withOpacity(darkText.opacity * 0.75),
                     ),
                   ),
                 ),

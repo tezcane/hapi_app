@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-
 import 'package:hapi/tarikh/colors.dart';
 
 /// Draws the search bar on top of the menu.
 class SearchWidget extends StatelessWidget {
-  SearchWidget(this._searchFocusNode, this._searchController, {Key? key})
+  const SearchWidget(this._searchFocusNode, this._searchController, {Key? key})
       : super(key: key);
 
   /// These two fields are passed down from the [TarikhSearchUI] in order to control
@@ -42,12 +41,12 @@ class SearchWidget extends StatelessWidget {
                 fontFamily: "Roboto",
                 color: darkText.withOpacity(darkText.opacity * 0.5),
               ),
-              prefixIcon: Icon(Icons.search, size: 30),
+              prefixIcon: const Icon(Icons.search, size: 30),
               suffixIcon: _searchFocusNode.hasFocus
                   ? Visibility(
                       visible: _searchController.text.isNotEmpty,
                       child: IconButton(
-                        icon: Icon(Icons.cancel, size: 30.0),
+                        icon: const Icon(Icons.cancel, size: 30.0),
                         onPressed: () {
                           // clear text then bring down keyboard
                           _searchController.clear();
@@ -58,7 +57,7 @@ class SearchWidget extends StatelessWidget {
                   : Visibility(
                       visible: _searchController.text.isNotEmpty,
                       child: IconButton(
-                        icon: Icon(Icons.cancel, size: 30.0),
+                        icon: const Icon(Icons.cancel, size: 30.0),
                         onPressed: () {
                           // clear text then bring up keyboard
                           _searchController.clear();

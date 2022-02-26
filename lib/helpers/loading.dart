@@ -61,7 +61,7 @@ Future<void> showLoadingIndicator(
     {bool isModal = true, Color? modalColor}) async {
   try {
     debugPrint('Showing loading overlay');
-    final _child = Center(
+    const _child = Center(
       child: SizedBox(
         child: CircularProgressIndicator(),
         /*(Platform.isAndroid
@@ -84,8 +84,8 @@ Future<void> showLoadingIndicator(
           : _child,
     );
   } catch (err) {
-    debugPrint('Exception showing loading overlay\n${err.toString()}');
-    throw err;
+    debugPrint('Exception showing loading overlay\n$err');
+    rethrow;
   }
 }
 
@@ -95,19 +95,19 @@ Future<void> hideLoadingIndicator() async {
     await _hideOverlay();
   } catch (err) {
     debugPrint('Exception hiding loading overlay');
-    throw err;
+    rethrow;
   }
 }
 
 ///----------------------------------------------------------------------------
 /// These methods deal with showing and hiding the overlay
-Future<void> _showOverlay({required Widget child}) async {
+_showOverlay({required Widget child}) async {
   try {
     final overlay = _overlayState;
 
     if (_loaderShown) {
       debugPrint('An overlay is already showing');
-      return Future.value(false);
+      return;
     }
 
     final overlayEntry = OverlayEntry(
@@ -118,8 +118,8 @@ Future<void> _showOverlay({required Widget child}) async {
     _loaderEntry = overlayEntry;
     _loaderShown = true;
   } catch (err) {
-    debugPrint('Exception inserting loading overlay\n${err.toString()}');
-    throw err;
+    debugPrint('Exception inserting loading overlay\n$err');
+    rethrow;
   }
 }
 
@@ -128,7 +128,7 @@ Future<void> _hideOverlay() async {
     _loaderEntry.remove();
     _loaderShown = false;
   } catch (err) {
-    debugPrint('Exception removing loading overlay\n${err.toString()}');
-    throw err;
+    debugPrint('Exception removing loading overlay\n$err');
+    rethrow;
   }
 }

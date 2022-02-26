@@ -1,4 +1,3 @@
-import 'package:get/get.dart';
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/Astronomical.dart';
@@ -13,8 +12,6 @@ import 'package:hapi/quest/active/athan/TimeComponents.dart';
 import 'package:timezone/timezone.dart';
 
 class TimeOfDay {
-  final ActiveQuestsController cQstA = Get.find();
-
   final Coordinates coordinates;
   final DateTime date;
   final CalculationParameters calculationParameters;
@@ -327,6 +324,8 @@ class TimeOfDay {
   }
 
   TOD getCurrZaman(DateTime date) {
+    final ActiveQuestsController cQstA = ActiveQuestsController.to;
+
     if (date.isAfter(_sunriseTomorrow_14)) {
       return TOD.Sunrise_Tomorrow;
     } else if (date.isAfter(_fajrTomorrow_13)) {
@@ -349,15 +348,19 @@ class TimeOfDay {
       return TOD.Asr;
     } else if (date.isAfter(_dhuhr_06)) {
       return TOD.Dhuhr;
-    } else if (date.isAfter(_kerahatAdkharZawal_05)) {
+    } else if (cQstA.showSunnahDuha && date.isAfter(_kerahatAdkharZawal_05)) {
       return TOD.Kerahat_Zawal;
-    } else if (date.isAfter(_duhaPrayer_04)) {
+    } else if (cQstA.showSunnahDuha && date.isAfter(_duhaPrayer_04)) {
       return TOD.Duha;
-    } else if (date.isAfter(_ishraqPrayer_03)) {
+    } else if (cQstA.showSunnahDuha && date.isAfter(_ishraqPrayer_03)) {
       return TOD.Ishraq;
-    } else if (date.isAfter(_kerahatAdkharSunrise_02)) {
+    } else if (cQstA.showSunnahDuha && date.isAfter(_kerahatAdkharSunrise_02)) {
       return TOD.Kerahat_Sunrise;
-/*  } else if (date.isAfter(_fajr)) {
+    } else if (!cQstA.showSunnahDuha &&
+        date.isAfter(_kerahatAdkharSunrise_02)) {
+      // special case, duha hidden so show duha during this TODO test
+      return TOD.Duha;
+/*  } else if (date.isAfter(_fajr_01)) {
       return Zaman.Fajr; */
     } else {
       return TOD.Fajr;
@@ -365,6 +368,8 @@ class TimeOfDay {
   }
 
   TOD getNextZaman(DateTime date) {
+    final ActiveQuestsController cQstA = ActiveQuestsController.to;
+
     if (date.isAfter(_fajrTomorrow_13)) {
       return TOD.Sunrise_Tomorrow;
     } else if (cQstA.showSunnahLayl &&
@@ -394,13 +399,16 @@ class TimeOfDay {
       return TOD.Asr;
     } else if (date.isAfter(_kerahatAdkharZawal_05)) {
       return TOD.Dhuhr;
-    } else if (date.isAfter(_duhaPrayer_04)) {
+    } else if (cQstA.showSunnahDuha && date.isAfter(_duhaPrayer_04)) {
       return TOD.Kerahat_Zawal;
-    } else if (date.isAfter(_ishraqPrayer_03)) {
+    } else if (cQstA.showSunnahDuha && date.isAfter(_ishraqPrayer_03)) {
       return TOD.Duha;
-    } else if (date.isAfter(_kerahatAdkharSunrise_02)) {
+    } else if (cQstA.showSunnahDuha && date.isAfter(_kerahatAdkharSunrise_02)) {
       return TOD.Ishraq;
-/*  } else if (date.isAfter(_fajr)) {
+    } else if (!cQstA.showSunnahDuha &&
+        date.isAfter(_kerahatAdkharSunrise_02)) {
+      return TOD.Dhuhr;
+/*  } else if (date.isAfter(_fajr_01)) {
       return Zaman.Sunrise; */
     } else {
       return TOD.Kerahat_Sunrise;

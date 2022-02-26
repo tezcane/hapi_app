@@ -10,6 +10,8 @@ class FabSubPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final MenuController cMenu = MenuController.to;
+
     return Scaffold(
       //floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: Align(
@@ -18,7 +20,7 @@ class FabSubPage extends StatelessWidget {
           tooltip: 'Go back to the previous page',
           onPressed: () => cMenu.handleBackButtonHit(),
           heroTag: subPage,
-          child: Icon(Icons.arrow_forward_outlined, size: 30),
+          child: const Icon(Icons.arrow_forward_outlined, size: 30),
         ),
       ),
       body: child, // <- SubPages go here

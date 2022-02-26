@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
+//import 'package:flutter/painting.dart'; TODO needed?
 import 'package:get/get.dart';
 import 'package:hapi/menu/toggle_switch.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/CalculationMethod.dart';
 
 class ActiveQuestsSettingsUI extends StatelessWidget {
-  final TextStyle textStyleTitle =
-      TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14);
-  final TextStyle textStyleBtn =
-      TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14);
+  final TextStyle textStyleTitle = const TextStyle(
+      color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14);
+  final TextStyle textStyleBtn = const TextStyle(
+      color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14);
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ActiveQuestsController>(
@@ -76,7 +76,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
                 style: textStyleTitle,
               ),
             ),
-            ShowSunnahSettings(
+            const ShowSunnahSettings(
               btnHeight: 25,
               btnGap: 0,
               fontSize: 14,
@@ -269,7 +269,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
 }
 
 class ShowSunnahSettings extends StatelessWidget {
-  ShowSunnahSettings({
+  const ShowSunnahSettings({
     required this.btnHeight,
     required this.btnGap,
     required this.fontSize,
@@ -318,20 +318,20 @@ class ShowSunnahSettings extends StatelessWidget {
               },
               child: Padding(
                 padding: EdgeInsets.only(left: lrPadding, right: lrPadding),
-                child: Container(
+                child: SizedBox(
                   height: btnHeight,
                   //color: Colors.green.withOpacity(c.showSunnahMuak ? 1 : 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      SizedBox(width: 3),
+                      const SizedBox(width: 3),
                       c.showSunnahMuak
-                          ? Icon(
+                          ? const Icon(
                               Icons.check_box_outlined,
                               size: 12,
                               color: Colors.white,
                             )
-                          : Icon(
+                          : const Icon(
                               Icons.check_box_outline_blank_outlined,
                               size: 12,
                               color: Colors.white,
@@ -352,21 +352,21 @@ class ShowSunnahSettings extends StatelessWidget {
               },
               child: Padding(
                 padding: EdgeInsets.only(left: lrPadding, right: lrPadding),
-                child: Container(
+                child: SizedBox(
                   height: btnHeight,
                   // color: Colors.amber.shade700
                   //     .withOpacity(c.showSunnahNafl ? 1 : 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      SizedBox(width: 3),
+                      const SizedBox(width: 3),
                       c.showSunnahNafl
-                          ? Icon(
+                          ? const Icon(
                               Icons.check_box_outlined,
                               size: 12,
                               color: Colors.white,
                             )
-                          : Icon(
+                          : const Icon(
                               Icons.check_box_outline_blank_outlined,
                               size: 12,
                               color: Colors.white,
@@ -387,21 +387,21 @@ class ShowSunnahSettings extends StatelessWidget {
               },
               child: Padding(
                 padding: EdgeInsets.only(left: lrPadding, right: lrPadding),
-                child: Container(
+                child: SizedBox(
                   height: btnHeight,
                   // color: Colors.yellow.shade300
                   //     .withOpacity(c.showSunnahDuha ? 1 : 0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      SizedBox(width: 3),
+                      const SizedBox(width: 3),
                       c.showSunnahDuha
-                          ? Icon(
+                          ? const Icon(
                               Icons.check_box_outlined,
                               size: 12,
                               color: Colors.white,
                             )
-                          : Icon(
+                          : const Icon(
                               Icons.check_box_outline_blank_outlined,
                               size: 12,
                               color: Colors.white,
@@ -422,7 +422,7 @@ class ShowSunnahSettings extends StatelessWidget {
               },
               child: Padding(
                 padding: EdgeInsets.only(left: lrPadding, right: lrPadding),
-                child: Container(
+                child: SizedBox(
                   height: btnHeight,
                   // color: Colors.pinkAccent.withOpacity(
                   //   c.showSunnahLayl ? 1 : 0,
@@ -430,14 +430,14 @@ class ShowSunnahSettings extends StatelessWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      SizedBox(width: 3),
+                      const SizedBox(width: 3),
                       c.showSunnahLayl
-                          ? Icon(
+                          ? const Icon(
                               Icons.check_box_outlined,
                               size: 12,
                               color: Colors.white,
                             )
-                          : Icon(
+                          : const Icon(
                               Icons.check_box_outline_blank_outlined,
                               size: 12,
                               color: Colors.white,

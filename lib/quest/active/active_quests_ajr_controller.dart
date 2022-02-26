@@ -4,9 +4,6 @@ import 'package:hapi/main.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/TOD.dart';
 
-// cAjrA = controller ajr active (quests):
-final ActiveQuestsAjrController cAjrA = Get.find();
-
 // ONLY NEW VALUES CAN BE ADDED TO PRESERVE ENUM IN DB:
 enum QUEST {
   FAJR_MUAKB, // Muakaddah Before
@@ -61,20 +58,20 @@ enum QUEST {
 extension EnumUtil on QUEST {
   /// Returns first part enum (must be uppercase), so: FAJR_FARD -> returns FAJR
   String salahRow() {
-    return this.toString().split('.').last.split('_').first;
+    return toString().split('.').last.split('_').first;
   }
 
-  bool isFard() => this.toString().split('.').last.endsWith('FARD');
-  bool isMuak() => this.toString().split('.').last.contains('MUAK');
-  bool isNafl() => this.toString().split('.').last.contains('NAFL');
+  bool isFard() => toString().split('.').last.endsWith('FARD');
+  bool isMuak() => toString().split('.').last.contains('MUAK');
+  bool isNafl() => toString().split('.').last.contains('NAFL');
 
-  bool isMuakBef() => this.toString().split('.').last.endsWith('MUAKB');
-  bool isMuakAft() => this.toString().split('.').last.endsWith('MUAKA');
-  bool isNaflBef() => this.toString().split('.').last.endsWith('NAFLB');
-  bool isNaflAft() => this.toString().split('.').last.endsWith('NAFLA');
+  bool isMuakBef() => toString().split('.').last.endsWith('MUAKB');
+  bool isMuakAft() => toString().split('.').last.endsWith('MUAKA');
+  bool isNaflBef() => toString().split('.').last.endsWith('NAFLB');
+  bool isNaflAft() => toString().split('.').last.endsWith('NAFLA');
 
-  bool isThikr() => this.toString().split('.').last.endsWith('THIKR');
-  bool isDua() => this.toString().split('.').last.endsWith('DUA');
+  bool isThikr() => toString().split('.').last.endsWith('THIKR');
+  bool isDua() => toString().split('.').last.endsWith('DUA');
 
   bool isQuestCellTimeBound() {
     switch (this) {
@@ -224,7 +221,8 @@ extension EnumUtil on QUEST {
 }
 
 class ActiveQuestsAjrController extends GetxHapi {
-  final ActiveQuestsController cQstA = Get.find();
+  // cAjrA = controller ajr active (quests):
+  static ActiveQuestsAjrController get to => Get.find();
 
 //RxInt _questsAll = 0.obs;
   final RxInt _questsDone = 0.obs;
@@ -270,7 +268,7 @@ class ActiveQuestsAjrController extends GetxHapi {
     int sleepBackoffSecs = 1;
 
     // No internet needed to init, but we put a back off just in case:
-    while (cQstA.tod == null) {
+    while (ActiveQuestsController.to.tod == null) {
       print(
           'ActiveQuestsAjrController.initCurrQuest: not ready, try again after sleeping $sleepBackoffSecs Secs...');
       await Future.delayed(Duration(seconds: sleepBackoffSecs));
@@ -279,7 +277,7 @@ class ActiveQuestsAjrController extends GetxHapi {
       }
     }
 
-    TOD currZaman = cQstA.tod!.currTOD;
+    TOD currZaman = ActiveQuestsController.to.tod!.currTOD;
 
     for (QUEST quest in QUEST.values) {
       if (quest.index == currZaman.getFirstQuest().index) {
@@ -320,7 +318,7 @@ class ActiveQuestsAjrController extends GetxHapi {
     print('setDone: $quest (index=${quest.index}) = ${_questsMiss.value}');
     printBinaryAll();
     _questsDone.value |= 1 << quest.index;
-    cQstA.update(); // refresh UI
+    ActiveQuestsController.to.update(); // refresh UI
     printBinaryAll();
   }
 
@@ -330,7 +328,7 @@ class ActiveQuestsAjrController extends GetxHapi {
     print('setSkip: $quest (index=${quest.index}) = ${_questsMiss.value}');
     printBinaryAll();
     _questsSkip.value |= 1 << quest.index;
-    cQstA.update(); // refresh UI
+    ActiveQuestsController.to.update(); // refresh UI
     printBinaryAll();
   }
 
@@ -340,7 +338,7 @@ class ActiveQuestsAjrController extends GetxHapi {
     print('setMiss: $quest (index=${quest.index}) = ${_questsMiss.value}');
     printBinaryAll();
     _questsMiss.value |= 1 << quest.index;
-    cQstA.update(); // refresh UI
+    ActiveQuestsController.to.update(); // refresh UI
     printBinaryAll();
   }
 
@@ -352,7 +350,7 @@ class ActiveQuestsAjrController extends GetxHapi {
     _questsDone.value &= ~(1 << quest.index);
     _questsSkip.value &= ~(1 << quest.index);
     _questsMiss.value &= ~(1 << quest.index);
-    cQstA.update(); // refresh UI
+    ActiveQuestsController.to.update(); // refresh UI
     printBinaryAll();
   }
 

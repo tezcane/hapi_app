@@ -2,9 +2,9 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:intl/intl.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
 import 'package:hapi/tarikh/timeline/timeline_utils.dart';
+import 'package:intl/intl.dart';
 
 /// This class is used by the [TimelineRenderWidget] to render the ticks on the left side of the screen.
 ///
@@ -73,7 +73,7 @@ class Ticks {
     /// depending on the current era. The [TickColors] object, in `timeline_utils.dart`,
     /// wraps this information.
     List<TickColors>? tickColors = timeline.tickColors;
-    if (tickColors != null && tickColors.length > 0) {
+    if (tickColors != null && tickColors.isNotEmpty) {
       /// Build up the color stops for the linear gradient.
       double rangeStart = tickColors.first.start!;
       double range = tickColors.last.start! - tickColors.first.start!;
@@ -115,10 +115,10 @@ class Ticks {
           Rect.fromLTWH(offset.dx, y1, gutterWidth, y2 - y1), paint);
     } else {
       canvas.drawRect(Rect.fromLTWH(offset.dx, offset.dy, gutterWidth, height),
-          Paint()..color = Color.fromRGBO(246, 246, 246, 0.95));
+          Paint()..color = const Color.fromRGBO(246, 246, 246, 0.95));
     }
 
-    Set<String> usedValues = Set<String>();
+    Set<String> usedValues = {};
 
     /// Draw all the ticks.
     for (int i = 0; i < numTicks; i++) {

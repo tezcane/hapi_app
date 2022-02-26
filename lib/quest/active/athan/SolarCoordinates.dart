@@ -26,20 +26,19 @@ class SolarCoordinates {
             the rays of the Sun and the plane of the Earth's
             equator, in degrees.
             Equation from Astronomical Algorithms page 165 */
-    this.declination =
-        radiansToDegrees(asin(sin(EpsilonApparent) * sin(Lambda)));
+    declination = radiansToDegrees(asin(sin(EpsilonApparent) * sin(Lambda)));
 
     /* rightAscension: Right ascension of the Sun, the angular distance on the
             celestial equator from the vernal equinox to the hour circle,
             in degrees.
             Equation from Astronomical Algorithms page 165 */
-    this.rightAscension = unwindAngle(radiansToDegrees(
+    rightAscension = unwindAngle(radiansToDegrees(
         atan2(cos(EpsilonApparent) * sin(Lambda), cos(Lambda))));
 
     /* apparentSiderealTime: Apparent sidereal time, the hour angle of the vernal
             equinox, in degrees.
             Equation from Astronomical Algorithms page 88 */
-    this.apparentSiderealTime = Theta0 +
+    apparentSiderealTime = Theta0 +
         (((dPsi * 3600) * cos(degreesToRadians(Epsilon0 + dEpsilon))) / 3600);
   }
 }

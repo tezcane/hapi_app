@@ -13,9 +13,6 @@ import 'package:hapi/quest/quest_model.dart';
 import 'package:hapi/services/database.dart';
 import 'package:intl/intl.dart';
 
-// Controller Quest Active:
-// final ActiveQuestsController cQstA = Get.find();
-
 enum DAY_OF_WEEK {
   Monday,
   Tuesday,
@@ -38,6 +35,7 @@ DAY_OF_WEEK getDayOfWeek(DateTime dateTime) {
 }
 
 class ActiveQuestsController extends GetxController {
+  // Controller Quest Active cQstA:
   static ActiveQuestsController get to => Get.find();
 
   Rx<List<QuestModel>> questList = Rx<List<QuestModel>>([]);
@@ -47,7 +45,8 @@ class ActiveQuestsController extends GetxController {
 
   final Rx<DAY_OF_WEEK> _dayOfWeek = getDayOfWeek(DUMMY_TIME).obs;
   DAY_OF_WEEK get dayOfWeek => _dayOfWeek.value;
-  updateDayOfWeek() async => _dayOfWeek.value = getDayOfWeek(await cTime.now());
+  updateDayOfWeek() async =>
+      _dayOfWeek.value = getDayOfWeek(await TimeController.to.now());
 
   bool isFriday() => _dayOfWeek.value == DAY_OF_WEEK.Friday;
 
@@ -95,7 +94,7 @@ class ActiveQuestsController extends GetxController {
     int sleepBackoffSecs = 1;
 
     // No internet needed to init, but we put a back off just in case:
-    while (Get.find<AuthController>().firebaseUser.value == null) {
+    while (AuthController.to.firebaseUser.value == null) {
       print(
           'ActiveQuestsController.initQuestList: not ready, try again after sleeping $sleepBackoffSecs Secs...');
       await Future.delayed(Duration(seconds: sleepBackoffSecs));
@@ -105,7 +104,7 @@ class ActiveQuestsController extends GetxController {
     }
 
     // TODO asdf fdsa move this to TODO logic controller? this looks unreliable:
-    String uid = Get.find<AuthController>().firebaseUser.value!.uid;
+    String uid = AuthController.to.firebaseUser.value!.uid;
     print('ActiveQuestsController.initQuestList: binding to db with uid=$uid');
     questList.bindStream(Database().questStream(uid)); //stream from firebase
   }
@@ -137,12 +136,14 @@ class ActiveQuestsController extends GetxController {
   void toggleShowSunnahDuha() {
     _showSunnahDuha.value = !_showSunnahDuha.value;
     s.write('showSunnahDuha', _showSunnahDuha.value);
+    ZamanController.to.forceSalahRecalculation = true;
     update();
   }
 
   void toggleShowSunnahLayl() {
     _showSunnahLayl.value = !_showSunnahLayl.value;
     s.write('showSunnahLayl', _showSunnahLayl.value);
+    ZamanController.to.forceSalahRecalculation = true;
     update();
   }
 
@@ -161,33 +162,35 @@ class ActiveQuestsController extends GetxController {
   set showLast3rdOfNight(bool value) {
     _show3rdOfNight.value = value;
     s.write('show3rdOfNight', value);
+    ZamanController.to.forceSalahRecalculation = true;
     update();
   }
 
   set show12HourClock(bool value) {
     _show12HourClock.value = value;
     s.write('show12HourClock', value);
+    ZamanController.to.forceSalahRecalculation = true;
     update();
   }
 
   set salahAsrSafe(bool value) {
     _salahAsrSafe.value = value;
     s.write('salahAsrSafe', value);
-    cZamn.forceSalahRecalculation = true;
+    ZamanController.to.forceSalahRecalculation = true;
     update();
   }
 
   set salahKerahatSafe(bool value) {
     _salahKerahatSafe.value = value;
     s.write('salahKerahatSafe', value);
-    cZamn.forceSalahRecalculation = true;
+    ZamanController.to.forceSalahRecalculation = true;
     update();
   }
 
   set salahCalcMethod(int value) {
     _salahCalcMethod.value = value;
     s.write('salahCalcMethod', value);
-    cZamn.forceSalahRecalculation = true;
+    ZamanController.to.forceSalahRecalculation = true;
     update();
   }
 

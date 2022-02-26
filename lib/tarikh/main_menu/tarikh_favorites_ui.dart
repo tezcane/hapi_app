@@ -42,14 +42,14 @@ class TarikhFavoritesUI extends StatelessWidget {
                             Container(
                               width: 128.0,
                               height: 114.0,
-                              margin: EdgeInsets.only(bottom: 30),
-                              child: FlareActor(
+                              margin: const EdgeInsets.only(bottom: 30),
+                              child: const FlareActor(
                                   "assets/tarikh/Broken Heart.flr",
                                   animation: "Heart Break",
                                   shouldClip: false),
                             ),
                             Container(
-                              padding: EdgeInsets.only(bottom: 21),
+                              padding: const EdgeInsets.only(bottom: 21),
                               width: 250,
                               child: Text("No favorites",
                                   textAlign: TextAlign.center,
@@ -63,7 +63,7 @@ class TarikhFavoritesUI extends StatelessWidget {
                             ),
                             Container(
                               //width: 270,
-                              margin: EdgeInsets.only(bottom: 114),
+                              margin: const EdgeInsets.only(bottom: 114),
                               child: Text(
                                 'Add favorites in timeline events',
                                 textAlign: TextAlign.center,
@@ -89,7 +89,8 @@ class TarikhFavoritesUI extends StatelessWidget {
                           tapSearchResult: (TimelineEntry entry) {
                             MenuItemData item = MenuItemData.fromEntry(entry);
 
-                            cMenu.pushSubPage(SubPage.TARIKH_TIMELINE,
+                            MenuController.to.pushSubPage(
+                                SubPage.TARIKH_TIMELINE,
                                 arguments: {'focusItem': item});
                           },
                         );

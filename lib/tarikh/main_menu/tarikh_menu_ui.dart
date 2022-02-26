@@ -14,7 +14,7 @@ import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
 /// and it'll provide on the bottom three links for quick access to your Favorites,
 /// a Share Menu and the About Page.
 class TarikhMenuUI extends StatefulWidget {
-  TarikhMenuUI({Key? key}) : super(key: key);
+  const TarikhMenuUI({Key? key}) : super(key: key);
 
   @override
   _TarikhMenuUIState createState() => _TarikhMenuUIState();
@@ -39,7 +39,8 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
   navigateToTimeline(MenuItemData item) {
     _pauseSection();
 
-    cMenu.pushSubPage(SubPage.TARIKH_TIMELINE, arguments: {'focusItem': item});
+    MenuController.to
+        .pushSubPage(SubPage.TARIKH_TIMELINE, arguments: {'focusItem': item});
 
     //_restoreSection(null); // TODO working? was below:
 
@@ -53,9 +54,10 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
 
   //    animation does not resume on return
   // TODO what was v below used for?, dummy value passed back i think from future:
-  _restoreSection(v) => setState(() => _isSectionActive = true);
+//_restoreSection(v) => setState(() => _isSectionActive = true);
   _pauseSection() => setState(() => _isSectionActive = false);
 
+  @override
   initState() {
     //print('tarikh init state 1, isAppInitDone=${cMain.isAppInitDone}');
 
@@ -85,7 +87,7 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
       ..addAll(_menu.sections
           .map<Widget>(
             (MenuSectionData section) => Container(
-              margin: EdgeInsets.only(top: 20.0),
+              margin: const EdgeInsets.only(top: 20.0),
               child: MenuSection(
                 section.label!,
                 section.backgroundColor!,
@@ -100,7 +102,7 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
           .toList(growable: false))
       ..add(
         Container(
-          margin: EdgeInsets.only(top: 40.0, bottom: 22),
+          margin: const EdgeInsets.only(top: 40.0, bottom: 22),
           height: 1.0,
           color: const Color.fromRGBO(151, 151, 151, 0.29),
         ),
@@ -120,7 +122,7 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
               onPressed: () {
                 setState(() {
                   _pauseSection();
-                  cMenu.pushSubPage(SubPage.TARIKH_FAVORITE);
+                  MenuController.to.pushSubPage(SubPage.TARIKH_FAVORITE);
                   // TODO working?:
                   //_restoreSection(null);
                 });
@@ -144,7 +146,7 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
                 onPressed: () {
                   setState(() {
                     _pauseSection();
-                    cMenu.pushSubPage(SubPage.TARIKH_SEARCH);
+                    MenuController.to.pushSubPage(SubPage.TARIKH_SEARCH);
                     // TODO working?:
                     //_restoreSection(null);
                   });

@@ -23,7 +23,7 @@ typedef TouchEntryCallback(TimelineEntry? entry);
 /// This widget's fields are accessible from the [RenderBox] so that it can
 /// be aligned with the current state.
 class TimelineRenderWidget extends LeafRenderObjectWidget {
-  TimelineRenderWidget({
+  const TimelineRenderWidget({
     Key? key,
     required this.topOverlap,
     required this.focusItem,
@@ -75,7 +75,8 @@ class TimelineRenderWidget extends LeafRenderObjectWidget {
 /// The core method of this object is [paint()]: this is where all the elements
 /// are actually drawn to screen.
 class TimelineRenderObject extends RenderBox {
-  static final Timeline t = TarikhController.t;
+  final TarikhController cTrkh = TarikhController.to; // for speed and less code
+  static final Timeline t = TarikhController.t; // for speed and less code
 
   static const List<Color> LineColors = [
     Color.fromARGB(255, 125, 195, 184),
@@ -86,10 +87,10 @@ class TimelineRenderObject extends RenderBox {
   ];
 
   double _topOverlap = 0.01; //.01 since check below, we use 0.0 by default now
-  Ticks _ticks = Ticks();
+  final Ticks _ticks = Ticks();
   MenuItemData? _focusItem;
   MenuItemData? _processedFocusItem;
-  List<TapTarget> _tapTargets = []; // was List<TapTarget>();
+  final List<TapTarget> _tapTargets = []; // was List<TapTarget>();
   TouchBubbleCallback? touchBubble;
   TouchEntryCallback? touchEntry;
 
@@ -205,7 +206,7 @@ class TimelineRenderObject extends RenderBox {
     /// Fetch the background colors from the [Timeline] and compute the fill.
     List<TimelineBackgroundColor>? backgroundColors = t.backgroundColors;
     ui.Paint? backgroundPaint;
-    if (backgroundColors != null && backgroundColors.length > 0) {
+    if (backgroundColors != null && backgroundColors.isNotEmpty) {
       double rangeStart = backgroundColors.first.start!;
       double range =
           backgroundColors.last.start! - backgroundColors.first.start!;
@@ -685,7 +686,7 @@ class TimelineRenderObject extends RenderBox {
       events = cTrkh.allEvents;
     }
 
-    if (!cTrkh.isGutterModeOff() && events.length > 0) {
+    if (!cTrkh.isGutterModeOff() && events.isNotEmpty) {
       Paint accentPaint = Paint()
         ..color = eventsGutterAccent
         ..style = PaintingStyle.stroke
@@ -751,7 +752,7 @@ class TimelineRenderObject extends RenderBox {
         canvas.drawCircle(
             Offset(x, y),
             eventRadius,
-            backgroundPaint != null ? backgroundPaint : Paint()
+            backgroundPaint ?? Paint()
               ..color = Colors.white
               ..style = PaintingStyle.fill);
         canvas.drawCircle(Offset(x, y), eventRadius, accentPaint);
@@ -1028,7 +1029,8 @@ class TimelineRenderObject extends RenderBox {
 
       builder.addText(item.label!);
       ui.Paragraph labelParagraph = builder.build();
-      labelParagraph.layout(ui.ParagraphConstraints(width: MaxLabelWidth));
+      labelParagraph
+          .layout(const ui.ParagraphConstraints(width: MaxLabelWidth));
 
       double textWidth =
           labelParagraph.maxIntrinsicWidth * item.opacity * item.labelOpacity;

@@ -252,9 +252,7 @@ class Astronomical {
   /* The Julian Day for the given Gregorian date components. */
   static double julianDay(year, month, day, hours) {
     /* Equation from Astronomical Algorithms page 60 */
-    if (hours == null) {
-      hours = 0;
-    }
+    hours ??= 0;
 
     // const trunc = Math.trunc || function (x) { return x < 0 ? Math.ceil(x) : Math.floor(x); };
     trunc(val) => val.truncate();
@@ -315,8 +313,6 @@ class Astronomical {
       }
     }
 
-    ;
-
     return dateByAddingSeconds(sunrise, (adjustment() * -60.0).round());
   }
 
@@ -343,8 +339,6 @@ class Astronomical {
         return b + (a - b) / 91.0 * (dyy - 275);
       }
     }
-
-    ;
 
     return dateByAddingSeconds(sunset, (adjustment() * 60.0).round());
   }

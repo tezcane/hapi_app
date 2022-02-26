@@ -8,8 +8,6 @@ import 'package:hapi/tarikh/timeline/timeline.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 import 'package:intl/intl.dart';
 
-final TarikhController cTrkh = Get.find();
-
 enum GutterMode {
   OFF,
   FAV,
@@ -31,11 +29,9 @@ class TimeBtn {
 }
 
 class TarikhController extends GetxHapi {
-  //static TarikhController get to => Get.find();
+  static TarikhController get to => Get.find();
 
-  static final Timeline t = Timeline();
-
-  static const String FAVORITES_KEY = "TARIKH_FAVS";
+  static late final Timeline t = Timeline();
 
   static final NumberFormat formatter = NumberFormat.compact();
 
@@ -96,13 +92,13 @@ class TarikhController extends GetxHapi {
   /// It receives as input the full list of [TimelineEntry], so that it can
   /// use those references to fill [_favorites].
   initFavorites(List<TimelineEntry> entries) async {
-    List<dynamic>? favs = s.read(TarikhController.FAVORITES_KEY);
+    List<dynamic>? favs = s.read("TARIKH_FAVS");
 
     /// A [Map] is used to optimize retrieval times when checking if a favorite
     /// is already present - in fact the label's used as the key.
     /// Checking if an element is in the map is O(1), making this process O(n)
     /// with n entries.
-    Map<String, TimelineEntry> entriesMap = Map();
+    Map<String, TimelineEntry> entriesMap = {};
     for (TimelineEntry entry in entries) {
       entriesMap.putIfAbsent(entry.label!, () => entry);
       _allEvents.add(entry); // TODO sort this needed? being done in paint...
@@ -126,7 +122,7 @@ class TarikhController extends GetxHapi {
   /// Save [e] into the list, re-sort it, and store to disk.
   addFavorite(TimelineEntry e) {
     if (!_favorites.contains(e)) {
-      this._favorites.add(e);
+      _favorites.add(e);
       _favorites.sort((TimelineEntry a, TimelineEntry b) {
         return a.start!.compareTo(b.start!);
       });
@@ -137,7 +133,7 @@ class TarikhController extends GetxHapi {
   /// Remove the entry and save to disk.
   removeFavorite(TimelineEntry e) {
     if (_favorites.contains(e)) {
-      this._favorites.remove(e);
+      _favorites.remove(e);
       _saveFavorites();
     }
   }
@@ -146,7 +142,7 @@ class TarikhController extends GetxHapi {
   _saveFavorites() {
     List<String> favsList =
         _favorites.map((TimelineEntry en) => en.label!).toList();
-    s.write(TarikhController.FAVORITES_KEY, favsList);
+    s.write("TARIKH_FAVS", favsList);
     update(); // favorites changed so notify people using it
   }
 

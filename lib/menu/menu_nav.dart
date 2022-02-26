@@ -53,7 +53,7 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
       vsync: this,
       duration: navMenuShowHideMs,
     );
-    cMenu.initACNavMenu(_acNavMenu);
+    MenuController.to.initACNavMenu(_acNavMenu);
     _acNavMenu.forward(from: 1.0); // needed to hide at init
 
     super.initState();
@@ -66,10 +66,10 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
   }
 
   void _displayMenuDragGesture(DragEndDetails endDetails) {
-    if (!cMenu.isMenuShowing()) {
+    if (!MenuController.to.isMenuShowing()) {
       final velocity = endDetails.primaryVelocity!;
       if (velocity < 0) {
-        cMenu.showMenu();
+        MenuController.to.showMenu();
       }
     }
   }
@@ -111,12 +111,12 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
                     children: [
                       /// dismiss the Menu when user taps outside the widget.
                       if (_acNavMenu.value < 1 &&
-                          cMenu.isMenuShowing() &&
-                          cMenu.isMenuShowingNav())
+                          MenuController.to.isMenuShowing() &&
+                          MenuController.to.isMenuShowingNav())
                         Align(
                           child: GestureDetector(
-                            onTap: () => cMenu.hideMenu(),
-                            onLongPress: () => cMenu.hideMenu(),
+                            onTap: () => MenuController.to.hideMenu(),
+                            onLongPress: () => MenuController.to.hideMenu(),
                           ),
                         ),
 
@@ -147,14 +147,15 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
                               : _kButtonColorUnselected,
                           onTap: () {
                             if (navPage == widget.initNavPage &&
-                                cMenu.getShowNavSettings()) {
-                              cMenu.hideMenuNav(); // shows settings
+                                MenuController.to.getShowNavSettings()) {
+                              MenuController.to.hideMenuNav(); // shows settings
                             } else if (navPage == widget.initNavPage) {
-                              cMenu.hideMenu(); // same page selected
+                              MenuController.to
+                                  .hideMenu(); // same page selected
                             } else {
                               // selected new nav page
-                              cMenu.hideMenu();
-                              cMenu.navigateToNavPage(navPage);
+                              MenuController.to.hideMenu();
+                              MenuController.to.navigateToNavPage(navPage);
                             }
                           },
                           child: widget.items[navPage.index],

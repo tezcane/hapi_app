@@ -1,17 +1,17 @@
 import 'package:bottom_bar/bottom_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
+//import 'package:flutter/painting.dart'; TODO needed?
 import 'package:get/get.dart';
 import 'package:hapi/menu/fab_nav_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/onboard/auth/auth_controller.dart';
-import 'package:hapi/settings/settings_ui.dart';
-import 'package:hapi/settings/theme/app_themes.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/active_quests_settings_ui.dart';
 import 'package:hapi/quest/active/active_quests_ui.dart';
 import 'package:hapi/quest/quest_card.dart';
 import 'package:hapi/services/database.dart';
+import 'package:hapi/settings/settings_ui.dart';
+import 'package:hapi/settings/theme/app_themes.dart';
 
 class QuestsUI extends StatelessWidget {
   @override
@@ -63,20 +63,20 @@ class _QuestBottomBarUIState extends State<QuestBottomBarUI> {
               },
               items: [
                 BottomBarItem(
-                  icon: Icon(Icons.how_to_reg_outlined),
+                  icon: const Icon(Icons.how_to_reg_outlined),
                   title: Text('Active Quests'),
                   activeColor: Colors.blue,
                   inactiveColor: Colors.white,
                 ),
                 BottomBarItem(
-                  icon: Icon(Icons.brightness_high_outlined),
+                  icon: const Icon(Icons.brightness_high_outlined),
                   title: Text('Daily Quests'),
                   activeColor: Colors.greenAccent.shade700,
                   //darkActiveColor: Colors.greenAccent.shade400,
                   inactiveColor: Colors.white,
                 ),
                 BottomBarItem(
-                  icon: Icon(Icons.timer_outlined),
+                  icon: const Icon(Icons.timer_outlined),
                   title: Text('Time Quests'),
                   activeColor: Colors.orange,
                   //darkActiveColor: Colors.greenAccent.shade400,
@@ -85,7 +85,7 @@ class _QuestBottomBarUIState extends State<QuestBottomBarUI> {
                 BottomBarItem(
                   icon: Transform.rotate(
                     angle: 2.8,
-                    child: Icon(Icons.brightness_3_outlined),
+                    child: const Icon(Icons.brightness_3_outlined),
                   ),
                   title: Text('hapi Quests'),
                   activeColor: Colors.red,
@@ -99,7 +99,7 @@ class _QuestBottomBarUIState extends State<QuestBottomBarUI> {
                 // ),
               ],
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
           ],
         ),
       ),
@@ -121,7 +121,7 @@ class UserQuest extends StatelessWidget {
     return GetBuilder<AuthController>(
       builder: (controller) => Scaffold(
         appBar: AppBar(
-          title: Text(
+          title: const Text(
             'hapi',
             style: TextStyle(
               fontFamily: 'Lobster',
@@ -131,7 +131,7 @@ class UserQuest extends StatelessWidget {
           ),
           actions: [
             IconButton(
-                icon: Icon(Icons.settings),
+                icon: const Icon(Icons.settings),
                 onPressed: () {
                   Get.to(() => SettingsUI());
                 }),
@@ -139,14 +139,15 @@ class UserQuest extends StatelessWidget {
         ),
         body: Column(
           children: <Widget>[
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
             AddQuest(
                 authController: controller,
                 textEditingController: _textEditingController),
             GetX<ActiveQuestsController>(
-              builder: (ActiveQuestsController c) {
+              // TODO should be GetBuilder? not GetX
+              builder: (c) {
                 return Expanded(
                   child: ListView.builder(
                     itemCount: c.quests.length,
@@ -179,7 +180,7 @@ class AddQuest extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.all(20),
+      margin: const EdgeInsets.all(20),
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Row(
@@ -190,7 +191,7 @@ class AddQuest extends StatelessWidget {
               ),
             ),
             IconButton(
-              icon: Icon(Icons.add),
+              icon: const Icon(Icons.add),
               onPressed: () {
                 if (_textEditingController.text != "") {
                   Database().addQuest(_textEditingController.text,

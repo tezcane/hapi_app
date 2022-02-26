@@ -9,6 +9,7 @@ import 'package:hapi/main.dart';
 /// saves and loads our selected theme.
 class ThemeController extends GetxHapi {
   static ThemeController get to => Get.find();
+
   final theme = "system".obs;
   late ThemeMode _themeMode;
 

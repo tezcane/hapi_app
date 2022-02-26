@@ -18,8 +18,7 @@ import 'package:hapi/onboard/user_model.dart';
 /// our user and authentication functions for creating, logging in and out our
 /// user and saving our user data.
 class AuthController extends GetxHapi {
-  static AuthController to = Get.find();
-  final OnboardingController onboardingController = OnboardingController.to;
+  static AuthController get to => Get.find();
 
   Stopwatch splashTimer = Stopwatch();
 
@@ -111,7 +110,7 @@ class AuthController extends GetxHapi {
     }
 
     if (_firebaseUser == null) {
-      if (onboardingController.isOnboarded()) {
+      if (OnboardingController.to.isOnboarded()) {
         Get.offAll(() => SignInUI());
       } else {
         Get.offAll(() => OnboardingUI());
@@ -120,13 +119,13 @@ class AuthController extends GetxHapi {
       splashTimer.stop();
       int msLeftToShowSplash =
           kSplashShowTimeMs - splashTimer.elapsedMilliseconds;
-      if (cMenu.isFastStartupMode() || msLeftToShowSplash < 0) {
+      if (MenuController.to.isFastStartupMode() || msLeftToShowSplash < 0) {
         msLeftToShowSplash = 0;
       }
 
       Timer(Duration(milliseconds: msLeftToShowSplash), () {
         setSplashScreenToDone(); // turns off Splash spinner so not in hero fade
-        cMenu.initAppsFirstPage();
+        MenuController.to.initAppsFirstPage();
       });
     }
   }
@@ -169,7 +168,7 @@ class AuthController extends GetxHapi {
       hideLoadingIndicator();
       Get.snackbar('auth.signInErrorTitle'.tr, 'auth.signInError'.tr,
           snackPosition: SnackPosition.BOTTOM,
-          duration: Duration(seconds: 7),
+          duration: const Duration(seconds: 7),
           backgroundColor: Get.theme.snackBarTheme.backgroundColor,
           colorText: Get.theme.snackBarTheme.actionTextColor);
     }
@@ -213,7 +212,7 @@ class AuthController extends GetxHapi {
       hideLoadingIndicator();
       Get.snackbar('auth.signUpErrorTitle'.tr, error.message!,
           snackPosition: SnackPosition.BOTTOM,
-          duration: Duration(seconds: 10),
+          duration: const Duration(seconds: 10),
           backgroundColor: Get.theme.snackBarTheme.backgroundColor,
           colorText: Get.theme.snackBarTheme.actionTextColor);
     }
@@ -319,14 +318,14 @@ class AuthController extends GetxHapi {
       Get.snackbar(
           'auth.resetPasswordNoticeTitle'.tr, 'auth.resetPasswordNotice'.tr,
           snackPosition: SnackPosition.BOTTOM,
-          duration: Duration(seconds: 5),
+          duration: const Duration(seconds: 5),
           backgroundColor: Get.theme.snackBarTheme.backgroundColor,
           colorText: Get.theme.snackBarTheme.actionTextColor);
     } on FirebaseAuthException catch (error) {
       hideLoadingIndicator();
       Get.snackbar('auth.resetPasswordFailed'.tr, error.message!,
           snackPosition: SnackPosition.BOTTOM,
-          duration: Duration(seconds: 10),
+          duration: const Duration(seconds: 10),
           backgroundColor: Get.theme.snackBarTheme.backgroundColor,
           colorText: Get.theme.snackBarTheme.actionTextColor);
     }

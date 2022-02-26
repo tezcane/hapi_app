@@ -1,7 +1,7 @@
 import 'package:flare_flutter/flare_actor.dart' show FlareActor;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:flutter/widgets.dart';
+//import 'package:flutter/widgets.dart'; TODO needed?
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
 import 'package:hapi/menu/fab_sub_page.dart';
@@ -96,7 +96,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
       img: style,
       blockSpacing: 20.0,
       listIndent: 20.0,
-      blockquotePadding: EdgeInsets.all(20.0),
+      blockquotePadding: const EdgeInsets.all(20.0),
     );
     setState(() {
       _title = widget.article.label!;
@@ -127,14 +127,14 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
   @override
   Widget build(BuildContext context) {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
-    List<TimelineEntry> favs = cTrkh.favorites;
+    List<TimelineEntry> favs = TarikhController.to.favorites;
     bool isFav = favs.any(
         (TimelineEntry te) => te.label!.toLowerCase() == _title.toLowerCase());
     return FabSubPage(
       subPage: SubPage.TARIKH_ARTICLE,
       child: Scaffold(
         body: Container(
-          color: Color.fromRGBO(255, 255, 255, 1),
+          color: const Color.fromRGBO(255, 255, 255, 1),
           child: Stack(
             children: <Widget>[
               Column(
@@ -142,7 +142,8 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                   Container(height: devicePadding.top),
                   Expanded(
                     child: SingleChildScrollView(
-                      padding: EdgeInsets.only(left: 20, right: 20, bottom: 30),
+                      padding: const EdgeInsets.only(
+                          left: 20, right: 20, bottom: 30),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -162,14 +163,14 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                                   _interactOffset = null;
                                 });
                               },
-                              child: Container(
+                              child: SizedBox(
                                   height: 280,
                                   child: TimelineEntryWidget(
                                       isActive: true,
                                       timelineEntry: widget.article,
                                       interactOffset: _interactOffset))),
                           Padding(
-                            padding: EdgeInsets.only(top: 30.0),
+                            padding: const EdgeInsets.only(top: 30.0),
                             child: Row(
                               children: [
                                 Expanded(
@@ -208,7 +209,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                                     child: Container(
                                       height: 60.0,
                                       width: 60.0,
-                                      padding: EdgeInsets.all(15.0),
+                                      padding: const EdgeInsets.all(15.0),
                                       color: Colors.white,
 
                                       /// Check out the widget at:
@@ -225,9 +226,11 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                                       _isFavorite = !_isFavorite;
                                     });
                                     if (_isFavorite) {
-                                      cTrkh.addFavorite(widget.article);
+                                      TarikhController.to
+                                          .addFavorite(widget.article);
                                     } else {
-                                      cTrkh.removeFavorite(widget.article);
+                                      TarikhController.to
+                                          .removeFavorite(widget.article);
                                     }
                                   },
                                 ),
@@ -235,14 +238,14 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                             ),
                           ),
                           Container(
-                            margin: EdgeInsets.only(top: 20, bottom: 20),
+                            margin: const EdgeInsets.only(top: 20, bottom: 20),
                             height: 1,
                             color: Colors.black.withOpacity(0.11),
                           ),
                           MarkdownBody(
                               data: _articleMarkdown,
                               styleSheet: _markdownStyleSheet),
-                          SizedBox(height: 100),
+                          const SizedBox(height: 100),
                         ],
                       ),
                     ),

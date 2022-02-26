@@ -1,5 +1,5 @@
 import 'dart:math';
-import 'dart:ui';
+//import 'dart:ui'; TODO needed?
 import 'dart:ui' as ui;
 
 import 'package:flare_dart/math/aabb.dart' as flare;
@@ -28,7 +28,7 @@ class MenuVignette extends LeafRenderObjectWidget {
   // Replaced old way of using timeline null checks
   final bool needsRepaint;
 
-  MenuVignette(
+  const MenuVignette(
       {Key? key,
       required this.needsRepaint,
       required this.gradientColor,
@@ -126,7 +126,7 @@ class MenuVignetteRenderObject extends RenderBox {
   bool get sizedByParent => true;
 
   @override
-  bool hitTestSelf(Offset screenOffset) => true;
+  bool hitTestSelf(Offset position) => true;
 
   @override
   void performResize() {

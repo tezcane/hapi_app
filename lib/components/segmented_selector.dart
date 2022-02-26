@@ -9,7 +9,7 @@ import 'package:flutter/cupertino.dart';
 ///                 onChanged: (value) => print('changed'),
 ///               ),
 class SegmentedSelector extends StatelessWidget {
-  SegmentedSelector(
+  const SegmentedSelector(
       {required this.menuOptions,
       required this.selectedOption,
       required this.onValueChanged});
@@ -25,18 +25,17 @@ class SegmentedSelector extends StatelessWidget {
     return CupertinoSlidingSegmentedControl(
         //thumbColor: Theme.of(context).primaryColor,
         groupValue: selectedOption,
-        children: Map.fromIterable(
-          menuOptions,
-          key: (option) => option.key,
-          value: (option) => Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(option.icon),
-              SizedBox(width: 6),
-              Text(option.value),
-            ],
-          ),
-        ),
+        children: {
+          for (var option in menuOptions)
+            option.key: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(option.icon),
+                const SizedBox(width: 6),
+                Text(option.value),
+              ],
+            )
+        },
         onValueChanged: onValueChanged);
   }
 }

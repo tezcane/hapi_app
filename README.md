@@ -6,6 +6,7 @@ Bef  - Before
 btn  - Button  
 C    - Controller
 Conn - Connectivity (controller)
+Cord - Coordinates
 curr - Current  
 dis  - Disabled  
 dn   - down (use with up: up/dn)  

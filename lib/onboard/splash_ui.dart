@@ -21,7 +21,6 @@ class SplashUI extends StatefulWidget {
 
 class _SplashUIState extends State<SplashUI> with TickerProviderStateMixin {
   _SplashUIState();
-  final AuthController c = Get.find();
 
   late GifController cGif;
   late String gifFilename;
@@ -63,9 +62,9 @@ class _SplashUIState extends State<SplashUI> with TickerProviderStateMixin {
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       // controller1repeat(min: 0, max: 30, period: Duration(milliseconds: 2000)); // how to repeat
       cGif.animateTo(gifFrames,
-          duration: Duration(milliseconds: kGifAnimationMs));
-      Timer(Duration(milliseconds: kGifAnimationMs + 81),
-          () => c.setGifAnimatingDone());
+          duration: const Duration(milliseconds: kGifAnimationMs));
+      Timer(const Duration(milliseconds: kGifAnimationMs + 81),
+          () => AuthController.to.setGifAnimatingDone());
     });
   }
 
@@ -85,7 +84,7 @@ class _SplashUIState extends State<SplashUI> with TickerProviderStateMixin {
   // After updateTimeMs time, refresh the loading bar.
   // TODO use Loading() progress bar instead?
   void updateLoadingMsg(int updateTimeMs, bool isBarGrowing) {
-    if (c.isSplashScreenDone()) {
+    if (AuthController.to.isSplashScreenDone()) {
       _loadingBar = ''; // hide loading bar so hero/init navigation is cleaner
       return;
     }
@@ -93,7 +92,7 @@ class _SplashUIState extends State<SplashUI> with TickerProviderStateMixin {
     _loadingBarTimer = Timer(
       Duration(milliseconds: updateTimeMs),
       () => setState(() {
-        if (_loadingBar.length == 0) {
+        if (_loadingBar.isEmpty) {
           isBarGrowing = true; // bar is blank, start growing again
           _loadingBar = '_';
         } else if (_loadingBar.length == 1) {
@@ -128,7 +127,7 @@ class _SplashUIState extends State<SplashUI> with TickerProviderStateMixin {
           builder: (c) => Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               if (!c.isGifAnimatingDone())
                 GifImage(
                   controller: cGif,
@@ -145,20 +144,20 @@ class _SplashUIState extends State<SplashUI> with TickerProviderStateMixin {
                     height: 250,
                   ),
                 ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 'بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ',
                 style: TextStyle(fontSize: 15.0),
               ),
-              SizedBox(height: 20),
-              Text(
+              const SizedBox(height: 20),
+              const Text(
                 'ٱلسَّلَامُ عَلَيْكُمْ وَرَحْمَةُ ٱللَّٰ وَبَرَكَاتُهُ',
                 style: TextStyle(fontSize: 15.0),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               Text(
                 _loadingBar,
-                style: TextStyle(fontSize: 30.0),
+                style: const TextStyle(fontSize: 30.0),
               ),
             ],
           ),

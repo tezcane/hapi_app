@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:get/get.dart';
 import 'package:hapi/controllers/time_controller.dart';
+import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/CalculationMethod.dart';
@@ -12,16 +12,15 @@ import 'package:hapi/quest/active/athan/Madhab.dart';
 import 'package:hapi/quest/active/athan/Qibla.dart';
 import 'package:hapi/quest/active/athan/TOD.dart';
 import 'package:hapi/quest/active/athan/TimeOfDay.dart';
-import 'package:timezone/data/latest.dart' show initializeTimeZones;
-import 'package:timezone/timezone.dart' show Location, TZDateTime, getLocation;
+import 'package:timezone/timezone.dart' show Location, TZDateTime;
 
-final ZamanController cZamn = Get.find();
+/// Controls Islamic Times Of Day, e.g. Fajr, Duha, Sunset/Maghrib, etc.
+class ZamanController extends GetxHapi {
+  static ZamanController get to => Get.find();
 
-class ZamanController extends GetxController {
-  RxString _nextZaman = '-'.obs;
+  final RxString _nextZaman = '-'.obs;
   String get timeToNextZaman => _nextZaman.value;
 
-  Location? _timeZone;
   Coordinates _gps = Coordinates(36.950663449472, -122.05716133118);
   double? _qiblaDirection;
   double? get qiblaDirection => _qiblaDirection;
@@ -30,27 +29,28 @@ class ZamanController extends GetxController {
 
   @override
   void onInit() {
-    initializeTimeZones();
+    super.onInit();
 
     initLocation();
-
-    super.onInit();
   }
 
   initLocation() async {
-    // TODO detect and report bad timezones
-    String timeZone = await FlutterNativeTimezone.getLocalTimezone();
-    print('***** Time Zone: "$timeZone"');
+    await TimeController.to.reinitTime();
 
-    _timeZone = getLocation(timeZone); // 'America/Los_Angeles'
+    // TODO call this before timer fully runs down
+
+    // TODO move to location controller
     _gps = Coordinates(37.3382, -121.8863); // San Jose // TODO
-
     _qiblaDirection = Qibla.qibla(_gps); // Qibla Direction TODO
     print('***** Qibla Direction:');
     print('qibla: $_qiblaDirection');
 
-    // TODO precision and salah settings
-    DateTime date = TZDateTime.from(await cTime.now(), _timeZone!);
+    // TODO is this even needed, getTime gets local time of user?
+    Location timezoneLoc = await TimeController.to.getTimezoneLocation();
+    DateTime date = TZDateTime.from(await TimeController.to.now(), timezoneLoc);
+
+    final ActiveQuestsController cQstA = ActiveQuestsController.to;
+
     CalculationParameters params =
         CalculationMethod.getMethod(SalahMethod.values[cQstA.salahCalcMethod]);
 
@@ -69,15 +69,16 @@ class ZamanController extends GetxController {
       params.kerahatSunZawalMins = 15;
       params.kerahatSunSettingMins = 20;
     }
+    // TODO precision and salah settings
     // TODO fix all this, date should change at FAJR_TOMORROW hit only?
-    cQstA.tod = TimeOfDay(_gps, date, params, _timeZone!, false);
+    cQstA.tod = TimeOfDay(_gps, date, params, timezoneLoc, false);
 
     // reset day:
     if (cQstA.tod!.currTOD == TOD.Fajr_Tomorrow) {
-      cAjrA.clearAllQuests();
+      ActiveQuestsAjrController.to.clearAllQuests();
     }
     // For next prayer/day, set any missed quests and do other quest setup:
-    cAjrA.initCurrQuest();
+    ActiveQuestsAjrController.to.initCurrQuest();
 
     update(); // update UI with above changes (needed at app init)
 
@@ -86,8 +87,11 @@ class ZamanController extends GetxController {
 
   void startNextZamanCountdownTimer() {
     Timer(const Duration(seconds: 1), () async {
-      Duration timeToNextZaman = cQstA.tod!.nextTODTime
-          .difference(TZDateTime.from(await cTime.now(), _timeZone!));
+      final ActiveQuestsController cQstA = ActiveQuestsController.to;
+
+      Duration timeToNextZaman = cQstA.tod!.nextTODTime.difference(
+          TZDateTime.from(
+              await TimeController.to.now(), TimeController.to.tzLoc));
 
       // if we hit the end of a timer (or forced), recalculate zaman times:
       if (forceSalahRecalculation || timeToNextZaman.inSeconds <= 0) {
@@ -97,9 +101,11 @@ class ZamanController extends GetxController {
         initLocation(); // does eventually call startNextZamanCountdownTimer();
       } else {
         if (timeToNextZaman.inSeconds % 60 == 0) {
-          // print once a minute
+          // print once a minute to show thread is alive
           print('Next Zaman Timer Minute Tick: ${timeToNextZaman.inSeconds} '
               'secs left (${timeToNextZaman.inSeconds / 60} minutes)');
+        } else if (timeToNextZaman.inSeconds % 300 == 0) {
+          TimeController.to.reinitTime(); // TODO check cheater every 5 mins?
         }
         _nextZaman.value = _printHourMinuteSeconds(timeToNextZaman);
         update();

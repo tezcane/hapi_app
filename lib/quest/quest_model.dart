@@ -26,9 +26,9 @@ class QuestModel {
       //questType: data['quest'] ?? QUEST.USER_CUSTOM,
       content: data['content'],
       dateCreated: data['dateCreated'],
-      dateStart: data['dateStart'] ?? null,
-      dateEnd: data['dateEnd'] ?? null,
-      dateDone: data['dateDone'] ?? null,
+      dateStart: data['dateStart'],
+      dateEnd: data['dateEnd'],
+      dateDone: data['dateDone'],
       done: data['done'],
     );
   }

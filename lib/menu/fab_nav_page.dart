@@ -15,7 +15,7 @@ class FabNavPage extends StatelessWidget {
     this.settingsWidget,
   }) : super(key: key) {
     hasSettings = settingsWidget != null;
-    cMenu.setShowNavSettings(hasSettings);
+    MenuController.to.setShowNavSettings(hasSettings);
   }
 
   final NavPage navPage;
@@ -46,12 +46,13 @@ class FabNavPage extends StatelessWidget {
                       Align(
                         alignment: Alignment.topCenter,
                         child: ConfettiWidget(
-                          confettiController: cMenu.confettiController(),
+                          confettiController:
+                              MenuController.to.confettiController(),
                           blastDirectionality: BlastDirectionality.explosive,
                           shouldLoop: false,
                           numberOfParticles: 75,
-                          maximumSize: Size(50, 50),
-                          minimumSize: Size(20, 20),
+                          maximumSize: const Size(50, 50),
+                          minimumSize: const Size(20, 20),
                           colors: const [
                             Colors.red,
                             Colors.pink,
@@ -62,18 +63,19 @@ class FabNavPage extends StatelessWidget {
                             Colors.indigo,
                             Colors.purple,
                           ], // manually specify the colors to be used
-                          createParticlePath: cMenu.drawStar,
+                          createParticlePath: MenuController.to.drawStar,
                         ),
                       ),
                       Align(
                         alignment: Alignment.topCenter,
                         child: ConfettiWidget(
-                          confettiController: cMenu.confettiController(),
+                          confettiController:
+                              MenuController.to.confettiController(),
                           blastDirectionality: BlastDirectionality.explosive,
                           shouldLoop: false,
                           numberOfParticles: 200,
-                          maximumSize: Size(10, 10),
-                          minimumSize: Size(3, 3),
+                          maximumSize: const Size(10, 10),
+                          minimumSize: const Size(3, 3),
                           colors: const [
                             Colors.red,
                             Colors.pink,
@@ -84,7 +86,7 @@ class FabNavPage extends StatelessWidget {
                             Colors.indigo,
                             Colors.purple,
                           ], // manually specify the colors to be used
-                          //createParticlePath: cMenu.drawStar,
+                          //createParticlePath: MenuController.to.drawStar,
                         ),
                       ),
                     ],
@@ -120,7 +122,7 @@ class FabNavPage extends StatelessWidget {
                                     right: -2.0,
                                     child: Transform.rotate(
                                       angle: nav.np == NavPage.RELICS ? .59 : 0,
-                                      child: Icon(
+                                      child: const Icon(
                                         Icons.star,
                                         color: Colors.orange,
                                         size: 18,
@@ -131,7 +133,7 @@ class FabNavPage extends StatelessWidget {
                             ),
                             Text(
                               nav.label,
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 20,
                                 fontWeight: FontWeight.normal,
@@ -141,7 +143,7 @@ class FabNavPage extends StatelessWidget {
                         ),
                       ),
                       if (hasSettings && nav.np == navPage)
-                        Align(
+                        const Align(
                           alignment: Alignment.topRight,
                           child: Icon(
                             Icons.settings_applications_outlined,
@@ -165,13 +167,13 @@ class HapiShareUI extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       children: [
-        SizedBox(width: 10.0),
+        const SizedBox(width: 10.0),
         Tooltip(
           message: 'Learn more about hapi and how to contribute',
           child: GestureDetector(
             onTap: () {
-              cMenu.pushSubPage(SubPage.ABOUT);
-              cMenu.hideMenu();
+              MenuController.to.pushSubPage(SubPage.ABOUT);
+              MenuController.to.hideMenu();
             },
             child: Row(
               children: <Widget>[
@@ -206,13 +208,13 @@ class HapiShareUI extends StatelessWidget {
             ),
           ),
         ),
-        SizedBox(width: 20.0),
+        const SizedBox(width: 20.0),
         Tooltip(
           message:
               'Share hapi with Muslims and earn mountains of good deeds from their actions too!',
           child: InkWell(
             onTap: () => Share.share('As-salamu Alaykum, '
-                'hapi is a fun and inspiring app for Muslims, join me today!\n\n'
+                'hapi is a really fun and rewarding app for Muslims, join me!\n\n'
                 'More Info: https://hapi.net/TODO\n'
                 'Download Android: https://bit.ly/TODO\n'
                 'Download iOS:  https://bit.ly/TODO'),
@@ -229,10 +231,10 @@ class HapiShareUI extends StatelessWidget {
                     ),
                   ),
                 ),
-                IconButton(
+                const IconButton(
                   onPressed: null,
-                  padding: const EdgeInsets.all(0.0), // to center
-                  icon: const Icon(
+                  padding: EdgeInsets.all(0.0), // to center
+                  icon: Icon(
                     Icons.share_outlined,
                     color: Colors.white,
                     size: 25,

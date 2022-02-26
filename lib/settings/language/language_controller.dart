@@ -26,6 +26,7 @@ final List<SettingsOptionModel> languageOptions = [
 /// saves and loads our selected language.
 class LanguageController extends GetxController {
   static LanguageController get to => Get.find();
+
   final language = "".obs;
 
   static const String defaultLanguage = 'en';

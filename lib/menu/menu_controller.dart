@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:confetti/confetti.dart';
-import 'package:flutter/animation.dart'; // TODO needed?
+//import 'package:flutter/animation.dart'; // TODO needed?
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/getx_hapi.dart';
@@ -18,8 +18,6 @@ import 'package:hapi/tarikh/main_menu/tarikh_menu_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_search_ui.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
-
-final MenuController cMenu = Get.find();
 
 class Nav {
   const Nav({required this.np, required this.label, required this.icon});
@@ -61,7 +59,7 @@ enum SubPage {
 }
 
 class MenuController extends GetxHapi {
-  //static MenuController to = Get.find();
+  static MenuController get to => Get.find();
 
   late AnimationController _acFabIcon; // controls fab icon animation
   late AnimationController _acNavMenu; // controls nav menu animation
@@ -121,7 +119,7 @@ class MenuController extends GetxHapi {
       _disableScreenTouch();
     } else {
       heroLogoTransistionMs = 0;
-      cMain.setAppInitDone();
+      MainController.to.setAppInitDone();
     }
 
     _navigateToNavPage(lastNavPage, transistionMs: heroLogoTransistionMs);
@@ -133,7 +131,7 @@ class MenuController extends GetxHapi {
           hideMenu(); // logo should be in menu by now
           Timer(navMenuShowHideMs, () {
             _enableScreenTouch(); // give time for menu to close
-            cMain.setAppInitDone();
+            MainController.to.setAppInitDone();
           });
         });
       });
@@ -162,7 +160,7 @@ class MenuController extends GetxHapi {
   /// Use to switch to a high level nav page only (e.g. Quests, Quran, etc.)
   void navigateToNavPage(NavPage navPage, {bool offAll = false}) {
     // clear stack in case we jump to this next nav menu
-    if (_subPageStack.length > 0) {
+    if (_subPageStack.isNotEmpty) {
       _subPageStack = [];
     }
 
@@ -220,7 +218,7 @@ class MenuController extends GetxHapi {
         break;
       case (NavPage.TARIKH):
         Get.offAll(
-          () => TarikhMenuUI(),
+          () => const TarikhMenuUI(),
           transition: transition,
           duration: Duration(milliseconds: transistionMs),
         );
@@ -277,7 +275,7 @@ class MenuController extends GetxHapi {
         break;
       case (SubPage.TARIKH_SEARCH):
         Get.to(
-          () => TarikhSearchUI(),
+          () => const TarikhSearchUI(),
           arguments: arguments,
           transition: transition,
           duration: Duration(milliseconds: transistionMs),
@@ -337,23 +335,23 @@ class MenuController extends GetxHapi {
   }
 
   bool isAnySubPageShowing() {
-    if (_subPageStack.length != 0) {
+    if (_subPageStack.isNotEmpty) {
       return true;
     }
     return false;
   }
 
   bool isSubPageShowing(SubPage subPage) {
-    if (_subPageStack.length != 0) {
+    if (_subPageStack.isNotEmpty) {
       return _subPageStack[_subPageStack.length - 1] == subPage;
     }
     return false;
   }
 
-  RxBool _isScreenDisabled = false.obs;
-  RxBool _isMenuShowing = false.obs;
-  RxBool _isMenuShowingNav = false.obs;
-  RxBool _isMenuShowingSettings = false.obs;
+  final RxBool _isScreenDisabled = false.obs;
+  final RxBool _isMenuShowing = false.obs;
+  final RxBool _isMenuShowingNav = false.obs;
+  final RxBool _isMenuShowingSettings = false.obs;
 
   RxBool get isScreenDisabled => _isScreenDisabled;
   RxBool get isMenuShowing => _isMenuShowing;

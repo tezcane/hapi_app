@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-
-import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 import 'package:hapi/tarikh/article/timeline_entry_widget.dart';
+import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
 /// This widget is responsible for drawing the circular thumbnail within the [ThumbnailDetailWidget].
 ///
 /// It uses an inactive [TimelineEntryWidget] for the image, with a [CustomClipper] for the circular image.
 class ThumbnailWidget extends StatelessWidget {
+  const ThumbnailWidget(this.entry, {Key? key}) : super(key: key);
+
   static const double radius = 17;
 
   /// Reference to the entry to get the thumbnail image information.
   final TimelineEntry entry;
-
-  ThumbnailWidget(this.entry, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +33,7 @@ class ThumbnailWidget extends StatelessWidget {
       );
     }
 
-    return Container(
+    return SizedBox(
         width: radius * 2,
         height: radius * 2,
         child: ClipPath(clipper: CircleClipper(), child: thumbnail));
@@ -52,5 +51,5 @@ class CircleClipper extends CustomClipper<Path> {
   }
 
   @override
-  bool shouldReclip(CustomClipper<Path> old) => true;
+  bool shouldReclip(CustomClipper<Path> oldClipper) => true;
 }

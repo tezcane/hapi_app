@@ -27,7 +27,7 @@ class TimelineEntryWidget extends LeafRenderObjectWidget {
   /// parameter can be used to detect motion effects and alter the [FlareActor] accordingly.
   final Offset? interactOffset;
 
-  TimelineEntryWidget(
+  const TimelineEntryWidget(
       {Key? key,
       required this.isActive,
       required this.timelineEntry,

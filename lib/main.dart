@@ -80,19 +80,20 @@ void main() async {
   tz.initializeTimeZones();
 
   // TODO cleanup/optimize use Getx bindings?
-  Get.put<LocationController>(LocationController(), permanent: true);
-  Get.put<ConnectivityController>(ConnectivityController(), permanent: true);
-  Get.put<TimeController>(TimeController(), permanent: true);
-  Get.put<MainController>(MainController(), permanent: true);
-  Get.put<MenuController>(MenuController(), permanent: true);
+  const bool permOn = false;
+  Get.put<LocationController>(LocationController(), permanent: permOn);
+  Get.put<ConnectivityController>(ConnectivityController(), permanent: permOn);
+  Get.put<TimeController>(TimeController(), permanent: permOn);
+  Get.put<MainController>(MainController(), permanent: permOn);
+  Get.put<MenuController>(MenuController(), permanent: permOn);
   Get.put<OnboardingController>(OnboardingController());
   Get.put<AuthController>(AuthController()); // requires OnboardingController
   Get.put<ActiveQuestsController>(ActiveQuestsController(),
-      permanent: true); // requires AuthController
+      permanent: permOn); // requires AuthController
   Get.put<ActiveQuestsAjrController>(ActiveQuestsAjrController(),
-      permanent: true); // requires ActiveQuestsController
+      permanent: permOn); // requires ActiveQuestsController
   Get.put<ZamanController>(ZamanController(),
-      permanent: true); // requires ActiveQuestsController
+      permanent: permOn); // requires ActiveQuestsController
   Get.put<TarikhController>(TarikhController());
   Get.put<ThemeController>(ThemeController());
   Get.put<LanguageController>(LanguageController());
@@ -116,7 +117,7 @@ class MyApp extends StatelessWidget {
 
     return OrientationBuilder(
       builder: (context, orientation) {
-        cMain.setOrientation(orientation == Orientation.portrait);
+        MainController.to.setOrientation(orientation == Orientation.portrait);
         return GetBuilder<LanguageController>(
           builder: (c) => Loading(
             child: GetMaterialApp(
@@ -154,7 +155,7 @@ class AppRoutes {
     GetPage(name: '/signin', page: () => SignInUI()),
     GetPage(name: '/signup', page: () => SignUpUI()),
     GetPage(name: '/quest', page: () => QuestsUI()),
-    GetPage(name: '/tarikh', page: () => TarikhMenuUI()),
+    GetPage(name: '/tarikh', page: () => const TarikhMenuUI()),
     GetPage(name: '/tarikh/favorite', page: () => TarikhFavoritesUI()),
     GetPage(name: '/tarikh/article', page: () => TarikhArticleUI()),
     GetPage(name: '/tarikh/timeline', page: () => TarikhTimelineUI()),

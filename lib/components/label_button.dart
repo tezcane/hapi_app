@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 ///                 onPressed: () => print('implement me'),
 ///               ),
 class LabelButton extends StatelessWidget {
-  LabelButton({required this.labelText, required this.onPressed});
+  const LabelButton({required this.labelText, required this.onPressed});
   final String labelText;
   final void Function() onPressed;
 

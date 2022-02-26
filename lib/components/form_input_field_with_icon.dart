@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 ///                 onSaved: (value) => print('implement me'),
 ///               ),
 class FormInputFieldWithIcon extends StatelessWidget {
-  FormInputFieldWithIcon(
+  const FormInputFieldWithIcon(
       {required this.controller,
       required this.iconPrefix,
       required this.labelText,

@@ -10,7 +10,7 @@ class QuestCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
       child: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Row(
@@ -18,7 +18,7 @@ class QuestCard extends StatelessWidget {
             Expanded(
               child: Text(
                 quest.content,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
                 ),

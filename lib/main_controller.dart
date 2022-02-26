@@ -6,10 +6,8 @@ import 'package:get/get.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/menu/menu_controller.dart';
 
-final MainController cMain = Get.find();
-
 class MainController extends GetxHapi {
-  //static MainController get to => Get.find();
+  static MainController get to => Get.find();
 
   late final TargetPlatform _platform;
 
@@ -85,14 +83,14 @@ class MainController extends GetxHapi {
 
     this.isPortrait.value = isPortrait;
 
-    if (cMenu.isAnySubPageShowing()) {
+    if (MenuController.to.isAnySubPageShowing()) {
       update(); // notify watchers
     } else {
       // TODO only do this to fix slide menu for now
-      if (cMenu.isMenuShowing()) {
-        cMenu.hideMenu();
+      if (MenuController.to.isMenuShowing()) {
+        MenuController.to.hideMenu();
       }
-      cMenu.navigateToNavPage(cMenu.getLastNavPage());
+      MenuController.to.navigateToNavPage(MenuController.to.getLastNavPage());
     }
   }
 }

@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 ///                 onSaved: (value) => print('implement me'),
 ///               ),
 class FormInputField extends StatelessWidget {
-  FormInputField(
+  const FormInputField(
       {required this.controller,
       required this.labelText,
       required this.validator,
@@ -34,15 +34,15 @@ class FormInputField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       decoration: InputDecoration(
-        border: OutlineInputBorder(
+        border: const OutlineInputBorder(
             borderRadius: BorderRadius.all(
           Radius.circular(8.0),
         )),
-        enabledBorder: OutlineInputBorder(
+        enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.black45, width: 1.0),
           borderRadius: BorderRadius.all(Radius.circular(8.0)),
         ),
-        focusedBorder: OutlineInputBorder(
+        focusedBorder: const OutlineInputBorder(
           borderSide: BorderSide(
               color: /*Palette.focusedinputBorderColor*/ Colors.black45,
               width: 1.0),

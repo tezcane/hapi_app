@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:get/get.dart';
 import 'package:hapi/onboard/auth/auth_controller.dart';
 import 'package:hapi/quest/quest_model.dart';
 
@@ -53,17 +52,17 @@ class Database {
         .snapshots()
         .map((QuerySnapshot query) {
       List<QuestModel> retVal = [];
-      query.docs.forEach((element) {
+      for (var element in query.docs) {
         retVal.add(QuestModel.fromMap(
             element.id, element.data() as Map<dynamic, dynamic>));
-      });
+      }
       return retVal;
     });
   }
 
   Future<void> updateQuest(String questId, bool newValue) async {
     try {
-      String uid = Get.find<AuthController>().firebaseUser.value!.uid;
+      String uid = AuthController.to.firebaseUser.value!.uid;
 
       _db
           .collection("user")

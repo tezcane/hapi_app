@@ -16,6 +16,7 @@ class UpdateProfileUI extends StatelessWidget {
   final AuthController authController = AuthController.to;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  @override
   Widget build(BuildContext context) {
     //print('user.name: ' + user?.value?.name);
     authController.nameController.text =
@@ -45,7 +46,7 @@ class UpdateProfileUI extends StatelessWidget {
                     onSaved: (value) =>
                         authController.nameController.text = value!,
                   ),
-                  FormVerticalSpace(),
+                  const FormVerticalSpace(),
                   FormInputFieldWithIcon(
                     controller: authController.emailController,
                     iconPrefix: Icons.email,
@@ -56,7 +57,7 @@ class UpdateProfileUI extends StatelessWidget {
                     onSaved: (value) =>
                         authController.emailController.text = value!,
                   ),
-                  FormVerticalSpace(),
+                  const FormVerticalSpace(),
                   PrimaryButton(
                       labelText: 'auth.updateUser'.tr,
                       onPressed: () async {
@@ -73,7 +74,7 @@ class UpdateProfileUI extends StatelessWidget {
                               authController.firestoreUser.value!.email);
                         }
                       }),
-                  FormVerticalSpace(),
+                  const FormVerticalSpace(),
                   LabelButton(
                     labelText: 'auth.resetPasswordLabelButton'.tr,
                     onPressed: () => Get.to(() => ResetPasswordUI()),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+//import 'package:flutter/services.dart';  TODO needed?
 import 'package:get/get.dart';
 import 'package:hapi/components/form_input_field_with_icon.dart';
 import 'package:hapi/components/form_vertical_spacing.dart';
@@ -15,6 +15,7 @@ class ResetPasswordUI extends StatelessWidget {
   final AuthController authController = AuthController.to;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: appBar(context),
@@ -29,7 +30,7 @@ class ResetPasswordUI extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   LogoGraphicHeader(),
-                  SizedBox(height: 48.0),
+                  const SizedBox(height: 48.0),
                   FormInputFieldWithIcon(
                     controller: authController.emailController,
                     iconPrefix: Icons.email,
@@ -40,7 +41,7 @@ class ResetPasswordUI extends StatelessWidget {
                     onSaved: (value) =>
                         authController.emailController.text = value as String,
                   ),
-                  FormVerticalSpace(),
+                  const FormVerticalSpace(),
                   PrimaryButton(
                       labelText: 'auth.resetPasswordButton'.tr,
                       onPressed: () async {
@@ -48,7 +49,7 @@ class ResetPasswordUI extends StatelessWidget {
                           await authController.sendPasswordResetEmail(context);
                         }
                       }),
-                  FormVerticalSpace(),
+                  const FormVerticalSpace(),
                   signInLink(context),
                 ],
               ),
@@ -73,6 +74,6 @@ class ResetPasswordUI extends StatelessWidget {
         onPressed: () => Get.offAll(() => SignInUI()),
       );
     }
-    return Container(width: 0, height: 0);
+    return const SizedBox(width: 0, height: 0);
   }
 }

@@ -5,7 +5,7 @@ import 'package:hapi/onboard/user_model.dart';
 // TODO unused we can use again to show gravatar
 /// displays a user avatar on the X.
 class Avatar extends StatelessWidget {
-  Avatar(
+  const Avatar(
     this.user,
   );
   final UserModel user;

@@ -35,9 +35,11 @@ class MenuItemData {
   /// Padding is built depending on the type of the [entry] provided.
   MenuItemData.fromEntry(TimelineEntry entry) {
     // put in timer so btns updates after navigation
-    Timer(Duration(milliseconds: 500), () {
-      cTrkh.setTBtnUp(cTrkh.getTimeBtn(entry.previous, 1.0));
-      cTrkh.setTBtnDn(cTrkh.getTimeBtn(entry.next, 1.0));
+    Timer(const Duration(milliseconds: 500), () {
+      TarikhController.to
+          .setTBtnUp(TarikhController.to.getTimeBtn(entry.previous, 1.0));
+      TarikhController.to
+          .setTBtnDn(TarikhController.to.getTimeBtn(entry.next, 1.0));
     });
 
     label = entry.label;
@@ -102,6 +104,7 @@ class MenuData {
     for (dynamic entry in jsonEntries) {
       Map map = entry as Map;
 
+      // TODO needed?:
       if (map != null) {
         MenuSectionData menuSection = MenuSectionData();
         menu.add(menuSection);
@@ -126,6 +129,7 @@ class MenuData {
           List items = map["items"] as List;
           for (dynamic item in items) {
             Map itemMap = item as Map;
+            // TODO needed?:
             if (itemMap == null) {
               continue;
             }

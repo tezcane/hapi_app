@@ -22,7 +22,7 @@ class MenuSection extends StatefulWidget {
   final NavigateTo navigateTo;
   final bool isActive;
 
-  MenuSection(this.title, this.backgroundColor, this.accentColor,
+  const MenuSection(this.title, this.backgroundColor, this.accentColor,
       this.menuOptions, this.navigateTo, this.isActive,
       {required this.assetId, Key? key})
       : super(key: key);
@@ -138,7 +138,7 @@ class _SectionState extends State<MenuSection>
                               Container(
                                 height: 21.0,
                                 width: 21.0,
-                                margin: EdgeInsets.all(18.0),
+                                margin: const EdgeInsets.all(18.0),
 
                                 /// Another [FlareActor] widget that
                                 /// you can experiment with here: https://www.2dimensions.com/a/pollux/files/flare/expandcollapse/preview
@@ -161,41 +161,40 @@ class _SectionState extends State<MenuSection>
                           axisAlignment: 0.0,
                           axis: Axis.vertical,
                           sizeFactor: _sizeAnimation!,
-                          child: Container(
-                              child: Padding(
-                                  padding: EdgeInsets.only(
-                                      left: 56.0, right: 20.0, top: 10.0),
-                                  child: Column(
-                                      children: widget.menuOptions.map((item) {
-                                    return GestureDetector(
-                                        behavior: HitTestBehavior.opaque,
-                                        onTap: () => widget.navigateTo(item),
-                                        child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Expanded(
-                                                  child: Container(
-                                                      margin: EdgeInsets.only(
-                                                          bottom: 20.0),
-                                                      child: Text(
-                                                        item.label!,
-                                                        style: TextStyle(
-                                                            color: widget
-                                                                .accentColor,
-                                                            fontSize: 20.0,
-                                                            fontFamily:
-                                                                "RobotoMedium"),
-                                                      ))),
-                                              Container(
-                                                  alignment: Alignment.center,
-                                                  child: Image.asset(
-                                                      "assets/tarikh/right_arrow.png",
-                                                      color: widget.accentColor,
-                                                      height: 22.0,
-                                                      width: 22.0))
-                                            ]));
-                                  }).toList()))))
+                          child: Padding(
+                              padding: const EdgeInsets.only(
+                                  left: 56.0, right: 20.0, top: 10.0),
+                              child: Column(
+                                  children: widget.menuOptions.map((item) {
+                                return GestureDetector(
+                                    behavior: HitTestBehavior.opaque,
+                                    onTap: () => widget.navigateTo(item),
+                                    child: Row(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Expanded(
+                                              child: Container(
+                                                  margin: const EdgeInsets.only(
+                                                      bottom: 20.0),
+                                                  child: Text(
+                                                    item.label!,
+                                                    style: TextStyle(
+                                                        color:
+                                                            widget.accentColor,
+                                                        fontSize: 20.0,
+                                                        fontFamily:
+                                                            "RobotoMedium"),
+                                                  ))),
+                                          Container(
+                                              alignment: Alignment.center,
+                                              child: Image.asset(
+                                                  "assets/tarikh/right_arrow.png",
+                                                  color: widget.accentColor,
+                                                  height: 22.0,
+                                                  width: 22.0))
+                                        ]));
+                              }).toList())))
                     ]),
                   ],
                 ))));

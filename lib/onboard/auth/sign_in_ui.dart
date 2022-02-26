@@ -1,7 +1,7 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+//import 'package:flutter/services.dart';  // TODO needed?
 import 'package:get/get.dart';
 import 'package:hapi/components/form_input_field_with_icon.dart';
 import 'package:hapi/components/form_vertical_spacing.dart';
@@ -18,6 +18,7 @@ class SignInUI extends StatelessWidget {
   final AuthController authController = AuthController.to;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Form(
@@ -31,7 +32,7 @@ class SignInUI extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
                   LogoGraphicHeader(),
-                  SizedBox(height: 48.0),
+                  const SizedBox(height: 48.0),
                   FormInputFieldWithIcon(
                     controller: authController.emailController,
                     iconPrefix: Icons.email,
@@ -42,7 +43,7 @@ class SignInUI extends StatelessWidget {
                     onSaved: (value) =>
                         authController.emailController.text = value!,
                   ),
-                  FormVerticalSpace(),
+                  const FormVerticalSpace(),
                   FormInputFieldWithIcon(
                     controller: authController.passwordController,
                     iconPrefix: Icons.lock,
@@ -54,7 +55,7 @@ class SignInUI extends StatelessWidget {
                         authController.passwordController.text = value!,
                     maxLines: 1,
                   ),
-                  FormVerticalSpace(),
+                  const FormVerticalSpace(),
                   PrimaryButton(
                       labelText: 'auth.signInButton'.tr,
                       onPressed: () async {
@@ -62,7 +63,7 @@ class SignInUI extends StatelessWidget {
                           authController.signInWithEmailAndPassword(context);
                         }
                       }),
-                  FormVerticalSpace(),
+                  const FormVerticalSpace(),
                   LabelButton(
                     labelText: 'auth.resetPasswordLabelButton'.tr,
                     onPressed: () => Get.to(() => ResetPasswordUI()),

@@ -8,8 +8,6 @@ import 'package:hapi/quest/active/athan/TOD.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 
 class ActiveQuestActionUI extends StatelessWidget {
-  final ActiveQuestsController cQstA = Get.find();
-
   late final QUEST _quest;
   late final Widget _callerWidget;
   late final bool _pinned;
@@ -30,6 +28,8 @@ class ActiveQuestActionUI extends StatelessWidget {
     if (_quest.isFard()) {
       skipEnabled = false;
     }
+
+    ActiveQuestsAjrController cAjrA = ActiveQuestsAjrController.to;
 
     // if active quest is not completed, we can undo last quest
     bool isPreviousQuest = cAjrA.getPrevQuest() == _quest;
@@ -56,7 +56,7 @@ class ActiveQuestActionUI extends StatelessWidget {
         noActionMsg = 'Quest expired, try again tomorrow';
         // if all row quests done, don't allow next row to be started yet
       } else {
-        TOD currTOD = cQstA.tod!.currTOD;
+        TOD currTOD = ActiveQuestsController.to.tod!.currTOD;
         if ((!_pinned && !isPreviousQuest) ||
             // For Adhkhar/Duha times we don't allow user to start task until
             // the quest's time comes in:
@@ -84,6 +84,7 @@ class ActiveQuestActionUI extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ActiveQuestsAjrController cAjrA = ActiveQuestsAjrController.to;
     return FabSubPage(
       subPage: SubPage.ACTIVE_QUEST_ACTION,
       child: Container(
@@ -130,7 +131,7 @@ class ActiveQuestActionUI extends StatelessWidget {
                             cAjrA.clearQuest(_quest);
                           }
                           cAjrA.setSkip(_quest);
-                          cMenu.handleBackButtonHit();
+                          MenuController.to.handleBackButtonHit();
                         },
                         style: TextButton.styleFrom(
                           primary: Colors.white,
@@ -138,7 +139,7 @@ class ActiveQuestActionUI extends StatelessWidget {
                         ),
                       ),
                     ),
-                  if (skipEnabled && doneEnabled) SizedBox(width: 20),
+                  if (skipEnabled && doneEnabled) const SizedBox(width: 20),
                   if (doneEnabled)
                     Tooltip(
                       message: 'Mark this active quest as completed',
@@ -150,8 +151,8 @@ class ActiveQuestActionUI extends StatelessWidget {
                             cAjrA.clearQuest(_quest);
                           }
                           cAjrA.setDone(_quest); //TODO add points
-                          cMenu.handleBackButtonHit();
-                          cMenu.playConfetti();
+                          MenuController.to.handleBackButtonHit();
+                          MenuController.to.playConfetti();
                         },
                         style: TextButton.styleFrom(
                           primary: Colors.white,
@@ -159,12 +160,12 @@ class ActiveQuestActionUI extends StatelessWidget {
                         ),
                       ),
                     ),
-                  if (skipEnabled && doneEnabled) SizedBox(width: 40),
+                  if (skipEnabled && doneEnabled) const SizedBox(width: 40),
                   if (noActionMsg != null)
                     Column(
                       children: [
                         Text(noActionMsg!, style: tsMsg),
-                        SizedBox(height: 16),
+                        const SizedBox(height: 16),
                       ],
                     ),
                 ],
