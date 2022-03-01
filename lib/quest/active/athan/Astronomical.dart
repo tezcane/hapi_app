@@ -1,7 +1,8 @@
 import 'dart:math';
 
+import 'package:hapi/helpers/cord.dart';
+import 'package:hapi/helpers/math_utils.dart';
 import 'package:hapi/quest/active/athan/DateUtils.dart';
-import 'package:hapi/quest/active/athan/MathUtils.dart';
 
 class Astronomical {
   /* The geometric mean longitude of the sun in degrees. */
@@ -180,7 +181,7 @@ class Astronomical {
   static double correctedHourAngle(
       approximateTransit,
       angle,
-      coordinates,
+      Cord coordinates,
       afterTransit,
       siderealTime,
       rightAscension,
@@ -200,12 +201,11 @@ class Astronomical {
     double d3 = nextDeclination;
 
     /* Equation from page Astronomical Algorithms 102 */
-    double Lw = coordinates.longitude * -1;
+    double Lw = coordinates.lng * -1;
     double term1 = sin(degreesToRadians(h0)) -
-        (sin(degreesToRadians(coordinates.latitude)) *
-            sin(degreesToRadians(d2)));
+        (sin(degreesToRadians(coordinates.lat)) * sin(degreesToRadians(d2)));
     double term2 =
-        cos(degreesToRadians(coordinates.latitude)) * cos(degreesToRadians(d2));
+        cos(degreesToRadians(coordinates.lat)) * cos(degreesToRadians(d2));
 
     // TODO: acos with term1/term2 > 1 or < -1
     double H0 =
@@ -216,12 +216,11 @@ class Astronomical {
     double a = unwindAngle(Astronomical.interpolateAngles(a2, a1, a3, m)!);
     double delta = Astronomical.interpolate(d2, d1, d3, m)!;
     double H = (Theta - Lw - a);
-    double h =
-        Astronomical.altitudeOfCelestialBody(coordinates.latitude, delta, H);
+    double h = Astronomical.altitudeOfCelestialBody(coordinates.lat, delta, H);
     double term3 = h - h0;
     double term4 = 360 *
         cos(degreesToRadians(delta)) *
-        cos(degreesToRadians(coordinates.latitude)) *
+        cos(degreesToRadians(coordinates.lat)) *
         sin(degreesToRadians(H));
     double dm = term3 / term4;
     return (m + dm) * 24;

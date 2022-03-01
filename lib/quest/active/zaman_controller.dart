@@ -1,15 +1,14 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
+import 'package:hapi/controllers/location_controller.dart';
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/CalculationMethod.dart';
 import 'package:hapi/quest/active/athan/CalculationParameters.dart';
-import 'package:hapi/quest/active/athan/Coordinates.dart';
 import 'package:hapi/quest/active/athan/Madhab.dart';
-import 'package:hapi/quest/active/athan/Qibla.dart';
 import 'package:hapi/quest/active/athan/TOD.dart';
 import 'package:hapi/quest/active/athan/TimeOfDay.dart';
 import 'package:timezone/timezone.dart' show Location, TZDateTime;
@@ -21,10 +20,6 @@ class ZamanController extends GetxHapi {
   final RxString _nextZaman = '-'.obs;
   String get timeToNextZaman => _nextZaman.value;
 
-  Coordinates _gps = Coordinates(36.950663449472, -122.05716133118);
-  double? _qiblaDirection;
-  double? get qiblaDirection => _qiblaDirection;
-
   bool forceSalahRecalculation = false;
 
   @override
@@ -35,15 +30,7 @@ class ZamanController extends GetxHapi {
   }
 
   initLocation() async {
-    await TimeController.to.reinitTime();
-
-    // TODO call this before timer fully runs down
-
-    // TODO move to location controller
-    _gps = Coordinates(37.3382, -121.8863); // San Jose // TODO
-    _qiblaDirection = Qibla.qibla(_gps); // Qibla Direction TODO
-    print('***** Qibla Direction:');
-    print('qibla: $_qiblaDirection');
+    await TimeController.to.reinitTime(); // TODO call before timer runs down?
 
     // TODO is this even needed, getTime gets local time of user?
     Location timezoneLoc = await TimeController.to.getTimezoneLocation();
@@ -71,7 +58,8 @@ class ZamanController extends GetxHapi {
     }
     // TODO precision and salah settings
     // TODO fix all this, date should change at FAJR_TOMORROW hit only?
-    cQstA.tod = TimeOfDay(_gps, date, params, timezoneLoc, false);
+    cQstA.tod = TimeOfDay(
+        LocationController.to.lastKnownCord, date, params, timezoneLoc, false);
 
     // reset day:
     if (cQstA.tod!.currTOD == TOD.Fajr_Tomorrow) {

@@ -19,6 +19,13 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>hapi needs access to location to set proper prayer/salah times.</string>
+    <key>NSLocationTemporaryUsageDescriptionDictionary</key>
+    <dict>
+      <key>YourPurposeKey</key>
+      <string>hapi requires temporary access to the device&apos;s precise location to find your distance to the Kabaa.</string>
+    </dict>
 	<array>
 		<dict>
 			<key>CFBundleTypeRole</key>

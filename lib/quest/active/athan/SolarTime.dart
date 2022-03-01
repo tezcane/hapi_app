@@ -1,12 +1,12 @@
 import 'dart:math';
 
+import 'package:hapi/helpers/cord.dart';
+import 'package:hapi/helpers/math_utils.dart';
 import 'package:hapi/quest/active/athan/Astronomical.dart';
-import 'package:hapi/quest/active/athan/Coordinates.dart';
-import 'package:hapi/quest/active/athan/MathUtils.dart';
 import 'package:hapi/quest/active/athan/SolarCoordinates.dart';
 
 class SolarTime {
-  late Coordinates observer;
+  late Cord observer;
   late SolarCoordinates solar;
   late SolarCoordinates prevSolar;
   late SolarCoordinates nextSolar;
@@ -16,25 +16,25 @@ class SolarTime {
   late double sunrise;
   late double sunset;
 
-  SolarTime(date, coordinates) {
+  SolarTime(date, Cord cord) {
     double julianDay =
         Astronomical.julianDay(date.year, date.month, date.day, 0);
 
-    observer = coordinates;
+    observer = cord;
     solar = SolarCoordinates(julianDay);
 
     prevSolar = SolarCoordinates(julianDay - 1);
     nextSolar = SolarCoordinates(julianDay + 1);
 
-    double m0 = Astronomical.approximateTransit(coordinates.longitude,
-        solar.apparentSiderealTime, solar.rightAscension);
+    double m0 = Astronomical.approximateTransit(
+        cord.lng, solar.apparentSiderealTime, solar.rightAscension);
     const solarAltitude = -50.0 / 60.0;
 
     approxTransit = m0;
 
     transit = Astronomical.correctedTransit(
         m0,
-        coordinates.longitude,
+        cord.lng,
         solar.apparentSiderealTime,
         solar.rightAscension,
         prevSolar.rightAscension,
@@ -43,7 +43,7 @@ class SolarTime {
     sunrise = Astronomical.correctedHourAngle(
         m0,
         solarAltitude,
-        coordinates,
+        cord,
         false,
         solar.apparentSiderealTime,
         solar.rightAscension,
@@ -56,7 +56,7 @@ class SolarTime {
     sunset = Astronomical.correctedHourAngle(
         m0,
         solarAltitude,
-        coordinates,
+        cord,
         true,
         solar.apparentSiderealTime,
         solar.rightAscension,
@@ -84,7 +84,7 @@ class SolarTime {
 
   double afternoon(shadowLength) {
     // TODO source shadow angle calculation
-    double tangent = (observer.latitude - solar.declination!).abs();
+    double tangent = (observer.lat - solar.declination!).abs();
     double inverse = shadowLength + tan(degreesToRadians(tangent));
     double angle = radiansToDegrees(atan(1.0 / inverse));
     return hourAngle(angle, true);

@@ -82,10 +82,13 @@ void main() async {
 
   // TODO cleanup/optimize use Getx bindings?
   const bool permOn = false;
-  Get.put<LocationController>(LocationController(), permanent: permOn);
+  Get.put<MainController>(MainController(),
+      permanent: permOn); // should do first
   Get.put<ConnectivityController>(ConnectivityController(), permanent: permOn);
-  Get.put<TimeController>(TimeController(), permanent: permOn);
-  Get.put<MainController>(MainController(), permanent: permOn);
+  Get.put<TimeController>(TimeController(),
+      permanent: permOn); // requires ConnectivityController
+  Get.put<LocationController>(LocationController(),
+      permanent: permOn); // requires TimeController
   Get.put<MenuController>(MenuController(), permanent: permOn);
   Get.put<OnboardingController>(OnboardingController());
   Get.put<AuthController>(AuthController()); // requires OnboardingController

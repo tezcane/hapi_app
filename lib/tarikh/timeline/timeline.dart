@@ -8,12 +8,12 @@ import 'dart:ui' as ui;
 import 'package:flare_dart/animation/actor_animation.dart' as flare;
 import 'package:flare_dart/math/aabb.dart' as flare;
 import 'package:flare_flutter/flare.dart' as flare;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter/widgets.dart';
 import 'package:hapi/controllers/time_controller.dart';
-import 'package:hapi/main_controller.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 import 'package:hapi/tarikh/timeline/timeline_utils.dart';
@@ -26,13 +26,8 @@ typedef ChangeHeaderColorCallback(Color background, Color text);
 
 class Timeline {
   Timeline() {
-    _platform = MainController.to.platform;
     setViewport(start: 1536.0, end: 3072.0); // TODO what is this?
   }
-
-  /// The current platform is initialized at boot, to properly initialize
-  /// [ScrollPhysics] based on the platform we're on.
-  late final TargetPlatform _platform;
 
   /// Some aptly named constants for properly aligning the Timeline view.
   static const double LineWidth = 2.0;
@@ -760,7 +755,9 @@ class Timeline {
 
       _simulationTime = 0.0;
       // TODO test this on all platforms
-      if (_platform == TargetPlatform.iOS) {
+      // The current platform is initialized at boot, to properly initialize
+      // [ScrollPhysics] based on the platform we're on.
+      if (defaultTargetPlatform == TargetPlatform.iOS) {
         _scrollPhysics = const BouncingScrollPhysics();
       } else {
         _scrollPhysics = const ClampingScrollPhysics();

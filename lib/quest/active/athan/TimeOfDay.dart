@@ -1,9 +1,9 @@
 import 'package:hapi/controllers/time_controller.dart';
+import 'package:hapi/helpers/cord.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/Astronomical.dart';
 import 'package:hapi/quest/active/athan/CalculationMethod.dart';
 import 'package:hapi/quest/active/athan/CalculationParameters.dart';
-import 'package:hapi/quest/active/athan/Coordinates.dart';
 import 'package:hapi/quest/active/athan/DateUtils.dart';
 import 'package:hapi/quest/active/athan/Madhab.dart';
 import 'package:hapi/quest/active/athan/SolarTime.dart';
@@ -12,7 +12,7 @@ import 'package:hapi/quest/active/athan/TimeComponents.dart';
 import 'package:timezone/timezone.dart';
 
 class TimeOfDay {
-  final Coordinates coordinates;
+  final Cord cord;
   final DateTime date;
   final CalculationParameters calculationParameters;
   final Location tzLoc; // timezone
@@ -59,19 +59,19 @@ class TimeOfDay {
   // TODO: added precision
   // rounded nightfraction
   TimeOfDay(
-    this.coordinates,
+    this.cord,
     this.date,
     this.calculationParameters,
     this.tzLoc,
     this.precision,
   ) {
-    SolarTime solarTime = SolarTime(date, coordinates);
+    SolarTime solarTime = SolarTime(date, cord);
 
     // DateTime dateYesterday = date.subtract(Duration(days: 1));
     // SolarTime solarTimeYesterday = SolarTime(dateYesterday, coordinates);
 
     DateTime dateTomorrow = date.add(const Duration(days: 1));
-    SolarTime solarTimeTomorrow = SolarTime(dateTomorrow, coordinates);
+    SolarTime solarTimeTomorrow = SolarTime(dateTomorrow, cord);
 
     // todo
     // print(calculationParameters.ishaAngle);
@@ -113,7 +113,7 @@ class TimeOfDay {
 
     // special case for moonsighting committee above latitude 55
     if (calculationParameters.salahMethod == SalahMethod.Moonsight_Committee &&
-        coordinates.latitude >= 55) {
+        cord.latitude >= 55) {
       nightFraction = nightDurationInSecs / 7;
       fajrTime = dateByAddingSeconds(sunriseTime, -nightFraction.round());
       fajrTomorrowTime =
@@ -124,7 +124,7 @@ class TimeOfDay {
       if (calculationParameters.salahMethod ==
           SalahMethod.Moonsight_Committee) {
         return Astronomical.seasonAdjustedMorningTwilight(
-            coordinates.latitude, dayOfYear(day), day.year, sunriseTime);
+            cord.latitude, dayOfYear(day), day.year, sunriseTime);
       } else {
         var portion = calculationParameters.nightPortions()["fajr"];
         nightFraction = portion * nightDurationInSecs;
@@ -157,7 +157,7 @@ class TimeOfDay {
       // special case for moonsighting committee above latitude 55
       if (calculationParameters.salahMethod ==
               SalahMethod.Moonsight_Committee &&
-          coordinates.latitude >= 55) {
+          cord.latitude >= 55) {
         nightFraction = nightDurationInSecs / 7;
         ishaTime = dateByAddingSeconds(sunsetTime, nightFraction!.round());
         // ishaYesterdayTime =
@@ -168,7 +168,7 @@ class TimeOfDay {
         if (calculationParameters.salahMethod ==
             SalahMethod.Moonsight_Committee) {
           return Astronomical.seasonAdjustedEveningTwilight(
-              coordinates.latitude, dayOfYear(day), day.year, sunsetTime);
+              cord.latitude, dayOfYear(day), day.year, sunsetTime);
         } else {
           var portion = calculationParameters.nightPortions()["isha"];
           nightFraction = portion * nightDurationInSecs;

@@ -17,8 +17,6 @@ const String DUMMY_TIMEZONE = 'America/Los_Angeles'; // TODO random Antartica?
 class TimeController extends GetxHapi {
   static TimeController get to => Get.find();
 
-  final ConnectivityController cConn = ConnectivityController.to;
-
   // TODO don't need Rx here and other controllers?
   final RxInt _ntpOffset = DUMMY_NTP_OFFSET.obs;
 
@@ -57,7 +55,7 @@ class TimeController extends GetxHapi {
 
   /// Gets NTP time from server when called, if internet is on
   Future<void> _updateNtpTime() async {
-    if (!cConn.isInternetOn) {
+    if (!ConnectivityController.to.isInternetOn) {
       print('cTime:updateNtpTime: aborting NTP update, no internet connection');
       return;
     }
@@ -84,6 +82,20 @@ class TimeController extends GetxHapi {
     if (_ntpOffset.value == DUMMY_NTP_OFFSET) {
       print('cTime:now: called but there is no ntp offset');
       await _updateNtpTime();
+    }
+    DateTime time = DateTime.now().toLocal();
+    if (_ntpOffset.value != DUMMY_NTP_OFFSET) {
+      time = time.add(Duration(milliseconds: _ntpOffset.value));
+    }
+    // print('cTime:now: (ntpOffset=$_ntpOffset) ${time.toLocal()}');
+    return time.toLocal();
+  }
+
+  /// Non-async version to get time
+  DateTime now2() {
+    if (_ntpOffset.value == DUMMY_NTP_OFFSET) {
+      print('cTime:now2: called but there is no ntp offset');
+      _updateNtpTime();
     }
     DateTime time = DateTime.now().toLocal();
     if (_ntpOffset.value != DUMMY_NTP_OFFSET) {

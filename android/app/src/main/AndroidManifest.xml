@@ -37,4 +37,9 @@
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
+    <!-- Three GPS geolocator package permissions -->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+<!--<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> City Block Accuracy: -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+
 </manifest>

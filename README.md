@@ -5,15 +5,15 @@ Aft  - After
 Bef  - Before  
 btn  - Button  
 C    - Controller
-Conn - Connectivity (controller)
 Cord - Coordinates
 curr - Current  
 dis  - Disabled  
 dn   - down (use with up: up/dn)  
 e    - exception/error  
 idx  - Index  
+lat  - latitude
+lng  - longitude
 Loc  - Location
-Lctn - Location (controller)
 lr   - left right  
 msg  - message  
 muak - Muakkadah  

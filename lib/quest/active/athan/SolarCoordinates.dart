@@ -1,7 +1,7 @@
 import 'dart:math';
 
+import 'package:hapi/helpers/math_utils.dart';
 import 'package:hapi/quest/active/athan/Astronomical.dart';
-import 'package:hapi/quest/active/athan/MathUtils.dart';
 
 class SolarCoordinates {
   double? declination;
