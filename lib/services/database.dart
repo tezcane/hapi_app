@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/onboard/auth/auth_controller.dart';
 import 'package:hapi/quest/daily/daily_quests_controller.dart';
 import 'package:hapi/quest/daily/do_list/do_list_model.dart';
@@ -33,11 +34,33 @@ class Database {
 
   Future<void> addDoList(String content, String uid) async {
     try {
-      await _db.collection("user").doc(uid).collection("quest").add({
-        'dateCreated': Timestamp.now(),
+      await _db
+          .collection("user")
+          .doc(uid)
+          .collection("quest/daily/doList")
+          .add({
+        'dateCreated': await TimeController.to.now(),
         'content': content,
         'done': false,
       }).then((_) => DailyQuestsController.to.update());
+    } catch (e) {
+      // TODO display error to user
+      print(e);
+      rethrow;
+    }
+  }
+
+  Future<void> updateDoList(String id, bool newValue) async {
+    try {
+      String uid = AuthController.to.firebaseUser.value!.uid;
+
+      _db
+          .collection("user")
+          .doc(uid)
+          .collection("quest/daily/doList")
+          .doc(id)
+          .update({"done": newValue}).then(
+              (_) => DailyQuestsController.to.update());
     } catch (e) {
       // TODO display error to user
       print(e);
@@ -50,30 +73,18 @@ class Database {
     return _db
         .collection("user")
         .doc(uid)
-        .collection("quest")
+        .collection("quest/daily/doList")
         .orderBy("dateCreated", descending: true)
         .snapshots()
         .map((QuerySnapshot query) {
-      List<DoListModel> retVal = [];
+      List<DoListModel> rv = [];
       for (var element in query.docs) {
-        retVal.add(DoListModel.fromMap(
-            element.id, element.data() as Map<dynamic, dynamic>));
+        var doList = element.data() as Map<String, dynamic>;
+        doList['id'] = element.id; // manually set id since not in schema here
+        rv.add(DoListModel.fromJson(doList));
       }
       DailyQuestsController.to.update();
-      return retVal;
+      return rv;
     });
-  }
-
-  Future<void> updateDoList(String questId, bool newValue) async {
-    try {
-      String uid = AuthController.to.firebaseUser.value!.uid;
-
-      _db.collection("user").doc(uid).collection("quest").doc(questId).update(
-          {"done": newValue}).then((_) => DailyQuestsController.to.update());
-    } catch (e) {
-      // TODO display error to user
-      print(e);
-      rethrow;
-    }
   }
 }

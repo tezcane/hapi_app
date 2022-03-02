@@ -7,8 +7,8 @@ import 'package:hapi/services/database.dart';
 import 'package:hapi/settings/settings_ui.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 
-class DoListQuestUI extends StatelessWidget {
-  const DoListQuestUI({
+class DoListUI extends StatelessWidget {
+  const DoListUI({
     Key? key,
   }) : super(key: key);
 

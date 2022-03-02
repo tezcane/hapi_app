@@ -91,7 +91,7 @@ class TimeController extends GetxHapi {
     return time.toLocal();
   }
 
-  /// Non-async version to get time
+  /// Non-async version to get time now()
   DateTime now2() {
     if (_ntpOffset.value == DUMMY_NTP_OFFSET) {
       print('cTime:now2: called but there is no ntp offset');

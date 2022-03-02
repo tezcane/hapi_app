@@ -17,17 +17,17 @@ class DailyQuestsController extends GetxController {
   void onInit() {
     super.onInit();
 
-    initQuestList();
+    _initDoList();
   }
 
   // TODO test this:
-  void initQuestList() async {
+  void _initDoList() async {
     int sleepBackoffSecs = 1;
 
     // No internet needed to init, but we put a back off just in case:
     while (AuthController.to.firebaseUser.value == null) {
       print(
-          'ActiveQuestsController.initQuestList: not ready, try again after sleeping $sleepBackoffSecs Secs...');
+          'DailyQuestsController.initDoList: not ready, try again after sleeping $sleepBackoffSecs Secs...');
       await Future.delayed(Duration(seconds: sleepBackoffSecs));
       if (sleepBackoffSecs < 4) {
         sleepBackoffSecs++;
@@ -36,7 +36,7 @@ class DailyQuestsController extends GetxController {
 
     // TODO asdf fdsa move this to TODO logic controller? this looks unreliable:
     String uid = AuthController.to.firebaseUser.value!.uid;
-    print('ActiveQuestsController.initQuestList: binding to db with uid=$uid');
+    print('DailyQuestsController.initDoList: binding to db with uid=$uid');
     _doList.bindStream(Database().doListStream(uid)); //stream from firebase
   }
 }

@@ -11,18 +11,19 @@ dis  - Disabled
 dn   - down (use with up: up/dn)  
 e    - exception/error  
 idx  - Index  
-lat  - latitude
-lng  - longitude
-Loc  - Location
+lat  - latitude  
+lng  - longitude  
+Loc  - Location  
 lr   - left right  
 msg  - message  
 muak - Muakkadah  
 nav  - Navigate/Navigator  
 np   - NavPage  
-P    - placement (start, center, end)  
+P    - placement (start, center, end)    
 qyam - Qiyam  
 qust - Quest  
 Rkt  - Rakat  
+rv   - return value  
 s    - storage/Get Storage  
 t    - timeline  
 ts   - text style  

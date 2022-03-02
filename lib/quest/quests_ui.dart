@@ -36,7 +36,7 @@ class _QuestBottomBarUIState extends State<QuestBottomBarUI> {
         controller: _pageController,
         children: [
           ActiveQuestsUI(),
-          const DoListQuestUI(),
+          const DoListUI(),
           Container(color: AppThemes.logoBackground),
           Container(color: AppThemes.logoBackground),
         ],

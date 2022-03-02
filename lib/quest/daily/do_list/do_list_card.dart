@@ -27,7 +27,7 @@ class DoListCard extends StatelessWidget {
             Checkbox(
               value: doList.done,
               onChanged: (newValue) {
-                Database().updateDoList(doList.questId, newValue as bool);
+                Database().updateDoList(doList.id, newValue as bool);
               },
             ),
           ],
