@@ -12,6 +12,8 @@ import 'package:hapi/menu/about_ui.dart';
 import 'package:hapi/menu/menu_nav.dart';
 import 'package:hapi/quest/active/active_quest_action_ui.dart';
 import 'package:hapi/quest/quests_ui.dart';
+import 'package:hapi/settings/reset_password_ui.dart';
+import 'package:hapi/settings/update_profile_ui.dart';
 import 'package:hapi/tarikh/article/tarikh_article_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_favorites_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_menu_ui.dart';
@@ -51,6 +53,8 @@ enum NavPage {
 
 enum SubPage {
   ABOUT,
+  UPDATE_PROFILE,
+  RESET_PASSWORD,
   TARIKH_FAVORITE,
   TARIKH_SEARCH,
   TARIKH_TIMELINE,
@@ -300,6 +304,22 @@ class MenuController extends GetxHapi {
       case (SubPage.ACTIVE_QUEST_ACTION):
         Get.to(
           () => ActiveQuestActionUI(),
+          arguments: arguments,
+          transition: transition,
+          duration: Duration(milliseconds: transistionMs),
+        );
+        break;
+      case (SubPage.UPDATE_PROFILE):
+        Get.to(
+          () => UpdateProfileUI(),
+          arguments: arguments,
+          transition: transition,
+          duration: Duration(milliseconds: transistionMs),
+        );
+        break;
+      case (SubPage.RESET_PASSWORD):
+        Get.to(
+          () => ResetPasswordUI(),
           arguments: arguments,
           transition: transition,
           duration: Duration(milliseconds: transistionMs),

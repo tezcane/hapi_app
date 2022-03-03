@@ -1,8 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/settings/language/language_list_ui.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
+import 'package:hapi/settings/theme/theme_list_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// This widget is visible when opening the about page from the [MainMenuWidget].
@@ -13,21 +16,12 @@ import 'package:url_launcher/url_launcher.dart';
 /// This page uses the package `url_launcher` available at https://pub.dartlang.org/packages/url_launcher
 /// to open up urls in a WebView on both iOS & Android.
 class AboutUI extends StatelessWidget {
-  /// Sanity check before opening up the url.
-  _launchUrl(String url) {
-    canLaunch(url).then((bool success) {
-      if (success) {
-        launch(url);
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return FabSubPage(
       subPage: SubPage.ABOUT,
       child: Scaffold(
-        backgroundColor: AppThemes.logoBackground,
+        //backgroundColor: AppThemes.logoBackground,
         body: Padding(
           padding:
               const EdgeInsets.only(top: 20, bottom: 20, left: 20, right: 20),
@@ -90,10 +84,25 @@ class AboutUI extends StatelessWidget {
                     ],
                   ),
                 ),
-                const SizedBox(height: 80.0),
-                Text(
-                  'hapi app version 0.0.0', // TODO tie to build release version
-                  style: const TextStyle(
+                const SizedBox(height: 20.0),
+                LanguageListUI(),
+                ThemeListUI(),
+                const SizedBox(height: 24.0),
+                Center(
+                  child: Hero(
+                    tag: 'UPDATE PROFILE',
+                    child: ElevatedButton.icon(
+                      onPressed: () =>
+                          MenuController.to.pushSubPage(SubPage.UPDATE_PROFILE),
+                      icon: const Icon(Icons.perm_identity_outlined),
+                      label: Text('settings.updateProfile'.tr),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 400.0),
+                const Text(
+                  'hapi app v0.0.0', // TODO tie to build release version
+                  style: TextStyle(
                     fontFamily: 'Roboto',
                     // fontSize: 17.0,
                     // height: 1.5,
@@ -106,5 +115,14 @@ class AboutUI extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  /// Sanity check before opening up the url.
+  _launchUrl(String url) {
+    canLaunch(url).then((bool success) {
+      if (success) {
+        launch(url);
+      }
+    });
   }
 }

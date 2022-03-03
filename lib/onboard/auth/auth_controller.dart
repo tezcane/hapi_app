@@ -221,7 +221,7 @@ class AuthController extends GetxHapi {
   /// handles updating the user when updating profile
   /// Note, this is highly modified by Tez, error reported here but tez fixed it:
   ///   "not yet working, see this issue https://github.com/delay/flutter_starter/issues/21"
-  Future<void> updateUser(BuildContext context, UserModel user, String oldEmail,
+  Future<bool> updateUser(BuildContext context, UserModel user, String oldEmail,
       String password) async {
     try {
       showLoadingIndicator();
@@ -245,22 +245,26 @@ class AuthController extends GetxHapi {
           duration: const Duration(seconds: 5),
           backgroundColor: Get.theme.snackBarTheme.backgroundColor,
           colorText: Get.theme.snackBarTheme.actionTextColor);
+      return Future.value(false);
     } catch (error) {
       // "} on  PlatformException catch (error) {" doesn't catch all error types
 
       hideLoadingIndicator();
 
-      // update failed so restore good name/email back to UI
-      getLastSignedInName();
-      getLastSignedInEmail();
+      // Don't do this so UI Update Profile button stays enabled with last
+      // entered bad input:
+      // // update failed so restore good name/email back to UI
+      // getLastSignedInName();
+      // getLastSignedInEmail();
 
       Get.snackbar('auth.updateUserFailNotice'.tr,
           translateFirestoreAuthFailure(error.toString()),
           snackPosition: SnackPosition.BOTTOM,
           duration: const Duration(seconds: 10),
           backgroundColor: Get.theme.snackBarTheme.backgroundColor,
-          colorText: Get.theme.snackBarTheme.actionTextColor);
+          colorText: Colors.red); //Get.theme.snackBarTheme.actionTextColor);
     }
+    return Future.value(true);
   }
 
   /// Convert auth error to translated nice user output.
@@ -310,10 +314,10 @@ class AuthController extends GetxHapi {
   }
 
   /// password reset email
-  Future<void> sendPasswordResetEmail(BuildContext context) async {
+  Future<void> sendPasswordResetEmail(String newEmail) async {
     showLoadingIndicator();
     try {
-      await _auth.sendPasswordResetEmail(email: emailController.text);
+      await _auth.sendPasswordResetEmail(email: newEmail);
       hideLoadingIndicator();
       Get.snackbar(
           'auth.resetPasswordNoticeTitle'.tr, 'auth.resetPasswordNotice'.tr,
@@ -327,7 +331,7 @@ class AuthController extends GetxHapi {
           snackPosition: SnackPosition.BOTTOM,
           duration: const Duration(seconds: 10),
           backgroundColor: Get.theme.snackBarTheme.backgroundColor,
-          colorText: Get.theme.snackBarTheme.actionTextColor);
+          colorText: Colors.red); //Get.theme.snackBarTheme.actionTextColor);
     }
   }
 

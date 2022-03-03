@@ -27,7 +27,6 @@ import 'package:hapi/quest/quests_ui.dart';
 import 'package:hapi/settings/language/language_controller.dart';
 import 'package:hapi/settings/language/localization.g.dart';
 import 'package:hapi/settings/reset_password_ui.dart';
-import 'package:hapi/settings/settings_ui.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 import 'package:hapi/settings/theme/theme_controller.dart';
 import 'package:hapi/settings/update_profile_ui.dart';
@@ -165,9 +164,8 @@ class AppRoutes {
     GetPage(name: '/tarikh/favorite', page: () => TarikhFavoritesUI()),
     GetPage(name: '/tarikh/article', page: () => TarikhArticleUI()),
     GetPage(name: '/tarikh/timeline', page: () => TarikhTimelineUI()),
-    GetPage(name: '/setting', page: () => SettingsUI()),
-    GetPage(name: '/setting/reset-pw', page: () => ResetPasswordUI()),
-    GetPage(name: '/setting/update-profile', page: () => UpdateProfileUI()),
     GetPage(name: '/about', page: () => AboutUI()),
+    GetPage(name: '/about/up-prof', page: () => UpdateProfileUI()),
+    GetPage(name: '/about/up-prof/reset-pw', page: () => ResetPasswordUI()),
   ];
 }

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:get/get.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main.dart';
@@ -171,9 +169,6 @@ class TarikhController extends GetxHapi {
     timeBtnDn.value.pageScrolls = pageScrolls;
     updateOnThread();
   }
-
-  // TODO We update() in another thread or there is a render/build error:
-  void updateOnThread() => Timer(const Duration(seconds: 0), () => update());
 
   int count = 0;
   TimeBtn getTimeBtn(TimelineEntry? entry, double opacity) {

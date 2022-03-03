@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -37,4 +39,9 @@ abstract class GetxHapi extends GetxController {
     print('GetxHapi.onClose: $runtimeType');
     super.onClose();
   }
+
+  // TODO still needed?
+  /// Sometimes we need to run update() in another thread or there is a
+  /// render/build/dirty error:
+  void updateOnThread() => Timer(const Duration(seconds: 1), () => update());
 }

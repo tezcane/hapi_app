@@ -10,7 +10,7 @@ import 'package:hapi/main.dart';
 class ThemeController extends GetxHapi {
   static ThemeController get to => Get.find();
 
-  final theme = "system".obs;
+  final theme = "dark".obs;
   late ThemeMode _themeMode;
 
   ThemeMode get themeMode => _themeMode;
@@ -28,29 +28,31 @@ class ThemeController extends GetxHapi {
     ThemeMode _setThemeMode = ThemeMode.system;
     if (themeString == 'light') {
       _setThemeMode = ThemeMode.light;
-    }
-    if (themeString == 'dark') {
-      _setThemeMode = ThemeMode.dark;
+    } else {
+      _setThemeMode = ThemeMode.dark; // default to dark mode
     }
     return _setThemeMode;
   }
 
   getThemeModeFromStore() async {
-    String _themeString = s.read('theme') ?? 'system';
+    String _themeString = s.read('theme') ?? 'dark';
     setThemeMode(_themeString);
   }
 
   // checks whether darkmode is set via system or previously by user
   bool get isDarkModeOn {
     if (currentTheme == 'system') {
+      // TODO not needed, cleanup
       if (WidgetsBinding.instance!.window.platformBrightness ==
           Brightness.dark) {
         return true;
       }
     }
+
     if (currentTheme == 'dark') {
       return true;
     }
+
     return false;
   }
 }

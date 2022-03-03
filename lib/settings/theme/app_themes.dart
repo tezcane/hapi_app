@@ -1,5 +1,22 @@
 import 'package:flutter/material.dart';
 
+// TODO cleaner way:
+class AppThemes2 {
+  AppThemes2._();
+
+  static final lightTheme = ThemeData.light().copyWith(
+    backgroundColor: Colors.white,
+    //textButtonTheme: const TextButtonThemeData(style: ButtonStyle(backgroundColor: Colors.blue)),
+  );
+  static final darkTheme = ThemeData.dark().copyWith(
+    backgroundColor: Colors.black,
+    //textButtonTheme: const TextButtonThemeData(buttonColor: Colors.red),
+  );
+
+  static const Color logoBackground = Color.fromRGBO(0x0A, 0x0E, 0x21, 1);
+  static const Color logoText = Color.fromRGBO(0xE3, 0x0A, 0x17, 1);
+}
+
 /// contains info related to our light and dark themes.
 class AppThemes {
   AppThemes._();

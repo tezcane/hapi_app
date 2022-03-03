@@ -4,7 +4,6 @@ import 'package:hapi/onboard/auth/auth_controller.dart';
 import 'package:hapi/quest/daily/daily_quests_controller.dart';
 import 'package:hapi/quest/daily/do_list/do_list_card.dart';
 import 'package:hapi/services/database.dart';
-import 'package:hapi/settings/settings_ui.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 
 class DoListUI extends StatelessWidget {
@@ -25,13 +24,6 @@ class DoListUI extends StatelessWidget {
               fontSize: 28,
             ),
           ),
-          actions: [
-            IconButton(
-                icon: const Icon(Icons.settings),
-                onPressed: () {
-                  Get.to(() => SettingsUI());
-                }),
-          ],
         ),
         body: Column(
           children: <Widget>[

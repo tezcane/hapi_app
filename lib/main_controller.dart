@@ -10,6 +10,14 @@ class MainController extends GetxHapi {
 
   RxBool isPortrait = true.obs; // MUST LEAVE TRUE FOR APP TO START
 
+  @override
+  void onInit() {
+    super.onInit();
+    // TODO replace other keyboard dismiss with this?
+    // Hide keyboard at app init, in case it was showing before restart
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
+  }
+
   void setAppInitDone() {
     // Splash animations done, now allow screen rotations for the rest of time:
     SystemChrome.setPreferredOrientations([
