@@ -51,7 +51,7 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
   @override
   void dispose() {
     // if keyboard showed, must hide status/bottom bar:
-    SystemChrome.setEnabledSystemUIOverlays([]);
+    //SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
 
     //_searchResults = [];
     cancelSearch();

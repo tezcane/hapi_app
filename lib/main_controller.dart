@@ -27,7 +27,7 @@ class MainController extends GetxHapi {
     ]);
 
     // Disable all OS overlay bars (e.g. top status and bottom navigation bar):
-    SystemChrome.setEnabledSystemUIOverlays([]); // TODO deprecated
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
 
     isAppInitDone = true;
   }

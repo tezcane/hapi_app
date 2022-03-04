@@ -118,7 +118,7 @@ class MyApp extends StatelessWidget {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    SystemChrome.setEnabledSystemUIOverlays([]); // Make app full screen
+    //SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
 
     return OrientationBuilder(
       builder: (context, orientation) {
@@ -132,13 +132,12 @@ class MyApp extends StatelessWidget {
               //   // FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
               // ],
               debugShowCheckedModeBanner: false,
-              // TODO these should be controlled in MenuController but we should probably enable here too
-              // defaultTransition: Transition.fade,
-              // transitionDuration:
-              //     const Duration(milliseconds: 1000),
+              // These are controlled in MenuController but we do here too for sign out/in pages
+              defaultTransition: Transition.fade,
+              transitionDuration: const Duration(milliseconds: 1000),
               theme: AppThemes.lightTheme,
               darkTheme: AppThemes.darkTheme,
-              themeMode: ThemeMode.system, // TODO test this
+              themeMode: ThemeMode.dark,
               initialRoute: "/",
               getPages: AppRoutes.routes,
             ),
