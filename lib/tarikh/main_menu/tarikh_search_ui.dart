@@ -10,7 +10,6 @@ import 'package:hapi/tarikh/main_menu/search_widget.dart';
 import 'package:hapi/tarikh/main_menu/thumbnail_detail_widget.dart';
 import 'package:hapi/tarikh/search_manager.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
-import 'package:keyboard_visibility/keyboard_visibility.dart';
 
 class TarikhSearchUI extends StatefulWidget {
   const TarikhSearchUI({Key? key}) : super(key: key);
@@ -21,11 +20,12 @@ class TarikhSearchUI extends StatefulWidget {
 
 class _TarikhSearchUIState extends State<TarikhSearchUI> {
   /// The [List] of search results that is displayed when searching.
-  List<TimelineEntry> _searchResults = []; // was List<TimelineEntry>();
+  List<TimelineEntry> _searchResults = [];
 
-  /// This is passed to the SearchWidget so we can handle text edits and display the search results on the main menu.
+  /// This is passed to the SearchWidget so we can handle text edits and display
+  /// the search results on the main menu.
   final TextEditingController _searchTextController = TextEditingController();
-  final FocusNode _searchFocusNode = FocusNode(); // TODO not used, can move out
+  final FocusNode _searchFocusNode = FocusNode();
   Timer? _searchTimer;
 
   /// Used to scroll to bottom of list view whenever page is rebuilt
@@ -42,26 +42,6 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
 
     _searchTextController.addListener(() => _updateSearch());
 
-    // _searchFocusNode.addListener(() => Timer(const Duration(milliseconds: 300),
-    //     () => SystemChrome.setEnabledSystemUIOverlays([])));
-
-    // if keyboard showed, must hide status/bottom bar:
-    KeyboardVisibilityNotification().addNewListener(
-      onChange: (bool visible) {
-        print('KeyboardVisibilityNotification: visible: $visible');
-
-        // Put in timer or status bar won't become transparent 100% of the time
-        if (visible) {
-          Timer(
-            const Duration(milliseconds: 300),
-            () => SystemChrome.setEnabledSystemUIOverlays([]),
-          );
-        } else {
-          SystemChrome.setEnabledSystemUIOverlays([]);
-        }
-      },
-    );
-
     // Enable to have keyboard pop up on page init:
     //_searchFocusNode.requestFocus();
 
@@ -77,7 +57,6 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
     cancelSearch();
     _searchFocusNode.dispose();
     _scrollController.dispose();
-    KeyboardVisibilityNotification().dispose();
 
     super.dispose();
   }

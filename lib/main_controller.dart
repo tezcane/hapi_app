@@ -13,7 +13,6 @@ class MainController extends GetxHapi {
   @override
   void onInit() {
     super.onInit();
-    // TODO replace other keyboard dismiss with this?
     // Hide keyboard at app init, in case it was showing before restart
     SystemChannels.textInput.invokeMethod('TextInput.hide');
   }
