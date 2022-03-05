@@ -181,7 +181,7 @@ class _SectionState extends State<MenuSection>
                                   child: Container(
                                     margin: const EdgeInsets.only(bottom: 20.0),
                                     child: Text(
-                                      item.label!,
+                                      item.label,
                                       style: TextStyle(
                                         color: widget.accentColor,
                                         fontSize: 20.0,

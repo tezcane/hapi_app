@@ -154,14 +154,14 @@ class TimelineRenderObject extends RenderBox {
           top: topOverlap + _focusItem!.padTop + Timeline.Parallax,
           bottom: _focusItem!.padBottom);
       t.setViewport(
-          start: _focusItem!.start!,
-          end: _focusItem!.end!,
+          start: _focusItem!.start,
+          end: _focusItem!.end,
           animate: true,
           pad: true);
     } else {
       t.padding = EdgeInsets.zero;
       t.setViewport(
-          start: _focusItem!.start!, end: _focusItem!.end!, animate: true);
+          start: _focusItem!.start, end: _focusItem!.end, animate: true);
     }
     _processedFocusItem = _focusItem;
   }

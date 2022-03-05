@@ -157,7 +157,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
       //bottom: target.padBottom,
     );
     t.setViewport(
-        start: target.start!, end: target.end!, animate: true, pad: true);
+        start: target.start, end: target.end, animate: true, pad: true);
   }
 
   /// If the [TimelineRenderWidget] has set the [_touchedBubble] to the currently

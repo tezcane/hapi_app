@@ -84,18 +84,18 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
     final List<Widget> tail = [];
 
     tail
-      ..addAll(_menu.sections
+      ..addAll(_menu.menuSectionDataList
           .map<Widget>(
             (MenuSectionData section) => Container(
               margin: const EdgeInsets.only(top: 20.0),
               child: MenuSection(
-                section.label!,
-                section.backgroundColor!,
-                section.textColor!,
+                section.label,
+                section.backgroundColor,
+                section.textColor,
                 section.items,
                 navigateToTimeline,
                 _isSectionActive,
-                assetId: section.assetId!,
+                assetId: section.assetId,
               ),
             ),
           )
