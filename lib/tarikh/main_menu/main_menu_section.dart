@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/main_menu/menu_vignette.dart';
 
-typedef NavigateTo(MenuItemData item);
+typedef NavigateTo = Function(MenuItemData item);
 
 /// This widget displays the single menu section of the [MainMenuWidget].
 ///

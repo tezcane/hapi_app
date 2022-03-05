@@ -1,7 +1,7 @@
 import 'dart:ui' as ui;
 import 'dart:ui';
 
-import 'package:flare_dart/animation/actor_animation.dart' as flare;
+//import 'package:flare_dart/animation/actor_animation.dart' as flare;
 import 'package:flare_dart/math/aabb.dart' as flare;
 import 'package:flare_flutter/flare.dart' as flare;
 import 'package:nima/nima.dart' as nima;

@@ -4,15 +4,14 @@ import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 
-// TODO clean up imports:
-import 'package:flare_dart/animation/actor_animation.dart' as flare;
+//import 'package:flare_dart/animation/actor_animation.dart' as flare;
 import 'package:flare_dart/math/aabb.dart' as flare;
 import 'package:flare_flutter/flare.dart' as flare;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:flutter/widgets.dart';
+//import 'package:flutter/widgets.dart';
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
@@ -20,9 +19,9 @@ import 'package:hapi/tarikh/timeline/timeline_utils.dart';
 import 'package:nima/nima.dart' as nima;
 import 'package:nima/nima/math/aabb.dart' as nima;
 
-typedef PaintCallback();
-typedef ChangeEraCallback(TimelineEntry? era); // TODO ? prob want to disallow
-typedef ChangeHeaderColorCallback(Color background, Color text);
+typedef PaintCallback = Function();
+typedef ChangeEraCallback = Function(TimelineEntry? era); // TODO ? prob want to disallow
+typedef ChangeHeaderColorCallback = Function(Color background, Color text);
 
 class Timeline {
   Timeline() {

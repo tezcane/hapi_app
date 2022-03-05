@@ -13,8 +13,8 @@ import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 import 'package:hapi/tarikh/timeline/timeline_render_widget.dart';
 import 'package:hapi/tarikh/timeline/timeline_utils.dart';
 
-typedef ShowMenuCallback();
-typedef SelectItemCallback(TimelineEntry item);
+typedef ShowMenuCallback = Function();
+typedef SelectItemCallback = Function(TimelineEntry item);
 
 /// This is the Stateful Widget associated with the Timeline object.
 /// It is built from a [focusItem], that is the event the [Timeline] should

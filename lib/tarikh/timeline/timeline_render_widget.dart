@@ -15,8 +15,8 @@ import 'package:nima/nima/math/aabb.dart' as nima;
 
 /// These two callbacks are used to detect if a bubble or an entry have been tapped.
 /// If that's the case, [ArticlePage] will be pushed onto the [Navigator] stack.
-typedef TouchBubbleCallback(TapTarget? bubble);
-typedef TouchEntryCallback(TimelineEntry? entry);
+typedef TouchBubbleCallback = Function(TapTarget? bubble);
+typedef TouchEntryCallback = Function(TimelineEntry? entry);
 
 /// This couples with [TimelineRenderObject].
 ///
