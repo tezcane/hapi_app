@@ -1,25 +1,47 @@
 import 'package:flutter/material.dart';
 
 // TODO cleaner way:
-class AppThemes2 {
-  AppThemes2._();
-
-  static final lightTheme = ThemeData.light().copyWith(
-    backgroundColor: Colors.white,
-    //textButtonTheme: const TextButtonThemeData(style: ButtonStyle(backgroundColor: Colors.blue)),
-  );
-  static final darkTheme = ThemeData.dark().copyWith(
-    backgroundColor: Colors.black,
-    //textButtonTheme: const TextButtonThemeData(buttonColor: Colors.red),
-  );
+class AppThemes {
+  AppThemes._();
 
   static const Color logoBackground = Color.fromRGBO(0x0A, 0x0E, 0x21, 1);
   static const Color logoText = Color.fromRGBO(0xE3, 0x0A, 0x17, 1);
+  static const Color hyperlink = Color.fromRGBO(0x10, 0x57, 0xE3, 1);
+
+  static const _floatingActionButtonTheme = FloatingActionButtonThemeData(
+      backgroundColor: logoText,
+      foregroundColor: Colors.white);
+  static final _elevatedButtonTheme = ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+          primary: logoText,
+          side: const BorderSide(color: Colors.grey, width: 1.5)));
+
+  static final lightTheme = ThemeData.light().copyWith(
+    floatingActionButtonTheme: _floatingActionButtonTheme,
+    elevatedButtonTheme: _elevatedButtonTheme,
+
+    //backgroundColor: Colors.white,
+    scaffoldBackgroundColor: Colors.white,
+
+    primaryTextTheme: Typography.blackMountainView,
+    textTheme: Typography.blackMountainView,
+  );
+
+  static final darkTheme = ThemeData.dark().copyWith(
+    floatingActionButtonTheme: _floatingActionButtonTheme,
+    elevatedButtonTheme: _elevatedButtonTheme,
+
+    //backgroundColor: logoBackground,
+    scaffoldBackgroundColor: logoBackground,
+
+    primaryTextTheme: Typography.whiteMountainView,
+    textTheme: Typography.whiteMountainView,
+  );
 }
 
 /// contains info related to our light and dark themes.
-class AppThemes {
-  AppThemes._();
+class AppThemes2 {
+  AppThemes2._();
 
   // TODO
   static const Color logoBackground = Color.fromRGBO(0x0A, 0x0E, 0x21, 1);

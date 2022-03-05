@@ -36,51 +36,47 @@ class AboutUI extends StatelessWidget {
                     tag: 'hapiLogo',
                     child: Image.asset(
                       'assets/images/logo/logo.png',
-                      width: 250,
-                      height: 250,
+                      width: 175,
+                      height: 175,
                     ),
                   ),
                 ),
                 RichText(
                   text: TextSpan(
-                    style: const TextStyle(
-                        //color: darkText.withOpacity(darkText.opacity * 0.75),
-                        fontFamily: 'Roboto',
-                        fontSize: 17.0,
-                        height: 1.5),
+                    style: Theme.of(context).textTheme.headline6,
                     children: [
                       TextSpan(
                           text: 'hapi',
                           style: const TextStyle(
                               fontFamily: 'Lobster',
                               fontSize: 25.0,
-                              color: AppThemes.logoText,
-                              fontWeight: FontWeight.bold,
+                              color: AppThemes.hyperlink,
                               decoration: TextDecoration.underline),
                           recognizer: TapGestureRecognizer()
-                            ..onTap = () => _launchUrl('https://www.hapi.net')),
+                            ..onTap = () => _launchUrl('https://www.hapi.net')
+                      ),
                       TextSpan(
-                          text: ' is built by volunteer Muslim engineers, '
-                              'scholars and historians.'
+                          text: ' is built by volunteers for the sake of Allah SWT.'
                               '\n\n'
                               'We hope it helps improve your hapi-ness, in this life '
-                              'and the next. May Allah SWT give us Firdaus. Ameen! '
+                              'and the next.'
                               '\n\n'
-                              'hapi will never track or sell your personal information. '
-                              'Please support us with your dua, telling others and '
-                              'donations: '
-                              '\n\n'),
+                              'hapi will never track or sell personal information.'
+                              '\n\n'
+                              'Support us with dua, telling others and donating '
+                              'towards maintenence, further development and social '
+                              'outreach programs: '
+                      ),
                       TextSpan(
                           text: 'paypal',
                           style: const TextStyle(
-                              // fontFamily: 'Lobster',
-                              // fontSize: 25.0,
-                              color: AppThemes.logoText,
+                              color: AppThemes.hyperlink,
                               fontWeight: FontWeight.bold,
                               decoration: TextDecoration.underline),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () =>
-                                _launchUrl('https://www.paypal.net/hapi')),
+                                _launchUrl('https://www.paypal.net/hapi')
+                      ),
                     ],
                   ),
                 ),
@@ -102,12 +98,7 @@ class AboutUI extends StatelessWidget {
                 const SizedBox(height: 400.0),
                 const Text(
                   'hapi app v0.0.0', // TODO tie to build release version
-                  style: TextStyle(
-                    fontFamily: 'Roboto',
-                    // fontSize: 17.0,
-                    // height: 1.5,
-                    //color: Color.white; //darkText.withOpacity(darkText.opacity * 0.5),
-                  ),
+                  style: TextStyle(fontSize: 17.0),
                 ),
               ],
             ),
