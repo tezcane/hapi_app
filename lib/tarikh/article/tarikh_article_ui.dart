@@ -1,13 +1,11 @@
 import 'package:flare_flutter/flare_actor.dart' show FlareActor;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-//import 'package:flutter/widgets.dart'; TODO needed?
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
 import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/tarikh/article/timeline_entry_widget.dart';
-import 'package:hapi/tarikh/colors.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
@@ -52,34 +50,16 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
   initState() {
     super.initState();
 
-    TextStyle style = TextStyle(
-        color: darkText.withOpacity(darkText.opacity * 0.68),
-        fontSize: 17.0,
-        height: 1.5,
-        fontFamily: "Roboto");
-    TextStyle h1 = TextStyle(
-        color: darkText.withOpacity(darkText.opacity * 0.68),
-        fontSize: 32.0,
-        height: 1.625,
-        fontFamily: "Roboto",
-        fontWeight: FontWeight.bold);
-    TextStyle h2 = TextStyle(
-        color: darkText.withOpacity(darkText.opacity * 0.68),
-        fontSize: 24.0,
-        height: 2,
-        fontFamily: "Roboto",
-        fontWeight: FontWeight.bold);
-    TextStyle strong = TextStyle(
-        color: darkText.withOpacity(darkText.opacity * 0.68),
-        fontSize: 17.0,
-        height: 1.5,
-        fontFamily: "RobotoMedium");
-    TextStyle em = TextStyle(
-        color: darkText.withOpacity(darkText.opacity * 0.68),
-        fontSize: 17.0,
-        height: 1.5,
-        fontFamily: "Roboto",
-        fontStyle: FontStyle.italic);
+    TextStyle h1 = Get.theme.textTheme.headline4!
+        .copyWith(fontSize: 32.0, height: 1.625, fontWeight: FontWeight.bold);
+    TextStyle h2 = Get.theme.textTheme.headline5!
+        .copyWith(fontSize: 24.0, height: 2, fontWeight: FontWeight.bold);
+    TextStyle style =
+        Get.theme.textTheme.headline6!.copyWith(fontSize: 17.0, height: 1.5);
+    TextStyle strong = Get.theme.textTheme.headline6!
+        .copyWith(fontSize: 17.0, height: 1.5, fontWeight: FontWeight.bold);
+    TextStyle em = Get.theme.textTheme.headline6!
+        .copyWith(fontSize: 17.0, height: 1.5, fontStyle: FontStyle.italic);
     _markdownStyleSheet = MarkdownStyleSheet(
       a: style,
       p: style,
@@ -132,7 +112,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
       subPage: SubPage.TARIKH_ARTICLE,
       child: Scaffold(
         body: Container(
-          color: const Color.fromRGBO(255, 255, 255, 1),
+          color: Get.theme.backgroundColor,
           child: Stack(
             children: <Widget>[
               Column(
@@ -179,23 +159,17 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                                       Text(
                                         _title,
                                         textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: darkText.withOpacity(
-                                              darkText.opacity * 0.87),
+                                        style: const TextStyle(
                                           fontSize: 25.0,
                                           height: 1.1,
-                                          fontFamily: "Roboto",
                                         ),
                                       ),
                                       Text(
                                         _subTitle,
                                         textAlign: TextAlign.left,
-                                        style: TextStyle(
-                                          color: darkText.withOpacity(
-                                              darkText.opacity * 0.5),
+                                        style: const TextStyle(
                                           fontSize: 17.0,
                                           height: 1.5,
-                                          fontFamily: "Roboto",
                                         ),
                                       ),
                                     ],
@@ -208,7 +182,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                                       height: 60.0,
                                       width: 60.0,
                                       padding: const EdgeInsets.all(15.0),
-                                      color: Colors.white,
+                                      color: Get.theme.scaffoldBackgroundColor,
 
                                       /// Check out the widget at:
                                       /// https://www.2dimensions.com/a/pollux/files/flare/heart-simple/preview
@@ -238,7 +212,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                           Container(
                             margin: const EdgeInsets.only(top: 20, bottom: 20),
                             height: 1,
-                            color: Colors.black.withOpacity(0.11),
+                            color: Get.theme.dividerColor,
                           ),
                           MarkdownBody(
                               data: _articleMarkdown,
