@@ -25,6 +25,7 @@ class TarikhFavoritesUI extends StatelessWidget {
     return FabSubPage(
       subPage: SubPage.TARIKH_FAVORITE,
       child: Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: GetBuilder<TarikhController>(

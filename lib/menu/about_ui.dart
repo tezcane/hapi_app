@@ -21,8 +21,7 @@ class AboutUI extends StatelessWidget {
     return FabSubPage(
       subPage: SubPage.ABOUT,
       child: Scaffold(
-        // special case to blend logo into dark background
-        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: Theme.of(context).backgroundColor,
         body: Padding(
           padding:
               const EdgeInsets.only(top: 20, bottom: 20, left: 20, right: 20),

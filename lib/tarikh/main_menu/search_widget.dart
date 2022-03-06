@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hapi/tarikh/colors.dart';
 
 /// Draws the search bar on top of the menu.
 class SearchWidget extends StatelessWidget {
@@ -22,56 +21,42 @@ class SearchWidget extends StatelessWidget {
     return Container(
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: lightGrey,
+        color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(30.0),
       ),
       height: 56.0,
-      child: Theme(
-        data: ThemeData(
-          primaryColor: darkText.withOpacity(darkText.opacity * 0.5),
-        ),
-        child: TextField(
-          controller: _searchController,
-          focusNode: _searchFocusNode,
-          textAlign: TextAlign.center, // align UI & better for arabic support
-          decoration: InputDecoration(
-              hintText: 'Search history',
-              hintStyle: TextStyle(
-                fontSize: 20.0,
-                fontFamily: "Roboto",
-                color: darkText.withOpacity(darkText.opacity * 0.5),
-              ),
-              prefixIcon: const Icon(Icons.search, size: 30),
-              suffixIcon: _searchFocusNode.hasFocus
-                  ? Visibility(
-                      visible: _searchController.text.isNotEmpty,
-                      child: IconButton(
-                        icon: const Icon(Icons.cancel, size: 30.0),
-                        onPressed: () {
-                          // clear text then bring down keyboard
-                          _searchController.clear();
-                          _searchFocusNode.unfocus();
-                        },
-                      ),
-                    )
-                  : Visibility(
-                      visible: _searchController.text.isNotEmpty,
-                      child: IconButton(
-                        icon: const Icon(Icons.cancel, size: 30.0),
-                        onPressed: () {
-                          // clear text then bring up keyboard
-                          _searchController.clear();
-                          _searchFocusNode.requestFocus();
-                        },
-                      ),
+      child: TextField(
+        controller: _searchController,
+        focusNode: _searchFocusNode,
+        textAlign: TextAlign.center, // align UI & better for arabic support
+        decoration: InputDecoration(
+            hintText: 'Search history',
+            prefixIcon: const Icon(Icons.search, size: 30),
+            suffixIcon: _searchFocusNode.hasFocus
+                ? Visibility(
+                    visible: _searchController.text.isNotEmpty,
+                    child: IconButton(
+                      icon: const Icon(Icons.cancel, size: 30.0),
+                      onPressed: () {
+                        // clear text then bring down keyboard
+                        _searchController.clear();
+                        _searchFocusNode.unfocus();
+                      },
                     ),
-              border: InputBorder.none),
-          style: TextStyle(
-            fontSize: 20.0,
-            fontFamily: "Roboto",
-            color: darkText.withOpacity(darkText.opacity),
-          ),
-        ),
+                  )
+                : Visibility(
+                    visible: _searchController.text.isNotEmpty,
+                    child: IconButton(
+                      icon: const Icon(Icons.cancel, size: 30.0),
+                      onPressed: () {
+                        // clear text then bring up keyboard
+                        _searchController.clear();
+                        _searchFocusNode.requestFocus();
+                      },
+                    ),
+                  ),
+            border: InputBorder.none),
+        style: const TextStyle(fontSize: 20.0),
       ),
     );
   }

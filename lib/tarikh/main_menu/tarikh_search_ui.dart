@@ -148,8 +148,9 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
     return FabSubPage(
       subPage: SubPage.TARIKH_SEARCH,
       child: Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
         bottomNavigationBar: Container(
-          color: Colors.white.withOpacity(0.0),
+          //color: Theme.of(context).backgroundColor,
           padding: const EdgeInsets.only(
               left: 20, top: 16.0, bottom: 16.0, right: 85),
           child: SearchWidget(_searchFocusNode, _searchTextController),
