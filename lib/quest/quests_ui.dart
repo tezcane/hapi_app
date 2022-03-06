@@ -1,11 +1,11 @@
 import 'package:bottom_bar/bottom_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hapi/menu/fab_nav_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/quest/active/active_quests_settings_ui.dart';
 import 'package:hapi/quest/active/active_quests_ui.dart';
 import 'package:hapi/quest/daily/do_list/do_list_quest_ui.dart';
-import 'package:hapi/settings/theme/app_themes.dart';
 
 /// Init active/daily/timed/hapi quests with slick bottom bar navigation
 class QuestsUI extends StatelessWidget {
@@ -37,15 +37,15 @@ class _QuestBottomBarUIState extends State<QuestBottomBarUI> {
         children: [
           ActiveQuestsUI(),
           const DoListUI(),
-          Container(color: AppThemes.logoBackground),
-          Container(color: AppThemes.logoBackground),
+          Container(color: Get.theme.backgroundColor),
+          Container(color: Get.theme.backgroundColor),
         ],
         onPageChanged: (index) {
           setState(() => _currentPage = index);
         },
       ),
       bottomNavigationBar: Container(
-        color: AppThemes.logoBackground,
+        color: Get.theme.backgroundColor,
         child: Row(
           children: [
             BottomBar(
@@ -59,21 +59,16 @@ class _QuestBottomBarUIState extends State<QuestBottomBarUI> {
                   icon: const Icon(Icons.how_to_reg_outlined),
                   title: Text('Active Quests'),
                   activeColor: Colors.blue,
-                  inactiveColor: Colors.white,
                 ),
                 BottomBarItem(
                   icon: const Icon(Icons.brightness_high_outlined),
                   title: Text('Daily Quests'),
                   activeColor: Colors.greenAccent.shade700,
-                  //darkActiveColor: Colors.greenAccent.shade400,
-                  inactiveColor: Colors.white,
                 ),
                 BottomBarItem(
                   icon: const Icon(Icons.timer_outlined),
                   title: Text('Time Quests'),
                   activeColor: Colors.orange,
-                  //darkActiveColor: Colors.greenAccent.shade400,
-                  inactiveColor: Colors.white,
                 ),
                 BottomBarItem(
                   icon: Transform.rotate(
@@ -82,8 +77,6 @@ class _QuestBottomBarUIState extends State<QuestBottomBarUI> {
                   ),
                   title: Text('hapi Quests'),
                   activeColor: Colors.red,
-                  //darkActiveColor: Colors.red.shade400,
-                  inactiveColor: Colors.white,
                 ),
               ],
             ),

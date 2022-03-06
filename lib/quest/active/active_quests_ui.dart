@@ -23,9 +23,6 @@ class ActiveQuestsUI extends StatelessWidget {
   static const TS tsAppBar = TS(9.5, Colors.white70);
   static const TS tsAppBarTime = TS(24.0, Colors.white70);
 
-  static const Color colorSalahTopActive = Color(0xFF268E0D);
-  static final Color colorSalahTopInactive =
-      Colors.grey.shade700; //lightBlue.shade600
   static const Color textColor = Colors.white70;
   static const TS tsWhite = TS(17.0, Colors.white70);
   static const TS tsFard = TS(17.0, Colors.red);
@@ -625,6 +622,7 @@ class ActiveQuestsUI extends StatelessWidget {
     );
   }
 
+  /// Used to hide salah section slivers scrolling up into top picture.
   SliverPersistentHeader sliverSpaceHeader(bool pinned) {
     return SliverPersistentHeader(
       pinned: pinned,
@@ -632,7 +630,7 @@ class ActiveQuestsUI extends StatelessWidget {
         minHeight: 5.0,
         maxHeight: 5.0,
         child: Container(
-          color: AppThemes.logoBackground,
+          color: Get.theme.backgroundColor,
         ),
       ),
     );
@@ -685,13 +683,13 @@ class ActiveQuestsUI extends StatelessWidget {
           isPinned(TOD.Isha, [TOD.Middle_of_Night, TOD.Last_1__3_of_Night]);
 
       return Container(
-        color: AppThemes.logoBackground,
+        color: Get.theme.backgroundColor,
         child: CustomScrollView(
           slivers: <Widget>[
             /// Show Top App Bar
             SliverAppBar(
-              backgroundColor: Colors.lightBlue.shade900,
-              expandedHeight: 260.0,
+              backgroundColor: AppThemes.logoText,
+              expandedHeight: 195.0,
               collapsedHeight: c.showSunnahKeys ? 90.0 : 56,
               floating: true,
               pinned: true,
@@ -874,7 +872,7 @@ class ActiveQuestsUI extends StatelessWidget {
   ) {
     return Expanded(
       child: Container(
-        color: AppThemes.logoBackground, // hide scroll of items behind
+        color: Get.theme.backgroundColor, // hide scroll of items behind
         child: ClipRRect(
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(15.0),
@@ -882,8 +880,8 @@ class ActiveQuestsUI extends StatelessWidget {
           ),
           child: Container(
             color: pinned && ((!isJummahMode) || (isJummahMode && c.isFriday()))
-                ? colorSalahTopActive
-                : colorSalahTopInactive,
+                ? AppThemes.selected
+                : AppThemes.unselected,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -1008,7 +1006,7 @@ class Cell extends StatelessWidget {
           'pinned': _pinned,
         }),
         child: Container(
-          color: AppThemes.logoBackground, // hide scroll of items behind
+          color: Get.theme.backgroundColor, // hide scroll of items behind
           child: ClipRRect(
             borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(_cellPlacement == P.S ? 15.0 : 0),

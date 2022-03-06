@@ -8,6 +8,9 @@ class AppThemes {
   static const Color logoBackground = Color.fromRGBO(0x14, 0x1A, 0x42, 1);
   static const Color logoText = Color.fromRGBO(0xE3, 0x0A, 0x17, 1);
 
+  static const Color selected = logoText;
+  static const Color unselected = Color(0xFF757575); // Grey 700
+
   static const Color hyperlink = Color.fromRGBO(0x10, 0x57, 0xE3, 1);
 
   static const Color _lBackground1 = Color.fromRGBO(225, 228, 229, 1);

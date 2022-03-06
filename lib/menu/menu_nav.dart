@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/settings/theme/app_themes.dart';
 
 /// Menu animation total duration time, each item has total_duration/items.length
 const Duration navMenuShowHideMs = Duration(milliseconds: 600);
@@ -19,7 +20,7 @@ const double _kSideMenuWidth = 132.0;
 /// [Curve] used for the animation
 const Curve _kCurveAnimation = Curves.linear;
 
-const Color _kButtonColorSelected = Color(0xFF268E0D); // TODO theme
+const Color _kButtonColorSelected = AppThemes.selected;
 const Color _kButtonColorUnselected = Color(0xFF1D1E33);
 
 /// The [MenuNav] controls the items from the lateral menu.
@@ -102,7 +103,7 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
             children: [
               widget.builder(), // need to embed menu_nav and menu together
               Padding(
-                // TODO use empty size boxes so we can dismiss on anypart of foregroundWiget
+                // TODO use empty size boxes so we can dismiss on any part of foregroundWidget
                 // top centers nav buttons, bottom allows tapping verticle bar
                 padding: EdgeInsets.only(top: itemSize * sm, bottom: 88),
                 child: AnimatedBuilder(

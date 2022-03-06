@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:hapi/menu/toggle_switch.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/CalculationMethod.dart';
+import 'package:hapi/settings/theme/app_themes.dart';
 
 class ActiveQuestsSettingsUI extends StatelessWidget {
   final TextStyle textStyleTitle = const TextStyle(
@@ -34,8 +35,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
               isDense: false,
               value: c.salahCalcMethod,
               //icon: const Icon(Icons.arrow_downward),
-              iconEnabledColor: Colors.white, //const Color(0xFF268E0D),
-              //focusColor: const Color(0xFF268E0D),
+              iconEnabledColor: Colors.white,
               iconSize: 25,
               style: textStyleBtn,
               dropdownColor: Colors.grey,
@@ -53,7 +53,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
                   return DropdownMenuItem<int>(
                     value: value,
                     child: Container(
-                      color: const Color(0xFF268E0D)
+                      color: AppThemes.selected
                           .withOpacity(c.salahCalcMethod == value ? 1 : 0),
                       child: Center(
                         child: Text(
@@ -67,21 +67,21 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
                 },
               ).toList(),
             ),
-            const SizedBox(height: 10),
-            Tooltip(
-              message: 'Show/Hide Sunnah actions',
-              child: Text(
-                'Show Sunnah:',
-                textAlign: TextAlign.center,
-                style: textStyleTitle,
-              ),
-            ),
-            const ShowSunnahSettings(
-              btnHeight: 25,
-              btnGap: 0,
-              fontSize: 14,
-              lrPadding: 0,
-            ),
+            // const SizedBox(height: 10),
+            // Tooltip(
+            //   message: 'Show/Hide Sunnah actions',
+            //   child: Text(
+            //     'Show Sunnah:',
+            //     textAlign: TextAlign.center,
+            //     style: textStyleTitle,
+            //   ),
+            // ),
+            // const ShowSunnahSettings(
+            //   btnHeight: 25,
+            //   btnGap: 0,
+            //   fontSize: 14,
+            //   lrPadding: 0,
+            // ),
             const SizedBox(height: 10),
             Tooltip(
               message: 'Show/Hide Labels and Sunnah Key',
@@ -99,7 +99,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
               initialLabelIndex: c.showSunnahKeys ? 0 : 1,
               labels: ['Show', 'Hide'],
               //cornerRadius: 20.0,
-              activeBgColor: const Color(0xFF268E0D),
+              activeBgColor: AppThemes.selected,
               activeFgColor: Colors.white,
               inactiveBgColor: Colors.grey, //const Color(0xFF1D1E33),
               inactiveFgColor: Colors.white,
@@ -129,7 +129,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
               initialLabelIndex: c.salahAsrSafe ? 0 : 1,
               labels: ['Later', 'Earlier'],
               //cornerRadius: 20.0,
-              activeBgColor: const Color(0xFF268E0D),
+              activeBgColor: AppThemes.selected,
               activeFgColor: Colors.white,
               inactiveBgColor: Colors.grey, //const Color(0xFF1D1E33),
               inactiveFgColor: Colors.white,
@@ -159,7 +159,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
               initialLabelIndex: c.salahKerahatSafe ? 0 : 1,
               labels: ['40/30/40', '20/15/20'],
               //cornerRadius: 20.0,
-              activeBgColor: const Color(0xFF268E0D),
+              activeBgColor: AppThemes.selected,
               activeFgColor: Colors.white,
               inactiveBgColor: Colors.grey, //const Color(0xFF1D1E33),
               inactiveFgColor: Colors.white,
@@ -189,7 +189,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
               initialLabelIndex: c.showJummahOnFriday ? 0 : 1,
               labels: ['Jummah', 'Dhuhr'],
               //cornerRadius: 20.0,
-              activeBgColor: const Color(0xFF268E0D),
+              activeBgColor: AppThemes.selected,
               activeFgColor: Colors.white,
               inactiveBgColor: Colors.grey, //const Color(0xFF1D1E33),
               inactiveFgColor: Colors.white,
@@ -219,7 +219,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
               initialLabelIndex: c.showLast3rdOfNight ? 0 : 1,
               labels: ['Last 1/3', 'Middle'],
               //cornerRadius: 20.0,
-              activeBgColor: const Color(0xFF268E0D),
+              activeBgColor: AppThemes.selected,
               activeFgColor: Colors.white,
               inactiveBgColor: Colors.grey, //const Color(0xFF1D1E33),
               inactiveFgColor: Colors.white,
@@ -249,7 +249,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
               initialLabelIndex: c.show12HourClock ? 0 : 1,
               labels: ['12 hour', '24 hour'],
               //cornerRadius: 20.0,
-              activeBgColor: const Color(0xFF268E0D),
+              activeBgColor: AppThemes.selected,
               activeFgColor: Colors.white,
               inactiveBgColor: Colors.grey, //const Color(0xFF1D1E33),
               inactiveFgColor: Colors.white,
