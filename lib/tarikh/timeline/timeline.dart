@@ -250,7 +250,7 @@ class Timeline {
       flutterActor = flare.FlutterActor();
 
       /// Flare library function to load the [FlutterActor]
-      bool success = await flutterActor.loadFromBundle(rootBundle, filename);
+      await flutterActor.loadFromBundle(rootBundle, filename);
 
       /// Populate the Map.
       _flareResources[filename] = flutterActor;
@@ -295,11 +295,9 @@ class Timeline {
 
     /// Make sure that all the initial values are set for the actor and for the
     /// actor instance.
-    double animationTime = 0.0;
     actor.advance(0.0);
     flare.AABB setupAABB = actor.computeAABB();
-    animation.apply(animationTime, actor, 1.0);
-
+    animation.apply(0.0, actor, 1.0);
     animation.apply(animation.duration, actorStatic, 1.0);
     actor.advance(0.0);
     actorStatic.advance(0.0);
@@ -322,7 +320,6 @@ class Timeline {
       loop,
       offset,
       gap,
-      animationTime,
       width,
       height,
       filename,
@@ -350,8 +347,7 @@ class Timeline {
     nima.FlutterActor? flutterActor = _nimaResources[filename];
     if (flutterActor == null) {
       flutterActor = nima.FlutterActor();
-
-      bool success = await flutterActor.loadFromBundle(filename);
+      await flutterActor.loadFromBundle(filename);
       _nimaResources[filename] = flutterActor;
     }
 
@@ -365,15 +361,14 @@ class Timeline {
     } else {
       animation = flutterActor.animations[0];
     }
-    double animationTime = 0.0;
-    actor.advance(0.0);
 
-    animation.apply(animationTime, actor, 1.0);
+    actor.advance(0.0);
+    nima.AABB setupAABB = actor.computeAABB();
+    animation.apply(0.0, actor, 1.0);
     animation.apply(animation.duration, actorStatic, 1.0);
     actor.advance(0.0);
     actorStatic.advance(0.0);
 
-    nima.AABB setupAABB = actor.computeAABB();
     dynamic bounds = assetMap["bounds"];
     if (bounds is List) {
       setupAABB = nima.AABB.fromValues(
@@ -391,7 +386,6 @@ class Timeline {
       loop,
       offset,
       gap,
-      animationTime,
       width,
       height,
       filename,
