@@ -21,7 +21,8 @@ class AboutUI extends StatelessWidget {
     return FabSubPage(
       subPage: SubPage.ABOUT,
       child: Scaffold(
-        //backgroundColor: AppThemes.logoBackground,
+        // special case to blend logo into dark background
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: Padding(
           padding:
               const EdgeInsets.only(top: 20, bottom: 20, left: 20, right: 20),
@@ -46,36 +47,37 @@ class AboutUI extends StatelessWidget {
                     style: Theme.of(context).textTheme.headline6,
                     children: [
                       TextSpan(
-                          text: 'hapi',
-                          style: const TextStyle(
-                              fontFamily: 'Lobster',
-                              fontSize: 25.0,
-                              color: AppThemes.hyperlink,
-                              decoration: TextDecoration.underline),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () => _launchUrl('https://www.hapi.net')
+                        text: 'hapi',
+                        style: const TextStyle(
+                            fontFamily: 'Lobster',
+                            fontSize: 25.0,
+                            color: AppThemes.hyperlink,
+                            decoration: TextDecoration.underline),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () => _launchUrl('https://www.hapi.net'),
                       ),
                       TextSpan(
-                          text: ' is built by volunteers for the sake of Allah SWT.'
-                              '\n\n'
-                              'We hope it helps improve your hapi-ness, in this life '
-                              'and the next.'
-                              '\n\n'
-                              'hapi will never track or sell personal information.'
-                              '\n\n'
-                              'Support us with dua, telling others and donating '
-                              'towards maintenence, further development and social '
-                              'outreach programs: '
+                        text:
+                            ' is built by volunteers for the sake of Allah SWT.'
+                            '\n\n'
+                            'We hope it helps improve your hapi-ness, in this life '
+                            'and the next.'
+                            '\n\n'
+                            'hapi will never track or sell personal information.'
+                            '\n\n'
+                            'Support us with dua, telling others and donating '
+                            'towards maintenence, further development and social '
+                            'outreach programs: ',
                       ),
                       TextSpan(
-                          text: 'paypal',
-                          style: const TextStyle(
-                              color: AppThemes.hyperlink,
-                              fontWeight: FontWeight.bold,
-                              decoration: TextDecoration.underline),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () =>
-                                _launchUrl('https://www.paypal.net/hapi')
+                        text: 'paypal',
+                        style: const TextStyle(
+                            color: AppThemes.hyperlink,
+                            fontWeight: FontWeight.bold,
+                            decoration: TextDecoration.underline),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap =
+                              () => _launchUrl('https://www.paypal.net/hapi'),
                       ),
                     ],
                   ),

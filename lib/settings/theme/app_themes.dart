@@ -4,13 +4,16 @@ import 'package:flutter/material.dart';
 class AppThemes {
   AppThemes._();
 
+  static const Color lBackground = Color.fromRGBO(225, 228, 229, 1.0);
+  static const Color dBackground = Color.fromRGBO(0xE, 0x11, 0x2D, 1.0);
+
   static const Color logoBackground = Color.fromRGBO(0x0A, 0x0E, 0x21, 1);
   static const Color logoText = Color.fromRGBO(0xE3, 0x0A, 0x17, 1);
+
   static const Color hyperlink = Color.fromRGBO(0x10, 0x57, 0xE3, 1);
 
   static const _floatingActionButtonTheme = FloatingActionButtonThemeData(
-      backgroundColor: logoText,
-      foregroundColor: Colors.white);
+      backgroundColor: logoText, foregroundColor: Colors.white);
   static final _elevatedButtonTheme = ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
           primary: logoText,
@@ -19,10 +22,8 @@ class AppThemes {
   static final lightTheme = ThemeData.light().copyWith(
     floatingActionButtonTheme: _floatingActionButtonTheme,
     elevatedButtonTheme: _elevatedButtonTheme,
-
-    //backgroundColor: Colors.white,
-    scaffoldBackgroundColor: Colors.white,
-
+    backgroundColor: lBackground,
+    scaffoldBackgroundColor: lBackground,
     primaryTextTheme: Typography.blackMountainView,
     textTheme: Typography.blackMountainView,
   );
@@ -30,10 +31,8 @@ class AppThemes {
   static final darkTheme = ThemeData.dark().copyWith(
     floatingActionButtonTheme: _floatingActionButtonTheme,
     elevatedButtonTheme: _elevatedButtonTheme,
-
-    //backgroundColor: logoBackground,
-    scaffoldBackgroundColor: logoBackground,
-
+    backgroundColor: dBackground,
+    scaffoldBackgroundColor: logoBackground, // blends logo to page in dark mode
     primaryTextTheme: Typography.whiteMountainView,
     textTheme: Typography.whiteMountainView,
   );

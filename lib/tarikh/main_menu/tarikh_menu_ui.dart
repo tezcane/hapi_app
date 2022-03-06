@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/menu/fab_nav_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
-import 'package:hapi/tarikh/colors.dart';
 import 'package:hapi/tarikh/main_menu/main_menu_section.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
@@ -83,30 +82,30 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
   Widget build(BuildContext context) {
     final List<Widget> tail = [];
 
-    tail
-      ..addAll(_menu.menuSectionDataList
-          .map<Widget>(
-            (MenuSectionData section) => Container(
-              margin: const EdgeInsets.only(top: 20.0),
-              child: MenuSection(
-                section.label,
-                section.backgroundColor,
-                section.textColor,
-                section.items,
-                navigateToTimeline,
-                _isSectionActive,
-                assetId: section.assetId,
-              ),
+    tail.addAll(_menu.menuSectionDataList
+        .map<Widget>(
+          (MenuSectionData section) => Container(
+            margin: const EdgeInsets.only(top: 20.0),
+            child: MenuSection(
+              section.label,
+              section.backgroundColor,
+              section.textColor,
+              section.items,
+              navigateToTimeline,
+              _isSectionActive,
+              assetId: section.assetId,
             ),
-          )
-          .toList(growable: false))
-      ..add(
-        Container(
-          margin: const EdgeInsets.only(top: 40.0, bottom: 22),
-          height: 1.0,
-          color: const Color.fromRGBO(151, 151, 151, 0.29),
-        ),
-      );
+          ),
+        )
+        .toList(growable: false));
+    // ..add(
+    //   /// this is the little line that shows under the vignettes
+    //   Container(
+    //     margin: const EdgeInsets.only(top: 40.0, bottom: 22),
+    //     height: 1.0,
+    //     color: const Color.fromRGBO(151, 151, 151, 0.29),
+    //   ),
+    // );
 
     /// A [SingleChildScrollView] is used to create a scrollable view for the main menu.
     return Scaffold(
@@ -147,12 +146,9 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
                   setState(() {
                     _pauseSection();
                     MenuController.to.pushSubPage(SubPage.TARIKH_SEARCH);
-                    // TODO working?:
-                    //_restoreSection(null);
                   });
                 },
                 materialTapTargetSize: MaterialTapTargetSize.padded,
-                //backgroundColor: Colors.green,
                 child: const Icon(Icons.search_outlined, size: 36.0),
               ),
             ),
@@ -163,7 +159,7 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
           settingsWidget: null,
           bottomWidget: HapiShareUI(),
           foregroundPage: Container(
-            color: background, //AppThemes.logoBackground, //background,
+            color: Theme.of(context).backgroundColor,
             child: Align(
               alignment: Alignment.topCenter,
               child: SingleChildScrollView(
