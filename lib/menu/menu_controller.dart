@@ -345,7 +345,7 @@ class MenuController extends GetxHapi {
         _subPageStack.removeLast();
 
         // timeline showing again so turn timeline rendering on
-        if (_subPageStack[0] == SubPage.TARIKH_TIMELINE) {
+        if (_subPageStack.last == SubPage.TARIKH_TIMELINE) {
           TarikhController.t.isActive = true;
         }
       }
