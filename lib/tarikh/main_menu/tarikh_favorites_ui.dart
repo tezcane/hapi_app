@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
-import 'package:hapi/tarikh/colors.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/main_menu/thumbnail_detail_widget.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
@@ -51,28 +50,20 @@ class TarikhFavoritesUI extends StatelessWidget {
                             Container(
                               padding: const EdgeInsets.only(bottom: 21),
                               width: 250,
-                              child: Text("No favorites",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontFamily: "RobotoMedium",
-                                    fontSize: 25,
-                                    color: darkText
-                                        .withOpacity(darkText.opacity * 0.75),
-                                    //height: 1.2,
-                                  )),
+                              child: Text(
+                                "No favorites",
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.headline4,
+                              ),
                             ),
+                            // TODO fix from cutting text when too long (different lang support)
                             Container(
                               //width: 270,
                               margin: const EdgeInsets.only(bottom: 114),
                               child: Text(
-                                'Add favorites in timeline events',
+                                'Add favorites in history articles',
                                 textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontFamily: "Roboto",
-                                  fontSize: 19,
-                                  //height: 1.5,
-                                  color: Colors.black.withOpacity(0.75),
-                                ),
+                                style: Theme.of(context).textTheme.headline6,
                               ),
                             ),
                           ],

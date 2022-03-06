@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hapi/tarikh/colors.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
 import 'thumbnail.dart';
@@ -50,7 +49,8 @@ class ThumbnailDetailWidget extends StatelessWidget {
               hasDivider
                   ? Container(
                       height: 1,
-                      color: const Color.fromRGBO(151, 151, 151, 0.29))
+                      color: Theme.of(context).dividerColor,
+                    )
                   : Container(),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 14.0),
@@ -66,17 +66,13 @@ class ThumbnailDetailWidget extends StatelessWidget {
                           children: [
                             Text(
                               timelineEntry.label,
-                              style: TextStyle(
-                                  fontFamily: "RobotoMedium",
-                                  fontSize: 20.0,
-                                  color: darkText
-                                      .withOpacity(darkText.opacity * 0.75)),
+                              style: Theme.of(context).textTheme.titleLarge,
                             ),
-                            Text(timelineEntry.formatYearsAgo(),
-                                style: TextStyle(
-                                    fontFamily: "Roboto",
-                                    fontSize: 14.0,
-                                    color: Colors.black.withOpacity(0.5)))
+                            const SizedBox(height: 5),
+                            Text(
+                              timelineEntry.formatYearsAgo(),
+                              style: Theme.of(context).textTheme.subtitle2,
+                            )
                           ]),
                     ))
                   ],
