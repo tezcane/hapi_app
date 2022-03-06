@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
@@ -21,6 +22,7 @@ class AboutUI extends StatelessWidget {
     return FabSubPage(
       subPage: SubPage.ABOUT,
       child: Scaffold(
+        // Note: Can't use Get.theme here, doesn't switch background color
         backgroundColor: Theme.of(context).backgroundColor,
         body: Padding(
           padding:
@@ -43,7 +45,7 @@ class AboutUI extends StatelessWidget {
                 ),
                 RichText(
                   text: TextSpan(
-                    style: Theme.of(context).textTheme.headline6,
+                    style: Get.theme.textTheme.headline6,
                     children: [
                       TextSpan(
                         text: 'hapi',

@@ -23,7 +23,7 @@ class SegmentedSelector extends StatelessWidget {
     //if (Platform.isIOS) {}
 
     return CupertinoSlidingSegmentedControl(
-        //thumbColor: Theme.of(context).primaryColor,
+        //thumbColor: Get.theme.primaryColor,
         groupValue: selectedOption,
         children: {
           for (var option in menuOptions)

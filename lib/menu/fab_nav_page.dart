@@ -31,7 +31,7 @@ class FabNavPage extends StatelessWidget {
       builder: (c) => IgnorePointer(
         ignoring: c.isScreenDisabled(),
         child: Scaffold(
-          //backgroundColor: Theme.of(context).backgroundColor,
+          //backgroundColor: Get.theme.backgroundColor,
           body: MenuNav(
             builder: () {
               return Scaffold(

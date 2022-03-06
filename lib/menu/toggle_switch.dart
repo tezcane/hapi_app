@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 typedef OnToggle = void Function(int index);
 
@@ -99,18 +100,18 @@ class _ToggleSwitchState extends State<ToggleSwitch>
     super.build(context);
 
     /// Assigns active background color to default primary theme color if it's null/not provided.
-    activeBgColor = widget.activeBgColor ?? Theme.of(context).primaryColor;
+    activeBgColor = widget.activeBgColor ?? Get.theme.primaryColor;
 
     /// Assigns active foreground color to default accent text theme color if it's null/not provided.
-    activeFgColor = widget.activeFgColor ??
-        Theme.of(context).accentTextTheme.bodyText1!.color;
+    activeFgColor =
+        widget.activeFgColor ?? Get.theme.accentTextTheme.bodyText1!.color;
 
     /// Assigns inactive background color to default disabled theme color if it's null/not provided.
-    inactiveBgColor = widget.inactiveBgColor ?? Theme.of(context).disabledColor;
+    inactiveBgColor = widget.inactiveBgColor ?? Get.theme.disabledColor;
 
     /// Assigns inactive foreground color to default text theme color if it's null/not provided.
     inactiveFgColor =
-        widget.inactiveFgColor ?? Theme.of(context).textTheme.bodyText1!.color;
+        widget.inactiveFgColor ?? Get.theme.textTheme.bodyText1!.color;
 
     return ClipRRect(
       borderRadius: BorderRadius.circular(widget.cornerRadius),

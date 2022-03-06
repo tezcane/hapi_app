@@ -25,7 +25,7 @@ class TarikhFavoritesUI extends StatelessWidget {
     return FabSubPage(
       subPage: SubPage.TARIKH_FAVORITE,
       child: Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
+        backgroundColor: Get.theme.backgroundColor,
         body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: GetBuilder<TarikhController>(
@@ -54,7 +54,7 @@ class TarikhFavoritesUI extends StatelessWidget {
                               child: Text(
                                 "No favorites",
                                 textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.headline4,
+                                style: Get.theme.textTheme.headline4,
                               ),
                             ),
                             // TODO fix from cutting text when too long (different lang support)
@@ -64,7 +64,7 @@ class TarikhFavoritesUI extends StatelessWidget {
                               child: Text(
                                 'Add favorites in history articles',
                                 textAlign: TextAlign.center,
-                                style: Theme.of(context).textTheme.headline6,
+                                style: Get.theme.textTheme.headline6,
                               ),
                             ),
                           ],
