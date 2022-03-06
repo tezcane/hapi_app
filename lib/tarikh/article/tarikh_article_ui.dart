@@ -99,12 +99,10 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
       blockquotePadding: const EdgeInsets.all(20.0),
     );
     setState(() {
-      _title = widget.article.label!;
+      _title = widget.article.label;
       _subTitle = widget.article.formatYearsAgo();
       _articleMarkdown = "";
-      if (widget.article.articleFilename != null) {
-        loadMarkdown(widget.article.articleFilename!);
-      }
+      loadMarkdown(widget.article.articleFilename);
     });
   }
 
@@ -129,7 +127,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
     List<TimelineEntry> favs = TarikhController.to.favorites;
     bool isFav = favs.any(
-        (TimelineEntry te) => te.label!.toLowerCase() == _title.toLowerCase());
+        (TimelineEntry te) => te.label.toLowerCase() == _title.toLowerCase());
     return FabSubPage(
       subPage: SubPage.TARIKH_ARTICLE,
       child: Scaffold(

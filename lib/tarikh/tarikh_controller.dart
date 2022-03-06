@@ -65,8 +65,8 @@ class TarikhController extends GetxHapi {
     t.loadFromBundle().then(
       (List<TimelineEntry> entries) {
         t.setViewport(
-          start: entries.first.start! * 2.0,
-          end: entries.first.start!,
+          start: entries.first.start * 2.0,
+          end: entries.first.start,
           animate: true,
         );
 
@@ -98,7 +98,7 @@ class TarikhController extends GetxHapi {
     /// with n entries.
     Map<String, TimelineEntry> entriesMap = {};
     for (TimelineEntry entry in entries) {
-      entriesMap.putIfAbsent(entry.label!, () => entry);
+      entriesMap.putIfAbsent(entry.label, () => entry);
       _allEvents.add(entry); // TODO sort this needed? being done in paint...
     }
 
@@ -113,7 +113,7 @@ class TarikhController extends GetxHapi {
 
     /// Sort by starting time, so the favorites' list is always displayed in ascending order.
     _favorites.sort((TimelineEntry a, TimelineEntry b) {
-      return a.start!.compareTo(b.start!);
+      return a.start.compareTo(b.start);
     });
   }
 
@@ -122,7 +122,7 @@ class TarikhController extends GetxHapi {
     if (!_favorites.contains(e)) {
       _favorites.add(e);
       _favorites.sort((TimelineEntry a, TimelineEntry b) {
-        return a.start!.compareTo(b.start!);
+        return a.start.compareTo(b.start);
       });
       _saveFavorites();
     }
@@ -139,7 +139,7 @@ class TarikhController extends GetxHapi {
   /// Persists the data to disk.
   _saveFavorites() {
     List<String> favsList =
-        _favorites.map((TimelineEntry en) => en.label!).toList();
+        _favorites.map((TimelineEntry entry) => entry.label).toList();
     s.write("TARIKH_FAVS", favsList);
     update(); // favorites changed so notify people using it
   }
@@ -180,11 +180,11 @@ class TarikhController extends GetxHapi {
     String pageScrolls = ' ';
 
     if (entry != null && opacity > 0.0) {
-      title = entry.label!;
+      title = entry.label;
 
       //was t.renderEnd, had 'page away 0' at bottom page edge, now in middle:
       double pageReference = (t.renderStart + t.renderEnd) / 2.0;
-      double timeUntilDouble = entry.start! - pageReference;
+      double timeUntilDouble = entry.start - pageReference;
       timeUntil = TimelineEntry.formatYears(timeUntilDouble).toLowerCase();
 
       double pageSize = t.renderEnd - t.renderStart;

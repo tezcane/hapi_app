@@ -88,24 +88,24 @@ class VignetteRenderObject extends RenderBox {
       _nimaActor = null;
       _flareActor = null;
     } else {
-      TimelineAsset asset = _timelineEntry!.asset!;
-      if (asset is TimelineNima && asset.actor != null) {
+      TimelineAsset asset = _timelineEntry!.asset;
+      if (asset is TimelineNima) {
         /// Instance [_nimaActor] through the actor reference in the asset
         /// and set the initial starting value for its animation.
-        _nimaActor = asset.actor!.makeInstance() as nima.FlutterActor;
-        asset.animation!.apply(asset.animation!.duration, _nimaActor, 1.0);
+        _nimaActor = asset.actor.makeInstance() as nima.FlutterActor;
+        asset.animation.apply(asset.animation.duration, _nimaActor, 1.0);
         _nimaActor!.advance(0.0);
         if (asset.filename == "assets/tarikh/Newton/Newton_v2.nma") {
           /// Newton uses a custom controller! =)
           _nimaController = NewtonController();
           _nimaController!.initialize(_nimaActor!);
         }
-      } else if (asset is TimelineFlare && asset.actor != null) {
+      } else if (asset is TimelineFlare) {
         /// Instance [_flareActor] through the actor reference in the asset
         /// and set the initial starting value for its animation.
-        _flareActor = asset.actor!.makeInstance() as flare.FlutterActorArtboard;
+        _flareActor = asset.actor.makeInstance() as flare.FlutterActorArtboard;
         _flareActor!.initializeGraphics();
-        asset.animation!.apply(asset.animation!.duration, _flareActor, 1.0);
+        asset.animation.apply(asset.animation.duration, _flareActor, 1.0);
         _flareActor!.advance(0.0);
         if (asset.filename ==
             "assets/tarikh/Amelia_Earhart/Amelia_Earhart.flr") {
@@ -157,10 +157,10 @@ class VignetteRenderObject extends RenderBox {
   @override
   bool hitTestSelf(Offset screenOffset) {
     if (_timelineEntry != null) {
-      TimelineAsset asset = _timelineEntry!.asset!;
-      if (asset is TimelineNima && asset.actor != null) {
+      TimelineAsset asset = _timelineEntry!.asset;
+      if (asset is TimelineNima) {
         asset.animationTime = 0.0;
-      } else if (asset is TimelineFlare && asset.actor != null) {
+      } else if (asset is TimelineFlare) {
         asset.animationTime = 0.0;
       }
     }
@@ -193,14 +193,14 @@ class VignetteRenderObject extends RenderBox {
 
     canvas.save();
 
-    double w = asset.width!;
-    double h = asset.height!;
+    double w = asset.width;
+    double h = asset.height;
 
     /// If the asset is just a static image, draw the image directly to [canvas].
     if (asset is TimelineImage) {
       canvas.drawImageRect(
-          asset.image!,
-          Rect.fromLTWH(0.0, 0.0, asset.width!, asset.height!),
+          asset.image,
+          Rect.fromLTWH(0.0, 0.0, asset.width, asset.height),
           Rect.fromLTWH(offset.dx + size.width - w, asset.y, w, h),
           Paint()
             ..isAntiAlias = true
@@ -212,7 +212,7 @@ class VignetteRenderObject extends RenderBox {
       /// 1. Calculate the bounds for the current object.
       /// An Axis-Aligned Bounding Box (AABB) is already set up when the asset is first loaded.
       /// We rely on this AABB to perform screen-space calculations.
-      nima.AABB bounds = asset.setupAABB!;
+      nima.AABB bounds = asset.setupAABB;
 
       double contentHeight = bounds[3] - bounds[1];
       double contentWidth = bounds[2] - bounds[0];
@@ -292,7 +292,7 @@ class VignetteRenderObject extends RenderBox {
       /// 1. Calculate the bounds for the current object.
       /// An Axis-Aligned Bounding Box (AABB) is already set up when the asset is first loaded.
       /// We rely on this AABB to perform screen-space calculations.
-      flare.AABB bounds = asset.setupAABB!;
+      flare.AABB bounds = asset.setupAABB;
       double contentWidth = bounds[2] - bounds[0];
       double contentHeight = bounds[3] - bounds[1];
       double x =
@@ -388,20 +388,20 @@ class VignetteRenderObject extends RenderBox {
     double elapsed = t - _lastFrameTime;
     _lastFrameTime = t;
     if (_timelineEntry != null) {
-      TimelineAsset asset = _timelineEntry!.asset!;
+      TimelineAsset asset = _timelineEntry!.asset;
       if (asset is TimelineNima && _nimaActor != null) {
         asset.animationTime += elapsed;
 
-        if (asset.loop!) {
-          asset.animationTime %= asset.animation!.duration;
+        if (asset.loop) {
+          asset.animationTime %= asset.animation.duration;
         }
 
         /// Apply the current time to the [asset] animation.
-        asset.animation!.apply(asset.animationTime, _nimaActor, 1.0);
+        asset.animation.apply(asset.animationTime, _nimaActor, 1.0);
         if (_nimaController != null) {
           nima.Vec2D? localTouchPosition;
           if (interactOffset != null) {
-            nima.AABB bounds = asset.setupAABB!;
+            nima.AABB bounds = asset.setupAABB;
             double contentHeight = bounds[3] - bounds[1];
             double contentWidth = bounds[2] - bounds[0];
             double x = -bounds[0] -
@@ -488,21 +488,21 @@ class VignetteRenderObject extends RenderBox {
           }
         } else {
           if (asset.intro == asset.animation &&
-              asset.animationTime >= asset.animation!.duration) {
-            asset.animationTime -= asset.animation!.duration;
+              asset.animationTime >= asset.animation.duration) {
+            asset.animationTime -= asset.animation.duration;
             asset.animation = asset.idle!;
           }
-          if (asset.loop! && asset.animationTime >= 0) {
-            asset.animationTime %= asset.animation!.duration;
+          if (asset.loop && asset.animationTime >= 0) {
+            asset.animationTime %= asset.animation.duration;
           }
 
           /// Apply the current time to this [ActorAnimation].
-          asset.animation!.apply(asset.animationTime, _flareActor, 1.0);
+          asset.animation.apply(asset.animationTime, _flareActor, 1.0);
         }
         if (_flareController != null) {
           flare.Vec2D? localTouchPosition;
           if (interactOffset != null) {
-            flare.AABB bounds = asset.setupAABB!;
+            flare.AABB bounds = asset.setupAABB;
             double contentWidth = bounds[2] - bounds[0];
             double contentHeight = bounds[3] - bounds[1];
             double x = -bounds[0] -

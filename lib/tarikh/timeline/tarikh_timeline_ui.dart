@@ -68,7 +68,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   @override
   initState() {
     t.isActive = true;
-    _eraName = t.currentEra != null ? t.currentEra!.label! : DefaultEraName;
+    _eraName = t.currentEra != null ? t.currentEra!.label : DefaultEraName;
     t.onHeaderColorsChanged = (Color background, Color text) {
       setState(() {
         _headerTextColor = text;
@@ -79,7 +79,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     /// Update the label for the [Timeline] object.
     t.onEraChanged = (TimelineEntry? entry) {
       setState(() {
-        _eraName = 'Era: ' + (entry != null ? entry.label! : DefaultEraName);
+        _eraName = 'Era: ' + (entry != null ? entry.label : DefaultEraName);
       });
     };
 
@@ -171,12 +171,12 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
     if (_touchedBubble != null) {
       if (_touchedBubble!.zoom) {
-        _navigateToTimeline(_touchedBubble!.entry!, devicePadding.top);
+        _navigateToTimeline(_touchedBubble!.entry, devicePadding.top);
       } else {
         //t.isActive = false; now done inside menu controller
 
         MenuController.to.pushSubPage(SubPage.TARIKH_ARTICLE, arguments: {
-          'article': _touchedBubble!.entry!,
+          'article': _touchedBubble!.entry,
         });
 
         //t.isActive = true; // TODO working? was below:
@@ -200,7 +200,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   void _longPress() {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
     if (_touchedBubble != null) {
-      _navigateToTimeline(_touchedBubble!.entry!, devicePadding.top);
+      _navigateToTimeline(_touchedBubble!.entry, devicePadding.top);
     }
   }
 
@@ -226,7 +226,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
       };
       t.onEraChanged = (TimelineEntry? entry) {
         setState(() {
-          _eraName = entry != null ? entry.label! : DefaultEraName;
+          _eraName = entry != null ? entry.label : DefaultEraName;
         });
       };
       setState(() {
@@ -467,7 +467,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               onPressed: () {
                                 if (btnUp.entry != null) {
                                   print('Navigate to past: ' +
-                                      btnUp.entry!.label!);
+                                      btnUp.entry!.label);
                                   // cTrkh.setTBtnUp(cTrkh.getTimeBtn(
                                   //     btnUp.entry!.previous, 1.0));
                                   _navigateToTimeline(
@@ -499,7 +499,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                             onPressed: () {
                               if (btnDn.entry != null) {
                                 print('Navigate to future: ' +
-                                    btnDn.entry!.label!);
+                                    btnDn.entry!.label);
                                 // cTrkh.setTBtnDn(
                                 //     cTrkh.getTimeBtn(btnDn.entry!.next, 1.0));
                                 _navigateToTimeline(

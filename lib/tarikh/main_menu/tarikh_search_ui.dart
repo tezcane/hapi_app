@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hapi/main.dart';
 import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
@@ -68,7 +67,7 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
 
     /// Sort by starting time, so the search list is always displayed in ascending order.
     searchResult.sort((TimelineEntry a, TimelineEntry b) {
-      return a.start!.compareTo(b.start!);
+      return a.start.compareTo(b.start);
     });
 
     return searchResult;

@@ -15,7 +15,7 @@ class ThumbnailWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    TimelineAsset asset = entry.asset!;
+    TimelineAsset asset = entry.asset;
     Widget thumbnail;
 
     /// Check if the [entry.asset] provided is already a [TimelineImage].

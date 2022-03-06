@@ -32,17 +32,17 @@ class SearchManager {
 
     /// Fill the map with all the possible searchable substrings.
     /// This operation is O(n^2), thus very slow, and performed only once upon initialization.
-    for (TimelineEntry e in entries) {
-      String label = e.label!;
+    for (TimelineEntry entry in entries) {
+      String label = entry.label;
       int len = label.length;
       for (int i = 0; i < len; i++) {
         for (int j = i + 1; j <= len; j++) {
           String substring = label.substring(i, j).toLowerCase();
           if (_queryMap.containsKey(substring)) {
             Set<TimelineEntry> labels = _queryMap[substring]!;
-            labels.add(e);
+            labels.add(entry);
           } else {
-            _queryMap.putIfAbsent(substring, () => {e});
+            _queryMap.putIfAbsent(substring, () => {entry});
           }
         }
       }

@@ -162,24 +162,24 @@ class MenuVignetteRenderObject extends RenderBox {
       return;
     }
 
-    TimelineAsset asset = _timelineEntry!.asset!;
+    TimelineAsset asset = _timelineEntry!.asset;
 
     canvas.save();
 
-    double w = asset.width!;
-    double h = asset.height!;
+    double w = asset.width;
+    double h = asset.height;
 
     /// If the asset is just a static image, draw the image directly to [canvas].
     if (asset is TimelineImage) {
       canvas.drawImageRect(
-          asset.image!,
-          Rect.fromLTWH(0.0, 0.0, asset.width!, asset.height!),
+          asset.image,
+          Rect.fromLTWH(0.0, 0.0, asset.width, asset.height),
           Rect.fromLTWH(offset.dx + size.width - w, asset.y, w, h),
           Paint()
             ..isAntiAlias = true
             ..filterQuality = ui.FilterQuality.low
             ..color = Colors.white.withOpacity(asset.opacity));
-    } else if (asset is TimelineNima && asset.actor != null) {
+    } else if (asset is TimelineNima) {
       Alignment alignment = Alignment.topRight;
       BoxFit fit = BoxFit.cover;
 
@@ -188,7 +188,7 @@ class MenuVignetteRenderObject extends RenderBox {
       /// 1. Calculate the bounds for the current object.
       /// An Axis-Aligned Bounding Box (AABB) is already set up when the asset is first loaded.
       /// We rely on this AABB to perform screen-space calculations.
-      nima.AABB bounds = asset.setupAABB!;
+      nima.AABB bounds = asset.setupAABB;
 
       double contentHeight = bounds[3] - bounds[1];
       double contentWidth = bounds[2] - bounds[0];
@@ -258,7 +258,7 @@ class MenuVignetteRenderObject extends RenderBox {
       canvas.translate(x, y);
 
       /// 5. perform the drawing operations.
-      asset.actor!.draw(canvas, 1.0);
+      asset.actor.draw(canvas, 1.0);
 
       /// 6. Restore the canvas' original transform state.
       canvas.restore();
@@ -277,7 +277,7 @@ class MenuVignetteRenderObject extends RenderBox {
             ui.Offset(0.0, offset.dy + 150.0), colors, stops)
         ..style = ui.PaintingStyle.fill;
       canvas.drawRect(offset & size, paint);
-    } else if (asset is TimelineFlare && asset.actor != null) {
+    } else if (asset is TimelineFlare) {
       Alignment alignment = Alignment.center;
       BoxFit fit = BoxFit.cover;
 
@@ -287,7 +287,7 @@ class MenuVignetteRenderObject extends RenderBox {
       /// An Axis-Aligned Bounding Box (AABB) is already set up when the asset is first loaded.
       /// We rely on this AABB to perform screen-space calculations.
 
-      flare.AABB bounds = asset.setupAABB!;
+      flare.AABB bounds = asset.setupAABB;
       double contentWidth = bounds[2] - bounds[0];
       double contentHeight = bounds[3] - bounds[1];
       double x =
@@ -356,7 +356,7 @@ class MenuVignetteRenderObject extends RenderBox {
       canvas.translate(x, y);
 
       /// 5. perform the drawing operations.
-      asset.actor!.draw(canvas);
+      asset.actor.draw(canvas);
 
       /// 6. Restore the canvas' original transform state.
       canvas.restore();
@@ -398,24 +398,24 @@ class MenuVignetteRenderObject extends RenderBox {
     double elapsed = t - _lastFrameTime;
     _lastFrameTime = t;
     TimelineEntry? entry = _timelineEntry;
-    if (entry != null && entry.asset != null) {
-      TimelineAsset asset = entry.asset!;
-      if (asset is TimelineNima && asset.actor != null) {
+    if (entry != null) {
+      TimelineAsset asset = entry.asset;
+      if (asset is TimelineNima) {
         /// Modulate the opacity value used by [gradientFade].
         if (opacity < 1.0) {
           opacity = min(opacity + elapsed, 1.0);
         }
         asset.animationTime += elapsed;
-        if (asset.loop!) {
-          asset.animationTime %= asset.animation!.duration;
+        if (asset.loop) {
+          asset.animationTime %= asset.animation.duration;
         }
 
         /// Apply the current time to the [asset] animation.
-        asset.animation!.apply(asset.animationTime, asset.actor, 1.0);
+        asset.animation.apply(asset.animationTime, asset.actor, 1.0);
 
         /// Use the library function to update the actor's time.
-        asset.actor!.advance(elapsed);
-      } else if (asset is TimelineFlare && asset.actor != null) {
+        asset.actor.advance(elapsed);
+      } else if (asset is TimelineFlare) {
         if (opacity < 1.0) {
           /// Modulate the opacity value used by [gradientFade].
           opacity = min(opacity + elapsed, 1.0);
@@ -432,19 +432,19 @@ class MenuVignetteRenderObject extends RenderBox {
         }
         asset.animationTime += elapsed;
         if (asset.intro == asset.animation &&
-            asset.animationTime >= asset.animation!.duration) {
-          asset.animationTime -= asset.animation!.duration;
+            asset.animationTime >= asset.animation.duration) {
+          asset.animationTime -= asset.animation.duration;
           asset.animation = asset.idle!;
         }
-        if (asset.loop! && asset.animationTime >= 0) {
-          asset.animationTime %= asset.animation!.duration;
+        if (asset.loop && asset.animationTime >= 0) {
+          asset.animationTime %= asset.animation.duration;
         }
 
         /// Apply the current time to this [ActorAnimation].
-        asset.animation!.apply(asset.animationTime, asset.actor, 1.0);
+        asset.animation.apply(asset.animationTime, asset.actor, 1.0);
 
         /// Use the library function to update the actor's time.
-        asset.actor!.advance(elapsed);
+        asset.actor.advance(elapsed);
       }
     }
 

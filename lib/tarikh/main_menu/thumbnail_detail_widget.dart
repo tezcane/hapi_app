@@ -65,7 +65,7 @@ class ThumbnailDetailWidget extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              timelineEntry.label!,
+                              timelineEntry.label,
                               style: TextStyle(
                                   fontFamily: "RobotoMedium",
                                   fontSize: 20.0,

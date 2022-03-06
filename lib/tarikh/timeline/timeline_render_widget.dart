@@ -152,7 +152,7 @@ class TimelineRenderObject extends RenderBox {
     if (_focusItem!.pad) {
       t.padding = EdgeInsets.only(
           top: topOverlap + _focusItem!.padTop + Timeline.Parallax,
-          bottom: _focusItem!.padBottom);
+          bottom: 0.0); //_focusItem!.padBottom);
       t.setViewport(
           start: _focusItem!.start,
           end: _focusItem!.end,
@@ -171,7 +171,7 @@ class TimelineRenderObject extends RenderBox {
   bool hitTestSelf(Offset screenOffset) {
     touchEntry!(null);
     for (TapTarget bubble in _tapTargets.reversed) {
-      if (bubble.rect!.contains(screenOffset)) {
+      if (bubble.rect.contains(screenOffset)) {
         if (touchBubble != null) {
           touchBubble!(bubble);
         }
@@ -204,21 +204,20 @@ class TimelineRenderObject extends RenderBox {
     // _needsRepaint = false;
 
     /// Fetch the background colors from the [Timeline] and compute the fill.
-    List<TimelineBackgroundColor>? backgroundColors = t.backgroundColors;
+    List<TimelineBackgroundColor> backgroundColors = t.backgroundColors;
     ui.Paint? backgroundPaint;
-    if (backgroundColors != null && backgroundColors.isNotEmpty) {
-      double rangeStart = backgroundColors.first.start!;
-      double range =
-          backgroundColors.last.start! - backgroundColors.first.start!;
+    if (backgroundColors.isNotEmpty) {
+      double rangeStart = backgroundColors.first.start;
+      double range = backgroundColors.last.start - backgroundColors.first.start;
       List<ui.Color> colors = <ui.Color>[];
       List<double> stops = <double>[];
       for (TimelineBackgroundColor bg in backgroundColors) {
-        colors.add(bg.color!);
-        stops.add((bg.start! - rangeStart) / range);
+        colors.add(bg.color);
+        stops.add((bg.start - rangeStart) / range);
       }
       double s = t.computeScale(t.renderStart, t.renderEnd);
-      double y1 = (backgroundColors.first.start! - t.renderStart) * s;
-      double y2 = (backgroundColors.last.start! - t.renderStart) * s;
+      double y1 = (backgroundColors.first.start - t.renderStart) * s;
+      double y2 = (backgroundColors.last.start - t.renderStart) * s;
 
       /// Fill Background.
       backgroundPaint = ui.Paint()
@@ -230,7 +229,7 @@ class TimelineRenderObject extends RenderBox {
         canvas.drawRect(
             Rect.fromLTWH(
                 offset.dx, offset.dy, size.width, y1 - offset.dy + 1.0),
-            ui.Paint()..color = backgroundColors.first.color!);
+            ui.Paint()..color = backgroundColors.first.color);
       }
 
       /// Draw the background on the canvas.
@@ -250,21 +249,21 @@ class TimelineRenderObject extends RenderBox {
         if (asset.opacity > 0) {
           double rs = 0.2 + asset.scale * 0.8;
 
-          double w = asset.width! * Timeline.AssetScreenScale;
-          double h = asset.height! * Timeline.AssetScreenScale;
+          double w = asset.width * Timeline.AssetScreenScale;
+          double h = asset.height * Timeline.AssetScreenScale;
 
           /// Draw the correct asset.
           if (asset is TimelineImage) {
             canvas.drawImageRect(
-                asset.image!,
-                Rect.fromLTWH(0.0, 0.0, asset.width!, asset.height!),
+                asset.image,
+                Rect.fromLTWH(0.0, 0.0, asset.width, asset.height),
                 Rect.fromLTWH(
                     offset.dx + size.width - w, asset.y, w * rs, h * rs),
                 Paint()
                   ..isAntiAlias = true
                   ..filterQuality = ui.FilterQuality.low
                   ..color = Colors.white.withOpacity(asset.opacity));
-          } else if (asset is TimelineNima && asset.actor != null) {
+          } else if (asset is TimelineNima) {
             /// If we have a [TimelineNima] asset, set it up properly and paint it.
             ///
             /// 1. Calculate the bounds for the current object.
@@ -273,7 +272,7 @@ class TimelineRenderObject extends RenderBox {
             Alignment alignment = Alignment.center;
             BoxFit fit = BoxFit.cover;
 
-            nima.AABB bounds = asset.setupAABB!;
+            nima.AABB bounds = asset.setupAABB;
 
             double contentHeight = bounds[3] - bounds[1];
             double contentWidth = bounds[2] - bounds[0];
@@ -345,17 +344,15 @@ class TimelineRenderObject extends RenderBox {
             canvas.translate(x, y);
 
             /// 5. perform the drawing operations.
-            asset.actor!.draw(canvas, asset.opacity);
+            asset.actor.draw(canvas, asset.opacity);
 
             /// 6. Restore the canvas' original transform state.
             canvas.restore();
 
             /// 7. This asset is also a *tappable* element, add it to the list
             /// so it can be processed.
-            _tapTargets.add(TapTarget()
-              ..entry = asset.entry
-              ..rect = renderOffset & renderSize);
-          } else if (asset is TimelineFlare && asset.actor != null) {
+            _tapTargets.add(TapTarget(asset.entry, renderOffset & renderSize));
+          } else if (asset is TimelineFlare) {
             /// If we have a [TimelineFlare] asset set it up properly and paint it.
             ///
             /// 1. Calculate the bounds for the current object.
@@ -364,7 +361,7 @@ class TimelineRenderObject extends RenderBox {
             Alignment alignment = Alignment.center;
             BoxFit fit = BoxFit.cover;
 
-            flare.AABB bounds = asset.setupAABB!;
+            flare.AABB bounds = asset.setupAABB;
             double contentWidth = bounds[2] - bounds[0];
             double contentHeight = bounds[3] - bounds[1];
             double x = -bounds[0] -
@@ -435,17 +432,15 @@ class TimelineRenderObject extends RenderBox {
             canvas.translate(x, y);
 
             /// 5. perform the drawing operations.
-            asset.actor!.modulateOpacity = asset.opacity;
-            asset.actor!.draw(canvas);
+            asset.actor.modulateOpacity = asset.opacity;
+            asset.actor.draw(canvas);
 
             /// 6. Restore the canvas' original transform state.
             canvas.restore();
 
             /// 7. This asset is also a *tappable* element, add it to the list
             /// so it can be processed.
-            _tapTargets.add(TapTarget()
-              ..entry = asset.entry
-              ..rect = renderOffset & renderSize);
+            _tapTargets.add(TapTarget(asset.entry, renderOffset & renderSize));
           }
         }
       }
@@ -711,13 +706,13 @@ class TimelineRenderObject extends RenderBox {
       List<TimelineEntry> nearbyEvents = List<TimelineEntry>.from(events);
       double mid = t.renderStart + (t.renderEnd - t.renderStart) / 2.0;
       nearbyEvents.sort((TimelineEntry a, TimelineEntry b) {
-        return (a.start! - mid).abs().compareTo((b.start! - mid).abs());
+        return (a.start - mid).abs().compareTo((b.start - mid).abs());
       });
 
       /// layout events.
       for (int i = 0; i < nearbyEvents.length; i++) {
         TimelineEntry event = nearbyEvents[i];
-        double y = ((event.start! - t.renderStart) * scale).clamp(
+        double y = ((event.start - t.renderStart) * scale).clamp(
             offset.dy +
                 eventRadius +
                 padEvents +
@@ -758,7 +753,7 @@ class TimelineRenderObject extends RenderBox {
         canvas.drawCircle(Offset(x, y), eventRadius, accentPaint);
         canvas.drawCircle(Offset(x, y), eventRadius - 4.0, whitePaint);
 
-        TimelineAsset asset = event.asset!;
+        TimelineAsset asset = event.asset;
         double assetSize = 40.0 - 8.0;
         Size renderSize = Size(assetSize, assetSize);
         Offset renderOffset = Offset(x - assetSize / 2.0, y - assetSize / 2.0);
@@ -768,8 +763,8 @@ class TimelineRenderObject extends RenderBox {
 
         /// Draw the assets statically within the circle.
         /// Calculations here are the same as seen in [paint()] for the assets.
-        if (asset is TimelineNima && asset.actorStatic != null) {
-          nima.AABB bounds = asset.setupAABB!;
+        if (asset is TimelineNima) {
+          nima.AABB bounds = asset.setupAABB;
 
           double contentHeight = bounds[3] - bounds[1];
           double contentWidth = bounds[2] - bounds[0];
@@ -830,14 +825,12 @@ class TimelineRenderObject extends RenderBox {
           canvas.scale(scaleX, -scaleY);
           canvas.translate(x, y);
 
-          asset.actorStatic!.draw(canvas);
+          asset.actorStatic.draw(canvas);
           canvas.restore();
-          _tapTargets.add(TapTarget()
-            ..entry = asset.entry
-            ..rect = renderOffset & renderSize
-            ..zoom = true);
-        } else if (asset is TimelineFlare && asset.actorStatic != null) {
-          flare.AABB bounds = asset.setupAABB!;
+          _tapTargets.add(
+              TapTarget(asset.entry, renderOffset & renderSize, zoom: true));
+        } else if (asset is TimelineFlare) {
+          flare.AABB bounds = asset.setupAABB;
           double contentWidth = bounds[2] - bounds[0];
           double contentHeight = bounds[3] - bounds[1];
           double x = -bounds[0] -
@@ -897,17 +890,13 @@ class TimelineRenderObject extends RenderBox {
           canvas.scale(scaleX, scaleY);
           canvas.translate(x, y);
 
-          asset.actorStatic!.draw(canvas);
+          asset.actorStatic.draw(canvas);
           canvas.restore();
-          _tapTargets.add(TapTarget()
-            ..entry = asset.entry
-            ..rect = renderOffset & renderSize
-            ..zoom = true);
+          _tapTargets.add(
+              TapTarget(asset.entry, renderOffset & renderSize, zoom: true));
         } else {
-          _tapTargets.add(TapTarget()
-            ..entry = event
-            ..rect = renderOffset & renderSize
-            ..zoom = true);
+          _tapTargets.add(
+              TapTarget(asset.entry, renderOffset & renderSize, zoom: true));
         }
       }
 
@@ -937,7 +926,7 @@ class TimelineRenderObject extends RenderBox {
                       fontSize: 10.0))
                 ..pushStyle(ui.TextStyle(color: Colors.white));
 
-              int value = (event.start! - previous.start!).round().abs();
+              int value = (event.start - previous.start).round().abs();
               String label;
               if (value < 9000) {
                 label = value.toStringAsFixed(0);
@@ -1027,7 +1016,7 @@ class TimelineRenderObject extends RenderBox {
         ..pushStyle(
             ui.TextStyle(color: const Color.fromRGBO(255, 255, 255, 1.0)));
 
-      builder.addText(item.label!);
+      builder.addText(item.label);
       ui.Paragraph labelParagraph = builder.build();
       labelParagraph
           .layout(const ui.ParagraphConstraints(width: MaxLabelWidth));
@@ -1054,10 +1043,13 @@ class TimelineRenderObject extends RenderBox {
                 .withOpacity(item.opacity * item.labelOpacity));
       canvas
           .clipRect(Rect.fromLTWH(BubblePadding, 0.0, textWidth, bubbleHeight));
-      _tapTargets.add(TapTarget()
-        ..entry = item
-        ..rect = Rect.fromLTWH(
-            bubbleX, bubbleY, textWidth + BubblePadding * 2.0, bubbleHeight));
+      _tapTargets.add(
+        TapTarget(
+          item,
+          Rect.fromLTWH(
+              bubbleX, bubbleY, textWidth + BubblePadding * 2.0, bubbleHeight),
+        ),
+      );
 
       canvas.drawParagraph(
           labelParagraph,

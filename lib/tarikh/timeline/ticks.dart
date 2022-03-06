@@ -75,20 +75,20 @@ class Ticks {
     List<TickColors>? tickColors = timeline.tickColors;
     if (tickColors != null && tickColors.isNotEmpty) {
       /// Build up the color stops for the linear gradient.
-      double rangeStart = tickColors.first.start!;
-      double range = tickColors.last.start! - tickColors.first.start!;
+      double rangeStart = tickColors.first.start;
+      double range = tickColors.last.start - tickColors.first.start;
       List<ui.Color> colors = <ui.Color>[];
       List<double> stops = <double>[];
       for (TickColors bg in tickColors) {
-        colors.add(bg.background!);
-        stops.add((bg.start! - rangeStart) / range);
+        colors.add(bg.background);
+        stops.add((bg.start - rangeStart) / range);
       }
       double s =
           timeline.computeScale(timeline.renderStart, timeline.renderEnd);
 
       /// y-coordinate for the starting and ending element.
-      double y1 = (tickColors.first.start! - timeline.renderStart) * s;
-      double y2 = (tickColors.last.start! - timeline.renderStart) * s;
+      double y1 = (tickColors.first.start - timeline.renderStart) * s;
+      double y2 = (tickColors.last.start - timeline.renderStart) * s;
 
       /// Fill Background.
       ui.Paint paint = ui.Paint()
@@ -101,13 +101,13 @@ class Ticks {
         canvas.drawRect(
             Rect.fromLTWH(
                 offset.dx, offset.dy, gutterWidth, y1 - offset.dy + 1.0),
-            ui.Paint()..color = tickColors.first.background!);
+            ui.Paint()..color = tickColors.first.background);
       }
       if (y2 < offset.dy + height) {
         canvas.drawRect(
             Rect.fromLTWH(
                 offset.dx, y2 - 1, gutterWidth, (offset.dy + height) - y2),
-            ui.Paint()..color = tickColors.last.background!);
+            ui.Paint()..color = tickColors.last.background);
       }
 
       /// Draw the gutter.
@@ -130,16 +130,16 @@ class Ticks {
       TickColors? colors = timeline.findTickColors(offset.dy + height - o);
       if (tt % textTickDistance == 0) {
         /// Every `textTickDistance`, draw a wider tick with the a label laid on top.
-        if (colors != null && colors.long != null) {
+        if (colors != null) {
           canvas.drawRect(
               Rect.fromLTWH(offset.dx + gutterWidth - TickSize,
                   offset.dy + height - o, TickSize, 1.0),
-              Paint()..color = colors.long!);
+              Paint()..color = colors.long);
         }
 
         /// Drawing text to [canvas] is done by using the [ParagraphBuilder] directly.
         ui.ParagraphBuilder? builder;
-        if (colors != null && colors.text != null) {
+        if (colors != null) {
           builder = ui.ParagraphBuilder(ui.ParagraphStyle(
               textAlign: TextAlign.end, fontFamily: "Roboto", fontSize: 10.0))
             ..pushStyle(ui.TextStyle(color: colors.text));
@@ -174,11 +174,11 @@ class Ticks {
         }
       } else {
         /// If we're within two text-ticks, just draw a smaller line.
-        if (colors != null && colors.short != null) {
+        if (colors != null) {
           canvas.drawRect(
               Rect.fromLTWH(offset.dx + gutterWidth - SmallTickSize,
                   offset.dy + height - o, SmallTickSize, 1.0),
-              Paint()..color = colors.short!);
+              Paint()..color = colors.short);
         }
       }
       startingTickMarkValue += tickDistance;

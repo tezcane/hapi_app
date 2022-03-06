@@ -35,8 +35,7 @@ class MenuItemData {
 
   bool pad = false;
   double padTop = 0.0;
-  double padBottom = 0.0;
-  TimelineEntry? entry;
+//double padBottom = 0.0; // not used, always 0
 
   /// When initializing this object from a [TimelineEntry], fill in the
   /// fields according to the [entry] provided. The entry in fact specifies
@@ -51,15 +50,14 @@ class MenuItemData {
           .setTBtnDn(TarikhController.to.getTimeBtn(entry.next, 1.0));
     });
 
-    String label = entry.label!;
+    String label = entry.label;
 
     /// Pad the edges of the screen.
     bool pad = true;
-    TimelineAsset? asset = entry.asset;
+    TimelineAsset asset = entry.asset;
 
     /// Extra padding for the top base don the asset size.
-    double padTop =
-        asset == null ? 0.0 : asset.height! * Timeline.AssetScreenScale;
+    double padTop = asset.height * Timeline.AssetScreenScale;
     if (asset is TimelineAnimatedAsset) {
       padTop += asset.gap;
     }
@@ -67,15 +65,15 @@ class MenuItemData {
     double start = 0;
     double end = 0;
     if (entry.type == TimelineEntryType.Era) {
-      start = entry.start!;
-      end = entry.end!;
+      start = entry.start;
+      end = entry.end;
     } else {
       /// No need to pad here as we are centering on a single item.
       double rangeBefore = double.maxFinite;
       for (TimelineEntry? prev = entry.previous;
           prev != null;
           prev = prev.previous) {
-        double diff = entry.start! - prev.start!;
+        double diff = entry.start - prev.start;
         if (diff > 0.0) {
           rangeBefore = diff;
           break;
@@ -84,18 +82,22 @@ class MenuItemData {
 
       double rangeAfter = double.maxFinite;
       for (TimelineEntry? next = entry.next; next != null; next = next.next!) {
-        double diff = next.start! - entry.start!;
+        double diff = next.start - entry.start;
         if (diff > 0.0) {
           rangeAfter = diff;
           break;
         }
       }
       double range = min(rangeBefore, rangeAfter) / 2.0;
-      start = entry.start!;
-      end = entry.end! + range;
+      start = entry.start;
+      end = entry.end + range;
     }
 
-    return MenuItemData(label, start, end);
+    var menuItemData = MenuItemData(label, start, end);
+    menuItemData.pad = pad;
+    menuItemData.padTop = padTop;
+
+    return menuItemData;
   }
 }
 

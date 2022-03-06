@@ -37,46 +37,50 @@ Color interpolateColor(Color from, Color to, double elapsed) {
   return Color.fromARGB(a.round(), r.round(), g.round(), b.round());
 }
 
-String? getExtension(String filename) {
+String getFileExtension(String filename) {
   int dot = filename.lastIndexOf(".");
   if (dot == -1) {
-    return null;
+    return "";
   }
   return filename.substring(dot + 1);
 }
 
-String? removeExtension(String filename) {
-  int dot = filename.lastIndexOf(".");
-  if (dot == -1) {
-    return null;
-  }
-  return filename.substring(0, dot);
-}
+// String? removeExtension(String filename) {
+//   int dot = filename.lastIndexOf(".");
+//   if (dot == -1) {
+//     return null;
+//   }
+//   return filename.substring(0, dot);
+// }
 
 class TimelineBackgroundColor {
-  Color? color;
-  double? start;
+  TimelineBackgroundColor(this.color, this.start);
+  final Color color;
+  final double start;
 }
 
 class TickColors {
-  Color? background;
-  Color? long;
-  Color? short;
-  Color? text;
-  double? start;
-  double? screenY;
+  TickColors(this.background, this.long, this.short, this.text, this.start,
+      this.screenY);
+  final Color background;
+  final Color long;
+  final Color short;
+  final Color text;
+  final double start;
+  double screenY;
 }
 
 class HeaderColors {
-  Color? background;
-  Color? text;
-  double? start;
-  double? screenY;
+  HeaderColors(this.background, this.text, this.start, this.screenY);
+  final Color background;
+  final Color text;
+  final double start;
+  double screenY;
 }
 
 class TapTarget {
-  TimelineEntry? entry;
-  Rect? rect;
-  bool zoom = false;
+  TapTarget(this.entry, this.rect, {this.zoom = false});
+  final TimelineEntry entry;
+  final Rect rect;
+  final bool zoom;
 }
-// TODO too many nullables again

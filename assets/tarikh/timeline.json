@@ -4,7 +4,7 @@
 		"label": "Big Bang",
 		"article":"big_bang.txt",
 		"background": [0, 38, 75],
-		"accent": [246, 76, 130, 255],
+		"accent": [246, 76, 130],
 		"ticks": 
 		{
 			"background": [20, 57, 92, 240],
@@ -46,7 +46,7 @@
 		"date": -4600000000,
 		"label": "Sun is Born",
 		"article":"sun.txt",
-		"accent": [255, 166, 20, 255],
+		"accent": [255, 166, 20],
 		"asset": 
 		{
 			"source": "Sun.flr",
@@ -76,12 +76,12 @@
 		"date": -4100000000,
 		"label": "Heavy Bombardment",
 		"article": "bombardment.txt",
-		"accent": [255, 63, 0, 255],
+		"accent": [255, 63, 0],
 		"asset": 
 		{
 			"source": "HeavyBombardment.flr",
-			"width": 3774,
-			"height": 2675,
+			"width": 1210,
+			"height": 1210,
 			"scale": 0.25,
 			"idle":"Bombardmnet",
 			"bounds":[-598.0,-2075.5,3176,599.5]
@@ -141,7 +141,7 @@
 			"bounds":[0.0, 0.0, 814.0, 664.0]
 		},
 		"background": [132, 175, 214],
-		"accent": [55, 134, 222, 255],
+		"accent": [55, 134, 222],
 		"ticks": 
 		{
 			"background": [113, 152, 188, 240],
@@ -160,7 +160,7 @@
 		"label": "Fish",
 		"article":"fish.txt",
 		"id":"fish",
-		"accent": [55, 134, 222, 255],
+		"accent": [55, 134, 222],
 		"asset": 
 		{
 			"source": "Fish_and_Stuff/Fish_and_Stuff.nma",
@@ -174,7 +174,7 @@
 		"date": -396000000,
 		"label": "Insects",
 		"article":"insects.txt",
-		"accent": [55, 134, 222, 255],
+		"accent": [55, 134, 222],
 		"asset": 
 		{
 			"source": "Insects/Insects.nma",
@@ -186,7 +186,7 @@
 		"date": -312000000,
 		"label": "Reptiles",
 		"article":"reptiles.txt",
-		"accent": [55, 134, 222, 255],
+		"accent": [55, 134, 222],
 		"asset": 
 		{
 			"source": "Reptiles/Reptiles.nma",
@@ -213,7 +213,7 @@
 		"date": -150000000,
 		"label": "Stegosaurus",
 		"article":"stegosaurus.txt",
-		"accent": [235, 155, 75, 255],
+		"accent": [235, 155, 75],
 		"asset": 
 		{
 			"source": "Dinosaurs/Dinosaurs.nma",
@@ -240,7 +240,7 @@
 		"date": -68000000,
 		"label": "Tyrannosaurus",
 		"article":"trex.txt",
-		"accent": [235, 155, 75, 255],
+		"accent": [235, 155, 75],
 		"asset": 
 		{
 			"source": "Trex.flr",
@@ -253,7 +253,7 @@
 		"date": -65000001,
 		"label": "Dinosaur Extinction",
 		"article":"dino_extinction.txt",
-		"accent": [235, 155, 75, 255],
+		"accent": [235, 155, 75],
 		"asset": 
 		{
 			"source": "Dinosaur_Demise/Dinosaur_Demise.nma",
@@ -267,7 +267,7 @@
 		"label": "Humans",
 		"article":"humans.txt",
 		"background": [255, 255, 255],
-		"accent": [202, 79, 63, 255],
+		"accent": [202, 79, 63],
 		"asset": 
 		{
 			"source": "humans.flr",
@@ -420,7 +420,7 @@
 		"end": 1291,
 		"label": "Crusades",
 		"article":"crusades.txt",
-		"accent": [227, 21, 55, 255],
+		"accent": [227, 21, 55],
 		"asset": 
 		{
 			"source": "Crusades/Crusades.nma",
@@ -481,7 +481,7 @@
 		"end": 1918,
 		"label": "World War I",
 		"article":"world_war_i.txt",
-		"accent": [227, 21, 55, 255],
+		"accent": [227, 21, 55],
 		"asset": 
 		{
 			"source": "World_War_I/World_War_I.nma",
@@ -493,7 +493,7 @@
 		"start": 1947,
 		"end": 1991,
 		"label": "Cold War",
-		"accent": [227, 21, 55, 255],
+		"accent": [227, 21, 55],
 		"article":"cold_war.txt",
 		"asset": 
 		{
@@ -507,7 +507,7 @@
 		"date": 1969,
 		"label": "Moon Landing",
 		"article":"moon_landing.txt",
-		"accent": [115, 132, 205, 255],
+		"accent": [115, 132, 205],
 		"asset": 
 		{
 			"source": "Moon/Moon.nma",
@@ -584,7 +584,7 @@
 		"end": 1945,
 		"label": "World War II",
 		"article":"world_war_ii.txt",
-		"accent": [227, 21, 55, 255],
+		"accent": [227, 21, 55],
 		"asset": 
 		{
 			"source": "World_War_II/World_War_II.nma",
@@ -621,7 +621,7 @@
 	{
 		"date": 1990,
 		"label": "World Wide Web",
-		"accent": [115, 132, 205, 255],
+		"accent": [115, 132, 205],
 		"article":"internet.txt",
 		"asset": 
 		{
