@@ -13,6 +13,9 @@ class AppThemes {
 
   static const Color hyperlink = Color.fromRGBO(0x10, 0x57, 0xE3, 1);
 
+  static const Color addIcon = Colors.green;
+  static const Color checkComplete = Colors.green;
+
   static const Color _lBackground1 = Color.fromRGBO(225, 228, 229, 1);
   static const Color _lBackground2 = Color.fromRGBO(217, 207, 207, 1.0);
 
@@ -33,15 +36,17 @@ class AppThemes {
     scaffoldBackgroundColor: _lBackground2,
     primaryTextTheme: Typography.blackMountainView,
     textTheme: Typography.blackMountainView,
+    unselectedWidgetColor: selected, // set un-checked checkbox
   );
 
   static final darkTheme = ThemeData.dark().copyWith(
     floatingActionButtonTheme: _floatingActionButtonTheme,
     elevatedButtonTheme: _elevatedButtonTheme,
     backgroundColor: _dBackground1,
-    scaffoldBackgroundColor: _dBackground2, // blends logo to page in dark mode
+    scaffoldBackgroundColor: _dBackground2,
     primaryTextTheme: Typography.whiteMountainView,
     textTheme: Typography.whiteMountainView,
+    unselectedWidgetColor: selected, // set un-checked checkbox
   );
 }
 

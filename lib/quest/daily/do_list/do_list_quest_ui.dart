@@ -15,24 +15,16 @@ class DoListUI extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<AuthController>(
       builder: (controller) => Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            'hapi',
-            style: TextStyle(
-              fontFamily: 'Lobster',
-              color: AppThemes.logoText,
-              fontSize: 28,
-            ),
-          ),
-        ),
+        backgroundColor: Get.theme.backgroundColor,
         body: Column(
           children: <Widget>[
             const SizedBox(
               height: 20,
             ),
             AddDoList(
-                authController: controller,
-                textEditingController: TextEditingController()),
+              authController: controller,
+              textEditingController: TextEditingController(),
+            ),
             GetBuilder<DailyQuestsController>(
               builder: (c) {
                 return Expanded(
@@ -67,26 +59,43 @@ class AddDoList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.all(20),
+      margin: const EdgeInsets.all(10),
       child: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: const EdgeInsets.all(0.5),
         child: Row(
           children: [
             Expanded(
               child: TextFormField(
+                decoration: InputDecoration(
+                  fillColor: context.theme.scaffoldBackgroundColor,
+                  filled: true,
+                  hintText: 'Enter new TODO quest',
+                  hintStyle: const TextStyle(fontSize: 20),
+                  prefixIcon: Transform.scale(
+                    scale: 1.2,
+                    child: const Icon(Icons.check_outlined),
+                  ),
+                ),
                 controller: _textEditingController,
               ),
             ),
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () {
-                if (_textEditingController.text != "") {
-                  Database().addDoList(_textEditingController.text,
-                      _authController.firestoreUser.value!.uid);
-                  _textEditingController.clear();
-                }
-              },
-            )
+            Transform.scale(
+              scale: 1.6,
+              child: IconButton(
+                color: AppThemes.addIcon,
+                // color: _textEditingController.text != "" TODO
+                //     ? AppThemes.selected
+                //     : AppThemes.unselected,
+                icon: const Icon(Icons.add),
+                onPressed: () {
+                  if (_textEditingController.text != "") {
+                    Database().addDoList(_textEditingController.text,
+                        _authController.firestoreUser.value!.uid);
+                    _textEditingController.clear();
+                  }
+                },
+              ),
+            ),
           ],
         ),
       ),
