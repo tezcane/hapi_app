@@ -242,10 +242,10 @@ class TimelineRenderObject extends RenderBox {
     double renderEnd = t.renderEnd;
     double scale = size.height / (renderEnd - renderStart);
 
-    if (t.renderAssets != null) {
+    if (t.renderedAssets.isNotEmpty) {
       canvas.save();
       canvas.clipRect(offset & size);
-      for (TimelineAsset asset in t.renderAssets!) {
+      for (TimelineAsset asset in t.renderedAssets) {
         if (asset.opacity > 0) {
           double rs = 0.2 + asset.scale * 0.8;
 
@@ -455,14 +455,14 @@ class TimelineRenderObject extends RenderBox {
     canvas.restore();
 
     /// And then draw the rest of the timeline.
-    if (t.entries != null) {
+    if (t.rootEntries.isNotEmpty) {
       canvas.save();
       canvas.clipRect(Rect.fromLTWH(offset.dx + t.gutterWidth, offset.dy,
           size.width - t.gutterWidth, size.height));
       drawItems(
           context,
           offset,
-          t.entries!,
+          t.rootEntries,
           t.gutterWidth +
               Timeline.LineSpacing -
               Timeline.DepthOffset * t.renderOffsetDepth,

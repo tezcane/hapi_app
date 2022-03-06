@@ -124,10 +124,11 @@ class Timeline {
   final List<HeaderColors> _headerColors = [];
 
   /// All the [TimelineEntry]s that are loaded from disk at boot (in [loadFromBundle()]).
-  List<TimelineEntry>? _entries;
+  /// List for "root" entries, i.e. entries with no parents.
+  final List<TimelineEntry> _rootEntries = [];
 
   /// The list of [TimelineAsset], also loaded from disk at boot.
-  List<TimelineAsset>? _renderAssets;
+  List<TimelineAsset> _renderedAssets = [];
 
   final Map<String, TimelineEntry> _entriesById = {};
   final Map<String, nima.FlutterActor> _nimaResources = {};
@@ -142,6 +143,11 @@ class Timeline {
   ChangeEraCallback? onEraChanged;
   ChangeHeaderColorCallback? onHeaderColorsChanged;
 
+  TimelineEntry? get currentEra => _currentEra;
+
+  List<TimelineEntry> get rootEntries => _rootEntries;
+  List<TimelineAsset> get renderedAssets => _renderedAssets;
+
   double get renderOffsetDepth => _renderOffsetDepth;
   double get renderLabelX => _renderLabelX;
   double get start => _start;
@@ -149,20 +155,21 @@ class Timeline {
   double get renderStart => _renderStart;
   double get renderEnd => _renderEnd;
   double get gutterWidth => _gutterWidth;
+
+  TimelineEntry? get nextEntry => _renderNextEntry;
+  TimelineEntry? get prevEntry => _renderPrevEntry;
   double get nextEntryOpacity => _nextEntryOpacity;
   double get prevEntryOpacity => _prevEntryOpacity;
+
   bool get isInteracting => _isInteracting;
   bool get isActive => _isActive;
+
   Color? get headerTextColor => _headerTextColor;
   Color? get headerBackgroundColor => _headerBackgroundColor;
   HeaderColors? get currentHeaderColors => _currentHeaderColors;
-  TimelineEntry? get currentEra => _currentEra;
-  TimelineEntry? get nextEntry => _renderNextEntry;
-  TimelineEntry? get prevEntry => _renderPrevEntry;
-  List<TimelineEntry>? get entries => _entries;
+
   List<TimelineBackgroundColor> get backgroundColors => _backgroundColors;
   List<TickColors> get tickColors => _tickColors;
-  List<TimelineAsset>? get renderAssets => _renderAssets;
 
   /// When a scale operation is detected, this setter is called:
   /// e.g. [_TimelineWidgetState.scaleStart()].
@@ -476,11 +483,11 @@ class Timeline {
   /// This function will load and decode `timline.json` from disk,
   /// decode the JSON file, and populate all the [TimelineEntry]s.
   Future<List<TimelineEntry>> loadFromBundle() async {
-    String jsonData =
+    final String jsonData =
         await rootBundle.loadString('assets/tarikh/timeline.json');
-    List jsonEntries = json.decode(jsonData);
+    final List jsonEntries = json.decode(jsonData);
 
-    List<TimelineEntry> allEntries = [];
+    final List<TimelineEntry> allEntries = [];
 
     /// The JSON decode doesn't provide strong typing, so we'll iterate
     /// on the dynamic entries in the [jsonEntries] list.
@@ -610,10 +617,10 @@ class Timeline {
     _timeMin = double.maxFinite;
     _timeMax = -double.maxFinite;
 
-    /// List for "root" entries, i.e. entries with no parents.
-    _entries = []; // was List<TimelineEntry>();
-
-    /// Build up hierarchy (Eras are grouped into "Spanning Eras" and Events are placed into the Eras they belong to).
+    /// IMPORTANT NOTE: Do we want to enhance this to allow json file input to
+    ///                 define where stuff belongs:
+    /// Build up hierarchy (Eras are grouped into "Spanning Eras" and Events are
+    /// placed into the Eras they belong to).
     TimelineEntry? previous;
     for (TimelineEntry entry in allEntries) {
       if (entry.start < _timeMin) {
@@ -640,13 +647,14 @@ class Timeline {
           }
         }
       }
-      if (parent != null) {
-        entry.parent = parent;
-        parent.children ??= []; // was List<TimelineEntry>();
-        parent.children!.add(entry);
+      // no parent, so this is a root entry.
+      if (parent == null) {
+        _rootEntries.add(entry); // note holds eras, not individual entries
       } else {
-        /// no parent, so this is a root entry.
-        _entries!.add(entry);
+        // otherwise add as child to parent node
+        entry.parent = parent;
+        parent.children ??= []; // parent node holds children
+        parent.children!.add(entry);
       }
     }
     return allEntries;
@@ -706,7 +714,7 @@ class Timeline {
       bool animate = false}) {
     /// Calculate the current height.
     if (height != double.maxFinite) {
-      if (_height == 0.0 && _entries != null && _entries!.isNotEmpty) {
+      if (_height == 0.0 && _rootEntries.isNotEmpty) {
         double scale = height / (_end - _start);
         _start = _start - padding.top / scale;
         _end = _end + padding.bottom / scale;
@@ -965,16 +973,16 @@ class Timeline {
     _currentEra = null;
     _nextEntry = null;
     _prevEntry = null;
-    if (_entries != null) {
+    if (_rootEntries.isNotEmpty) {
       /// Advance the items hierarchy one level at a time.
-      if (_advanceItems(
-          _entries!, _gutterWidth + LineSpacing, scale, elapsed, animate, 0)) {
+      if (_advanceItems(_rootEntries, _gutterWidth + LineSpacing, scale,
+          elapsed, animate, 0)) {
         doneRendering = false;
       }
 
       /// Advance all the assets and add the rendered ones into [_renderAssets].
-      _renderAssets = []; // was List<TimelineAsset>();
-      if (_advanceAssets(_entries!, elapsed, animate, _renderAssets!)) {
+      _renderedAssets = []; // resets here, where all UI cleanup is done?
+      if (_advanceAssets(_rootEntries, elapsed, animate, _renderedAssets)) {
         doneRendering = false;
       }
     }
@@ -1051,7 +1059,7 @@ class Timeline {
   }
 
   double bubbleHeight(TimelineEntry entry) {
-    return BubblePadding * 2.0 + entry.lineCount * BubbleTextHeight;
+    return (BubblePadding * 1.15) + (entry.lineCount * BubbleTextHeight);
   }
 
   /// Advance entry [assets] with the current [elapsed] time.
@@ -1216,9 +1224,10 @@ class Timeline {
     return stillAnimating;
   }
 
-  /// Advance asset [items] with the [elapsed] time.
+  /// Advance asset [items] with the [elapsed] time. Calls itself recursively
+  /// to process all of a parent's root and its children.
   bool _advanceAssets(List<TimelineEntry> items, double elapsed, bool animate,
-      List<TimelineAsset> renderAssets) {
+      List<TimelineAsset> renderedAssets) {
     bool stillAnimating = false;
     for (TimelineEntry item in items) {
       double y = item.labelY;
@@ -1360,7 +1369,7 @@ class Timeline {
           }
 
           /// Add this asset to the list of rendered assets.
-          renderAssets.add(item.asset);
+          renderedAssets.add(item.asset);
         }
       } else {
         /// [item] is not visible.
@@ -1368,8 +1377,8 @@ class Timeline {
       }
 
       if (item.children != null && item.isVisible) {
-        /// Proceed down the hierarchy.
-        if (_advanceAssets(item.children!, elapsed, animate, renderAssets)) {
+        /// Proceed down the hierarchy. Recursive call back into this method.
+        if (_advanceAssets(item.children!, elapsed, animate, renderedAssets)) {
           stillAnimating = true;
         }
       }

@@ -173,7 +173,9 @@ class TimelineEntry {
     this.asset,
     this.accent,
     this.id,
-  );
+  ) {
+    _handleLabelNewlineCount();
+  }
 
   final String _label;
   final TimelineEntryType type;
@@ -181,6 +183,8 @@ class TimelineEntry {
   final double end;
   final String articleFilename;
   final TimelineAsset asset;
+
+  /// not always given in json input file, thus nullable:
   Color? accent;
   String? id;
 
@@ -188,13 +192,17 @@ class TimelineEntry {
   int lineCount = 1;
 
   /// Each entry constitutes an element of a tree:
-  /// eras are grouped into spanning eras and events are placed into the eras they belong to.
+  /// eras are grouped into spanning eras and events are placed into the eras
+  /// they belong to. If not null, this is the root entry, if null it's a child.
   TimelineEntry? parent;
+
+  /// holds all entries under the parent/era. If a child will be null.
   List<TimelineEntry>? children;
 
   /// All the timeline entries are also linked together to easily access the next/previous event.
   /// After a couple of seconds of inactivity on the timeline, a previous/next entry button will appear
   /// to allow the user to navigate faster between adjacent events.
+  /// Should only be null when on the first or last entry.
   TimelineEntry? next;
   TimelineEntry? previous;
 
@@ -222,22 +230,21 @@ class TimelineEntry {
 
   String get label => _label;
 
-  // TODO asdf where is this used?
-  // /// Some labels already have newline characters to adjust their alignment.
-  // /// Detect the occurrence and add information regarding the line-count.
-  // set label(String value) {
-  //   _label = value;
-  //   int start = 0;
-  //   lineCount = 1;
-  //   while (true) {
-  //     start = _label.indexOf("\n", start);
-  //     if (start == -1) {
-  //       break;
-  //     }
-  //     lineCount++;
-  //     start++;
-  //   }
-  // }
+  /// Some labels have a newline characters to adjust their alignment.
+  /// Detect the occurrence and add information regarding the line-count.
+  _handleLabelNewlineCount() {
+    lineCount = 1;
+
+    int startIdx = 0;
+    while (true) {
+      startIdx = _label.indexOf("\n", startIdx);
+      if (startIdx == -1) {
+        break;
+      }
+      lineCount++; // found a new line, continue
+      startIdx++; // to go past current new line
+    }
+  }
 
   /// Pretty-printing for the entry date.
   String formatYearsAgo() {
@@ -299,4 +306,3 @@ class TimelineEntry {
     return label + " Years";
   }
 }
-// TODO too many nullables here too
