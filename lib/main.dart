@@ -125,21 +125,52 @@ class MyApp extends StatelessWidget {
         MainController.to.setOrientation(orientation == Orientation.portrait);
         return GetBuilder<LanguageController>(
           builder: (c) => Loading(
-            child: GetMaterialApp(
-              translations: Localization(),
-              locale: c.getLocale, // <- Current locale
-              // navigatorObservers: [
-              //   // FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
-              // ],
-              debugShowCheckedModeBanner: false,
-              // These are controlled in MenuController but we do here too for sign out/in pages
-              defaultTransition: Transition.fade,
-              transitionDuration: const Duration(milliseconds: 1000),
-              theme: AppThemes.lightTheme,
-              darkTheme: AppThemes.darkTheme,
-              themeMode: ThemeMode.dark,
-              initialRoute: "/",
-              getPages: AppRoutes.routes,
+            child: MaterialApp(
+              home: Scaffold(
+                // floatingActionButtonLocation:
+                //     FloatingActionButtonLocation.startFloat,
+                floatingActionButton: GetBuilder<MenuController>(builder: (cm) {
+                  return FloatingActionButton(
+                    tooltip: cm.getToolTip(),
+                    backgroundColor:
+                        AppThemes.floatingActionButtonTheme.backgroundColor,
+                    foregroundColor:
+                        AppThemes.floatingActionButtonTheme.foregroundColor,
+                    onPressed: () => {},
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          IconButton(
+                            iconSize: 30.0,
+                            icon: AnimatedIcon(
+                              icon: cm.fabAnimatedIcon,
+                              progress: cm.acFabIcon,
+                            ),
+                            onPressed: () => cm.handlePressedFAB(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                }),
+                body: GetMaterialApp(
+                  translations: Localization(),
+                  locale: c.getLocale, // <- Current locale
+                  // navigatorObservers: [
+                  //   // FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
+                  // ],
+                  debugShowCheckedModeBanner: false,
+                  // These are controlled in MenuController but we do here too for sign out/in pages
+                  defaultTransition: Transition.fade,
+                  transitionDuration: const Duration(milliseconds: 1000),
+                  theme: AppThemes.lightTheme,
+                  darkTheme: AppThemes.darkTheme,
+                  themeMode: ThemeMode.dark,
+                  initialRoute: "/",
+                  getPages: AppRoutes.routes,
+                ),
+              ),
             ),
           ),
         );

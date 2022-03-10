@@ -29,9 +29,22 @@ class TimeBtn {
 class TarikhController extends GetxHapi {
   static TarikhController get to => Get.find();
 
-  static late final Timeline t = Timeline();
+  static late final Timeline t;
 
   static final NumberFormat formatter = NumberFormat.compact();
+
+  /// Used to start/stop vignettes menu section animations
+  bool _isSectionActive = true;
+  get isSectionActive => _isSectionActive;
+  restoreMenuSection() {
+    _isSectionActive = true;
+    update();
+  }
+
+  pauseMenuSection() {
+    _isSectionActive = false;
+    update();
+  }
 
   /// List of favorite events shown on Tarikh_Favorites page and timeline gutter
   final List<TimelineEntry> _favorites = [];
@@ -58,6 +71,8 @@ class TarikhController extends GetxHapi {
   @override
   void onInit() {
     super.onInit();
+
+    t = Timeline();
 
     int lastGutterModeIdx = s.read('lastGutterModeIdx') ?? GutterMode.OFF.index;
     gutterMode = GutterMode.values[lastGutterModeIdx];

@@ -22,7 +22,7 @@ class AppThemes {
   static const Color _dBackground1 = Color.fromRGBO(0x0A, 0x0E, 0x21, 1);
   static const Color _dBackground2 = logoBackground;
 
-  static const _floatingActionButtonTheme = FloatingActionButtonThemeData(
+  static const floatingActionButtonTheme = FloatingActionButtonThemeData(
       backgroundColor: logoText, foregroundColor: Colors.white);
   static final _elevatedButtonTheme = ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
@@ -30,7 +30,7 @@ class AppThemes {
           side: const BorderSide(color: Colors.grey, width: 1.5)));
 
   static final lightTheme = ThemeData.light().copyWith(
-    floatingActionButtonTheme: _floatingActionButtonTheme,
+    floatingActionButtonTheme: floatingActionButtonTheme,
     elevatedButtonTheme: _elevatedButtonTheme,
     backgroundColor: _lBackground1,
     scaffoldBackgroundColor: _lBackground2,
@@ -40,7 +40,7 @@ class AppThemes {
   );
 
   static final darkTheme = ThemeData.dark().copyWith(
-    floatingActionButtonTheme: _floatingActionButtonTheme,
+    floatingActionButtonTheme: floatingActionButtonTheme,
     elevatedButtonTheme: _elevatedButtonTheme,
     backgroundColor: _dBackground1,
     scaffoldBackgroundColor: _dBackground2,

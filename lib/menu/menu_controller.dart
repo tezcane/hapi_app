@@ -8,7 +8,6 @@ import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/about_ui.dart';
-import 'package:hapi/menu/menu_nav.dart';
 import 'package:hapi/quest/active/active_quest_action_ui.dart';
 import 'package:hapi/quest/quests_ui.dart';
 import 'package:hapi/settings/reset_password_ui.dart';
@@ -21,54 +20,133 @@ import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
 
 class Nav {
-  const Nav({required this.np, required this.label, required this.icon});
+  const Nav({required this.np, required this.icon});
   final NavPage np;
-  final String label;
   final IconData icon;
 }
 
 const kNavs = [
-  Nav(np: NavPage.STATS, label: 'Stats', icon: Icons.leaderboard_rounded),
-  Nav(np: NavPage.TOOLS, label: 'Tools', icon: Icons.explore_outlined),
-  Nav(np: NavPage.DUA, label: 'Dua', icon: Icons.volunteer_activism),
-  Nav(np: NavPage.HADITH, label: 'Hadith', icon: Icons.menu_book_outlined),
-  Nav(np: NavPage.QURAN, label: 'Quran', icon: Icons.auto_stories),
-  Nav(np: NavPage.TARIKH, label: 'Tarikh', icon: Icons.history_edu_outlined),
-  Nav(np: NavPage.RELICS, label: 'Relics', icon: Icons.brightness_3_outlined),
-  Nav(np: NavPage.QUESTS, label: 'Quests', icon: Icons.how_to_reg_outlined),
+  Nav(np: NavPage.Stats, icon: Icons.leaderboard_rounded),
+  Nav(np: NavPage.Tools, icon: Icons.explore_outlined),
+  Nav(np: NavPage.Dua, icon: Icons.volunteer_activism),
+  Nav(np: NavPage.Hadith, icon: Icons.menu_book_outlined),
+  Nav(np: NavPage.Quran, icon: Icons.auto_stories),
+  Nav(np: NavPage.Tarikh, icon: Icons.history_edu_outlined),
+  Nav(np: NavPage.Relics, icon: Icons.brightness_3_outlined),
+  Nav(np: NavPage.Quests, icon: Icons.how_to_reg_outlined),
 ];
 
 // must keep in sync with _kNavs
 enum NavPage {
-  STATS,
-  TOOLS,
-  DUA,
-  HADITH,
-  QURAN,
-  TARIKH,
-  RELICS,
-  QUESTS,
+  Stats,
+  Tools,
+  Dua,
+  Hadith,
+  Quran,
+  Tarikh,
+  Relics,
+  Quests,
 }
 
 enum SubPage {
-  ABOUT,
-  UPDATE_PROFILE,
-  RESET_PASSWORD,
-  TARIKH_FAVORITE,
-  TARIKH_SEARCH,
-  TARIKH_TIMELINE,
-  TARIKH_ARTICLE,
-  ACTIVE_QUEST_ACTION,
+  About,
+  Update_Profile,
+  Reset_Password,
+  Tarikh_Favorite,
+  Tarikh_Search,
+  Tarikh_Timeline,
+  Tarikh_Article,
+  Active_Quests,
 }
 
-class MenuController extends GetxHapi {
+extension EnumUtil on SubPage {
+  String niceName() {
+    return toString().split('.').last.replaceAll('_', ' ');
+  }
+}
+
+class MenuController extends GetxHapi with GetTickerProviderStateMixin {
   static MenuController get to => Get.find();
+
+  final animationDuration = const Duration(milliseconds: 650);
+
+  AnimatedIconData _fabAnimatedIcon = AnimatedIcons.menu_close;
+  AnimatedIconData get fabAnimatedIcon => _fabAnimatedIcon;
 
   late AnimationController _acFabIcon; // controls fab icon animation
   late AnimationController _acNavMenu; // controls nav menu animation
+  get acFabIcon => _acFabIcon;
+  get acNavMenu => _acNavMenu;
 
-  void initACFabIcon(AnimationController ac) => _acFabIcon = ac;
-  void initACNavMenu(AnimationController navMenuAC) => _acNavMenu = navMenuAC;
+  @override
+  void onInit() {
+    super.onInit();
+
+    _acFabIcon = AnimationController(
+      vsync: this,
+      duration: animationDuration,
+    );
+
+    _acNavMenu = AnimationController(
+      vsync: this,
+      duration: animationDuration,
+    );
+    _acNavMenu.forward(from: 1.0); // needed to hide at init
+  }
+
+  /// Here we handle when the FAB button is hit for show/hide menu or back btn.
+  void handlePressedFAB() {
+    // if on main menu page, just show/hide menu per usual
+    if (_subPageStack.isEmpty) {
+      if (isMenuShowing()) {
+        hideMenu(); // just hit close on fab
+      } else {
+        showMenu(); // just hit menu on fab
+      }
+    } else {
+      // if we are in sub page then it means back button was hit
+      if (_subPageStack.length == 1) {
+        // if page before main menu page, play animation
+        _acFabIcon.reverse();
+        // and switch back to menu close icon
+        _fabAnimatedIcon = AnimatedIcons.menu_close;
+        update();
+      }
+
+      // pop the page out of the stack
+      _subPageStack.removeLast();
+
+      // if timeline showing again, turn timeline rendering back on
+      if (_subPageStack.isNotEmpty &&
+          _subPageStack.last == SubPage.Tarikh_Timeline) {
+        TarikhController.t.isActive = true;
+      } else {
+        if (_subPageStack.isEmpty && getLastNavPage() == NavPage.Tarikh) {
+          TarikhController.to.restoreMenuSection();
+        }
+      }
+
+      Get.back(); // pop the sub menu stack
+
+      update(); // updates FAB tooltip to say what back button does
+    }
+  }
+
+  /// Handle the fab button hint, required update() to be called on page
+  /// insertion and deletion.
+  String getToolTip() {
+    if (_subPageStack.isNotEmpty) {
+      if (_subPageStack.length > 1) {
+        return 'Go back to ${_subPageStack[_subPageStack.length - 2].niceName()}';
+      } else {
+        return 'Go back to ${getLastNavPage().name} Home';
+      }
+    } else if (_isMenuShowing()) {
+      return 'Hide menu';
+    } else {
+      return 'Show menu';
+    }
+  }
 
   // TODO looks like a bug in getx for this: https://github.com/jonataslaw/getx/issues/1027
   // list aligns with enum NavPage above.
@@ -92,7 +170,7 @@ class MenuController extends GetxHapi {
   List<SubPage> _subPageStack = [];
 
   int _getLastNavIdx() {
-    return s.read('lastNavIdx') ?? NavPage.QUESTS.index;
+    return s.read('lastNavIdx') ?? NavPage.Quests.index;
   }
 
   NavPage getLastNavPage() {
@@ -107,7 +185,7 @@ class MenuController extends GetxHapi {
   void initAppsFirstPage() {
     int navIdx = _getLastNavIdx(); //Quests
 
-    NavPage lastNavPage = NavPage.QUESTS;
+    NavPage lastNavPage = NavPage.Quests;
     try {
       lastNavPage = NavPage.values[navIdx];
     } catch (e) {
@@ -132,7 +210,7 @@ class MenuController extends GetxHapi {
         showMenu(); // open menu to let logo slide into place
         Timer(Duration(milliseconds: hideMenuAfterFullInitMs), () {
           hideMenu(); // logo should be in menu by now
-          Timer(navMenuShowHideMs, () {
+          Timer(animationDuration, () {
             _enableScreenTouch(); // give time for menu to close
             MainController.to.setAppInitDone();
           });
@@ -156,7 +234,7 @@ class MenuController extends GetxHapi {
       return NavPage.values[navIdx];
     } catch (e) {
       print('ERROR did not find navIdx $navIdx page, trying for Quest');
-      return NavPage.QUESTS;
+      return NavPage.Quests;
     }
   }
 
@@ -184,56 +262,56 @@ class MenuController extends GetxHapi {
     TarikhController.t.isActive = false; // turn off timeline rendering
 
     switch (navPage) {
-      case (NavPage.STATS):
+      case (NavPage.Stats):
         Get.offAll(
           () => QuestsUI(),
           transition: transition,
           duration: Duration(milliseconds: transistionMs),
         );
         break;
-      case (NavPage.TOOLS):
+      case (NavPage.Tools):
         Get.offAll(
           () => QuestsUI(),
           transition: transition,
           duration: Duration(milliseconds: transistionMs),
         );
         break;
-      case (NavPage.DUA):
+      case (NavPage.Dua):
         Get.offAll(
           () => QuestsUI(),
           transition: transition,
           duration: Duration(milliseconds: transistionMs),
         );
         break;
-      case (NavPage.HADITH):
+      case (NavPage.Hadith):
         Get.offAll(
           () => QuestsUI(),
           transition: transition,
           duration: Duration(milliseconds: transistionMs),
         );
         break;
-      case (NavPage.QURAN):
+      case (NavPage.Quran):
         Get.offAll(
           () => QuestsUI(),
           transition: transition,
           duration: Duration(milliseconds: transistionMs),
         );
         break;
-      case (NavPage.TARIKH):
+      case (NavPage.Tarikh):
         Get.offAll(
           () => const TarikhMenuUI(),
           transition: transition,
           duration: Duration(milliseconds: transistionMs),
         );
         break;
-      case (NavPage.RELICS):
+      case (NavPage.Relics):
         Get.offAll(
           () => QuestsUI(),
           transition: transition,
           duration: Duration(milliseconds: transistionMs),
         );
         break;
-      case (NavPage.QUESTS):
+      case (NavPage.Quests):
       default:
         Get.offAll(
           () => QuestsUI(),
@@ -262,13 +340,22 @@ class MenuController extends GetxHapi {
 
     _subPageStack.add(subPage);
 
-    // turn off timeline rendering, in case it was previously showing/on
-    if (subPage != SubPage.TARIKH_TIMELINE) {
-      TarikhController.t.isActive = false;
+    /// HERE WE HANDLE THE FAB BUTTON ANIMATIONS ON INSERTING NEW SUB PAGES
+    // if adding first sub page, animate menu turning into an arrow
+    if (_subPageStack.length == 1) {
+      if (isMenuShowing()) {
+        // i.e. about page is clicked
+        hideMenu(); // spin out of showing X to menu, then we turn into arrow
+      }
+      Timer(animationDuration, () {
+        _fabAnimatedIcon = AnimatedIcons.menu_arrow;
+        update();
+        _acFabIcon.forward();
+      }); // requires new thread
     }
 
     switch (subPage) {
-      case (SubPage.TARIKH_FAVORITE):
+      case (SubPage.Tarikh_Favorite):
         Get.to(
           () => TarikhFavoritesUI(),
           arguments: arguments,
@@ -276,7 +363,7 @@ class MenuController extends GetxHapi {
           duration: Duration(milliseconds: transistionMs),
         );
         break;
-      case (SubPage.TARIKH_SEARCH):
+      case (SubPage.Tarikh_Search):
         Get.to(
           () => const TarikhSearchUI(),
           arguments: arguments,
@@ -284,7 +371,7 @@ class MenuController extends GetxHapi {
           duration: Duration(milliseconds: transistionMs),
         );
         break;
-      case (SubPage.TARIKH_TIMELINE):
+      case (SubPage.Tarikh_Timeline):
         Get.to(
           () => TarikhTimelineUI(),
           arguments: arguments,
@@ -292,7 +379,7 @@ class MenuController extends GetxHapi {
           duration: Duration(milliseconds: transistionMs),
         );
         break;
-      case (SubPage.TARIKH_ARTICLE):
+      case (SubPage.Tarikh_Article):
         Get.to(
           () => TarikhArticleUI(),
           arguments: arguments,
@@ -300,7 +387,7 @@ class MenuController extends GetxHapi {
           duration: Duration(milliseconds: transistionMs),
         );
         break;
-      case (SubPage.ACTIVE_QUEST_ACTION):
+      case (SubPage.Active_Quests):
         Get.to(
           () => ActiveQuestActionUI(),
           arguments: arguments,
@@ -308,7 +395,7 @@ class MenuController extends GetxHapi {
           duration: Duration(milliseconds: transistionMs),
         );
         break;
-      case (SubPage.UPDATE_PROFILE):
+      case (SubPage.Update_Profile):
         Get.to(
           () => UpdateProfileUI(),
           arguments: arguments,
@@ -316,7 +403,7 @@ class MenuController extends GetxHapi {
           duration: Duration(milliseconds: transistionMs),
         );
         break;
-      case (SubPage.RESET_PASSWORD):
+      case (SubPage.Reset_Password):
         Get.to(
           () => ResetPasswordUI(),
           arguments: arguments,
@@ -324,7 +411,7 @@ class MenuController extends GetxHapi {
           duration: Duration(milliseconds: transistionMs),
         );
         break;
-      case (SubPage.ABOUT):
+      case (SubPage.About):
       default:
         Get.to(
           () => AboutUI(),
@@ -334,23 +421,8 @@ class MenuController extends GetxHapi {
         );
         break;
     }
-  }
 
-  void handleBackButtonHit() {
-    if (_subPageStack.length == 1) {
-      navigateToNavPage(getLastNavPage()); // this clears out fab back mode
-      // TODO animate back button
-    } else {
-      if (_subPageStack.length > 1) {
-        _subPageStack.removeLast();
-
-        // timeline showing again so turn timeline rendering on
-        if (_subPageStack.last == SubPage.TARIKH_TIMELINE) {
-          TarikhController.t.isActive = true;
-        }
-      }
-      Get.back(); // pop the sub menu stack
-    }
+    update(); // updates FAB tooltip to say what back button does
   }
 
   bool isAnySubPageShowing() {
@@ -437,6 +509,7 @@ class MenuController extends GetxHapi {
     return path;
   }
 
+  // TODO move to main controller?
   ConfettiController confettiController() => _confettiController;
   void playConfetti() => _confettiController.play();
 

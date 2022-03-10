@@ -111,7 +111,7 @@ class FabNavPage extends StatelessWidget {
                               Stack(
                                 children: [
                                   Transform.rotate(
-                                    angle: nav.np == NavPage.RELICS ? 2.8 : 0,
+                                    angle: nav.np == NavPage.Relics ? 2.8 : 0,
                                     child: Icon(
                                       nav.icon,
                                       color: Colors.white,
@@ -121,11 +121,11 @@ class FabNavPage extends StatelessWidget {
                                   if (c.getShowBadge(navPage))
                                     Positioned(
                                       top:
-                                          nav.np == NavPage.RELICS ? 8.6 : -2.0,
+                                          nav.np == NavPage.Relics ? 8.6 : -2.0,
                                       right: -2.0,
                                       child: Transform.rotate(
                                         angle:
-                                            nav.np == NavPage.RELICS ? .59 : 0,
+                                            nav.np == NavPage.Relics ? .59 : 0,
                                         child: const Icon(
                                           Icons.star,
                                           color: Colors.orange,
@@ -136,7 +136,7 @@ class FabNavPage extends StatelessWidget {
                                 ],
                               ),
                               Text(
-                                nav.label,
+                                nav.np.name,
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,
@@ -177,7 +177,7 @@ class HapiShareUI extends StatelessWidget {
           message: 'Learn more about hapi and how to contribute',
           child: GestureDetector(
             onTap: () {
-              MenuController.to.pushSubPage(SubPage.ABOUT);
+              MenuController.to.pushSubPage(SubPage.About);
               MenuController.to.hideMenu();
             },
             child: Row(

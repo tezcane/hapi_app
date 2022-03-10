@@ -109,7 +109,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
     bool isFav = favs.any(
         (TimelineEntry te) => te.label.toLowerCase() == _title.toLowerCase());
     return FabSubPage(
-      subPage: SubPage.TARIKH_ARTICLE,
+      subPage: SubPage.Tarikh_Article,
       child: Scaffold(
         body: Container(
           color: Get.theme.backgroundColor,

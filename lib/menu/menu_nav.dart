@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 
-/// Menu animation total duration time, each item has total_duration/items.length
-const Duration navMenuShowHideMs = Duration(milliseconds: 600);
-
 /// Signature for creating widget to open/close Side Menu.
 typedef SideMenuAnimationBuilder = Widget Function();
 
@@ -45,27 +42,7 @@ class MenuNav extends StatefulWidget {
   _MenuNavState createState() => _MenuNavState();
 }
 
-class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
-  late AnimationController _acNavMenu;
-
-  @override
-  void initState() {
-    _acNavMenu = AnimationController(
-      vsync: this,
-      duration: navMenuShowHideMs,
-    );
-    MenuController.to.initACNavMenu(_acNavMenu);
-    _acNavMenu.forward(from: 1.0); // needed to hide at init
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _acNavMenu.dispose();
-    super.dispose();
-  }
-
+class _MenuNavState extends State<MenuNav> {
   void _displayMenuDragGesture(DragEndDetails endDetails) {
     if (!MenuController.to.isMenuShowing()) {
       final velocity = endDetails.primaryVelocity!;
@@ -107,11 +84,11 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
                 // top centers nav buttons, bottom allows tapping verticle bar
                 padding: EdgeInsets.only(top: itemSize * sm, bottom: 88),
                 child: AnimatedBuilder(
-                  animation: _acNavMenu,
+                  animation: MenuController.to.acNavMenu,
                   builder: (context, child) => Stack(
                     children: [
                       /// dismiss the Menu when user taps outside the widget.
-                      if (_acNavMenu.value < 1 &&
+                      if (MenuController.to.acNavMenu.value < 1 &&
                           MenuController.to.isMenuShowing() &&
                           MenuController.to.isMenuShowingNav())
                         Align(
@@ -122,7 +99,8 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
                         ),
 
                       /// handle drag out of menu from right side of screen
-                      if (_enableEdgeDragGesture && _acNavMenu.isCompleted)
+                      if (_enableEdgeDragGesture &&
+                          MenuController.to.acNavMenu.isCompleted)
                         //!c.isMenuShowing()) // hasn't been flagged yet
                         Align(
                           alignment: Alignment.bottomRight, // was centerRight
@@ -141,7 +119,7 @@ class _MenuNavState extends State<MenuNav> with SingleTickerProviderStateMixin {
                           length: NavPage.values.length,
                           width: _kSideMenuWidth,
                           height: itemSize,
-                          acNavMenu: _acNavMenu,
+                          acNavMenu: MenuController.to.acNavMenu,
                           curve: _kCurveAnimation,
                           color: (navPage == widget.initNavPage)
                               ? _kButtonColorSelected

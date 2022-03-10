@@ -117,7 +117,7 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
   }
 
   void _tapSearchResult(TimelineEntry entry) {
-    MenuController.to.pushSubPage(SubPage.TARIKH_TIMELINE, arguments: {
+    MenuController.to.pushSubPage(SubPage.Tarikh_Timeline, arguments: {
       'focusItem': MenuItemData.fromEntry(entry),
     });
   }
@@ -147,7 +147,7 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
     }
 
     return FabSubPage(
-      subPage: SubPage.TARIKH_SEARCH,
+      subPage: SubPage.Tarikh_Search,
       child: Scaffold(
         backgroundColor: Get.theme.backgroundColor,
         bottomNavigationBar: Container(

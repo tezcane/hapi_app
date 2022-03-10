@@ -20,7 +20,7 @@ class AboutUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FabSubPage(
-      subPage: SubPage.ABOUT,
+      subPage: SubPage.About,
       child: Scaffold(
         // Note: Can't use Get.theme here, doesn't switch background color
         backgroundColor: Theme.of(context).backgroundColor,
@@ -92,7 +92,7 @@ class AboutUI extends StatelessWidget {
                     tag: 'UPDATE PROFILE',
                     child: ElevatedButton.icon(
                       onPressed: () =>
-                          MenuController.to.pushSubPage(SubPage.UPDATE_PROFILE),
+                          MenuController.to.pushSubPage(SubPage.Update_Profile),
                       icon: const Icon(Icons.perm_identity_outlined),
                       label: Text('settings.updateProfile'.tr),
                     ),

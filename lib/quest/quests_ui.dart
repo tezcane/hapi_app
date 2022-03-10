@@ -12,7 +12,7 @@ class QuestsUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FabNavPage(
-      navPage: NavPage.QUESTS,
+      navPage: NavPage.Quests,
       settingsWidget: ActiveQuestsSettingsUI(),
       bottomWidget: HapiShareUI(),
       foregroundPage: QuestBottomBarUI(),

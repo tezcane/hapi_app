@@ -4,6 +4,7 @@ import 'package:hapi/menu/fab_nav_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/tarikh/main_menu/main_menu_section.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
+import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
 
 /// The Main Page of the Timeline App.
@@ -21,10 +22,11 @@ class TarikhMenuUI extends StatefulWidget {
 
 class _TarikhMenuUIState extends State<TarikhMenuUI> {
   /// 2. Section Animations:
-  /// Each card section contains a Flare animation that's playing in the background.
-  /// These animations are paused when they're not visible anymore (e.g. when search is visible instead),
-  /// and are played again once they're back in view.
-  bool _isSectionActive = true;
+  /// Each card section contains a Flare animation that's playing in the
+  /// background. These animations are paused when they're not visible anymore
+  /// (e.g. when search is visible instead), and are played again once they're
+  /// back in view.
+  //bool _isSectionActive = TarikhController.to.isSectionActive;
 
   /// [MenuData] is a wrapper object for the data of each Card section.
   /// This data is loaded from the asset bundle during [initState()]
@@ -36,25 +38,10 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
   /// a parameter to the [TarikhTimelineUI] constructor, this widget will know
   /// where to scroll to.
   navigateToTimeline(MenuItemData item) {
-    _pauseSection();
-
+    TarikhController.to.pauseMenuSection();
     MenuController.to
-        .pushSubPage(SubPage.TARIKH_TIMELINE, arguments: {'focusItem': item});
-
-    //_restoreSection(null); // TODO working? was below:
-
-    // Navigator.of(context)
-    //     .push(MaterialPageRoute(
-    //       builder: (BuildContext context) =>
-    //           TarikhTimelineUI(item, BlocProvider.getTimeline(context)),
-    //     ))
-    //     .then(_restoreSection); // <- TODO how to do this with Getx?
+        .pushSubPage(SubPage.Tarikh_Timeline, arguments: {'focusItem': item});
   }
-
-  //    animation does not resume on return
-  // TODO what was v below used for?, dummy value passed back i think from future:
-//_restoreSection(v) => setState(() => _isSectionActive = true);
-  _pauseSection() => setState(() => _isSectionActive = false);
 
   @override
   initState() {
@@ -86,15 +73,17 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
         .map<Widget>(
           (MenuSectionData section) => Container(
             margin: const EdgeInsets.only(top: 20.0),
-            child: MenuSection(
-              section.label,
-              section.backgroundColor,
-              section.textColor,
-              section.items,
-              navigateToTimeline,
-              _isSectionActive,
-              assetId: section.assetId,
-            ),
+            child: GetBuilder<TarikhController>(builder: (c) {
+              return MenuSection(
+                section.label,
+                section.backgroundColor,
+                section.textColor,
+                section.items,
+                navigateToTimeline,
+                c.isSectionActive,
+                assetId: section.assetId,
+              );
+            }),
           ),
         )
         .toList(growable: false));
@@ -117,17 +106,14 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
             padding: const EdgeInsets.only(right: 75.0),
             child: FloatingActionButton(
               tooltip: 'View your favorites',
-              heroTag: SubPage.TARIKH_FAVORITE,
+              heroTag: SubPage.Tarikh_Favorite,
               onPressed: () {
                 setState(() {
-                  _pauseSection();
-                  MenuController.to.pushSubPage(SubPage.TARIKH_FAVORITE);
-                  // TODO working?:
-                  //_restoreSection(null);
+                  TarikhController.to.pauseMenuSection();
+                  MenuController.to.pushSubPage(SubPage.Tarikh_Favorite);
                 });
               },
               materialTapTargetSize: MaterialTapTargetSize.padded,
-              //backgroundColor: Colors.green,
               child: const Icon(Icons.favorite_border_outlined, size: 36.0),
             ),
           ),
@@ -141,11 +127,11 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
               padding: const EdgeInsets.only(right: 150.0),
               child: FloatingActionButton(
                 tooltip: 'Search history',
-                heroTag: SubPage.TARIKH_SEARCH,
+                heroTag: SubPage.Tarikh_Search,
                 onPressed: () {
                   setState(() {
-                    _pauseSection();
-                    MenuController.to.pushSubPage(SubPage.TARIKH_SEARCH);
+                    TarikhController.to.pauseMenuSection();
+                    MenuController.to.pushSubPage(SubPage.Tarikh_Search);
                   });
                 },
                 materialTapTargetSize: MaterialTapTargetSize.padded,
@@ -155,7 +141,7 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
           ),
         ),
         body: FabNavPage(
-          navPage: NavPage.TARIKH,
+          navPage: NavPage.Tarikh,
           settingsWidget: null,
           bottomWidget: HapiShareUI(),
           foregroundPage: Container(

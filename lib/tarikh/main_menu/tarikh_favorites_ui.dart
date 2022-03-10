@@ -23,7 +23,7 @@ class TarikhFavoritesUI extends StatelessWidget {
     /// If no entry has been added to the favorites yet, a placeholder is shown with a
     /// a few lines of text and a [FlareActor] animation of a broken heart.
     return FabSubPage(
-      subPage: SubPage.TARIKH_FAVORITE,
+      subPage: SubPage.Tarikh_Favorite,
       child: Scaffold(
         backgroundColor: Get.theme.backgroundColor,
         body: Padding(
@@ -82,7 +82,7 @@ class TarikhFavoritesUI extends StatelessWidget {
                             MenuItemData item = MenuItemData.fromEntry(entry);
 
                             MenuController.to.pushSubPage(
-                                SubPage.TARIKH_TIMELINE,
+                                SubPage.Tarikh_Timeline,
                                 arguments: {'focusItem': item});
                           },
                         );

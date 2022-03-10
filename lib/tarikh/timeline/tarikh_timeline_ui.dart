@@ -173,9 +173,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
       if (_touchedBubble!.zoom) {
         _navigateToTimeline(_touchedBubble!.entry, devicePadding.top);
       } else {
-        //t.isActive = false; now done inside menu controller
-
-        MenuController.to.pushSubPage(SubPage.TARIKH_ARTICLE, arguments: {
+        t.isActive = false; // stop rendering here, menu controller re-enables
+        MenuController.to.pushSubPage(SubPage.Tarikh_Article, arguments: {
           'article': _touchedBubble!.entry,
         });
 
@@ -265,7 +264,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     //     : darkText.withOpacity(darkText.opacity * 0.75);
 
     return FabSubPage(
-      subPage: SubPage.TARIKH_TIMELINE,
+      subPage: SubPage.Tarikh_Timeline,
       child: Scaffold(
         floatingActionButtonLocation:
             FloatingActionButtonLocation.miniCenterDocked,
@@ -423,7 +422,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                           children: [
                             FloatingActionButton(
                               tooltip: 'Show/hide favorite or all events',
-                              heroTag: SubPage.TARIKH_FAVORITE,
+                              heroTag: SubPage.Tarikh_Favorite,
                               onPressed: () {
                                 if (c.isGutterModeOff()) {
                                   c.gutterMode = GutterMode.FAV;

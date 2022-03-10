@@ -20,7 +20,7 @@ class ResetPasswordUI extends StatelessWidget {
     // set initial email from what user already entered on previous screen
     emailController.text = authController.emailController.text;
     return FabSubPage(
-      subPage: SubPage.RESET_PASSWORD,
+      subPage: SubPage.Reset_Password,
       child: Form(
         key: _formKey,
         child: Padding(

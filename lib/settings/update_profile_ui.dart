@@ -21,7 +21,7 @@ class UpdateProfileUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FabSubPage(
-      subPage: SubPage.UPDATE_PROFILE,
+      subPage: SubPage.Update_Profile,
       child: Form(
         key: _formKey1,
         child: GetBuilder<AuthController>(
@@ -122,7 +122,7 @@ class UpdateProfileUI extends StatelessWidget {
                           LabelButton(
                               labelText: 'auth.resetPasswordLabelButton'.tr,
                               onPressed: () => MenuController.to
-                                  .pushSubPage(SubPage.RESET_PASSWORD)),
+                                  .pushSubPage(SubPage.Reset_Password)),
                           const SizedBox(height: 400), // hide signout down page
                           Center(
                             child: ElevatedButton(

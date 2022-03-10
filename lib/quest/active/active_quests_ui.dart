@@ -999,8 +999,8 @@ class Cell extends StatelessWidget {
     return Expanded(
       flex: flex,
       child: InkWell(
-        onTap: () => MenuController.to
-            .pushSubPage(SubPage.ACTIVE_QUEST_ACTION, arguments: {
+        onTap: () =>
+            MenuController.to.pushSubPage(SubPage.Active_Quests, arguments: {
           'quest': _quest,
           'widget': _widget,
           'pinned': _pinned,

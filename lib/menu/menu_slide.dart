@@ -11,7 +11,6 @@ class MenuSlide extends StatefulWidget {
   final double scaleWidth;
   final double scaleHeight;
   final Duration slideAnimationDuration;
-  final Duration buttonAnimationDuration;
   final Curve openAnimationCurve;
   final Curve closeAnimationCurve;
 
@@ -23,7 +22,6 @@ class MenuSlide extends StatefulWidget {
     this.scaleWidth = 100,
     this.scaleHeight = 56,
     this.slideAnimationDuration = const Duration(milliseconds: 600),
-    this.buttonAnimationDuration = const Duration(milliseconds: 650),
     this.openAnimationCurve = const ElasticOutCurve(0.9),
     this.closeAnimationCurve = const ElasticInCurve(0.9),
   })  : assert(scaleHeight >= 40),
@@ -37,47 +35,9 @@ class _MenuSlideState extends State<MenuSlide>
     with SingleTickerProviderStateMixin {
   final MenuController cMenu = MenuController.to;
 
-  late AnimationController _acFabIcon;
-
-  @override
-  void initState() {
-    _acFabIcon = AnimationController(
-        vsync: this, duration: widget.buttonAnimationDuration);
-
-    // Needed for fab button menu/close animation when menu_nav closes menu
-    cMenu.initACFabIcon(_acFabIcon);
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _acFabIcon.dispose();
-    super.dispose(); // must do this last!
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        tooltip: 'Show or hide the main menu',
-        onPressed: null,
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              IconButton(
-                iconSize: 30.0,
-                icon: AnimatedIcon(
-                  icon: AnimatedIcons.menu_close, //cMenu.getFabAnimatedIcon(),
-                  progress: _acFabIcon,
-                ),
-                onPressed: () => _handleOnPressed(),
-              ),
-            ],
-          ),
-        ),
-      ),
       body: GetBuilder<MenuController>(
         builder: (c) {
           final double _width = MediaQuery.of(context).size.width;
@@ -139,25 +99,6 @@ class _MenuSlideState extends State<MenuSlide>
         },
       ),
     );
-  }
-
-  void _handleOnPressed() {
-    // if (cMenu.isFabBackMode()) {
-    //   print('menu/fab is in back <- mode');
-    //   if (cMenu.isMenuShowing()) {
-    //     cMenu.hideMenu(); // TODO menu x here?
-    //   } else {
-    //     cMenu.handleBackButtonHit();
-    //   }
-    // } else {
-    // menu open/close mode
-    // print('menu open/close mode');
-    if (cMenu.isMenuShowing()) {
-      cMenu.hideMenu(); // just hit close on fab
-    } else {
-      cMenu.showMenu(); // just hit menu on fab
-    }
-    // }
   }
 }
 
