@@ -3,19 +3,17 @@ import 'package:hapi/settings/theme/theme_controller.dart';
 
 /// a graphic displayed in our ui.
 class LogoGraphicHeader extends StatelessWidget {
-  LogoGraphicHeader();
-  final ThemeController themeController = ThemeController.to;
-
   @override
   Widget build(BuildContext context) {
-    String _imageLogo = 'assets/images/defaultDark.png';
-    if (themeController.isDarkModeOn == true) {
-      _imageLogo = 'assets/images/default_white.png';
+    String _imageLogo = 'assets/images/profileD.png';
+    if (ThemeController.to.isDarkModeOn == false) {
+      _imageLogo = 'assets/images/profileL.png';
     }
+
     return Hero(
       tag: 'App Logo',
       child: CircleAvatar(
-          foregroundColor: Colors.blue,
+          //foregroundColor: Colors.blue,
           backgroundColor: Colors.transparent,
           radius: 60.0,
           child: ClipOval(

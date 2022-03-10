@@ -25,11 +25,9 @@ class ThemeController extends GetxHapi {
   }
 
   ThemeMode getThemeModeFromString(String themeString) {
-    ThemeMode _setThemeMode = ThemeMode.system;
+    ThemeMode _setThemeMode = ThemeMode.dark;
     if (themeString == 'light') {
       _setThemeMode = ThemeMode.light;
-    } else {
-      _setThemeMode = ThemeMode.dark; // default to dark mode
     }
     return _setThemeMode;
   }
@@ -39,14 +37,10 @@ class ThemeController extends GetxHapi {
     setThemeMode(_themeString);
   }
 
-  // checks whether darkmode is set via system or previously by user
+  // checks whether dark mode is set via system or previously by user
   bool get isDarkModeOn {
-    if (currentTheme == 'system') {
-      // TODO not needed, cleanup
-      if (WidgetsBinding.instance!.window.platformBrightness ==
-          Brightness.dark) {
-        return true;
-      }
+    if (WidgetsBinding.instance!.window.platformBrightness == Brightness.dark) {
+      return true;
     }
 
     if (currentTheme == 'dark') {
