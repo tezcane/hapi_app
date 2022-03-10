@@ -121,7 +121,7 @@ class _SplashUIState extends State<SplashUI> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Theme.of(context).backgroundColor,
       body: Center(
         child: GetBuilder<AuthController>(
           builder: (c) => Column(

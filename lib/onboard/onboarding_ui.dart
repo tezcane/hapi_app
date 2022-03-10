@@ -12,14 +12,14 @@ class OnboardingUI extends StatelessWidget {
       body: OverBoard(
         pages: [
           PageModel(
-              color: const Color(0xFF0A0E21),
+              color: Theme.of(context).backgroundColor,
               imageAssetPath: 'assets/images/logo/logo.png',
               title: '',
               body:
                   '\n\n\n\nSwipe left or hit "NEXT" to learn about hapi', // TODO arabic swipe right?
               doAnimateImage: true),
           PageModel(
-              color: const Color(0xFF111328),
+              color: Theme.of(context).backgroundColor,
               imageAssetPath: 'assets/images/logo/logo.png',
               title: 'Earn Rewards and Improve Yourself',
               body:
@@ -28,14 +28,14 @@ class OnboardingUI extends StatelessWidget {
                   'Rewards are used in game but more importantly, you will collect mountains of good deeds for the Hereafter!',
               doAnimateImage: false),
           PageModel(
-              color: const Color(0xFF1D1E33),
+              color: Theme.of(context).backgroundColor,
               imageAssetPath: 'assets/images/logo/logo.png',
               title: 'Discover Endless Islamic Wisdom',
               body:
                   '\n\nLearn deep religious and historical knowledge in an organized, beautiful and fun way.',
               doAnimateImage: false),
           PageModel(
-              color: const Color(0xFF1D1E44),
+              color: Theme.of(context).backgroundColor,
               imageAssetPath: 'assets/images/logo/logo.png',
               title: 'Use Helpful Resources',
               body:

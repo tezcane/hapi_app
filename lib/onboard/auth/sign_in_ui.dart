@@ -1,7 +1,6 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
-//import 'package:flutter/services.dart';  // TODO needed?
 import 'package:get/get.dart';
 import 'package:hapi/components/form_input_field_with_icon.dart';
 import 'package:hapi/components/form_vertical_spacing.dart';
@@ -21,6 +20,7 @@ class SignInUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       body: Form(
         key: _formKey,
         child: Padding(

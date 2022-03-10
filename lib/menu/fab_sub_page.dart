@@ -13,6 +13,7 @@ class FabSubPage extends StatelessWidget {
     final MenuController cMenu = MenuController.to;
 
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       //floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: Align(
         alignment: Alignment.bottomRight,
