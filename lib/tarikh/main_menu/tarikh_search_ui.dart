@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:hapi/main.dart';
 import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
@@ -149,9 +148,8 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
     return FabSubPage(
       subPage: SubPage.Tarikh_Search,
       child: Scaffold(
-        backgroundColor: Get.theme.backgroundColor,
+        backgroundColor: Theme.of(context).backgroundColor,
         bottomNavigationBar: Container(
-          //color: Get.theme.backgroundColor,
           padding: const EdgeInsets.only(
               left: 20, top: 16.0, bottom: 16.0, right: 85),
           child: SearchWidget(_searchFocusNode, _searchTextController),

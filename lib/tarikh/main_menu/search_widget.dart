@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 /// Draws the search bar on top of the menu.
 class SearchWidget extends StatelessWidget {
@@ -22,7 +21,7 @@ class SearchWidget extends StatelessWidget {
     return Container(
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: Get.theme.scaffoldBackgroundColor,
+        color: Theme.of(context).scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(30.0),
       ),
       height: 56.0,

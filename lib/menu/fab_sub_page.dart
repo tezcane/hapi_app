@@ -11,8 +11,10 @@ class FabSubPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // used only for the hero movements and hide keyboard on text search bars
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
+
+      // used only for the hero movements and hide keyboard on text search bars
       floatingActionButton: FloatingActionButton(
         tooltip: 'Hide keyboard',
         onPressed: () =>

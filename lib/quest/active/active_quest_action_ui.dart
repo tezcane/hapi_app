@@ -5,7 +5,6 @@ import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/TOD.dart';
-import 'package:hapi/settings/theme/app_themes.dart';
 
 class ActiveQuestActionUI extends StatelessWidget {
   late final QUEST _quest;
@@ -87,93 +86,90 @@ class ActiveQuestActionUI extends StatelessWidget {
     ActiveQuestsAjrController cAjrA = ActiveQuestsAjrController.to;
     return FabSubPage(
       subPage: SubPage.Active_Quests,
-      child: Container(
-        color: AppThemes.logoBackground,
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              /// Title
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  // TODO internationalize/add text
-                  Text('pre ' + _quest.salahRow() + ' '),
-                  Hero(
-                    tag: _quest,
-                    child: _callerWidget,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            /// Title
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                // TODO internationalize/add text
+                Text('pre ' + _quest.salahRow() + ' '),
+                Hero(
+                  tag: _quest,
+                  child: _callerWidget,
+                ),
+                Text(' post ' + _quest.salahRow()),
+              ],
+            ),
+
+            /// Body
+            Text('body text'),
+
+            /// Action Buttons
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                if (skipEnabled)
+                  Tooltip(
+                    message: 'Skip to the next active quest',
+                    child: TextButton.icon(
+                      label: Text('Skip', style: tsBtn),
+                      icon: const Icon(Icons.redo_outlined),
+                      onPressed: () {
+                        if (cAjrA.isDone(_quest) || cAjrA.isMiss(_quest)) {
+                          if (cAjrA.isDone(_quest)) {
+                            //TODO remove points
+                          }
+                          cAjrA.clearQuest(_quest);
+                        }
+                        cAjrA.setSkip(_quest);
+                        // Handle's the sub page back button functionality
+                        MenuController.to.handlePressedFAB();
+                      },
+                      style: TextButton.styleFrom(
+                        primary: Colors.white,
+                        backgroundColor: Colors.red,
+                      ),
+                    ),
                   ),
-                  Text(' post ' + _quest.salahRow()),
-                ],
-              ),
-
-              /// Body
-              Text('body text'),
-
-              /// Action Buttons
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  if (skipEnabled)
-                    Tooltip(
-                      message: 'Skip to the next active quest',
-                      child: TextButton.icon(
-                        label: Text('Skip', style: tsBtn),
-                        icon: const Icon(Icons.redo_outlined),
-                        onPressed: () {
-                          if (cAjrA.isDone(_quest) || cAjrA.isMiss(_quest)) {
-                            if (cAjrA.isDone(_quest)) {
-                              //TODO remove points
-                            }
-                            cAjrA.clearQuest(_quest);
-                          }
-                          cAjrA.setSkip(_quest);
-                          // Handle's the sub page back button functionality
-                          MenuController.to.handlePressedFAB();
-                        },
-                        style: TextButton.styleFrom(
-                          primary: Colors.white,
-                          backgroundColor: Colors.red,
-                        ),
+                if (skipEnabled && doneEnabled) const SizedBox(width: 20),
+                if (doneEnabled)
+                  Tooltip(
+                    message: 'Mark this active quest as completed',
+                    child: TextButton.icon(
+                      label: Text('Done', style: tsBtn),
+                      icon: const Icon(Icons.check_outlined),
+                      onPressed: () {
+                        if (cAjrA.isSkip(_quest) || cAjrA.isMiss(_quest)) {
+                          cAjrA.clearQuest(_quest);
+                        }
+                        cAjrA.setDone(_quest); //TODO add points
+                        // Handle's the sub page back button functionality
+                        MenuController.to.handlePressedFAB();
+                        MenuController.to.playConfetti();
+                      },
+                      style: TextButton.styleFrom(
+                        primary: Colors.white,
+                        backgroundColor: Colors.green,
                       ),
                     ),
-                  if (skipEnabled && doneEnabled) const SizedBox(width: 20),
-                  if (doneEnabled)
-                    Tooltip(
-                      message: 'Mark this active quest as completed',
-                      child: TextButton.icon(
-                        label: Text('Done', style: tsBtn),
-                        icon: const Icon(Icons.check_outlined),
-                        onPressed: () {
-                          if (cAjrA.isSkip(_quest) || cAjrA.isMiss(_quest)) {
-                            cAjrA.clearQuest(_quest);
-                          }
-                          cAjrA.setDone(_quest); //TODO add points
-                          // Handle's the sub page back button functionality
-                          MenuController.to.handlePressedFAB();
-                          MenuController.to.playConfetti();
-                        },
-                        style: TextButton.styleFrom(
-                          primary: Colors.white,
-                          backgroundColor: Colors.green,
-                        ),
-                      ),
-                    ),
-                  if (skipEnabled && doneEnabled) const SizedBox(width: 40),
-                  if (noActionMsg != null)
-                    Column(
-                      children: [
-                        Text(noActionMsg!, style: tsMsg),
-                        const SizedBox(height: 16),
-                      ],
-                    ),
-                ],
-              ),
-            ],
-          ),
+                  ),
+                if (skipEnabled && doneEnabled) const SizedBox(width: 40),
+                if (noActionMsg != null)
+                  Column(
+                    children: [
+                      Text(noActionMsg!, style: tsMsg),
+                      const SizedBox(height: 16),
+                    ],
+                  ),
+              ],
+            ),
+          ],
         ),
       ),
     );

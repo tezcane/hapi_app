@@ -110,123 +110,118 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
         (TimelineEntry te) => te.label.toLowerCase() == _title.toLowerCase());
     return FabSubPage(
       subPage: SubPage.Tarikh_Article,
-      child: Scaffold(
-        body: Container(
-          color: Get.theme.backgroundColor,
-          child: Stack(
+      child: Stack(
+        children: <Widget>[
+          Column(
             children: <Widget>[
-              Column(
-                children: <Widget>[
-                  Container(height: devicePadding.top),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      padding: const EdgeInsets.only(
-                          left: 20, right: 20, bottom: 30),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          GestureDetector(
-                              onPanStart: (DragStartDetails details) {
-                                setState(() {
-                                  _interactOffset = details.globalPosition;
-                                });
-                              },
-                              onPanUpdate: (DragUpdateDetails details) {
-                                setState(() {
-                                  _interactOffset = details.globalPosition;
-                                });
-                              },
-                              onPanEnd: (DragEndDetails details) {
-                                setState(() {
-                                  _interactOffset = null;
-                                });
-                              },
-                              child: SizedBox(
-                                  height: 280,
-                                  child: TimelineEntryWidget(
-                                      isActive: true,
-                                      timelineEntry: widget.article,
-                                      interactOffset: _interactOffset))),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 30.0),
-                            child: Row(
-                              children: [
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        _title,
-                                        textAlign: TextAlign.left,
-                                        style: const TextStyle(
-                                          fontSize: 25.0,
-                                          height: 1.1,
-                                        ),
-                                      ),
-                                      Text(
-                                        _subTitle,
-                                        textAlign: TextAlign.left,
-                                        style: const TextStyle(
-                                          fontSize: 17.0,
-                                          height: 1.5,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                GestureDetector(
-                                  child: Transform.translate(
-                                    offset: const Offset(15.0, 0.0),
-                                    child: Container(
-                                      height: 60.0,
-                                      width: 60.0,
-                                      padding: const EdgeInsets.all(15.0),
-                                      color: Get.theme.scaffoldBackgroundColor,
-
-                                      /// Check out the widget at:
-                                      /// https://www.2dimensions.com/a/pollux/files/flare/heart-simple/preview
-                                      child: FlareActor(
-                                          "assets/tarikh/Favorite.flr",
-                                          animation:
-                                              isFav ? "Favorite" : "Unfavorite",
-                                          shouldClip: false),
+              Container(height: devicePadding.top),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding:
+                      const EdgeInsets.only(left: 20, right: 20, bottom: 30),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      GestureDetector(
+                          onPanStart: (DragStartDetails details) {
+                            setState(() {
+                              _interactOffset = details.globalPosition;
+                            });
+                          },
+                          onPanUpdate: (DragUpdateDetails details) {
+                            setState(() {
+                              _interactOffset = details.globalPosition;
+                            });
+                          },
+                          onPanEnd: (DragEndDetails details) {
+                            setState(() {
+                              _interactOffset = null;
+                            });
+                          },
+                          child: SizedBox(
+                              height: 280,
+                              child: TimelineEntryWidget(
+                                  isActive: true,
+                                  timelineEntry: widget.article,
+                                  interactOffset: _interactOffset))),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 30.0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    _title,
+                                    textAlign: TextAlign.left,
+                                    style: const TextStyle(
+                                      fontSize: 25.0,
+                                      height: 1.1,
                                     ),
                                   ),
-                                  onTap: () {
-                                    setState(() {
-                                      _isFavorite = !_isFavorite;
-                                    });
-                                    if (_isFavorite) {
-                                      TarikhController.to
-                                          .addFavorite(widget.article);
-                                    } else {
-                                      TarikhController.to
-                                          .removeFavorite(widget.article);
-                                    }
-                                  },
-                                ),
-                              ],
+                                  Text(
+                                    _subTitle,
+                                    textAlign: TextAlign.left,
+                                    style: const TextStyle(
+                                      fontSize: 17.0,
+                                      height: 1.5,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.only(top: 20, bottom: 20),
-                            height: 1,
-                            color: Get.theme.dividerColor,
-                          ),
-                          MarkdownBody(
-                              data: _articleMarkdown,
-                              styleSheet: _markdownStyleSheet),
-                          const SizedBox(height: 100),
-                        ],
+                            GestureDetector(
+                              child: Transform.translate(
+                                offset: const Offset(15.0, 0.0),
+                                child: Container(
+                                  height: 60.0,
+                                  width: 60.0,
+                                  padding: const EdgeInsets.all(15.0),
+                                  color:
+                                      Theme.of(context).scaffoldBackgroundColor,
+
+                                  /// Check out the widget at:
+                                  /// https://www.2dimensions.com/a/pollux/files/flare/heart-simple/preview
+                                  child: FlareActor(
+                                      "assets/tarikh/Favorite.flr",
+                                      animation:
+                                          isFav ? "Favorite" : "Unfavorite",
+                                      shouldClip: false),
+                                ),
+                              ),
+                              onTap: () {
+                                setState(() {
+                                  _isFavorite = !_isFavorite;
+                                });
+                                if (_isFavorite) {
+                                  TarikhController.to
+                                      .addFavorite(widget.article);
+                                } else {
+                                  TarikhController.to
+                                      .removeFavorite(widget.article);
+                                }
+                              },
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
+                      Container(
+                        margin: const EdgeInsets.only(top: 20, bottom: 20),
+                        height: 1,
+                        color: Theme.of(context).dividerColor,
+                      ),
+                      MarkdownBody(
+                          data: _articleMarkdown,
+                          styleSheet: _markdownStyleSheet),
+                      const SizedBox(height: 100),
+                    ],
                   ),
-                ],
-              )
+                ),
+              ),
             ],
-          ),
-        ),
+          )
+        ],
       ),
     );
   }

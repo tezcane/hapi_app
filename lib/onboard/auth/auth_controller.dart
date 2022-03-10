@@ -169,8 +169,8 @@ class AuthController extends GetxHapi {
       Get.snackbar('auth.signInErrorTitle'.tr, 'auth.signInError'.tr,
           snackPosition: SnackPosition.BOTTOM,
           duration: const Duration(seconds: 7),
-          backgroundColor: Get.theme.snackBarTheme.backgroundColor,
-          colorText: Get.theme.snackBarTheme.actionTextColor);
+          backgroundColor: Theme.of(context).snackBarTheme.backgroundColor,
+          colorText: Theme.of(context).snackBarTheme.actionTextColor);
     }
   }
 
@@ -213,8 +213,8 @@ class AuthController extends GetxHapi {
       Get.snackbar('auth.signUpErrorTitle'.tr, error.message!,
           snackPosition: SnackPosition.BOTTOM,
           duration: const Duration(seconds: 10),
-          backgroundColor: Get.theme.snackBarTheme.backgroundColor,
-          colorText: Get.theme.snackBarTheme.actionTextColor);
+          backgroundColor: Theme.of(context).snackBarTheme.backgroundColor,
+          colorText: Theme.of(context).snackBarTheme.actionTextColor);
     }
   }
 
@@ -243,8 +243,8 @@ class AuthController extends GetxHapi {
           'auth.updateUserSuccessNotice'.tr,
           snackPosition: SnackPosition.BOTTOM,
           duration: const Duration(seconds: 5),
-          backgroundColor: Get.theme.snackBarTheme.backgroundColor,
-          colorText: Get.theme.snackBarTheme.actionTextColor);
+          backgroundColor: Theme.of(context).snackBarTheme.backgroundColor,
+          colorText: Theme.of(context).snackBarTheme.actionTextColor);
       return Future.value(false);
     } catch (error) {
       // "} on  PlatformException catch (error) {" doesn't catch all error types
@@ -261,8 +261,9 @@ class AuthController extends GetxHapi {
           translateFirestoreAuthFailure(error.toString()),
           snackPosition: SnackPosition.BOTTOM,
           duration: const Duration(seconds: 10),
-          backgroundColor: Get.theme.snackBarTheme.backgroundColor,
-          colorText: Colors.red); //Get.theme.snackBarTheme.actionTextColor);
+          backgroundColor: Theme.of(context).snackBarTheme.backgroundColor,
+          colorText:
+              Colors.red); //Theme.of(context).snackBarTheme.actionTextColor);
     }
     return Future.value(true);
   }

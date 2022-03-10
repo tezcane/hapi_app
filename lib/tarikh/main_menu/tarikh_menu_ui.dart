@@ -147,7 +147,7 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
           settingsWidget: null,
           bottomWidget: HapiShareUI(),
           foregroundPage: Container(
-            color: Get.theme.backgroundColor,
+            color: Theme.of(context).backgroundColor,
             child: Align(
               alignment: Alignment.topCenter,
               child: SingleChildScrollView(

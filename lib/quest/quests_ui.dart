@@ -1,6 +1,5 @@
 import 'package:bottom_bar/bottom_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:hapi/menu/fab_nav_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/quest/active/active_quests_settings_ui.dart';
@@ -32,20 +31,21 @@ class _QuestBottomBarUIState extends State<QuestBottomBarUI> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).backgroundColor,
       body: PageView(
         controller: _pageController,
         children: [
           ActiveQuestsUI(),
           const DoListUI(),
-          Container(color: Get.theme.backgroundColor),
-          Container(color: Get.theme.backgroundColor),
+          Container(),
+          Container(),
         ],
         onPageChanged: (index) {
           setState(() => _currentPage = index);
         },
       ),
       bottomNavigationBar: Container(
-        color: Get.theme.backgroundColor,
+        color: Theme.of(context).backgroundColor,
         child: Row(
           children: [
             BottomBar(

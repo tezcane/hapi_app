@@ -14,31 +14,28 @@ class DoListUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<AuthController>(
-      builder: (controller) => Scaffold(
-        backgroundColor: Get.theme.backgroundColor,
-        body: Column(
-          children: <Widget>[
-            const SizedBox(
-              height: 20,
-            ),
-            AddDoList(
-              authController: controller,
-              textEditingController: TextEditingController(),
-            ),
-            GetBuilder<DailyQuestsController>(
-              builder: (c) {
-                return Expanded(
-                  child: ListView.builder(
-                    itemCount: c.doList.length,
-                    itemBuilder: (_, index) {
-                      return DoListCard(doList: c.doList[index]);
-                    },
-                  ),
-                );
-              },
-            )
-          ],
-        ),
+      builder: (controller) => Column(
+        children: <Widget>[
+          const SizedBox(
+            height: 20,
+          ),
+          AddDoList(
+            authController: controller,
+            textEditingController: TextEditingController(),
+          ),
+          GetBuilder<DailyQuestsController>(
+            builder: (c) {
+              return Expanded(
+                child: ListView.builder(
+                  itemCount: c.doList.length,
+                  itemBuilder: (_, index) {
+                    return DoListCard(doList: c.doList[index]);
+                  },
+                ),
+              );
+            },
+          )
+        ],
       ),
     );
   }

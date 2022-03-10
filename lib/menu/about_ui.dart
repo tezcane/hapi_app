@@ -45,7 +45,7 @@ class AboutUI extends StatelessWidget {
                 ),
                 RichText(
                   text: TextSpan(
-                    style: Get.theme.textTheme.headline6,
+                    style: context.textTheme.headline6,
                     children: [
                       TextSpan(
                         text: 'hapi',

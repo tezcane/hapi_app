@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-//import 'package:hapi/components/sliding_segmented_control.dart';
 
 /// a control used to select the theme.
 ///
@@ -23,7 +22,7 @@ class SegmentedSelector extends StatelessWidget {
     //if (Platform.isIOS) {}
 
     return CupertinoSlidingSegmentedControl(
-        //thumbColor: Get.theme.primaryColor,
+        //thumbColor: Theme.of(context).primaryColor,
         groupValue: selectedOption,
         children: {
           for (var option in menuOptions)

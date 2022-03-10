@@ -32,8 +32,8 @@ class FabNavPage extends StatelessWidget {
       builder: (c) => IgnorePointer(
         ignoring: c.isScreenDisabled(),
         child: Scaffold(
-          //backgroundColor: Get.theme.backgroundColor,
-          //backgroundColor: Theme.of(context).backgroundColor,
+          backgroundColor: Theme.of(context).backgroundColor,
+
           // used only for the hero movements and hide keyboard on text search bars
           floatingActionButton: FloatingActionButton(
             tooltip: 'Hide keyboard',

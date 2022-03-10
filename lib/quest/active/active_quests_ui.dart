@@ -629,9 +629,7 @@ class ActiveQuestsUI extends StatelessWidget {
       delegate: _SliverAppBarDelegate(
         minHeight: 5.0,
         maxHeight: 5.0,
-        child: Container(
-          color: Get.theme.backgroundColor,
-        ),
+        child: Container(color: Colors.transparent),
       ),
     );
   }
@@ -682,181 +680,177 @@ class ActiveQuestsUI extends StatelessWidget {
           ActiveQuestsAjrController.to.isIshaIbadahComplete &&
           isPinned(TOD.Isha, [TOD.Middle_of_Night, TOD.Last_1__3_of_Night]);
 
-      return Container(
-        color: Get.theme.backgroundColor,
-        child: CustomScrollView(
-          slivers: <Widget>[
-            /// Show Top App Bar
-            SliverAppBar(
-              backgroundColor: AppThemes.logoText,
-              expandedHeight: 195.0,
-              collapsedHeight: c.showSunnahKeys ? 90.0 : 56,
-              floating: true,
-              pinned: true,
-              flexibleSpace: FlexibleSpaceBar(
-                centerTitle: true,
-                titlePadding: const EdgeInsets.all(7.0),
-                title: salahAppBar(),
-                background: Swiper(
-                  itemCount: 3,
-                  itemBuilder: (BuildContext context, int index) => Image.asset(
-                    'assets/images/quests/active$index.jpg',
-                    //TODO add more images
-                    fit: BoxFit.cover,
-                  ),
-                  autoplay: true,
-                  autoplayDelay: 10000,
+      return CustomScrollView(
+        slivers: <Widget>[
+          /// Show Top App Bar
+          SliverAppBar(
+            backgroundColor: AppThemes.logoText,
+            expandedHeight: 195.0,
+            collapsedHeight: c.showSunnahKeys ? 90.0 : 56,
+            floating: true,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              centerTitle: true,
+              titlePadding: const EdgeInsets.all(7.0),
+              title: salahAppBar(),
+              background: Swiper(
+                itemCount: 3,
+                itemBuilder: (BuildContext context, int index) => Image.asset(
+                  'assets/images/quests/active$index.jpg',
+                  //TODO add more images
+                  fit: BoxFit.cover,
+                ),
+                autoplay: true,
+                autoplayDelay: 10000,
+              ),
+            ),
+          ),
+          sliverSpaceHeader(true),
+
+          /// Show rest of sliver list
+          /// Fajr:
+          SliverPersistentHeader(
+            pinned: pinnedFajr,
+            delegate: _SliverAppBarDelegate(
+              minHeight: SALAH_ACTIONS_HEIGHT,
+              maxHeight: SALAH_ACTIONS_HEIGHT,
+              child: FlipCard(
+                flipOnTouch: false,
+                controller: cflipCardFajr,
+                direction: FlipDirection.HORIZONTAL,
+                front: rowFajr(pinnedFajr),
+                back: rowNoActionFlipCard(
+                  fardRkt: '2',
+                  tod: TOD.Fajr_Tomorrow,
+                  salahTimeStart: c.tod!.fajrTomorrow,
+                  salahTimeEnd: c.tod!.sunriseTomorrow,
+                  muakBef: '2',
+                  isJummahMode: false,
+                  flipCardController: cflipCardFajr,
                 ),
               ),
             ),
-            sliverSpaceHeader(true),
+          ),
+          sliverSpaceHeader(pinnedFajr),
 
-            /// Show rest of sliver list
-            /// Fajr:
-            SliverPersistentHeader(
-              pinned: pinnedFajr,
-              delegate: _SliverAppBarDelegate(
-                minHeight: SALAH_ACTIONS_HEIGHT,
-                maxHeight: SALAH_ACTIONS_HEIGHT,
-                child: FlipCard(
-                  flipOnTouch: false,
-                  controller: cflipCardFajr,
-                  direction: FlipDirection.HORIZONTAL,
-                  front: rowFajr(pinnedFajr),
-                  back: rowNoActionFlipCard(
-                    fardRkt: '2',
-                    tod: TOD.Fajr_Tomorrow,
-                    salahTimeStart: c.tod!.fajrTomorrow,
-                    salahTimeEnd: c.tod!.sunriseTomorrow,
-                    muakBef: '2',
-                    isJummahMode: false,
-                    flipCardController: cflipCardFajr,
+          /// Duha:
+          if (c.showSunnahDuha) rowDuha(c, pinnedDuha),
+          if (c.showSunnahDuha) sliverSpaceHeader(pinnedDuha),
+
+          /// Dhuhr/Jummah:
+          c.isFriday() && c.showJummahOnFriday
+              ? SliverPersistentHeader(
+                  pinned: pinnedDuhr,
+                  delegate: _SliverAppBarDelegate(
+                    minHeight: SALAH_ACTIONS_HEIGHT,
+                    maxHeight: SALAH_ACTIONS_HEIGHT,
+                    child: FlipCard(
+                      flipOnTouch: false,
+                      controller: cflipCardDhuhr,
+                      direction: FlipDirection.HORIZONTAL,
+                      // Jummah Mode:
+                      front: rowDhuhr(pinnedDuhr,
+                          fardRkt: '2', muakAft: '6', isJummahMode: true),
+                      back: rowNoActionFlipCard(
+                        fardRkt: '4',
+                        tod: TOD.Dhuhr,
+                        salahTimeStart: c.tod!.dhuhr,
+                        muakBef: '4',
+                        muakAft: '2',
+                        naflAft: '2',
+                        isJummahMode: false,
+                        flipCardController: cflipCardDhuhr,
+                      ),
+                    ),
+                  ),
+                )
+              : SliverPersistentHeader(
+                  pinned: pinnedDuhr,
+                  delegate: _SliverAppBarDelegate(
+                    minHeight: SALAH_ACTIONS_HEIGHT,
+                    maxHeight: SALAH_ACTIONS_HEIGHT,
+                    child: FlipCard(
+                      flipOnTouch: false,
+                      controller: cflipCardDhuhr,
+                      direction: FlipDirection.HORIZONTAL,
+                      front: rowDhuhr(
+                        pinnedDuhr,
+                        fardRkt: '4',
+                        muakAft: '2',
+                        isJummahMode: false,
+                      ),
+                      back: rowNoActionFlipCard(
+                        fardRkt: '2', // Jummah Mode
+                        tod: TOD.Dhuhr,
+                        salahTimeStart: c.tod!.dhuhr,
+                        muakBef: '4',
+                        muakAft: '6',
+                        naflAft: '2',
+                        isJummahMode: true,
+                        flipCardController: cflipCardDhuhr,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-            sliverSpaceHeader(pinnedFajr),
+          sliverSpaceHeader(pinnedDuhr),
 
-            /// Duha:
-            if (c.showSunnahDuha) rowDuha(c, pinnedDuha),
-            if (c.showSunnahDuha) sliverSpaceHeader(pinnedDuha),
+          /// Asr:
+          rowAsr(pinnedAsr),
+          sliverSpaceHeader(pinnedAsr),
 
-            /// Dhuhr/Jummah:
-            c.isFriday() && c.showJummahOnFriday
+          /// Maghrib:
+          rowMaghrib(pinnedMaghrib),
+          sliverSpaceHeader(pinnedMaghrib),
+
+          /// Isha:
+          rowIsha(pinnedIsha),
+          sliverSpaceHeader(pinnedIsha),
+
+          /// Layl Ibadah:
+          if (c.showSunnahLayl)
+            c.showLast3rdOfNight
                 ? SliverPersistentHeader(
-                    pinned: pinnedDuhr,
+                    pinned: pinnedLayl,
                     delegate: _SliverAppBarDelegate(
                       minHeight: SALAH_ACTIONS_HEIGHT,
                       maxHeight: SALAH_ACTIONS_HEIGHT,
                       child: FlipCard(
                         flipOnTouch: false,
-                        controller: cflipCardDhuhr,
+                        controller: cflipCardLayl,
                         direction: FlipDirection.HORIZONTAL,
-                        // Jummah Mode:
-                        front: rowDhuhr(pinnedDuhr,
-                            fardRkt: '2', muakAft: '6', isJummahMode: true),
-                        back: rowNoActionFlipCard(
-                          fardRkt: '4',
-                          tod: TOD.Dhuhr,
-                          salahTimeStart: c.tod!.dhuhr,
-                          muakBef: '4',
-                          muakAft: '2',
-                          naflAft: '2',
-                          isJummahMode: false,
-                          flipCardController: cflipCardDhuhr,
-                        ),
+                        front:
+                            rowLayl(TOD.Last_1__3_of_Night, pinnedLayl, false),
+                        back: rowLayl(TOD.Middle_of_Night, false, true),
                       ),
                     ),
                   )
                 : SliverPersistentHeader(
-                    pinned: pinnedDuhr,
+                    pinned: pinnedLayl,
                     delegate: _SliverAppBarDelegate(
                       minHeight: SALAH_ACTIONS_HEIGHT,
                       maxHeight: SALAH_ACTIONS_HEIGHT,
                       child: FlipCard(
                         flipOnTouch: false,
-                        controller: cflipCardDhuhr,
+                        controller: cflipCardLayl,
                         direction: FlipDirection.HORIZONTAL,
-                        front: rowDhuhr(
-                          pinnedDuhr,
-                          fardRkt: '4',
-                          muakAft: '2',
-                          isJummahMode: false,
-                        ),
-                        back: rowNoActionFlipCard(
-                          fardRkt: '2', // Jummah Mode
-                          tod: TOD.Dhuhr,
-                          salahTimeStart: c.tod!.dhuhr,
-                          muakBef: '4',
-                          muakAft: '6',
-                          naflAft: '2',
-                          isJummahMode: true,
-                          flipCardController: cflipCardDhuhr,
-                        ),
+                        front: rowLayl(TOD.Middle_of_Night, pinnedLayl, false),
+                        back: rowLayl(TOD.Last_1__3_of_Night, false, true),
                       ),
                     ),
                   ),
-            sliverSpaceHeader(pinnedDuhr),
+          if (c.showSunnahLayl) sliverSpaceHeader(pinnedLayl),
 
-            /// Asr:
-            rowAsr(pinnedAsr),
-            sliverSpaceHeader(pinnedAsr),
-
-            /// Maghrib:
-            rowMaghrib(pinnedMaghrib),
-            sliverSpaceHeader(pinnedMaghrib),
-
-            /// Isha:
-            rowIsha(pinnedIsha),
-            sliverSpaceHeader(pinnedIsha),
-
-            /// Layl Ibadah:
-            if (c.showSunnahLayl)
-              c.showLast3rdOfNight
-                  ? SliverPersistentHeader(
-                      pinned: pinnedLayl,
-                      delegate: _SliverAppBarDelegate(
-                        minHeight: SALAH_ACTIONS_HEIGHT,
-                        maxHeight: SALAH_ACTIONS_HEIGHT,
-                        child: FlipCard(
-                          flipOnTouch: false,
-                          controller: cflipCardLayl,
-                          direction: FlipDirection.HORIZONTAL,
-                          front: rowLayl(
-                              TOD.Last_1__3_of_Night, pinnedLayl, false),
-                          back: rowLayl(TOD.Middle_of_Night, false, true),
-                        ),
-                      ),
-                    )
-                  : SliverPersistentHeader(
-                      pinned: pinnedLayl,
-                      delegate: _SliverAppBarDelegate(
-                        minHeight: SALAH_ACTIONS_HEIGHT,
-                        maxHeight: SALAH_ACTIONS_HEIGHT,
-                        child: FlipCard(
-                          flipOnTouch: false,
-                          controller: cflipCardLayl,
-                          direction: FlipDirection.HORIZONTAL,
-                          front:
-                              rowLayl(TOD.Middle_of_Night, pinnedLayl, false),
-                          back: rowLayl(TOD.Last_1__3_of_Night, false, true),
-                        ),
-                      ),
-                    ),
-            if (c.showSunnahLayl) sliverSpaceHeader(pinnedLayl),
-
-            /// Fillers:
-            sliverSpaceHeader(true),
-            sliverSpaceHeaderFiller(),
-            sliverSpaceHeaderFiller(),
-            sliverSpaceHeaderFiller(),
-            sliverSpaceHeaderFiller(),
-            sliverSpaceHeaderFiller(),
-            sliverSpaceHeaderFiller(),
-            sliverSpaceHeaderFiller(),
-            sliverSpaceHeaderFiller(),
-          ],
-        ),
+          /// Fillers:
+          sliverSpaceHeader(true),
+          sliverSpaceHeaderFiller(),
+          sliverSpaceHeaderFiller(),
+          sliverSpaceHeaderFiller(),
+          sliverSpaceHeaderFiller(),
+          sliverSpaceHeaderFiller(),
+          sliverSpaceHeaderFiller(),
+          sliverSpaceHeaderFiller(),
+          sliverSpaceHeaderFiller(),
+        ],
       );
     });
   }
@@ -871,57 +865,54 @@ class ActiveQuestsUI extends StatelessWidget {
     final FlipCardController? flipCardController,
   ) {
     return Expanded(
-      child: Container(
-        color: Get.theme.backgroundColor, // hide scroll of items behind
-        child: ClipRRect(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(15.0),
-            topRight: Radius.circular(15.0),
-          ),
-          child: Container(
-            color: pinned && ((!isJummahMode) || (isJummahMode && c.isFriday()))
-                ? AppThemes.selected
-                : AppThemes.unselected,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                if (flipCardController != null)
-                  InkWell(
-                    child: Transform.rotate(
-                      angle: 1.5708, // <- radian = 90 degrees
-                      child: const Icon(Icons.swap_vert_outlined,
-                          size: 21, color: Colors.white38),
-                    ),
-                    onTap: () => c.toggleFlipCard(flipCardController),
+      child: ClipRRect(
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(15.0),
+          topRight: Radius.circular(15.0),
+        ),
+        child: Container(
+          color: pinned && ((!isJummahMode) || (isJummahMode && c.isFriday()))
+              ? AppThemes.selected
+              : AppThemes.unselected,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (flipCardController != null)
+                InkWell(
+                  child: Transform.rotate(
+                    angle: 1.5708, // <- radian = 90 degrees
+                    child: const Icon(Icons.swap_vert_outlined,
+                        size: 21, color: Colors.white38),
                   ),
-                Text(
-                  isJummahMode ? 'Jummah' : tod.name(),
-                  style: const TS(20.0, textColor),
-                  textAlign: TextAlign.center,
+                  onTap: () => c.toggleFlipCard(flipCardController),
                 ),
-                const SizedBox(width: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Text(
-                      getTimeRange(salahTimeStart, salahTimeEnd),
-                      style: tsWhite,
-                      textAlign: TextAlign.center,
+              Text(
+                isJummahMode ? 'Jummah' : tod.name(),
+                style: const TS(20.0, textColor),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(width: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Text(
+                    getTimeRange(salahTimeStart, salahTimeEnd),
+                    style: tsWhite,
+                    textAlign: TextAlign.center,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      c.toggleSalahAlarm(tod);
+                    },
+                    child: const Icon(
+                      Icons.alarm_outlined, // TODO
+                      size: 20,
+                      color: Colors.white70,
                     ),
-                    InkWell(
-                      onTap: () {
-                        c.toggleSalahAlarm(tod);
-                      },
-                      child: const Icon(
-                        Icons.alarm_outlined, // TODO
-                        size: 20,
-                        color: Colors.white70,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                  ),
+                ],
+              ),
+            ],
           ),
         ),
       ),
@@ -1005,37 +996,34 @@ class Cell extends StatelessWidget {
           'widget': _widget,
           'pinned': _pinned,
         }),
-        child: Container(
-          color: Get.theme.backgroundColor, // hide scroll of items behind
-          child: ClipRRect(
-            borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(_cellPlacement == P.S ? 15.0 : 0),
-              bottomRight: Radius.circular(_cellPlacement == P.E ? 15.0 : 0),
+        child: ClipRRect(
+          borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(_cellPlacement == P.S ? 15.0 : 0),
+            bottomRight: Radius.circular(_cellPlacement == P.E ? 15.0 : 0),
+          ),
+          child: Container(
+            color: colorSalahBottom,
+            child: Stack(
+              children: [
+                _actionWidget,
+                if (ActiveQuestsAjrController.to.isDone(_quest))
+                  const Center(
+                    child: Icon(Icons.check_outlined,
+                        size: 30, color: Colors.green),
+                  ),
+                if (ActiveQuestsAjrController.to.isSkip(_quest))
+                  const Center(
+                    child:
+                        Icon(Icons.redo_outlined, size: 20, color: Colors.red),
+                  ),
+                if (ActiveQuestsAjrController.to.isMiss(_quest))
+                  const Center(
+                    child:
+                        Icon(Icons.close_outlined, size: 20, color: Colors.red),
+                  ),
+              ],
             ),
-            child: Container(
-              color: colorSalahBottom,
-              child: Stack(
-                children: [
-                  _actionWidget,
-                  if (ActiveQuestsAjrController.to.isDone(_quest))
-                    const Center(
-                      child: Icon(Icons.check_outlined,
-                          size: 30, color: Colors.green),
-                    ),
-                  if (ActiveQuestsAjrController.to.isSkip(_quest))
-                    const Center(
-                      child: Icon(Icons.redo_outlined,
-                          size: 20, color: Colors.red),
-                    ),
-                  if (ActiveQuestsAjrController.to.isMiss(_quest))
-                    const Center(
-                      child: Icon(Icons.close_outlined,
-                          size: 20, color: Colors.red),
-                    ),
-                ],
-              ),
-              //child: AvatarGlow(endRadius: 100.0, showTwoGlows: true, glowColor: const Color(0xFFFFD700), duration: Duration(milliseconds: 1000), //shape: CircleBorder(),child: HeartBeat(beatsPerMinute: 120,//radius: 100,child: Text('Duha',style: actionDuhaTextStyle,),),
-            ),
+            //child: AvatarGlow(endRadius: 100.0, showTwoGlows: true, glowColor: const Color(0xFFFFD700), duration: Duration(milliseconds: 1000), //shape: CircleBorder(),child: HeartBeat(beatsPerMinute: 120,//radius: 100,child: Text('Duha',style: actionDuhaTextStyle,),),
           ),
         ),
       ),
