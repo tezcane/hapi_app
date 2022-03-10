@@ -69,32 +69,34 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
   Widget build(BuildContext context) {
     final List<Widget> tail = [];
 
-    tail.addAll(_menu.menuSectionDataList
-        .map<Widget>(
-          (MenuSectionData section) => Container(
-            margin: const EdgeInsets.only(top: 20.0),
-            child: GetBuilder<TarikhController>(builder: (c) {
-              return MenuSection(
-                section.label,
-                section.backgroundColor,
-                section.textColor,
-                section.items,
-                navigateToTimeline,
-                c.isSectionActive,
-                assetId: section.assetId,
-              );
-            }),
-          ),
-        )
-        .toList(growable: false));
-    // ..add(
-    //   /// this is the little line that shows under the vignettes
-    //   Container(
-    //     margin: const EdgeInsets.only(top: 40.0, bottom: 22),
-    //     height: 1.0,
-    //     color: const Color.fromRGBO(151, 151, 151, 0.29),
-    //   ),
-    // );
+    tail
+      ..addAll(_menu.menuSectionDataList
+          .map<Widget>(
+            (MenuSectionData section) => Container(
+              margin: const EdgeInsets.only(top: 20.0),
+              child: GetBuilder<TarikhController>(builder: (c) {
+                return MenuSection(
+                  section.label,
+                  section.backgroundColor,
+                  section.textColor,
+                  section.items,
+                  navigateToTimeline,
+                  c.isSectionActive,
+                  assetId: section.assetId,
+                );
+              }),
+            ),
+          )
+          .toList(growable: false))
+      // add some space under the final vignette so FABs don't interfere
+      ..add(
+        /// this is the little line that shows under the vignettes
+        Container(
+          margin: const EdgeInsets.only(top: 40.0, bottom: 22),
+          height: 1.0,
+          color: const Color.fromRGBO(151, 151, 151, 0.29),
+        ),
+      );
 
     /// A [SingleChildScrollView] is used to create a scrollable view for the main menu.
     return Scaffold(
