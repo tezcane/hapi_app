@@ -68,15 +68,17 @@ extension EnumUtil on SubPage {
 class MenuController extends GetxHapi with GetTickerProviderStateMixin {
   static MenuController get to => Get.find();
 
+  /// fab and menu animation controllers
   final animationDuration = const Duration(milliseconds: 650);
-
   AnimatedIconData _fabAnimatedIcon = AnimatedIcons.menu_close;
   AnimatedIconData get fabAnimatedIcon => _fabAnimatedIcon;
-
   late AnimationController _acFabIcon; // controls fab icon animation
   late AnimationController _acNavMenu; // controls nav menu animation
   get acFabIcon => _acFabIcon;
   get acNavMenu => _acNavMenu;
+
+  /// Track if user clicks on sub page transition so we can protect fab icon
+  bool fabButtonIsTransitioning = false;
 
   @override
   void onInit() {
@@ -96,6 +98,11 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
 
   /// Here we handle when the FAB button is hit for show/hide menu or back btn.
   void handlePressedFAB() {
+    if (fabButtonIsTransitioning) {
+      print('GOOD TRY, FAB is still transitioning!!!!!!!!!!');
+      return; // POSSIBLE HAPI QUEST: "Interrupt/Break Menu Button" hapi task
+    }
+
     // if on main menu page, just show/hide menu per usual
     if (_subPageStack.isEmpty) {
       if (isMenuShowing()) {
@@ -343,6 +350,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
     /// HERE WE HANDLE THE FAB BUTTON ANIMATIONS ON INSERTING NEW SUB PAGES
     // if adding first sub page, animate menu turning into an arrow
     if (_subPageStack.length == 1) {
+      fabButtonIsTransitioning = true;
       if (isMenuShowing()) {
         // i.e. about page is clicked
         hideMenu(); // spin out of showing X to menu, then we turn into arrow
@@ -351,6 +359,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
         _fabAnimatedIcon = AnimatedIcons.menu_arrow;
         update();
         _acFabIcon.forward();
+        fabButtonIsTransitioning = false;
       }); // requires new thread
     }
 
