@@ -131,7 +131,8 @@ class ActiveQuestActionUI extends StatelessWidget {
                             cAjrA.clearQuest(_quest);
                           }
                           cAjrA.setSkip(_quest);
-                          MenuController.to.handleBackButtonHit();
+                          // Handle's the sub page back button functionality
+                          MenuController.to.handlePressedFAB();
                         },
                         style: TextButton.styleFrom(
                           primary: Colors.white,
@@ -151,7 +152,8 @@ class ActiveQuestActionUI extends StatelessWidget {
                             cAjrA.clearQuest(_quest);
                           }
                           cAjrA.setDone(_quest); //TODO add points
-                          MenuController.to.handleBackButtonHit();
+                          // Handle's the sub page back button functionality
+                          MenuController.to.handlePressedFAB();
                           MenuController.to.playConfetti();
                         },
                         style: TextButton.styleFrom(
