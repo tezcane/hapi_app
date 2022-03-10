@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hapi/menu/menu_controller.dart';
 
 class FabSubPage extends StatelessWidget {
@@ -10,10 +11,12 @@ class FabSubPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // we leave this only for the hero movements
+    // used only for the hero movements and hide keyboard on text search bars
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () => {},
+        tooltip: 'Hide keyboard',
+        onPressed: () =>
+            SystemChannels.textInput.invokeMethod('TextInput.hide'),
         heroTag: subPage,
         child: const Icon(Icons.arrow_back_outlined, size: 30),
       ),
