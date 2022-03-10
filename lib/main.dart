@@ -128,7 +128,8 @@ class MyApp extends StatelessWidget {
             child: MaterialApp(
               home: Scaffold(
                 // floatingActionButtonLocation:
-                //     FloatingActionButtonLocation.startFloat,
+                //     FloatingActionButtonLocation.endFloat,
+                resizeToAvoidBottomInset: false, // fixes keyboard pushing UI up
                 floatingActionButton: GetBuilder<MenuController>(builder: (cm) {
                   return FloatingActionButton(
                     tooltip: cm.getToolTip(),
