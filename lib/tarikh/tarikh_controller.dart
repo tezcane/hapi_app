@@ -185,12 +185,8 @@ class TarikhController extends GetxHapi {
     updateOnThread();
   }
 
-  int count = 0;
   TimeBtn getTimeBtn(TimelineEntry? entry, double opacity) {
-    if (entry == null) {
-      count++;
-    }
-    String title = '$count'; // these can't be blank because of FittedBox
+    String title = ' '; // these can't be blank because of FittedBox
     String timeUntil = ' ';
     String pageScrolls = ' ';
 

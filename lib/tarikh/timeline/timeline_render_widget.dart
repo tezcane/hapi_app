@@ -191,7 +191,6 @@ class TimelineRenderObject extends RenderBox {
   /// Adjust the viewport when needed.
   @override
   void performLayout() {
-    // TODO was under if (_timeline != null) {
     t.setViewport(height: size.height, animate: true);
   }
 

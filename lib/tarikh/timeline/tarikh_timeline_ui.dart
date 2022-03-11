@@ -269,7 +269,6 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
         floatingActionButtonLocation:
             FloatingActionButtonLocation.miniCenterDocked,
         floatingActionButton: GetBuilder<TarikhController>(
-          //init: TarikhController(), // TODO needed?
           builder: (c) {
             const Color aqua = Color.fromRGBO(69, 211, 197, 1.0);
             TimeBtn btnUp = c.timeBtnUp();
@@ -460,11 +459,11 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                           children: [
                             const Text(''),
                             const Text(''),
-                            FloatingActionButton(
-                              tooltip: 'Navigate to past',
-                              heroTag: null, // needed
-                              onPressed: () {
-                                if (btnUp.entry != null) {
+                            if (btnUp.entry != null)
+                              FloatingActionButton(
+                                tooltip: 'Navigate to past',
+                                heroTag: null, // needed
+                                onPressed: () {
                                   print('Navigate to past: ' +
                                       btnUp.entry!.label);
                                   // cTrkh.setTBtnUp(cTrkh.getTimeBtn(
@@ -473,13 +472,12 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                       btnUp.entry!, devicePadding.top);
                                   // cTrkh.setTBtnDn(
                                   //     cTrkh.getTimeBtn(btnUp.entry, 1.0));
-                                }
-                              },
-                              materialTapTargetSize:
-                                  MaterialTapTargetSize.padded,
-                              child: const Icon(Icons.arrow_upward_outlined,
-                                  size: 30.0),
-                            ),
+                                },
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.padded,
+                                child: const Icon(Icons.arrow_upward_outlined,
+                                    size: 30.0),
+                              ),
                             const Text(''),
                             const SizedBox(height: 1.8),
                           ],
@@ -492,11 +490,11 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                         children: [
                           const Text(''),
                           const Text(''),
-                          FloatingActionButton(
-                            tooltip: 'Navigate to future',
-                            heroTag: null, // needed
-                            onPressed: () {
-                              if (btnDn.entry != null) {
+                          if (btnDn.entry != null)
+                            FloatingActionButton(
+                              tooltip: 'Navigate to future',
+                              heroTag: null, // needed
+                              onPressed: () {
                                 print('Navigate to future: ' +
                                     btnDn.entry!.label);
                                 // cTrkh.setTBtnDn(
@@ -505,12 +503,12 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                     btnDn.entry!, devicePadding.top);
                                 // cTrkh.setTBtnUp(
                                 //     cTrkh.getTimeBtn(btnDn.entry, 1.0));
-                              }
-                            },
-                            materialTapTargetSize: MaterialTapTargetSize.padded,
-                            child: const Icon(Icons.arrow_downward_outlined,
-                                size: 30.0),
-                          ),
+                              },
+                              materialTapTargetSize:
+                                  MaterialTapTargetSize.padded,
+                              child: const Icon(Icons.arrow_downward_outlined,
+                                  size: 30.0),
+                            ),
                           const Text(''),
                           const SizedBox(height: 1.8),
                         ],
