@@ -15,8 +15,6 @@ import 'package:hapi/settings/theme/app_themes.dart';
 import 'package:im_animations/im_animations.dart';
 
 class ActiveQuestsUI extends StatelessWidget {
-  static const double SALAH_ACTIONS_HEIGHT = 62;
-
   static const TS tsAppBar = TS(9.5, Colors.white70);
   static const TS tsAppBarTime = TS(24.0, Colors.white70);
 
@@ -257,18 +255,18 @@ class ActiveQuestsUI extends StatelessWidget {
               child: Row(
                 children: [
                   /// 1 of 4. sunnah before fard column item:
-                  Cell(P.S, T(muakBef, tsMuak), false, QUEST.NONE, dis: true),
+                  Cell(T(muakBef, tsMuak), false, QUEST.NONE, dis: true),
 
                   /// 2 of 4. fard column item:
-                  Cell(P.C, T(fardRkt, tsFard), false, QUEST.NONE, dis: true),
+                  Cell(T(fardRkt, tsFard), false, QUEST.NONE, dis: true),
 
                   /// 3 of 4. sunnah after fard column items:
-                  Cell(P.C, T(muakAft, tsMuak), false, QUEST.NONE, dis: true),
-                  Cell(P.C, T(naflAft, tsNafl), false, QUEST.NONE, dis: true),
+                  Cell(T(muakAft, tsMuak), false, QUEST.NONE, dis: true),
+                  Cell(T(naflAft, tsNafl), false, QUEST.NONE, dis: true),
 
                   /// 4 of 4. Thikr and Dua after fard:
-                  const Cell(P.C, IconThikr(), false, QUEST.NONE, dis: true),
-                  const Cell(P.E, IconDua(), false, QUEST.NONE, dis: true),
+                  const Cell(IconThikr(), false, QUEST.NONE, dis: true),
+                  const Cell(IconDua(), false, QUEST.NONE, dis: true),
                 ],
               ),
             ),
@@ -303,18 +301,18 @@ class ActiveQuestsUI extends StatelessWidget {
               child: Row(
                 children: [
                   /// 1 of 4. sunnah before fard column item:
-                  Cell(P.S, T(muakBef, tsMuak), pinned, QUEST.FAJR_MUAKB),
+                  Cell(T(muakBef, tsMuak), pinned, QUEST.FAJR_MUAKB),
 
                   /// 2 of 4. fard column item:
-                  Cell(P.C, T(fardRkt, tsFard), pinned, QUEST.FAJR_FARD),
+                  Cell(T(fardRkt, tsFard), pinned, QUEST.FAJR_FARD),
 
                   /// 3 of 4. Sunnah after fard column items:
-                  Cell(P.C, const T('', tsMuak), pinned, QUEST.NONE),
-                  Cell(P.C, T('', tsNafl), pinned, QUEST.NONE),
+                  Cell(const T('', tsMuak), pinned, QUEST.NONE),
+                  Cell(T('', tsNafl), pinned, QUEST.NONE),
 
                   /// 4 of 4. Thikr and Dua after fard:
-                  Cell(P.C, const IconThikr(), pinned, QUEST.FAJR_THIKR),
-                  Cell(P.E, const IconDua(), pinned, QUEST.FAJR_DUA),
+                  Cell(const IconThikr(), pinned, QUEST.FAJR_THIKR),
+                  Cell(const IconDua(), pinned, QUEST.FAJR_DUA),
                 ],
               ),
             ),
@@ -324,57 +322,49 @@ class ActiveQuestsUI extends StatelessWidget {
     );
   }
 
-  SliverPersistentHeader rowDuha(ActiveQuestsController c, bool pinned) {
-    return SliverPersistentHeader(
-      pinned: pinned,
-      delegate: _SliverAppBarDelegate(
-        minHeight: SALAH_ACTIONS_HEIGHT,
-        maxHeight: SALAH_ACTIONS_HEIGHT,
-        child: Column(
-          children: [
-            /// First row is title with times, etc.
-            salahHeader(TOD.Duha, pinned, c, false, c.tod!.sunrise, null, null),
-            Expanded(
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Cell(
-                    P.S,
-                    SunCell(
-                      const IconSunrise(),
-                      'Morning Adhkar',
-                      c.tod!.sunrise,
-                      c.tod!.ishraq,
-                    ),
-                    pinned,
-                    QUEST.KERAHAT_ADHKAR_SUNRISE,
-                    flex: 2000,
-                  ),
-                  Cell(P.C, T('Ishraq', tsIshr), pinned, QUEST.DUHA_ISHRAQ),
-                  Cell(P.C, T('Duha', tsDuha), pinned, QUEST.DUHA_DUHA),
-                  Cell(
-                    P.E,
-                    SunCell(
-                      const IconSunBright(),
-                      "Zawal",
-                      c.tod!.zawal,
-                      c.tod!.dhuhr,
-                    ),
-                    pinned,
-                    QUEST.KERAHAT_ADHKAR_ZAWAL,
-                    flex: 2000,
-                  ),
-                ],
+  Column rowDuha(ActiveQuestsController c, bool pinned) {
+    return Column(
+      children: [
+        /// First row is title with times, etc.
+        salahHeader(TOD.Duha, pinned, c, false, c.tod!.sunrise, null, null),
+        Expanded(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Cell(
+                SunCell(
+                  const IconSunrise(),
+                  'Morning Adhkar',
+                  c.tod!.sunrise,
+                  c.tod!.ishraq,
+                ),
+                pinned,
+                QUEST.KERAHAT_ADHKAR_SUNRISE,
+                flex: 2000,
               ),
-            ),
-          ],
+              Cell(T('Ishraq', tsIshr), pinned, QUEST.DUHA_ISHRAQ),
+              Cell(T('Duha', tsDuha), pinned, QUEST.DUHA_DUHA),
+              Cell(
+                SunCell(
+                  const IconSunBright(),
+                  "Zawal",
+                  c.tod!.zawal,
+                  c.tod!.dhuhr,
+                ),
+                pinned,
+                QUEST.KERAHAT_ADHKAR_ZAWAL,
+                flex: 2000,
+              ),
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
   /// Note: returns GetBuilder since has FlipCard()
-  GetBuilder<ActiveQuestsController> rowDhuhr(
+  Column rowDhuhr(
+    ActiveQuestsController c,
     final bool pinned, {
     required String fardRkt,
     required String muakAft,
@@ -383,194 +373,152 @@ class ActiveQuestsUI extends StatelessWidget {
     String muakBef = '4';
     String naflAft = '2';
 
-    return GetBuilder<ActiveQuestsController>(
-      builder: (c) {
-        muakBef = c.showSunnahMuak ? muakBef : '';
-        muakAft = c.showSunnahMuak ? muakAft : '';
-        naflAft = c.showSunnahNafl ? naflAft : '';
+    muakBef = c.showSunnahMuak ? muakBef : '';
+    muakAft = c.showSunnahMuak ? muakAft : '';
+    naflAft = c.showSunnahNafl ? naflAft : '';
 
-        return Column(
-          children: [
-            /// First row is title of salah, with times, etc.
-            salahHeader(
-              TOD.Dhuhr,
-              pinned,
-              c,
-              isJummahMode,
-              c.tod!.dhuhr,
-              null,
-              cflipCardDhuhr,
-            ),
-            Expanded(
-              child: Row(
-                children: [
-                  /// 1 of 4. sunnah before fard column item:
-                  Cell(P.S, T(muakBef, tsMuak), pinned, QUEST.DHUHR_MUAKB),
+    return Column(
+      children: [
+        /// First row is title of salah, with times, etc.
+        salahHeader(
+          TOD.Dhuhr,
+          pinned,
+          c,
+          isJummahMode,
+          c.tod!.dhuhr,
+          null,
+          cflipCardDhuhr,
+        ),
+        Expanded(
+          child: Row(
+            children: [
+              /// 1 of 4. sunnah before fard column item:
+              Cell(T(muakBef, tsMuak), pinned, QUEST.DHUHR_MUAKB),
 
-                  /// 2 of 4. fard column item:
-                  Cell(P.C, T(fardRkt, tsFard), pinned, QUEST.DHUHR_FARD),
+              /// 2 of 4. fard column item:
+              Cell(T(fardRkt, tsFard), pinned, QUEST.DHUHR_FARD),
 
-                  /// 3 of 4. Option 2: sunnah after fard column items:
-                  Cell(P.C, T(muakAft, tsMuak), pinned, QUEST.DHUHR_MUAKA),
-                  Cell(P.C, T(naflAft, tsNafl), pinned, QUEST.DHUHR_NAFLA),
+              /// 3 of 4. Option 2: sunnah after fard column items:
+              Cell(T(muakAft, tsMuak), pinned, QUEST.DHUHR_MUAKA),
+              Cell(T(naflAft, tsNafl), pinned, QUEST.DHUHR_NAFLA),
 
-                  /// 4 of 4. Thikr and Dua after fard:
-                  Cell(P.C, const IconThikr(), pinned, QUEST.DHUHR_THIKR),
-                  Cell(P.E, const IconDua(), pinned, QUEST.DHUHR_DUA),
-                ],
-              ),
-            ),
-          ],
-        );
-      },
+              /// 4 of 4. Thikr and Dua after fard:
+              Cell(const IconThikr(), pinned, QUEST.DHUHR_THIKR),
+              Cell(const IconDua(), pinned, QUEST.DHUHR_DUA),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
-  SliverPersistentHeader rowAsr(final bool pinned) {
+  Column rowAsr(ActiveQuestsController c, final bool pinned) {
     String naflBef = '4';
     String fardRkt = '4';
 
-    return SliverPersistentHeader(
-      pinned: pinned,
-      delegate: _SliverAppBarDelegate(
-        minHeight: SALAH_ACTIONS_HEIGHT,
-        maxHeight: SALAH_ACTIONS_HEIGHT,
-        child: GetBuilder<ActiveQuestsController>(
-          builder: (c) {
-            naflBef = c.showSunnahNafl ? naflBef : '';
+    naflBef = c.showSunnahNafl ? naflBef : '';
 
-            return Column(
-              children: [
-                /// First row is title of salah, with times, etc.
-                salahHeader(TOD.Asr, pinned, c, false, c.tod!.asr, null, null),
-                Expanded(
-                  child: Row(
-                    children: [
-                      /// 1 of 4. sunnah before fard column item:
-                      Cell(P.S, T(naflBef, tsNafl), pinned, QUEST.ASR_NAFLB),
+    return Column(
+      children: [
+        /// First row is title of salah, with times, etc.
+        salahHeader(TOD.Asr, pinned, c, false, c.tod!.asr, null, null),
+        Expanded(
+          child: Row(
+            children: [
+              /// 1 of 4. sunnah before fard column item:
+              Cell(T(naflBef, tsNafl), pinned, QUEST.ASR_NAFLB),
 
-                      /// 2 of 4. fard column item:
-                      Cell(P.C, T(fardRkt, tsFard), pinned, QUEST.ASR_FARD),
+              /// 2 of 4. fard column item:
+              Cell(T(fardRkt, tsFard), pinned, QUEST.ASR_FARD),
 
-                      /// 3 of 4. Thikr and Dua after fard:
-                      Cell(P.C, const IconThikr(), pinned, QUEST.ASR_THIKR),
-                      Cell(P.C, const IconDua(), pinned, QUEST.ASR_DUA),
+              /// 3 of 4. Thikr and Dua after fard:
+              Cell(const IconThikr(), pinned, QUEST.ASR_THIKR),
+              Cell(const IconDua(), pinned, QUEST.ASR_DUA),
 
-                      /// 4 of 4. Evening adhkar
-                      Cell(
-                        P.E,
-                        SunCell(const IconSunset(), 'Evening Adhkar',
-                            c.tod!.sunSetting, c.tod!.maghrib),
-                        pinned,
-                        QUEST.KERAHAT_ADHKAR_SUNSET,
-                        flex: 2000,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            );
-          },
+              /// 4 of 4. Evening adhkar
+              Cell(
+                SunCell(const IconSunset(), 'Evening Adhkar', c.tod!.sunSetting,
+                    c.tod!.maghrib),
+                pinned,
+                QUEST.KERAHAT_ADHKAR_SUNSET,
+                flex: 2000,
+              ),
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
-  SliverPersistentHeader rowMaghrib(final bool pinned) {
+  Column rowMaghrib(ActiveQuestsController c, final bool pinned) {
     String fardRkt = '3';
     String muakAft = '2';
     String naflAft = '2';
 
-    return SliverPersistentHeader(
-      pinned: pinned,
-      delegate: _SliverAppBarDelegate(
-        minHeight: SALAH_ACTIONS_HEIGHT,
-        maxHeight: SALAH_ACTIONS_HEIGHT,
-        child: GetBuilder<ActiveQuestsController>(
-          builder: (c) {
-            muakAft = c.showSunnahMuak ? muakAft : '';
-            naflAft = c.showSunnahNafl ? naflAft : '';
+    muakAft = c.showSunnahMuak ? muakAft : '';
+    naflAft = c.showSunnahNafl ? naflAft : '';
 
-            return Column(
-              children: [
-                /// First row is title of salah, with times, etc.
-                salahHeader(
-                    TOD.Maghrib, pinned, c, false, c.tod!.maghrib, null, null),
-                Expanded(
-                  child: Row(
-                    children: [
-                      /// 1 of 4. sunnah before fard column item:
-                      Cell(P.S, const T('', tsWhite), pinned, QUEST.NONE),
+    return Column(
+      children: [
+        /// First row is title of salah, with times, etc.
+        salahHeader(TOD.Maghrib, pinned, c, false, c.tod!.maghrib, null, null),
+        Expanded(
+          child: Row(
+            children: [
+              /// 1 of 4. sunnah before fard column item:
+              Cell(const T('', tsWhite), pinned, QUEST.NONE),
 
-                      /// 2 of 4. fard column item:
-                      Cell(P.C, T(fardRkt, tsFard), pinned, QUEST.MAGHRIB_FARD),
+              /// 2 of 4. fard column item:
+              Cell(T(fardRkt, tsFard), pinned, QUEST.MAGHRIB_FARD),
 
-                      /// 3 of 4. Option 2: sunnah after fard column items:
-                      Cell(
-                          P.C, T(muakAft, tsMuak), pinned, QUEST.MAGHRIB_MUAKA),
-                      Cell(
-                          P.C, T(naflAft, tsNafl), pinned, QUEST.MAGHRIB_NAFLA),
+              /// 3 of 4. Option 2: sunnah after fard column items:
+              Cell(T(muakAft, tsMuak), pinned, QUEST.MAGHRIB_MUAKA),
+              Cell(T(naflAft, tsNafl), pinned, QUEST.MAGHRIB_NAFLA),
 
-                      /// 4 of 4. Thikr and Dua after fard:
-                      Cell(P.C, const IconThikr(), pinned, QUEST.MAGHRIB_THIKR),
-                      Cell(P.E, const IconDua(), pinned, QUEST.MAGHRIB_DUA),
-                    ],
-                  ),
-                ),
-              ],
-            );
-          },
+              /// 4 of 4. Thikr and Dua after fard:
+              Cell(const IconThikr(), pinned, QUEST.MAGHRIB_THIKR),
+              Cell(const IconDua(), pinned, QUEST.MAGHRIB_DUA),
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
-  SliverPersistentHeader rowIsha(final bool pinned) {
+  Column rowIsha(ActiveQuestsController c, final bool pinned) {
     String naflBef = '4';
     String fardRkt = '4';
     String muakAft = '2';
     String naflAft = '2';
 
-    return SliverPersistentHeader(
-      pinned: pinned,
-      delegate: _SliverAppBarDelegate(
-        minHeight: SALAH_ACTIONS_HEIGHT,
-        maxHeight: SALAH_ACTIONS_HEIGHT,
-        child: GetBuilder<ActiveQuestsController>(
-          builder: (c) {
-            naflBef = c.showSunnahNafl ? naflBef : '';
-            muakAft = c.showSunnahMuak ? muakAft : '';
-            naflAft = c.showSunnahNafl ? naflAft : '';
+    naflBef = c.showSunnahNafl ? naflBef : '';
+    muakAft = c.showSunnahMuak ? muakAft : '';
+    naflAft = c.showSunnahNafl ? naflAft : '';
 
-            return Column(
-              children: [
-                /// First row is title of salah, with times, etc.
-                salahHeader(
-                    TOD.Isha, pinned, c, false, c.tod!.isha, null, null),
-                Expanded(
-                  child: Row(
-                    children: [
-                      /// 1 of 4. sunnah before fard column item:
-                      Cell(P.S, T(naflBef, tsNafl), pinned, QUEST.ISHA_NAFLB),
+    return Column(
+      children: [
+        /// First row is title of salah, with times, etc.
+        salahHeader(TOD.Isha, pinned, c, false, c.tod!.isha, null, null),
+        Expanded(
+          child: Row(
+            children: [
+              /// 1 of 4. sunnah before fard column item:
+              Cell(T(naflBef, tsNafl), pinned, QUEST.ISHA_NAFLB),
 
-                      /// 2 of 4. fard column item:
-                      Cell(P.C, T(fardRkt, tsFard), pinned, QUEST.ISHA_FARD),
+              /// 2 of 4. fard column item:
+              Cell(T(fardRkt, tsFard), pinned, QUEST.ISHA_FARD),
 
-                      /// 3 of 4. Option 1: sunnah after fard column items:
-                      Cell(P.C, T(muakAft, tsMuak), pinned, QUEST.ISHA_MUAKA),
-                      Cell(P.C, T(naflAft, tsNafl), pinned, QUEST.ISHA_NAFLA),
+              /// 3 of 4. Option 1: sunnah after fard column items:
+              Cell(T(muakAft, tsMuak), pinned, QUEST.ISHA_MUAKA),
+              Cell(T(naflAft, tsNafl), pinned, QUEST.ISHA_NAFLA),
 
-                      /// 4 of 4. Thikr and Dua after fard:
-                      Cell(P.C, const IconThikr(), pinned, QUEST.ISHA_THIKR),
-                      Cell(P.E, const IconDua(), pinned, QUEST.ISHA_DUA),
-                    ],
-                  ),
-                ),
-              ],
-            );
-          },
+              /// 4 of 4. Thikr and Dua after fard:
+              Cell(const IconThikr(), pinned, QUEST.ISHA_THIKR),
+              Cell(const IconDua(), pinned, QUEST.ISHA_DUA),
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 
@@ -595,21 +543,17 @@ class ActiveQuestsUI extends StatelessWidget {
             Expanded(
               child: Row(
                 children: [
-                  Cell(P.S, T('Qiyam', tsQyam), pinned, QUEST.LAYL_QIYAM,
-                      dis: dis),
+                  Cell(T('Qiyam', tsQyam), pinned, QUEST.LAYL_QIYAM, dis: dis),
 
                   /// Thikr and Dua before bed:
-                  Cell(P.C, const IconThikr(), pinned, QUEST.LAYL_THIKR,
-                      dis: dis),
-                  Cell(P.C, const IconDua(), pinned, QUEST.LAYL_DUA, dis: dis),
-                  Cell(P.C, T('Sleep', tsWhite), pinned, QUEST.LAYL_SLEEP,
-                      dis: dis),
+                  Cell(const IconThikr(), pinned, QUEST.LAYL_THIKR, dis: dis),
+                  Cell(const IconDua(), pinned, QUEST.LAYL_DUA, dis: dis),
+                  Cell(T('Sleep', tsWhite), pinned, QUEST.LAYL_SLEEP, dis: dis),
 
                   /// Tahhajud and Witr after waking up
-                  Cell(P.C, T('Tahajjud', tsThjd), pinned, QUEST.LAYL_TAHAJJUD,
+                  Cell(T('Tahajjud', tsThjd), pinned, QUEST.LAYL_TAHAJJUD,
                       dis: dis),
-                  Cell(P.E, T('Witr', tsWitr), pinned, QUEST.LAYL_WITR,
-                      dis: dis),
+                  Cell(T('Witr', tsWitr), pinned, QUEST.LAYL_WITR, dis: dis),
                 ],
               ),
             ),
@@ -623,22 +567,22 @@ class ActiveQuestsUI extends StatelessWidget {
   SliverPersistentHeader sliverSpaceHeader(bool pinned) {
     return SliverPersistentHeader(
       pinned: pinned,
-      delegate: _SliverAppBarDelegate(
-        minHeight: 5.0,
+      delegate: const _SliverAppBarDelegate(
+        minHeight: 5.0, // should match padding size for nice look
         maxHeight: 5.0,
-        child: Container(color: Colors.transparent),
+        child: SizedBox(),
       ),
     );
   }
 
   /// Use to make scrolling of active salah always pin when scrolling up.
   SliverPersistentHeader sliverSpaceHeaderFiller() {
-    return SliverPersistentHeader(
+    return const SliverPersistentHeader(
       pinned: false,
       delegate: _SliverAppBarDelegate(
         minHeight: 100.0,
         maxHeight: 100.0,
-        child: Container(),
+        child: SizedBox(),
       ),
     );
   }
@@ -678,13 +622,13 @@ class ActiveQuestsUI extends StatelessWidget {
           isPinned(TOD.Isha, [TOD.Middle_of_Night, TOD.Last_1__3_of_Night]);
 
       return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 5), // match sliver gap
         child: CustomScrollView(
           slivers: <Widget>[
             /// Show Top App Bar
             SliverAppBar(
               backgroundColor: Colors.grey.shade800, // logoText/unselected
-              expandedHeight: 195.0,
+              expandedHeight: 175.0,
               collapsedHeight: c.showSunnahKeys ? 90.0 : 56,
               floating: true,
               pinned: true,
@@ -708,140 +652,112 @@ class ActiveQuestsUI extends StatelessWidget {
 
             /// Show rest of sliver list
             /// Fajr:
-            SliverPersistentHeader(
-              pinned: pinnedFajr,
-              delegate: _SliverAppBarDelegate(
-                minHeight: SALAH_ACTIONS_HEIGHT,
-                maxHeight: SALAH_ACTIONS_HEIGHT,
-                child: FlipCard(
-                  flipOnTouch: false,
-                  controller: cflipCardFajr,
-                  direction: FlipDirection.HORIZONTAL,
-                  front: rowFajr(pinnedFajr),
-                  back: rowNoActionFlipCard(
-                    fardRkt: '2',
-                    tod: TOD.Fajr_Tomorrow,
-                    salahTimeStart: c.tod!.fajrTomorrow,
-                    salahTimeEnd: c.tod!.sunriseTomorrow,
-                    muakBef: '2',
-                    isJummahMode: false,
-                    flipCardController: cflipCardFajr,
-                  ),
+            Sliv(
+              FlipCard(
+                flipOnTouch: false,
+                controller: cflipCardFajr,
+                direction: FlipDirection.HORIZONTAL,
+                front: rowFajr(pinnedFajr),
+                back: rowNoActionFlipCard(
+                  fardRkt: '2',
+                  tod: TOD.Fajr_Tomorrow,
+                  salahTimeStart: c.tod!.fajrTomorrow,
+                  salahTimeEnd: c.tod!.sunriseTomorrow,
+                  muakBef: '2',
+                  isJummahMode: false,
+                  flipCardController: cflipCardFajr,
                 ),
               ),
+              pinnedFajr,
             ),
             sliverSpaceHeader(pinnedFajr),
 
             /// Duha:
-            if (c.showSunnahDuha) rowDuha(c, pinnedDuha),
+            if (c.showSunnahDuha) Sliv(rowDuha(c, pinnedDuha), pinnedDuha),
             if (c.showSunnahDuha) sliverSpaceHeader(pinnedDuha),
 
             /// Dhuhr/Jummah:
-            c.isFriday() && c.showJummahOnFriday
-                ? SliverPersistentHeader(
-                    pinned: pinnedDuhr,
-                    delegate: _SliverAppBarDelegate(
-                      minHeight: SALAH_ACTIONS_HEIGHT,
-                      maxHeight: SALAH_ACTIONS_HEIGHT,
-                      child: FlipCard(
-                        flipOnTouch: false,
-                        controller: cflipCardDhuhr,
-                        direction: FlipDirection.HORIZONTAL,
-                        // Jummah Mode:
-                        front: rowDhuhr(pinnedDuhr,
-                            fardRkt: '2', muakAft: '6', isJummahMode: true),
-                        back: rowNoActionFlipCard(
-                          fardRkt: '4',
-                          tod: TOD.Dhuhr,
-                          salahTimeStart: c.tod!.dhuhr,
-                          muakBef: '4',
-                          muakAft: '2',
-                          naflAft: '2',
-                          isJummahMode: false,
-                          flipCardController: cflipCardDhuhr,
-                        ),
+            Sliv(
+              c.isFriday() && c.showJummahOnFriday
+                  ? FlipCard(
+                      flipOnTouch: false,
+                      controller: cflipCardDhuhr,
+                      direction: FlipDirection.HORIZONTAL,
+                      // Jummah Mode:
+                      front: rowDhuhr(c, pinnedDuhr,
+                          fardRkt: '2', muakAft: '6', isJummahMode: true),
+                      back: rowNoActionFlipCard(
+                        fardRkt: '4',
+                        tod: TOD.Dhuhr,
+                        salahTimeStart: c.tod!.dhuhr,
+                        muakBef: '4',
+                        muakAft: '2',
+                        naflAft: '2',
+                        isJummahMode: false,
+                        flipCardController: cflipCardDhuhr,
+                      ),
+                    )
+                  : FlipCard(
+                      flipOnTouch: false,
+                      controller: cflipCardDhuhr,
+                      direction: FlipDirection.HORIZONTAL,
+                      front: rowDhuhr(c, pinnedDuhr,
+                          fardRkt: '4', muakAft: '2', isJummahMode: false),
+                      back: rowNoActionFlipCard(
+                        fardRkt: '2', // Jummah Mode
+                        tod: TOD.Dhuhr,
+                        salahTimeStart: c.tod!.dhuhr,
+                        muakBef: '4',
+                        muakAft: '6',
+                        naflAft: '2',
+                        isJummahMode: true,
+                        flipCardController: cflipCardDhuhr,
                       ),
                     ),
-                  )
-                : SliverPersistentHeader(
-                    pinned: pinnedDuhr,
-                    delegate: _SliverAppBarDelegate(
-                      minHeight: SALAH_ACTIONS_HEIGHT,
-                      maxHeight: SALAH_ACTIONS_HEIGHT,
-                      child: FlipCard(
-                        flipOnTouch: false,
-                        controller: cflipCardDhuhr,
-                        direction: FlipDirection.HORIZONTAL,
-                        front: rowDhuhr(
-                          pinnedDuhr,
-                          fardRkt: '4',
-                          muakAft: '2',
-                          isJummahMode: false,
-                        ),
-                        back: rowNoActionFlipCard(
-                          fardRkt: '2', // Jummah Mode
-                          tod: TOD.Dhuhr,
-                          salahTimeStart: c.tod!.dhuhr,
-                          muakBef: '4',
-                          muakAft: '6',
-                          naflAft: '2',
-                          isJummahMode: true,
-                          flipCardController: cflipCardDhuhr,
-                        ),
-                      ),
-                    ),
-                  ),
+              pinnedDuhr,
+            ),
             sliverSpaceHeader(pinnedDuhr),
 
             /// Asr:
-            rowAsr(pinnedAsr),
+            Sliv(rowAsr(c, pinnedAsr), pinnedAsr),
             sliverSpaceHeader(pinnedAsr),
 
             /// Maghrib:
-            rowMaghrib(pinnedMaghrib),
+            Sliv(rowMaghrib(c, pinnedMaghrib), pinnedMaghrib),
             sliverSpaceHeader(pinnedMaghrib),
 
             /// Isha:
-            rowIsha(pinnedIsha),
+            Sliv(rowIsha(c, pinnedIsha), pinnedIsha),
             sliverSpaceHeader(pinnedIsha),
 
             /// Layl Ibadah:
             if (c.showSunnahLayl)
-              c.showLast3rdOfNight
-                  ? SliverPersistentHeader(
-                      pinned: pinnedLayl,
-                      delegate: _SliverAppBarDelegate(
-                        minHeight: SALAH_ACTIONS_HEIGHT,
-                        maxHeight: SALAH_ACTIONS_HEIGHT,
-                        child: FlipCard(
-                          flipOnTouch: false,
-                          controller: cflipCardLayl,
-                          direction: FlipDirection.HORIZONTAL,
-                          front: rowLayl(
-                              TOD.Last_1__3_of_Night, pinnedLayl, false),
-                          back: rowLayl(TOD.Middle_of_Night, false, true),
-                        ),
+              Sliv(
+                c.showLast3rdOfNight
+                    ? FlipCard(
+                        flipOnTouch: false,
+                        controller: cflipCardLayl,
+                        direction: FlipDirection.HORIZONTAL,
+                        front:
+                            rowLayl(TOD.Last_1__3_of_Night, pinnedLayl, false),
+                        back: rowLayl(TOD.Middle_of_Night, false, true),
+                      )
+                    : FlipCard(
+                        flipOnTouch: false,
+                        controller: cflipCardLayl,
+                        direction: FlipDirection.HORIZONTAL,
+                        front: rowLayl(TOD.Middle_of_Night, pinnedLayl, false),
+                        back: rowLayl(TOD.Last_1__3_of_Night, false, true),
                       ),
-                    )
-                  : SliverPersistentHeader(
-                      pinned: pinnedLayl,
-                      delegate: _SliverAppBarDelegate(
-                        minHeight: SALAH_ACTIONS_HEIGHT,
-                        maxHeight: SALAH_ACTIONS_HEIGHT,
-                        child: FlipCard(
-                          flipOnTouch: false,
-                          controller: cflipCardLayl,
-                          direction: FlipDirection.HORIZONTAL,
-                          front:
-                              rowLayl(TOD.Middle_of_Night, pinnedLayl, false),
-                          back: rowLayl(TOD.Last_1__3_of_Night, false, true),
-                        ),
-                      ),
-                    ),
+                pinnedLayl,
+              ),
             if (c.showSunnahLayl) sliverSpaceHeader(pinnedLayl),
 
             /// Fillers:
             sliverSpaceHeader(true),
+            sliverSpaceHeaderFiller(),
+            sliverSpaceHeaderFiller(),
+            sliverSpaceHeaderFiller(),
             sliverSpaceHeaderFiller(),
             sliverSpaceHeaderFiller(),
             sliverSpaceHeaderFiller(),
@@ -887,6 +803,7 @@ class ActiveQuestsUI extends StatelessWidget {
                   ),
                   onTap: () => c.toggleFlipCard(flipCardController),
                 ),
+              const SizedBox(width: 10),
               Text(
                 isJummahMode ? 'Jummah' : tod.name(),
                 style: const TS(20.0, textColor),
@@ -948,6 +865,41 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   }
 }
 
+/// Used to Fill in the gaps that were between the salah row cells. Also, adds a
+/// border for nicer looks and returns a SliverPersistentHeader.
+class Sliv extends StatelessWidget {
+  const Sliv(this.widget, this.pinned);
+
+  final Widget widget;
+  final bool pinned;
+
+  @override
+  SliverPersistentHeader build(BuildContext context) {
+    return SliverPersistentHeader(
+      pinned: pinned,
+      delegate: _SliverAppBarDelegate(
+        minHeight: 64,
+        maxHeight: 64,
+        child: Container(
+          decoration: BoxDecoration(
+            color: pinned
+                ? Theme.of(context).scaffoldBackgroundColor
+                : AppThemes.unselected,
+            border: Border.all(
+              // selects entire salah row if pinned
+              color: pinned ? AppThemes.selected : Colors.grey.shade800,
+            ),
+            borderRadius: const BorderRadius.all(
+              Radius.circular(15.0),
+            ),
+          ),
+          child: widget,
+        ),
+      ),
+    );
+  }
+}
+
 /// T = Text Widget
 class T extends StatelessWidget {
   const T(this._text, this._textStyle);
@@ -961,18 +913,10 @@ class T extends StatelessWidget {
   }
 }
 
-// P = CELL PLACEMENT
-enum P {
-  S, // START
-  C, // CENTER
-  E, // END
-}
-
 class Cell extends StatelessWidget {
-  const Cell(this._cellPlacement, this._widget, this._pinned, this._quest,
+  const Cell(this._widget, this._pinned, this._quest,
       {this.flex = 1000, this.dis = false});
 
-  final P _cellPlacement; // true = start, false = center, null = end
   final Widget _widget;
   final bool _pinned;
   final QUEST _quest;
@@ -997,47 +941,37 @@ class Cell extends StatelessWidget {
           'widget': _widget,
           'pinned': _pinned,
         }),
-        child: ClipRRect(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(_cellPlacement == P.S ? 15.0 : 0),
-            bottomRight: Radius.circular(_cellPlacement == P.E ? 15.0 : 0),
+        child: Container(
+          decoration: BoxDecoration(
+            // color: _pinned
+            //     ? Theme.of(context).scaffoldBackgroundColor
+            //     : AppThemes.unselected,
+            border: // selects container around the current active quest
+                _pinned && ActiveQuestsAjrController.to.isQuestActive(_quest)
+                    ? Border.all(color: AppThemes.logoText)
+                    : null,
+            borderRadius: const BorderRadius.all(Radius.circular(15.0)),
           ),
-          child: Container(
-            decoration: BoxDecoration(
-              color: _pinned
-                  ? Theme.of(context).scaffoldBackgroundColor
-                  : AppThemes.unselected,
-              border:
-                  _pinned && ActiveQuestsAjrController.to.isQuestActive(_quest)
-                      ? Border.all(color: AppThemes.logoText)
-                      : null,
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(_cellPlacement == P.S ? 15.0 : 0),
-                bottomRight: Radius.circular(_cellPlacement == P.E ? 15.0 : 0),
-              ),
-            ),
-            child: Stack(
-              children: [
-                _actionWidget,
-                if (ActiveQuestsAjrController.to.isDone(_quest))
-                  const Center(
-                    child: Icon(Icons.check_outlined,
-                        size: 30, color: Colors.green),
-                  ),
-                if (ActiveQuestsAjrController.to.isSkip(_quest))
-                  const Center(
-                    child:
-                        Icon(Icons.redo_outlined, size: 20, color: Colors.red),
-                  ),
-                if (ActiveQuestsAjrController.to.isMiss(_quest))
-                  const Center(
-                    child:
-                        Icon(Icons.close_outlined, size: 20, color: Colors.red),
-                  ),
-              ],
-            ),
-            //child: AvatarGlow(endRadius: 100.0, showTwoGlows: true, glowColor: const Color(0xFFFFD700), duration: Duration(milliseconds: 1000), //shape: CircleBorder(),child: HeartBeat(beatsPerMinute: 120,//radius: 100,child: Text('Duha',style: actionDuhaTextStyle,),),
+          child: Stack(
+            children: [
+              _actionWidget,
+              if (ActiveQuestsAjrController.to.isDone(_quest))
+                const Center(
+                  child:
+                      Icon(Icons.check_outlined, size: 30, color: Colors.green),
+                ),
+              if (ActiveQuestsAjrController.to.isSkip(_quest))
+                const Center(
+                  child: Icon(Icons.redo_outlined, size: 20, color: Colors.red),
+                ),
+              if (ActiveQuestsAjrController.to.isMiss(_quest))
+                const Center(
+                  child:
+                      Icon(Icons.close_outlined, size: 20, color: Colors.red),
+                ),
+            ],
           ),
+          //child: AvatarGlow(endRadius: 100.0, showTwoGlows: true, glowColor: const Color(0xFFFFD700), duration: Duration(milliseconds: 1000), //shape: CircleBorder(),child: HeartBeat(beatsPerMinute: 120,//radius: 100,child: Text('Duha',style: actionDuhaTextStyle,),),
         ),
       ),
     );
