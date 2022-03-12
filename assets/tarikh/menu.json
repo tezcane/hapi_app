@@ -14,7 +14,7 @@
             {
                 "start": -4625000000,
                 "end": -4560000000,
-                "label": "Birth of the Sun"
+                "label": "Sun is Born"
             },
             {
                 "start": -4520000000,
@@ -77,7 +77,7 @@
             {
                 "start": 1620,
                 "end": 1824,
-                "label": "Newton's Theory of Gravity"
+                "label": "Newton and Gravity"
             },
             {
                 "start": 1852,
@@ -92,12 +92,12 @@
             {
                 "start": 1910,
                 "end": 1917,
-                "label": "World War I"
+                "label": "World War 1"
             },
             {
                 "start": 1930,
                 "end": 1955,
-                "label": "World War II"
+                "label": "World War 2"
             },
             {
                 "start": 1956,
