@@ -3,19 +3,19 @@
 		"date": -13800000000,
 		"label": "Big Bang",
 		"article":"big_bang.txt",
-		"background": [0, 38, 75],
 		"accent": [246, 76, 130],
-		"ticks": 
-		{
-			"background": [20, 57, 92, 240],
-			"long": [255, 255, 255, 75],
-			"short": [255, 255, 255, 51],
-			"text": [255, 255, 255, 157]
-		},
-		"header": 
-		{
-			"background": [11, 47, 81, 94],
-			"text": [255, 255, 255, 157]
+		"timelineColors": {
+			"background": [0, 38, 75],
+			"ticks": {
+				"background": [20, 57, 92, 240],
+				"long": [255, 255, 255, 75],
+				"short": [255, 255, 255, 51],
+				"text": [255, 255, 255, 157]
+			},
+			"header": {
+				"background": [11, 47, 81, 94],
+				"text": [255, 255, 255, 157]
+			}
 		},
 		"asset": 
 		{
@@ -91,20 +91,19 @@
 		"start": -4000000000,
 		"label": "Life on Earth",
 		"article": "life_on_earth.txt",
-		"background": [31, 89, 143],
-		"ticks": 
-		{
-			"background": [27, 79, 128, 240],
-			"long": [255, 255, 255, 75],
-			"short": [255, 255, 255, 51],
-			"text": [255, 255, 255, 157]
+		"timelineColors": {
+			"background": [31, 89, 143],
+			"ticks": {
+				"background": [27, 79, 128, 240],
+				"long": [255, 255, 255, 75],
+				"short": [255, 255, 255, 51],
+				"text": [255, 255, 255, 157]
+			},
+			"header": {
+				"background": [27, 79, 128, 240],
+				"text": [255, 255, 255, 157]
+			}
 		},
-		"header": 
-		{
-			"background": [27, 79, 128, 240],
-			"text": [255, 255, 255, 157]
-		},
-
 		"asset": 
 		{
 			"source": "HeavyBombardment.flr",
@@ -140,19 +139,19 @@
 			"offset": -100,
 			"bounds":[0.0, 0.0, 814.0, 664.0]
 		},
-		"background": [132, 175, 214],
 		"accent": [55, 134, 222],
-		"ticks": 
-		{
-			"background": [113, 152, 188, 240],
-			"long": [255, 255, 255, 75],
-			"short": [255, 255, 255, 51],
-			"text": [255, 255, 255, 157]
-		},
-		"header": 
-		{
-			"background": [113, 152, 188, 240],
-			"text": [255, 255, 255, 157]
+		"timelineColors": {
+			"background": [132, 175, 214],
+			"ticks": {
+				"background": [113, 152, 188, 240],
+				"long": [255, 255, 255, 75],
+				"short": [255, 255, 255, 51],
+				"text": [255, 255, 255, 157]
+			},
+			"header": {
+				"background": [113, 152, 188, 240],
+				"text": [255, 255, 255, 157]
+			}
 		}
 	},
 	{
@@ -266,9 +265,21 @@
 		"start": -6000000,
 		"label": "Humans",
 		"article":"humans.txt",
-		"background": [255, 255, 255],
 		"accent": [202, 79, 63],
-		"asset": 
+		"timelineColors": {
+			"background": [255, 255, 255],
+			"ticks": {
+				"background": [245, 245, 245, 240],
+				"long": [0, 0, 0, 60],
+				"short": [0, 0, 0, 35],
+				"text": [0, 0, 0, 110]
+			},
+			"header": {
+				"background": [245, 245, 245, 240],
+				"text": [0, 0, 0, 110]
+			}
+		},
+		"asset":
 		{
 			"source": "humans.flr",
 			"width": 1068,
@@ -276,18 +287,6 @@
 			"offset": 0,
 			"bounds":[-534,-670,1602,670],
 			"idle":["human_1", "human_2", "human_3", "human_4", "human_5"]
-		},
-		"ticks": 
-		{
-			"background": [245, 245, 245, 240],
-			"long": [0, 0, 0, 60],
-			"short": [0, 0, 0, 35],
-			"text": [0, 0, 0, 110]
-		},
-		"header": 
-		{
-			"background": [245, 245, 245, 240],
-			"text": [0, 0, 0, 110]
 		}
 	},
 	{

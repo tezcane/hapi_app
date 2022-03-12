@@ -204,17 +204,18 @@ class TimelineRenderObject extends RenderBox {
     List<TimelineBackgroundColor> backgroundColors = t.backgroundColors;
     ui.Paint? backgroundPaint;
     if (backgroundColors.isNotEmpty) {
-      double rangeStart = backgroundColors.first.start;
-      double range = backgroundColors.last.start - backgroundColors.first.start;
+      double rangeStart = backgroundColors.first.startMs;
+      double range =
+          backgroundColors.last.startMs - backgroundColors.first.startMs;
       List<ui.Color> colors = <ui.Color>[];
       List<double> stops = <double>[];
       for (TimelineBackgroundColor bg in backgroundColors) {
         colors.add(bg.color);
-        stops.add((bg.start - rangeStart) / range);
+        stops.add((bg.startMs - rangeStart) / range);
       }
       double s = t.computeScale(t.renderStart, t.renderEnd);
-      double y1 = (backgroundColors.first.start - t.renderStart) * s;
-      double y2 = (backgroundColors.last.start - t.renderStart) * s;
+      double y1 = (backgroundColors.first.startMs - t.renderStart) * s;
+      double y2 = (backgroundColors.last.startMs - t.renderStart) * s;
 
       /// Fill Background.
       backgroundPaint = ui.Paint()
@@ -448,7 +449,7 @@ class TimelineRenderObject extends RenderBox {
     canvas.save();
     canvas.clipRect(Rect.fromLTWH(
         offset.dx, offset.dy + topOverlap, size.width, size.height));
-    _ticks.paint(context, offset, -renderStart * scale, scale, size.height, t);
+    _ticks.paint(context, offset, -renderStart * scale, scale, size.height);
     canvas.restore();
 
     /// And then draw the rest of the timeline.
@@ -703,13 +704,13 @@ class TimelineRenderObject extends RenderBox {
       List<TimelineEntry> nearbyEvents = List<TimelineEntry>.from(events);
       double mid = t.renderStart + (t.renderEnd - t.renderStart) / 2.0;
       nearbyEvents.sort((TimelineEntry a, TimelineEntry b) {
-        return (a.start - mid).abs().compareTo((b.start - mid).abs());
+        return (a.startMs - mid).abs().compareTo((b.startMs - mid).abs());
       });
 
       /// layout events.
       for (int i = 0; i < nearbyEvents.length; i++) {
         TimelineEntry event = nearbyEvents[i];
-        double y = ((event.start - t.renderStart) * scale).clamp(
+        double y = ((event.startMs - t.renderStart) * scale).clamp(
             offset.dy +
                 eventRadius +
                 padEvents +
@@ -923,7 +924,7 @@ class TimelineRenderObject extends RenderBox {
                       fontSize: 10.0))
                 ..pushStyle(ui.TextStyle(color: Colors.white));
 
-              int value = (event.start - previous.start).round().abs();
+              int value = (event.startMs - previous.startMs).round().abs();
               String label;
               if (value < 9000) {
                 label = value.toStringAsFixed(0);

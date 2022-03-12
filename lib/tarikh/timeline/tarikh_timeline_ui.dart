@@ -62,7 +62,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   String _eraName = '';
 
   Color? _headerTextColor;
-  Color? _headerBackgroundColor; // TODO should we delete?
+  //Color? _headerBackgroundColor; // CAN DO: cleanup/reuse for other coloring
 
   /// Tez was originally not here, good to have:
   @override
@@ -88,7 +88,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     t.onHeaderColorsChanged = (Color background, Color text) {
       setState(() {
         _headerTextColor = text;
-        _headerBackgroundColor = background;
+        //_headerBackgroundColor = background;
       });
     };
 
@@ -102,15 +102,15 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     if (t.headerTextColor != null) {
       _headerTextColor = t.headerTextColor!;
     } else {
-      // _headerTextColor = null; // TODO
+      _headerTextColor = null;
     }
-    if (t.headerBackgroundColor != null) {
-      _headerBackgroundColor = t.headerBackgroundColor!;
-    } else {
-      // _headerBackgroundColor = null; // TODO
-    }
+    // if (t.headerBackgroundColor != null) {
+    //   _headerBackgroundColor = t.headerBackgroundColor!;
+    // } else {
+    //   _headerBackgroundColor = null;
+    // }
 
-    // Timer(Duration(milliseconds: 2000), //TODO i think this was always commented
+    // Timer(Duration(milliseconds: 2000), //Tez: I think this was always commented
     //     () => _tapUp(new TapUpDetails(kind: PointerDeviceKind.values[0])));
 
     super.initState();
@@ -230,13 +230,13 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
       print('Timeline: didUpdateWidget true');
       setState(() {
         _headerTextColor = t.headerTextColor;
-        _headerBackgroundColor = t.headerBackgroundColor;
+        // _headerBackgroundColor = t.headerBackgroundColor;
       });
 
       t.onHeaderColorsChanged = (Color background, Color text) {
         setState(() {
           _headerTextColor = text;
-          _headerBackgroundColor = background;
+          // _headerBackgroundColor = background;
         });
       };
       t.onEraChanged = (TimelineEntry? entry) {

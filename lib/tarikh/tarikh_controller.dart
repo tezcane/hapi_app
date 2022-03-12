@@ -54,6 +54,13 @@ class TarikhController extends GetxHapi {
   final List<TimelineEntry> _allEvents = [];
   List<TimelineEntry> get allEvents => _allEvents;
 
+  /// A [Map] is used to optimize retrieval times when checking if a favorite
+  /// is already present - in fact the label's used as the key.
+  /// Checking if an element is in the map is O(1), making this process O(n)
+  /// with n entries.
+  final Map<String, TimelineEntry> _entriesMap = {};
+  Map<String, TimelineEntry> get entriesMap => _entriesMap;
+
   /// Turn timeline gutter off/show favorites/show all history:
   final Rx<GutterMode> _gutterMode = GutterMode.OFF.obs;
   GutterMode get gutterMode => _gutterMode.value;
@@ -79,9 +86,14 @@ class TarikhController extends GetxHapi {
 
     t.loadFromBundle().then(
       (List<TimelineEntry> entries) {
+        for (TimelineEntry entry in entries) {
+          _entriesMap.putIfAbsent(entry.label, () => entry);
+          _allEvents.add(entry); // sort is probably needed
+        }
+
         t.setViewport(
-          start: entries.first.start * 2.0,
-          end: entries.first.start,
+          start: entries.first.startMs * 2.0,
+          end: entries.first.startMs,
           animate: true,
         );
 
@@ -93,10 +105,6 @@ class TarikhController extends GetxHapi {
 
         /// ...and initialize the [SearchManager].
         SearchManager.init(entries);
-
-        // /// initialize up down buttons
-        // timeBtnUp.value = getTimeBtn(t.prevEntry, t.prevEntryOpacity);
-        // timeBtnDn.value = getTimeBtn(t.nextEntry, t.nextEntryOpacity);
       },
     );
   }
@@ -106,16 +114,6 @@ class TarikhController extends GetxHapi {
   /// use those references to fill [_favorites].
   initFavorites(List<TimelineEntry> entries) async {
     List<dynamic>? favs = s.read("TARIKH_FAVS");
-
-    /// A [Map] is used to optimize retrieval times when checking if a favorite
-    /// is already present - in fact the label's used as the key.
-    /// Checking if an element is in the map is O(1), making this process O(n)
-    /// with n entries.
-    Map<String, TimelineEntry> entriesMap = {};
-    for (TimelineEntry entry in entries) {
-      entriesMap.putIfAbsent(entry.label, () => entry);
-      _allEvents.add(entry); // TODO sort this needed? being done in paint...
-    }
 
     if (favs != null) {
       for (String fav in favs) {
@@ -128,7 +126,7 @@ class TarikhController extends GetxHapi {
 
     /// Sort by starting time, so the favorites' list is always displayed in ascending order.
     _favorites.sort((TimelineEntry a, TimelineEntry b) {
-      return a.start.compareTo(b.start);
+      return a.startMs.compareTo(b.startMs);
     });
   }
 
@@ -137,7 +135,7 @@ class TarikhController extends GetxHapi {
     if (!_favorites.contains(e)) {
       _favorites.add(e);
       _favorites.sort((TimelineEntry a, TimelineEntry b) {
-        return a.start.compareTo(b.start);
+        return a.startMs.compareTo(b.startMs);
       });
       _saveFavorites();
     }
@@ -195,7 +193,7 @@ class TarikhController extends GetxHapi {
 
       //was t.renderEnd, had 'page away 0' at bottom page edge, now in middle:
       double pageReference = (t.renderStart + t.renderEnd) / 2.0;
-      double timeUntilDouble = entry.start - pageReference;
+      double timeUntilDouble = entry.startMs - pageReference;
       timeUntil = TimelineEntry.formatYears(timeUntilDouble).toLowerCase();
 
       double pageSize = t.renderEnd - t.renderStart;

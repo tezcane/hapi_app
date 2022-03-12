@@ -65,15 +65,15 @@ class MenuItemData {
     double start = 0;
     double end = 0;
     if (entry.type == TimelineEntryType.Era) {
-      start = entry.start;
-      end = entry.end;
+      start = entry.startMs;
+      end = entry.endMs;
     } else {
       /// No need to pad here as we are centering on a single item.
       double rangeBefore = double.maxFinite;
       for (TimelineEntry? prev = entry.previous;
           prev != null;
           prev = prev.previous) {
-        double diff = entry.start - prev.start;
+        double diff = entry.startMs - prev.startMs;
         if (diff > 0.0) {
           rangeBefore = diff;
           break;
@@ -82,15 +82,15 @@ class MenuItemData {
 
       double rangeAfter = double.maxFinite;
       for (TimelineEntry? next = entry.next; next != null; next = next.next!) {
-        double diff = next.start - entry.start;
+        double diff = next.startMs - entry.startMs;
         if (diff > 0.0) {
           rangeAfter = diff;
           break;
         }
       }
       double range = min(rangeBefore, rangeAfter) / 2.0;
-      start = entry.start;
-      end = entry.end + range;
+      start = entry.startMs;
+      end = entry.endMs + range;
     }
 
     var menuItemData = MenuItemData(label, start, end);

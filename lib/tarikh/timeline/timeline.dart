@@ -131,6 +131,7 @@ class Timeline {
   /// The list of [TimelineAsset], also loaded from disk at boot.
   List<TimelineAsset> _renderedAssets = [];
 
+  /// This is a special feature to play a particular part of an animation
   final Map<String, TimelineEntry> _entriesById = {};
   final Map<String, nima.FlutterActor> _nimaResources = {};
   final Map<String, flare.FlutterActor> _flareResources = {};
@@ -166,8 +167,8 @@ class Timeline {
   bool get isActive => _isActive;
 
   Color? get headerTextColor => _headerTextColor;
-  Color? get headerBackgroundColor => _headerBackgroundColor;
-  HeaderColors? get currentHeaderColors => _currentHeaderColors;
+  // Color? get headerBackgroundColor => _headerBackgroundColor;
+  // HeaderColors? get currentHeaderColors => _currentHeaderColors;
 
   List<TimelineBackgroundColor> get backgroundColors => _backgroundColors;
   List<TickColors> get tickColors => _tickColors;
@@ -524,6 +525,9 @@ class Timeline {
 
     final List<TimelineEntry> allEntries = [];
 
+    // late because being lazy:
+    // late TimelineEntryColors timelineEntryColors;
+
     /// The JSON decode doesn't provide strong typing, so we'll iterate
     /// on the dynamic entries in the [jsonEntries] list.
     for (Map map in jsonEntries) {
@@ -536,15 +540,15 @@ class Timeline {
       /// These entries specify a particular event such as the appearance of
       /// "Humans" in history, which hasn't come to an end -- yet.
       TimelineEntryType type;
-      double start;
+      double startMs;
       if (map.containsKey("date")) {
         type = TimelineEntryType.Incident;
         dynamic date = map["date"];
-        start = date is int ? date.toDouble() : date;
+        startMs = date is int ? date.toDouble() : date;
       } else {
         type = TimelineEntryType.Era;
         dynamic startVal = map["start"];
-        start = startVal is int ? startVal.toDouble() : startVal;
+        startMs = startVal is int ? startVal.toDouble() : startVal;
       }
 
       /// Some elements will have an `end` time specified.
@@ -552,24 +556,66 @@ class Timeline {
       /// on the type of the event:
       /// - Eras use the current year as an end time.
       /// - Other entries are just single points in time (start == end).
-      double end;
+      double endMs;
       if (map.containsKey("end")) {
         dynamic endVal = map["end"];
-        end = endVal is int ? endVal.toDouble() : endVal;
+        endMs = endVal is int ? endVal.toDouble() : endVal;
       } else if (type == TimelineEntryType.Era) {
         // TODO where timeline eras stretch to future?
-        end = (await TimeController.to.now()).year.toDouble() * 10.0;
+        endMs = (await TimeController.to.now()).year.toDouble() * 10.0;
       } else {
-        end = start;
+        endMs = startMs;
       }
 
       String articleFilename = map["article"];
 
+      /// Get Timeline Color Setup:
+      // bool drawGradient = true;
+      if (map.containsKey('timelineColors')) {
+        // drawGradient = false;
+
+        var timelineColors = map['timelineColors'];
+
+        /// If a custom background color for this [TimelineEntry] is specified,
+        /// extract its RGB values and save them for reference, along with the
+        /// starting date of the current entry.
+        var timelineBackgroundColor = TimelineBackgroundColor(
+          colorFromList(timelineColors["background"]),
+          startMs,
+        );
+        _backgroundColors.add(timelineBackgroundColor);
+
+        /// [Ticks] can also have custom colors, so that everything's is visible
+        /// even with custom colored backgrounds.
+        var tickColors = TickColors(
+          colorFromList(timelineColors["ticks"], key: "background"),
+          colorFromList(timelineColors["ticks"], key: "long"),
+          colorFromList(timelineColors["ticks"], key: "short"),
+          colorFromList(timelineColors["ticks"], key: "text"),
+          startMs,
+        );
+        _tickColors.add(tickColors);
+
+        /// If a `header` element is present, de-serialize the colors for it too.
+        var headerColors = HeaderColors(
+          colorFromList(timelineColors["header"], key: "background"),
+          colorFromList(timelineColors["header"], key: "text"),
+          startMs,
+        );
+        _headerColors.add(headerColors);
+
+        // timelineEntryColors = TimelineEntryColors(
+        //   timelineBackgroundColor,
+        //   tickColors,
+        //   headerColors,
+        //   // tapTarget, TODO
+        // );
+      }
+
       /// OPTIONAL FIELD 1 of 2: An accent color is also specified at times.
       Color? accent;
       if (map.containsKey("accent")) {
-        List<int> ac = map["accent"].cast<int>();
-        accent = Color.fromARGB(255, ac[0], ac[1], ac[2]);
+        accent = colorFromList(map["accent"]);
       }
 
       /// OPTIONAL FIELD 2 of 2: Some entries will also have an id
@@ -578,13 +624,22 @@ class Timeline {
         id = map["id"];
       }
 
-      /// DO THIS LAST SINCE IT IS VERY INVOLVED:
       /// Get flare/nima/image asset object
       TimelineAsset asset = await getTimelineAsset(map["asset"]);
 
       /// Finally create TimeLineEntry object
       var timelineEntry = TimelineEntry(
-          label, type, start, end, articleFilename, asset, accent, id);
+        label,
+        type,
+        startMs,
+        endMs,
+        articleFilename,
+        asset,
+        // timelineEntryColors, // if not in json map, uses last built one
+        // drawGradient, // used to draw gradient off of timelineEntryColors
+        accent,
+        id,
+      );
 
       /// Add TimelineEntry reference 1 of 2:
       asset.entry = timelineEntry; // can only do this once
@@ -596,57 +651,16 @@ class Timeline {
 
       /// Add this entry to the list.
       allEntries.add(timelineEntry);
-
-      /// TimelineEntry Object setup is done, now setup other timeline items:
-
-      /// If a custom background color for this [TimelineEntry] is specified,
-      /// extract its RGB values and save them for reference, along with the starting
-      /// date of the current entry.
-      if (map.containsKey("background")) {
-        List<int> bg = map["background"].cast<int>();
-        _backgroundColors.add(TimelineBackgroundColor(
-            Color.fromARGB(255, bg[0], bg[1], bg[2]), start));
-      }
-
-      /// [Ticks] can also have custom colors, so that everything's is visible
-      /// even with custom colored backgrounds.
-      if (map.containsKey("ticks")) {
-        Map ticks = map["ticks"];
-
-        List<int> bg = ticks["background"].cast<int>();
-        Color bgColor = Color.fromARGB(bg[3], bg[0], bg[1], bg[2]);
-        List<int> ln = ticks["long"].cast<int>();
-        Color lgColor = Color.fromARGB(ln[3], ln[0], ln[1], ln[2]);
-        List<int> sh = ticks["short"].cast<int>();
-        Color shColor = Color.fromARGB(sh[3], sh[0], sh[1], sh[2]);
-        List<int> tx = ticks["text"].cast<int>();
-        Color txColor = Color.fromARGB(tx[3], tx[0], tx[1], tx[2]);
-
-        _tickColors
-            .add(TickColors(bgColor, lgColor, shColor, txColor, start, 0.0));
-      }
-
-      /// If a `header` element is present, de-serialize the colors for it too.
-      if (map.containsKey("header")) {
-        Map header = map["header"];
-
-        List<int> bg = header["background"].cast<int>();
-        Color bgColor = Color.fromARGB(bg[3], bg[0], bg[1], bg[2]);
-        List<int> tx = header["text"].cast<int>();
-        Color txColor = Color.fromARGB(tx[3], tx[0], tx[1], tx[2]);
-
-        _headerColors.add(HeaderColors(bgColor, txColor, start, 0.0));
-      }
     }
 
     /// sort the full list so they are in order of oldest to newest
     allEntries.sort((TimelineEntry a, TimelineEntry b) {
-      return a.start.compareTo(b.start);
+      return a.startMs.compareTo(b.startMs);
     });
 
     _backgroundColors
         .sort((TimelineBackgroundColor a, TimelineBackgroundColor b) {
-      return a.start.compareTo(b.start);
+      return a.startMs.compareTo(b.startMs);
     });
 
     _timeMin = double.maxFinite;
@@ -658,11 +672,11 @@ class Timeline {
     /// placed into the Eras they belong to).
     TimelineEntry? previous;
     for (TimelineEntry entry in allEntries) {
-      if (entry.start < _timeMin) {
-        _timeMin = entry.start;
+      if (entry.startMs < _timeMin) {
+        _timeMin = entry.startMs;
       }
-      if (entry.end > _timeMax) {
-        _timeMax = entry.end;
+      if (entry.endMs > _timeMax) {
+        _timeMax = entry.endMs;
       }
       if (previous != null) {
         previous.next = entry;
@@ -674,8 +688,8 @@ class Timeline {
       double minDistance = double.maxFinite;
       for (TimelineEntry checkEntry in allEntries) {
         if (checkEntry.type == TimelineEntryType.Era) {
-          double distance = entry.start - checkEntry.start;
-          double distanceEnd = entry.start - checkEntry.end;
+          double distance = entry.startMs - checkEntry.startMs;
+          double distanceEnd = entry.startMs - checkEntry.endMs;
           if (distance > 0 && distanceEnd < 0 && distance < minDistance) {
             minDistance = distance;
             parent = checkEntry;
@@ -737,6 +751,20 @@ class Timeline {
       _lastFrameTime = 0.0;
       SchedulerBinding.instance!.scheduleFrameCallback(beginFrame);
     }
+  }
+
+  Color colorFromList(colorList, {String key = ""}) {
+    if (key != "") {
+      colorList = colorList[key];
+    }
+    List<int> bg = colorList.cast<int>();
+
+    int bg3 = 0xFF; // 255 (no opacity)
+    if (bg.length == 4) {
+      bg3 = bg[3];
+    }
+
+    return Color.fromARGB(bg3, bg[0], bg[1], bg[2]);
   }
 
   /// This method bounds the current viewport depending on the current start and end positions.
@@ -947,21 +975,21 @@ class Timeline {
 
     /// Update color screen positions.
     if (_tickColors.isNotEmpty) {
-      double lastStart = _tickColors.first.start;
+      double lastStart = _tickColors.first.startMs;
       for (TickColors color in _tickColors) {
         color.screenY =
-            (lastStart + (color.start - lastStart / 2.0) - _renderStart) *
+            (lastStart + (color.startMs - lastStart / 2.0) - _renderStart) *
                 scale;
-        lastStart = color.start;
+        lastStart = color.startMs;
       }
     }
     if (_headerColors.isNotEmpty) {
-      double lastStart = _headerColors.first.start;
+      double lastStart = _headerColors.first.startMs;
       for (HeaderColors color in _headerColors) {
         color.screenY =
-            (lastStart + (color.start - lastStart / 2.0) - _renderStart) *
+            (lastStart + (color.startMs - lastStart / 2.0) - _renderStart) *
                 scale;
-        lastStart = color.start;
+        lastStart = color.startMs;
       }
     }
 
@@ -1105,9 +1133,10 @@ class Timeline {
     for (int i = 0; i < items.length; i++) {
       TimelineEntry item = items[i];
 
-      double start = item.start - _renderStart;
-      double end =
-          item.type == TimelineEntryType.Era ? item.end - _renderStart : start;
+      double start = item.startMs - _renderStart;
+      double end = item.type == TimelineEntryType.Era
+          ? item.endMs - _renderStart
+          : start;
 
       /// Vertical position for this element.
       double y = start * scale; // +pad;

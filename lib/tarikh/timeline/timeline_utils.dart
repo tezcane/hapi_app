@@ -53,29 +53,42 @@ String getFileExtension(String filename) {
 //   return filename.substring(0, dot);
 // }
 
+// class TimelineEntryColors {
+//   TimelineEntryColors(
+//     this.timelineBackgroundColor,
+//     this.tickColors,
+//     this.headerColors,
+//     //this.tapTarget,
+//   );
+//
+//   final TimelineBackgroundColor timelineBackgroundColor;
+//   final TickColors tickColors;
+//   final HeaderColors headerColors;
+//   // final TapTarget tapTarget;
+// }
+
 class TimelineBackgroundColor {
-  TimelineBackgroundColor(this.color, this.start);
+  TimelineBackgroundColor(this.color, this.startMs);
   final Color color;
-  final double start;
+  final double startMs;
 }
 
 class TickColors {
-  TickColors(this.background, this.long, this.short, this.text, this.start,
-      this.screenY);
+  TickColors(this.background, this.long, this.short, this.text, this.startMs);
   final Color background;
   final Color long;
   final Color short;
   final Color text;
-  final double start;
-  double screenY;
+  final double startMs;
+  double screenY = 0.0;
 }
 
 class HeaderColors {
-  HeaderColors(this.background, this.text, this.start, this.screenY);
+  HeaderColors(this.background, this.text, this.startMs);
   final Color background;
   final Color text;
-  final double start;
-  double screenY;
+  final double startMs;
+  double screenY = 0.0;
 }
 
 class TapTarget {

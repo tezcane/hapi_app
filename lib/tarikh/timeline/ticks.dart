@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
 import 'package:hapi/tarikh/timeline/timeline_utils.dart';
 import 'package:intl/intl.dart';
@@ -25,7 +26,9 @@ class Ticks {
   /// other relevant sizing information is passed to this `paint()` method, as well as
   /// a reference to the [Timeline].
   void paint(PaintingContext context, Offset offset, double translation,
-      double scale, double height, Timeline timeline) {
+      double scale, double height) {
+    Timeline t = TarikhController.t;
+
     final Canvas canvas = context.canvas;
 
     double bottom = height;
@@ -34,7 +37,7 @@ class Ticks {
 
     /// The width of the left panel can expand and contract if the favorites-view is activated,
     /// by pressing the button on the top-right corner of the timeline.
-    double gutterWidth = timeline.gutterWidth;
+    double gutterWidth = t.gutterWidth;
 
     /// Calculate spacing based on current scale
     double scaledTickDistance = tickDistance * scale;
@@ -72,23 +75,22 @@ class Ticks {
     /// Ticks can change color because the timeline background will also change color
     /// depending on the current era. The [TickColors] object, in `timeline_utils.dart`,
     /// wraps this information.
-    List<TickColors>? tickColors = timeline.tickColors;
-    if (tickColors != null && tickColors.isNotEmpty) {
+    List<TickColors> tickColors = t.tickColors;
+    if (tickColors.isNotEmpty) {
       /// Build up the color stops for the linear gradient.
-      double rangeStart = tickColors.first.start;
-      double range = tickColors.last.start - tickColors.first.start;
+      double rangeStart = tickColors.first.startMs;
+      double range = tickColors.last.startMs - tickColors.first.startMs;
       List<ui.Color> colors = <ui.Color>[];
       List<double> stops = <double>[];
       for (TickColors bg in tickColors) {
         colors.add(bg.background);
-        stops.add((bg.start - rangeStart) / range);
+        stops.add((bg.startMs - rangeStart) / range);
       }
-      double s =
-          timeline.computeScale(timeline.renderStart, timeline.renderEnd);
+      double s = t.computeScale(t.renderStart, t.renderEnd);
 
       /// y-coordinate for the starting and ending element.
-      double y1 = (tickColors.first.start - timeline.renderStart) * s;
-      double y2 = (tickColors.last.start - timeline.renderStart) * s;
+      double y1 = (tickColors.first.startMs - t.renderStart) * s;
+      double y2 = (tickColors.last.startMs - t.renderStart) * s;
 
       /// Fill Background.
       ui.Paint paint = ui.Paint()
@@ -127,7 +129,7 @@ class Ticks {
       int tt = startingTickMarkValue.round();
       tt = -tt;
       int o = tickOffset.floor();
-      TickColors? colors = timeline.findTickColors(offset.dy + height - o);
+      TickColors? colors = t.findTickColors(offset.dy + height - o);
       if (tt % textTickDistance == 0) {
         /// Every `textTickDistance`, draw a wider tick with the a label laid on top.
         if (colors != null) {

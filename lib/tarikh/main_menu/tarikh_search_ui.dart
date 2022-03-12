@@ -67,7 +67,7 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
 
     /// Sort by starting time, so the search list is always displayed in ascending order.
     searchResult.sort((TimelineEntry a, TimelineEntry b) {
-      return a.start.compareTo(b.start);
+      return a.startMs.compareTo(b.startMs);
     });
 
     return searchResult;

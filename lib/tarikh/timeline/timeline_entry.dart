@@ -167,8 +167,8 @@ class TimelineEntry {
   TimelineEntry(
     this._label,
     this.type,
-    this.start,
-    this.end,
+    this.startMs,
+    this.endMs,
     this.articleFilename,
     this.asset,
     this.accent,
@@ -179,8 +179,8 @@ class TimelineEntry {
 
   final String _label;
   final TimelineEntryType type;
-  final double start;
-  final double end;
+  final double startMs;
+  final double endMs;
   final String articleFilename;
   final TimelineAsset asset;
 
@@ -248,16 +248,16 @@ class TimelineEntry {
 
   /// Pretty-printing for the entry date.
   String formatYearsAgo() {
-    if (start > 0) {
-      return start.round().toString();
+    if (startMs > 0) {
+      return startMs.round().toString();
     }
-    return TimelineEntry.formatYears(start) + " Ago";
+    return TimelineEntry.formatYears(startMs) + " Ago";
   }
 
   /// Debug information.
   @override
   String toString() {
-    return "TIMELINE ENTRY: $label -($start,$end)";
+    return "TIMELINE ENTRY: $label -($startMs,$endMs)";
   }
 
   /// Helper method.
