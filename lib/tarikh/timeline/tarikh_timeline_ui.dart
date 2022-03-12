@@ -6,7 +6,6 @@ import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 import 'package:hapi/tarikh/article/tarikh_article_ui.dart';
-import 'package:hapi/tarikh/colors.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
@@ -577,8 +576,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                     style: TextStyle(
                       fontFamily: "RobotoMedium",
                       fontSize: 20.0,
-                      color: _headerTextColor ??
-                          darkText.withOpacity(darkText.opacity * 0.75),
+                      color: _headerTextColor ?? AppThemes.colorDarkText,
                     ),
                   ),
                 ),

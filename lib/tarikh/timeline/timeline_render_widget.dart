@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flare_dart/math/aabb.dart' as flare;
 import 'package:flutter/material.dart';
-import 'package:hapi/tarikh/colors.dart';
+import 'package:hapi/settings/theme/app_themes.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/ticks.dart';
@@ -680,11 +680,11 @@ class TimelineRenderObject extends RenderBox {
 
     if (!cTrkh.isGutterModeOff() && events.isNotEmpty) {
       Paint accentPaint = Paint()
-        ..color = eventsGutterAccent
+        ..color = AppThemes.eventsGutterAccent
         ..style = PaintingStyle.stroke
         ..strokeWidth = 2.0;
       Paint accentFill = Paint()
-        ..color = eventsGutterAccent
+        ..color = AppThemes.eventsGutterAccent
         ..style = PaintingStyle.fill;
       Paint whitePaint = Paint()..color = Colors.white;
       double scale = t.computeScale(t.renderStart, t.renderEnd);
