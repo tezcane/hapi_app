@@ -13,6 +13,9 @@ class AppThemes {
 
   static const Color hyperlink = Color.fromRGBO(0x10, 0x57, 0xE3, 1);
 
+  static const Color colorDarkText = Color.fromRGBO(0, 0, 0, 0.87);
+  static const Color eventsGutterAccent = Color.fromRGBO(229, 55, 108, 1.0);
+
   static const Color addIcon = Colors.green;
   static const Color checkComplete = Colors.green;
 
