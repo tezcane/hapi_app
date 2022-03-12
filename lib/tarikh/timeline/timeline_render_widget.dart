@@ -36,8 +36,8 @@ class TimelineRenderWidget extends LeafRenderObjectWidget {
   final MenuItemData focusItem;
   final TouchBubbleCallback touchBubble;
   final TouchEntryCallback touchEntry;
-  // TODO this is needed or good to have MAYBE?, but not used anywhere now
-  // Replaced old way of using timeline null checks
+
+  /// Tez: Replaced old way of using timeline null checks
   final bool needsRepaint;
 
   @override
@@ -62,7 +62,6 @@ class TimelineRenderWidget extends LeafRenderObjectWidget {
       ..needsRepaint = needsRepaint;
   }
 
-  // TODO needed?, was originally here:
   @override
   didUnmountRenderObject(covariant TimelineRenderObject renderObject) {
     TarikhController.t.isActive = false;
@@ -116,7 +115,7 @@ class TimelineRenderObject extends RenderBox {
     markNeedsLayout();
   }
 
-  //was set timeline(Timeline? value) TODO search old code of any usage of this
+  /// Tez: was set timeline(Timeline? value) TODO search old code of any usage of this
   set needsRepaint(bool value) {
     if (_needsRepaint == value) {
       return;
@@ -139,11 +138,10 @@ class TimelineRenderObject extends RenderBox {
 
   /// If [_focusItem] has been updated with a new value, update the current view.
   void updateFocusItem() {
-    // TODO asdf btn action here?
     if (_processedFocusItem == _focusItem) {
       return;
     }
-    // TODO was also checking timeline == null:
+    // Tez: was also checking timeline == null:
     if (_focusItem == null || topOverlap == 0.0) {
       return;
     }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/settings/theme/app_themes.dart';
 import 'package:hapi/tarikh/article/tarikh_article_ui.dart';
 import 'package:hapi/tarikh/colors.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
@@ -21,11 +22,17 @@ typedef SelectItemCallback = Function(TimelineEntry item);
 /// focus on when it's created.
 class TarikhTimelineUI extends StatefulWidget {
   TarikhTimelineUI() {
-    //TODO this must also set time up/dn btns:
     focusItem = Get.arguments['focusItem'];
+    entry = Get.arguments['entry'];
   }
 
+  /// focusItem may have a bigger time span (via menu.json) on the timeline
+  /// compared to loading just a single entry (from timeline.json).
   late final MenuItemData focusItem;
+
+  /// if null, we must lookup entry and then set up/dn btns manually
+  TimelineEntry? entry;
+
   final Timeline timeline =
       TarikhController.t; // TODO needed for widget update detect?
 
@@ -34,7 +41,7 @@ class TarikhTimelineUI extends StatefulWidget {
 }
 
 class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
-  static final Timeline t = TarikhController.t;
+  static final Timeline t = TarikhController.t; // used a lot so shorten it.
 
   // TODO fix shows anytime no era on timeline, should be blank or something like "Unnamed Era"
   static const String DefaultEraName = "Birth of the Universe";
@@ -58,15 +65,25 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   Color? _headerTextColor;
   Color? _headerBackgroundColor; // TODO should we delete?
 
-  // TODO needed? was originally not here:
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   t.isActive = false;
-  // }
+  /// Tez was originally not here, good to have:
+  @override
+  void dispose() {
+    super.dispose();
+    t.isActive = false;
+  }
 
   @override
   initState() {
+    if (widget.entry == null) {
+      // lookup entry manually since not provided on init
+      widget.entry = t.findEntry(widget.focusItem.label);
+
+      // We need entry just to update down/up past/future btns. Since it wasn't
+      // used/available/wanted? by the original caller to this class, we ignore
+      // the view/focusItem MenuItemData.fromEntry returns here:
+      MenuItemData.fromEntry(widget.entry!);
+    }
+
     t.isActive = true;
     _eraName = t.currentEra != null ? t.currentEra!.label : DefaultEraName;
     t.onHeaderColorsChanged = (Color background, Color text) {
@@ -94,10 +111,10 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
       // _headerBackgroundColor = null; // TODO
     }
 
-    super.initState();
-
-    // Timer(Duration(milliseconds: 2000),
+    // Timer(Duration(milliseconds: 2000), //TODO i think this was always commented
     //     () => _tapUp(new TapUpDetails(kind: PointerDeviceKind.values[0])));
+
+    super.initState();
   }
 
   /// The following three functions define are the callbacks used by the
@@ -270,7 +287,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
             FloatingActionButtonLocation.miniCenterDocked,
         floatingActionButton: GetBuilder<TarikhController>(
           builder: (c) {
-            const Color aqua = Color.fromRGBO(69, 211, 197, 1.0);
+            const Color fabTextColor = AppThemes.logoText;
             TimeBtn btnUp = c.timeBtnUp();
             TimeBtn btnDn = c.timeBtnDn();
             return Stack(
@@ -318,7 +335,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               child: Text(
                                 btnUp.title,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(color: aqua),
+                                style: const TextStyle(color: fabTextColor),
                               ),
                             ),
                             FittedBox(
@@ -326,7 +343,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               child: Text(
                                 btnUp.timeUntil,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(color: aqua),
+                                style: const TextStyle(color: fabTextColor),
                               ),
                             ),
                             Container(
@@ -343,7 +360,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               child: Text(
                                 btnUp.pageScrolls,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(color: aqua),
+                                style: const TextStyle(color: fabTextColor),
                               ),
                             ),
                             const SizedBox(height: 1.8),
@@ -361,7 +378,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               child: Text(
                                 btnDn.title,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(color: aqua),
+                                style: const TextStyle(color: fabTextColor),
                               ),
                             ),
                             FittedBox(
@@ -369,7 +386,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               child: Text(
                                 btnDn.timeUntil,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(color: aqua),
+                                style: const TextStyle(color: fabTextColor),
                               ),
                             ),
                             Container(
@@ -386,7 +403,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               child: Text(
                                 btnDn.pageScrolls,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(color: aqua),
+                                style: const TextStyle(color: fabTextColor),
                               ),
                             ),
                             const SizedBox(height: 1.8),

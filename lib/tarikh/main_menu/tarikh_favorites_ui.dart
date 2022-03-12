@@ -80,10 +80,10 @@ class TarikhFavoritesUI extends StatelessWidget {
                           hasDivider: idx != 0,
                           tapSearchResult: (TimelineEntry entry) {
                             MenuItemData item = MenuItemData.fromEntry(entry);
-
                             MenuController.to.pushSubPage(
-                                SubPage.Tarikh_Timeline,
-                                arguments: {'focusItem': item});
+                              SubPage.Tarikh_Timeline,
+                              arguments: {'focusItem': item, 'entry': entry},
+                            );
                           },
                         );
                       },

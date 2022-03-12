@@ -39,8 +39,11 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
   /// where to scroll to.
   navigateToTimeline(MenuItemData item) {
     TarikhController.to.pauseMenuSection();
-    MenuController.to
-        .pushSubPage(SubPage.Tarikh_Timeline, arguments: {'focusItem': item});
+
+    MenuController.to.pushSubPage(
+      SubPage.Tarikh_Timeline,
+      arguments: {'focusItem': item, 'entry': null}, // null= up/dn btns not set
+    );
   }
 
   @override

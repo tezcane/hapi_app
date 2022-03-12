@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
@@ -170,6 +171,40 @@ class Timeline {
 
   List<TimelineBackgroundColor> get backgroundColors => _backgroundColors;
   List<TickColors> get tickColors => _tickColors;
+
+  TimelineEntry findEntry(String label) {
+    // while (rootEntries.isEmpty) {
+    //   print(
+    //       'findEntry: rootEntries are not ready yet, sleep 1 sec and try again');
+    //   sleep(const Duration(seconds: 1));
+    // }
+
+    // make sure rootEntries is fully initialized TODO asdf fdsa rootEntries never populates
+    int rootEntriesSize = -1;
+    while (rootEntries.isEmpty || rootEntriesSize != rootEntries.length) {
+      rootEntriesSize = rootEntries.length;
+      print(
+          'findEntry: waiting for rootEntries to initialize, size=$rootEntriesSize');
+      sleep(const Duration(seconds: 1));
+    }
+
+    print('findEntry: rootEntries initialized, size=$rootEntriesSize');
+
+    TimelineEntry entry = rootEntries.first;
+
+    while (true) {
+      if (entry.label == label) {
+        break;
+      }
+      if (entry.next == null) {
+        print('Error: findEntry "$label" not found');
+        break;
+      }
+      entry = entry.next!;
+    }
+
+    return entry;
+  }
 
   /// When a scale operation is detected, this setter is called:
   /// e.g. [_TimelineWidgetState.scaleStart()].
