@@ -173,38 +173,19 @@ class Timeline {
   List<TimelineBackgroundColor> get backgroundColors => _backgroundColors;
   List<TickColors> get tickColors => _tickColors;
 
-  TimelineEntry findEntry(String label) {
-    // while (rootEntries.isEmpty) {
-    //   print(
-    //       'findEntry: rootEntries are not ready yet, sleep 1 sec and try again');
-    //   sleep(const Duration(seconds: 1));
-    // }
-
-    // make sure rootEntries is fully initialized TODO asdf fdsa rootEntries never populates
-    int rootEntriesSize = -1;
-    while (rootEntries.isEmpty || rootEntriesSize != rootEntries.length) {
-      rootEntriesSize = rootEntries.length;
-      print(
-          'findEntry: waiting for rootEntries to initialize, size=$rootEntriesSize');
-      sleep(const Duration(seconds: 1));
-    }
-
-    print('findEntry: rootEntries initialized, size=$rootEntriesSize');
-
-    TimelineEntry entry = rootEntries.first;
-
+  TimelineEntry findEvent(String label) {
     while (true) {
-      if (entry.label == label) {
-        break;
+      Map<String, TimelineEntry> eventMap = TarikhController.to.eventMap;
+      if (eventMap.containsKey(label)) {
+        return eventMap[label]!;
+      } else {
+        // TODO this is broken if menu section clicked on before init is done
+        print(
+            'findEvent: eventMap not initialized, eventMap size=${eventMap.length}');
+        sleep(const Duration(seconds: 1));
+        continue;
       }
-      if (entry.next == null) {
-        print('Error: findEntry "$label" not found');
-        break;
-      }
-      entry = entry.next!;
     }
-
-    return entry;
   }
 
   /// When a scale operation is detected, this setter is called:
@@ -518,15 +499,10 @@ class Timeline {
   ///
   /// This function will load and decode `timline.json` from disk,
   /// decode the JSON file, and populate all the [TimelineEntry]s.
-  Future<List<TimelineEntry>> loadFromBundle() async {
+  loadFromBundle() async {
     final String jsonData =
         await rootBundle.loadString('assets/tarikh/timeline.json');
     final List jsonEntries = json.decode(jsonData);
-
-    final List<TimelineEntry> allEntries = [];
-
-    // late because being lazy:
-    // late TimelineEntryColors timelineEntryColors;
 
     /// The JSON decode doesn't provide strong typing, so we'll iterate
     /// on the dynamic entries in the [jsonEntries] list.
@@ -570,10 +546,7 @@ class Timeline {
       String articleFilename = map["article"];
 
       /// Get Timeline Color Setup:
-      // bool drawGradient = true;
       if (map.containsKey('timelineColors')) {
-        // drawGradient = false;
-
         var timelineColors = map['timelineColors'];
 
         /// If a custom background color for this [TimelineEntry] is specified,
@@ -603,13 +576,6 @@ class Timeline {
           startMs,
         );
         _headerColors.add(headerColors);
-
-        // timelineEntryColors = TimelineEntryColors(
-        //   timelineBackgroundColor,
-        //   tickColors,
-        //   headerColors,
-        //   // tapTarget, TODO
-        // );
       }
 
       /// OPTIONAL FIELD 1 of 2: An accent color is also specified at times.
@@ -635,8 +601,6 @@ class Timeline {
         endMs,
         articleFilename,
         asset,
-        // timelineEntryColors, // if not in json map, uses last built one
-        // drawGradient, // used to draw gradient off of timelineEntryColors
         accent,
         id,
       );
@@ -650,11 +614,13 @@ class Timeline {
       }
 
       /// Add this entry to the list.
-      allEntries.add(timelineEntry);
+      TarikhController.to.eventMap
+          .putIfAbsent(timelineEntry.label, () => timelineEntry);
+      TarikhController.to.events.add(timelineEntry); // sort is probably needed
     }
 
     /// sort the full list so they are in order of oldest to newest
-    allEntries.sort((TimelineEntry a, TimelineEntry b) {
+    TarikhController.to.events.sort((TimelineEntry a, TimelineEntry b) {
       return a.startMs.compareTo(b.startMs);
     });
 
@@ -671,7 +637,7 @@ class Timeline {
     /// Build up hierarchy (Eras are grouped into "Spanning Eras" and Events are
     /// placed into the Eras they belong to).
     TimelineEntry? previous;
-    for (TimelineEntry entry in allEntries) {
+    for (TimelineEntry entry in TarikhController.to.events) {
       if (entry.startMs < _timeMin) {
         _timeMin = entry.startMs;
       }
@@ -686,7 +652,7 @@ class Timeline {
 
       TimelineEntry? parent;
       double minDistance = double.maxFinite;
-      for (TimelineEntry checkEntry in allEntries) {
+      for (TimelineEntry checkEntry in TarikhController.to.events) {
         if (checkEntry.type == TimelineEntryType.Era) {
           double distance = entry.startMs - checkEntry.startMs;
           double distanceEnd = entry.startMs - checkEntry.endMs;
@@ -706,7 +672,6 @@ class Timeline {
         parent.children!.add(entry);
       }
     }
-    return allEntries;
   }
 
   /// Helper function for [MenuVignette].

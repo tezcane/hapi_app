@@ -75,7 +75,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   initState() {
     if (widget.entry == null) {
       // lookup entry manually since not provided on init
-      widget.entry = t.findEntry(widget.focusItem.label);
+      widget.entry = t.findEvent(widget.focusItem.label);
 
       // We need entry just to update down/up past/future btns. Since it wasn't
       // used/available/wanted? by the original caller to this class, we ignore

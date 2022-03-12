@@ -105,7 +105,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
   @override
   Widget build(BuildContext context) {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
-    List<TimelineEntry> favs = TarikhController.to.favorites;
+    List<TimelineEntry> favs = TarikhController.to.favoriteEvents;
     bool isFav = favs.any(
         (TimelineEntry te) => te.label.toLowerCase() == _title.toLowerCase());
     return FabSubPage(

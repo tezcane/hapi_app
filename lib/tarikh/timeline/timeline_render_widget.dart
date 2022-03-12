@@ -674,9 +674,9 @@ class TimelineRenderObject extends RenderBox {
     /// favorite or all history elements are quickly accessible.
     ///
     /// Here the gutter is drawn and elements are added as *tappable* targets.
-    List<TimelineEntry> events = cTrkh.favorites;
+    List<TimelineEntry> events = cTrkh.favoriteEvents;
     if (cTrkh.isGutterModeAll()) {
-      events = cTrkh.allEvents;
+      events = cTrkh.events;
     }
 
     if (!cTrkh.isGutterModeOff() && events.isNotEmpty) {

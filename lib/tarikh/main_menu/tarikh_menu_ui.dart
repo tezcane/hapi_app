@@ -9,10 +9,10 @@ import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
 
 /// The Main Page of the Timeline App.
 ///
-/// This Widget lays out the search bar at the top of the page,
+/// This Widget lays out the search bar at the bottom of the page,
 /// the three card-sections for accessing the main events on the Timeline,
-/// and it'll provide on the bottom three links for quick access to your Favorites,
-/// a Share Menu and the About Page.
+/// and it'll provide on the bottom three links for quick access to your
+/// Favorites.
 class TarikhMenuUI extends StatefulWidget {
   const TarikhMenuUI({Key? key}) : super(key: key);
 
