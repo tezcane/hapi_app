@@ -30,7 +30,7 @@
 	},
 	{
 		"date": -13000000000,
-		"label": "Birth of the Milky Way",
+		"label": "Milky Way is Born",
 		"id":"milky",
 		"article": "milky_way.txt",
 		"asset": 
@@ -210,6 +210,19 @@
 		}
 	},
 	{
+		"date": -200000000,
+		"label": "Mammals",
+		"article":"mammals.txt",
+		"id":"mammal",
+		"asset":
+		{
+			"source": "Mammals/Mammals.nma",
+			"offset":-200,
+			"width": 400,
+			"height": 400
+		}
+	},
+	{
 		"date": -150000000,
 		"label": "Stegosaurus",
 		"article":"stegosaurus.txt",
@@ -221,19 +234,6 @@
 			"height": 570,
 			"offset":-200,
 			"gap": 0
-		}
-	},
-	{
-		"date": -200000000,
-		"label": "Mammals",
-		"article":"mammals.txt",
-		"id":"mammal",
-		"asset": 
-		{
-			"source": "Mammals/Mammals.nma",
-			"offset":-200,
-			"width": 400,
-			"height": 400
 		}
 	},
 	{
@@ -378,6 +378,18 @@
 		}
 	},
 	{
+		"start": -3500,
+		"label": "Recorded History",
+		"article":"history.txt",
+		"asset":
+		{
+			"source": "Recorded_history/Recorded_history.nma",
+			"width": 400,
+			"height": 400,
+			"offset": -200
+		}
+	},
+	{
 		"date": -2630,
 		"label": "First Pyramid Built",
 		"article":"pyramids.txt",
@@ -404,18 +416,6 @@
 		}
 	},
 	{
-		"start": -3500,
-		"label": "Recorded History",
-		"article":"history.txt",
-		"asset": 
-		{
-			"source": "Recorded_history/Recorded_history.nma",
-			"width": 400,
-			"height": 400,
-			"offset": -200
-		}
-	},
-	{
 		"start": 1095,
 		"end": 1291,
 		"label": "Crusades",
@@ -430,10 +430,33 @@
 		}
 	},
 	{
-		"date": 1687,
-		"label": "Newton's\nTheory of Gravity",
-		"article":"newton.txt",
+		"start": 1347,
+		"end": 1351,
+		"label": "Black Plague",
+		"article":"black_plague.txt",
+		"asset":
+		{
+			"source": "BlackPlague/BlackPlague.nma",
+			"width": 800,
+			"height": 400
+		}
+	},
+	{
+		"date": 1453,
+		"label": "Constantinople/Istanbul",
+		"article":"constantinople.txt",
 		"asset": 
+		{
+			"source": "Constantinople/Constantinople.nma",
+			"width": 500,
+			"height": 500
+		}
+	},
+	{
+		"date": 1687,
+		"label": "Newton and Gravity",
+		"article":"newton.txt",
+		"asset":
 		{
 			"source": "Newton/Newton_v2.nma",
 			"width": 500,
@@ -445,7 +468,7 @@
 		"date": 1760,
 		"label": "Industrialization",
 		"article":"industrialization.txt",
-		"asset": 
+		"asset":
 		{
 			"source": "Industrialization/Industrialization.nma",
 			"width": 500,
@@ -454,32 +477,47 @@
 		}
 	},
 	{
-		"date": 1453,
-		"label": "Constantinople",
-		"article":"constantinople.txt",
-		"asset": 
+		"date": 1859,
+		"label": "Darwin's\nTheory of Evolution",
+		"article":"darwin.txt",
+		"asset":
 		{
-			"source": "Constantinople/Constantinople.nma",
-			"width": 500,
-			"height": 500
+			"source": "Darwin 2/Darwin 2.nma",
+			"width": 1850,
+			"height": 2100,
+			"scale": 0.22,
+			"offset": 0,
+			"bounds":[-934,-859,916,1241]
 		}
 	},
 	{
-		"start": 1347,
-		"end": 1351,
-		"label": "Black Plague",
-		"article":"black_plague.txt",
-		"asset": 
+		"date": 1867,
+		"label": "Marie Curie",
+		"article":"marie_curie.txt",
+		"asset":
 		{
-			"source": "BlackPlague/BlackPlague.nma",
-			"width": 800,
-			"height": 400
+			"source": "Marie_Curie/Marie_Curie.nma",
+			"width": 528,
+			"height": 528,
+			"offset": -140
+		}
+	},
+	{
+		"date": 1903,
+		"label": "Suffragettes",
+		"article":"suffragette.txt",
+		"asset":
+		{
+			"source": "Sufraggette_movement/Sufraggette_movement.nma",
+			"width": 528,
+			"height": 528,
+			"offset": -40
 		}
 	},
 	{
 		"start": 1914,
 		"end": 1918,
-		"label": "World War I",
+		"label": "World War 1",
 		"article":"world_war_i.txt",
 		"accent": [227, 21, 55],
 		"asset": 
@@ -487,6 +525,45 @@
 			"source": "World_War_I/World_War_I.nma",
 			"width": 528,
 			"height": 528
+		}
+	},
+	{
+		"date": 1932,
+		"label": "Amelia Earhart",
+		"id":"amelia",
+		"article":"amelia_earhart.txt",
+		"asset":
+		{
+			"source": "Amelia_Earhart/Amelia_Earhart.flr",
+			"width": 528,
+			"height": 528,
+			"offset": -140
+		}
+	},
+	{
+		"date": 1938,
+		"label": "Alan Turing",
+		"article":"alan_turing.txt",
+		"asset":
+		{
+			"source": "Alan_Turing/Alan_Turing.nma",
+			"width": 528,
+			"height": 528,
+			"offset": -140
+		}
+	},
+	{
+		"start": 1939,
+		"end": 1945,
+		"label": "World War 2",
+		"article":"world_war_ii.txt",
+		"accent": [227, 21, 55],
+		"asset":
+		{
+			"source": "World_War_II/World_War_II.nma",
+			"width": 528,
+			"height": 528,
+			"offset": -140
 		}
 	},
 	{
@@ -504,105 +581,15 @@
 		}
 	},
 	{
-		"date": 1969,
-		"label": "Moon Landing",
-		"article":"moon_landing.txt",
-		"accent": [115, 132, 205],
-		"asset": 
-		{
-			"source": "Moon/Moon.nma",
-			"width": 528,
-			"height": 528,
-			"offset": -100
-		}
-	},
-	{
-		"date": 1859,
-		"label": "Darwin's\nTheory of Evolution",
-		"article":"darwin.txt",
-		"asset": 
-		{
-			"source": "Darwin 2/Darwin 2.nma",
-			"width": 1850,
-			"height": 2100,
-			"scale": 0.22,
-			"offset": 0,
-			"bounds":[-934,-859,916,1241]
-		}
-	},
-	{
 		"date": 1952,
 		"label": "Nelson Mandela",
 		"article":"nelson_mandela.txt",
-		"asset": 
+		"asset":
 		{
 			"source": "Nelson Mandela_v2/Nelson Mandela_v2.nma",
 			"width": 528,
 			"height": 528,
 			"offset": -40
-		}
-	},
-	{
-		"date": 1867,
-		"label": "Marie Curie",
-		"article":"marie_curie.txt",
-		"asset": 
-		{
-			"source": "Marie_Curie/Marie_Curie.nma",
-			"width": 528,
-			"height": 528,
-			"offset": -140
-		}
-	},
-	{
-		"date": 1903,
-		"label": "Suffragettes",
-		"article":"suffragette.txt",
-		"asset": 
-		{
-			"source": "Sufraggette_movement/Sufraggette_movement.nma",
-			"width": 528,
-			"height": 528,
-			"offset": -40
-		}
-	},
-	{
-		"date": 1932,
-		"label": "Amelia Earhart",
-		"id":"amelia",
-		"article":"amelia_earhart.txt",
-		"asset":
-		{
-			"source": "Amelia_Earhart/Amelia_Earhart.flr",
-			"width": 528,
-			"height": 528,
-			"offset": -140
-		}
-	},
-	{
-		"start": 1939,
-		"end": 1945,
-		"label": "World War II",
-		"article":"world_war_ii.txt",
-		"accent": [227, 21, 55],
-		"asset": 
-		{
-			"source": "World_War_II/World_War_II.nma",
-			"width": 528,
-			"height": 528,
-			"offset": -140
-		}
-	},
-	{
-		"date": 1939,
-		"label": "Alan Turing",
-		"article":"alan_turing.txt",
-		"asset":
-		{
-			"source": "Alan_Turing/Alan_Turing.nma",
-			"width": 528,
-			"height": 528,
-			"offset": -140
 		}
 	},
 	{
@@ -616,6 +603,19 @@
 			"width": 528,
 			"height": 528,
 			"offset": -140
+		}
+	},
+	{
+		"date": 1969,
+		"label": "Moon Landing",
+		"article":"moon_landing.txt",
+		"accent": [115, 132, 205],
+		"asset": 
+		{
+			"source": "Moon/Moon.nma",
+			"width": 528,
+			"height": 528,
+			"offset": -100
 		}
 	},
 	{
