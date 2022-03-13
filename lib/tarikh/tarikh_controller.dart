@@ -56,12 +56,9 @@ class TarikhController extends GetxHapi {
       _isActive = isIt;
       if (_isActive) {
         t.startRendering();
+        //updateOnThread();  //update() causes error
       }
     }
-    // _isActive = isIt;
-    // if (isIt) {
-    //   t.startRendering();
-    // }
   }
 
   // MENU SECTION RENDER ENABLE/DISABLE:
