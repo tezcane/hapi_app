@@ -133,7 +133,7 @@ class _SectionState extends State<MenuSection>
               Column(
                 children: <Widget>[
                   Container(
-                    height: 150.0,
+                    height: 150.0, // TODO tune height of each vignette
                     alignment: Alignment.bottomCenter,
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,

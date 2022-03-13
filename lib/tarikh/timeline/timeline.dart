@@ -154,21 +154,6 @@ class Timeline {
 
   Color? get headerTextColor => _headerTextColor;
 
-  TimelineEntry findEvent(String label) {
-    while (true) {
-      Map<String, TimelineEntry> eventMap = TarikhController.to.eventMap;
-      if (eventMap.containsKey(label)) {
-        return eventMap[label]!;
-      } else {
-        // TODO this is broken if menu section clicked on before init is done
-        print(
-            'findEvent: eventMap not initialized, eventMap size=${eventMap.length}');
-        sleep(const Duration(seconds: 1));
-        continue;
-      }
-    }
-  }
-
   /// When a scale operation is detected, this setter is called:
   /// e.g. [_TimelineWidgetState.scaleStart()].
   set isInteracting(bool value) {

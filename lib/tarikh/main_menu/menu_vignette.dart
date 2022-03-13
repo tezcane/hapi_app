@@ -135,11 +135,6 @@ class MenuVignetteRenderObject extends RenderBox {
 
   /// Uses the [SchedulerBinding] to trigger a new paint for this widget.
   void updateRendering() {
-    // if (!_needsRepaint) { // will stop animation from happening
-    //   return;
-    // }
-    // _needsRepaint = false;
-
     if (_isActive) {
       markNeedsPaint();
       if (!_isFrameScheduled) {

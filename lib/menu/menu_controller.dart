@@ -307,7 +307,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
         break;
       case (NavPage.Tarikh):
         Get.offAll(
-          () => const TarikhMenuUI(),
+          () => TarikhMenuUI(),
           transition: transition,
           duration: Duration(milliseconds: transistionMs),
         );

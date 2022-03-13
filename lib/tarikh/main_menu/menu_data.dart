@@ -1,14 +1,12 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:math';
 import 'dart:ui';
 
-import "package:flutter/services.dart" show rootBundle;
 import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
-/// Data container for the Section loaded in [MenuData.loadFromBundle()].
+/// Data container loaded in [TarikhMenuInitHandler.loadFromBundle()].
 class MenuSectionData {
   MenuSectionData(
     this.label,
@@ -27,11 +25,11 @@ class MenuSectionData {
 
 /// Data container for all the sub-elements of the [MenuSection].
 class MenuItemData {
-  MenuItemData(this.label, this.start, this.end);
+  MenuItemData(this.label, this.startMs, this.endMs);
 
   final String label;
-  final double start;
-  final double end;
+  final double startMs;
+  final double endMs;
 
   bool pad = false;
   double padTop = 0.0;
@@ -39,7 +37,7 @@ class MenuItemData {
 
   /// When initializing this object from a [TimelineEntry], fill in the
   /// fields according to the [entry] provided. The entry in fact specifies
-  /// a [label], a [start] and [end] times.
+  /// a [label], a [startMs] and [endMs] times.
   /// Padding is built depending on the type of the [entry] provided.
   static MenuItemData fromEntry(TimelineEntry entry) {
     // put in timer so btns updates after navigation
@@ -98,57 +96,5 @@ class MenuItemData {
     menuItemData.padTop = padTop;
 
     return menuItemData;
-  }
-}
-
-/// This class has the sole purpose of loading the resources from storage and
-/// de-serializing the JSON file appropriately.
-///
-/// `menu.json` contains an array of objects, each with:
-/// * label - the title for the section
-/// * background - the color on the section background
-/// * color - the accent color for the menu section
-/// * asset - the background Flare/Nima asset id that will play the section background
-/// * items - an array of elements providing each the start and end times for that link
-/// as well as the label to display in the [MenuSection].
-class MenuData {
-  final List<MenuSectionData> _menuSectionList = [];
-
-  get menuSectionDataList => _menuSectionList;
-
-  Future<bool> loadFromBundle(String filename) async {
-    String jsonData = await rootBundle.loadString(filename);
-    List jsonEntries = json.decode(jsonData);
-
-    List<MenuItemData> menuItemList;
-    for (Map map in jsonEntries) {
-      menuItemList = [];
-
-      var label = map["label"] as String;
-      var textColor = Color(
-          int.parse((map["color"] as String).substring(1, 7), radix: 16) +
-              0xFF000000);
-      var backgroundColor = Color(
-          int.parse((map["background"] as String).substring(1, 7), radix: 16) +
-              0xFF000000);
-      var assetId = map["asset"] as String;
-
-      for (Map itemMap in map["items"]) {
-        var label = itemMap["label"] as String;
-
-        dynamic startVal = itemMap["start"];
-        double start = startVal is int ? startVal.toDouble() : startVal;
-
-        dynamic endVal = itemMap["end"];
-        double end = endVal is int ? endVal.toDouble() : endVal;
-
-        menuItemList.add(MenuItemData(label, start, end));
-      }
-
-      menuSectionDataList.add(MenuSectionData(
-          label, textColor, backgroundColor, assetId, menuItemList));
-    }
-
-    return true;
   }
 }

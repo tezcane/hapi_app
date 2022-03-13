@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main.dart';
+import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/search_manager.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
@@ -62,7 +63,11 @@ class TarikhController extends GetxHapi {
   }
 
   // MENU SECTION RENDER ENABLE/DISABLE:
-  /// Used to start/stop vignettes menu section animations
+  /// Used to start/stop vignettes menu section animations.
+  /// Each card section contains a Flare animation that's playing in the
+  /// background. These animations are paused when they're not visible anymore
+  /// (e.g. when search is visible instead), and are played again once they're
+  /// back in view.
   bool _isSectionActive = true;
   get isSectionActive => _isSectionActive;
   restoreMenuSection() {
@@ -74,6 +79,15 @@ class TarikhController extends GetxHapi {
     _isSectionActive = false;
     update();
   }
+
+  /// Loaded from JSON input that's stored in the assets folder which provides
+  /// all the necessary information for the MenuSection display data, such as
+  /// labels, background colors, the background Flare animation asset, and for
+  /// each event in the expanded card, the relative position on the timeline.
+  /// It does not contain all event info, so the Tarikh Menu requires the
+  /// timeline to load to be fully functional.
+  final List<MenuSectionData> _menuSectionDataList = [];
+  get menuSectionDataList => _menuSectionDataList;
 
   /// List of favorite events shown on Tarikh_Favorites page and timeline gutter
   final List<TimelineEntry> _favoriteEvents = [];
@@ -99,6 +113,7 @@ class TarikhController extends GetxHapi {
     update();
   }
 
+  /// Buttons on timeline to go up/down past/future.
   late final Rx<TimeBtn> timeBtnUp;
   late final Rx<TimeBtn> timeBtnDn;
 
@@ -106,7 +121,12 @@ class TarikhController extends GetxHapi {
   void onInit() async {
     super.onInit();
 
-    await initTimeline();
+    await initTarikhMenu(); // init first to show UI fast
+    await initTimeline(); // slow init, takes time to load
+  }
+
+  initTarikhMenu() async {
+    await TarikhMenuInitHandler().loadFromBundle('assets/tarikh/menu.json');
   }
 
   initTimeline() async {
@@ -116,9 +136,10 @@ class TarikhController extends GetxHapi {
     int lastGutterModeIdx = s.read('lastGutterModeIdx') ?? GutterMode.OFF.index;
     gutterMode = GutterMode.values[lastGutterModeIdx];
 
+    // first handle json inputs
     tih = TimelineInitHandler();
     await tih.loadFromBundle();
-
+    // then init static timeline object
     t = Timeline(
       tih.rootEntries,
       tih.tickColors,
@@ -146,8 +167,6 @@ class TarikhController extends GetxHapi {
     _isTimelineInitDone = true;
     update();
   }
-
-  /// This method is called during the [BlocProvider] initialization.
 
   /// It receives as input the full list of [TimelineEntry], so that it can
   /// use those references to fill [_favoriteEvents].
@@ -200,6 +219,7 @@ class TarikhController extends GetxHapi {
   bool isGutterModeFav() => _gutterMode.value == GutterMode.FAV;
   bool isGutterModeAll() => _gutterMode.value == GutterMode.ALL;
 
+  /// resets entry value, so new button
   void setTBtnUp(TimeBtn timeBtn) {
     timeBtnUp.value = timeBtn;
     updateOnThread();
@@ -210,6 +230,7 @@ class TarikhController extends GetxHapi {
     updateOnThread();
   }
 
+  /// Updates text around time button
   void updateTBtnUp(String timeUntil, String pageScrolls) {
     timeBtnUp.value.timeUntil = timeUntil;
     timeBtnUp.value.pageScrolls = pageScrolls;
@@ -705,5 +726,51 @@ class TimelineInitHandler {
     return screen < _tickColors.first.screenY
         ? _tickColors.first
         : _tickColors.last;
+  }
+}
+
+/// This class has the sole purpose of loading the resources from storage and
+/// de-serializing the JSON file appropriately.
+///
+/// `menu.json` contains an array of objects, each with:
+/// * label - the title for the section
+/// * background - the color on the section background
+/// * color - the accent color for the menu section
+/// * asset - the background Flare/Nima asset id that will play the section background
+/// * items - an array of elements providing each the start and end times for that link
+/// as well as the label to display in the [MenuSection].
+class TarikhMenuInitHandler {
+  loadFromBundle(String filename) async {
+    String jsonData = await rootBundle.loadString(filename);
+    List jsonEntries = json.decode(jsonData);
+
+    List<MenuItemData> menuItemList;
+    for (Map map in jsonEntries) {
+      menuItemList = [];
+
+      String label = map["label"];
+      Color textColor = Color(
+          int.parse((map["color"]).substring(1, 7), radix: 16) + 0xFF000000);
+      Color backgroundColor = Color(
+          int.parse((map["background"]).substring(1, 7), radix: 16) +
+              0xFF000000);
+      String assetId = map["asset"];
+
+      for (Map itemMap in map["items"]) {
+        String label = itemMap["label"];
+
+        dynamic startVal = itemMap["start"];
+        double start = startVal is int ? startVal.toDouble() : startVal;
+
+        dynamic endVal = itemMap["end"];
+        double end = endVal is int ? endVal.toDouble() : endVal;
+
+        menuItemList.add(MenuItemData(label, start, end));
+      }
+
+      TarikhController.to._menuSectionDataList.add(MenuSectionData(
+          label, textColor, backgroundColor, assetId, menuItemList));
+      TarikhController.to.update();
+    }
   }
 }

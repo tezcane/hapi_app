@@ -192,7 +192,7 @@ class AppRoutes {
     GetPage(name: '/signin', page: () => SignInUI()),
     GetPage(name: '/signup', page: () => SignUpUI()),
     GetPage(name: '/quest', page: () => QuestsUI()),
-    GetPage(name: '/tarikh', page: () => const TarikhMenuUI()),
+    GetPage(name: '/tarikh', page: () => TarikhMenuUI()),
     GetPage(name: '/tarikh/favorite', page: () => TarikhFavoritesUI()),
     GetPage(name: '/tarikh/article', page: () => TarikhArticleUI()),
     GetPage(name: '/tarikh/timeline', page: () => TarikhTimelineUI()),

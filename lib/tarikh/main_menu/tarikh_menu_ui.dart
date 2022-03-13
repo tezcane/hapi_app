@@ -7,36 +7,16 @@ import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
 
-/// The Main Page of the Timeline App.
+/// The Main Menu Page of the Tarikh Section of the App.
 ///
-/// This Widget lays out the search bar at the bottom of the page,
-/// the three card-sections for accessing the main events on the Timeline,
-/// and it'll provide on the bottom three links for quick access to your
-/// Favorites.
-class TarikhMenuUI extends StatefulWidget {
-  const TarikhMenuUI({Key? key}) : super(key: key);
-
-  @override
-  _TarikhMenuUIState createState() => _TarikhMenuUIState();
-}
-
-class _TarikhMenuUIState extends State<TarikhMenuUI> {
-  /// 2. Section Animations:
-  /// Each card section contains a Flare animation that's playing in the
-  /// background. These animations are paused when they're not visible anymore
-  /// (e.g. when search is visible instead), and are played again once they're
-  /// back in view.
-  //bool _isSectionActive = TarikhController.to.isSectionActive;
-
-  /// [MenuData] is a wrapper object for the data of each Card section.
-  /// This data is loaded from the asset bundle during [initState()]
-  final MenuData _menu = MenuData();
-
+/// This Widget lays out the search and favorite FAB at the bottom of the page,
+/// then the menu card-sections for accessing the main events on the Timeline.
+class TarikhMenuUI extends StatelessWidget {
   /// Helper function which sets the [MenuItemData] for the [TarikhTimelineUI].
   /// This will trigger a transition from the current menu to the Timeline,
-  /// thus the push on the [Navigator], and by providing the [item] as
-  /// a parameter to the [TarikhTimelineUI] constructor, this widget will know
-  /// where to scroll to.
+  /// thus the push on the [MenuController.pushSubPage], and by providing the
+  /// [item] as a parameter to the [TarikhTimelineUI] constructor, this widget
+  /// will know where to scroll to.
   navigateToTimeline(MenuItemData item) {
     TarikhController.to.pauseMenuSection();
 
@@ -47,60 +27,7 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
   }
 
   @override
-  initState() {
-    //print('tarikh init state 1, isAppInitDone=${cMain.isAppInitDone}');
-
-    /// The [_menu] loads a JSON file that's stored in the assets folder.
-    /// This asset provides all the necessary information for the cards,
-    /// such as labels, background colors, the background Flare animation asset,
-    /// and for each element in the expanded card, the relative position on the [Timeline].
-    _menu.loadFromBundle('assets/tarikh/menu.json').then((bool success) {
-      //print('tarikh init state 2, isAppInitDone=${cMain.isAppInitDone}');
-      if (success) setState(() {}); // Load the menu.
-    }); // TODO bug here on hot reload breaks auto rotate
-
-    super.initState();
-  }
-
-  // prob need to do something here to avoid hot reload issue
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  // }
-
-  @override
   Widget build(BuildContext context) {
-    final List<Widget> tail = [];
-
-    tail
-      ..addAll(_menu.menuSectionDataList
-          .map<Widget>(
-            (MenuSectionData section) => Container(
-              margin: const EdgeInsets.only(top: 20.0),
-              child: GetBuilder<TarikhController>(builder: (c) {
-                return MenuSection(
-                  section.label,
-                  section.backgroundColor,
-                  section.textColor,
-                  section.items,
-                  navigateToTimeline,
-                  c.isSectionActive,
-                  assetId: section.assetId,
-                );
-              }),
-            ),
-          )
-          .toList(growable: false))
-      // add some space under the final vignette so FABs don't interfere
-      ..add(
-        /// this is the little line that shows under the vignettes
-        Container(
-          margin: const EdgeInsets.only(top: 40.0, bottom: 22),
-          height: 1.0,
-          color: const Color.fromRGBO(151, 151, 151, 0.29),
-        ),
-      );
-
     /// A [SingleChildScrollView] is used to create a scrollable view for the main menu.
     return Scaffold(
       floatingActionButton: GetBuilder<MenuController>(
@@ -113,10 +40,8 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
               tooltip: 'View your favorites',
               heroTag: SubPage.Tarikh_Favorite,
               onPressed: () {
-                setState(() {
-                  TarikhController.to.pauseMenuSection();
-                  MenuController.to.pushSubPage(SubPage.Tarikh_Favorite);
-                });
+                TarikhController.to.pauseMenuSection();
+                MenuController.to.pushSubPage(SubPage.Tarikh_Favorite);
               },
               materialTapTargetSize: MaterialTapTargetSize.padded,
               child: const Icon(Icons.favorite_border_outlined, size: 36.0),
@@ -134,10 +59,8 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
                 tooltip: 'Search history',
                 heroTag: SubPage.Tarikh_Search,
                 onPressed: () {
-                  setState(() {
-                    TarikhController.to.pauseMenuSection();
-                    MenuController.to.pushSubPage(SubPage.Tarikh_Search);
-                  });
+                  TarikhController.to.pauseMenuSection();
+                  MenuController.to.pushSubPage(SubPage.Tarikh_Search);
                 },
                 materialTapTargetSize: MaterialTapTargetSize.padded,
                 child: const Icon(Icons.search_outlined, size: 36.0),
@@ -150,15 +73,52 @@ class _TarikhMenuUIState extends State<TarikhMenuUI> {
           settingsWidget: null,
           bottomWidget: HapiShareUI(),
           foregroundPage: Container(
-            color: Theme.of(context).backgroundColor,
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.only(
-                    top: 20.0, left: 20, right: 20, bottom: 20),
-                child: Column(
-                  children: tail,
-                ),
+            // Set height since shrinkwrap exposed the hapi logo/menu
+            height: MediaQuery.of(context).size.height,
+            color: Theme.of(context).backgroundColor, // covers hapi logo/menu
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.only(
+                  top: 20.0, left: 20, right: 20, bottom: 20),
+              child: Column(
+                children: [
+                  GetBuilder<TarikhController>(builder: (c) {
+                    return ListView.builder(
+                      shrinkWrap: true, // needed or app pukes
+                      physics: const ScrollPhysics(), // needed to drag up/down
+                      itemCount: c.menuSectionDataList.length,
+                      itemBuilder: (_, index) {
+                        return Container(
+                          margin: const EdgeInsets.only(top: 20.0),
+                          child: GetBuilder<TarikhController>(builder: (c) {
+                            return MenuSection(
+                              c.menuSectionDataList[index].label,
+                              c.menuSectionDataList[index].backgroundColor,
+                              c.menuSectionDataList[index].textColor,
+                              c.menuSectionDataList[index].items,
+                              navigateToTimeline,
+                              c.isSectionActive,
+                              assetId: c.menuSectionDataList[index].assetId,
+                            );
+                          }),
+                        );
+                      },
+                    );
+                  }),
+
+                  /// this is the little line that shows under the vignettes
+                  Container(
+                    margin: const EdgeInsets.only(top: 43.0),
+                    height: 2.0,
+                    color: const Color.fromRGBO(151, 151, 151, 0.29),
+                  ),
+
+                  /// this is the little line that shows under the vignettes
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 22),
+                    height: 2.0,
+                    color: const Color.fromRGBO(239, 227, 227, 0.29),
+                  ),
+                ],
               ),
             ),
           ),
