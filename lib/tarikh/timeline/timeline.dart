@@ -365,7 +365,7 @@ class Timeline {
     // Tez: fixes exception when hitting back button from timeline back to root page
     // TODO isActive was not here before, needed to fix exception after upgrading
     // flutter version:
-    if (TarikhController.to.isActive && onNeedPaint != null) {
+    if (TarikhController.to.isActiveTimeline && onNeedPaint != null) {
       onNeedPaint!();
     }
   }
@@ -863,7 +863,7 @@ class Timeline {
             }
           }
         } else {
-          bool isActive = TarikhController.to.isActive;
+          bool isActive = TarikhController.to.isActiveTimeline;
 
           /// Item is in view, apply the new animation time and advance the actor.
           if (asset is TimelineNima && isActive) {

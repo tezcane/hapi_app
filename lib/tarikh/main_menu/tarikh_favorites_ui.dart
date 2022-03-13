@@ -30,7 +30,7 @@ class TarikhFavoritesUI extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20.0),
           child: GetBuilder<TarikhController>(
             builder: (c) {
-              return c.favoriteEvents.isEmpty
+              return c.eventFavorites.isEmpty
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -72,9 +72,9 @@ class TarikhFavoritesUI extends StatelessWidget {
                       ],
                     )
                   : ListView.builder(
-                      itemCount: c.favoriteEvents.length,
+                      itemCount: c.eventFavorites.length,
                       itemBuilder: (BuildContext context, int idx) {
-                        TimelineEntry entry = c.favoriteEvents[idx];
+                        TimelineEntry entry = c.eventFavorites[idx];
                         return ThumbnailDetailWidget(
                           entry,
                           hasDivider: idx != 0,

@@ -19,6 +19,7 @@ msg  - message
 muak - Muakkadah  
 nav  - Navigate/Navigator  
 np   - NavPage  
+nv   - new value  
 P    - placement (start, center, end)    
 qyam - Qiyam  
 qust - Quest  

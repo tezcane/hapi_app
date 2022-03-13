@@ -18,7 +18,7 @@ class TarikhMenuUI extends StatelessWidget {
   /// [item] as a parameter to the [TarikhTimelineUI] constructor, this widget
   /// will know where to scroll to.
   navigateToTimeline(MenuItemData item) {
-    TarikhController.to.pauseMenuSection();
+    TarikhController.to.isActiveTarikhMenu = false;
 
     MenuController.to.pushSubPage(
       SubPage.Tarikh_Timeline,
@@ -40,7 +40,7 @@ class TarikhMenuUI extends StatelessWidget {
               tooltip: 'View your favorites',
               heroTag: SubPage.Tarikh_Favorite,
               onPressed: () {
-                TarikhController.to.pauseMenuSection();
+                TarikhController.to.isActiveTarikhMenu = false;
                 MenuController.to.pushSubPage(SubPage.Tarikh_Favorite);
               },
               materialTapTargetSize: MaterialTapTargetSize.padded,
@@ -59,7 +59,7 @@ class TarikhMenuUI extends StatelessWidget {
                 tooltip: 'Search history',
                 heroTag: SubPage.Tarikh_Search,
                 onPressed: () {
-                  TarikhController.to.pauseMenuSection();
+                  TarikhController.to.isActiveTarikhMenu = false;
                   MenuController.to.pushSubPage(SubPage.Tarikh_Search);
                 },
                 materialTapTargetSize: MaterialTapTargetSize.padded,
@@ -85,19 +85,19 @@ class TarikhMenuUI extends StatelessWidget {
                     return ListView.builder(
                       shrinkWrap: true, // needed or app pukes
                       physics: const ScrollPhysics(), // needed to drag up/down
-                      itemCount: c.menuSectionDataList.length,
+                      itemCount: c.tarikhMenuData.length,
                       itemBuilder: (_, index) {
                         return Container(
                           margin: const EdgeInsets.only(top: 20.0),
                           child: GetBuilder<TarikhController>(builder: (c) {
                             return MenuSection(
-                              c.menuSectionDataList[index].label,
-                              c.menuSectionDataList[index].backgroundColor,
-                              c.menuSectionDataList[index].textColor,
-                              c.menuSectionDataList[index].items,
+                              c.tarikhMenuData[index].label,
+                              c.tarikhMenuData[index].backgroundColor,
+                              c.tarikhMenuData[index].textColor,
+                              c.tarikhMenuData[index].items,
                               navigateToTimeline,
-                              c.isSectionActive,
-                              assetId: c.menuSectionDataList[index].assetId,
+                              c.isActiveTarikhMenu,
+                              assetId: c.tarikhMenuData[index].assetId,
                             );
                           }),
                         );

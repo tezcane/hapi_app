@@ -48,17 +48,19 @@ class TarikhController extends GetxHapi {
   get isTimelineInitDone => _isTimelineInitDone;
 
   // TIMELINE RENDER ENABLE/DISABLE:
-  bool _isActive = false;
-  bool get isActive => _isActive;
+  bool _isActiveTimeline = false;
+  bool get isActiveTimeline => _isActiveTimeline;
 
-  /// Toggle/stop rendering whenever the timeline is visible or hidden.
-  set isActive(bool isIt) {
-    if (isIt != _isActive) {
-      _isActive = isIt;
-      if (_isActive) {
+  /// Togge start/stop rendering whenever the timeline is visible or hidden.
+  set isActiveTimeline(bool nv) {
+    if (nv != _isActiveTimeline) {
+      _isActiveTimeline = nv;
+      if (_isActiveTimeline) {
         t.startRendering();
-        //updateOnThread();  //update() causes error
+        updateOnThread(); //update() causes error
       }
+    } else {
+      print('WARNING: _isActiveTimeline already set to $_isActiveTimeline');
     }
   }
 
@@ -68,16 +70,17 @@ class TarikhController extends GetxHapi {
   /// background. These animations are paused when they're not visible anymore
   /// (e.g. when search is visible instead), and are played again once they're
   /// back in view.
-  bool _isSectionActive = true;
-  get isSectionActive => _isSectionActive;
-  restoreMenuSection() {
-    _isSectionActive = true;
-    update();
-  }
+  bool _isActiveTarikhMenu = true;
+  bool get isActiveTarikhMenu => _isActiveTarikhMenu;
 
-  pauseMenuSection() {
-    _isSectionActive = false;
-    update();
+  /// Toggle start/stop rendering whenever the tarikh menu is visible or hidden.
+  set isActiveTarikhMenu(bool nv) {
+    if (nv != _isActiveTarikhMenu) {
+      _isActiveTarikhMenu = nv;
+      update();
+    } else {
+      print('WARNING: _isActiveTarikhMenu already set to $_isActiveTarikhMenu');
+    }
   }
 
   /// Loaded from JSON input that's stored in the assets folder which provides
@@ -86,12 +89,12 @@ class TarikhController extends GetxHapi {
   /// each event in the expanded card, the relative position on the timeline.
   /// It does not contain all event info, so the Tarikh Menu requires the
   /// timeline to load to be fully functional.
-  final List<MenuSectionData> _menuSectionDataList = [];
-  get menuSectionDataList => _menuSectionDataList;
+  final List<MenuSectionData> _tarikhMenuData = [];
+  get tarikhMenuData => _tarikhMenuData;
 
   /// List of favorite events shown on Tarikh_Favorites page and timeline gutter
-  final List<TimelineEntry> _favoriteEvents = [];
-  List<TimelineEntry> get favoriteEvents => _favoriteEvents;
+  final List<TimelineEntry> _eventFavorites = [];
+  List<TimelineEntry> get eventFavorites => _eventFavorites;
 
   /// List of all history events for timeline gutter retrieval
   final List<TimelineEntry> _events = [];
@@ -169,30 +172,30 @@ class TarikhController extends GetxHapi {
   }
 
   /// It receives as input the full list of [TimelineEntry], so that it can
-  /// use those references to fill [_favoriteEvents].
+  /// use those references to fill [_eventFavorites].
   initFavorites() {
     List<dynamic>? favs = s.read("TARIKH_FAVS");
 
     if (favs != null) {
       for (String fav in favs) {
-        TimelineEntry? entry = eventMap[fav];
-        if (entry != null) {
-          _favoriteEvents.add(entry);
+        if (eventMap.containsKey(fav)) {
+          _eventFavorites.add(eventMap[fav]!);
         }
       }
     }
 
     /// Sort by starting time, so the favorites' list is always displayed in ascending order.
-    _favoriteEvents.sort((TimelineEntry a, TimelineEntry b) {
+    _eventFavorites.sort((TimelineEntry a, TimelineEntry b) {
       return a.startMs.compareTo(b.startMs);
     });
   }
 
   /// Save [e] into the list, re-sort it, and store to disk.
   addFavorite(TimelineEntry e) {
-    if (!_favoriteEvents.contains(e)) {
-      _favoriteEvents.add(e);
-      _favoriteEvents.sort((TimelineEntry a, TimelineEntry b) {
+    if (!_eventFavorites.contains(e)) {
+      _eventFavorites.add(e);
+      // sort for UI to still show in order
+      _eventFavorites.sort((TimelineEntry a, TimelineEntry b) {
         return a.startMs.compareTo(b.startMs);
       });
       _saveFavorites();
@@ -201,16 +204,17 @@ class TarikhController extends GetxHapi {
 
   /// Remove the entry and save to disk.
   removeFavorite(TimelineEntry e) {
-    if (_favoriteEvents.contains(e)) {
-      _favoriteEvents.remove(e);
+    if (_eventFavorites.contains(e)) {
+      _eventFavorites.remove(e);
       _saveFavorites();
     }
   }
 
   /// Persists the data to disk.
   _saveFavorites() {
+    // note saves in any order, must sort on reading in from disk
     List<String> favsList =
-        _favoriteEvents.map((TimelineEntry entry) => entry.label).toList();
+        _eventFavorites.map((TimelineEntry entry) => entry.label).toList();
     s.write("TARIKH_FAVS", favsList);
     update(); // favorites changed so notify people using it
   }
@@ -768,7 +772,7 @@ class TarikhMenuInitHandler {
         menuItemList.add(MenuItemData(label, start, end));
       }
 
-      TarikhController.to._menuSectionDataList.add(MenuSectionData(
+      TarikhController.to._tarikhMenuData.add(MenuSectionData(
           label, textColor, backgroundColor, assetId, menuItemList));
       TarikhController.to.update();
     }

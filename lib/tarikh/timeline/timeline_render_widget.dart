@@ -64,7 +64,7 @@ class TimelineRenderWidget extends LeafRenderObjectWidget {
 
   @override
   didUnmountRenderObject(covariant TimelineRenderObject renderObject) {
-    TarikhController.to.isActive = false;
+    TarikhController.to.isActiveTimeline = false;
   }
 }
 
@@ -673,7 +673,7 @@ class TimelineRenderObject extends RenderBox {
     /// favorite or all history elements are quickly accessible.
     ///
     /// Here the gutter is drawn and elements are added as *tappable* targets.
-    List<TimelineEntry> events = cTrkh.favoriteEvents;
+    List<TimelineEntry> events = cTrkh.eventFavorites;
     if (cTrkh.isGutterModeAll()) {
       events = cTrkh.events;
     }

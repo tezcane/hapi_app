@@ -127,10 +127,10 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
       // if timeline showing again, turn timeline rendering back on
       if (_subPageStack.isNotEmpty &&
           _subPageStack.last == SubPage.Tarikh_Timeline) {
-        TarikhController.to.isActive = true;
+        TarikhController.to.isActiveTimeline = true;
       } else {
         if (_subPageStack.isEmpty && getLastNavPage() == NavPage.Tarikh) {
-          TarikhController.to.restoreMenuSection();
+          TarikhController.to.isActiveTarikhMenu = true;
         }
       }
 
@@ -267,7 +267,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
   }) {
     _showNavSettings.value = false; // clear last setting icon if was showing
 
-    TarikhController.to.isActive = false; // turn off timeline rendering
+    TarikhController.to.isActiveTimeline = false; // turn off timeline rendering
 
     switch (navPage) {
       case (NavPage.Stats):
