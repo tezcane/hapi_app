@@ -102,12 +102,19 @@ class TarikhController extends GetxHapi {
     update();
   }
 
-  final Rx<TimeBtn> timeBtnUp = TimeBtn(' ', ' ', ' ').obs;
-  final Rx<TimeBtn> timeBtnDn = TimeBtn(' ', ' ', ' ').obs;
+  late final Rx<TimeBtn> timeBtnUp;
+  late final Rx<TimeBtn> timeBtnDn;
 
   @override
   void onInit() async {
     super.onInit();
+
+    await initTimeline();
+  }
+
+  initTimeline() async {
+    timeBtnUp = TimeBtn(' ', ' ', ' ').obs;
+    timeBtnDn = TimeBtn(' ', ' ', ' ').obs;
 
     int lastGutterModeIdx = s.read('lastGutterModeIdx') ?? GutterMode.OFF.index;
     gutterMode = GutterMode.values[lastGutterModeIdx];
