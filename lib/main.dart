@@ -88,7 +88,9 @@ void main() async {
       permanent: permOn); // requires ConnectivityController
   Get.put<LocationController>(LocationController(),
       permanent: permOn); // requires TimeController
-  Get.put<MenuController>(MenuController(), permanent: permOn);
+  Get.put<TarikhController>(TarikhController());
+  Get.put<MenuController>(MenuController(),
+      permanent: permOn); //requires TarikhController
   Get.put<OnboardingController>(OnboardingController());
   Get.put<AuthController>(AuthController()); // requires OnboardingController
   Get.put<DailyQuestsController>(DailyQuestsController(),
@@ -99,7 +101,6 @@ void main() async {
       permanent: permOn); // requires ActiveQuestsController
   Get.put<ZamanController>(ZamanController(),
       permanent: permOn); // requires ActiveQuestsController
-  Get.put<TarikhController>(TarikhController());
   Get.put<ThemeController>(ThemeController());
   Get.put<LanguageController>(LanguageController());
 

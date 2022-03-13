@@ -5,6 +5,7 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/getx_hapi.dart';
+import 'package:hapi/helpers/loading.dart';
 import 'package:hapi/main.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/about_ui.dart';
@@ -126,7 +127,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
       // if timeline showing again, turn timeline rendering back on
       if (_subPageStack.isNotEmpty &&
           _subPageStack.last == SubPage.Tarikh_Timeline) {
-        TarikhController.t.isActive = true;
+        TarikhController.to.isActive = true;
       } else {
         if (_subPageStack.isEmpty && getLastNavPage() == NavPage.Tarikh) {
           TarikhController.to.restoreMenuSection();
@@ -266,7 +267,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
   }) {
     _showNavSettings.value = false; // clear last setting icon if was showing
 
-    TarikhController.t.isActive = false; // turn off timeline rendering
+    TarikhController.to.isActive = false; // turn off timeline rendering
 
     switch (navPage) {
       case (NavPage.Stats):
@@ -336,7 +337,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
     dynamic arguments,
     int transistionMs = 1000,
     Transition transition = Transition.fade,
-  }) {
+  }) async {
     // // TODO option for disallow duplicates so might not need this
     // if (_subPageStack.length != 0) {
     //   if (_subPageStack[_subPageStack.length - 1] == subPage) {
@@ -344,6 +345,20 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
     //     return;
     //   }
     // }
+
+    // if we are in Tarikh page and switch to a page that needs timeline fully
+    // initialized, we must wait for it to initialize:
+    if (getLastNavPage() == NavPage.Tarikh) {
+      switch (subPage) {
+        case (SubPage.Tarikh_Favorite):
+        case (SubPage.Tarikh_Search):
+        case (SubPage.Tarikh_Timeline):
+          await handleTimelineNotInitializedYet();
+          break;
+        default:
+          break;
+      }
+    }
 
     _subPageStack.add(subPage);
 
@@ -521,6 +536,22 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
   // TODO move to main controller?
   ConfettiController confettiController() => _confettiController;
   void playConfetti() => _confettiController.play();
+
+  handleTimelineNotInitializedYet() async {
+    if (TarikhController.to.isTimelineInitDone) {
+      return; // already initialized, no need to show loading and wait
+    }
+
+    showLoadingIndicator();
+    while (true) {
+      if (TarikhController.to.isTimelineInitDone) {
+        hideLoadingIndicator();
+        break;
+      }
+      print('*********** Timeline is not initialized yet ************');
+      await Future.delayed(const Duration(milliseconds: 250));
+    }
+  }
 
 // TODO
 // @override

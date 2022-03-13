@@ -28,6 +28,7 @@ class Ticks {
   void paint(PaintingContext context, Offset offset, double translation,
       double scale, double height) {
     Timeline t = TarikhController.t;
+    TimelineInitHandler tih = TarikhController.tih;
 
     final Canvas canvas = context.canvas;
 
@@ -75,7 +76,7 @@ class Ticks {
     /// Ticks can change color because the timeline background will also change color
     /// depending on the current era. The [TickColors] object, in `timeline_utils.dart`,
     /// wraps this information.
-    List<TickColors> tickColors = t.tickColors;
+    List<TickColors> tickColors = tih.tickColors;
     if (tickColors.isNotEmpty) {
       /// Build up the color stops for the linear gradient.
       double rangeStart = tickColors.first.startMs;
@@ -129,7 +130,7 @@ class Ticks {
       int tt = startingTickMarkValue.round();
       tt = -tt;
       int o = tickOffset.floor();
-      TickColors? colors = t.findTickColors(offset.dy + height - o);
+      TickColors? colors = tih.findTickColors(offset.dy + height - o);
       if (tt % textTickDistance == 0) {
         /// Every `textTickDistance`, draw a wider tick with the a label laid on top.
         if (colors != null) {

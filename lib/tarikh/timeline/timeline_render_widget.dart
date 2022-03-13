@@ -64,7 +64,7 @@ class TimelineRenderWidget extends LeafRenderObjectWidget {
 
   @override
   didUnmountRenderObject(covariant TimelineRenderObject renderObject) {
-    TarikhController.t.isActive = false;
+    TarikhController.to.isActive = false;
   }
 }
 
@@ -74,8 +74,9 @@ class TimelineRenderWidget extends LeafRenderObjectWidget {
 /// The core method of this object is [paint()]: this is where all the elements
 /// are actually drawn to screen.
 class TimelineRenderObject extends RenderBox {
-  final TarikhController cTrkh = TarikhController.to; // for speed and less code
-  static final Timeline t = TarikhController.t; // for speed and less code
+  final TarikhController cTrkh = TarikhController.to;
+  static final Timeline t = TarikhController.t;
+  static final TimelineInitHandler tih = TarikhController.tih;
 
   static const List<Color> LineColors = [
     Color.fromARGB(255, 125, 195, 184),
@@ -201,7 +202,7 @@ class TimelineRenderObject extends RenderBox {
     // _needsRepaint = false;
 
     /// Fetch the background colors from the [Timeline] and compute the fill.
-    List<TimelineBackgroundColor> backgroundColors = t.backgroundColors;
+    List<TimelineBackgroundColor> backgroundColors = tih.backgroundColors;
     ui.Paint? backgroundPaint;
     if (backgroundColors.isNotEmpty) {
       double rangeStart = backgroundColors.first.startMs;
@@ -453,21 +454,19 @@ class TimelineRenderObject extends RenderBox {
     canvas.restore();
 
     /// And then draw the rest of the timeline.
-    if (t.rootEntries.isNotEmpty) {
-      canvas.save();
-      canvas.clipRect(Rect.fromLTWH(offset.dx + t.gutterWidth, offset.dy,
-          size.width - t.gutterWidth, size.height));
-      drawItems(
-          context,
-          offset,
-          t.rootEntries,
-          t.gutterWidth +
-              Timeline.LineSpacing -
-              Timeline.DepthOffset * t.renderOffsetDepth,
-          scale,
-          0);
-      canvas.restore();
-    }
+    canvas.save();
+    canvas.clipRect(Rect.fromLTWH(offset.dx + t.gutterWidth, offset.dy,
+        size.width - t.gutterWidth, size.height));
+    drawItems(
+        context,
+        offset,
+        tih.rootEntries,
+        t.gutterWidth +
+            Timeline.LineSpacing -
+            Timeline.DepthOffset * t.renderOffsetDepth,
+        scale,
+        0);
+    canvas.restore();
 
     // Replace two commented out (very large) if statement logic with these two:
     if (t.nextEntry != null && t.nextEntryOpacity > 0.0) {

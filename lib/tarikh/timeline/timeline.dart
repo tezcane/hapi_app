@@ -1,32 +1,45 @@
 import 'dart:async';
-import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-import 'dart:typed_data';
-import 'dart:ui' as ui;
 
-import 'package:flare_dart/math/aabb.dart' as flare;
 import 'package:flare_flutter/flare.dart' as flare;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 import 'package:hapi/tarikh/timeline/timeline_utils.dart';
-import 'package:nima/nima.dart' as nima;
-import 'package:nima/nima/animation/actor_animation.dart' as nima;
-import 'package:nima/nima/math/aabb.dart' as nima;
 
 typedef PaintCallback = Function();
 typedef ChangeEraCallback = Function(TimelineEntry? era);
 typedef ChangeHeaderColorCallback = Function(Color background, Color text);
 
 class Timeline {
-  Timeline() {
+  Timeline(
+    this._rootEntries,
+    this._tickColors,
+    this._headerColors,
+    this._timeMin,
+    this._timeMax,
+  ) {
+    _headerColorsReversed = _headerColors.reversed;
     setViewport(start: 1536.0, end: 3072.0); // TODO what is this?
   }
+
+  /// All the [TimelineEntry]s that are loaded from disk at boot (in [loadFromBundle()]).
+  /// List for "root" entries, i.e. entries with no parents.
+  final List<TimelineEntry> _rootEntries;
+
+  /// [Ticks] also have custom colors so that they are always visible with the changing background.
+  final List<TickColors> _tickColors;
+  final List<HeaderColors> _headerColors;
+  late final Iterable<HeaderColors> _headerColorsReversed;
+
+  final double _timeMin;
+  final double _timeMax;
+
+  /// The list of [TimelineAsset], loaded from disk at boot and stored in entry.
+  List<TimelineAsset> _renderedAssets = [];
 
   /// Some aptly named constants for properly aligning the Timeline view.
   static const double LineWidth = 2.0;
@@ -43,14 +56,11 @@ class Timeline {
   static const double EdgeRadius = 4.0;
   static const double MinChildLength = 50.0;
   static const double BubbleHeight = 50.0;
-//static const double BubbleArrowSize = 19.0;
   static const double BubblePadding = 20.0;
   static const double BubbleTextHeight = 20.0;
   static const double AssetPadding = 30.0;
   static const double Parallax = 100.0;
   static const double AssetScreenScale = 0.3;
-//static const double InitialViewportPadding = 100.0; // TODO cleanup
-//static const double TravelViewportPaddingTop = 400.0;
 
   static const double ViewportPaddingTop = 120.0;
   static const double ViewportPaddingBottom = 100.0;
@@ -58,7 +68,7 @@ class Timeline {
 
   double _start = 0.0;
   double _end = 0.0;
-  double _renderStart = double.maxFinite; // TODO ?
+  double _renderStart = double.maxFinite; // TODO sets size of ticks?
   double _renderEnd = double.maxFinite;
   double _lastFrameTime = 0.0;
   double _height = 0.0;
@@ -75,14 +85,11 @@ class Timeline {
   double _nextEntryOpacity = 0.0;
   double _distanceToNextEntry = 0.0;
   double _simulationTime = 0.0;
-  double _timeMin = 0.0;
-  double _timeMax = 0.0;
   double _gutterWidth = GutterLeft;
 
   bool _isFrameScheduled = false;
   bool _isInteracting = false;
   bool _isScaling = false;
-  bool _isActive = false;
   bool _isSteady = false;
 
   HeaderColors? _currentHeaderColors;
@@ -117,25 +124,6 @@ class Timeline {
   TimelineEntry? _prevEntry;
   TimelineEntry? _renderPrevEntry;
 
-  /// A gradient is shown on the background, depending on the [_currentEra] we're in.
-  final List<TimelineBackgroundColor> _backgroundColors = [];
-
-  /// [Ticks] also have custom colors so that they are always visible with the changing background.
-  final List<TickColors> _tickColors = [];
-  final List<HeaderColors> _headerColors = [];
-
-  /// All the [TimelineEntry]s that are loaded from disk at boot (in [loadFromBundle()]).
-  /// List for "root" entries, i.e. entries with no parents.
-  final List<TimelineEntry> _rootEntries = [];
-
-  /// The list of [TimelineAsset], also loaded from disk at boot.
-  List<TimelineAsset> _renderedAssets = [];
-
-  /// This is a special feature to play a particular part of an animation
-  final Map<String, TimelineEntry> _entriesById = {};
-  final Map<String, nima.FlutterActor> _nimaResources = {};
-  final Map<String, flare.FlutterActor> _flareResources = {};
-
   /// Callback set by [TimelineRenderWidget] when adding a reference to this object.
   /// It'll trigger [RenderBox.markNeedsPaint()].
   PaintCallback? onNeedPaint;
@@ -147,7 +135,6 @@ class Timeline {
 
   TimelineEntry? get currentEra => _currentEra;
 
-  List<TimelineEntry> get rootEntries => _rootEntries;
   List<TimelineAsset> get renderedAssets => _renderedAssets;
 
   double get renderOffsetDepth => _renderOffsetDepth;
@@ -164,14 +151,8 @@ class Timeline {
   double get prevEntryOpacity => _prevEntryOpacity;
 
   bool get isInteracting => _isInteracting;
-  bool get isActive => _isActive;
 
   Color? get headerTextColor => _headerTextColor;
-  // Color? get headerBackgroundColor => _headerBackgroundColor;
-  // HeaderColors? get currentHeaderColors => _currentHeaderColors;
-
-  List<TimelineBackgroundColor> get backgroundColors => _backgroundColors;
-  List<TickColors> get tickColors => _tickColors;
 
   TimelineEntry findEvent(String label) {
     while (true) {
@@ -206,16 +187,6 @@ class Timeline {
     }
   }
 
-  /// Toggle/stop rendering whenever the timeline is visible or hidden.
-  set isActive(bool isIt) {
-    if (isIt != _isActive) {
-      _isActive = isIt;
-      if (_isActive) {
-        _startRendering();
-      }
-    }
-  }
-
   /// Check that the viewport is steady - i.e. no taps, pans, scales or other gestures are being detected.
   void _updateSteady() {
     bool isIt = !_isInteracting && !_isScaling;
@@ -232,17 +203,17 @@ class Timeline {
           Timer(const Duration(milliseconds: SteadyMilliseconds), () {
         _steadyTimer = null;
         _isSteady = true;
-        _startRendering();
+        startRendering();
       });
     } else {
       /// Otherwise update the current state and schedule a new frame.
       _isSteady = false;
-      _startRendering();
+      startRendering();
     }
   }
 
   /// Schedule a new frame.
-  void _startRendering() {
+  startRendering() {
     if (!_isFrameScheduled) {
       _isFrameScheduled = true;
       _lastFrameTime = 0.0;
@@ -257,426 +228,6 @@ class Timeline {
   /// Compute the viewport scale from the start/end times.
   double computeScale(double start, double end) {
     return _height == 0.0 ? 1.0 : _height / (end - start);
-  }
-
-  Future<TimelineAsset> loadFlareAsset(
-    Map assetMap,
-    String filename,
-    bool loop,
-    double offset,
-    double gap,
-    double width,
-    double height,
-    double scale,
-  ) async {
-    flare.FlutterActor? flutterActor = _flareResources[filename];
-    if (flutterActor == null) {
-      flutterActor = flare.FlutterActor();
-
-      /// Flare library function to load the [FlutterActor]
-      await flutterActor.loadFromBundle(rootBundle, filename);
-
-      /// Populate the Map.
-      _flareResources[filename] = flutterActor;
-    }
-
-    /// Distinguish between the actual actor, and its instance.
-    flare.FlutterActorArtboard actorStatic =
-        flutterActor.artboard as flare.FlutterActorArtboard;
-    actorStatic.initializeGraphics();
-    flare.FlutterActorArtboard actor =
-        flutterActor.artboard.makeInstance() as flare.FlutterActorArtboard;
-    actor.initializeGraphics();
-
-    /// and the reference to their first animation is grabbed.
-    flare.ActorAnimation animation = flutterActor.artboard.animations[0];
-
-    flare.ActorAnimation? idle;
-    List<flare.ActorAnimation>? idleAnimations;
-    dynamic name = assetMap["idle"];
-    if (name is String) {
-      if ((idle = actor.getAnimation(name)) != null) {
-        animation = idle;
-      }
-    } else if (name is List) {
-      for (String animationName in name) {
-        flare.ActorAnimation? animation1 = actor.getAnimation(animationName);
-        if (animation1 != null) {
-          idleAnimations ??= [];
-          idleAnimations.add(animation1);
-          animation = animation1;
-        }
-      }
-    }
-
-    flare.ActorAnimation? intro;
-    name = assetMap["intro"];
-    if (name is String) {
-      if ((intro = actor.getAnimation(name)) != null) {
-        animation = intro;
-      }
-    }
-
-    /// Make sure that all the initial values are set for the actor and for the
-    /// actor instance.
-    actor.advance(0.0);
-    flare.AABB setupAABB = actor.computeAABB();
-    animation.apply(0.0, actor, 1.0);
-    animation.apply(animation.duration, actorStatic, 1.0);
-    actor.advance(0.0);
-    actorStatic.advance(0.0);
-
-    dynamic bounds = assetMap["bounds"];
-    if (bounds is List) {
-      /// Override the AABB for this entry with custom values.
-      setupAABB = flare.AABB.fromValues(
-          bounds[0] is int ? bounds[0].toDouble() : bounds[0],
-          bounds[1] is int ? bounds[1].toDouble() : bounds[1],
-          bounds[2] is int ? bounds[2].toDouble() : bounds[2],
-          bounds[3] is int ? bounds[3].toDouble() : bounds[3]);
-    }
-
-    TimelineFlare flareAsset = TimelineFlare(
-      actorStatic,
-      actor,
-      setupAABB,
-      animation,
-      loop,
-      offset,
-      gap,
-      width,
-      height,
-      filename,
-      scale,
-    );
-
-    // set optional fields, if they exist:
-    flareAsset.intro = intro;
-    flareAsset.idle = idle;
-    flareAsset.idleAnimations = idleAnimations;
-
-    return flareAsset;
-  }
-
-  Future<TimelineAsset> loadNimaAsset(
-    Map assetMap,
-    String filename,
-    bool loop,
-    double offset,
-    double gap,
-    double width,
-    double height,
-    double scale,
-  ) async {
-    nima.FlutterActor? flutterActor = _nimaResources[filename];
-    if (flutterActor == null) {
-      flutterActor = nima.FlutterActor();
-      await flutterActor.loadFromBundle(filename);
-      _nimaResources[filename] = flutterActor;
-    }
-
-    nima.FlutterActor actorStatic = flutterActor;
-    nima.FlutterActor actor = flutterActor.makeInstance() as nima.FlutterActor;
-
-    nima.ActorAnimation animation;
-    dynamic name = assetMap["idle"];
-    if (name is String) {
-      animation = actor.getAnimation(name);
-    } else {
-      animation = flutterActor.animations[0];
-    }
-
-    actor.advance(0.0);
-    nima.AABB setupAABB = actor.computeAABB();
-    animation.apply(0.0, actor, 1.0);
-    animation.apply(animation.duration, actorStatic, 1.0);
-    actor.advance(0.0);
-    actorStatic.advance(0.0);
-
-    dynamic bounds = assetMap["bounds"];
-    if (bounds is List) {
-      setupAABB = nima.AABB.fromValues(
-          bounds[0] is int ? bounds[0].toDouble() : bounds[0],
-          bounds[1] is int ? bounds[1].toDouble() : bounds[1],
-          bounds[2] is int ? bounds[2].toDouble() : bounds[2],
-          bounds[3] is int ? bounds[3].toDouble() : bounds[3]);
-    }
-
-    TimelineNima nimaAsset = TimelineNima(
-      actorStatic,
-      actor,
-      setupAABB,
-      animation,
-      loop,
-      offset,
-      gap,
-      width,
-      height,
-      filename,
-      scale,
-    );
-
-    return nimaAsset;
-  }
-
-  /// The `asset` key in the current entry contains all the information for
-  /// the nima/flare animation file that'll be played on the timeline.
-  ///
-  /// `asset` is a JSON map with:
-  ///   - source: the name of the nima/flare/image file in the assets folder.
-  ///   - width/height/offset/bounds/gap:
-  ///            Sizes of the animation to properly align it in the timeline,
-  ///            together with its Axis-Aligned Bounding Box container.
-  ///   - intro: Some files have an 'intro' animation, to be played before
-  ///            idling.
-  ///   - idle:  Some files have one or more idle animations, and these are
-  ///            their names.
-  ///   - loop:  Some animations shouldn't loop (e.g. Big Bang) but just settle
-  ///            onto their idle animation. If that's the case, this flag is
-  ///            raised.
-  ///   - scale: a custom scale value.
-  Future<TimelineAsset> getTimelineAsset(Map assetMap) async {
-    String source = assetMap["source"];
-    String filename = "assets/tarikh/" + source;
-
-    TimelineAsset asset;
-
-    dynamic loopVal = assetMap["loop"];
-    bool loop = loopVal is bool ? loopVal : true;
-
-    dynamic offsetVal = assetMap["offset"];
-    double offset = offsetVal == null
-        ? 0.0
-        : offsetVal is int
-            ? offsetVal.toDouble()
-            : offsetVal;
-
-    dynamic gapVal = assetMap["gap"];
-    double gap = gapVal == null
-        ? 0.0
-        : gapVal is int
-            ? gapVal.toDouble()
-            : gapVal;
-
-    dynamic widthVal = assetMap["width"];
-    double width = widthVal is int ? widthVal.toDouble() : widthVal;
-
-    dynamic heightVal = assetMap["height"];
-    double height = heightVal is int ? heightVal.toDouble() : heightVal;
-
-    double scale = 1.0;
-    if (assetMap.containsKey("scale")) {
-      dynamic scaleVal = assetMap["scale"];
-      scale = scaleVal is int ? scaleVal.toDouble() : scaleVal;
-    }
-
-    /// Instantiate the correct object based on the file extension.
-    switch (getFileExtension(source)) {
-      case "flr":
-        asset = await loadFlareAsset(
-            assetMap, filename, loop, offset, gap, width, height, scale);
-        break;
-      case "nma":
-        asset = await loadNimaAsset(
-            assetMap, filename, loop, offset, gap, width, height, scale);
-        break;
-      default: // TODO TEST THIS, MVP can ship with just pictures
-        /// Legacy fallback case: some elements could have been just images.
-        ByteData data = await rootBundle.load(filename);
-        Uint8List list = Uint8List.view(data.buffer);
-        ui.Codec codec = await ui.instantiateImageCodec(list);
-        ui.FrameInfo frame = await codec.getNextFrame();
-
-        asset = TimelineImage(frame.image, width, height, filename, scale);
-
-        break;
-    }
-
-    return Future.value(asset);
-  }
-
-  /// Load all the resources from the local bundle.
-  ///
-  /// This function will load and decode `timline.json` from disk,
-  /// decode the JSON file, and populate all the [TimelineEntry]s.
-  loadFromBundle() async {
-    final String jsonData =
-        await rootBundle.loadString('assets/tarikh/timeline.json');
-    final List jsonEntries = json.decode(jsonData);
-
-    /// The JSON decode doesn't provide strong typing, so we'll iterate
-    /// on the dynamic entries in the [jsonEntries] list.
-    for (Map map in jsonEntries) {
-      /// The label is a brief description for the current entry.
-      String label = map["label"];
-
-      /// Create the current entry and fill in the current date if it's
-      /// an `Incident`, or look for the `start` property if it's an `Era` instead.
-      /// Some entries will have a `start` element, but not an `end` specified.
-      /// These entries specify a particular event such as the appearance of
-      /// "Humans" in history, which hasn't come to an end -- yet.
-      TimelineEntryType type;
-      double startMs;
-      if (map.containsKey("date")) {
-        type = TimelineEntryType.Incident;
-        dynamic date = map["date"];
-        startMs = date is int ? date.toDouble() : date;
-      } else {
-        type = TimelineEntryType.Era;
-        dynamic startVal = map["start"];
-        startMs = startVal is int ? startVal.toDouble() : startVal;
-      }
-
-      /// Some elements will have an `end` time specified.
-      /// If not `end` key is present in this entry, create the value based
-      /// on the type of the event:
-      /// - Eras use the current year as an end time.
-      /// - Other entries are just single points in time (start == end).
-      double endMs;
-      if (map.containsKey("end")) {
-        dynamic endVal = map["end"];
-        endMs = endVal is int ? endVal.toDouble() : endVal;
-      } else if (type == TimelineEntryType.Era) {
-        // TODO where timeline eras stretch to future?
-        endMs = (await TimeController.to.now()).year.toDouble() * 10.0;
-      } else {
-        endMs = startMs;
-      }
-
-      String articleFilename = map["article"];
-
-      /// Get Timeline Color Setup:
-      if (map.containsKey('timelineColors')) {
-        var timelineColors = map['timelineColors'];
-
-        /// If a custom background color for this [TimelineEntry] is specified,
-        /// extract its RGB values and save them for reference, along with the
-        /// starting date of the current entry.
-        var timelineBackgroundColor = TimelineBackgroundColor(
-          colorFromList(timelineColors["background"]),
-          startMs,
-        );
-        _backgroundColors.add(timelineBackgroundColor);
-
-        /// [Ticks] can also have custom colors, so that everything's is visible
-        /// even with custom colored backgrounds.
-        var tickColors = TickColors(
-          colorFromList(timelineColors["ticks"], key: "background"),
-          colorFromList(timelineColors["ticks"], key: "long"),
-          colorFromList(timelineColors["ticks"], key: "short"),
-          colorFromList(timelineColors["ticks"], key: "text"),
-          startMs,
-        );
-        _tickColors.add(tickColors);
-
-        /// If a `header` element is present, de-serialize the colors for it too.
-        var headerColors = HeaderColors(
-          colorFromList(timelineColors["header"], key: "background"),
-          colorFromList(timelineColors["header"], key: "text"),
-          startMs,
-        );
-        _headerColors.add(headerColors);
-      }
-
-      /// OPTIONAL FIELD 1 of 2: An accent color is also specified at times.
-      Color? accent;
-      if (map.containsKey("accent")) {
-        accent = colorFromList(map["accent"]);
-      }
-
-      /// OPTIONAL FIELD 2 of 2: Some entries will also have an id
-      String? id;
-      if (map.containsKey("id")) {
-        id = map["id"];
-      }
-
-      /// Get flare/nima/image asset object
-      TimelineAsset asset = await getTimelineAsset(map["asset"]);
-
-      /// Finally create TimeLineEntry object
-      var timelineEntry = TimelineEntry(
-        label,
-        type,
-        startMs,
-        endMs,
-        articleFilename,
-        asset,
-        accent,
-        id,
-      );
-
-      /// Add TimelineEntry reference 1 of 2:
-      asset.entry = timelineEntry; // can only do this once
-
-      /// Add TimelineEntry reference 2 of 2:
-      if (map.containsKey("id")) {
-        _entriesById[id!] = timelineEntry;
-      }
-
-      /// Add this entry to the list.
-      TarikhController.to.eventMap
-          .putIfAbsent(timelineEntry.label, () => timelineEntry);
-      TarikhController.to.events.add(timelineEntry); // sort is probably needed
-    }
-
-    /// sort the full list so they are in order of oldest to newest
-    TarikhController.to.events.sort((TimelineEntry a, TimelineEntry b) {
-      return a.startMs.compareTo(b.startMs);
-    });
-
-    _backgroundColors
-        .sort((TimelineBackgroundColor a, TimelineBackgroundColor b) {
-      return a.startMs.compareTo(b.startMs);
-    });
-
-    _timeMin = double.maxFinite;
-    _timeMax = -double.maxFinite;
-
-    /// IMPORTANT NOTE: Do we want to enhance this to allow json file input to
-    ///                 define where stuff belongs:
-    /// Build up hierarchy (Eras are grouped into "Spanning Eras" and Events are
-    /// placed into the Eras they belong to).
-    TimelineEntry? previous;
-    for (TimelineEntry entry in TarikhController.to.events) {
-      if (entry.startMs < _timeMin) {
-        _timeMin = entry.startMs;
-      }
-      if (entry.endMs > _timeMax) {
-        _timeMax = entry.endMs;
-      }
-      if (previous != null) {
-        previous.next = entry;
-      }
-      entry.previous = previous;
-      previous = entry;
-
-      TimelineEntry? parent;
-      double minDistance = double.maxFinite;
-      for (TimelineEntry checkEntry in TarikhController.to.events) {
-        if (checkEntry.type == TimelineEntryType.Era) {
-          double distance = entry.startMs - checkEntry.startMs;
-          double distanceEnd = entry.startMs - checkEntry.endMs;
-          if (distance > 0 && distanceEnd < 0 && distance < minDistance) {
-            minDistance = distance;
-            parent = checkEntry;
-          }
-        }
-      }
-      // no parent, so this is a root entry.
-      if (parent == null) {
-        _rootEntries.add(entry); // note holds eras, not individual entries
-      } else {
-        // otherwise add as child to parent node
-        entry.parent = parent;
-        parent.children ??= []; // parent node holds children
-        parent.children!.add(entry);
-      }
-    }
-  }
-
-  /// Helper function for [MenuVignette].
-  TimelineEntry? getById(String id) {
-    return _entriesById[id];
   }
 
   /// Make sure that while scrolling we're within the correct timeline bounds.
@@ -718,20 +269,6 @@ class Timeline {
     }
   }
 
-  Color colorFromList(colorList, {String key = ""}) {
-    if (key != "") {
-      colorList = colorList[key];
-    }
-    List<int> bg = colorList.cast<int>();
-
-    int bg3 = 0xFF; // 255 (no opacity)
-    if (bg.length == 4) {
-      bg3 = bg[3];
-    }
-
-    return Color.fromARGB(bg3, bg[0], bg[1], bg[2]);
-  }
-
   /// This method bounds the current viewport depending on the current start and end positions.
   void setViewport(
       {double start = double.maxFinite,
@@ -742,7 +279,7 @@ class Timeline {
       bool animate = false}) {
     /// Calculate the current height.
     if (height != double.maxFinite) {
-      if (_height == 0.0 && _rootEntries.isNotEmpty) {
+      if (_height == 0.0) {
         double scale = height / (_end - _start);
         _start = _start - padding.top / scale;
         _end = _end + padding.bottom / scale;
@@ -843,33 +380,9 @@ class Timeline {
     // Tez: fixes exception when hitting back button from timeline back to root page
     // TODO isActive was not here before, needed to fix exception after upgrading
     // flutter version:
-    if (isActive && onNeedPaint != null) {
+    if (TarikhController.to.isActive && onNeedPaint != null) {
       onNeedPaint!();
     }
-  }
-
-  TickColors? findTickColors(double screen) {
-    for (TickColors color in _tickColors.reversed) {
-      if (screen >= color.screenY) {
-        return color;
-      }
-    }
-
-    return screen < _tickColors.first.screenY
-        ? _tickColors.first
-        : _tickColors.last;
-  }
-
-  HeaderColors? _findHeaderColors(double screen) {
-    for (HeaderColors color in _headerColors.reversed) {
-      if (screen >= color.screenY) {
-        return color;
-      }
-    }
-
-    return screen < _headerColors.first.screenY
-        ? _headerColors.first
-        : _headerColors.last;
   }
 
   bool advance(double elapsed, bool animate) {
@@ -939,52 +452,58 @@ class Timeline {
     scale = _height / (_renderEnd - _renderStart);
 
     /// Update color screen positions.
-    if (_tickColors.isNotEmpty) {
-      double lastStart = _tickColors.first.startMs;
-      for (TickColors color in _tickColors) {
-        color.screenY =
-            (lastStart + (color.startMs - lastStart / 2.0) - _renderStart) *
-                scale;
-        lastStart = color.startMs;
-      }
-    }
-    if (_headerColors.isNotEmpty) {
-      double lastStart = _headerColors.first.startMs;
-      for (HeaderColors color in _headerColors) {
-        color.screenY =
-            (lastStart + (color.startMs - lastStart / 2.0) - _renderStart) *
-                scale;
-        lastStart = color.startMs;
-      }
+    double lastStart = _tickColors.first.startMs;
+    for (TickColors color in _tickColors) {
+      color.screenY =
+          (lastStart + (color.startMs - lastStart / 2.0) - _renderStart) *
+              scale;
+      lastStart = color.startMs;
     }
 
-    _currentHeaderColors = _findHeaderColors(0.0)!;
+    lastStart = _headerColors.first.startMs;
+    for (HeaderColors color in _headerColors) {
+      color.screenY =
+          (lastStart + (color.startMs - lastStart / 2.0) - _renderStart) *
+              scale;
+      lastStart = color.startMs;
+    }
 
-    if (_currentHeaderColors != null) {
-      if (_headerTextColor == null) {
-        _headerTextColor = _currentHeaderColors!.text;
-        _headerBackgroundColor = _currentHeaderColors!.background;
-      } else {
-        bool stillColoring = false;
-        Color headerTextColor = interpolateColor(
-            _headerTextColor!, _currentHeaderColors!.text, elapsed);
+    // old _findHeaderColors() logic:
+    double screen = 0.0;
+    HeaderColors? headerColors;
+    for (HeaderColors color in _headerColorsReversed) {
+      if (screen >= color.screenY) {
+        headerColors = color;
+      }
+    }
+    headerColors ??= screen < _headerColors.first.screenY
+        ? _headerColors.first
+        : _headerColors.last;
+    _currentHeaderColors = headerColors;
 
-        if (headerTextColor != _headerTextColor) {
-          _headerTextColor = headerTextColor;
-          stillColoring = true;
-          doneRendering = false;
-        }
-        Color headerBackgroundColor = interpolateColor(
-            _headerBackgroundColor!, _currentHeaderColors!.background, elapsed);
-        if (headerBackgroundColor != _headerBackgroundColor) {
-          _headerBackgroundColor = headerBackgroundColor;
-          stillColoring = true;
-          doneRendering = false;
-        }
-        if (stillColoring) {
-          if (onHeaderColorsChanged != null) {
-            onHeaderColorsChanged!(_headerBackgroundColor!, _headerTextColor!);
-          }
+    if (_headerTextColor == null) {
+      _headerTextColor = _currentHeaderColors!.text;
+      _headerBackgroundColor = _currentHeaderColors!.background;
+    } else {
+      bool stillColoring = false;
+      Color headerTextColor = interpolateColor(
+          _headerTextColor!, _currentHeaderColors!.text, elapsed);
+
+      if (headerTextColor != _headerTextColor) {
+        _headerTextColor = headerTextColor;
+        stillColoring = true;
+        doneRendering = false;
+      }
+      Color headerBackgroundColor = interpolateColor(
+          _headerBackgroundColor!, _currentHeaderColors!.background, elapsed);
+      if (headerBackgroundColor != _headerBackgroundColor) {
+        _headerBackgroundColor = headerBackgroundColor;
+        stillColoring = true;
+        doneRendering = false;
+      }
+      if (stillColoring) {
+        if (onHeaderColorsChanged != null) {
+          onHeaderColorsChanged!(_headerBackgroundColor!, _headerTextColor!);
         }
       }
     }
@@ -1001,18 +520,17 @@ class Timeline {
     _currentEra = null;
     _nextEntry = null;
     _prevEntry = null;
-    if (_rootEntries.isNotEmpty) {
-      /// Advance the items hierarchy one level at a time.
-      if (_advanceItems(_rootEntries, _gutterWidth + LineSpacing, scale,
-          elapsed, animate, 0)) {
-        doneRendering = false;
-      }
 
-      /// Advance all the assets and add the rendered ones into [_renderAssets].
-      _renderedAssets = []; // resets here, where all UI cleanup is done?
-      if (_advanceAssets(_rootEntries, elapsed, animate, _renderedAssets)) {
-        doneRendering = false;
-      }
+    /// Advance the items hierarchy one level at a time.
+    if (_advanceItems(
+        _rootEntries, _gutterWidth + LineSpacing, scale, elapsed, animate, 0)) {
+      doneRendering = false;
+    }
+
+    /// Advance all the assets and add the rendered ones into [_renderAssets].
+    _renderedAssets = []; // resets here, where all UI cleanup is done?
+    if (_advanceAssets(_rootEntries, elapsed, animate, _renderedAssets)) {
+      doneRendering = false;
     }
 
     if (_nextEntryOpacity == 0.0) {
@@ -1359,6 +877,8 @@ class Timeline {
             }
           }
         } else {
+          bool isActive = TarikhController.to.isActive;
+
           /// Item is in view, apply the new animation time and advance the actor.
           if (asset is TimelineNima && isActive) {
             asset.animationTime += elapsed;

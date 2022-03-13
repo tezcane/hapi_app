@@ -68,7 +68,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   @override
   void dispose() {
     super.dispose();
-    t.isActive = false;
+    TarikhController.to.isActive = false;
   }
 
   @override
@@ -83,7 +83,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
       MenuItemData.fromEntry(widget.entry!);
     }
 
-    t.isActive = true;
+    TarikhController.to.isActive = true;
     _eraName = t.currentEra != null ? t.currentEra!.label : DefaultEraName;
     t.onHeaderColorsChanged = (Color background, Color text) {
       setState(() {
@@ -189,7 +189,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
       if (_touchedBubble!.zoom) {
         _navigateToTimeline(_touchedBubble!.entry, devicePadding.top);
       } else {
-        t.isActive = false; // stop rendering here, menu controller re-enables
+        TarikhController.to.isActive =
+            false; // stop rendering here, menu controller re-enables
         MenuController.to.pushSubPage(SubPage.Tarikh_Article, arguments: {
           'article': _touchedBubble!.entry,
         });
@@ -224,6 +225,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   @override
   void didUpdateWidget(covariant TarikhTimelineUI oldWidget) {
     super.didUpdateWidget(oldWidget);
+
+    print('********************* Timeline: didUpdateWidget ******************');
 
     // TODO what is this doing?:
     if (t != oldWidget.timeline) {
