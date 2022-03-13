@@ -85,7 +85,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
 
     TarikhController.to.isActive = true;
     _eraName = t.currentEra != null ? t.currentEra!.label : DefaultEraName;
-    t.onHeaderColorsChanged = (Color background, Color text) {
+    t.onHeaderColorsChanged = (/*Color background,*/ Color text) {
       setState(() {
         _headerTextColor = text;
         //_headerBackgroundColor = background;
@@ -236,7 +236,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
         // _headerBackgroundColor = t.headerBackgroundColor;
       });
 
-      t.onHeaderColorsChanged = (Color background, Color text) {
+      t.onHeaderColorsChanged = (/*Color background,*/ Color text) {
         setState(() {
           _headerTextColor = text;
           // _headerBackgroundColor = background;

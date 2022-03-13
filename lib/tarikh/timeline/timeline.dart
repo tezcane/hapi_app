@@ -12,7 +12,7 @@ import 'package:hapi/tarikh/timeline/timeline_utils.dart';
 
 typedef PaintCallback = Function();
 typedef ChangeEraCallback = Function(TimelineEntry? era);
-typedef ChangeHeaderColorCallback = Function(Color background, Color text);
+typedef ChangeHeaderColorCallback = Function(/*Color background,*/ Color text);
 
 class Timeline {
   Timeline(
@@ -95,7 +95,7 @@ class Timeline {
   HeaderColors? _currentHeaderColors;
 
   Color? _headerTextColor;
-  Color? _headerBackgroundColor;
+//Color? _headerBackgroundColor;
 
   /// Depending on the current [Platform], different values are initialized
   /// so that they behave properly on iOS&Android.
@@ -468,7 +468,7 @@ class Timeline {
 
     if (_headerTextColor == null) {
       _headerTextColor = _currentHeaderColors!.text;
-      _headerBackgroundColor = _currentHeaderColors!.background;
+      //_headerBackgroundColor = _currentHeaderColors!.background;
     } else {
       bool stillColoring = false;
       Color headerTextColor = interpolateColor(
@@ -479,16 +479,17 @@ class Timeline {
         stillColoring = true;
         doneRendering = false;
       }
-      Color headerBackgroundColor = interpolateColor(
-          _headerBackgroundColor!, _currentHeaderColors!.background, elapsed);
-      if (headerBackgroundColor != _headerBackgroundColor) {
-        _headerBackgroundColor = headerBackgroundColor;
-        stillColoring = true;
-        doneRendering = false;
-      }
+      // Color headerBackgroundColor = interpolateColor(
+      //     _headerBackgroundColor!, _currentHeaderColors!.background, elapsed);
+      // if (headerBackgroundColor != _headerBackgroundColor) {
+      //   _headerBackgroundColor = headerBackgroundColor;
+      //   stillColoring = true;
+      //   doneRendering = false;
+      // }
       if (stillColoring) {
         if (onHeaderColorsChanged != null) {
-          onHeaderColorsChanged!(_headerBackgroundColor!, _headerTextColor!);
+          //onHeaderColorsChanged!(_headerBackgroundColor!, _headerTextColor!);
+          onHeaderColorsChanged!(_headerTextColor!);
         }
       }
     }

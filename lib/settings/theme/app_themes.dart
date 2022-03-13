@@ -52,7 +52,7 @@ class AppThemes {
     unselectedWidgetColor: selected, // set un-checked checkbox
   );
 }
-
+/*
 /// contains info related to our light and dark themes.
 class AppThemes2 {
   AppThemes2._();
@@ -299,3 +299,4 @@ class AppThemes2 {
     ),
   );
 }
+*/
