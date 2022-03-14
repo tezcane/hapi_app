@@ -25,7 +25,7 @@ class QuestBottomBarUI extends StatefulWidget {
 }
 
 class _QuestBottomBarUIState extends State<QuestBottomBarUI> {
-  int _currentPage = 0; // TODO turn off settings on other quest pages
+  int _currentPage = 3; // TODO turn off settings on other quest pages
   final _pageController = PageController();
 
   @override
@@ -35,54 +35,56 @@ class _QuestBottomBarUIState extends State<QuestBottomBarUI> {
       body: PageView(
         controller: _pageController,
         children: [
-          ActiveQuestsUI(),
+          Container(),
+          Container(),
           const DoListUI(),
-          Container(),
-          Container(),
+          ActiveQuestsUI(),
         ],
         onPageChanged: (index) {
           setState(() => _currentPage = index);
         },
       ),
-      bottomNavigationBar: Container(
-        color: Theme.of(context).backgroundColor,
-        child: Row(
-          children: [
-            BottomBar(
-              selectedIndex: _currentPage,
-              onTap: (int index) {
-                _pageController.jumpToPage(index);
-                setState(() => _currentPage = index);
-              },
-              items: [
-                BottomBarItem(
-                  icon: const Icon(Icons.how_to_reg_outlined),
-                  title: Text('Active Quests'),
-                  activeColor: Colors.blue,
-                ),
-                BottomBarItem(
-                  icon: const Icon(Icons.brightness_high_outlined),
-                  title: Text('Daily Quests'),
-                  activeColor: Colors.greenAccent.shade700,
-                ),
-                BottomBarItem(
-                  icon: const Icon(Icons.timer_outlined),
-                  title: Text('Time Quests'),
-                  activeColor: Colors.orange,
-                ),
-                BottomBarItem(
-                  icon: Transform.rotate(
-                    angle: 2.8,
-                    child: const Icon(Icons.brightness_3_outlined),
-                  ),
-                  title: Text('hapi Quests'),
-                  activeColor: Colors.red,
-                ),
-              ],
+      bottomNavigationBar: BottomBar(
+        //backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        backgroundColor: Colors.transparent,
+        itemPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+        showActiveBackgroundColor: false,
+        selectedIndex: _currentPage,
+        onTap: (int index) {
+          _pageController.jumpToPage(index);
+          setState(() => _currentPage = index);
+        },
+        items: [
+          BottomBarItem(
+            icon: Transform.rotate(
+              angle: 2.8,
+              child: const Icon(Icons.brightness_3_outlined),
             ),
-            const SizedBox(width: 10), // filler to offset menu
-          ],
-        ),
+            title: Text('hapi Quests'),
+            activeColor: Colors.red,
+          ),
+          BottomBarItem(
+            icon: const Icon(Icons.timer_outlined),
+            title: Text('Time Quests'),
+            activeColor: Colors.orange,
+          ),
+          BottomBarItem(
+            icon: const Icon(Icons.brightness_high_outlined),
+            title: Text('Daily Quests'),
+            activeColor: Colors.greenAccent.shade700,
+          ),
+          BottomBarItem(
+            icon: const Icon(Icons.how_to_reg_outlined),
+            title: Text('Active Quests' + '        '), // space to move from FAB
+            activeColor: Colors.blue,
+          ),
+          // This is a dummy to move left of the FAB
+          BottomBarItem(
+            icon: const Icon(Icons.close, color: Colors.transparent),
+            title: const Text(''),
+            activeColor: Colors.transparent,
+          ),
+        ],
       ),
     );
   }
