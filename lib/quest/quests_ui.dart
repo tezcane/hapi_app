@@ -1,10 +1,14 @@
 import 'package:bottom_bar/bottom_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hapi/getx_hapi.dart';
+import 'package:hapi/main.dart';
 import 'package:hapi/menu/fab_nav_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/quest/active/active_quests_settings_ui.dart';
 import 'package:hapi/quest/active/active_quests_ui.dart';
 import 'package:hapi/quest/daily/do_list/do_list_quest_ui.dart';
+import 'package:hapi/settings/theme/app_themes.dart';
 
 /// Init active/daily/timed/hapi quests with slick bottom bar navigation
 class QuestsUI extends StatelessWidget {
@@ -19,73 +23,133 @@ class QuestsUI extends StatelessWidget {
   }
 }
 
-class QuestBottomBarUI extends StatefulWidget {
-  @override
-  _QuestBottomBarUIState createState() => _QuestBottomBarUIState();
+/// Controller to track a NavPage's last selected SubPage.
+class HapiPageController extends GetxHapi {
+  HapiPageController(this.subPage) {
+    key = '${SubPage.Active_Quests.name}_lastIdx';
+    pageController = PageController(initialPage: lastIdx);
+  }
+
+  final SubPage subPage;
+  late final String key;
+  late final PageController pageController;
+
+  int get lastIdx => s.read(key) ?? 3; // 3 = Active Quests
+  set lastIdx(int idx) {
+    pageController.jumpToPage(idx);
+    update(); // needed for UI to update
+    s.write(key, idx); // done async, do last
+  }
 }
 
-class _QuestBottomBarUIState extends State<QuestBottomBarUI> {
-  int _currentPage = 3; // TODO turn off settings on other quest pages
-  final _pageController = PageController();
-
+// TODO turn off menu settings on other quest pages
+class QuestBottomBarUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      body: PageView(
-        controller: _pageController,
-        children: [
-          Container(),
-          Container(),
-          const DoListUI(),
-          ActiveQuestsUI(),
-        ],
-        onPageChanged: (index) {
-          setState(() => _currentPage = index);
-        },
-      ),
-      bottomNavigationBar: BottomBar(
-        //backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        backgroundColor: Colors.transparent,
-        itemPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        showActiveBackgroundColor: false,
-        selectedIndex: _currentPage,
-        onTap: (int index) {
-          _pageController.jumpToPage(index);
-          setState(() => _currentPage = index);
-        },
-        items: [
-          BottomBarItem(
-            icon: Transform.rotate(
-              angle: 2.8,
-              child: const Icon(Icons.brightness_3_outlined),
-            ),
-            title: Text('hapi Quests'),
-            activeColor: Colors.red,
+    return GetBuilder<HapiPageController>(
+      init: HapiPageController(SubPage.Active_Quests),
+      builder: (c) {
+        return Scaffold(
+          backgroundColor: Theme.of(context).backgroundColor,
+          body: PageView(
+            controller: c.pageController,
+            children: [
+              Container(),
+              Container(),
+              const DoListUI(),
+              ActiveQuestsUI(),
+            ],
+            onPageChanged: (idx) {
+              c.lastIdx = idx;
+            },
           ),
-          BottomBarItem(
-            icon: const Icon(Icons.timer_outlined),
-            title: Text('Time Quests'),
-            activeColor: Colors.orange,
+          bottomNavigationBar: Row(
+            children: [
+              BottomBar(
+                // Disable to turn off bottom bar view, so menu blends to page
+                //backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+                itemPadding: const EdgeInsets.only(
+                    top: 5, bottom: 5, left: 16, right: 16),
+                showActiveBackgroundColor: false, // no highlighting text
+                selectedIndex: c.lastIdx,
+                onTap: (int idx) => c.lastIdx = idx,
+                items: [
+                  BBItem(
+                    context,
+                    AppThemes.logoText,
+                    Icons.brightness_3_outlined,
+                    'hapi',
+                    'Quests that are long-term',
+                    iconAngle: 2.8,
+                  ),
+                  BBItem(
+                    context,
+                    Colors.greenAccent.shade700, //.orange,
+                    Icons.timer_outlined,
+                    'Time',
+                    'Quests to manage time',
+                  ),
+                  BBItem(
+                    context,
+                    Colors.yellow,
+                    Icons.brightness_high_outlined,
+                    'Daily',
+                    'Quests to start good habits',
+                  ),
+                  BBItem(
+                    context,
+                    Colors.blue,
+                    Icons.how_to_reg_outlined,
+                    'Active',
+                    '            ' // Get around FAB
+                        'Quests to perform prayers'
+                        '            ', // Get around FAB
+                  ),
+                ],
+              ),
+              //const SizedBox(), not needed Row is using MainAxis.start
+            ],
           ),
-          BottomBarItem(
-            icon: const Icon(Icons.brightness_high_outlined),
-            title: Text('Daily Quests'),
-            activeColor: Colors.greenAccent.shade700,
-          ),
-          BottomBarItem(
-            icon: const Icon(Icons.how_to_reg_outlined),
-            title: Text('Active Quests' + '        '), // space to move from FAB
-            activeColor: Colors.blue,
-          ),
-          // This is a dummy to move left of the FAB
-          BottomBarItem(
-            icon: const Icon(Icons.close, color: Colors.transparent),
-            title: const Text(''),
-            activeColor: Colors.transparent,
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
+}
+
+class BBItem extends BottomBarItem {
+  BBItem(context, Color color, IconData iconData, String title, String tooltip,
+      {double iconAngle = 0.0})
+      : super(
+          activeColor: color,
+          icon: Tooltip(
+            message: tooltip,
+            child: iconAngle == 0
+                ? Icon(iconData, size: 30.0)
+                : Transform.rotate(
+                    // For crescent angle
+                    angle: 2.8,
+                    child: Icon(iconData, size: 30.0)),
+          ),
+          title: Tooltip(
+            message: tooltip,
+            child: Container(
+              // magic fixed the BBItems on the page finally... TODO will cut i18n text
+              constraints: BoxConstraints(
+                minWidth: MediaQuery.of(context).size.width / 6.0, // Tune this
+                maxWidth: MediaQuery.of(context).size.width / 6.0,
+              ),
+              child: Center(
+                child: Text(
+                  title,
+                  style: iconAngle == 0
+                      ? const TextStyle(fontSize: 17)
+                      : const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Lobster', // for hapi text
+                          fontSize: 17),
+                ),
+              ),
+            ),
+          ),
+        );
 }
