@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flare_dart/math/aabb.dart' as flare;
 import 'package:flare_flutter/flare.dart' as flare;
+import 'package:hapi/controllers/time_controller.dart';
 import 'package:nima/nima.dart' as nima;
 import 'package:nima/nima/animation/actor_animation.dart' as nima;
 import 'package:nima/nima/math/aabb.dart' as nima;
@@ -177,6 +178,7 @@ class TimelineEntry {
     _handleLabelNewlineCount();
   }
 
+  static final int todaysAdTimeYears = TimeController.to.now2().year;
   final String _label;
   final TimelineEntryType type;
   final double startMs;
@@ -246,62 +248,76 @@ class TimelineEntry {
     }
   }
 
-  /// Pretty-printing for the entry date.
-  String formatYearsAgo() {
-    if (startMs > 0) {
-      return startMs.round().toString();
-    }
-    return TimelineEntry.formatYears(startMs) + " Ago";
-  }
-
   /// Debug information.
   @override
   String toString() {
     return "TIMELINE ENTRY: $label -($startMs,$endMs)";
   }
 
-  /// Helper method.
+  /// Pretty-printing for the entry date.
+  String formatYearsAgo({double? eventYear}) {
+    eventYear ??= startMs;
+
+    if (eventYear <= -10000) {
+      return TimelineEntry.formatYears(startMs) + " Ago";
+    }
+
+    double yearsAgo;
+    String bc = " AD (";
+    if (eventYear <= 0) {
+      bc = " BC (";
+      yearsAgo = eventYear.abs() + todaysAdTimeYears;
+    } else {
+      yearsAgo = todaysAdTimeYears - eventYear;
+    }
+    return eventYear.abs().toStringAsFixed(0) +
+        bc +
+        yearsAgo.toStringAsFixed(0) +
+        " Years Ago)";
+  }
+
+  /// Shortens large numbers, e.g. 10,000,000 returns "10 million years"
   /// Dart int supports -9223372036854775808 - 9223372036854775807
-  static String formatYears(double start) {
+  static String formatYears(double eventYear) {
     String label;
-    int valueAbs = start.round().abs();
-    if (valueAbs > 1000000000000000000) {
+    int valueAbs = eventYear.round().abs();
+    if (valueAbs >= 1000000000000000000) {
       double v = (valueAbs / 100000000000000000.0).floorToDouble() / 10.0;
 
       label = (valueAbs / 1000000000000000000)
               .toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
           " Quintillion ";
-    } else if (valueAbs > 1000000000000000) {
+    } else if (valueAbs >= 1000000000000000) {
       double v = (valueAbs / 100000000000000.0).floorToDouble() / 10.0;
 
       label = (valueAbs / 1000000000000000)
               .toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
           " Quadrillion ";
-    } else if (valueAbs > 1000000000000) {
+    } else if (valueAbs >= 1000000000000) {
       double v = (valueAbs / 100000000000.0).floorToDouble() / 10.0;
 
       label = (valueAbs / 1000000000000)
               .toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
           " Trillion ";
-    } else if (valueAbs > 1000000000) {
+    } else if (valueAbs >= 1000000000) {
       double v = (valueAbs / 100000000.0).floorToDouble() / 10.0;
 
       label = (valueAbs / 1000000000)
               .toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
           " Billion";
-    } else if (valueAbs > 1000000) {
+    } else if (valueAbs >= 1000000) {
       double v = (valueAbs / 100000.0).floorToDouble() / 10.0;
       label =
           (valueAbs / 1000000).toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
               " Million";
-    } else if (valueAbs > 10000) // N.B. < 10,000
-    {
+    } else if (valueAbs >= 10000) {
       double v = (valueAbs / 100.0).floorToDouble() / 10.0;
       label =
           (valueAbs / 1000).toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
               " Thousand";
     } else {
       label = valueAbs.toStringAsFixed(0);
+      return label + (label == "1" ? " Year" : " Years");
     }
     return label + " Years";
   }

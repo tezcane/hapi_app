@@ -262,7 +262,12 @@ class TarikhController extends GetxHapi {
 
       double pageSize = t.renderEnd - t.renderStart;
       double pages = timeUntilDouble / pageSize;
-      pageScrolls = '${formatter.format(pages.abs())} pages away';
+      String pagesAwayNum = formatter.format(pages.abs());
+      if (pagesAwayNum == "1") {
+        pageScrolls = "1 page away";
+      } else {
+        pageScrolls = '$pagesAwayNum pages away';
+      }
     }
 
     return TimeBtn(title, timeUntil, pageScrolls, entry: entry);
