@@ -45,7 +45,19 @@ class _BottomBarMenuState extends State<BottomBarMenu> {
             selectedIndex: _currentPage,
             showActiveBackgroundColor: true,
             onTap: (newIdx) {
-              _pageController.jumpToPage(newIdx);
+              if (newIdx == _currentPage) {
+                return; // already on this index, don't do anything
+              }
+              //_pageController.jumpToPage(newIdx); <-boring, use animation:
+              _pageController.animateToPage(
+                newIdx,
+                //curve: Curves.easeInOut,
+                //curve: Curves.elasticOut,
+                curve: newIdx > _currentPage
+                    ? Curves.easeInOut // move right
+                    : Curves.elasticOut, // move left
+                duration: const Duration(milliseconds: 650),
+              );
               NavPageController.to.setLastIdx(widget.navPage, newIdx);
               setState(() => _currentPage = newIdx);
             },

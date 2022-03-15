@@ -11,10 +11,11 @@ dis  - Disabled
 dn   - down (use with up: up/dn)  
 e    - exception/error  
 idx  - Index  
+L    - Left (use with Left/Right->L/R)  
 lat  - latitude  
 lng  - longitude  
 Loc  - Location  
-lr   - left right  
+lr   - left right
 msg  - message  
 muak - Muakkadah  
 nav  - Navigate/Navigator  
@@ -23,6 +24,7 @@ nv   - new value
 P    - placement (start, center, end)    
 qyam - Qiyam  
 qust - Quest  
+R    - Right (use with Left/Right->L/R)  
 Rkt  - Rakat  
 rv   - return value  
 s    - storage/Get Storage  
