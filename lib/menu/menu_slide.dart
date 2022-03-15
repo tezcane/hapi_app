@@ -1,24 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hapi/controllers/nav_page_controller.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 
 class MenuSlide extends StatefulWidget {
-  final Widget foregroundPage; // where the app/navigation lives
-  final Widget bottomWidget; // bottom row/horizontal menu bar
-  final Widget? settingsWidget; // right column/verticle menu bar
-
-  final double scaleWidth;
-  final double scaleHeight;
-  final Duration slideAnimationDuration;
-  final Curve openAnimationCurve;
-  final Curve closeAnimationCurve;
-
   const MenuSlide({
     Key? key,
+    required this.navPage,
     required this.foregroundPage,
     required this.bottomWidget,
-    this.settingsWidget,
+    required this.settingsWidgets,
     this.scaleWidth = 100,
     this.scaleHeight = 56,
     this.slideAnimationDuration = const Duration(milliseconds: 600),
@@ -26,6 +18,17 @@ class MenuSlide extends StatefulWidget {
     this.closeAnimationCurve = const ElasticInCurve(0.9),
   })  : assert(scaleHeight >= 40),
         super(key: key);
+
+  final NavPage navPage;
+  final Widget foregroundPage; // where the app/navigation lives
+  final Widget bottomWidget; // bottom row/horizontal menu bar
+  final List<Widget?> settingsWidgets; // right column/vertical menu bar
+
+  final double scaleWidth;
+  final double scaleHeight;
+  final Duration slideAnimationDuration;
+  final Curve openAnimationCurve;
+  final Curve closeAnimationCurve;
 
   @override
   _MenuSlideState createState() => _MenuSlideState();
@@ -65,9 +68,14 @@ class _MenuSlideState extends State<MenuSlide>
                           minWidth: widget.scaleWidth,
                           maxWidth: widget.scaleWidth,
                         ),
-                        child: Visibility(
+                        child: GetBuilder<NavPageController>(builder: (c) {
+                          return Visibility(
                             visible: cMenu.isMenuShowingSettings(),
-                            child: widget.settingsWidget ?? Column()),
+                            child: widget.settingsWidgets[
+                                    c.getLastIdx(widget.navPage)] ??
+                                Column(),
+                          );
+                        }),
                       ),
                     ),
                     Positioned(

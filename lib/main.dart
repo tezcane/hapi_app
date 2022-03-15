@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hapi/controllers/connectivity_controller.dart';
 import 'package:hapi/controllers/location_controller.dart';
+import 'package:hapi/controllers/nav_page_controller.dart';
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/helpers/loading.dart';
 import 'package:hapi/main_controller.dart';
@@ -80,7 +81,7 @@ void main() async {
   tz.initializeTimeZones();
 
   // TODO cleanup/optimize use Getx bindings?
-  const bool permOn = false;
+  const bool permOn = true;
   Get.put<MainController>(MainController(),
       permanent: permOn); // should do first
   Get.put<ConnectivityController>(ConnectivityController(), permanent: permOn);
@@ -89,7 +90,8 @@ void main() async {
   Get.put<LocationController>(LocationController(),
       permanent: permOn); // requires TimeController
   Get.put<TarikhController>(TarikhController());
-  Get.put<MenuController>(MenuController(),
+  Get.put<NavPageController>(NavPageController(), permanent: permOn);
+  Get.put<MenuController>(MenuController(), // requires NavPageController
       permanent: permOn); //requires TarikhController
   Get.put<OnboardingController>(OnboardingController());
   Get.put<AuthController>(AuthController()); // requires OnboardingController

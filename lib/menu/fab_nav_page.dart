@@ -2,29 +2,25 @@ import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:hapi/controllers/nav_page_controller.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/menu/menu_nav.dart';
 import 'package:hapi/menu/menu_slide.dart';
 import 'package:share/share.dart';
 
 class FabNavPage extends StatelessWidget {
-  FabNavPage({
+  const FabNavPage({
     Key? key,
     required this.navPage,
     required this.foregroundPage,
     required this.bottomWidget,
-    this.settingsWidget,
-  }) : super(key: key) {
-    hasSettings = settingsWidget != null;
-    MenuController.to.setShowNavSettings(hasSettings);
-  }
+    required this.settingsWidgets,
+  }) : super(key: key);
 
   final NavPage navPage;
   final Widget foregroundPage;
   final Widget bottomWidget;
-  final Widget? settingsWidget;
-
-  late final bool hasSettings; // class var so settings don't show on switch
+  final List<Widget?> settingsWidgets;
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +38,12 @@ class FabNavPage extends StatelessWidget {
             child: const Icon(Icons.arrow_back_outlined, size: 30),
           ),
           body: MenuNav(
+            initNavPage: navPage,
+            settingsWidgets: settingsWidgets,
             builder: () {
               return Scaffold(
                 body: MenuSlide(
+                  navPage: navPage,
                   foregroundPage: Stack(
                     children: [
                       IgnorePointer(
@@ -53,13 +52,14 @@ class FabNavPage extends StatelessWidget {
                         child: foregroundPage, // Main page
                       ),
                       Align(
+                        // TODO asdf move the confetti away from here
                         alignment: Alignment.topCenter,
                         child: ConfettiWidget(
                           confettiController:
                               MenuController.to.confettiController(),
                           blastDirectionality: BlastDirectionality.explosive,
                           shouldLoop: false,
-                          numberOfParticles: 75,
+                          numberOfParticles: 25,
                           maximumSize: const Size(50, 50),
                           minimumSize: const Size(20, 20),
                           colors: const [
@@ -82,7 +82,7 @@ class FabNavPage extends StatelessWidget {
                               MenuController.to.confettiController(),
                           blastDirectionality: BlastDirectionality.explosive,
                           shouldLoop: false,
-                          numberOfParticles: 75,
+                          numberOfParticles: 25,
                           maximumSize: const Size(10, 10),
                           minimumSize: const Size(3, 3),
                           colors: const [
@@ -101,12 +101,11 @@ class FabNavPage extends StatelessWidget {
                     ],
                   ),
                   bottomWidget: bottomWidget, // preferably Row
-                  settingsWidget: settingsWidget, // preferably Column
+                  settingsWidgets: settingsWidgets, // preferably Column
                 ),
               );
             },
-            initNavPage: navPage,
-            items: kNavs
+            items: navPageValues
                 .map(
                   // resize menu icons/text if keyboard shows
                   (nav) => SingleChildScrollView(
@@ -120,7 +119,8 @@ class FabNavPage extends StatelessWidget {
                               Stack(
                                 children: [
                                   Transform.rotate(
-                                    angle: nav.np == NavPage.Relics ? 2.8 : 0,
+                                    angle:
+                                        nav.navPage == NavPage.Relics ? 2.8 : 0,
                                     child: Icon(
                                       nav.icon,
                                       color: Colors.white,
@@ -129,12 +129,14 @@ class FabNavPage extends StatelessWidget {
                                   ),
                                   if (c.getShowBadge(navPage))
                                     Positioned(
-                                      top:
-                                          nav.np == NavPage.Relics ? 8.6 : -2.0,
+                                      top: nav.navPage == NavPage.Relics
+                                          ? 8.6
+                                          : -2.0,
                                       right: -2.0,
                                       child: Transform.rotate(
-                                        angle:
-                                            nav.np == NavPage.Relics ? .59 : 0,
+                                        angle: nav.navPage == NavPage.Relics
+                                            ? .59
+                                            : 0,
                                         child: const Icon(
                                           Icons.star,
                                           color: Colors.orange,
@@ -145,7 +147,7 @@ class FabNavPage extends StatelessWidget {
                                 ],
                               ),
                               Text(
-                                nav.np.name,
+                                nav.navPage.name,
                                 style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 20,
@@ -155,15 +157,22 @@ class FabNavPage extends StatelessWidget {
                             ],
                           ),
                         ),
-                        if (hasSettings && nav.np == navPage)
-                          const Align(
+                        GetBuilder<NavPageController>(builder: (c) {
+                          Color showSettingsColor = Colors.transparent;
+                          if (nav.navPage == navPage &&
+                              settingsWidgets[c.getLastIdx(nav.navPage)] !=
+                                  null) {
+                            showSettingsColor = Colors.orange;
+                          }
+                          return Align(
                             alignment: Alignment.topRight,
                             child: Icon(
                               Icons.settings_applications_outlined,
-                              color: Colors.orange,
+                              color: showSettingsColor,
                               size: 27,
                             ),
-                          ),
+                          );
+                        }),
                       ],
                     ),
                   ),
@@ -183,7 +192,7 @@ class HapiShareUI extends StatelessWidget {
       children: [
         const SizedBox(width: 10.0),
         Tooltip(
-          message: 'Learn more about hapi and how to contribute',
+          message: 'Learn about hapi, contribute or update profile',
           child: GestureDetector(
             onTap: () {
               MenuController.to.pushSubPage(SubPage.About);
@@ -197,7 +206,6 @@ class HapiShareUI extends StatelessWidget {
                     'About',
                     style: TextStyle(
                       fontSize: 20.0,
-                      //fontFamily: 'RobotoMedium',
                       color: Colors.white.withOpacity(0.65),
                     ),
                   ),

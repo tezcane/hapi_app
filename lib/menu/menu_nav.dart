@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hapi/controllers/nav_page_controller.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 
@@ -23,17 +25,23 @@ const Color _kButtonColorUnselected = Color(0xFF1D1E33);
 /// The [MenuNav] controls the items from the lateral menu.
 class MenuNav extends StatefulWidget {
   const MenuNav({
-    Key? key,
-    required this.builder,
     required this.initNavPage,
+    required this.settingsWidgets,
+    required this.builder,
     required this.items,
+    Key? key,
   }) : super(key: key);
-
-  /// `builder` builds a view/page based on the `selectedIndex`.
-  final SideMenuAnimationBuilder builder;
 
   /// NavPage to know what is selected in nav menu.
   final NavPage initNavPage;
+
+  /// Settings columns, if null, no settings will be displayed.  If populated
+  /// when  user clicks the nav icon, all nav icons animate/fold away and reveal
+  /// the settings panel held in this list.
+  final List<Widget?> settingsWidgets;
+
+  /// `builder` builds a view/page based on the `selectedIndex`.
+  final SideMenuAnimationBuilder builder;
 
   /// List of items that we want to display on the Side Menu.
   final List<Widget> items;
@@ -114,30 +122,37 @@ class _MenuNavState extends State<MenuNav> {
 
                       /// Show Menu:
                       for (NavPage navPage in NavPage.values)
-                        MenuItem(
-                          index: navPage.index,
-                          length: NavPage.values.length,
-                          width: _kSideMenuWidth,
-                          height: itemSize,
-                          acNavMenu: MenuController.to.acNavMenu,
-                          curve: _kCurveAnimation,
-                          color: (navPage == widget.initNavPage)
-                              ? _kButtonColorSelected
-                              : _kButtonColorUnselected,
-                          onTap: () {
-                            if (navPage == widget.initNavPage &&
-                                MenuController.to.getShowNavSettings()) {
-                              MenuController.to.hideMenuNav(); // shows settings
-                            } else if (navPage == widget.initNavPage) {
-                              MenuController.to
-                                  .hideMenu(); // same page selected
-                            } else {
-                              // selected new nav page
-                              MenuController.to.hideMenu();
-                              MenuController.to.navigateToNavPage(navPage);
-                            }
+                        GetBuilder<NavPageController>(
+                          builder: (c) {
+                            return MenuItem(
+                              index: navPage.index,
+                              length: NavPage.values.length,
+                              width: _kSideMenuWidth,
+                              height: itemSize,
+                              acNavMenu: MenuController.to.acNavMenu,
+                              curve: _kCurveAnimation,
+                              color: (navPage == widget.initNavPage)
+                                  ? _kButtonColorSelected
+                                  : _kButtonColorUnselected,
+                              onTap: () {
+                                if (navPage == widget.initNavPage &&
+                                    widget.settingsWidgets[
+                                            c.getLastIdx(navPage)] !=
+                                        null) {
+                                  // same page selected and it has settings
+                                  MenuController.to.hideMenuNav();
+                                } else if (navPage == widget.initNavPage) {
+                                  // same page selected
+                                  MenuController.to.hideMenu();
+                                } else {
+                                  // selected new nav page
+                                  MenuController.to.hideMenu();
+                                  MenuController.to.navigateToNavPage(navPage);
+                                }
+                              },
+                              child: widget.items[navPage.index],
+                            );
                           },
-                          child: widget.items[navPage.index],
                         ),
                     ],
                   ),

@@ -70,7 +70,7 @@ class TarikhMenuUI extends StatelessWidget {
         ),
         body: FabNavPage(
           navPage: NavPage.Tarikh,
-          settingsWidget: null,
+          settingsWidgets: const [null],
           bottomWidget: HapiShareUI(),
           foregroundPage: Container(
             // Set height since shrinkwrap exposed the hapi logo/menu

@@ -20,24 +20,28 @@ import 'package:hapi/tarikh/main_menu/tarikh_search_ui.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
 
-class Nav {
-  const Nav({required this.np, required this.icon});
-  final NavPage np;
+/// Class to hold values needed to initialize NavPage and its defaults.
+class NavPageValue {
+  const NavPageValue(this.defaultIdx, this.navPage, this.icon);
+  final int defaultIdx;
+  final NavPage navPage;
   final IconData icon;
 }
 
-const kNavs = [
-  Nav(np: NavPage.Stats, icon: Icons.leaderboard_rounded),
-  Nav(np: NavPage.Tools, icon: Icons.explore_outlined),
-  Nav(np: NavPage.Dua, icon: Icons.volunteer_activism),
-  Nav(np: NavPage.Hadith, icon: Icons.menu_book_outlined),
-  Nav(np: NavPage.Quran, icon: Icons.auto_stories),
-  Nav(np: NavPage.Tarikh, icon: Icons.history_edu_outlined),
-  Nav(np: NavPage.Relics, icon: Icons.brightness_3_outlined),
-  Nav(np: NavPage.Quests, icon: Icons.how_to_reg_outlined),
+/// must keep in sync with NavPage
+final navPageValues = [
+  NavPageValue(0, NavPage.Stats, Icons.leaderboard_rounded),
+  NavPageValue(0, NavPage.Tools, Icons.explore_outlined),
+  NavPageValue(0, NavPage.Dua, Icons.volunteer_activism),
+  NavPageValue(0, NavPage.Hadith, Icons.menu_book_outlined),
+  NavPageValue(0, NavPage.Quran, Icons.auto_stories),
+  NavPageValue(0, NavPage.Tarikh, Icons.history_edu_outlined),
+  NavPageValue(0, NavPage.Relics, Icons.brightness_3_outlined),
+  NavPageValue(Quests.Active.index, NavPage.Quests,
+      Icons.how_to_reg_outlined), // 3=Active Quests
 ];
 
-// must keep in sync with _kNavs
+/// must keep in sync with navPageValues
 enum NavPage {
   Stats,
   Tools,
@@ -61,9 +65,7 @@ enum SubPage {
 }
 
 extension EnumUtil on SubPage {
-  String niceName() {
-    return toString().split('.').last.replaceAll('_', ' ');
-  }
+  get niceName => name.replaceAll('_', ' ');
 }
 
 class MenuController extends GetxHapi with GetTickerProviderStateMixin {
@@ -145,7 +147,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
   String getToolTip() {
     if (_subPageStack.isNotEmpty) {
       if (_subPageStack.length > 1) {
-        return 'Go back to ${_subPageStack[_subPageStack.length - 2].niceName()}';
+        return 'Go back to ${_subPageStack[_subPageStack.length - 2].niceName} Page';
       } else {
         return 'Go back to ${getLastNavPage().name} Home';
       }
@@ -164,13 +166,6 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
   void setShowBadge(NavPage navPage, bool value) {
     _showBadge[navPage.index] = value;
     update();
-  }
-
-  final RxBool _showNavSettings = false.obs;
-  bool getShowNavSettings() => _showNavSettings.value;
-  void setShowNavSettings(bool value) {
-    _showNavSettings.value = value;
-    Timer(const Duration(seconds: 0), () => update()); // requires new thread
   }
 
   /// Track pushed pages so we can backtrack to main nav menu page
@@ -265,46 +260,9 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
     int transistionMs = 1000,
     Transition transition = Transition.fade,
   }) {
-    _showNavSettings.value = false; // clear last setting icon if was showing
-
     TarikhController.to.isActiveTimeline = false; // turn off timeline rendering
 
     switch (navPage) {
-      case (NavPage.Stats):
-        Get.offAll(
-          () => QuestsUI(),
-          transition: transition,
-          duration: Duration(milliseconds: transistionMs),
-        );
-        break;
-      case (NavPage.Tools):
-        Get.offAll(
-          () => QuestsUI(),
-          transition: transition,
-          duration: Duration(milliseconds: transistionMs),
-        );
-        break;
-      case (NavPage.Dua):
-        Get.offAll(
-          () => QuestsUI(),
-          transition: transition,
-          duration: Duration(milliseconds: transistionMs),
-        );
-        break;
-      case (NavPage.Hadith):
-        Get.offAll(
-          () => QuestsUI(),
-          transition: transition,
-          duration: Duration(milliseconds: transistionMs),
-        );
-        break;
-      case (NavPage.Quran):
-        Get.offAll(
-          () => QuestsUI(),
-          transition: transition,
-          duration: Duration(milliseconds: transistionMs),
-        );
-        break;
       case (NavPage.Tarikh):
         Get.offAll(
           () => TarikhMenuUI(),
@@ -312,13 +270,12 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
           duration: Duration(milliseconds: transistionMs),
         );
         break;
+      case (NavPage.Stats):
+      case (NavPage.Tools):
+      case (NavPage.Dua):
+      case (NavPage.Hadith):
+      case (NavPage.Quran):
       case (NavPage.Relics):
-        Get.offAll(
-          () => QuestsUI(),
-          transition: transition,
-          duration: Duration(milliseconds: transistionMs),
-        );
-        break;
       case (NavPage.Quests):
       default:
         Get.offAll(
