@@ -20,7 +20,7 @@ class AppThemes {
   static const Color checkComplete = Colors.green;
 
   static const Color _lBackground1 = Color.fromRGBO(225, 228, 229, 1);
-  static const Color _lBackground2 = Color.fromRGBO(217, 207, 207, 1.0);
+  static const Color _lBackground2 = Color.fromRGBO(224, 181, 181, 1.0);
 
   static const Color _dBackground1 = Color.fromRGBO(0x0A, 0x0E, 0x21, 1);
   static const Color _dBackground2 = logoBackground;

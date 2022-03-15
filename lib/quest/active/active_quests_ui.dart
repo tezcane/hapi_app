@@ -18,7 +18,7 @@ class ActiveQuestsUI extends StatelessWidget {
   static const TS tsAppBar = TS(9.5, Colors.white70);
   static const TS tsAppBarTime = TS(24.0, Colors.white70);
 
-  static const Color textColor = Colors.white70;
+  // TODO don't use white for all, Theme.of(context).textTheme.headline6!:
   static const TS tsWhite = TS(17.0, Colors.white70);
   static const TS tsFard = TS(17.0, Colors.red);
   static const TS tsMuak = TS(17.0, Colors.green);
@@ -242,7 +242,7 @@ class ActiveQuestsUI extends StatelessWidget {
         return Column(
           children: [
             /// First row is title of salah, with times, etc.
-            salahHeader(
+            _SalahHeader(
               tod,
               false,
               c,
@@ -255,18 +255,18 @@ class ActiveQuestsUI extends StatelessWidget {
               child: Row(
                 children: [
                   /// 1 of 4. sunnah before fard column item:
-                  Cell(T(muakBef, tsMuak), false, QUEST.NONE, dis: true),
+                  _Cell(T(muakBef, tsMuak), false, QUEST.NONE, dis: true),
 
                   /// 2 of 4. fard column item:
-                  Cell(T(fardRkt, tsFard), false, QUEST.NONE, dis: true),
+                  _Cell(T(fardRkt, tsFard), false, QUEST.NONE, dis: true),
 
                   /// 3 of 4. sunnah after fard column items:
-                  Cell(T(muakAft, tsMuak), false, QUEST.NONE, dis: true),
-                  Cell(T(naflAft, tsNafl), false, QUEST.NONE, dis: true),
+                  _Cell(T(muakAft, tsMuak), false, QUEST.NONE, dis: true),
+                  _Cell(T(naflAft, tsNafl), false, QUEST.NONE, dis: true),
 
                   /// 4 of 4. Thikr and Dua after fard:
-                  const Cell(IconThikr(), false, QUEST.NONE, dis: true),
-                  const Cell(IconDua(), false, QUEST.NONE, dis: true),
+                  const _Cell(_IconThikr(), false, QUEST.NONE, dis: true),
+                  const _Cell(_IconDua(), false, QUEST.NONE, dis: true),
                 ],
               ),
             ),
@@ -288,7 +288,7 @@ class ActiveQuestsUI extends StatelessWidget {
         return Column(
           children: [
             /// First row is title of salah, with times, etc.
-            salahHeader(
+            _SalahHeader(
               TOD.Fajr,
               pinned,
               c,
@@ -301,18 +301,18 @@ class ActiveQuestsUI extends StatelessWidget {
               child: Row(
                 children: [
                   /// 1 of 4. sunnah before fard column item:
-                  Cell(T(muakBef, tsMuak), pinned, QUEST.FAJR_MUAKB),
+                  _Cell(T(muakBef, tsMuak), pinned, QUEST.FAJR_MUAKB),
 
                   /// 2 of 4. fard column item:
-                  Cell(T(fardRkt, tsFard), pinned, QUEST.FAJR_FARD),
+                  _Cell(T(fardRkt, tsFard), pinned, QUEST.FAJR_FARD),
 
                   /// 3 of 4. Sunnah after fard column items:
-                  Cell(const T('', tsMuak), pinned, QUEST.NONE),
-                  Cell(T('', tsNafl), pinned, QUEST.NONE),
+                  _Cell(const T('', tsMuak), pinned, QUEST.NONE),
+                  _Cell(T('', tsNafl), pinned, QUEST.NONE),
 
                   /// 4 of 4. Thikr and Dua after fard:
-                  Cell(const IconThikr(), pinned, QUEST.FAJR_THIKR),
-                  Cell(const IconDua(), pinned, QUEST.FAJR_DUA),
+                  _Cell(const _IconThikr(), pinned, QUEST.FAJR_THIKR),
+                  _Cell(const _IconDua(), pinned, QUEST.FAJR_DUA),
                 ],
               ),
             ),
@@ -322,18 +322,18 @@ class ActiveQuestsUI extends StatelessWidget {
     );
   }
 
-  Column rowDuha(ActiveQuestsController c, bool pinned) {
+  Column rowDuha(ActiveQuestsController c, final bool pinned) {
     return Column(
       children: [
         /// First row is title with times, etc.
-        salahHeader(TOD.Duha, pinned, c, false, c.tod!.sunrise, null, null),
+        _SalahHeader(TOD.Duha, pinned, c, false, c.tod!.sunrise, null, null),
         Expanded(
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Cell(
-                SunCell(
-                  const IconSunrise(),
+              _Cell(
+                _SunCell(
+                  _IconSunrise(pinned),
                   'Morning Adhkar',
                   c.tod!.sunrise,
                   c.tod!.ishraq,
@@ -342,11 +342,11 @@ class ActiveQuestsUI extends StatelessWidget {
                 QUEST.KERAHAT_ADHKAR_SUNRISE,
                 flex: 2000,
               ),
-              Cell(T('Ishraq', tsIshr), pinned, QUEST.DUHA_ISHRAQ),
-              Cell(T('Duha', tsDuha), pinned, QUEST.DUHA_DUHA),
-              Cell(
-                SunCell(
-                  const IconSunBright(),
+              _Cell(T('Ishraq', tsIshr), pinned, QUEST.DUHA_ISHRAQ),
+              _Cell(T('Duha', tsDuha), pinned, QUEST.DUHA_DUHA),
+              _Cell(
+                _SunCell(
+                  const _IconSunBright(),
                   "Zawal",
                   c.tod!.zawal,
                   c.tod!.dhuhr,
@@ -380,7 +380,7 @@ class ActiveQuestsUI extends StatelessWidget {
     return Column(
       children: [
         /// First row is title of salah, with times, etc.
-        salahHeader(
+        _SalahHeader(
           TOD.Dhuhr,
           pinned,
           c,
@@ -393,18 +393,18 @@ class ActiveQuestsUI extends StatelessWidget {
           child: Row(
             children: [
               /// 1 of 4. sunnah before fard column item:
-              Cell(T(muakBef, tsMuak), pinned, QUEST.DHUHR_MUAKB),
+              _Cell(T(muakBef, tsMuak), pinned, QUEST.DHUHR_MUAKB),
 
               /// 2 of 4. fard column item:
-              Cell(T(fardRkt, tsFard), pinned, QUEST.DHUHR_FARD),
+              _Cell(T(fardRkt, tsFard), pinned, QUEST.DHUHR_FARD),
 
               /// 3 of 4. Option 2: sunnah after fard column items:
-              Cell(T(muakAft, tsMuak), pinned, QUEST.DHUHR_MUAKA),
-              Cell(T(naflAft, tsNafl), pinned, QUEST.DHUHR_NAFLA),
+              _Cell(T(muakAft, tsMuak), pinned, QUEST.DHUHR_MUAKA),
+              _Cell(T(naflAft, tsNafl), pinned, QUEST.DHUHR_NAFLA),
 
               /// 4 of 4. Thikr and Dua after fard:
-              Cell(const IconThikr(), pinned, QUEST.DHUHR_THIKR),
-              Cell(const IconDua(), pinned, QUEST.DHUHR_DUA),
+              _Cell(const _IconThikr(), pinned, QUEST.DHUHR_THIKR),
+              _Cell(const _IconDua(), pinned, QUEST.DHUHR_DUA),
             ],
           ),
         ),
@@ -421,24 +421,24 @@ class ActiveQuestsUI extends StatelessWidget {
     return Column(
       children: [
         /// First row is title of salah, with times, etc.
-        salahHeader(TOD.Asr, pinned, c, false, c.tod!.asr, null, null),
+        _SalahHeader(TOD.Asr, pinned, c, false, c.tod!.asr, null, null),
         Expanded(
           child: Row(
             children: [
               /// 1 of 4. sunnah before fard column item:
-              Cell(T(naflBef, tsNafl), pinned, QUEST.ASR_NAFLB),
+              _Cell(T(naflBef, tsNafl), pinned, QUEST.ASR_NAFLB),
 
               /// 2 of 4. fard column item:
-              Cell(T(fardRkt, tsFard), pinned, QUEST.ASR_FARD),
+              _Cell(T(fardRkt, tsFard), pinned, QUEST.ASR_FARD),
 
               /// 3 of 4. Thikr and Dua after fard:
-              Cell(const IconThikr(), pinned, QUEST.ASR_THIKR),
-              Cell(const IconDua(), pinned, QUEST.ASR_DUA),
+              _Cell(const _IconThikr(), pinned, QUEST.ASR_THIKR),
+              _Cell(const _IconDua(), pinned, QUEST.ASR_DUA),
 
               /// 4 of 4. Evening adhkar
-              Cell(
-                SunCell(const IconSunset(), 'Evening Adhkar', c.tod!.sunSetting,
-                    c.tod!.maghrib),
+              _Cell(
+                _SunCell(_IconSunset(pinned), 'Evening Adhkar',
+                    c.tod!.sunSetting, c.tod!.maghrib),
                 pinned,
                 QUEST.KERAHAT_ADHKAR_SUNSET,
                 flex: 2000,
@@ -461,23 +461,23 @@ class ActiveQuestsUI extends StatelessWidget {
     return Column(
       children: [
         /// First row is title of salah, with times, etc.
-        salahHeader(TOD.Maghrib, pinned, c, false, c.tod!.maghrib, null, null),
+        _SalahHeader(TOD.Maghrib, pinned, c, false, c.tod!.maghrib, null, null),
         Expanded(
           child: Row(
             children: [
               /// 1 of 4. sunnah before fard column item:
-              Cell(const T('', tsWhite), pinned, QUEST.NONE),
+              _Cell(const T('', tsWhite), pinned, QUEST.NONE),
 
               /// 2 of 4. fard column item:
-              Cell(T(fardRkt, tsFard), pinned, QUEST.MAGHRIB_FARD),
+              _Cell(T(fardRkt, tsFard), pinned, QUEST.MAGHRIB_FARD),
 
               /// 3 of 4. Option 2: sunnah after fard column items:
-              Cell(T(muakAft, tsMuak), pinned, QUEST.MAGHRIB_MUAKA),
-              Cell(T(naflAft, tsNafl), pinned, QUEST.MAGHRIB_NAFLA),
+              _Cell(T(muakAft, tsMuak), pinned, QUEST.MAGHRIB_MUAKA),
+              _Cell(T(naflAft, tsNafl), pinned, QUEST.MAGHRIB_NAFLA),
 
               /// 4 of 4. Thikr and Dua after fard:
-              Cell(const IconThikr(), pinned, QUEST.MAGHRIB_THIKR),
-              Cell(const IconDua(), pinned, QUEST.MAGHRIB_DUA),
+              _Cell(const _IconThikr(), pinned, QUEST.MAGHRIB_THIKR),
+              _Cell(const _IconDua(), pinned, QUEST.MAGHRIB_DUA),
             ],
           ),
         ),
@@ -498,23 +498,23 @@ class ActiveQuestsUI extends StatelessWidget {
     return Column(
       children: [
         /// First row is title of salah, with times, etc.
-        salahHeader(TOD.Isha, pinned, c, false, c.tod!.isha, null, null),
+        _SalahHeader(TOD.Isha, pinned, c, false, c.tod!.isha, null, null),
         Expanded(
           child: Row(
             children: [
               /// 1 of 4. sunnah before fard column item:
-              Cell(T(naflBef, tsNafl), pinned, QUEST.ISHA_NAFLB),
+              _Cell(T(naflBef, tsNafl), pinned, QUEST.ISHA_NAFLB),
 
               /// 2 of 4. fard column item:
-              Cell(T(fardRkt, tsFard), pinned, QUEST.ISHA_FARD),
+              _Cell(T(fardRkt, tsFard), pinned, QUEST.ISHA_FARD),
 
               /// 3 of 4. Option 1: sunnah after fard column items:
-              Cell(T(muakAft, tsMuak), pinned, QUEST.ISHA_MUAKA),
-              Cell(T(naflAft, tsNafl), pinned, QUEST.ISHA_NAFLA),
+              _Cell(T(muakAft, tsMuak), pinned, QUEST.ISHA_MUAKA),
+              _Cell(T(naflAft, tsNafl), pinned, QUEST.ISHA_NAFLA),
 
               /// 4 of 4. Thikr and Dua after fard:
-              Cell(const IconThikr(), pinned, QUEST.ISHA_THIKR),
-              Cell(const IconDua(), pinned, QUEST.ISHA_DUA),
+              _Cell(const _IconThikr(), pinned, QUEST.ISHA_THIKR),
+              _Cell(const _IconDua(), pinned, QUEST.ISHA_DUA),
             ],
           ),
         ),
@@ -529,7 +529,7 @@ class ActiveQuestsUI extends StatelessWidget {
         return Column(
           children: [
             /// First row is title with times, etc.
-            salahHeader(
+            _SalahHeader(
               tod,
               pinned,
               c,
@@ -543,17 +543,18 @@ class ActiveQuestsUI extends StatelessWidget {
             Expanded(
               child: Row(
                 children: [
-                  Cell(T('Qiyam', tsQyam), pinned, QUEST.LAYL_QIYAM, dis: dis),
+                  _Cell(T('Qiyam', tsQyam), pinned, QUEST.LAYL_QIYAM, dis: dis),
 
                   /// Thikr and Dua before bed:
-                  Cell(const IconThikr(), pinned, QUEST.LAYL_THIKR, dis: dis),
-                  Cell(const IconDua(), pinned, QUEST.LAYL_DUA, dis: dis),
-                  Cell(T('Sleep', tsWhite), pinned, QUEST.LAYL_SLEEP, dis: dis),
+                  _Cell(const _IconThikr(), pinned, QUEST.LAYL_THIKR, dis: dis),
+                  _Cell(const _IconDua(), pinned, QUEST.LAYL_DUA, dis: dis),
+                  _Cell(T('Sleep', tsWhite), pinned, QUEST.LAYL_SLEEP,
+                      dis: dis),
 
                   /// Tahhajud and Witr after waking up
-                  Cell(T('Tahajjud', tsThjd), pinned, QUEST.LAYL_TAHAJJUD,
+                  _Cell(T('Tahajjud', tsThjd), pinned, QUEST.LAYL_TAHAJJUD,
                       dis: dis),
-                  Cell(T('Witr', tsWitr), pinned, QUEST.LAYL_WITR, dis: dis),
+                  _Cell(T('Witr', tsWitr), pinned, QUEST.LAYL_WITR, dis: dis),
                 ],
               ),
             ),
@@ -652,7 +653,7 @@ class ActiveQuestsUI extends StatelessWidget {
 
             /// Show rest of sliver list
             /// Fajr:
-            Sliv(
+            _Sliv(
               FlipCard(
                 flipOnTouch: false,
                 controller: cflipCardFajr,
@@ -673,11 +674,11 @@ class ActiveQuestsUI extends StatelessWidget {
             sliverSpaceHeader(pinnedFajr),
 
             /// Duha:
-            if (c.showSunnahDuha) Sliv(rowDuha(c, pinnedDuha), pinnedDuha),
+            if (c.showSunnahDuha) _Sliv(rowDuha(c, pinnedDuha), pinnedDuha),
             if (c.showSunnahDuha) sliverSpaceHeader(pinnedDuha),
 
             /// Dhuhr/Jummah:
-            Sliv(
+            _Sliv(
               c.isFriday() && c.showJummahOnFriday
                   ? FlipCard(
                       flipOnTouch: false,
@@ -719,20 +720,20 @@ class ActiveQuestsUI extends StatelessWidget {
             sliverSpaceHeader(pinnedDuhr),
 
             /// Asr:
-            Sliv(rowAsr(c, pinnedAsr), pinnedAsr),
+            _Sliv(rowAsr(c, pinnedAsr), pinnedAsr),
             sliverSpaceHeader(pinnedAsr),
 
             /// Maghrib:
-            Sliv(rowMaghrib(c, pinnedMaghrib), pinnedMaghrib),
+            _Sliv(rowMaghrib(c, pinnedMaghrib), pinnedMaghrib),
             sliverSpaceHeader(pinnedMaghrib),
 
             /// Isha:
-            Sliv(rowIsha(c, pinnedIsha), pinnedIsha),
+            _Sliv(rowIsha(c, pinnedIsha), pinnedIsha),
             sliverSpaceHeader(pinnedIsha),
 
             /// Layl Ibadah:
             if (c.showSunnahLayl)
-              Sliv(
+              _Sliv(
                 c.showLast3rdOfNight
                     ? FlipCard(
                         flipOnTouch: false,
@@ -771,16 +772,29 @@ class ActiveQuestsUI extends StatelessWidget {
       );
     });
   }
+}
 
-  Expanded salahHeader(
-    final TOD tod,
-    final bool pinned,
-    final ActiveQuestsController c,
-    final bool isJummahMode,
-    final DateTime salahTimeStart,
-    final DateTime? salahTimeEnd,
-    final FlipCardController? flipCardController,
-  ) {
+class _SalahHeader extends StatelessWidget {
+  const _SalahHeader(
+    this.tod,
+    this.pinned,
+    this.c,
+    this.isJummahMode,
+    this.salahTimeStart,
+    this.salahTimeEnd,
+    this.flipCardController,
+  );
+
+  final TOD tod;
+  final bool pinned;
+  final ActiveQuestsController c;
+  final bool isJummahMode;
+  final DateTime salahTimeStart;
+  final DateTime? salahTimeEnd;
+  final FlipCardController? flipCardController;
+
+  @override
+  Widget build(BuildContext context) {
     return Expanded(
       child: ClipRRect(
         borderRadius: const BorderRadius.only(
@@ -789,7 +803,7 @@ class ActiveQuestsUI extends StatelessWidget {
         ),
         child: Container(
           color: pinned && ((!isJummahMode) || (isJummahMode && c.isFriday()))
-              ? Get.theme.scaffoldBackgroundColor
+              ? Theme.of(context).scaffoldBackgroundColor
               : AppThemes.unselected,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -801,12 +815,12 @@ class ActiveQuestsUI extends StatelessWidget {
                     child: const Icon(Icons.swap_vert_outlined,
                         size: 21, color: Colors.white38),
                   ),
-                  onTap: () => c.toggleFlipCard(flipCardController),
+                  onTap: () => c.toggleFlipCard(flipCardController!),
                 ),
               const SizedBox(width: 10),
               Text(
                 isJummahMode ? 'Jummah' : tod.name(),
-                style: const TS(20.0, textColor),
+                style: TS(20.0, Theme.of(context).textTheme.headline6!.color!),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(width: 10),
@@ -814,8 +828,8 @@ class ActiveQuestsUI extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   Text(
-                    getTimeRange(salahTimeStart, salahTimeEnd),
-                    style: tsWhite,
+                    ActiveQuestsUI.getTimeRange(salahTimeStart, salahTimeEnd),
+                    style: Theme.of(context).textTheme.headline6!,
                     textAlign: TextAlign.center,
                   ),
                   InkWell(
@@ -867,8 +881,8 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 
 /// Used to Fill in the gaps that were between the salah row cells. Also, adds a
 /// border for nicer looks and returns a SliverPersistentHeader.
-class Sliv extends StatelessWidget {
-  const Sliv(this.widget, this.pinned);
+class _Sliv extends StatelessWidget {
+  const _Sliv(this.widget, this.pinned);
 
   final Widget widget;
   final bool pinned;
@@ -900,21 +914,8 @@ class Sliv extends StatelessWidget {
   }
 }
 
-/// T = Text Widget
-class T extends StatelessWidget {
-  const T(this._text, this._textStyle);
-
-  final String _text;
-  final TS _textStyle;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(_text, style: _textStyle);
-  }
-}
-
-class Cell extends StatelessWidget {
-  const Cell(this._widget, this._pinned, this._quest,
+class _Cell extends StatelessWidget {
+  const _Cell(this._widget, this._pinned, this._quest,
       {this.flex = 1000, this.dis = false});
 
   final Widget _widget;
@@ -925,7 +926,7 @@ class Cell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ActionWidget _actionWidget = ActionWidget(
+    final _ActionWidget _actionWidget = _ActionWidget(
       isActive: _pinned,
       quest: _quest,
       dis: dis,
@@ -978,8 +979,8 @@ class Cell extends StatelessWidget {
   }
 }
 
-class ActionWidget extends StatelessWidget {
-  const ActionWidget({
+class _ActionWidget extends StatelessWidget {
+  const _ActionWidget({
     Key? key,
     required bool isActive,
     required QUEST quest,
@@ -1012,8 +1013,8 @@ class ActionWidget extends StatelessWidget {
   }
 }
 
-class SunCell extends StatelessWidget {
-  const SunCell(this._sunIcon, this._label, this._time1, this._time2);
+class _SunCell extends StatelessWidget {
+  const _SunCell(this._sunIcon, this._label, this._time1, this._time2);
 
   final Widget _sunIcon;
   final String _label;
@@ -1047,19 +1048,23 @@ class SunCell extends StatelessWidget {
   }
 }
 
-class IconSunrise extends StatelessWidget {
-  const IconSunrise();
+class _IconSunrise extends StatelessWidget {
+  const _IconSunrise(this.pinned);
+
+  final bool pinned;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Transform.rotate(angle: 4.71239, child: const IconSun()),
+        Transform.rotate(angle: 4.71239, child: const _IconSun()),
         Positioned(
           top: 9,
           left: 0,
           child: Container(
-            color: AppThemes.unselected,
+            color: pinned
+                ? Theme.of(context).scaffoldBackgroundColor
+                : AppThemes.unselected,
             height: 10,
             width: 20,
             //child: SizedBox(height: 10),
@@ -1076,19 +1081,23 @@ class IconSunrise extends StatelessWidget {
   }
 }
 
-class IconSunset extends StatelessWidget {
-  const IconSunset();
+class _IconSunset extends StatelessWidget {
+  const _IconSunset(this.pinned);
+
+  final bool pinned;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Transform.rotate(angle: 4.71239, child: const IconSun()),
+        Transform.rotate(angle: 4.71239, child: const _IconSun()),
         Positioned(
           top: 9,
           left: 0,
           child: Container(
-            color: AppThemes.unselected,
+            color: pinned
+                ? Theme.of(context).scaffoldBackgroundColor
+                : AppThemes.unselected,
             height: 10,
             width: 20,
           ),
@@ -1104,8 +1113,8 @@ class IconSunset extends StatelessWidget {
   }
 }
 
-class IconSun extends StatelessWidget {
-  const IconSun();
+class _IconSun extends StatelessWidget {
+  const _IconSun();
 
   @override
   Widget build(BuildContext context) {
@@ -1117,8 +1126,8 @@ class IconSun extends StatelessWidget {
   }
 }
 
-class IconSunBright extends StatelessWidget {
-  const IconSunBright();
+class _IconSunBright extends StatelessWidget {
+  const _IconSunBright();
 
   @override
   Widget build(BuildContext context) {
@@ -1130,8 +1139,8 @@ class IconSunBright extends StatelessWidget {
   }
 }
 
-class IconThikr extends StatelessWidget {
-  const IconThikr();
+class _IconThikr extends StatelessWidget {
+  const _IconThikr();
 
   @override
   Widget build(BuildContext context) {
@@ -1153,12 +1162,25 @@ class IconThikr extends StatelessWidget {
   }
 }
 
-class IconDua extends StatelessWidget {
-  const IconDua();
+class _IconDua extends StatelessWidget {
+  const _IconDua();
 
   @override
   Widget build(BuildContext context) {
     return const Icon(Icons.volunteer_activism, color: Colors.grey, size: 25);
+  }
+}
+
+/// T = Text Widget
+class T extends StatelessWidget {
+  const T(this._text, this._textStyle);
+
+  final String _text;
+  final TS _textStyle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(_text, style: _textStyle);
   }
 }
 
