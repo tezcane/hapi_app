@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main.dart';
 import 'package:hapi/menu/menu_controller.dart';
-import 'package:hapi/quest/quests_ui.dart';
 
 /// Controller to track a NavPages last selected SubPages. Used to persist UI
 /// (e.g. bottom bar, lists of sub pages, etc.) last selected idx. Does this so
@@ -35,5 +34,5 @@ class NavPageController extends GetxHapi {
 //get isLastIdxQuestHapi => getLastIdx(NavPage.Quests) == Quests.hapi.index;
 //get isLastIdxQuestTime => getLastIdx(NavPage.Quests) == Quests.Time.index;
 //get isLastIdxQuestDaily => getLastIdx(NavPage.Quests) == Quests.Daily.index;
-  get isLastIdxQuestActive => getLastIdx(NavPage.Quests) == Quests.Active.index;
+//get isLastIdxQuestActive => getLastIdx(NavPage.Quests) == Quests.Active.index;
 }
