@@ -58,20 +58,20 @@ enum QUEST {
 extension EnumUtil on QUEST {
   /// Returns first part enum (must be uppercase), so: FAJR_FARD -> returns FAJR
   String salahRow() {
-    return toString().split('.').last.split('_').first;
+    return name.split('_').first;
   }
 
-  bool isFard() => toString().split('.').last.endsWith('FARD');
-  bool isMuak() => toString().split('.').last.contains('MUAK');
-  bool isNafl() => toString().split('.').last.contains('NAFL');
+  bool isFard() => name.endsWith('FARD');
+  bool isMuak() => name.contains('MUAK');
+  bool isNafl() => name.contains('NAFL');
 
-  bool isMuakBef() => toString().split('.').last.endsWith('MUAKB');
-  bool isMuakAft() => toString().split('.').last.endsWith('MUAKA');
-  bool isNaflBef() => toString().split('.').last.endsWith('NAFLB');
-  bool isNaflAft() => toString().split('.').last.endsWith('NAFLA');
+  bool isMuakBef() => name.endsWith('MUAKB');
+  bool isMuakAft() => name.endsWith('MUAKA');
+  bool isNaflBef() => name.endsWith('NAFLB');
+  bool isNaflAft() => name.endsWith('NAFLA');
 
-  bool isThikr() => toString().split('.').last.endsWith('THIKR');
-  bool isDua() => toString().split('.').last.endsWith('DUA');
+  bool isThikr() => name.endsWith('THIKR');
+  bool isDua() => name.endsWith('DUA');
 
   bool isQuestCellTimeBound() {
     switch (this) {

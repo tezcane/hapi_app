@@ -265,8 +265,8 @@ class ActiveQuestsUI extends StatelessWidget {
                   _Cell(T(naflAft, tsNafl), false, tod, QUEST.NONE, dis: true),
 
                   /// 4 of 4. Thikr and Dua after fard:
-                  _Cell(_IconThikr(), false, tod, QUEST.NONE, dis: true),
-                  _Cell(_IconDua(), false, tod, QUEST.NONE, dis: true),
+                  _Cell(const _IconThikr(), false, tod, QUEST.NONE, dis: true),
+                  _Cell(const _IconDua(), false, tod, QUEST.NONE, dis: true),
                 ],
               ),
             ),
