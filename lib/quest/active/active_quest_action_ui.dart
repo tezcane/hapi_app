@@ -7,6 +7,7 @@ import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/TOD.dart';
 
 class ActiveQuestActionUI extends StatelessWidget {
+  late final TOD _tod; // TODO use
   late final QUEST _quest;
   late final Widget _callerWidget;
   late final bool _pinned;
@@ -19,6 +20,7 @@ class ActiveQuestActionUI extends StatelessWidget {
   static const TextStyle tsMsg = TextStyle(fontSize: 15, color: Colors.red);
 
   ActiveQuestActionUI() {
+    _tod = Get.arguments['tod'];
     _quest = Get.arguments['quest'];
     _callerWidget = Get.arguments['widget'];
     _pinned = Get.arguments['pinned'];
@@ -85,7 +87,7 @@ class ActiveQuestActionUI extends StatelessWidget {
   Widget build(BuildContext context) {
     ActiveQuestsAjrController cAjrA = ActiveQuestsAjrController.to;
     return FabSubPage(
-      subPage: SubPage.Active_Quests,
+      subPage: SubPage.Active_Quest_Action,
       child: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Column(

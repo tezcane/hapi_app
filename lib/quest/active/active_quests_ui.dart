@@ -5,6 +5,7 @@ import 'package:flip_card/flip_card_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:get/get.dart';
+import 'package:hapi/components/grow_shrink_alert.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
@@ -12,7 +13,6 @@ import 'package:hapi/quest/active/active_quests_settings_ui.dart';
 import 'package:hapi/quest/active/athan/TOD.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
-import 'package:im_animations/im_animations.dart';
 
 class ActiveQuestsUI extends StatelessWidget {
   static const TS tsAppBar = TS(9.5, Colors.white70);
@@ -255,18 +255,18 @@ class ActiveQuestsUI extends StatelessWidget {
               child: Row(
                 children: [
                   /// 1 of 4. sunnah before fard column item:
-                  _Cell(T(muakBef, tsMuak), false, QUEST.NONE, dis: true),
+                  _Cell(T(muakBef, tsMuak), false, tod, QUEST.NONE, dis: true),
 
                   /// 2 of 4. fard column item:
-                  _Cell(T(fardRkt, tsFard), false, QUEST.NONE, dis: true),
+                  _Cell(T(fardRkt, tsFard), false, tod, QUEST.NONE, dis: true),
 
                   /// 3 of 4. sunnah after fard column items:
-                  _Cell(T(muakAft, tsMuak), false, QUEST.NONE, dis: true),
-                  _Cell(T(naflAft, tsNafl), false, QUEST.NONE, dis: true),
+                  _Cell(T(muakAft, tsMuak), false, tod, QUEST.NONE, dis: true),
+                  _Cell(T(naflAft, tsNafl), false, tod, QUEST.NONE, dis: true),
 
                   /// 4 of 4. Thikr and Dua after fard:
-                  const _Cell(_IconThikr(), false, QUEST.NONE, dis: true),
-                  const _Cell(_IconDua(), false, QUEST.NONE, dis: true),
+                  _Cell(_IconThikr(), false, tod, QUEST.NONE, dis: true),
+                  _Cell(_IconDua(), false, tod, QUEST.NONE, dis: true),
                 ],
               ),
             ),
@@ -278,6 +278,7 @@ class ActiveQuestsUI extends StatelessWidget {
 
   /// Note: returns GetBuilder since has FlipCard()
   GetBuilder<ActiveQuestsController> rowFajr(final bool pinned) {
+    TOD tod = TOD.Fajr;
     String muakBef = '2';
     String fardRkt = '2';
 
@@ -301,18 +302,18 @@ class ActiveQuestsUI extends StatelessWidget {
               child: Row(
                 children: [
                   /// 1 of 4. sunnah before fard column item:
-                  _Cell(T(muakBef, tsMuak), pinned, QUEST.FAJR_MUAKB),
+                  _Cell(T(muakBef, tsMuak), pinned, tod, QUEST.FAJR_MUAKB),
 
                   /// 2 of 4. fard column item:
-                  _Cell(T(fardRkt, tsFard), pinned, QUEST.FAJR_FARD),
+                  _Cell(T(fardRkt, tsFard), pinned, tod, QUEST.FAJR_FARD),
 
                   /// 3 of 4. Sunnah after fard column items:
-                  _Cell(const T('', tsMuak), pinned, QUEST.NONE),
-                  _Cell(T('', tsNafl), pinned, QUEST.NONE),
+                  _Cell(T('', tsMuak), pinned, tod, QUEST.NONE),
+                  _Cell(T('', tsNafl), pinned, tod, QUEST.NONE),
 
                   /// 4 of 4. Thikr and Dua after fard:
-                  _Cell(const _IconThikr(), pinned, QUEST.FAJR_THIKR),
-                  _Cell(const _IconDua(), pinned, QUEST.FAJR_DUA),
+                  _Cell(const _IconThikr(), pinned, tod, QUEST.FAJR_THIKR),
+                  _Cell(const _IconDua(), pinned, tod, QUEST.FAJR_DUA),
                 ],
               ),
             ),
@@ -323,6 +324,8 @@ class ActiveQuestsUI extends StatelessWidget {
   }
 
   Column rowDuha(ActiveQuestsController c, final bool pinned) {
+    TOD tod = TOD.Duha;
+
     return Column(
       children: [
         /// First row is title with times, etc.
@@ -339,11 +342,12 @@ class ActiveQuestsUI extends StatelessWidget {
                   c.tod!.ishraq,
                 ),
                 pinned,
+                tod,
                 QUEST.KERAHAT_ADHKAR_SUNRISE,
                 flex: 2000,
               ),
-              _Cell(T('Ishraq', tsIshr), pinned, QUEST.DUHA_ISHRAQ),
-              _Cell(T('Duha', tsDuha), pinned, QUEST.DUHA_DUHA),
+              _Cell(T('Ishraq', tsIshr), pinned, tod, QUEST.DUHA_ISHRAQ),
+              _Cell(T('Duha', tsDuha), pinned, tod, QUEST.DUHA_DUHA),
               _Cell(
                 _SunCell(
                   const _IconSunBright(),
@@ -352,6 +356,7 @@ class ActiveQuestsUI extends StatelessWidget {
                   c.tod!.dhuhr,
                 ),
                 pinned,
+                tod,
                 QUEST.KERAHAT_ADHKAR_ZAWAL,
                 flex: 2000,
               ),
@@ -370,6 +375,8 @@ class ActiveQuestsUI extends StatelessWidget {
     required String muakAft,
     required final bool isJummahMode,
   }) {
+    TOD tod = TOD.Dhuhr;
+
     String muakBef = '4';
     String naflAft = '2';
 
@@ -393,18 +400,18 @@ class ActiveQuestsUI extends StatelessWidget {
           child: Row(
             children: [
               /// 1 of 4. sunnah before fard column item:
-              _Cell(T(muakBef, tsMuak), pinned, QUEST.DHUHR_MUAKB),
+              _Cell(T(muakBef, tsMuak), pinned, tod, QUEST.DHUHR_MUAKB),
 
               /// 2 of 4. fard column item:
-              _Cell(T(fardRkt, tsFard), pinned, QUEST.DHUHR_FARD),
+              _Cell(T(fardRkt, tsFard), pinned, tod, QUEST.DHUHR_FARD),
 
               /// 3 of 4. Option 2: sunnah after fard column items:
-              _Cell(T(muakAft, tsMuak), pinned, QUEST.DHUHR_MUAKA),
-              _Cell(T(naflAft, tsNafl), pinned, QUEST.DHUHR_NAFLA),
+              _Cell(T(muakAft, tsMuak), pinned, tod, QUEST.DHUHR_MUAKA),
+              _Cell(T(naflAft, tsNafl), pinned, tod, QUEST.DHUHR_NAFLA),
 
               /// 4 of 4. Thikr and Dua after fard:
-              _Cell(const _IconThikr(), pinned, QUEST.DHUHR_THIKR),
-              _Cell(const _IconDua(), pinned, QUEST.DHUHR_DUA),
+              _Cell(const _IconThikr(), pinned, tod, QUEST.DHUHR_THIKR),
+              _Cell(const _IconDua(), pinned, tod, QUEST.DHUHR_DUA),
             ],
           ),
         ),
@@ -413,6 +420,8 @@ class ActiveQuestsUI extends StatelessWidget {
   }
 
   Column rowAsr(ActiveQuestsController c, final bool pinned) {
+    TOD tod = TOD.Asr;
+
     String naflBef = '4';
     String fardRkt = '4';
 
@@ -426,23 +435,23 @@ class ActiveQuestsUI extends StatelessWidget {
           child: Row(
             children: [
               /// 1 of 4. sunnah before fard column item:
-              _Cell(T(naflBef, tsNafl), pinned, QUEST.ASR_NAFLB),
+              _Cell(T(naflBef, tsNafl), pinned, tod, QUEST.ASR_NAFLB),
 
               /// 2 of 4. fard column item:
-              _Cell(T(fardRkt, tsFard), pinned, QUEST.ASR_FARD),
+              _Cell(T(fardRkt, tsFard), pinned, tod, QUEST.ASR_FARD),
 
               /// 3 of 4. Thikr and Dua after fard:
-              _Cell(const _IconThikr(), pinned, QUEST.ASR_THIKR),
-              _Cell(const _IconDua(), pinned, QUEST.ASR_DUA),
+              _Cell(const _IconThikr(), pinned, tod, QUEST.ASR_THIKR),
+              _Cell(const _IconDua(), pinned, tod, QUEST.ASR_DUA),
 
               /// 4 of 4. Evening adhkar
               _Cell(
-                _SunCell(_IconSunset(pinned), 'Evening Adhkar',
-                    c.tod!.sunSetting, c.tod!.maghrib),
-                pinned,
-                QUEST.KERAHAT_ADHKAR_SUNSET,
-                flex: 2000,
-              ),
+                  _SunCell(_IconSunset(pinned), 'Evening Adhkar',
+                      c.tod!.sunSetting, c.tod!.maghrib),
+                  pinned,
+                  tod,
+                  QUEST.KERAHAT_ADHKAR_SUNSET,
+                  flex: 2000),
             ],
           ),
         ),
@@ -451,6 +460,8 @@ class ActiveQuestsUI extends StatelessWidget {
   }
 
   Column rowMaghrib(ActiveQuestsController c, final bool pinned) {
+    TOD tod = TOD.Maghrib;
+
     String fardRkt = '3';
     String muakAft = '2';
     String naflAft = '2';
@@ -466,18 +477,18 @@ class ActiveQuestsUI extends StatelessWidget {
           child: Row(
             children: [
               /// 1 of 4. sunnah before fard column item:
-              _Cell(const T('', tsWhite), pinned, QUEST.NONE),
+              _Cell(const T('', tsWhite), pinned, tod, QUEST.NONE),
 
               /// 2 of 4. fard column item:
-              _Cell(T(fardRkt, tsFard), pinned, QUEST.MAGHRIB_FARD),
+              _Cell(T(fardRkt, tsFard), pinned, tod, QUEST.MAGHRIB_FARD),
 
               /// 3 of 4. Option 2: sunnah after fard column items:
-              _Cell(T(muakAft, tsMuak), pinned, QUEST.MAGHRIB_MUAKA),
-              _Cell(T(naflAft, tsNafl), pinned, QUEST.MAGHRIB_NAFLA),
+              _Cell(T(muakAft, tsMuak), pinned, tod, QUEST.MAGHRIB_MUAKA),
+              _Cell(T(naflAft, tsNafl), pinned, tod, QUEST.MAGHRIB_NAFLA),
 
               /// 4 of 4. Thikr and Dua after fard:
-              _Cell(const _IconThikr(), pinned, QUEST.MAGHRIB_THIKR),
-              _Cell(const _IconDua(), pinned, QUEST.MAGHRIB_DUA),
+              _Cell(const _IconThikr(), pinned, tod, QUEST.MAGHRIB_THIKR),
+              _Cell(const _IconDua(), pinned, tod, QUEST.MAGHRIB_DUA),
             ],
           ),
         ),
@@ -486,6 +497,8 @@ class ActiveQuestsUI extends StatelessWidget {
   }
 
   Column rowIsha(ActiveQuestsController c, final bool pinned) {
+    TOD tod = TOD.Isha;
+
     String naflBef = '4';
     String fardRkt = '4';
     String muakAft = '2';
@@ -503,18 +516,18 @@ class ActiveQuestsUI extends StatelessWidget {
           child: Row(
             children: [
               /// 1 of 4. sunnah before fard column item:
-              _Cell(T(naflBef, tsNafl), pinned, QUEST.ISHA_NAFLB),
+              _Cell(T(naflBef, tsNafl), pinned, tod, QUEST.ISHA_NAFLB),
 
               /// 2 of 4. fard column item:
-              _Cell(T(fardRkt, tsFard), pinned, QUEST.ISHA_FARD),
+              _Cell(T(fardRkt, tsFard), pinned, tod, QUEST.ISHA_FARD),
 
               /// 3 of 4. Option 1: sunnah after fard column items:
-              _Cell(T(muakAft, tsMuak), pinned, QUEST.ISHA_MUAKA),
-              _Cell(T(naflAft, tsNafl), pinned, QUEST.ISHA_NAFLA),
+              _Cell(T(muakAft, tsMuak), pinned, tod, QUEST.ISHA_MUAKA),
+              _Cell(T(naflAft, tsNafl), pinned, tod, QUEST.ISHA_NAFLA),
 
               /// 4 of 4. Thikr and Dua after fard:
-              _Cell(const _IconThikr(), pinned, QUEST.ISHA_THIKR),
-              _Cell(const _IconDua(), pinned, QUEST.ISHA_DUA),
+              _Cell(const _IconThikr(), pinned, tod, QUEST.ISHA_THIKR),
+              _Cell(const _IconDua(), pinned, tod, QUEST.ISHA_DUA),
             ],
           ),
         ),
@@ -543,18 +556,22 @@ class ActiveQuestsUI extends StatelessWidget {
             Expanded(
               child: Row(
                 children: [
-                  _Cell(T('Qiyam', tsQyam), pinned, QUEST.LAYL_QIYAM, dis: dis),
+                  _Cell(T('Qiyam', tsQyam), pinned, tod, QUEST.LAYL_QIYAM,
+                      dis: dis),
 
                   /// Thikr and Dua before bed:
-                  _Cell(const _IconThikr(), pinned, QUEST.LAYL_THIKR, dis: dis),
-                  _Cell(const _IconDua(), pinned, QUEST.LAYL_DUA, dis: dis),
-                  _Cell(T('Sleep', tsWhite), pinned, QUEST.LAYL_SLEEP,
+                  _Cell(const _IconThikr(), pinned, tod, QUEST.LAYL_THIKR,
+                      dis: dis),
+                  _Cell(const _IconDua(), pinned, tod, QUEST.LAYL_DUA,
+                      dis: dis),
+                  _Cell(T('Sleep', tsWhite), pinned, tod, QUEST.LAYL_SLEEP,
                       dis: dis),
 
                   /// Tahhajud and Witr after waking up
-                  _Cell(T('Tahajjud', tsThjd), pinned, QUEST.LAYL_TAHAJJUD,
+                  _Cell(T('Tahajjud', tsThjd), pinned, tod, QUEST.LAYL_TAHAJJUD,
                       dis: dis),
-                  _Cell(T('Witr', tsWitr), pinned, QUEST.LAYL_WITR, dis: dis),
+                  _Cell(T('Witr', tsWitr), pinned, tod, QUEST.LAYL_WITR,
+                      dis: dis),
                 ],
               ),
             ),
@@ -915,19 +932,29 @@ class _Sliv extends StatelessWidget {
 }
 
 class _Cell extends StatelessWidget {
-  const _Cell(this._widget, this._pinned, this._quest,
-      {this.flex = 1000, this.dis = false});
+  const _Cell(
+    this._widget,
+    this._pinned,
+    this._tod,
+    this._quest, {
+    this.flex = 1000,
+    this.dis = false,
+  });
 
   final Widget _widget;
   final bool _pinned;
+  final TOD _tod;
   final QUEST _quest;
   final int flex;
+
+  /// used to prevent any actions on FlipCard
   final bool dis;
 
   @override
   Widget build(BuildContext context) {
     final _ActionWidget _actionWidget = _ActionWidget(
       isActive: _pinned,
+      tod: _tod,
       quest: _quest,
       dis: dis,
       widget: _widget,
@@ -936,8 +963,9 @@ class _Cell extends StatelessWidget {
     return Expanded(
       flex: flex,
       child: InkWell(
-        onTap: () =>
-            MenuController.to.pushSubPage(SubPage.Active_Quests, arguments: {
+        onTap: () => MenuController.to
+            .pushSubPage(SubPage.Active_Quest_Action, arguments: {
+          'tod': _tod,
           'quest': _quest,
           'widget': _widget,
           'pinned': _pinned,
@@ -983,33 +1011,38 @@ class _ActionWidget extends StatelessWidget {
   const _ActionWidget({
     Key? key,
     required bool isActive,
+    required TOD tod,
     required QUEST quest,
     required this.dis,
     required Widget widget,
   })  : _pinned = isActive,
+        _tod = tod,
         _quest = quest,
         _widget = widget,
         super(key: key);
 
   final bool _pinned;
+  final TOD _tod;
   final QUEST _quest;
   final bool dis;
   final Widget _widget;
 
   @override
   Widget build(BuildContext context) {
+    GrowShrinkAlert? growShrinkAlert;
+    if (_pinned && ActiveQuestsAjrController.to.isQuestActive(_quest)) {
+      growShrinkAlert = GrowShrinkAlert(
+        dis || _quest == QUEST.NONE
+            ? _widget
+            : Hero(tag: _quest, child: _widget),
+      );
+    }
     return Center(
-        // child: AvatarGlow(endRadius: 100.0, showTwoGlows: true, glowColor: const Color(0xFFFFD700),duration: Duration(milliseconds: 1000), //shape: CircleBorder(),child: Text('Duha',style: actionDuhaTextStyle,),),
-        child: _pinned && ActiveQuestsAjrController.to.isQuestActive(_quest)
-            ? HeartBeat(
-                beatsPerMinute: 60,
-                child: dis || _quest == QUEST.NONE
-                    ? _widget
-                    : Hero(tag: _quest, child: _widget),
-              )
-            : dis || _quest == QUEST.NONE
-                ? _widget
-                : Hero(tag: _quest, child: _widget));
+      child: growShrinkAlert ??
+          (dis || _quest == QUEST.NONE
+              ? _widget
+              : Hero(tag: _quest, child: _widget)),
+    );
   }
 }
 

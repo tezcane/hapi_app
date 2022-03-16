@@ -80,9 +80,6 @@ dependencies:
   timezone: ^0.8.0 # timezone database and data types
   flutter_native_timezone: ^2.0.0 # retrieves timezones (TODO IOS and Android only support in app?)
   flip_card: ^0.6.0
-#  flutter_picker: ^2.0.2
-  #avatar_glow: ^2.0.2 TODO not used yet
-  im_animations: ^0.1.1
   confetti: ^0.6.0
 
   json_annotation: ^4.4.0

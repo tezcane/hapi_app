@@ -61,7 +61,7 @@ enum SubPage {
   Tarikh_Search,
   Tarikh_Timeline,
   Tarikh_Article,
-  Active_Quests,
+  Active_Quest_Action,
 }
 
 extension EnumUtil on SubPage {
@@ -368,7 +368,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
           duration: Duration(milliseconds: transistionMs),
         );
         break;
-      case (SubPage.Active_Quests):
+      case (SubPage.Active_Quest_Action):
         Get.to(
           () => ActiveQuestActionUI(),
           arguments: arguments,
