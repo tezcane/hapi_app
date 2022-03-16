@@ -48,6 +48,7 @@ class _BottomBarMenuState extends State<BottomBarMenu> {
               if (newIdx == _currentPage) {
                 return; // already on this index, don't do anything
               }
+
               //_pageController.jumpToPage(newIdx); <-boring, use animation:
               _pageController.animateToPage(
                 newIdx,
@@ -58,8 +59,10 @@ class _BottomBarMenuState extends State<BottomBarMenu> {
                     : Curves.elasticOut, // move left
                 duration: const Duration(milliseconds: 650),
               );
-              NavPageController.to.setLastIdx(widget.navPage, newIdx);
-              setState(() => _currentPage = newIdx);
+
+              // animateToPage triggers onPageChanged above, don't need this:
+              //NavPageController.to.setLastIdx(widget.navPage, newIdx);
+              //setState(() => _currentPage = newIdx);
             },
             itemPadding:
                 const EdgeInsets.only(top: 5, bottom: 5, left: 16, right: 16),
