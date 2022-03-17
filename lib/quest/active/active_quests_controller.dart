@@ -21,7 +21,7 @@ DAY_OF_WEEK getDayOfWeek(DateTime dateTime) {
   // TODO test in other locales also // TODO test, used to be DateTime now()
   String day = DateFormat('EEEE').format(dateTime);
   for (var dayOfWeek in DAY_OF_WEEK.values) {
-    if (day == dayOfWeek.toString().split('.').last) {
+    if (day == dayOfWeek.name) {
       return dayOfWeek;
     }
   }

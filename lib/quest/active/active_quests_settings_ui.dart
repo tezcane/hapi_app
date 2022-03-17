@@ -57,7 +57,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
                           .withOpacity(c.salahCalcMethod == value ? 1 : 0),
                       child: Center(
                         child: Text(
-                          SalahMethod.values[value].name(),
+                          SalahMethod.values[value].niceName,
                           textAlign: TextAlign.center,
                           //textAlign: TextAlign.center,
                         ),

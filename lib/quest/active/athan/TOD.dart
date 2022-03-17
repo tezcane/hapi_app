@@ -19,10 +19,12 @@ enum TOD {
 }
 
 extension EnumUtil on TOD {
-  String name() {
-    return toString()
-        .split('.')
-        .last
+  /// Special logic and rules here to rename enum to a nice name:
+  ///     Kerahat_ -> '' (blank)
+  ///     __       -> /
+  ///     _        -> ' ' (space)
+  String get niceName {
+    return name
         .replaceFirst('Kerahat_', '')
         .replaceFirst('__', '/')
         .replaceAll('_', ' ');

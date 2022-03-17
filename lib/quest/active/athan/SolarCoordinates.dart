@@ -4,10 +4,6 @@ import 'package:hapi/helpers/math_utils.dart';
 import 'package:hapi/quest/active/athan/Astronomical.dart';
 
 class SolarCoordinates {
-  double? declination;
-  double? rightAscension;
-  late double apparentSiderealTime;
-
   SolarCoordinates(double julianDay) {
     double T = Astronomical.julianCentury(julianDay);
     double L0 = Astronomical.meanSolarLongitude(T);
@@ -26,19 +22,28 @@ class SolarCoordinates {
             the rays of the Sun and the plane of the Earth's
             equator, in degrees.
             Equation from Astronomical Algorithms page 165 */
-    declination = radiansToDegrees(asin(sin(EpsilonApparent) * sin(Lambda)));
+    _declination = radiansToDegrees(asin(sin(EpsilonApparent) * sin(Lambda)));
 
     /* rightAscension: Right ascension of the Sun, the angular distance on the
             celestial equator from the vernal equinox to the hour circle,
             in degrees.
             Equation from Astronomical Algorithms page 165 */
-    rightAscension = unwindAngle(radiansToDegrees(
+    _rightAscension = unwindAngle(radiansToDegrees(
         atan2(cos(EpsilonApparent) * sin(Lambda), cos(Lambda))));
 
     /* apparentSiderealTime: Apparent sidereal time, the hour angle of the vernal
             equinox, in degrees.
             Equation from Astronomical Algorithms page 88 */
-    apparentSiderealTime = Theta0 +
+    _apparentSiderealTime = Theta0 +
         (((dPsi * 3600) * cos(degreesToRadians(Epsilon0 + dEpsilon))) / 3600);
   }
+
+  late double _declination;
+  double get declination => _declination;
+
+  late double _rightAscension;
+  double get rightAscension => _rightAscension;
+
+  late double _apparentSiderealTime;
+  double get apparentSiderealTime => _apparentSiderealTime;
 }

@@ -17,10 +17,13 @@ enum SalahMethod {
 }
 
 extension EnumUtil on SalahMethod {
-  String name() {
-    return toString()
-        .split('.')
-        .last
+  /// Special logic and rules here to rename enum to a nice name:
+  ///     ____ -> (
+  ///     ___  -> )
+  ///     __   -> -
+  ///     _    -> ' ' (space)
+  String get niceName {
+    return name
         .replaceFirst('____', ' (')
         .replaceFirst('___', ')')
         .replaceFirst('__', '-')

@@ -84,7 +84,7 @@ class SolarTime {
 
   double afternoon(shadowLength) {
     // TODO source shadow angle calculation
-    double tangent = (observer.lat - solar.declination!).abs();
+    double tangent = (observer.lat - solar.declination).abs();
     double inverse = shadowLength + tan(degreesToRadians(tangent));
     double angle = radiansToDegrees(atan(1.0 / inverse));
     return hourAngle(angle, true);

@@ -52,7 +52,7 @@ class ActiveQuestsUI extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Text(c.tod!.currTOD.name(), style: tsAppBar),
+                              Text(c.tod!.currTOD.niceName, style: tsAppBar),
                               Text(' ends', style: tsAppBar),
                               const SizedBox(width: 1),
                               const Icon(Icons.arrow_right_alt_rounded,
@@ -62,7 +62,7 @@ class ActiveQuestsUI extends StatelessWidget {
                           ),
                           Row(
                             children: [
-                              Text(c.tod!.nextTOD.name(), style: tsAppBar),
+                              Text(c.tod!.nextTOD.niceName, style: tsAppBar),
                               Text(' in', style: tsAppBar),
                               const SizedBox(width: 1),
                               const Icon(Icons.arrow_right_alt_rounded,
@@ -833,7 +833,7 @@ class _SalahHeader extends StatelessWidget {
                 ),
               const SizedBox(width: 10),
               Text(
-                isJummahMode ? 'Jummah' : tod.name(),
+                isJummahMode ? 'Jummah' : tod.niceName,
                 style: TS(20.0, Theme.of(context).textTheme.headline6!.color!),
                 textAlign: TextAlign.center,
               ),
