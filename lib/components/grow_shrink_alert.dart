@@ -56,6 +56,8 @@ class _GrowShrinkAlertState extends State<GrowShrinkAlert>
             _controller.forward(); // shrink done, now grow
           }
           break;
+        default:
+          break;
       }
     });
 
