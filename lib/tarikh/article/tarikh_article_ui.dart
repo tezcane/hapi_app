@@ -178,16 +178,21 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                                   height: 60.0,
                                   width: 60.0,
                                   padding: const EdgeInsets.all(15.0),
-                                  color:
-                                      Theme.of(context).scaffoldBackgroundColor,
 
                                   /// Check out the widget at:
                                   /// https://www.2dimensions.com/a/pollux/files/flare/heart-simple/preview
                                   child: FlareActor(
-                                      "assets/tarikh/Favorite.flr",
-                                      animation:
-                                          isFav ? "Favorite" : "Unfavorite",
-                                      shouldClip: false),
+                                    "assets/tarikh/Favorite.flr",
+                                    animation:
+                                        isFav ? "Favorite" : "Unfavorite",
+                                    shouldClip: false,
+                                    color: isFav
+                                        ? Colors.pinkAccent
+                                        : Theme.of(context)
+                                            .textTheme
+                                            .headline6!
+                                            .color,
+                                  ),
                                 ),
                               ),
                               onTap: () {
