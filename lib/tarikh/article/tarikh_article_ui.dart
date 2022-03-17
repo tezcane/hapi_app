@@ -186,12 +186,13 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                                     animation:
                                         isFav ? "Favorite" : "Unfavorite",
                                     shouldClip: false,
-                                    color: isFav
-                                        ? Colors.pinkAccent
-                                        : Theme.of(context)
-                                            .textTheme
-                                            .headline6!
-                                            .color,
+                                    color: Colors.pinkAccent,
+                                    // color: isFav
+                                    //     ? Colors.pinkAccent
+                                    //     : Theme.of(context)
+                                    //         .textTheme
+                                    //         .headline6!
+                                    //         .color,
                                   ),
                                 ),
                               ),
