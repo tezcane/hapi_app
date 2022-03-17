@@ -42,10 +42,9 @@ class MenuItemData {
   static MenuItemData fromEntry(TimelineEntry entry) {
     // put in timer so btns updates after navigation
     Timer(const Duration(milliseconds: 500), () {
-      TarikhController.to
-          .setTBtnUp(TarikhController.to.getTimeBtn(entry.previous, 1.0));
-      TarikhController.to
-          .setTBtnDn(TarikhController.to.getTimeBtn(entry.next, 1.0));
+      TarikhController c = TarikhController.to;
+      c.updateTimeBtnEntry(c.timeBtnUp, entry.previous);
+      c.updateTimeBtnEntry(c.timeBtnDn, entry.next);
     });
 
     String label = entry.label;

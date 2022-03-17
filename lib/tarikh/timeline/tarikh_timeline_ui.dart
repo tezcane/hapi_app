@@ -289,9 +289,9 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
             FloatingActionButtonLocation.miniCenterDocked,
         floatingActionButton: GetBuilder<TarikhController>(
           builder: (c) {
-            const Color fabTextColor = AppThemes.logoText;
-            TimeBtn btnUp = c.timeBtnUp();
-            TimeBtn btnDn = c.timeBtnDn();
+            TimeBtn btnUp = c.timeBtnUp;
+            TimeBtn btnDn = c.timeBtnDn;
+
             return Stack(
               children: [
                 Align(
@@ -337,7 +337,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               child: Text(
                                 btnUp.title,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(color: fabTextColor),
+                                style:
+                                    const TextStyle(color: AppThemes.logoText),
                               ),
                             ),
                             FittedBox(
@@ -345,7 +346,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               child: Text(
                                 btnUp.timeUntil,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(color: fabTextColor),
+                                style:
+                                    const TextStyle(color: AppThemes.logoText),
                               ),
                             ),
                             Container(
@@ -362,7 +364,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               child: Text(
                                 btnUp.pageScrolls,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(color: fabTextColor),
+                                style:
+                                    const TextStyle(color: AppThemes.logoText),
                               ),
                             ),
                             const SizedBox(height: 1.8),
@@ -380,7 +383,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               child: Text(
                                 btnDn.title,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(color: fabTextColor),
+                                style:
+                                    const TextStyle(color: AppThemes.logoText),
                               ),
                             ),
                             FittedBox(
@@ -388,7 +392,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               child: Text(
                                 btnDn.timeUntil,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(color: fabTextColor),
+                                style:
+                                    const TextStyle(color: AppThemes.logoText),
                               ),
                             ),
                             Container(
@@ -405,7 +410,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               child: Text(
                                 btnDn.pageScrolls,
                                 textAlign: TextAlign.center,
-                                style: const TextStyle(color: fabTextColor),
+                                style:
+                                    const TextStyle(color: AppThemes.logoText),
                               ),
                             ),
                             const SizedBox(height: 1.8),

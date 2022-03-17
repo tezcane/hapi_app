@@ -469,29 +469,37 @@ class TimelineRenderObject extends RenderBox {
     canvas.restore();
 
     // Replace two commented out (very large) if statement logic with these two:
-    if (t.nextEntry != null && t.nextEntryOpacity > 0.0) {
-      cTrkh.setTBtnDn(cTrkh.getTimeBtn(t.nextEntry, t.nextEntryOpacity));
+    if (t.nextEntry != null) {
+      // && t.nextEntryOpacity > 0.0) {
+      cTrkh.updateTimeBtnEntry(cTrkh.timeBtnDn, t.nextEntry);
     } else {
-      TimeBtn trkhTimeBtn = cTrkh.timeBtnDn.value;
-      TimeBtn timeBtnTemp = cTrkh.getTimeBtn(trkhTimeBtn.entry, 1.0);
+      TimeBtn timeBtn = cTrkh.timeBtnDn;
+      String timeUntil = timeBtn.timeUntil;
+      String pageScrolls = timeBtn.pageScrolls;
+      String title = timeBtn.title;
 
       // don't update unless we have a new value
-      if (trkhTimeBtn.timeUntil != timeBtnTemp.timeUntil ||
-          trkhTimeBtn.pageScrolls != timeBtnTemp.pageScrolls) {
-        cTrkh.updateTBtnDn(timeBtnTemp.timeUntil, timeBtnTemp.pageScrolls);
+      if (timeBtn.timeUntil != timeUntil ||
+          timeBtn.pageScrolls != pageScrolls ||
+          timeBtn.title != title) {
+        cTrkh.updateTimeBtn(timeBtn, title, timeUntil, pageScrolls);
       }
     }
 
-    if (t.prevEntry != null && t.prevEntryOpacity > 0.0) {
-      cTrkh.setTBtnUp(cTrkh.getTimeBtn(t.prevEntry, t.prevEntryOpacity));
+    if (t.prevEntry != null) {
+      // && t.prevEntryOpacity > 0.0) {
+      cTrkh.updateTimeBtnEntry(cTrkh.timeBtnUp, t.prevEntry);
     } else {
-      TimeBtn trkhTimeBtn = cTrkh.timeBtnUp.value;
-      TimeBtn timeBtnTemp = cTrkh.getTimeBtn(trkhTimeBtn.entry, 1.0);
+      TimeBtn timeBtn = cTrkh.timeBtnUp;
+      String timeUntil = timeBtn.timeUntil;
+      String pageScrolls = timeBtn.pageScrolls;
+      String title = timeBtn.title;
 
       // don't update unless we have a new value
-      if (trkhTimeBtn.timeUntil != timeBtnTemp.timeUntil ||
-          trkhTimeBtn.pageScrolls != timeBtnTemp.pageScrolls) {
-        cTrkh.updateTBtnUp(timeBtnTemp.timeUntil, timeBtnTemp.pageScrolls);
+      if (timeBtn.timeUntil != timeUntil ||
+          timeBtn.pageScrolls != pageScrolls ||
+          timeBtn.title != title) {
+        cTrkh.updateTimeBtn(timeBtn, title, timeUntil, pageScrolls);
       }
     }
 

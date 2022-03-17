@@ -29,11 +29,11 @@ enum GutterMode {
 
 /// Used for Timeline Up/Down Button data
 class TimeBtn {
-  TimeBtn(this.title, this.timeUntil, this.pageScrolls, {this.entry});
-  final String title;
-  String timeUntil; // not final to allow updating these as page scrolls
+  TimeBtn(this.title, this.timeUntil, this.pageScrolls, this.entry);
+  String title;
+  String timeUntil;
   String pageScrolls;
-  final TimelineEntry? entry;
+  TimelineEntry? entry; // will be null on first/last entries
 }
 
 class TarikhController extends GetxHapi {
@@ -42,16 +42,20 @@ class TarikhController extends GetxHapi {
   static late final Timeline t;
   static late final TimelineInitHandler tih;
 
+  /// Buttons on timeline to go up/down past/future.
+  late final TimeBtn timeBtnUp;
+  late final TimeBtn timeBtnDn;
+
   static final NumberFormat formatter = NumberFormat.compact();
 
+  /// We can't show Tarikh Sub Pages until JSON file input data is parsed.
   bool _isTimelineInitDone = false;
   get isTimelineInitDone => _isTimelineInitDone;
 
-  // TIMELINE RENDER ENABLE/DISABLE:
+  /// TIMELINE RENDER ENABLE/DISABLE:
+  /// Toggle start/stop rendering whenever the timeline is visible or hidden.
   bool _isActiveTimeline = false;
   bool get isActiveTimeline => _isActiveTimeline;
-
-  /// Togge start/stop rendering whenever the timeline is visible or hidden.
   set isActiveTimeline(bool nv) {
     if (nv != _isActiveTimeline) {
       _isActiveTimeline = nv;
@@ -70,10 +74,9 @@ class TarikhController extends GetxHapi {
   /// background. These animations are paused when they're not visible anymore
   /// (e.g. when search is visible instead), and are played again once they're
   /// back in view.
+  /// Toggle start/stop rendering whenever the tarikh menu is visible or hidden.
   bool _isActiveTarikhMenu = true;
   bool get isActiveTarikhMenu => _isActiveTarikhMenu;
-
-  /// Toggle start/stop rendering whenever the tarikh menu is visible or hidden.
   set isActiveTarikhMenu(bool nv) {
     if (nv != _isActiveTarikhMenu) {
       _isActiveTarikhMenu = nv;
@@ -116,10 +119,6 @@ class TarikhController extends GetxHapi {
     update();
   }
 
-  /// Buttons on timeline to go up/down past/future.
-  late final Rx<TimeBtn> timeBtnUp;
-  late final Rx<TimeBtn> timeBtnDn;
-
   @override
   void onInit() async {
     super.onInit();
@@ -133,8 +132,8 @@ class TarikhController extends GetxHapi {
   }
 
   initTimeline() async {
-    timeBtnUp = TimeBtn(' ', ' ', ' ').obs;
-    timeBtnDn = TimeBtn(' ', ' ', ' ').obs;
+    timeBtnUp = TimeBtn(' ', ' ', ' ', null);
+    timeBtnDn = TimeBtn(' ', ' ', ' ', null);
 
     int lastGutterModeIdx = s.read('lastGutterModeIdx') ?? GutterMode.OFF.index;
     gutterMode = GutterMode.values[lastGutterModeIdx];
@@ -155,13 +154,13 @@ class TarikhController extends GetxHapi {
       start: events.first.startMs * 2.0,
       end: events.first.startMs,
       animate: true,
-    );
+    ); // TODO needed, what does it and other setViewport do?
 
-    /// Advance the timeline to its starting position.
+    /// Advance the timeline to its starting position. // TODO needed?
     t.advance(0.0, false);
 
     /// All the entries are loaded, we can fill in the [favoritesBloc]...
-    initFavorites();
+    _initFavorites();
 
     /// ...and initialize the [SearchManager].
     SearchManager.init(events);
@@ -173,7 +172,7 @@ class TarikhController extends GetxHapi {
 
   /// It receives as input the full list of [TimelineEntry], so that it can
   /// use those references to fill [_eventFavorites].
-  initFavorites() {
+  _initFavorites() {
     List<dynamic>? favs = s.read("TARIKH_FAVS");
 
     if (favs != null) {
@@ -188,6 +187,15 @@ class TarikhController extends GetxHapi {
     _eventFavorites.sort((TimelineEntry a, TimelineEntry b) {
       return a.startMs.compareTo(b.startMs);
     });
+  }
+
+  /// Persists the data to disk.
+  _saveFavorites() {
+    // note saves in any order, must sort on reading in from disk
+    List<String> favsList =
+        _eventFavorites.map((TimelineEntry entry) => entry.label).toList();
+    s.write("TARIKH_FAVS", favsList);
+    update(); // favorites changed so notify people using it
   }
 
   /// Save [e] into the list, re-sort it, and store to disk.
@@ -210,49 +218,25 @@ class TarikhController extends GetxHapi {
     }
   }
 
-  /// Persists the data to disk.
-  _saveFavorites() {
-    // note saves in any order, must sort on reading in from disk
-    List<String> favsList =
-        _eventFavorites.map((TimelineEntry entry) => entry.label).toList();
-    s.write("TARIKH_FAVS", favsList);
-    update(); // favorites changed so notify people using it
-  }
-
   bool isGutterModeOff() => _gutterMode.value == GutterMode.OFF;
   bool isGutterModeFav() => _gutterMode.value == GutterMode.FAV;
   bool isGutterModeAll() => _gutterMode.value == GutterMode.ALL;
 
-  /// resets entry value, so new button
-  void setTBtnUp(TimeBtn timeBtn) {
-    timeBtnUp.value = timeBtn;
+  /// Updates text around time button, no entry is set
+  void updateTimeBtn(
+      TimeBtn timeBtn, String title, String timeUntil, String pageScrolls) {
+    timeBtn.title = title;
+    timeBtn.timeUntil = timeUntil;
+    timeBtn.pageScrolls = pageScrolls;
     updateOnThread();
   }
 
-  void setTBtnDn(TimeBtn timeBtn) {
-    timeBtnDn.value = timeBtn;
-    updateOnThread();
-  }
-
-  /// Updates text around time button
-  void updateTBtnUp(String timeUntil, String pageScrolls) {
-    timeBtnUp.value.timeUntil = timeUntil;
-    timeBtnUp.value.pageScrolls = pageScrolls;
-    updateOnThread();
-  }
-
-  void updateTBtnDn(String timeUntil, String pageScrolls) {
-    timeBtnDn.value.timeUntil = timeUntil;
-    timeBtnDn.value.pageScrolls = pageScrolls;
-    updateOnThread();
-  }
-
-  TimeBtn getTimeBtn(TimelineEntry? entry, double opacity) {
-    String title = ' '; // these can't be blank because of FittedBox
+  void updateTimeBtnEntry(TimeBtn timeBtn, TimelineEntry? entry) {
+    String title = ' '; // these can't be blank/'' because of FittedBox
     String timeUntil = ' ';
     String pageScrolls = ' ';
 
-    if (entry != null && opacity > 0.0) {
+    if (entry != null) {
       title = entry.label;
 
       //was t.renderEnd, had 'page away 0' at bottom page edge, now in middle:
@@ -270,7 +254,8 @@ class TarikhController extends GetxHapi {
       }
     }
 
-    return TimeBtn(title, timeUntil, pageScrolls, entry: entry);
+    timeBtn.entry = entry;
+    updateTimeBtn(timeBtn, title, timeUntil, pageScrolls);
   }
 }
 
