@@ -503,6 +503,21 @@ class TimelineRenderObject extends RenderBox {
       }
     }
 
+    // Fixes bug where if we drag the timeline beyond first or last entry both
+    // up and down buttons show the first/last entry.
+    if (cTrkh.timeBtnUp.entry != null && cTrkh.timeBtnDn.entry != null) {
+      String upLabel = cTrkh.timeBtnUp.entry!.label;
+      if (upLabel == cTrkh.timeBtnDn.entry!.label) {
+        if (upLabel == 'Big Bang') {
+          print('***************** TOO HIGH FIXING ************************');
+          cTrkh.updateTimeBtnEntry(cTrkh.timeBtnUp, null);
+        } else {
+          print('***************** TOO LOW FIXING ************************');
+          cTrkh.updateTimeBtnEntry(cTrkh.timeBtnDn, null);
+        }
+      }
+    }
+
     /// After a few moments of inaction on the timeline, if there's enough space,
     /// an arrow pointing to the next event on the timeline will appear on the
     /// bottom of the screen. Draw it, and add it as another [TapTarget].

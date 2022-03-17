@@ -165,6 +165,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   }
 
   void _navigateToTimeline(TimelineEntry entry, double devicePaddingTop) {
+    // updates up/down buttons:
     MenuItemData target = MenuItemData.fromEntry(entry);
 
     t.padding = EdgeInsets.only(
@@ -174,6 +175,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     );
     t.setViewport(
         start: target.startMs, end: target.endMs, animate: true, pad: true);
+
+    setState(() {}); // needed to show big bang up arrow after manually hidden
   }
 
   /// If the [TimelineRenderWidget] has set the [_touchedBubble] to the currently
@@ -491,12 +494,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                 onPressed: () {
                                   print('Navigate to past: ' +
                                       btnUp.entry!.label);
-                                  // cTrkh.setTBtnUp(cTrkh.getTimeBtn(
-                                  //     btnUp.entry!.previous, 1.0));
                                   _navigateToTimeline(
                                       btnUp.entry!, devicePadding.top);
-                                  // cTrkh.setTBtnDn(
-                                  //     cTrkh.getTimeBtn(btnUp.entry, 1.0));
                                 },
                                 materialTapTargetSize:
                                     MaterialTapTargetSize.padded,
@@ -522,12 +521,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               onPressed: () {
                                 print('Navigate to future: ' +
                                     btnDn.entry!.label);
-                                // cTrkh.setTBtnDn(
-                                //     cTrkh.getTimeBtn(btnDn.entry!.next, 1.0));
                                 _navigateToTimeline(
                                     btnDn.entry!, devicePadding.top);
-                                // cTrkh.setTBtnUp(
-                                //     cTrkh.getTimeBtn(btnDn.entry, 1.0));
                               },
                               materialTapTargetSize:
                                   MaterialTapTargetSize.padded,
