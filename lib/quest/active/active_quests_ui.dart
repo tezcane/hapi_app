@@ -605,19 +605,16 @@ class ActiveQuestsUI extends StatelessWidget {
     );
   }
 
-  bool isPinned(TOD tod, List<TOD>? tods) {
+  /// Iterate through given TODs and see if it matches the current TOD.
+  bool isPinned(List<TOD> tods) {
     TOD currTOD = ActiveQuestsController.to.tod!.currTOD;
-    bool pinned = tod == currTOD;
-    if (!pinned) {
-      if (tods != null) {
-        for (TOD prayer in tods) {
-          if (prayer == currTOD) {
-            return true;
-          }
-        }
+    for (TOD tod in tods) {
+      if (tod == currTOD) {
+        return true;
       }
     }
-    return pinned;
+
+    return false; // this time of day is not
   }
 
   @override
@@ -627,17 +624,17 @@ class ActiveQuestsUI extends StatelessWidget {
         return Container(); // TODO show spinner?
       }
 
-      final bool pinnedFajr = isPinned(TOD.Fajr, [TOD.Fajr_Tomorrow]);
+      final bool pinnedFajr = isPinned([TOD.Fajr, TOD.Fajr_Tomorrow]);
       final bool pinnedDuha = c.showSunnahDuha &&
           isPinned(
-              TOD.Kerahat_Sunrise, [TOD.Ishraq, TOD.Duha, TOD.Kerahat_Zawal]);
-      final bool pinnedDuhr = isPinned(TOD.Dhuhr, null);
-      final bool pinnedAsr = isPinned(TOD.Asr, [TOD.Kerahat_Sun_Setting]);
-      final bool pinnedMaghrib = isPinned(TOD.Maghrib, null);
-      final bool pinnedIsha = isPinned(TOD.Isha, null);
+              [TOD.Kerahat_Sunrise, TOD.Ishraq, TOD.Duha, TOD.Kerahat_Zawal]);
+      final bool pinnedDuhr = isPinned([TOD.Dhuhr]);
+      final bool pinnedAsr = isPinned([TOD.Asr, TOD.Kerahat_Sun_Setting]);
+      final bool pinnedMaghrib = isPinned([TOD.Maghrib]);
+      final bool pinnedIsha = isPinned([TOD.Isha]);
       final bool pinnedLayl = c.showSunnahLayl &&
           ActiveQuestsAjrController.to.isIshaIbadahComplete &&
-          isPinned(TOD.Isha, [TOD.Middle_of_Night, TOD.Last_1__3_of_Night]);
+          isPinned([TOD.Isha, TOD.Middle_of_Night, TOD.Last_1__3_of_Night]);
 
       return Padding(
         padding: const EdgeInsets.symmetric(horizontal: 5), // match sliver gap
