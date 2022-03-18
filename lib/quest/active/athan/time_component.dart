@@ -1,9 +1,9 @@
-class TimeComponents {
+class TimeComponent {
   late final int hours;
   late final int minutes;
   late final int seconds;
 
-  TimeComponents(double number) {
+  TimeComponent(double number) {
     hours = (number).floor();
     minutes = ((number - hours) * 60).floor();
     seconds = ((number - (hours + minutes / 60)) * 3600).floor();

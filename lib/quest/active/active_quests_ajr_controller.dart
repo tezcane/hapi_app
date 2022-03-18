@@ -2,7 +2,8 @@ import 'package:get/get.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
-import 'package:hapi/quest/active/athan/TOD.dart';
+import 'package:hapi/quest/active/athan/tod.dart';
+import 'package:hapi/quest/active/zaman_controller.dart';
 
 // ONLY NEW VALUES CAN BE ADDED TO PRESERVE ENUM IN DB:
 enum QUEST {
@@ -277,10 +278,8 @@ class ActiveQuestsAjrController extends GetxHapi {
       }
     }
 
-    TOD currZaman = ActiveQuestsController.to.tod!.currTOD;
-
     for (QUEST quest in QUEST.values) {
-      if (quest.index == currZaman.getFirstQuest().index) {
+      if (quest.index == ZamanController.to.currTOD.getFirstQuest().index) {
         print('Stopping init: $quest = ${_questsMiss.value}');
         break;
       }

@@ -2,8 +2,8 @@ import 'package:flip_card/flip_card_controller.dart';
 import 'package:get/get.dart';
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/main.dart';
-import 'package:hapi/quest/active/athan/TOD.dart';
-import 'package:hapi/quest/active/athan/TimeOfDay.dart';
+import 'package:hapi/quest/active/athan/time_of_day.dart';
+import 'package:hapi/quest/active/athan/tod.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
 import 'package:intl/intl.dart';
 
@@ -25,7 +25,11 @@ DAY_OF_WEEK getDayOfWeek(DateTime dateTime) {
       return dayOfWeek;
     }
   }
-  return DAY_OF_WEEK.Monday;
+
+  DAY_OF_WEEK defaultDayOfWeek = DAY_OF_WEEK.Monday;
+  print(
+      'ERROR: getDayOfWeek: Invalid day of week, defaulting to; method found: $defaultDayOfWeek');
+  return defaultDayOfWeek;
 }
 
 class ActiveQuestsController extends GetxController {

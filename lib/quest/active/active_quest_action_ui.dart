@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
-import 'package:hapi/quest/active/active_quests_controller.dart';
-import 'package:hapi/quest/active/athan/TOD.dart';
+import 'package:hapi/quest/active/athan/tod.dart';
+import 'package:hapi/quest/active/zaman_controller.dart';
 
 class ActiveQuestActionUI extends StatelessWidget {
   late final TOD _tod; // TODO use
@@ -57,7 +57,7 @@ class ActiveQuestActionUI extends StatelessWidget {
         noActionMsg = 'Quest expired, try again tomorrow';
         // if all row quests done, don't allow next row to be started yet
       } else {
-        TOD currTOD = ActiveQuestsController.to.tod!.currTOD;
+        TOD currTOD = ZamanController.to.currTOD;
         if ((!_pinned && !isPreviousQuest) ||
             // For Adhkhar/Duha times we don't allow user to start task until
             // the quest's time comes in:

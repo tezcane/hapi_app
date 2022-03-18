@@ -82,7 +82,7 @@ class SolarTime {
         nextSolar.declination);
   }
 
-  double afternoon(shadowLength) {
+  double afternoon(int shadowLength) {
     // TODO source shadow angle calculation
     double tangent = (observer.lat - solar.declination).abs();
     double inverse = shadowLength + tan(degreesToRadians(tangent));

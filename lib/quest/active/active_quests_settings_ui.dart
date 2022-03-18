@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-//import 'package:flutter/painting.dart'; TODO needed?
 import 'package:get/get.dart';
 import 'package:hapi/menu/toggle_switch.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
-import 'package:hapi/quest/active/athan/CalculationMethod.dart';
+import 'package:hapi/quest/active/athan/calculation_method.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 
 class ActiveQuestsSettingsUI extends StatelessWidget {
@@ -47,7 +46,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
               onChanged: (int? newValue) {
                 c.salahCalcMethod = newValue!;
               },
-              items: List<int>.generate(SalahMethod.values.length - 1, (i) => i)
+              items: List<int>.generate(CalcMethod.values.length - 1, (i) => i)
                   .map<DropdownMenuItem<int>>(
                 (int value) {
                   return DropdownMenuItem<int>(
@@ -57,7 +56,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
                           .withOpacity(c.salahCalcMethod == value ? 1 : 0),
                       child: Center(
                         child: Text(
-                          SalahMethod.values[value].niceName,
+                          CalcMethod.values[value].niceName,
                           textAlign: TextAlign.center,
                           //textAlign: TextAlign.center,
                         ),

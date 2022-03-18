@@ -21,8 +21,8 @@ enum TOD {
 extension EnumUtil on TOD {
   /// Special logic and rules here to rename enum to a nice name:
   ///     Kerahat_ -> '' (blank)
-  ///     __       -> /
-  ///     _        -> ' ' (space)
+  ///           __ -> /
+  ///            _ -> ' ' (space)
   String get niceName {
     return name
         .replaceFirst('Kerahat_', '')

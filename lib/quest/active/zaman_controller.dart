@@ -6,16 +6,25 @@ import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
-import 'package:hapi/quest/active/athan/CalculationMethod.dart';
-import 'package:hapi/quest/active/athan/CalculationParameters.dart';
-import 'package:hapi/quest/active/athan/Madhab.dart';
-import 'package:hapi/quest/active/athan/TOD.dart';
-import 'package:hapi/quest/active/athan/TimeOfDay.dart';
+import 'package:hapi/quest/active/athan/calculation_method.dart';
+import 'package:hapi/quest/active/athan/calculation_params.dart';
+import 'package:hapi/quest/active/athan/time_of_day.dart';
+import 'package:hapi/quest/active/athan/tod.dart';
 import 'package:timezone/timezone.dart' show Location, TZDateTime;
 
-/// Controls Islamic Times Of Day, e.g. Fajr, Duha, Sunset/Maghrib, etc.
+/// Controls Islamic Times Of Day, e.g. Fajr, Duha, Sunset/Maghrib, etc. that
+/// many pages rely on for the current time.
 class ZamanController extends GetxHapi {
   static ZamanController get to => Get.find();
+
+  TOD _currTOD = TOD.Dhuhr;
+  TOD _nextTOD = TOD.Asr;
+  DateTime _currTODTime = DUMMY_TIME;
+  DateTime _nextTODTime = DUMMY_TIME;
+  TOD get currTOD => _currTOD;
+  TOD get nextTOD => _nextTOD;
+  DateTime get currTODTime => _currTODTime;
+  DateTime get nextTODTime => _nextTODTime;
 
   final RxString _nextZaman = '-'.obs;
   String get timeToNextZaman => _nextZaman.value;
@@ -36,33 +45,59 @@ class ZamanController extends GetxHapi {
     Location timezoneLoc = await TimeController.to.getTimezoneLocation();
     DateTime date = TZDateTime.from(await TimeController.to.now(), timezoneLoc);
 
-    final ActiveQuestsController cQstA = ActiveQuestsController.to;
+    var salahMethod =
+        CalcMethod.values[ActiveQuestsController.to.salahCalcMethod];
 
-    CalculationParameters params =
-        CalculationMethod.getMethod(SalahMethod.values[cQstA.salahCalcMethod]);
-
-    if (cQstA.salahAsrSafe) {
-      params.madhab = Madhab.Hanafi;
-    } else {
-      params.madhab = Madhab.Shafi;
+    var madhab = Madhab.Hanafi;
+    if (!ActiveQuestsController.to.salahAsrSafe) {
+      madhab = Madhab.Shafi;
     }
 
-    if (cQstA.salahKerahatSafe) {
-      params.kerahatSunRisingMins = 40;
-      params.kerahatSunZawalMins = 30;
-      params.kerahatSunSettingMins = 40;
-    } else {
-      params.kerahatSunRisingMins = 20;
-      params.kerahatSunZawalMins = 15;
-      params.kerahatSunSettingMins = 20;
+    int kerahatSunRisingMins = 40;
+    int kerahatSunZawalMins = 30;
+    int kerahatSunSettingMins = 40;
+    if (!ActiveQuestsController.to.salahKerahatSafe) {
+      kerahatSunRisingMins = 20;
+      kerahatSunZawalMins = 15;
+      kerahatSunSettingMins = 20;
     }
+
+    var params = CalculationParams(
+      salahMethod.method,
+      madhab,
+      kerahatSunRisingMins,
+      kerahatSunZawalMins,
+      kerahatSunSettingMins,
+      HighLatitudeRule.MiddleOfTheNight, // TODO give user a way to change this
+      {
+        // TODO give user a way to tune salah times
+        SalahAdjust.fajr: 0,
+        SalahAdjust.sunrise: 0,
+        SalahAdjust.dhuhr: 0,
+        SalahAdjust.asr: 0,
+        SalahAdjust.maghrib: 0,
+        SalahAdjust.isha: 0
+      },
+    );
+
     // TODO precision and salah settings
     // TODO fix all this, date should change at FAJR_TOMORROW hit only?
-    cQstA.tod = TimeOfDay(
+    TimeOfDay tod = TimeOfDay(
         LocationController.to.lastKnownCord, date, params, timezoneLoc, false);
+    ActiveQuestsController.to.tod = tod;
+
+    _currTOD = tod.getCurrZaman(date);
+    _currTODTime = tod.getZamanTime(_currTOD);
+
+    _nextTOD = tod.getNextZaman(date);
+    _nextTODTime = tod.getZamanTime(_nextTOD);
+
+    print('***** Convenience Variables:');
+    print('current: $_currTODTime ($_currTOD)');
+    print('next:    $_nextTODTime ($_nextTOD)');
 
     // reset day:
-    if (cQstA.tod!.currTOD == TOD.Fajr_Tomorrow) {
+    if (currTOD == TOD.Fajr_Tomorrow) {
       ActiveQuestsAjrController.to.clearAllQuests();
     }
     // For next prayer/day, set any missed quests and do other quest setup:
@@ -73,13 +108,16 @@ class ZamanController extends GetxHapi {
     startNextZamanCountdownTimer();
   }
 
-  void startNextZamanCountdownTimer() {
-    Timer(const Duration(seconds: 1), () async {
-      final ActiveQuestsController cQstA = ActiveQuestsController.to;
+  void startNextZamanCountdownTimer() async {
+    while (true) {
+      await Future.delayed(const Duration(seconds: 1));
 
-      Duration timeToNextZaman = cQstA.tod!.nextTODTime.difference(
-          TZDateTime.from(
-              await TimeController.to.now(), TimeController.to.tzLoc));
+      Duration timeToNextZaman = nextTODTime.difference(
+        TZDateTime.from(
+          await TimeController.to.now(),
+          TimeController.to.tzLoc,
+        ),
+      );
 
       // if we hit the end of a timer (or forced), recalculate zaman times:
       if (forceSalahRecalculation || timeToNextZaman.inSeconds <= 0) {
@@ -87,6 +125,7 @@ class ZamanController extends GetxHapi {
             '${timeToNextZaman.inSeconds} secs left');
         forceSalahRecalculation = false;
         initLocation(); // does eventually call startNextZamanCountdownTimer();
+        return;
       } else {
         if (timeToNextZaman.inSeconds % 60 == 0) {
           // print once a minute to show thread is alive
@@ -97,9 +136,8 @@ class ZamanController extends GetxHapi {
         }
         _nextZaman.value = _printHourMinuteSeconds(timeToNextZaman);
         update();
-        startNextZamanCountdownTimer();
       }
-    });
+    }
   }
 
   String _printHourMinuteSeconds(Duration duration) {

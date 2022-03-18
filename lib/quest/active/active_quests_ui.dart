@@ -10,7 +10,7 @@ import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/active_quests_settings_ui.dart';
-import 'package:hapi/quest/active/athan/TOD.dart';
+import 'package:hapi/quest/active/athan/tod.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 
@@ -33,132 +33,128 @@ class ActiveQuestsUI extends StatelessWidget {
   static final FlipCardController cflipCardDhuhr = FlipCardController();
   static final FlipCardController cflipCardLayl = FlipCardController();
 
-  GetBuilder salahAppBar() {
-    return GetBuilder<ActiveQuestsController>(
-      builder: (c) {
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Expanded(
-              flex: 4400,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+  Widget salahAppBar() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Expanded(
+          flex: 4400,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              GetBuilder<ZamanController>(builder: (c) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Row(
+                          children: [
+                            Text(c.currTOD.niceName, style: tsAppBar),
+                            Text(' ends', style: tsAppBar),
+                            const SizedBox(width: 1),
+                            const Icon(Icons.arrow_right_alt_rounded,
+                                color: Colors.white70, size: 12),
+                            const SizedBox(width: 5),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text(c.nextTOD.niceName, style: tsAppBar),
+                            Text(' in', style: tsAppBar),
+                            const SizedBox(width: 1),
+                            const Icon(Icons.arrow_right_alt_rounded,
+                                color: Colors.white70, size: 12),
+                            const SizedBox(width: 5),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Text(c.timeToNextZaman, style: tsAppBarTime),
+                  ],
+                );
+              }),
+              //if (c.showSunnahKeys) SizedBox(height: 1),
+              const SizedBox(height: 5.5),
+              GetBuilder<ActiveQuestsController>(
+                builder: (c) => !c.showSunnahKeys
+                    ? Row()
+                    : Row(
                         children: [
-                          Row(
-                            children: [
-                              Text(c.tod!.currTOD.niceName, style: tsAppBar),
-                              Text(' ends', style: tsAppBar),
-                              const SizedBox(width: 1),
-                              const Icon(Icons.arrow_right_alt_rounded,
-                                  color: Colors.white70, size: 12),
-                              const SizedBox(width: 5),
-                            ],
+                          Expanded(
+                            flex: 1000,
+                            child: Column(
+                              children: [
+                                Text(
+                                  'Before',
+                                  textAlign: TextAlign.center,
+                                  style: tsAppBar,
+                                ),
+                                Text(
+                                  'Sunnah',
+                                  textAlign: TextAlign.center,
+                                  style: tsAppBar,
+                                ),
+                              ],
+                            ),
                           ),
-                          Row(
-                            children: [
-                              Text(c.tod!.nextTOD.niceName, style: tsAppBar),
-                              Text(' in', style: tsAppBar),
-                              const SizedBox(width: 1),
-                              const Icon(Icons.arrow_right_alt_rounded,
-                                  color: Colors.white70, size: 12),
-                              const SizedBox(width: 5),
-                            ],
+                          Expanded(
+                            flex: 1000,
+                            child: Column(
+                              children: [
+                                Text(
+                                  'Fard',
+                                  textAlign: TextAlign.center,
+                                  style: tsAppBar,
+                                ),
+                                Text(
+                                  'Rakat',
+                                  textAlign: TextAlign.center,
+                                  style: tsAppBar,
+                                ),
+                              ],
+                            ),
                           ),
+                          const Expanded(flex: 100, child: Text('')),
+                          Expanded(
+                            flex: 1900,
+                            child: Column(
+                              children: [
+                                Text(
+                                  'After',
+                                  textAlign: TextAlign.center,
+                                  style: tsAppBar,
+                                ),
+                                Text(
+                                  'Sunnah',
+                                  textAlign: TextAlign.center,
+                                  style: tsAppBar,
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Expanded(flex: 400, child: Text('')),
                         ],
                       ),
-                      GetX<ZamanController>(builder: (ZamanController c) {
-                        // TODO should use GetBuilder instead of GetX?
-                        return Row(
-                          children: [
-                            Text(c.timeToNextZaman, style: tsAppBarTime),
-                          ],
-                        );
-                      }),
-                    ],
-                  ),
-                  //if (c.showSunnahKeys) SizedBox(height: 1),
-                  const SizedBox(height: 5.5),
-                  if (c.showSunnahKeys)
-                    Row(
-                      children: [
-                        Expanded(
-                          flex: 1000,
-                          child: Column(
-                            children: [
-                              Text(
-                                'Before',
-                                textAlign: TextAlign.center,
-                                style: tsAppBar,
-                              ),
-                              Text(
-                                'Sunnah',
-                                textAlign: TextAlign.center,
-                                style: tsAppBar,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                          flex: 1000,
-                          child: Column(
-                            children: [
-                              Text(
-                                'Fard',
-                                textAlign: TextAlign.center,
-                                style: tsAppBar,
-                              ),
-                              Text(
-                                'Rakat',
-                                textAlign: TextAlign.center,
-                                style: tsAppBar,
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Expanded(flex: 100, child: Text('')),
-                        Expanded(
-                          flex: 1900,
-                          child: Column(
-                            children: [
-                              Text(
-                                'After',
-                                textAlign: TextAlign.center,
-                                style: tsAppBar,
-                              ),
-                              Text(
-                                'Sunnah',
-                                textAlign: TextAlign.center,
-                                style: tsAppBar,
-                              ),
-                            ],
-                          ),
-                        ),
-                        const Expanded(flex: 400, child: Text('')),
-                      ],
-                    )
-                ],
-              ),
-            ),
-            Expanded(
-              flex: c.showSunnahKeys ? 1600 : 0,
-              child: c.showSunnahKeys
-                  ? const ShowSunnahSettings(
-                      btnHeight: 19,
-                      btnGap: 0,
-                      fontSize: 9,
-                      lrPadding: 0,
-                    )
-                  : const Text(''),
-            ),
-          ],
-        );
-      },
+              )
+            ],
+          ),
+        ),
+        GetBuilder<ActiveQuestsController>(
+          builder: (c) => Expanded(
+            flex: c.showSunnahKeys ? 1600 : 0, // if hidden, give room back
+            child: c.showSunnahKeys
+                ? const ShowSunnahSettings(
+                    btnHeight: 19,
+                    btnGap: 0,
+                    fontSize: 9,
+                    lrPadding: 0,
+                  )
+                : const Text(''),
+          ),
+        ),
+      ],
     );
   }
 
@@ -607,7 +603,7 @@ class ActiveQuestsUI extends StatelessWidget {
 
   /// Iterate through given TODs and see if it matches the current TOD.
   bool isPinned(List<TOD> tods) {
-    TOD currTOD = ActiveQuestsController.to.tod!.currTOD;
+    TOD currTOD = ZamanController.to.currTOD;
     for (TOD tod in tods) {
       if (tod == currTOD) {
         return true;
