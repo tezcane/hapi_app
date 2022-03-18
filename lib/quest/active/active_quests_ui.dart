@@ -218,7 +218,8 @@ class ActiveQuestsUI extends StatelessWidget {
 
   /// Needed for FlipCard on fajr_tomorrow and dhur/jummah.
   /// Note: returns GetBuilder.
-  GetBuilder<ActiveQuestsController> rowNoActionFlipCard({
+  rowNoActionFlipCard(
+    ActiveQuestsController c, {
     required final String fardRkt,
     required final TOD tod,
     required final DateTime salahTimeStart,
@@ -229,93 +230,85 @@ class ActiveQuestsUI extends StatelessWidget {
     required final bool isJummahMode,
     required FlipCardController flipCardController,
   }) {
-    return GetBuilder<ActiveQuestsController>(
-      builder: (c) {
-        muakBef = c.showSunnahMuak ? muakBef : '';
-        muakAft = c.showSunnahMuak ? muakAft : '';
-        naflAft = c.showSunnahNafl ? naflAft : '';
+    muakBef = c.showSunnahMuak ? muakBef : '';
+    muakAft = c.showSunnahMuak ? muakAft : '';
+    naflAft = c.showSunnahNafl ? naflAft : '';
 
-        return Column(
-          children: [
-            /// First row is title of salah, with times, etc.
-            _SalahHeader(
-              tod,
-              false,
-              c,
-              isJummahMode,
-              salahTimeStart,
-              tod == TOD.Fajr_Tomorrow ? salahTimeEnd : null,
-              flipCardController,
-            ),
-            Expanded(
-              child: Row(
-                children: [
-                  /// 1 of 4. sunnah before fard column item:
-                  _Cell(T(muakBef, tsMuak), false, tod, QUEST.NONE, dis: true),
+    return Column(
+      children: [
+        /// First row is title of salah, with times, etc.
+        _SalahHeader(
+          tod,
+          false,
+          c,
+          isJummahMode,
+          salahTimeStart,
+          tod == TOD.Fajr_Tomorrow ? salahTimeEnd : null,
+          flipCardController,
+        ),
+        Expanded(
+          child: Row(
+            children: [
+              /// 1 of 4. sunnah before fard column item:
+              _Cell(T(muakBef, tsMuak), false, tod, QUEST.NONE, dis: true),
 
-                  /// 2 of 4. fard column item:
-                  _Cell(T(fardRkt, tsFard), false, tod, QUEST.NONE, dis: true),
+              /// 2 of 4. fard column item:
+              _Cell(T(fardRkt, tsFard), false, tod, QUEST.NONE, dis: true),
 
-                  /// 3 of 4. sunnah after fard column items:
-                  _Cell(T(muakAft, tsMuak), false, tod, QUEST.NONE, dis: true),
-                  _Cell(T(naflAft, tsNafl), false, tod, QUEST.NONE, dis: true),
+              /// 3 of 4. sunnah after fard column items:
+              _Cell(T(muakAft, tsMuak), false, tod, QUEST.NONE, dis: true),
+              _Cell(T(naflAft, tsNafl), false, tod, QUEST.NONE, dis: true),
 
-                  /// 4 of 4. Thikr and Dua after fard:
-                  _Cell(const _IconThikr(), false, tod, QUEST.NONE, dis: true),
-                  _Cell(const _IconDua(), false, tod, QUEST.NONE, dis: true),
-                ],
-              ),
-            ),
-          ],
-        );
-      },
+              /// 4 of 4. Thikr and Dua after fard:
+              _Cell(const _IconThikr(), false, tod, QUEST.NONE, dis: true),
+              _Cell(const _IconDua(), false, tod, QUEST.NONE, dis: true),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
   /// Note: returns GetBuilder since has FlipCard()
-  GetBuilder<ActiveQuestsController> rowFajr(final bool pinned) {
+  Column rowFajr(ActiveQuestsController c, final bool pinned) {
     TOD tod = TOD.Fajr;
     String muakBef = '2';
     String fardRkt = '2';
 
-    return GetBuilder<ActiveQuestsController>(
-      builder: (c) {
-        muakBef = c.showSunnahMuak ? muakBef : '';
+    muakBef = c.showSunnahMuak ? muakBef : '';
 
-        return Column(
-          children: [
-            /// First row is title of salah, with times, etc.
-            _SalahHeader(
-              TOD.Fajr,
-              pinned,
-              c,
-              false,
-              c.tod!.fajr,
-              !c.showSunnahDuha ? c.tod!.sunrise : null,
-              cflipCardFajr,
-            ),
-            Expanded(
-              child: Row(
-                children: [
-                  /// 1 of 4. sunnah before fard column item:
-                  _Cell(T(muakBef, tsMuak), pinned, tod, QUEST.FAJR_MUAKB),
+    return Column(
+      children: [
+        /// First row is title of salah, with times, etc.
+        _SalahHeader(
+          TOD.Fajr,
+          pinned,
+          c,
+          false,
+          c.tod!.fajr,
+          !c.showSunnahDuha ? c.tod!.sunrise : null,
+          cflipCardFajr,
+        ),
+        Expanded(
+          child: Row(
+            children: [
+              /// 1 of 4. sunnah before fard column item:
+              _Cell(T(muakBef, tsMuak), pinned, tod, QUEST.FAJR_MUAKB),
 
-                  /// 2 of 4. fard column item:
-                  _Cell(T(fardRkt, tsFard), pinned, tod, QUEST.FAJR_FARD),
+              /// 2 of 4. fard column item:
+              _Cell(T(fardRkt, tsFard), pinned, tod, QUEST.FAJR_FARD),
 
-                  /// 3 of 4. Sunnah after fard column items:
-                  _Cell(T('', tsMuak), pinned, tod, QUEST.NONE),
-                  _Cell(T('', tsNafl), pinned, tod, QUEST.NONE),
+              /// 3 of 4. Sunnah after fard column items:
+              _Cell(T('', tsMuak), pinned, tod, QUEST.NONE),
+              _Cell(T('', tsNafl), pinned, tod, QUEST.NONE),
 
-                  /// 4 of 4. Thikr and Dua after fard:
-                  _Cell(const _IconThikr(), pinned, tod, QUEST.FAJR_THIKR),
-                  _Cell(const _IconDua(), pinned, tod, QUEST.FAJR_DUA),
-                ],
-              ),
-            ),
-          ],
-        );
-      },
+              /// 4 of 4. Thikr and Dua after fard:
+              _Cell(const _IconThikr(), pinned, tod, QUEST.FAJR_THIKR),
+              _Cell(const _IconDua(), pinned, tod, QUEST.FAJR_DUA),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -668,8 +661,9 @@ class ActiveQuestsUI extends StatelessWidget {
                 flipOnTouch: false,
                 controller: cflipCardFajr,
                 direction: FlipDirection.HORIZONTAL,
-                front: rowFajr(pinnedFajr),
+                front: rowFajr(c, pinnedFajr),
                 back: rowNoActionFlipCard(
+                  c,
                   fardRkt: '2',
                   tod: TOD.Fajr_Tomorrow,
                   salahTimeStart: c.tod!.fajrTomorrow,
@@ -698,6 +692,7 @@ class ActiveQuestsUI extends StatelessWidget {
                       front: rowDhuhr(c, pinnedDuhr,
                           fardRkt: '2', muakAft: '6', isJummahMode: true),
                       back: rowNoActionFlipCard(
+                        c,
                         fardRkt: '4',
                         tod: TOD.Dhuhr,
                         salahTimeStart: c.tod!.dhuhr,
@@ -715,6 +710,7 @@ class ActiveQuestsUI extends StatelessWidget {
                       front: rowDhuhr(c, pinnedDuhr,
                           fardRkt: '4', muakAft: '2', isJummahMode: false),
                       back: rowNoActionFlipCard(
+                        c,
                         fardRkt: '2', // Jummah Mode
                         tod: TOD.Dhuhr,
                         salahTimeStart: c.tod!.dhuhr,
