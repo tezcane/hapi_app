@@ -43,15 +43,15 @@ class _MenuSlideState extends State<MenuSlide>
     return Scaffold(
       body: GetBuilder<MenuController>(
         builder: (c) {
-          final double _width = MediaQuery.of(context).size.width;
-          final double _height = MediaQuery.of(context).size.height;
-          const double _fabPosition = 16;
-          const double _fabSize = 56;
+          final double width = MediaQuery.of(context).size.width;
+          final double height = MediaQuery.of(context).size.height;
+          const double fabPosition = 16;
+          const double fabSize = 56;
 
-          final double _xScale =
-              (widget.scaleWidth + _fabPosition * 2) * 100 / _width;
-          final double _yScale =
-              (widget.scaleHeight + _fabPosition * 2) * 100 / _height;
+          final double xScale =
+              (widget.scaleWidth + fabPosition * 2) * 100 / width;
+          final double yScale =
+              (widget.scaleHeight + fabPosition * 2) * 100 / height;
 
           return Stack(
             children: <Widget>[
@@ -60,8 +60,8 @@ class _MenuSlideState extends State<MenuSlide>
                 child: Stack(
                   children: <Widget>[
                     Positioned(
-                      bottom: _fabSize + _fabPosition * 4,
-                      right: _fabPosition,
+                      bottom: fabSize + fabPosition * 4,
+                      right: fabPosition,
                       // width is used as max width to prevent overlap
                       child: ConstrainedBox(
                         constraints: BoxConstraints(
@@ -97,8 +97,8 @@ class _MenuSlideState extends State<MenuSlide>
               ),
               SlideAnimation(
                 opened: c.isMenuShowing(),
-                xScale: _xScale,
-                yScale: _yScale,
+                xScale: xScale,
+                yScale: yScale,
                 duration: widget.slideAnimationDuration,
                 child: widget.foregroundPage,
               ),
