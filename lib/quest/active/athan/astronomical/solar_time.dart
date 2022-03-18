@@ -2,8 +2,8 @@ import 'dart:math';
 
 import 'package:hapi/helpers/cord.dart';
 import 'package:hapi/helpers/math_utils.dart';
-import 'package:hapi/quest/active/athan/Astronomical.dart';
-import 'package:hapi/quest/active/athan/SolarCoordinates.dart';
+import 'package:hapi/quest/active/athan/astronomical/astronomical.dart';
+import 'package:hapi/quest/active/athan/astronomical/solar_coordinates.dart';
 
 class SolarTime {
   late Cord observer;

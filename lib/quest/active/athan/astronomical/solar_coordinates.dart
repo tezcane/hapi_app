@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:hapi/helpers/math_utils.dart';
-import 'package:hapi/quest/active/athan/Astronomical.dart';
+import 'package:hapi/quest/active/athan/astronomical/astronomical.dart';
 
 class SolarCoordinates {
   SolarCoordinates(double julianDay) {

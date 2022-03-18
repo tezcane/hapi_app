@@ -1,11 +1,10 @@
 import 'package:hapi/helpers/cord.dart';
+import 'package:hapi/helpers/date_utils.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
-import 'package:hapi/quest/active/athan/Astronomical.dart';
-import 'package:hapi/quest/active/athan/DateUtils.dart';
-import 'package:hapi/quest/active/athan/SolarTime.dart';
+import 'package:hapi/quest/active/athan/astronomical/astronomical.dart';
+import 'package:hapi/quest/active/athan/astronomical/solar_time.dart';
 import 'package:hapi/quest/active/athan/calculation_method.dart';
 import 'package:hapi/quest/active/athan/calculation_params.dart';
-import 'package:hapi/quest/active/athan/time_component.dart';
 import 'package:hapi/quest/active/athan/tod.dart';
 import 'package:timezone/timezone.dart';
 
