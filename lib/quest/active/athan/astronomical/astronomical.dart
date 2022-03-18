@@ -207,7 +207,7 @@ class Astronomical {
     double term2 =
         cos(degreesToRadians(coordinates.lat)) * cos(degreesToRadians(d2));
 
-    // TODO: acos with term1/term2 > 1 or < -1
+    // TODO asdf fdsa (original to-do): acos with term1/term2 > 1 or < -1
     double H0 =
         (term1 / term2).abs() > 1 ? 1.0 : radiansToDegrees(acos(term1 / term2));
 
