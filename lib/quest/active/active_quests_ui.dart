@@ -33,6 +33,8 @@ class ActiveQuestsUI extends StatelessWidget {
   static final FlipCardController cflipCardDhuhr = FlipCardController();
   static final FlipCardController cflipCardLayl = FlipCardController();
 
+  final double minAppBarHeight = 56;
+
   Widget salahAppBar() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
@@ -583,13 +585,15 @@ class ActiveQuestsUI extends StatelessWidget {
   }
 
   /// Use to make scrolling of active salah always pin when scrolling up.
-  SliverPersistentHeader sliverSpaceHeaderFiller() {
-    return const SliverPersistentHeader(
+  SliverPersistentHeader sliverSpaceHeaderFiller(BuildContext context) {
+    final double height = // hide behind here
+        MediaQuery.of(context).size.height - minAppBarHeight;
+    return SliverPersistentHeader(
       pinned: false,
       delegate: _SliverAppBarDelegate(
-        minHeight: 100.0,
-        maxHeight: 100.0,
-        child: SizedBox(),
+        minHeight: height,
+        maxHeight: height,
+        child: const SizedBox(),
       ),
     );
   }
@@ -633,7 +637,7 @@ class ActiveQuestsUI extends StatelessWidget {
             SliverAppBar(
               backgroundColor: Colors.grey.shade800, // logoText/unselected
               expandedHeight: 175.0,
-              collapsedHeight: c.showSunnahKeys ? 90.0 : 56,
+              collapsedHeight: c.showSunnahKeys ? 90.0 : minAppBarHeight,
               floating: true,
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
@@ -762,17 +766,7 @@ class ActiveQuestsUI extends StatelessWidget {
 
             /// Fillers:
             sliverSpaceHeader(true),
-            sliverSpaceHeaderFiller(),
-            sliverSpaceHeaderFiller(),
-            sliverSpaceHeaderFiller(),
-            sliverSpaceHeaderFiller(),
-            sliverSpaceHeaderFiller(),
-            sliverSpaceHeaderFiller(),
-            sliverSpaceHeaderFiller(),
-            sliverSpaceHeaderFiller(),
-            sliverSpaceHeaderFiller(),
-            sliverSpaceHeaderFiller(),
-            sliverSpaceHeaderFiller(),
+            sliverSpaceHeaderFiller(context), // height of the page
           ],
         ),
       );
