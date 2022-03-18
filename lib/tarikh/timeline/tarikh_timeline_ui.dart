@@ -175,8 +175,6 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     );
     t.setViewport(
         start: target.startMs, end: target.endMs, animate: true, pad: true);
-
-    setState(() {}); // needed to show big bang up arrow after manually hidden
   }
 
   /// If the [TimelineRenderWidget] has set the [_touchedBubble] to the currently
