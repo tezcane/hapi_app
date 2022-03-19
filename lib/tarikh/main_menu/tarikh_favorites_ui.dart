@@ -44,15 +44,15 @@ class TarikhFavoritesUI extends StatelessWidget {
                               height: 114.0,
                               margin: const EdgeInsets.only(bottom: 30),
                               child: const FlareActor(
-                                  "assets/tarikh/Broken Heart.flr",
-                                  animation: "Heart Break",
+                                  'assets/tarikh/Broken Heart.flr',
+                                  animation: 'Heart Break',
                                   shouldClip: false),
                             ),
                             Container(
                               padding: const EdgeInsets.only(bottom: 21),
                               width: 250,
                               child: Text(
-                                "No favorites",
+                                'No favorites',
                                 textAlign: TextAlign.center,
                                 style: Theme.of(context).textTheme.headline4,
                               ),

@@ -10,24 +10,24 @@ import 'package:internet_connection_checker/internet_connection_checker.dart';
 class ConnectivityController extends GetxHapi {
   static ConnectivityController get to => Get.find();
 
-  final Rx<ConnectivityResult> _connResult = ConnectivityResult.none.obs;
-  ConnectivityResult get connResult => _connResult.value;
+  ConnectivityResult _connResult = ConnectivityResult.none;
+  ConnectivityResult get connResult => _connResult;
 
-  final RxBool _isInternetOn = false.obs;
-  bool get isInternetOn => _isInternetOn.value;
+  bool _isInternetOn = false;
+  bool get isInternetOn => _isInternetOn;
   set isInternetOn(bool isInternetOn) {
-    if (_isInternetOn.value != isInternetOn) {
-      _hasUpdate.value = true;
+    if (_isInternetOn != isInternetOn) {
+      _hasUpdate = true;
       update();
     }
-    _isInternetOn.value = isInternetOn;
+    _isInternetOn = isInternetOn;
   }
 
   /// used to track if internet connection went up or down, can be read once
-  final RxBool _hasUpdate = true.obs; // true so we check on init
+  bool _hasUpdate = true; // true so we check on init
   bool get hasUpdate {
-    bool internetConnHasUpdate = _hasUpdate.value;
-    _hasUpdate.value = false; // clear for next update
+    bool internetConnHasUpdate = _hasUpdate;
+    _hasUpdate = false; // clear for next update
     return internetConnHasUpdate;
   }
 
@@ -52,8 +52,8 @@ class ConnectivityController extends GetxHapi {
   }
 
   _updateConnectionStatus(ConnectivityResult connResult) {
-    l.i('Connectivity changed from ${_connResult.value} to $connResult');
-    _connResult.value = connResult;
+    l.i('Connectivity changed from $_connResult to $connResult');
+    _connResult = connResult;
 
     // we only know radio/physical layer is on, check for internet connection
     checkIfInternetIsOn(connResult: connResult);
@@ -77,16 +77,16 @@ class ConnectivityController extends GetxHapi {
       isInternetOn = false; // mobile/wifi/ethernet is disconnected
     }
 
-    l.d('checkIfInternetIsOn: _isInternetOn=${_isInternetOn.value}');
+    l.d('checkIfInternetIsOn: _isInternetOn=$_isInternetOn');
 
-    return _isInternetOn.value;
+    return _isInternetOn;
   }
 
   /// Check if radio/physical layers are on
   bool get isPhysicalLayerOn =>
-      _connResult.value == ConnectivityResult.mobile ||
-      _connResult.value == ConnectivityResult.ethernet ||
-      _connResult.value == ConnectivityResult.wifi;
+      _connResult == ConnectivityResult.mobile ||
+      _connResult == ConnectivityResult.ethernet ||
+      _connResult == ConnectivityResult.wifi;
 
   /// Be sure to cancel subscription after you are done
   @override

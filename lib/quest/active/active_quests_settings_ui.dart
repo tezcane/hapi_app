@@ -113,7 +113,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
             const SizedBox(height: 10),
             Tooltip(
               message:
-                  "Ulema opinions on Asr start time are when an object's shadow is either 2 times its lengths (later) or 1 times its length (earlier)",
+                  'Ulema opinions on Asr start time are when an object\'s shadow is either 2 times its lengths (later) or 1 times its length (earlier)',
               child: Text(
                 'Asr Start',
                 textAlign: TextAlign.center,
@@ -173,7 +173,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
             const SizedBox(height: 10),
             Tooltip(
               message:
-                  "Choice between showing Jummah Salah on Friday (if you go to Jummah) or set to Dhuhr which acts like non-Jummah days",
+                  'Choice between showing Jummah Salah on Friday (if you go to Jummah) or set to Dhuhr which acts like non-Jummah days',
               child: Text(
                 'Friday Default',
                 textAlign: TextAlign.center,
@@ -203,7 +203,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
             const SizedBox(height: 10),
             Tooltip(
               message:
-                  "Choice between showing Last 1/3 of the night or middle of the night, for Tahajjud alarm",
+                  'Choice between showing Last 1/3 of the night or middle of the night, for Tahajjud alarm',
               child: Text(
                 'Night Default',
                 textAlign: TextAlign.center,
@@ -233,7 +233,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
             const SizedBox(height: 10),
             Tooltip(
               message:
-                  "Gives choice between 12 hour clock (AM/PM) or 24 hour clock (military time)",
+                  'Gives choice between 12 hour clock (AM/PM) or 24 hour clock (military time)',
               child: Text(
                 'Clock Type',
                 textAlign: TextAlign.center,
@@ -307,7 +307,7 @@ class ShowSunnahSettings extends StatelessWidget {
           //crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Text(
-            //   "Sunnah Key:",
+            //   'Sunnah Key:',
             //   style: textStyleTitle,
             // ),
             SizedBox(height: btnGap > 2 ? btnGap - 2 : 0),

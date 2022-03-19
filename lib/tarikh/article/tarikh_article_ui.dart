@@ -29,9 +29,9 @@ class TarikhArticleUI extends StatefulWidget {
 /// on this page (i.e. the top [TimelineEntryWidget] the favorite button) rely on life-cycle parameters.
 class _TarikhArticleUIState extends State<TarikhArticleUI> {
   /// The information for the current page.
-  String _articleMarkdown = "";
-  String _title = "";
-  String _subTitle = "";
+  String _articleMarkdown = '';
+  String _title = '';
+  String _subTitle = '';
 
   /// This page uses the `flutter_markdown` package, and thus needs its styles to be defined
   /// with a custom objects. This is created in [initState()].
@@ -81,7 +81,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
     setState(() {
       _title = widget.article.label;
       _subTitle = widget.article.formatYearsAgo();
-      _articleMarkdown = "";
+      _articleMarkdown = '';
       loadMarkdown(widget.article.articleFilename);
     });
   }
@@ -89,7 +89,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
   /// Load the markdown file from the assets and set the contents of the page to its value.
   void loadMarkdown(String filename) async {
     rootBundle
-        .loadString("assets/tarikh/Articles/" + filename)
+        .loadString('assets/tarikh/Articles/' + filename)
         .then((String data) {
       setState(() {
         _articleMarkdown = data;
@@ -182,9 +182,9 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                                   /// Check out the widget at:
                                   /// https://www.2dimensions.com/a/pollux/files/flare/heart-simple/preview
                                   child: FlareActor(
-                                    "assets/tarikh/Favorite.flr",
+                                    'assets/tarikh/Favorite.flr',
                                     animation:
-                                        isFav ? "Favorite" : "Unfavorite",
+                                        isFav ? 'Favorite' : 'Unfavorite',
                                     shouldClip: false,
                                     color: Colors.pinkAccent,
                                     // color: isFav

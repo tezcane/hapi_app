@@ -131,7 +131,7 @@ class _SplashUIState extends State<SplashUI> with TickerProviderStateMixin {
               if (!c.isGifAnimatingDone())
                 GifImage(
                   controller: cGif,
-                  image: AssetImage("assets/images/logo/gif/$gifFilename.gif"),
+                  image: AssetImage('assets/images/logo/gif/$gifFilename.gif'),
                   width: 250,
                   height: 250,
                 ),

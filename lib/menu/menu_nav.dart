@@ -52,7 +52,7 @@ class MenuNav extends StatefulWidget {
 
 class _MenuNavState extends State<MenuNav> {
   void _displayMenuDragGesture(DragEndDetails endDetails) {
-    if (!MenuController.to.isMenuShowing()) {
+    if (!MenuController.to.isMenuShowing) {
       final velocity = endDetails.primaryVelocity!;
       if (velocity < 0) {
         MenuController.to.showMenu();
@@ -97,8 +97,8 @@ class _MenuNavState extends State<MenuNav> {
                     children: [
                       /// dismiss the Menu when user taps outside the widget.
                       if (MenuController.to.acNavMenu.value < 1 &&
-                          MenuController.to.isMenuShowing() &&
-                          MenuController.to.isMenuShowingNav())
+                          MenuController.to.isMenuShowing &&
+                          MenuController.to.isMenuShowingNav)
                         Align(
                           child: GestureDetector(
                             onTap: () => MenuController.to.hideMenu(),

@@ -225,16 +225,16 @@ class ActiveQuestsAjrController extends GetxHapi {
   // cAjrA = controller ajr active (quests):
   static ActiveQuestsAjrController get to => Get.find();
 
-//RxInt _questsAll = 0.obs;
-  final RxInt _questsDone = 0.obs;
-  final RxInt _questsSkip = 0.obs;
-  final RxInt _questsMiss = 0.obs;
+//int _questsAll = 0;
+  int _questsDone = 0;
+  int _questsSkip = 0;
+  int _questsMiss = 0;
 
-  final RxBool _isIshaIbadahComplete = false.obs;
+  bool _isIshaIbadahComplete = false;
 
-  bool get isIshaIbadahComplete => _isIshaIbadahComplete.value;
+  bool get isIshaIbadahComplete => _isIshaIbadahComplete;
   set isIshaIbadahComplete(bool value) {
-    _isIshaIbadahComplete.value = value;
+    _isIshaIbadahComplete = value;
     //s.write('showSunnahKeys', value);
     update();
   }
@@ -243,13 +243,13 @@ class ActiveQuestsAjrController extends GetxHapi {
   void onInit() {
     super.onInit();
 
-    _questsDone.value = s.rd('questsDone') ?? 0;
-    _questsSkip.value = s.rd('questsSkip') ?? 0;
-    _questsMiss.value = s.rd('questsMiss') ?? 0;
+    _questsDone = s.rd('questsDone') ?? 0;
+    _questsSkip = s.rd('questsSkip') ?? 0;
+    _questsMiss = s.rd('questsMiss') ?? 0;
 
     initCurrQuest();
 
-    //_isIshaIbadahComplete.value = false;
+    //_isIshaIbadahComplete = false;
   }
 
   void printBinary(int input) {
@@ -257,10 +257,10 @@ class ActiveQuestsAjrController extends GetxHapi {
   }
 
   printBinaryAll() {
-    l.v('questsDone=${_questsDone.value}, questsSkip=${_questsSkip.value}, questsMiss=${_questsMiss.value}, questsAll=${questsAll()}:');
-    printBinary(_questsDone.value);
-    printBinary(_questsSkip.value);
-    printBinary(_questsMiss.value);
+    l.v('questsDone=$_questsDone, questsSkip=$_questsSkip, questsMiss=$_questsMiss, questsAll=${questsAll()}:');
+    printBinary(_questsDone);
+    printBinary(_questsSkip);
+    printBinary(_questsMiss);
     printBinary(questsAll());
   }
 
@@ -278,14 +278,14 @@ class ActiveQuestsAjrController extends GetxHapi {
 
     for (QUEST quest in QUEST.values) {
       if (quest.index == ZamanController.to.currTOD.getFirstQuest().index) {
-        l.i('Stopping init: $quest = ${_questsMiss.value}');
+        l.i('Stopping init: $quest = $_questsMiss');
         break;
       }
 
       int curBitMask = 0x1 << quest.index;
-      if (curBitMask & _questsDone.value != 0) continue;
-      if (curBitMask & _questsSkip.value != 0) continue;
-      if (curBitMask & _questsMiss.value != 0) continue;
+      if (curBitMask & _questsDone != 0) continue;
+      if (curBitMask & _questsSkip != 0) continue;
+      if (curBitMask & _questsMiss != 0) continue;
 
       // user never inputted this value, we assume it is missed:
       setMiss(quest);
@@ -307,14 +307,14 @@ class ActiveQuestsAjrController extends GetxHapi {
 
   bool isQuestActive(QUEST q) => getCurrIdx() == q.index;
 
-  int questsAll() => _questsDone.value | _questsSkip.value | _questsMiss.value;
+  int questsAll() => _questsDone | _questsSkip | _questsMiss;
 
   void setDone(QUEST quest) {
     l.v('');
     l.v('');
-    l.v('setDone: $quest (index=${quest.index}) = ${_questsMiss.value}');
+    l.v('setDone: $quest (index=${quest.index}) = $_questsMiss');
     printBinaryAll();
-    _questsDone.value |= 1 << quest.index;
+    _questsDone |= 1 << quest.index;
     ActiveQuestsController.to.update(); // refresh UI
     printBinaryAll();
   }
@@ -322,9 +322,9 @@ class ActiveQuestsAjrController extends GetxHapi {
   void setSkip(QUEST quest) {
     l.v('');
     l.v('');
-    l.v('setSkip: $quest (index=${quest.index}) = ${_questsMiss.value}');
+    l.v('setSkip: $quest (index=${quest.index}) = $_questsMiss');
     printBinaryAll();
-    _questsSkip.value |= 1 << quest.index;
+    _questsSkip |= 1 << quest.index;
     ActiveQuestsController.to.update(); // refresh UI
     printBinaryAll();
   }
@@ -332,9 +332,9 @@ class ActiveQuestsAjrController extends GetxHapi {
   void setMiss(QUEST quest) {
     l.v('');
     l.v('');
-    l.v('setMiss: $quest (index=${quest.index}) = ${_questsMiss.value}');
+    l.v('setMiss: $quest (index=${quest.index}) = $_questsMiss');
     printBinaryAll();
-    _questsMiss.value |= 1 << quest.index;
+    _questsMiss |= 1 << quest.index;
     ActiveQuestsController.to.update(); // refresh UI
     printBinaryAll();
   }
@@ -342,25 +342,25 @@ class ActiveQuestsAjrController extends GetxHapi {
   void clearQuest(QUEST quest) {
     l.v('');
     l.v('');
-    l.v('clearQuest: $quest (index=${quest.index}) = ${_questsMiss.value}');
+    l.v('clearQuest: $quest (index=${quest.index}) = $_questsMiss');
     printBinaryAll();
-    _questsDone.value &= ~(1 << quest.index);
-    _questsSkip.value &= ~(1 << quest.index);
-    _questsMiss.value &= ~(1 << quest.index);
+    _questsDone &= ~(1 << quest.index);
+    _questsSkip &= ~(1 << quest.index);
+    _questsMiss &= ~(1 << quest.index);
     ActiveQuestsController.to.update(); // refresh UI
     printBinaryAll();
   }
 
   /// Call at start of next day
   void clearAllQuests() {
-    _questsDone.value = 0;
-    _questsSkip.value = 0;
-    _questsMiss.value = 0;
+    _questsDone = 0;
+    _questsSkip = 0;
+    _questsMiss = 0;
   }
 
-  bool isDone(QUEST q) => (_questsDone.value >> q.index) & 1 == 1;
-  bool isSkip(QUEST q) => (_questsSkip.value >> q.index) & 1 == 1;
-  bool isMiss(QUEST q) => (_questsMiss.value >> q.index) & 1 == 1;
+  bool isDone(QUEST q) => (_questsDone >> q.index) & 1 == 1;
+  bool isSkip(QUEST q) => (_questsSkip >> q.index) & 1 == 1;
+  bool isMiss(QUEST q) => (_questsMiss >> q.index) & 1 == 1;
 }
 
 // enum QUEST_TYPE {

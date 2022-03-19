@@ -1,4 +1,4 @@
-import "package:flare_flutter/flare_actor.dart" as flare;
+import 'package:flare_flutter/flare_actor.dart' as flare;
 import 'package:flutter/material.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/main_menu/menu_vignette.dart';
@@ -146,16 +146,16 @@ class _SectionState extends State<MenuSection>
                           /// Another [FlareActor] widget that
                           /// you can experiment with here: https://www.2dimensions.com/a/pollux/files/flare/expandcollapse/preview
                           child: flare.FlareActor(
-                            "assets/tarikh/ExpandCollapse.flr",
+                            'assets/tarikh/ExpandCollapse.flr',
                             color: widget.accentColor,
-                            animation: _isExpanded ? "Collapse" : "Expand",
+                            animation: _isExpanded ? 'Collapse' : 'Expand',
                           ),
                         ),
                         Text(
                           widget.title,
                           style: TextStyle(
                             fontSize: 20.0,
-                            fontFamily: "RobotoMedium",
+                            fontFamily: 'RobotoMedium',
                             color: widget.accentColor,
                           ),
                         ),
@@ -185,7 +185,7 @@ class _SectionState extends State<MenuSection>
                                       style: TextStyle(
                                         color: widget.accentColor,
                                         fontSize: 20.0,
-                                        fontFamily: "RobotoMedium",
+                                        fontFamily: 'RobotoMedium',
                                       ),
                                     ),
                                   ),
@@ -193,7 +193,7 @@ class _SectionState extends State<MenuSection>
                                 Container(
                                   alignment: Alignment.center,
                                   child: Image.asset(
-                                    "assets/tarikh/right_arrow.png",
+                                    'assets/tarikh/right_arrow.png',
                                     color: widget.accentColor,
                                     height: 22.0,
                                     width: 22.0,

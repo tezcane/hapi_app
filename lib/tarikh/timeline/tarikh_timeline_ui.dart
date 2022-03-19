@@ -42,7 +42,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   static final Timeline t = TarikhController.t; // used a lot so shorten it.
 
   // TODO fix shows anytime no era on timeline, should be blank or something like "Unnamed Era"
-  static const String DefaultEraName = "Birth of the Universe";
+  static const String DefaultEraName = 'Birth of the Universe';
   static const double TopOverlap = 0.0; //56.0;
 
   /// These variables are used to calculate the correct viewport for the timeline
@@ -575,7 +575,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                     _eraName,
                     textAlign: TextAlign.center,
                     style: TextStyle(
-                      fontFamily: "RobotoMedium",
+                      fontFamily: 'RobotoMedium',
                       fontSize: 20.0,
                       color: _headerTextColor ?? AppThemes.colorDarkText,
                     ),

@@ -70,7 +70,7 @@ class _MenuSlideState extends State<MenuSlide>
                         ),
                         child: GetBuilder<NavPageController>(builder: (c) {
                           return Visibility(
-                            visible: cMenu.isMenuShowingSettings(),
+                            visible: cMenu.isMenuShowingSettings,
                             child: widget.settingsWidgets[
                                     c.getLastIdx(widget.navPage)] ??
                                 Column(),
@@ -96,7 +96,7 @@ class _MenuSlideState extends State<MenuSlide>
                 ),
               ),
               SlideAnimation(
-                opened: c.isMenuShowing(),
+                opened: c.isMenuShowing,
                 xScale: xScale,
                 yScale: yScale,
                 duration: widget.slideAnimationDuration,

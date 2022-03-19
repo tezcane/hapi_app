@@ -107,7 +107,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
 
     // if on main menu page, just show/hide menu per usual
     if (_subPageStack.isEmpty) {
-      if (isMenuShowing()) {
+      if (_isMenuShowing) {
         hideMenu(); // just hit close on fab
       } else {
         showMenu(); // just hit menu on fab
@@ -150,7 +150,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
       } else {
         return 'Go back to ${getLastNavPage().name} Home';
       }
-    } else if (_isMenuShowing()) {
+    } else if (_isMenuShowing) {
       return 'Hide menu';
     } else {
       return 'Show menu';
@@ -222,12 +222,12 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
   }
 
   void _disableScreenTouch() {
-    _isScreenDisabled.value = true;
+    _isScreenDisabled = true;
     update();
   }
 
   void _enableScreenTouch() {
-    _isScreenDisabled.value = false;
+    _isScreenDisabled = false;
     update();
   }
 
@@ -322,7 +322,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
     // if adding first sub page, animate menu turning into an arrow
     if (_subPageStack.length == 1) {
       fabButtonIsTransitioning = true;
-      if (isMenuShowing()) {
+      if (_isMenuShowing) {
         // i.e. about page is clicked
         hideMenu(); // spin out of showing X to menu, then we turn into arrow
       }
@@ -419,20 +419,20 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
     return false;
   }
 
-  final RxBool _isScreenDisabled = false.obs;
-  final RxBool _isMenuShowing = false.obs;
-  final RxBool _isMenuShowingNav = false.obs;
-  final RxBool _isMenuShowingSettings = false.obs;
+  bool _isScreenDisabled = false;
+  bool _isMenuShowing = false;
+  bool _isMenuShowingNav = false;
+  bool _isMenuShowingSettings = false;
 
-  RxBool get isScreenDisabled => _isScreenDisabled;
-  RxBool get isMenuShowing => _isMenuShowing;
-  RxBool get isMenuShowingNav => _isMenuShowingNav;
-  RxBool get isMenuShowingSettings => _isMenuShowingSettings;
+  bool get isScreenDisabled => _isScreenDisabled;
+  bool get isMenuShowing => _isMenuShowing;
+  bool get isMenuShowingNav => _isMenuShowingNav;
+  bool get isMenuShowingSettings => _isMenuShowingSettings;
 
   void showMenu() {
-    _isMenuShowing.value = true;
-    _isMenuShowingNav.value = true;
-    _isMenuShowingSettings.value = false;
+    _isMenuShowing = true;
+    _isMenuShowingNav = true;
+    _isMenuShowingSettings = false;
 
     _acFabIcon.forward();
     _acNavMenu.reverse();
@@ -441,9 +441,9 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
   }
 
   void hideMenu() {
-    _isMenuShowing.value = false;
-    _isMenuShowingNav.value = false;
-    _isMenuShowingSettings.value = false;
+    _isMenuShowing = false;
+    _isMenuShowingNav = false;
+    _isMenuShowingSettings = false;
 
     _acFabIcon.reverse();
     _acNavMenu.forward();
@@ -452,9 +452,9 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
   }
 
   void hideMenuNav() {
-    _isMenuShowing.value = true;
-    _isMenuShowingNav.value = false;
-    _isMenuShowingSettings.value = true;
+    _isMenuShowing = true;
+    _isMenuShowingNav = false;
+    _isMenuShowingSettings = true;
 
     _acNavMenu.forward();
 

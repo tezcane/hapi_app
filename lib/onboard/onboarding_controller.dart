@@ -6,15 +6,15 @@ import 'package:hapi/onboard/auth/sign_up_ui.dart';
 class OnboardingController extends GetxHapi {
   static OnboardingController get to => Get.find();
 
-  final onboarded = false.obs;
+  bool onboarded = false;
 
-  RxBool get isOnboarded {
-    onboarded.value = s.rd('onboarded') ?? false;
+  bool get isOnboarded {
+    onboarded = s.rd('onboarded') ?? false;
     return onboarded;
   }
 
   Future<void> setOnboardingComplete() async {
-    onboarded.value = true;
+    onboarded = true;
     await s.wr('onboarded', true);
     Get.offAll(() => SignUpUI());
     //update(); // not needed

@@ -1,7 +1,7 @@
-import 'package:flare_flutter/flare.dart';
 import 'package:flare_dart/math/mat2d.dart';
 import 'package:flare_dart/math/vec2d.dart';
-import 'flare_interaction_controller.dart';
+import 'package:flare_flutter/flare.dart';
+import 'package:hapi/tarikh/article/controllers/flare_interaction_controller.dart';
 
 // "Amelia Earhart" Article Page contains a custom controller.
 /// Since Amelias Earhart's animation was built in Flare, it'll interface with the Flare library (https://github.com/2d-inc/Flare-Flutter).
@@ -23,7 +23,7 @@ class AmeliaController extends FlareInteractionController {
   /// and the original translation position for the face.
   @override
   void initialize(FlutterActorArtboard artboard) {
-    _ctrlFace = artboard.getNode("ctrl_face");
+    _ctrlFace = artboard.getNode('ctrl_face');
     if (_ctrlFace != null) {
       _originalTranslation = Vec2D.clone(_ctrlFace!.translation);
     }

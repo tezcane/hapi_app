@@ -34,24 +34,24 @@ DAY_OF_WEEK getDayOfWeek(DateTime dateTime) {
 class ActiveQuestsController extends GetxController {
   static ActiveQuestsController get to => Get.find(); // A.K.A. cQstA
 
-  final Rx<DAY_OF_WEEK> _dayOfWeek = getDayOfWeek(DUMMY_TIME).obs;
-  DAY_OF_WEEK get dayOfWeek => _dayOfWeek.value;
+  DAY_OF_WEEK _dayOfWeek = getDayOfWeek(DUMMY_TIME);
+  DAY_OF_WEEK get dayOfWeek => _dayOfWeek;
   updateDayOfWeek() async =>
-      _dayOfWeek.value = getDayOfWeek(await TimeController.to.now());
+      _dayOfWeek = getDayOfWeek(await TimeController.to.now());
 
-  bool isFriday() => _dayOfWeek.value == DAY_OF_WEEK.Friday;
+  bool isFriday() => _dayOfWeek == DAY_OF_WEEK.Friday;
 
-  final RxBool _showSunnahMuak = true.obs;
-  final RxBool _showSunnahNafl = true.obs;
-  final RxBool _showSunnahDuha = false.obs;
-  final RxBool _showSunnahLayl = false.obs;
-  final RxBool _showSunnahKeys = true.obs;
-  final RxInt _salahCalcMethod = 0.obs; // 0 = America (ISNA)
-  final RxBool _showJummahOnFriday = true.obs; // if friday=true, shows jummah
-  final RxBool _show3rdOfNight = true.obs; // true=last 1/3, false=middle night
-  final RxBool _show12HourClock = true.obs; // false = 24h clock/military time
-  final RxBool _salahAsrSafe = true.obs; // true hanafi, false other
-  final RxBool _salahKerahatSafe = true.obs; // true hanafi, false other
+  bool _showSunnahMuak = true;
+  bool _showSunnahNafl = true;
+  bool _showSunnahDuha = false;
+  bool _showSunnahLayl = false;
+  bool _showSunnahKeys = true;
+  int _salahCalcMethod = 0; // 0 = America (ISNA)
+  bool _showJummahOnFriday = true; // if friday=true, shows jummah
+  bool _show3rdOfNight = true; // true=last 1/3, false=middle night
+  bool _show12HourClock = true; // false = 24h clock/military time
+  bool _salahAsrSafe = true; // true hanafi, false other
+  bool _salahKerahatSafe = true; // true hanafi, false other
 
   TimeOfDay? _tod;
   set tod(TimeOfDay? tod) {
@@ -65,99 +65,99 @@ class ActiveQuestsController extends GetxController {
   void onInit() {
     super.onInit();
 
-    _showSunnahMuak.value = s.rd('showSunnahMuak') ?? true;
-    _showSunnahNafl.value = s.rd('showSunnahNafl') ?? true;
-    _showSunnahDuha.value = s.rd('showSunnahDuha') ?? false;
-    _showSunnahLayl.value = s.rd('showSunnahLayl') ?? false;
-    _showSunnahKeys.value = s.rd('showSunnahKeys') ?? true;
-    _showJummahOnFriday.value = s.rd('showJummahOnFriday') ?? true;
-    _show3rdOfNight.value = s.rd('show3rdOfNight') ?? true;
-    _show12HourClock.value = s.rd('show12HourClock') ?? true;
-    _salahAsrSafe.value = s.rd('salahAsrSafe') ?? true;
-    _salahKerahatSafe.value = s.rd('salahKerahatSafe') ?? true;
-    _salahCalcMethod.value = s.rd('salahCalcMethod') ?? 0;
+    _showSunnahMuak = s.rd('showSunnahMuak') ?? true;
+    _showSunnahNafl = s.rd('showSunnahNafl') ?? true;
+    _showSunnahDuha = s.rd('showSunnahDuha') ?? false;
+    _showSunnahLayl = s.rd('showSunnahLayl') ?? false;
+    _showSunnahKeys = s.rd('showSunnahKeys') ?? true;
+    _showJummahOnFriday = s.rd('showJummahOnFriday') ?? true;
+    _show3rdOfNight = s.rd('show3rdOfNight') ?? true;
+    _show12HourClock = s.rd('show12HourClock') ?? true;
+    _salahAsrSafe = s.rd('salahAsrSafe') ?? true;
+    _salahKerahatSafe = s.rd('salahKerahatSafe') ?? true;
+    _salahCalcMethod = s.rd('salahCalcMethod') ?? 0;
   }
 
-  bool get showSunnahMuak => _showSunnahMuak.value;
-  bool get showSunnahNafl => _showSunnahNafl.value;
-  bool get showSunnahDuha => _showSunnahDuha.value;
-  bool get showSunnahLayl => _showSunnahLayl.value;
-  bool get showSunnahKeys => _showSunnahKeys.value;
-  bool get showJummahOnFriday => _showJummahOnFriday.value;
-  bool get showLast3rdOfNight => _show3rdOfNight.value;
-  bool get show12HourClock => _show12HourClock.value;
-  bool get salahAsrSafe => _salahAsrSafe.value;
-  bool get salahKerahatSafe => _salahKerahatSafe.value;
-  int get salahCalcMethod => _salahCalcMethod.value;
+  bool get showSunnahMuak => _showSunnahMuak;
+  bool get showSunnahNafl => _showSunnahNafl;
+  bool get showSunnahDuha => _showSunnahDuha;
+  bool get showSunnahLayl => _showSunnahLayl;
+  bool get showSunnahKeys => _showSunnahKeys;
+  bool get showJummahOnFriday => _showJummahOnFriday;
+  bool get showLast3rdOfNight => _show3rdOfNight;
+  bool get show12HourClock => _show12HourClock;
+  bool get salahAsrSafe => _salahAsrSafe;
+  bool get salahKerahatSafe => _salahKerahatSafe;
+  int get salahCalcMethod => _salahCalcMethod;
 
   void toggleShowSunnahMuak() {
-    _showSunnahMuak.value = !_showSunnahMuak.value;
-    s.wr('showSunnahMuak', _showSunnahMuak.value);
+    _showSunnahMuak = !_showSunnahMuak;
+    s.wr('showSunnahMuak', _showSunnahMuak);
     update();
   }
 
   void toggleShowSunnahNafl() {
-    _showSunnahNafl.value = !_showSunnahNafl.value;
-    s.wr('showSunnahNafl', _showSunnahNafl.value);
+    _showSunnahNafl = !_showSunnahNafl;
+    s.wr('showSunnahNafl', _showSunnahNafl);
     update();
   }
 
   void toggleShowSunnahDuha() {
-    _showSunnahDuha.value = !_showSunnahDuha.value;
-    s.wr('showSunnahDuha', _showSunnahDuha.value);
+    _showSunnahDuha = !_showSunnahDuha;
+    s.wr('showSunnahDuha', _showSunnahDuha);
     ZamanController.to.forceSalahRecalculation = true;
     update();
   }
 
   void toggleShowSunnahLayl() {
-    _showSunnahLayl.value = !_showSunnahLayl.value;
-    s.wr('showSunnahLayl', _showSunnahLayl.value);
+    _showSunnahLayl = !_showSunnahLayl;
+    s.wr('showSunnahLayl', _showSunnahLayl);
     ZamanController.to.forceSalahRecalculation = true;
     update();
   }
 
   set showSunnahKeys(bool value) {
-    _showSunnahKeys.value = value;
+    _showSunnahKeys = value;
     s.wr('showSunnahKeys', value);
     update();
   }
 
   set showJummahOnFriday(bool value) {
-    _showJummahOnFriday.value = value;
+    _showJummahOnFriday = value;
     s.wr('showJummahOnFriday', value);
     update();
   }
 
   set showLast3rdOfNight(bool value) {
-    _show3rdOfNight.value = value;
+    _show3rdOfNight = value;
     s.wr('show3rdOfNight', value);
     ZamanController.to.forceSalahRecalculation = true;
     update();
   }
 
   set show12HourClock(bool value) {
-    _show12HourClock.value = value;
+    _show12HourClock = value;
     s.wr('show12HourClock', value);
     ZamanController.to.forceSalahRecalculation = true;
     update();
   }
 
   set salahAsrSafe(bool value) {
-    _salahAsrSafe.value = value;
+    _salahAsrSafe = value;
     s.wr('salahAsrSafe', value);
     ZamanController.to.forceSalahRecalculation = true;
     update();
   }
 
   set salahKerahatSafe(bool value) {
-    _salahKerahatSafe.value = value;
+    _salahKerahatSafe = value;
     s.wr('salahKerahatSafe', value);
     ZamanController.to.forceSalahRecalculation = true;
     update();
   }
 
   set salahCalcMethod(int value) {
-    _salahCalcMethod.value = value;
+    _salahCalcMethod = value;
     s.wr('salahCalcMethod', value);
     ZamanController.to.forceSalahRecalculation = true;
     update();

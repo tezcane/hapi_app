@@ -29,20 +29,20 @@ class AuthController extends GetxHapi {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   Rxn<User> firebaseUser = Rxn<User>();
   Rxn<UserModel> firestoreUser = Rxn<UserModel>();
-  final RxBool admin = false.obs;
+  bool admin = false;
 
   /// SplashUI has gif timer is used to swap gif to png for hero animation
-  final RxBool _isGifAnimatingDone = false.obs;
-  bool isGifAnimatingDone() => _isGifAnimatingDone.value;
+  bool _isGifAnimatingDone = false;
+  bool isGifAnimatingDone() => _isGifAnimatingDone;
   void setGifAnimatingDone() {
-    _isGifAnimatingDone.value = true;
+    _isGifAnimatingDone = true;
     update();
   }
 
-  final RxBool _isSplashScreenDone = false.obs;
-  bool isSplashScreenDone() => _isSplashScreenDone.value;
+  bool _isSplashScreenDone = false;
+  bool isSplashScreenDone() => _isSplashScreenDone;
   void setSplashScreenToDone() {
-    _isSplashScreenDone.value = true;
+    _isSplashScreenDone = true;
     update();
   }
 
@@ -112,7 +112,7 @@ class AuthController extends GetxHapi {
 
     /// TODO need to detect if user is deleted/banned/not found, etc. here.
     if (_firebaseUser == null) {
-      if (OnboardingController.to.isOnboarded()) {
+      if (OnboardingController.to.isOnboarded) {
         Get.offAll(() => SignInUI());
       } else {
         Get.offAll(() => OnboardingUI());
@@ -273,33 +273,33 @@ class AuthController extends GetxHapi {
   /// Convert auth error to translated nice user output.
   String translateFirestoreAuthFailure(String authError) {
     // Note: leaves brackets around unknown errors. i.e. "[unknown-err] err msg"
-    authError = authError.replaceFirst("firebase_auth/", "");
+    authError = authError.replaceFirst('firebase_auth/', '');
 
     String error = authError.toLowerCase(); // to match below
-    if (error.contains("invalid-email")) {
+    if (error.contains('invalid-email')) {
       return 'validator.email'.tr;
-    } else if (error.contains("email-already-in-use")) {
+    } else if (error.contains('email-already-in-use')) {
       return 'auth.updateUserEmailInUse'.tr;
-    } else if (error.contains("wrong-password")) {
+    } else if (error.contains('wrong-password')) {
       return 'auth.wrongPasswordNotice'.tr;
-    } else if (error.contains("weak-password")) {
+    } else if (error.contains('weak-password')) {
       return 'validator.password'.tr;
-    } else if (error.contains("user-disabled")) {
+    } else if (error.contains('user-disabled')) {
       return 'auth.userIsAdminDisabled'.tr;
     }
 
     // I don't expect to see these
     l.e('Strange/unexpected error: $authError');
-    if (error.contains("user-not-found")) {
+    if (error.contains('user-not-found')) {
       return 'auth.signInError'.tr;
-    } else if (error.contains("too-many-requests")) {
+    } else if (error.contains('too-many-requests')) {
       return 'auth.tooManyRequests'.tr;
-    } else if (error.contains("operation-not-allowed")) {
+    } else if (error.contains('operation-not-allowed')) {
       return 'auth.operationNotAllowed'.tr;
-    } else if (error.contains("requires-recent-login")) {
+    } else if (error.contains('requires-recent-login')) {
       return 'auth.requiresRecentLogin'.tr;
     } else {
-      return 'auth.unknownError'.tr + ": " + authError;
+      return 'auth.unknownError'.tr + ': ' + authError;
     }
   }
 
@@ -345,9 +345,9 @@ class AuthController extends GetxHapi {
       // DocumentSnapshot adminRef =
       //     await _db.collection('admin').doc(user.uid).get();
       // if (adminRef.exists) {
-      //   admin.value = true;
+      //   admin = true;
       // } else {
-      admin.value = false;
+      admin = false;
       // }
       update();
     });

@@ -537,7 +537,7 @@ class TimelineRenderObject extends RenderBox {
     //   /// 5. Draw the Paragraph at the right offset.
     //   const double MaxLabelWidth = 1200.0;
     //   ui.ParagraphBuilder builder = ui.ParagraphBuilder(ui.ParagraphStyle(
-    //       textAlign: TextAlign.start, fontFamily: "Roboto", fontSize: 20.0))
+    //       textAlign: TextAlign.start, fontFamily: 'Roboto', fontSize: 20.0))
     //     ..pushStyle(ui.TextStyle(color: color));
     //
     //   builder.addText(t.nextEntry!.label!);
@@ -587,7 +587,7 @@ class TimelineRenderObject extends RenderBox {
     //
     //   builder = ui.ParagraphBuilder(ui.ParagraphStyle(
     //       textAlign: TextAlign.center,
-    //       fontFamily: "Roboto",
+    //       fontFamily: 'Roboto',
     //       fontSize: 14.0,
     //       height: 1.3))
     //     ..pushStyle(ui.TextStyle(color: color));
@@ -596,9 +596,9 @@ class TimelineRenderObject extends RenderBox {
     //   double pages = timeUntil / pageSize;
     //   NumberFormat formatter = NumberFormat.compact();
     //   String pagesFormatted = formatter.format(pages);
-    //   String until = "in " +
+    //   String until = 'in ' +
     //       TimelineEntry.formatYears(timeUntil).toLowerCase() +
-    //       "\n($pagesFormatted page scrolls)";
+    //       '\n($pagesFormatted page scrolls)';
     //   builder.addText(until);
     //   labelParagraph = builder.build();
     //   labelParagraph.layout(ui.ParagraphConstraints(width: size.width));
@@ -624,7 +624,7 @@ class TimelineRenderObject extends RenderBox {
     //
     //   const double MaxLabelWidth = 1200.0;
     //   ui.ParagraphBuilder builder = ui.ParagraphBuilder(ui.ParagraphStyle(
-    //       textAlign: TextAlign.start, fontFamily: "Roboto", fontSize: 20.0))
+    //       textAlign: TextAlign.start, fontFamily: 'Roboto', fontSize: 20.0))
     //     ..pushStyle(ui.TextStyle(color: color));
     //
     //   builder.addText(t.prevEntry!.label!);
@@ -669,7 +669,7 @@ class TimelineRenderObject extends RenderBox {
     //
     //   builder = ui.ParagraphBuilder(ui.ParagraphStyle(
     //       textAlign: TextAlign.center,
-    //       fontFamily: "Roboto",
+    //       fontFamily: 'Roboto',
     //       fontSize: 14.0,
     //       height: 1.3))
     //     ..pushStyle(ui.TextStyle(color: color));
@@ -679,7 +679,7 @@ class TimelineRenderObject extends RenderBox {
     //   NumberFormat formatter = NumberFormat.compact();
     //   String pagesFormatted = formatter.format(pages.abs());
     //   String until = TimelineEntry.formatYears(timeUntil).toLowerCase() +
-    //       " ago\n($pagesFormatted page scrolls)";
+    //       ' ago\n($pagesFormatted page scrolls)';
     //   builder.addText(until);
     //   labelParagraph = builder.build();
     //   labelParagraph.layout(ui.ParagraphConstraints(width: size.width));
@@ -943,7 +943,7 @@ class TimelineRenderObject extends RenderBox {
               ui.ParagraphBuilder builder = ui.ParagraphBuilder(
                   ui.ParagraphStyle(
                       textAlign: TextAlign.center,
-                      fontFamily: "RobotoMedium",
+                      fontFamily: 'RobotoMedium',
                       fontSize: 10.0))
                 ..pushStyle(ui.TextStyle(color: Colors.white));
 
@@ -1032,8 +1032,8 @@ class TimelineRenderObject extends RenderBox {
       double bubbleHeight = t.bubbleHeight(item);
 
       /// Use [ui.ParagraphBuilder] to construct the label for canvas.
-      ui.ParagraphBuilder builder = ui.ParagraphBuilder(ui.ParagraphStyle(
-          textAlign: TextAlign.start, fontFamily: "Roboto", fontSize: 20.0))
+      ui.ParagraphBuilder builder = ui.ParagraphBuilder(
+          ui.ParagraphStyle(textAlign: TextAlign.start, fontSize: 20.0))
         ..pushStyle(
             ui.TextStyle(color: const Color.fromRGBO(255, 255, 255, 1.0)));
 

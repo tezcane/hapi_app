@@ -239,7 +239,7 @@ class TimelineEntry {
 
     int startIdx = 0;
     while (true) {
-      startIdx = _label.indexOf("\n", startIdx);
+      startIdx = _label.indexOf('\n', startIdx);
       if (startIdx == -1) {
         break;
       }
@@ -251,7 +251,7 @@ class TimelineEntry {
   /// Debug information.
   @override
   String toString() {
-    return "TIMELINE ENTRY: $label -($startMs,$endMs)";
+    return 'TIMELINE ENTRY: $label -($startMs,$endMs)';
   }
 
   /// Pretty-printing for the entry date.
@@ -259,13 +259,13 @@ class TimelineEntry {
     eventYear ??= startMs;
 
     if (eventYear <= -10000) {
-      return TimelineEntry.formatYears(startMs) + " Ago";
+      return TimelineEntry.formatYears(startMs) + ' Ago';
     }
 
     double yearsAgo;
-    String bc = " AD (";
+    String bc = ' AD (';
     if (eventYear <= 0) {
-      bc = " BC (";
+      bc = ' BC (';
       yearsAgo = eventYear.abs() + todaysAdTimeYears;
     } else {
       yearsAgo = todaysAdTimeYears - eventYear;
@@ -273,7 +273,7 @@ class TimelineEntry {
     return eventYear.abs().toStringAsFixed(0) +
         bc +
         yearsAgo.toStringAsFixed(0) +
-        " Years Ago)";
+        ' Years Ago)';
   }
 
   /// Shortens large numbers, e.g. 10,000,000 returns "10 million years"
@@ -286,39 +286,39 @@ class TimelineEntry {
 
       label = (valueAbs / 1000000000000000000)
               .toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
-          " Quintillion ";
+          ' Quintillion ';
     } else if (valueAbs >= 1000000000000000) {
       double v = (valueAbs / 100000000000000.0).floorToDouble() / 10.0;
 
       label = (valueAbs / 1000000000000000)
               .toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
-          " Quadrillion ";
+          ' Quadrillion ';
     } else if (valueAbs >= 1000000000000) {
       double v = (valueAbs / 100000000000.0).floorToDouble() / 10.0;
 
       label = (valueAbs / 1000000000000)
               .toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
-          " Trillion ";
+          ' Trillion ';
     } else if (valueAbs >= 1000000000) {
       double v = (valueAbs / 100000000.0).floorToDouble() / 10.0;
 
       label = (valueAbs / 1000000000)
               .toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
-          " Billion";
+          ' Billion';
     } else if (valueAbs >= 1000000) {
       double v = (valueAbs / 100000.0).floorToDouble() / 10.0;
       label =
           (valueAbs / 1000000).toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
-              " Million";
+              ' Million';
     } else if (valueAbs >= 10000) {
       double v = (valueAbs / 100.0).floorToDouble() / 10.0;
       label =
           (valueAbs / 1000).toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
-              " Thousand";
+              ' Thousand';
     } else {
       label = valueAbs.toStringAsFixed(0);
-      return label + (label == "1" ? " Year" : " Years");
+      return label + (label == '1' ? ' Year' : ' Years');
     }
-    return label + " Years";
+    return label + ' Years';
   }
 }

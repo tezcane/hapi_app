@@ -103,7 +103,8 @@ class TimeOfDay {
             .utcDate(dateTomorrow.year, dateTomorrow.month, dateTomorrow.day);
 
     // special case for moonsighting committee above latitude 55
-    if (method == CalcMethod.Moonsight_Committee && cord.latitude >= 55) {
+    if (method.calcMethod == CalcMethod.Moonsight_Committee &&
+        cord.latitude >= 55) {
       nightFraction = nightDurationInSecs / 7;
       fajrTime = dateByAddingSeconds(sunriseTime, -nightFraction.round());
       fajrTomorrowTime =

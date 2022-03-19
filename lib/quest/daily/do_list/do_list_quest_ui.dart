@@ -85,7 +85,7 @@ class AddDoList extends StatelessWidget {
                 //     : AppThemes.unselected,
                 icon: const Icon(Icons.add),
                 onPressed: () {
-                  if (_textEditingController.text != "") {
+                  if (_textEditingController.text != '') {
                     Database().addDoList(_textEditingController.text,
                         _authController.firestoreUser.value!.uid);
                     _textEditingController.clear();

@@ -32,7 +32,7 @@ class TarikhMenuUI extends StatelessWidget {
     return Scaffold(
       floatingActionButton: GetBuilder<MenuController>(
         builder: (c) => Visibility(
-          visible: !c.isMenuShowing(),
+          visible: !c.isMenuShowing,
           //maintainAnimation: true,
           child: Padding(
             padding: const EdgeInsets.only(right: 75.0),
@@ -52,7 +52,7 @@ class TarikhMenuUI extends StatelessWidget {
       body: Scaffold(
         floatingActionButton: GetBuilder<MenuController>(
           builder: (c) => Visibility(
-            visible: !c.isMenuShowing(),
+            visible: !c.isMenuShowing,
             child: Padding(
               padding: const EdgeInsets.only(right: 150.0),
               child: FloatingActionButton(

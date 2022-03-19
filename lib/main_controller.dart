@@ -10,7 +10,7 @@ class MainController extends GetxHapi {
 
   bool isAppInitDone = false;
 
-  RxBool isPortrait = true.obs; // MUST LEAVE TRUE FOR APP TO START
+  bool isPortrait = true; // MUST LEAVE TRUE FOR APP TO START
 
   @override
   void onInit() {
@@ -41,15 +41,13 @@ class MainController extends GetxHapi {
       return;
     }
 
-    bool lastModeWasPortait = this.isPortrait.value;
-
-    if (lastModeWasPortait && isPortrait) {
+    if (this.isPortrait && isPortrait) {
       l.d('ORIENTATION: Still in portrait');
       return;
     }
 
     // if still in landscape mode return
-    if (!lastModeWasPortait && !isPortrait) {
+    if (!this.isPortrait && !isPortrait) {
       l.d('ORIENTATION: Still in landscape');
       return;
     }
@@ -60,13 +58,13 @@ class MainController extends GetxHapi {
       l.i('ORIENTATION: Switched to landscape');
     }
 
-    this.isPortrait.value = isPortrait;
+    this.isPortrait = isPortrait;
 
     if (MenuController.to.isAnySubPageShowing()) {
       update(); // notify watchers
     } else {
       // TODO only do this to fix slide menu for now
-      if (MenuController.to.isMenuShowing()) {
+      if (MenuController.to.isMenuShowing) {
         MenuController.to.hideMenu();
       }
       MenuController.to.navigateToNavPage(MenuController.to.getLastNavPage());

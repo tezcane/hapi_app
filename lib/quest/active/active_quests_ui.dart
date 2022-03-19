@@ -169,8 +169,6 @@ class ActiveQuestsUI extends StatelessWidget {
       return '-';
     }
 
-    //"${d.year.toString()}-${d.month.toString().padLeft(2,'0')}-${d.day.toString().padLeft(2,'0')} ${d.hour.toString()}-${d.minute.toString()}";
-
     int startHour = startTime.hour;
     int startMinute = startTime.minute;
     String startAmPm = '';
@@ -342,7 +340,7 @@ class ActiveQuestsUI extends StatelessWidget {
               _Cell(
                 _SunCell(
                   const _IconSunBright(),
-                  "Zawal",
+                  'Zawal',
                   c.tod!.zawal,
                   c.tod!.dhuhr,
                 ),

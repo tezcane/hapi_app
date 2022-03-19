@@ -111,11 +111,11 @@ class TarikhController extends GetxHapi {
   Map<String, TimelineEntry> get eventMap => _eventMap;
 
   /// Turn timeline gutter off/show favorites/show all history:
-  final Rx<GutterMode> _gutterMode = GutterMode.OFF.obs;
-  GutterMode get gutterMode => _gutterMode.value;
+  GutterMode _gutterMode = GutterMode.OFF;
+  GutterMode get gutterMode => _gutterMode;
   set gutterMode(GutterMode newGutterMode) {
     s.wr('lastGutterModeIdx', newGutterMode.index);
-    _gutterMode.value = newGutterMode;
+    _gutterMode = newGutterMode;
     update();
   }
 
@@ -173,7 +173,7 @@ class TarikhController extends GetxHapi {
   /// It receives as input the full list of [TimelineEntry], so that it can
   /// use those references to fill [_eventFavorites].
   _initFavorites() {
-    List<dynamic>? favs = s.rd("TARIKH_FAVS");
+    List<dynamic>? favs = s.rd('TARIKH_FAVS');
 
     if (favs != null) {
       for (String fav in favs) {
@@ -194,7 +194,7 @@ class TarikhController extends GetxHapi {
     // note saves in any order, must sort on reading in from disk
     List<String> favsList =
         _eventFavorites.map((TimelineEntry entry) => entry.label).toList();
-    s.wr("TARIKH_FAVS", favsList);
+    s.wr('TARIKH_FAVS', favsList);
     update(); // favorites changed so notify people using it
   }
 
@@ -218,9 +218,9 @@ class TarikhController extends GetxHapi {
     }
   }
 
-  bool isGutterModeOff() => _gutterMode.value == GutterMode.OFF;
-  bool isGutterModeFav() => _gutterMode.value == GutterMode.FAV;
-  bool isGutterModeAll() => _gutterMode.value == GutterMode.ALL;
+  bool isGutterModeOff() => _gutterMode == GutterMode.OFF;
+  bool isGutterModeFav() => _gutterMode == GutterMode.FAV;
+  bool isGutterModeAll() => _gutterMode == GutterMode.ALL;
 
   /// Updates text around time button, no entry is set
   void updateTimeBtn(
@@ -247,8 +247,8 @@ class TarikhController extends GetxHapi {
       double pageSize = t.renderEnd - t.renderStart;
       double pages = timeUntilDouble / pageSize;
       String pagesAwayNum = formatter.format(pages.abs());
-      if (pagesAwayNum == "1") {
-        pageScrolls = "1 page away";
+      if (pagesAwayNum == '1') {
+        pageScrolls = '1 page away';
       } else {
         pageScrolls = '$pagesAwayNum pages away';
       }
@@ -294,7 +294,7 @@ class TimelineInitHandler {
     /// on the dynamic entries in the [jsonEntries] list.
     for (Map map in jsonEntries) {
       /// The label is a brief description for the current entry.
-      String label = map["label"];
+      String label = map['label'];
 
       /// Create the current entry and fill in the current date if it's
       /// an `Incident`, or look for the `start` property if it's an `Era` instead.
@@ -303,13 +303,13 @@ class TimelineInitHandler {
       /// "Humans" in history, which hasn't come to an end -- yet.
       TimelineEntryType type;
       double startMs;
-      if (map.containsKey("date")) {
+      if (map.containsKey('date')) {
         type = TimelineEntryType.Incident;
-        dynamic date = map["date"];
+        dynamic date = map['date'];
         startMs = date is int ? date.toDouble() : date;
       } else {
         type = TimelineEntryType.Era;
-        dynamic startVal = map["start"];
+        dynamic startVal = map['start'];
         startMs = startVal is int ? startVal.toDouble() : startVal;
       }
 
@@ -319,8 +319,8 @@ class TimelineInitHandler {
       /// - Eras use the current year as an end time.
       /// - Other entries are just single points in time (start == end).
       double endMs;
-      if (map.containsKey("end")) {
-        dynamic endVal = map["end"];
+      if (map.containsKey('end')) {
+        dynamic endVal = map['end'];
         endMs = endVal is int ? endVal.toDouble() : endVal;
       } else if (type == TimelineEntryType.Era) {
         // TODO where timeline eras stretch to future?
@@ -329,7 +329,7 @@ class TimelineInitHandler {
         endMs = startMs;
       }
 
-      String articleFilename = map["article"];
+      String articleFilename = map['article'];
 
       /// Get Timeline Color Setup:
       if (map.containsKey('timelineColors')) {
@@ -340,7 +340,7 @@ class TimelineInitHandler {
         /// starting date of the current entry.
         _backgroundColors.add(
           TimelineBackgroundColor(
-            colorFromList(timelineColors["background"]),
+            colorFromList(timelineColors['background']),
             startMs,
           ),
         );
@@ -349,10 +349,10 @@ class TimelineInitHandler {
         /// even with custom colored backgrounds.
         _tickColors.add(
           TickColors(
-            colorFromList(timelineColors["ticks"], key: "background"),
-            colorFromList(timelineColors["ticks"], key: "long"),
-            colorFromList(timelineColors["ticks"], key: "short"),
-            colorFromList(timelineColors["ticks"], key: "text"),
+            colorFromList(timelineColors['ticks'], key: 'background'),
+            colorFromList(timelineColors['ticks'], key: 'long'),
+            colorFromList(timelineColors['ticks'], key: 'short'),
+            colorFromList(timelineColors['ticks'], key: 'text'),
             startMs,
           ),
         );
@@ -360,8 +360,8 @@ class TimelineInitHandler {
         /// If a `header` element is present, de-serialize the colors for it too.
         _headerColors.add(
           HeaderColors(
-            colorFromList(timelineColors["header"], key: "background"),
-            colorFromList(timelineColors["header"], key: "text"),
+            colorFromList(timelineColors['header'], key: 'background'),
+            colorFromList(timelineColors['header'], key: 'text'),
             startMs,
           ),
         );
@@ -369,18 +369,18 @@ class TimelineInitHandler {
 
       /// OPTIONAL FIELD 1 of 2: An accent color is also specified at times.
       Color? accent;
-      if (map.containsKey("accent")) {
-        accent = colorFromList(map["accent"]);
+      if (map.containsKey('accent')) {
+        accent = colorFromList(map['accent']);
       }
 
       /// OPTIONAL FIELD 2 of 2: Some entries will also have an id
       String? id;
-      if (map.containsKey("id")) {
-        id = map["id"];
+      if (map.containsKey('id')) {
+        id = map['id'];
       }
 
       /// Get flare/nima/image asset object
-      TimelineAsset asset = await getTimelineAsset(map["asset"]);
+      TimelineAsset asset = await getTimelineAsset(map['asset']);
 
       /// Finally create TimeLineEntry object
       var timelineEntry = TimelineEntry(
@@ -398,7 +398,7 @@ class TimelineInitHandler {
       asset.entry = timelineEntry; // can only do this once
 
       /// Add TimelineEntry reference 2 of 2:
-      if (map.containsKey("id")) {
+      if (map.containsKey('id')) {
         _entriesById[id!] = timelineEntry;
       }
 
@@ -465,8 +465,8 @@ class TimelineInitHandler {
     }
   }
 
-  Color colorFromList(colorList, {String key = ""}) {
-    if (key != "") {
+  Color colorFromList(colorList, {String key = ''}) {
+    if (key != '') {
       colorList = colorList[key];
     }
     List<int> bg = colorList.cast<int>();
@@ -496,47 +496,47 @@ class TimelineInitHandler {
   ///            raised.
   ///   - scale: a custom scale value.
   Future<TimelineAsset> getTimelineAsset(Map assetMap) async {
-    String source = assetMap["source"];
-    String filename = "assets/tarikh/" + source;
+    String source = assetMap['source'];
+    String filename = 'assets/tarikh/' + source;
 
     TimelineAsset asset;
 
-    dynamic loopVal = assetMap["loop"];
+    dynamic loopVal = assetMap['loop'];
     bool loop = loopVal is bool ? loopVal : true;
 
-    dynamic offsetVal = assetMap["offset"];
+    dynamic offsetVal = assetMap['offset'];
     double offset = offsetVal == null
         ? 0.0
         : offsetVal is int
             ? offsetVal.toDouble()
             : offsetVal;
 
-    dynamic gapVal = assetMap["gap"];
+    dynamic gapVal = assetMap['gap'];
     double gap = gapVal == null
         ? 0.0
         : gapVal is int
             ? gapVal.toDouble()
             : gapVal;
 
-    dynamic widthVal = assetMap["width"];
+    dynamic widthVal = assetMap['width'];
     double width = widthVal is int ? widthVal.toDouble() : widthVal;
 
-    dynamic heightVal = assetMap["height"];
+    dynamic heightVal = assetMap['height'];
     double height = heightVal is int ? heightVal.toDouble() : heightVal;
 
     double scale = 1.0;
-    if (assetMap.containsKey("scale")) {
-      dynamic scaleVal = assetMap["scale"];
+    if (assetMap.containsKey('scale')) {
+      dynamic scaleVal = assetMap['scale'];
       scale = scaleVal is int ? scaleVal.toDouble() : scaleVal;
     }
 
     /// Instantiate the correct object based on the file extension.
     switch (getFileExtension(source)) {
-      case "flr":
+      case 'flr':
         asset = await loadFlareAsset(
             assetMap, filename, loop, offset, gap, width, height, scale);
         break;
-      case "nma":
+      case 'nma':
         asset = await loadNimaAsset(
             assetMap, filename, loop, offset, gap, width, height, scale);
         break;
@@ -583,7 +583,7 @@ class TimelineInitHandler {
 
     flare.ActorAnimation? idle;
     List<flare.ActorAnimation>? idleAnimations;
-    dynamic name = assetMap["idle"];
+    dynamic name = assetMap['idle'];
     if (name is String) {
       if ((idle = actor.getAnimation(name)) != null) {
         animation = idle;
@@ -600,7 +600,7 @@ class TimelineInitHandler {
     }
 
     flare.ActorAnimation? intro;
-    name = assetMap["intro"];
+    name = assetMap['intro'];
     if (name is String) {
       if ((intro = actor.getAnimation(name)) != null) {
         animation = intro;
@@ -616,7 +616,7 @@ class TimelineInitHandler {
     actor.advance(0.0);
     actorStatic.advance(0.0);
 
-    dynamic bounds = assetMap["bounds"];
+    dynamic bounds = assetMap['bounds'];
     if (bounds is List) {
       /// Override the AABB for this entry with custom values.
       setupAABB = flare.AABB.fromValues(
@@ -665,7 +665,7 @@ class TimelineInitHandler {
     nima.FlutterActor actor = flutterActor.makeInstance() as nima.FlutterActor;
 
     nima.ActorAnimation animation;
-    dynamic name = assetMap["idle"];
+    dynamic name = assetMap['idle'];
     if (name is String) {
       animation = actor.getAnimation(name);
     } else {
@@ -679,7 +679,7 @@ class TimelineInitHandler {
     actor.advance(0.0);
     actorStatic.advance(0.0);
 
-    dynamic bounds = assetMap["bounds"];
+    dynamic bounds = assetMap['bounds'];
     if (bounds is List) {
       setupAABB = nima.AABB.fromValues(
           bounds[0] is int ? bounds[0].toDouble() : bounds[0],
@@ -742,21 +742,21 @@ class TarikhMenuInitHandler {
     for (Map map in jsonEntries) {
       menuItemList = [];
 
-      String label = map["label"];
+      String label = map['label'];
       Color textColor = Color(
-          int.parse((map["color"]).substring(1, 7), radix: 16) + 0xFF000000);
+          int.parse((map['color']).substring(1, 7), radix: 16) + 0xFF000000);
       Color backgroundColor = Color(
-          int.parse((map["background"]).substring(1, 7), radix: 16) +
+          int.parse((map['background']).substring(1, 7), radix: 16) +
               0xFF000000);
-      String assetId = map["asset"];
+      String assetId = map['asset'];
 
-      for (Map itemMap in map["items"]) {
-        String label = itemMap["label"];
+      for (Map itemMap in map['items']) {
+        String label = itemMap['label'];
 
-        dynamic startVal = itemMap["start"];
+        dynamic startVal = itemMap['start'];
         double start = startVal is int ? startVal.toDouble() : startVal;
 
-        dynamic endVal = itemMap["end"];
+        dynamic endVal = itemMap['end'];
         double end = endVal is int ? endVal.toDouble() : endVal;
 
         menuItemList.add(MenuItemData(label, start, end));

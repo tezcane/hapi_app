@@ -9,6 +9,7 @@ import 'package:hapi/services/database.dart';
 class DailyQuestsController extends GetxController {
   static DailyQuestsController get to => Get.find();
 
+  /// _doList is an observable object so we can do streams:
   final Rx<List<DoListModel>> _doList = Rx<List<DoListModel>>([]);
   List<DoListModel> get doList => _doList.value;
 

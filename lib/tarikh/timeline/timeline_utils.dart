@@ -38,15 +38,15 @@ Color interpolateColor(Color from, Color to, double elapsed) {
 }
 
 String getFileExtension(String filename) {
-  int dot = filename.lastIndexOf(".");
+  int dot = filename.lastIndexOf('.');
   if (dot == -1) {
-    return "";
+    return '';
   }
   return filename.substring(dot + 1);
 }
 
 // String? removeExtension(String filename) {
-//   int dot = filename.lastIndexOf(".");
+//   int dot = filename.lastIndexOf('.');
 //   if (dot == -1) {
 //     return null;
 //   }

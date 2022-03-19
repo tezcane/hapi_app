@@ -10,9 +10,9 @@ class Database {
 
   // Future<bool> createNewUser(UserModel user) async {
   //   try {
-  //     await _firestore.collection("user").document(user.id).setData({
-  //       "name": user.name,
-  //       "email": user.email,
+  //     await _firestore.collection('user').document(user.id).setData({
+  //       "name': user.name,
+  //       'email": user.email,
   //     });
   //     return true;
   //   } catch (e) {
@@ -36,9 +36,9 @@ class Database {
   Future<void> addDoList(String content, String uid) async {
     try {
       await _db
-          .collection("user")
+          .collection('user')
           .doc(uid)
-          .collection("quest/daily/doList")
+          .collection('quest/daily/doList')
           .add({
         'dateCreated': await TimeController.to.now(),
         'content': content,
@@ -56,11 +56,11 @@ class Database {
       String uid = AuthController.to.firebaseUser.value!.uid;
 
       _db
-          .collection("user")
+          .collection('user')
           .doc(uid)
-          .collection("quest/daily/doList")
+          .collection('quest/daily/doList')
           .doc(id)
-          .update({"done": newValue}).then(
+          .update({'done': newValue}).then(
               (_) => DailyQuestsController.to.update());
     } catch (e) {
       // TODO display error to user
@@ -72,10 +72,10 @@ class Database {
   /// Stream is a bit much? TODO needed?
   Stream<List<DoListModel>> doListStream(String uid) {
     return _db
-        .collection("user")
+        .collection('user')
         .doc(uid)
-        .collection("quest/daily/doList")
-        .orderBy("dateCreated", descending: true)
+        .collection('quest/daily/doList')
+        .orderBy('dateCreated', descending: true)
         .snapshots()
         .map((QuerySnapshot query) {
       List<DoListModel> rv = [];

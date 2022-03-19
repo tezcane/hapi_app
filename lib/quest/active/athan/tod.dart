@@ -33,25 +33,25 @@ extension EnumUtil on TOD {
   String salahRow() {
     switch (this) {
       case (TOD.Fajr):
-        return "FAJR";
+        return 'FAJR';
       case (TOD.Kerahat_Sunrise):
       case (TOD.Ishraq):
       case (TOD.Duha):
       case (TOD.Kerahat_Zawal):
-        return "DUHA";
+        return 'DUHA';
       case (TOD.Dhuhr):
-        return "DHUHR";
+        return 'DHUHR';
       case (TOD.Asr):
       case (TOD.Kerahat_Sun_Setting):
-        return "ASR";
+        return 'ASR';
       case (TOD.Maghrib):
-        return "MAGHRIB";
+        return 'MAGHRIB';
       case (TOD.Isha):
-        return "ISHA";
+        return 'ISHA';
       case (TOD.Middle_of_Night):
       case (TOD.Last_1__3_of_Night):
       default:
-        return "LAYL";
+        return 'LAYL';
     }
   }
 

@@ -27,8 +27,8 @@ class ZamanController extends GetxHapi {
   DateTime get currTODTime => _currTODTime;
   DateTime get nextTODTime => _nextTODTime;
 
-  final RxString _nextZaman = '-'.obs;
-  String get timeToNextZaman => _nextZaman.value;
+  String _nextZaman = '-';
+  String get timeToNextZaman => _nextZaman;
 
   bool forceSalahRecalculation = false;
 
@@ -136,16 +136,16 @@ class ZamanController extends GetxHapi {
         } else if (timeToNextZaman.inSeconds % 300 == 0) {
           TimeController.to.reinitTime(); // TODO check cheater every 5 mins?
         }
-        _nextZaman.value = _printHourMinuteSeconds(timeToNextZaman);
+        _nextZaman = _printHourMinuteSeconds(timeToNextZaman);
         update();
       }
     }
   }
 
   String _printHourMinuteSeconds(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigits(int n) => n.toString().padLeft(2, '0');
     String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
     String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
-    return "${duration.inHours}:$twoDigitMinutes:$twoDigitSeconds";
+    return '${duration.inHours}:$twoDigitMinutes:$twoDigitSeconds';
   }
 }

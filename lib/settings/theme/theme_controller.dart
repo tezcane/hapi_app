@@ -10,14 +10,14 @@ import 'package:hapi/main_controller.dart';
 class ThemeController extends GetxHapi {
   static ThemeController get to => Get.find();
 
-  final theme = "dark".obs;
+  String theme = 'dark';
   late ThemeMode _themeMode;
 
   ThemeMode get themeMode => _themeMode;
-  String get currentTheme => theme.value;
+  String get currentTheme => theme;
 
   Future<void> setThemeMode(String value) async {
-    theme.value = value;
+    theme = value;
     _themeMode = getThemeModeFromString(value);
     Get.changeThemeMode(_themeMode);
     await s.wr('theme', value);

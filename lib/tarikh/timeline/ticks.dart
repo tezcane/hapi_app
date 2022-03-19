@@ -143,8 +143,8 @@ class Ticks {
         /// Drawing text to [canvas] is done by using the [ParagraphBuilder] directly.
         ui.ParagraphBuilder? builder;
         if (colors != null) {
-          builder = ui.ParagraphBuilder(ui.ParagraphStyle(
-              textAlign: TextAlign.end, fontFamily: "Roboto", fontSize: 10.0))
+          builder = ui.ParagraphBuilder(
+              ui.ParagraphStyle(textAlign: TextAlign.end, fontSize: 10.0))
             ..pushStyle(ui.TextStyle(color: colors.text));
         }
 

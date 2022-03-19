@@ -26,7 +26,7 @@ class FabNavPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetBuilder<MenuController>(
       builder: (c) => IgnorePointer(
-        ignoring: c.isScreenDisabled(),
+        ignoring: c.isScreenDisabled,
         child: Scaffold(
           backgroundColor: Theme.of(context).backgroundColor,
 
@@ -48,7 +48,7 @@ class FabNavPage extends StatelessWidget {
                     children: [
                       IgnorePointer(
                         // disable UI when menu showing:
-                        ignoring: c.isMenuShowing(),
+                        ignoring: c.isMenuShowing,
                         child: foregroundPage, // Main page
                       ),
                       Align(

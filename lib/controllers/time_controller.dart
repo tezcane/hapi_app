@@ -19,20 +19,17 @@ class TimeController extends GetxHapi {
   static TimeController get to => Get.find();
 
   // TODO don't need Rx here and other controllers?
-  final RxInt _ntpOffset = DUMMY_NTP_OFFSET.obs;
+  int _ntpOffset = DUMMY_NTP_OFFSET;
 
-  final Rx<DateTime> _lastNtpTime = DUMMY_TIME.obs;
-  final Rx<DateTime> _lastLocTime = DUMMY_TIME.obs;
-  DateTime get lastUtcTime => _lastNtpTime.value;
-  DateTime get lastLocTime => _lastLocTime.value;
+  DateTime _lastNtpTime = DUMMY_TIME;
+  DateTime get lastUtcTime => _lastNtpTime;
 
   bool forceSalahRecalculation = false;
 
   /// NOTE: Can run only because tz.initializeTimeZones() completes in main.dart
-  final Rx<Location> _tzLoc = getLocation(DUMMY_TIMEZONE).obs;
-
   /// Used to calculate Zaman times
-  Location get tzLoc => _tzLoc.value;
+  Location _tzLoc = getLocation(DUMMY_TIMEZONE);
+  Location get tzLoc => _tzLoc;
 
   @override
   void onInit() async {
@@ -43,10 +40,10 @@ class TimeController extends GetxHapi {
 
   /// Call to update time TODO use to detect irregular clock movement
   Future<void> initTime() async {
-    l.d('initTime called tz=$tzLoc, DateTime=${DateTime.now()}, ntpOffset=${_ntpOffset.value}');
+    l.d('initTime called tz=$tzLoc, DateTime=${DateTime.now()}, ntpOffset=$_ntpOffset');
     await _updateNtpTime();
     await getTimezoneLocation();
-    l.d('initTime done tz=$tzLoc, DateTime=${DateTime.now()}, ntpOffset=${_ntpOffset.value}}');
+    l.d('initTime done tz=$tzLoc, DateTime=${DateTime.now()}, ntpOffset=$_ntpOffset}');
   }
 
   Future<void> reinitTime() async {}
@@ -60,14 +57,13 @@ class TimeController extends GetxHapi {
     l.d('cTime:updateNtpTime: Called');
     DateTime appTime = DateTime.now().toLocal();
     try {
-      _ntpOffset.value = await NTP.getNtpOffset(
+      _ntpOffset = await NTP.getNtpOffset(
           localTime: appTime, timeout: const Duration(seconds: 3)); // TODO
-      _lastNtpTime.value =
-          appTime.add(Duration(milliseconds: _ntpOffset.value));
+      _lastNtpTime = appTime.add(Duration(milliseconds: _ntpOffset));
 
       l.d('cTime:updateNtpTime: NTP DateTime offset align (ntpOffset=$_ntpOffset):');
       l.d('cTime:updateNtpTime: locTime was=${appTime.toLocal()}');
-      l.d('cTime:updateNtpTime: ntpTime now=${_lastNtpTime.value.toLocal()}');
+      l.d('cTime:updateNtpTime: ntpTime now=${_lastNtpTime.toLocal()}');
     } on Exception catch (e) {
       l.e('cTime:updateNtpTime: Exception: Failed to call NTP.getNtpOffset(): $e');
     }
@@ -75,13 +71,13 @@ class TimeController extends GetxHapi {
 
   /// Get's local time, uses ntp offset to calculate more accurate time
   Future<DateTime> now() async {
-    if (_ntpOffset.value == DUMMY_NTP_OFFSET) {
+    if (_ntpOffset == DUMMY_NTP_OFFSET) {
       l.w('cTime:now: called but there is no ntp offset');
       await _updateNtpTime();
     }
     DateTime time = DateTime.now().toLocal();
-    if (_ntpOffset.value != DUMMY_NTP_OFFSET) {
-      time = time.add(Duration(milliseconds: _ntpOffset.value));
+    if (_ntpOffset != DUMMY_NTP_OFFSET) {
+      time = time.add(Duration(milliseconds: _ntpOffset));
     }
     // print('cTime:now: (ntpOffset=$_ntpOffset) ${time.toLocal()}');
     return time.toLocal();
@@ -89,13 +85,13 @@ class TimeController extends GetxHapi {
 
   /// Non-async version to get time now()
   DateTime now2() {
-    if (_ntpOffset.value == DUMMY_NTP_OFFSET) {
+    if (_ntpOffset == DUMMY_NTP_OFFSET) {
       l.w('cTime:now2: called but there is no ntp offset');
       _updateNtpTime();
     }
     DateTime time = DateTime.now().toLocal();
-    if (_ntpOffset.value != DUMMY_NTP_OFFSET) {
-      time = time.add(Duration(milliseconds: _ntpOffset.value));
+    if (_ntpOffset != DUMMY_NTP_OFFSET) {
+      time = time.add(Duration(milliseconds: _ntpOffset));
     }
     // print('cTime:now: (ntpOffset=$_ntpOffset) ${time.toLocal()}');
     return time.toLocal();
@@ -149,7 +145,7 @@ class TimeController extends GetxHapi {
 
   Future<Location> getTimezoneLocation() async {
     Location? tzLocation = await _getTimezoneLocFromSystem();
-    _tzLoc.value = tzLocation ?? await _getTimezoneLocFromTimeDate();
-    return Future<Location>.value(_tzLoc.value);
+    _tzLoc = tzLocation ?? await _getTimezoneLocFromTimeDate();
+    return Future<Location>.value(_tzLoc);
   }
 }
