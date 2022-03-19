@@ -14,7 +14,7 @@ class CalculationParams {
     this.adjustments,
   );
 
-  final CalculationMethod method;
+  final CalcMethodParams method;
   final Madhab madhab;
   final int kerahatSunRisingMins;
   final int kerahatSunZawalMins;

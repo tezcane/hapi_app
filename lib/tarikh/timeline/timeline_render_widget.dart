@@ -3,6 +3,7 @@ import 'dart:ui' as ui;
 
 import 'package:flare_dart/math/aabb.dart' as flare;
 import 'package:flutter/material.dart';
+import 'package:hapi/main_controller.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
@@ -509,10 +510,10 @@ class TimelineRenderObject extends RenderBox {
       String upLabel = cTrkh.timeBtnUp.entry!.label;
       if (upLabel == cTrkh.timeBtnDn.entry!.label) {
         if (upLabel == 'Big Bang') {
-          print('***************** TOO HIGH FIXING ************************');
+          l.d('***************** TOO HIGH FIXING ************************');
           cTrkh.updateTimeBtnEntry(cTrkh.timeBtnUp, null);
         } else {
-          print('***************** TOO LOW FIXING ************************');
+          l.d('***************** TOO LOW FIXING ************************');
           cTrkh.updateTimeBtnEntry(cTrkh.timeBtnDn, null);
         }
       }

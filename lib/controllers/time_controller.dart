@@ -4,6 +4,7 @@ import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:get/get.dart';
 import 'package:hapi/controllers/connectivity_controller.dart';
 import 'package:hapi/getx_hapi.dart';
+import 'package:hapi/main_controller.dart';
 import 'package:ntp/ntp.dart';
 import 'package:timezone/timezone.dart'
     show Location, LocationNotFoundException, getLocation;
@@ -35,7 +36,6 @@ class TimeController extends GetxHapi {
 
   @override
   void onInit() async {
-    print('ON_INIT: $runtimeType');
     super.onInit();
 
     await initTime(); // TODO do during splash screen?
@@ -43,12 +43,10 @@ class TimeController extends GetxHapi {
 
   /// Call to update time TODO use to detect irregular clock movement
   Future<void> initTime() async {
-    print(
-        'initTime called tz=$tzLoc, DateTime=${DateTime.now()}, ntpOffset=${_ntpOffset.value}');
+    l.d('initTime called tz=$tzLoc, DateTime=${DateTime.now()}, ntpOffset=${_ntpOffset.value}');
     await _updateNtpTime();
     await getTimezoneLocation();
-    print(
-        'initTime done tz=$tzLoc, DateTime=${DateTime.now()}, ntpOffset=${_ntpOffset.value}}');
+    l.d('initTime done tz=$tzLoc, DateTime=${DateTime.now()}, ntpOffset=${_ntpOffset.value}}');
   }
 
   Future<void> reinitTime() async {}
@@ -56,10 +54,10 @@ class TimeController extends GetxHapi {
   /// Gets NTP time from server when called, if internet is on
   Future<void> _updateNtpTime() async {
     if (!ConnectivityController.to.isInternetOn) {
-      print('cTime:updateNtpTime: aborting NTP update, no internet connection');
+      l.w('cTime:updateNtpTime: aborting NTP update, no internet connection');
       return;
     }
-    print('cTime:updateNtpTime: Called');
+    l.d('cTime:updateNtpTime: Called');
     DateTime appTime = DateTime.now().toLocal();
     try {
       _ntpOffset.value = await NTP.getNtpOffset(
@@ -67,20 +65,18 @@ class TimeController extends GetxHapi {
       _lastNtpTime.value =
           appTime.add(Duration(milliseconds: _ntpOffset.value));
 
-      print(
-          'cTime:updateNtpTime: NTP DateTime offset align (ntpOffset=$_ntpOffset):');
-      print('cTime:updateNtpTime: locTime was=${appTime.toLocal()}');
-      print('cTime:updateNtpTime: ntpTime now=${_lastNtpTime.value.toLocal()}');
+      l.d('cTime:updateNtpTime: NTP DateTime offset align (ntpOffset=$_ntpOffset):');
+      l.d('cTime:updateNtpTime: locTime was=${appTime.toLocal()}');
+      l.d('cTime:updateNtpTime: ntpTime now=${_lastNtpTime.value.toLocal()}');
     } on Exception catch (e) {
-      print(
-          'cTime:updateNtpTime: Exception: Failed to call NTP.getNtpOffset(): $e');
+      l.e('cTime:updateNtpTime: Exception: Failed to call NTP.getNtpOffset(): $e');
     }
   }
 
   /// Get's local time, uses ntp offset to calculate more accurate time
   Future<DateTime> now() async {
     if (_ntpOffset.value == DUMMY_NTP_OFFSET) {
-      print('cTime:now: called but there is no ntp offset');
+      l.w('cTime:now: called but there is no ntp offset');
       await _updateNtpTime();
     }
     DateTime time = DateTime.now().toLocal();
@@ -94,7 +90,7 @@ class TimeController extends GetxHapi {
   /// Non-async version to get time now()
   DateTime now2() {
     if (_ntpOffset.value == DUMMY_NTP_OFFSET) {
-      print('cTime:now2: called but there is no ntp offset');
+      l.w('cTime:now2: called but there is no ntp offset');
       _updateNtpTime();
     }
     DateTime time = DateTime.now().toLocal();
@@ -111,15 +107,15 @@ class TimeController extends GetxHapi {
     Location? timezoneLoc;
     try {
       String tzName = await FlutterNativeTimezone.getLocalTimezone();
-      print('***** _getTimezoneFromSystem Timezone: "$tzName"');
+      l.d('***** _getTimezoneFromSystem Timezone: "$tzName"');
 
       try {
         timezoneLoc = getLocation(tzName);
       } on LocationNotFoundException catch (err) {
-        print('Error: "timezone "$tzName" not found by getLocation: $err');
+        l.e('timezone "$tzName" not found by getLocation: $err');
       }
     } on ArgumentError catch (err) {
-      print('failed to get sys timezone: error=$err');
+      l.e('failed to get sys timezone: error=$err');
     }
     return Future<Location?>.value(timezoneLoc);
   }
@@ -128,15 +124,13 @@ class TimeController extends GetxHapi {
   Future<Location> _getTimezoneLocFromTimeDate() async {
     Location tzLocation;
     String tzName = (await now()).toLocal().timeZoneName;
-    print(
-        '***** _getTimezoneFromTimeDate Time Zone: "$tzName"'); // 'America/Los_Angeles'
+    l.d('***** _getTimezoneFromTimeDate Time Zone: "$tzName"'); // 'America/Los_Angeles'
 
     try {
       tzLocation = getLocation(tzName);
     } on LocationNotFoundException catch (err) {
       if (tzLoc.name == DUMMY_TIMEZONE) {
-        print(
-            'Error: $err\ntimezone "$tzName" not found by getLocation, using existing: $_tzLoc');
+        l.e('$err\ntimezone "$tzName" not found by getLocation, using existing: $_tzLoc');
         tzLocation = tzLoc;
       } else {
         // TODO give prompt to user to enter their timezone:
@@ -145,8 +139,7 @@ class TimeController extends GetxHapi {
         // whole number of hours, but a few zones are offset by an additional
         // 30 or 45 minutes, such as in India, South Australia and Nepal.
 
-        print(
-            'Error: $err\ntimezone "$tzName" not found by getLocation, using defualt: $DUMMY_TIMEZONE');
+        l.e('$err\ntimezone "$tzName" not found by getLocation, using defualt: $DUMMY_TIMEZONE');
         tzLocation = getLocation(DUMMY_TIMEZONE);
       }
     }

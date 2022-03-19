@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hapi/controllers/time_controller.dart';
+import 'package:hapi/main_controller.dart';
 import 'package:hapi/onboard/auth/auth_controller.dart';
 import 'package:hapi/quest/daily/daily_quests_controller.dart';
 import 'package:hapi/quest/daily/do_list/do_list_model.dart';
@@ -45,7 +46,7 @@ class Database {
       }).then((_) => DailyQuestsController.to.update());
     } catch (e) {
       // TODO display error to user
-      print(e);
+      l.e(e.toString());
       rethrow;
     }
   }
@@ -63,7 +64,7 @@ class Database {
               (_) => DailyQuestsController.to.update());
     } catch (e) {
       // TODO display error to user
-      print(e);
+      l.e(e.toString());
       rethrow;
     }
   }

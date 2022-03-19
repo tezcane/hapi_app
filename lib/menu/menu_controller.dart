@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/helpers/loading.dart';
-import 'package:hapi/main.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/about_ui.dart';
 import 'package:hapi/quest/active/active_quest_action_ui.dart';
@@ -102,7 +101,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
   /// Here we handle when the FAB button is hit for show/hide menu or back btn.
   void handlePressedFAB() {
     if (fabButtonIsTransitioning) {
-      print('GOOD TRY, FAB is still transitioning!!!!!!!!!!');
+      l.w('GOOD TRY, FAB is still transitioning!!!!!!!!!!');
       return; // POSSIBLE HAPI QUEST: "Interrupt/Break Menu Button" hapi task
     }
 
@@ -173,7 +172,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
   List<SubPage> _subPageStack = [];
 
   int _getLastNavIdx() {
-    return s.read('lastNavIdx') ?? NavPage.Quests.index;
+    return s.rd('lastNavIdx') ?? NavPage.Quests.index;
   }
 
   NavPage getLastNavPage() {
@@ -181,7 +180,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
   }
 
   bool isFastStartupMode() {
-    return s.read('fastStartupMode') ?? true; // TODO write this setting
+    return s.rd('fastStartupMode') ?? true; // TODO write this setting
   }
 
   /// set foreground to last opened page
@@ -192,7 +191,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
     try {
       lastNavPage = NavPage.values[navIdx];
     } catch (e) {
-      print('ERROR: appInit last index was $navIdx, no longer used');
+      l.e('appInit last index was $navIdx, no longer used, error: $e');
     }
 
     int heroLogoTransistionMs = 3001;
@@ -236,7 +235,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
     try {
       return NavPage.values[navIdx];
     } catch (e) {
-      print('ERROR did not find navIdx $navIdx page, trying for Quest');
+      l.e('Did not find navIdx $navIdx page, trying for Quest, error: $e');
       return NavPage.Quests;
     }
   }
@@ -249,7 +248,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
     }
 
     // save so app restarts at this idx
-    s.write('lastNavIdx', navPage.index);
+    s.wr('lastNavIdx', navPage.index);
 
     _navigateToNavPage(navPage);
   }
@@ -505,7 +504,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
         hideLoadingIndicator();
         break;
       }
-      print('*********** Timeline is not initialized yet ************');
+      l.w('*********** Timeline is not initialized yet ************');
       await Future.delayed(const Duration(milliseconds: 250));
     }
   }

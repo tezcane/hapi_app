@@ -10,7 +10,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:get/get.dart';
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/getx_hapi.dart';
-import 'package:hapi/main.dart';
+import 'package:hapi/main_controller.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/search_manager.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
@@ -64,7 +64,7 @@ class TarikhController extends GetxHapi {
         updateOnThread(); //update() causes error
       }
     } else {
-      print('WARNING: _isActiveTimeline already set to $_isActiveTimeline');
+      l.w('_isActiveTimeline already set to $_isActiveTimeline');
     }
   }
 
@@ -82,7 +82,7 @@ class TarikhController extends GetxHapi {
       _isActiveTarikhMenu = nv;
       update();
     } else {
-      print('WARNING: _isActiveTarikhMenu already set to $_isActiveTarikhMenu');
+      l.w('_isActiveTarikhMenu already set to $_isActiveTarikhMenu');
     }
   }
 
@@ -114,7 +114,7 @@ class TarikhController extends GetxHapi {
   final Rx<GutterMode> _gutterMode = GutterMode.OFF.obs;
   GutterMode get gutterMode => _gutterMode.value;
   set gutterMode(GutterMode newGutterMode) {
-    s.write('lastGutterModeIdx', newGutterMode.index);
+    s.wr('lastGutterModeIdx', newGutterMode.index);
     _gutterMode.value = newGutterMode;
     update();
   }
@@ -135,7 +135,7 @@ class TarikhController extends GetxHapi {
     timeBtnUp = TimeBtn(' ', ' ', ' ', null);
     timeBtnDn = TimeBtn(' ', ' ', ' ', null);
 
-    int lastGutterModeIdx = s.read('lastGutterModeIdx') ?? GutterMode.OFF.index;
+    int lastGutterModeIdx = s.rd('lastGutterModeIdx') ?? GutterMode.OFF.index;
     gutterMode = GutterMode.values[lastGutterModeIdx];
 
     // first handle json inputs
@@ -165,7 +165,7 @@ class TarikhController extends GetxHapi {
     /// ...and initialize the [SearchManager].
     SearchManager.init(events);
 
-    print('********************* TIMELINE INIT DONE **********************');
+    l.i('********************* TIMELINE INIT DONE **********************');
     _isTimelineInitDone = true;
     update();
   }
@@ -173,7 +173,7 @@ class TarikhController extends GetxHapi {
   /// It receives as input the full list of [TimelineEntry], so that it can
   /// use those references to fill [_eventFavorites].
   _initFavorites() {
-    List<dynamic>? favs = s.read("TARIKH_FAVS");
+    List<dynamic>? favs = s.rd("TARIKH_FAVS");
 
     if (favs != null) {
       for (String fav in favs) {
@@ -194,7 +194,7 @@ class TarikhController extends GetxHapi {
     // note saves in any order, must sort on reading in from disk
     List<String> favsList =
         _eventFavorites.map((TimelineEntry entry) => entry.label).toList();
-    s.write("TARIKH_FAVS", favsList);
+    s.wr("TARIKH_FAVS", favsList);
     update(); // favorites changed so notify people using it
   }
 

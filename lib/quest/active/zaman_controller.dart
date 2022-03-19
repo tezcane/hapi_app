@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:hapi/controllers/location_controller.dart';
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/getx_hapi.dart';
+import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/calculation_method.dart';
@@ -45,7 +46,7 @@ class ZamanController extends GetxHapi {
     Location timezoneLoc = await TimeController.to.getTimezoneLocation();
     DateTime date = TZDateTime.from(await TimeController.to.now(), timezoneLoc);
 
-    var salahMethod =
+    var calcMethod =
         CalcMethod.values[ActiveQuestsController.to.salahCalcMethod];
 
     var madhab = Madhab.Hanafi;
@@ -63,7 +64,7 @@ class ZamanController extends GetxHapi {
     }
 
     var params = CalculationParams(
-      salahMethod.method,
+      calcMethod.params,
       madhab,
       kerahatSunRisingMins,
       kerahatSunZawalMins,
@@ -84,6 +85,7 @@ class ZamanController extends GetxHapi {
     // TODO fix all this, date should change at FAJR_TOMORROW hit only?
     TimeOfDay tod = TimeOfDay(
         LocationController.to.lastKnownCord, date, params, timezoneLoc, false);
+    // TODO asdf fdsa should not need to do this since it's main area is now set a few lines down:
     ActiveQuestsController.to.tod = tod;
 
     _currTOD = tod.getCurrZaman(date);
@@ -92,10 +94,10 @@ class ZamanController extends GetxHapi {
     _nextTOD = tod.getNextZaman(date);
     _nextTODTime = tod.getZamanTime(_nextTOD);
 
-    print('***** Convenience Variables:');
-    print('current: $_currTODTime ($_currTOD)');
-    print('next:    $_nextTODTime ($_nextTOD)');
+    l.d('_currTODTime: $_currTODTime ($_currTOD)');
+    l.d('_nextTODTime: $_nextTODTime ($_nextTOD)');
 
+    // TODO asdf fdsa, this is broken: reset at Maghrib time:
     // reset day:
     if (currTOD == TOD.Fajr_Tomorrow) {
       ActiveQuestsAjrController.to.clearAllQuests();
@@ -121,7 +123,7 @@ class ZamanController extends GetxHapi {
 
       // if we hit the end of a timer (or forced), recalculate zaman times:
       if (forceSalahRecalculation || timeToNextZaman.inSeconds <= 0) {
-        print('This zaman is over, going to next zaman: '
+        l.d('This zaman is over, going to next zaman: '
             '${timeToNextZaman.inSeconds} secs left');
         forceSalahRecalculation = false;
         initLocation(); // does eventually call startNextZamanCountdownTimer();
@@ -129,7 +131,7 @@ class ZamanController extends GetxHapi {
       } else {
         if (timeToNextZaman.inSeconds % 60 == 0) {
           // print once a minute to show thread is alive
-          print('Next Zaman Timer Minute Tick: ${timeToNextZaman.inSeconds} '
+          l.i('Next Zaman Timer Minute Tick: ${timeToNextZaman.inSeconds} '
               'secs left (${timeToNextZaman.inSeconds / 60} minutes)');
         } else if (timeToNextZaman.inSeconds % 300 == 0) {
           TimeController.to.reinitTime(); // TODO check cheater every 5 mins?

@@ -2,12 +2,13 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hapi/main_controller.dart';
 
 /// To help find bugs and understand Getx/Flutter states we print all state
 /// transitions here.  CANDO: removed once code is stable?
 abstract class GetxHapi extends GetxController {
   GetxHapi() {
-    print('GetxHapi.Constructor: $runtimeType');
+    l.v('GetxHapi.Constructor: $runtimeType');
   }
 
   /// Called immediately after the widget is allocated in memory.
@@ -15,7 +16,7 @@ abstract class GetxHapi extends GetxController {
   @override
   @mustCallSuper
   void onInit() {
-    print('GetxHapi.onInit: $runtimeType');
+    l.v('GetxHapi.onInit: $runtimeType');
     super.onInit();
   }
 
@@ -24,7 +25,7 @@ abstract class GetxHapi extends GetxController {
   /// async request.
   @override
   void onReady() {
-    print('GetxHapi.onReady: $runtimeType');
+    l.v('GetxHapi.onReady: $runtimeType');
     super.onReady();
   }
 
@@ -36,7 +37,7 @@ abstract class GetxHapi extends GetxController {
   /// Might be useful as well to persist some data on disk.
   @override
   void onClose() {
-    print('GetxHapi.onClose: $runtimeType');
+    l.v('GetxHapi.onClose: $runtimeType');
     super.onClose();
   }
 

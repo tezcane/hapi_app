@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:hapi/main.dart';
+import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
@@ -35,7 +35,7 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
   @override
   initState() {
     // init list search on page
-    String lastHistorySearch = s.read('lastHistorySearch') ?? '';
+    String lastHistorySearch = s.rd('lastHistorySearch') ?? '';
     _searchTextController.text = lastHistorySearch;
     _updateSearch();
 
@@ -107,7 +107,7 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
     /// Perform search.
     /// A [Timer] is used to prevent unnecessary searches while the user is typing.
     _searchTimer = Timer(Duration(milliseconds: query.isEmpty ? 0 : 350), () {
-      s.write('lastHistorySearch', _searchTextController.text);
+      s.wr('lastHistorySearch', _searchTextController.text);
       List<TimelineEntry> searchResults = getSortedSearchResults(query);
       setState(() {
         _searchResults = searchResults;

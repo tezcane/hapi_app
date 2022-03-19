@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:hapi/getx_hapi.dart';
-import 'package:hapi/main.dart';
+import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/menu_controller.dart';
 
 /// Controller to track a NavPages last selected SubPages. Used to persist UI
@@ -18,14 +18,14 @@ class NavPageController extends GetxHapi {
   @override
   onInit() {
     for (NavPageValue npv in navPageValues) {
-      pageIdxMap[npv.navPage] = s.read(key(npv.navPage)) ?? npv.defaultIdx;
+      pageIdxMap[npv.navPage] = s.rd(key(npv.navPage)) ?? npv.defaultIdx;
     }
     super.onInit();
   }
 
   setLastIdx(navPage, newIdx) {
     pageIdxMap[navPage] = newIdx;
-    s.write(key(navPage), newIdx);
+    s.wr(key(navPage), newIdx);
     //update(); // not needed right now
   }
 

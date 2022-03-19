@@ -2,7 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/main.dart';
+import 'package:hapi/main_controller.dart';
 import 'package:hapi/settings/settings_option_model.dart';
 
 // TODO update to match google spreadsheet languages
@@ -45,14 +45,14 @@ class LanguageController extends GetxController {
       String _deviceLanguage = ui.window.locale.toString();
       _deviceLanguage =
           _deviceLanguage.substring(0, 2); //only get 1st 2 characters
-      print(ui.window.locale.toString());
+      l.d('setInitialLocalLanguage: ui.window.locale="${ui.window.locale.toString()}"');
       updateLanguage(_deviceLanguage);
     }
   }
 
   /// Gets current language stored
   RxString get currentLanguageStore {
-    language.value = s.read('language') ?? '';
+    language.value = s.rd('language') ?? ''; // TODO can return default here
     return language;
   }
 
@@ -72,7 +72,7 @@ class LanguageController extends GetxController {
   /// updates the language stored
   Future<void> updateLanguage(String value) async {
     language.value = value;
-    await s.write('language', value);
+    await s.wr('language', value);
     if (getLocale != null) {
       Get.updateLocale(getLocale!);
     }

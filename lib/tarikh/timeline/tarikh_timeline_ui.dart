@@ -1,7 +1,6 @@
-//import 'dart:ui'; TODO needed?
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
@@ -227,11 +226,11 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   void didUpdateWidget(covariant TarikhTimelineUI oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    print('********************* Timeline: didUpdateWidget ******************');
+    l.w('********************* Timeline: didUpdateWidget ******************');
 
     // TODO what is this doing?:
     if (t != oldWidget.timeline) {
-      print('Timeline: didUpdateWidget true');
+      l.w('Timeline: didUpdateWidget true');
       setState(() {
         _headerTextColor = t.headerTextColor;
         // _headerBackgroundColor = t.headerBackgroundColor;
@@ -254,7 +253,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
         //t.isActive = true; //TODO old showFavirts called _startRendering(), but i think was for heart flare animation
       });
     } else {
-      print('Timeline: didUpdateWidget false');
+      l.w('Timeline: didUpdateWidget false');
     }
   }
 
@@ -490,7 +489,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                 tooltip: 'Navigate to past',
                                 heroTag: null, // needed
                                 onPressed: () {
-                                  print('Navigate to past: ' +
+                                  l.d('Navigate to past: ' +
                                       btnUp.entry!.label);
                                   _navigateToTimeline(
                                       btnUp.entry!, devicePadding.top);
@@ -517,7 +516,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                               tooltip: 'Navigate to future',
                               heroTag: null, // needed
                               onPressed: () {
-                                print('Navigate to future: ' +
+                                l.d('Navigate to future: ' +
                                     btnDn.entry!.label);
                                 _navigateToTimeline(
                                     btnDn.entry!, devicePadding.top);

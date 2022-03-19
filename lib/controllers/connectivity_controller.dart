@@ -4,6 +4,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hapi/getx_hapi.dart';
+import 'package:hapi/main_controller.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class ConnectivityController extends GetxHapi {
@@ -46,12 +47,12 @@ class ConnectivityController extends GetxHapi {
       ConnectivityResult connResult = await _conn.checkConnectivity();
       _updateConnectionStatus(connResult);
     } on PlatformException catch (e) {
-      print("initConnectivity: Error Occurred: ${e.toString()} ");
+      l.e('initConnectivity: Error Occurred: ${e.toString()}');
     }
   }
 
   _updateConnectionStatus(ConnectivityResult connResult) {
-    print('Connectivity changed from ${_connResult.value} to $connResult');
+    l.i('Connectivity changed from ${_connResult.value} to $connResult');
     _connResult.value = connResult;
 
     // we only know radio/physical layer is on, check for internet connection
@@ -76,7 +77,7 @@ class ConnectivityController extends GetxHapi {
       isInternetOn = false; // mobile/wifi/ethernet is disconnected
     }
 
-    print('checkIfInternetIsOn: _isInternetOn=${_isInternetOn.value}');
+    l.d('checkIfInternetIsOn: _isInternetOn=${_isInternetOn.value}');
 
     return _isInternetOn.value;
   }

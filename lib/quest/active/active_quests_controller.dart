@@ -1,7 +1,7 @@
 import 'package:flip_card/flip_card_controller.dart';
 import 'package:get/get.dart';
 import 'package:hapi/controllers/time_controller.dart';
-import 'package:hapi/main.dart';
+import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/athan/time_of_day.dart';
 import 'package:hapi/quest/active/athan/tod.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
@@ -27,8 +27,7 @@ DAY_OF_WEEK getDayOfWeek(DateTime dateTime) {
   }
 
   DAY_OF_WEEK defaultDayOfWeek = DAY_OF_WEEK.Monday;
-  print(
-      'ERROR: getDayOfWeek: Invalid day of week, defaulting to; method found: $defaultDayOfWeek');
+  l.e('getDayOfWeek: Invalid day of week, defaulting to; method found: $defaultDayOfWeek');
   return defaultDayOfWeek;
 }
 
@@ -66,17 +65,17 @@ class ActiveQuestsController extends GetxController {
   void onInit() {
     super.onInit();
 
-    _showSunnahMuak.value = s.read('showSunnahMuak') ?? true;
-    _showSunnahNafl.value = s.read('showSunnahNafl') ?? true;
-    _showSunnahDuha.value = s.read('showSunnahDuha') ?? false;
-    _showSunnahLayl.value = s.read('showSunnahLayl') ?? false;
-    _showSunnahKeys.value = s.read('showSunnahKeys') ?? true;
-    _showJummahOnFriday.value = s.read('showJummahOnFriday') ?? true;
-    _show3rdOfNight.value = s.read('show3rdOfNight') ?? true;
-    _show12HourClock.value = s.read('show12HourClock') ?? true;
-    _salahAsrSafe.value = s.read('salahAsrSafe') ?? true;
-    _salahKerahatSafe.value = s.read('salahKerahatSafe') ?? true;
-    _salahCalcMethod.value = s.read('salahCalcMethod') ?? 0;
+    _showSunnahMuak.value = s.rd('showSunnahMuak') ?? true;
+    _showSunnahNafl.value = s.rd('showSunnahNafl') ?? true;
+    _showSunnahDuha.value = s.rd('showSunnahDuha') ?? false;
+    _showSunnahLayl.value = s.rd('showSunnahLayl') ?? false;
+    _showSunnahKeys.value = s.rd('showSunnahKeys') ?? true;
+    _showJummahOnFriday.value = s.rd('showJummahOnFriday') ?? true;
+    _show3rdOfNight.value = s.rd('show3rdOfNight') ?? true;
+    _show12HourClock.value = s.rd('show12HourClock') ?? true;
+    _salahAsrSafe.value = s.rd('salahAsrSafe') ?? true;
+    _salahKerahatSafe.value = s.rd('salahKerahatSafe') ?? true;
+    _salahCalcMethod.value = s.rd('salahCalcMethod') ?? 0;
   }
 
   bool get showSunnahMuak => _showSunnahMuak.value;
@@ -93,73 +92,73 @@ class ActiveQuestsController extends GetxController {
 
   void toggleShowSunnahMuak() {
     _showSunnahMuak.value = !_showSunnahMuak.value;
-    s.write('showSunnahMuak', _showSunnahMuak.value);
+    s.wr('showSunnahMuak', _showSunnahMuak.value);
     update();
   }
 
   void toggleShowSunnahNafl() {
     _showSunnahNafl.value = !_showSunnahNafl.value;
-    s.write('showSunnahNafl', _showSunnahNafl.value);
+    s.wr('showSunnahNafl', _showSunnahNafl.value);
     update();
   }
 
   void toggleShowSunnahDuha() {
     _showSunnahDuha.value = !_showSunnahDuha.value;
-    s.write('showSunnahDuha', _showSunnahDuha.value);
+    s.wr('showSunnahDuha', _showSunnahDuha.value);
     ZamanController.to.forceSalahRecalculation = true;
     update();
   }
 
   void toggleShowSunnahLayl() {
     _showSunnahLayl.value = !_showSunnahLayl.value;
-    s.write('showSunnahLayl', _showSunnahLayl.value);
+    s.wr('showSunnahLayl', _showSunnahLayl.value);
     ZamanController.to.forceSalahRecalculation = true;
     update();
   }
 
   set showSunnahKeys(bool value) {
     _showSunnahKeys.value = value;
-    s.write('showSunnahKeys', value);
+    s.wr('showSunnahKeys', value);
     update();
   }
 
   set showJummahOnFriday(bool value) {
     _showJummahOnFriday.value = value;
-    s.write('showJummahOnFriday', value);
+    s.wr('showJummahOnFriday', value);
     update();
   }
 
   set showLast3rdOfNight(bool value) {
     _show3rdOfNight.value = value;
-    s.write('show3rdOfNight', value);
+    s.wr('show3rdOfNight', value);
     ZamanController.to.forceSalahRecalculation = true;
     update();
   }
 
   set show12HourClock(bool value) {
     _show12HourClock.value = value;
-    s.write('show12HourClock', value);
+    s.wr('show12HourClock', value);
     ZamanController.to.forceSalahRecalculation = true;
     update();
   }
 
   set salahAsrSafe(bool value) {
     _salahAsrSafe.value = value;
-    s.write('salahAsrSafe', value);
+    s.wr('salahAsrSafe', value);
     ZamanController.to.forceSalahRecalculation = true;
     update();
   }
 
   set salahKerahatSafe(bool value) {
     _salahKerahatSafe.value = value;
-    s.write('salahKerahatSafe', value);
+    s.wr('salahKerahatSafe', value);
     ZamanController.to.forceSalahRecalculation = true;
     update();
   }
 
   set salahCalcMethod(int value) {
     _salahCalcMethod.value = value;
-    s.write('salahCalcMethod', value);
+    s.wr('salahCalcMethod', value);
     ZamanController.to.forceSalahRecalculation = true;
     update();
   }

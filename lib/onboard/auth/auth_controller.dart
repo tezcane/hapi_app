@@ -7,7 +7,7 @@ import 'package:get/get.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/helpers/gravatar.dart';
 import 'package:hapi/helpers/loading.dart';
-import 'package:hapi/main.dart';
+import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/onboard/auth/sign_in_ui.dart';
 import 'package:hapi/onboard/onboarding_controller.dart';
@@ -66,20 +66,20 @@ class AuthController extends GetxHapi {
   }
 
   String getLastSignedInEmail() {
-    emailController.text = s.read('lastSignedInEmail') ?? '';
+    emailController.text = s.rd('lastSignedInEmail') ?? '';
     return emailController.text;
   }
 
   storeLastSignedInEmail() =>
-      s.write('lastSignedInEmail', emailController.text.trim());
+      s.wr('lastSignedInEmail', emailController.text.trim());
 
   String getLastSignedInName() {
-    nameController.text = s.read('lastSignedInName') ?? '';
+    nameController.text = s.rd('lastSignedInName') ?? '';
     return nameController.text;
   }
 
   storeLastSignedInName() =>
-      s.write('lastSignedInName', nameController.text.trim());
+      s.wr('lastSignedInName', nameController.text.trim());
 
   @override
   void onClose() {
@@ -105,10 +105,12 @@ class AuthController extends GetxHapi {
   handleAuthChanged(_firebaseUser) async {
     //get user data from firestore
     if (_firebaseUser?.uid != null) {
+      s.setUidKey(_firebaseUser!.uid);
       firestoreUser.bindStream(streamFirestoreUser());
       await isAdmin();
     }
 
+    /// TODO need to detect if user is deleted/banned/not found, etc. here.
     if (_firebaseUser == null) {
       if (OnboardingController.to.isOnboarded()) {
         Get.offAll(() => SignInUI());
@@ -138,7 +140,7 @@ class AuthController extends GetxHapi {
 
   /// Streams the firestore user from the firestore collection
   Stream<UserModel> streamFirestoreUser() {
-    print('streamFirestoreUser()');
+    l.v('streamFirestoreUser()');
 
     return _db
         .doc('/user/${firebaseUser.value!.uid}')
@@ -183,8 +185,8 @@ class AuthController extends GetxHapi {
               email: emailController.text.trim(),
               password: passwordController.text)
           .then((result) async {
-        print('uID: ' + result.user!.uid.toString());
-        print('email: ' + result.user!.email.toString());
+        l.d('uID: ' + result.user!.uid.toString());
+        l.d('email: ' + result.user!.email.toString());
         //get photo url from gravatar if user has one
         Gravatar gravatar = Gravatar(emailController.text.trim());
         String gravatarUrl = gravatar.imageUrl(
@@ -287,7 +289,7 @@ class AuthController extends GetxHapi {
     }
 
     // I don't expect to see these
-    print('Strange/unexpected error: $authError');
+    l.e('Strange/unexpected error: $authError');
     if (error.contains("user-not-found")) {
       return 'auth.signInError'.tr;
     } else if (error.contains("too-many-requests")) {
@@ -309,7 +311,7 @@ class AuthController extends GetxHapi {
 
   /// create the firestore user in users collection
   void _createUserFirestore(UserModel user, User _firebaseUser) {
-    s.write('lastSignedInEmail', user.email);
+    s.wr('lastSignedInEmail', user.email);
     _db.doc('/user/${_firebaseUser.uid}').set(user.toJson());
     update();
   }
@@ -353,6 +355,7 @@ class AuthController extends GetxHapi {
 
   /// Sign out
   Future<void> signOut() {
+    s.setUidKey(''); // clear for next user
     nameController.clear();
     //emailController.clear();
     getLastSignedInEmail(); // show it in case user forgets what email they used

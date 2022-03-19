@@ -1,5 +1,6 @@
 import 'package:hapi/helpers/cord.dart';
 import 'package:hapi/helpers/date_utils.dart';
+import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/astronomical/astronomical.dart';
 import 'package:hapi/quest/active/athan/astronomical/solar_time.dart';
@@ -54,7 +55,7 @@ class TimeOfDay {
     this.tzLoc,
     this.precision,
   ) {
-    CalculationMethod method = params.method;
+    CalcMethodParams method = params.method;
 
     SolarTime solarTime = SolarTime(date, cord);
 
@@ -130,8 +131,8 @@ class TimeOfDay {
       fajrTomorrowTime = safeFajr(dateTomorrow);
     }
 
-    if (method.ishaInterval > 0) {
-      ishaTime = dateByAddingMinutes(sunsetTime, method.ishaInterval);
+    if (method.ishaIntervalMins > 0) {
+      ishaTime = dateByAddingMinutes(sunsetTime, method.ishaIntervalMins);
       // ishaYesterdayTime = dateByAddingMinutes(
       //     sunsetTimeYesteray, calculationParameters.ishaInterval);
     } else {
@@ -172,9 +173,9 @@ class TimeOfDay {
     }
 
     maghribTime = sunsetTime;
-    if (method.maghribAngle != null) {
+    if (method.maghribAngle > 0.0) {
       DateTime angleBasedMaghrib =
-          TimeComponent(solarTime.hourAngle(-1 * method.maghribAngle!, true))
+          TimeComponent(solarTime.hourAngle(-1 * method.maghribAngle, true))
               .utcDate(date.year, date.month, date.day);
       if (sunsetTime.isBefore(angleBasedMaghrib) &&
           ishaTime.isAfter(angleBasedMaghrib)) {
@@ -226,25 +227,25 @@ class TimeOfDay {
         precision: precision);
 
     // Convenience Utilities
-    print('***** Current Local Time: $date');
-    print('***** Time Zone: "${date.timeZoneName}"');
+    l.v('***** Current Local Time: $date');
+    l.v('***** Time Zone: "${date.timeZoneName}"');
 
-    print('***** Times Of Day:');
-    //print('isha yesterday:   $_ishaYesterday');
-    print('fajr:             $_fajr_01');
-    print('sunrise:          $_kerahatAdkharSunrise_02');
-    print('ishrak:           $_ishraqPrayer_03');
-    print('duha:             $_duhaPrayer_04');
-    print('zawal:            $_kerahatAdkharZawal_05');
-    print('dhuhr:            $_dhuhr_06');
-    print('asr:              $_asr_07');
-    print('sunset:           $_kerahatAdkharSunSetting_08');
-    print('maghrib:          $_maghrib_09');
-    print('isha:             $_isha_10');
-    print('middleOfight:     $_middleOfNight_11');
-    print('last3rdOfNight:   $_last3rdOfNight_12');
-    print('fajr tomorrow:    $_fajrTomorrow_13');
-    print('sunrise tomorrow: $_sunriseTomorrow_14');
+    l.v('***** Times Of Day:');
+    //v('isha yesterday:   $_ishaYesterday');
+    l.v('fajr:             $_fajr_01');
+    l.v('sunrise:          $_kerahatAdkharSunrise_02');
+    l.v('ishrak:           $_ishraqPrayer_03');
+    l.v('duha:             $_duhaPrayer_04');
+    l.v('zawal:            $_kerahatAdkharZawal_05');
+    l.v('dhuhr:            $_dhuhr_06');
+    l.v('asr:              $_asr_07');
+    l.v('sunset:           $_kerahatAdkharSunSetting_08');
+    l.v('maghrib:          $_maghrib_09');
+    l.v('isha:             $_isha_10');
+    l.v('middleOfight:     $_middleOfNight_11');
+    l.v('last3rdOfNight:   $_last3rdOfNight_12');
+    l.v('fajr tomorrow:    $_fajrTomorrow_13');
+    l.v('sunrise tomorrow: $_sunriseTomorrow_14');
   }
 
   DateTime getTime(DateTime date, int adjustment) {
@@ -286,7 +287,7 @@ class TimeOfDay {
     } else if (tod == TOD.Sunrise_Tomorrow) {
       return _sunriseTomorrow_14;
     } else {
-      print('TimeOfDay:getZamanTime: Error unknown zaman: "$tod"');
+      l.e('TimeOfDay:getZamanTime: unknown zaman: "$tod"');
       return _dhuhr_06;
     }
   }

@@ -5,7 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/helpers/cord.dart';
-import 'package:hapi/main.dart';
+import 'package:hapi/main_controller.dart';
 
 // TODO finish setup geolocator for all platforms: https://pub.dev/packages/geolocator
 // TODO currently used high for accuracy and 1000 meter filter, test all platforms
@@ -46,20 +46,20 @@ class LocationController extends GetxHapi {
   Cord? _lastKnownCord;
   set lastKnownCord(Cord? cord) {
     if (cord != null) {
-      s.write('lastKnownCordLat', cord.latitude);
-      s.write('lastKnownCordLng', cord.longitude);
+      s.wr('lastKnownCordLat', cord.latitude);
+      s.wr('lastKnownCordLng', cord.longitude);
       _lastKnownCord = cord;
     }
   }
 
   Cord get lastKnownCord {
     if (_lastKnownCord == null) {
-      if (s.read('lastKnownCordLat') != null &&
-          s.read('lastKnownCordLng') != null) {
-        return Cord(s.read('lastKnownCordLat'), s.read('lastKnownCordLng'));
+      if (s.rd('lastKnownCordLat') != null &&
+          s.rd('lastKnownCordLng') != null) {
+        return Cord(s.rd('lastKnownCordLat'), s.rd('lastKnownCordLng'));
       } else {
-        print(
-            'get lastKnownCord using default cord'); // TODO show map to choose?
+        // TODO show map to choose?
+        l.e('get lastKnownCord using default cord');
         return Cord(36.950663449472, -122.05716133118);
       }
     }
@@ -134,9 +134,9 @@ class LocationController extends GetxHapi {
         Geolocator.getPositionStream(locationSettings: _locationSettings)
             .listen((Position? position) {
       if (position == null) {
-        print('STREAM UPDATE: _positionStream: Unknown GPS position');
+        l.e('STREAM UPDATE: _positionStream: Unknown GPS position');
       } else {
-        print('STREAM UPDATE: _positionStream: $position');
+        l.i('STREAM UPDATE: _positionStream: $position');
       }
       _updatePosition(position);
     });
@@ -146,7 +146,7 @@ class LocationController extends GetxHapi {
     // can be listened to, to receive location service status updates.
     _serviceStatusStream =
         Geolocator.getServiceStatusStream().listen((ServiceStatus status) {
-      print('STREAM UPDATE: _serviceStatusStream=$status');
+      l.i('STREAM UPDATE: _serviceStatusStream=$status');
       _updatePosition(null);
     });
   }
@@ -156,8 +156,7 @@ class LocationController extends GetxHapi {
     lastKnownCord = Cord.fromPosition(position!);
     _qiblaDirection =
         LocationController.to.getQiblaBearing(lastKnownCord); // Qibla Direction
-    print('***** Qibla Direction:');
-    print('qibla bearing: $_qiblaDirection');
+    l.i('qibla bearing: $_qiblaDirection');
   }
 
   /// Determine the current position of the device.

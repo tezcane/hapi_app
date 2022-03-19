@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:hapi/getx_hapi.dart';
-import 'package:hapi/main.dart';
+import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/tod.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
@@ -243,9 +243,9 @@ class ActiveQuestsAjrController extends GetxHapi {
   void onInit() {
     super.onInit();
 
-    _questsDone.value = s.read('questsDone') ?? 0;
-    _questsSkip.value = s.read('questsSkip') ?? 0;
-    _questsMiss.value = s.read('questsMiss') ?? 0;
+    _questsDone.value = s.rd('questsDone') ?? 0;
+    _questsSkip.value = s.rd('questsSkip') ?? 0;
+    _questsMiss.value = s.rd('questsMiss') ?? 0;
 
     initCurrQuest();
 
@@ -253,12 +253,11 @@ class ActiveQuestsAjrController extends GetxHapi {
   }
 
   void printBinary(int input) {
-    print(input.toRadixString(2));
+    l.v(input.toRadixString(2));
   }
 
   printBinaryAll() {
-    print(
-        'questsDone=${_questsDone.value}, questsSkip=${_questsSkip.value}, questsMiss=${_questsMiss.value}, questsAll=${questsAll()}:');
+    l.v('questsDone=${_questsDone.value}, questsSkip=${_questsSkip.value}, questsMiss=${_questsMiss.value}, questsAll=${questsAll()}:');
     printBinary(_questsDone.value);
     printBinary(_questsSkip.value);
     printBinary(_questsMiss.value);
@@ -270,8 +269,7 @@ class ActiveQuestsAjrController extends GetxHapi {
 
     // No internet needed to init, but we put a back off just in case:
     while (ActiveQuestsController.to.tod == null) {
-      print(
-          'ActiveQuestsAjrController.initCurrQuest: not ready, try again after sleeping $sleepBackoffSecs Secs...');
+      l.w('ActiveQuestsAjrController.initCurrQuest: not ready, try again after sleeping $sleepBackoffSecs Secs...');
       await Future.delayed(Duration(seconds: sleepBackoffSecs));
       if (sleepBackoffSecs < 4) {
         sleepBackoffSecs++;
@@ -280,7 +278,7 @@ class ActiveQuestsAjrController extends GetxHapi {
 
     for (QUEST quest in QUEST.values) {
       if (quest.index == ZamanController.to.currTOD.getFirstQuest().index) {
-        print('Stopping init: $quest = ${_questsMiss.value}');
+        l.i('Stopping init: $quest = ${_questsMiss.value}');
         break;
       }
 
@@ -312,9 +310,9 @@ class ActiveQuestsAjrController extends GetxHapi {
   int questsAll() => _questsDone.value | _questsSkip.value | _questsMiss.value;
 
   void setDone(QUEST quest) {
-    print('');
-    print('');
-    print('setDone: $quest (index=${quest.index}) = ${_questsMiss.value}');
+    l.v('');
+    l.v('');
+    l.v('setDone: $quest (index=${quest.index}) = ${_questsMiss.value}');
     printBinaryAll();
     _questsDone.value |= 1 << quest.index;
     ActiveQuestsController.to.update(); // refresh UI
@@ -322,9 +320,9 @@ class ActiveQuestsAjrController extends GetxHapi {
   }
 
   void setSkip(QUEST quest) {
-    print('');
-    print('');
-    print('setSkip: $quest (index=${quest.index}) = ${_questsMiss.value}');
+    l.v('');
+    l.v('');
+    l.v('setSkip: $quest (index=${quest.index}) = ${_questsMiss.value}');
     printBinaryAll();
     _questsSkip.value |= 1 << quest.index;
     ActiveQuestsController.to.update(); // refresh UI
@@ -332,9 +330,9 @@ class ActiveQuestsAjrController extends GetxHapi {
   }
 
   void setMiss(QUEST quest) {
-    print('');
-    print('');
-    print('setMiss: $quest (index=${quest.index}) = ${_questsMiss.value}');
+    l.v('');
+    l.v('');
+    l.v('setMiss: $quest (index=${quest.index}) = ${_questsMiss.value}');
     printBinaryAll();
     _questsMiss.value |= 1 << quest.index;
     ActiveQuestsController.to.update(); // refresh UI
@@ -342,9 +340,9 @@ class ActiveQuestsAjrController extends GetxHapi {
   }
 
   void clearQuest(QUEST quest) {
-    print('');
-    print('');
-    print('clearQuest: $quest (index=${quest.index}) = ${_questsMiss.value}');
+    l.v('');
+    l.v('');
+    l.v('clearQuest: $quest (index=${quest.index}) = ${_questsMiss.value}');
     printBinaryAll();
     _questsDone.value &= ~(1 << quest.index);
     _questsSkip.value &= ~(1 << quest.index);

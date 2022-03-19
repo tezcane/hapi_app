@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/getx_hapi.dart';
-import 'package:hapi/main.dart';
+import 'package:hapi/main_controller.dart';
 
 // https://gist.github.com/RodBr/37310335c6639f486bb3c8a628052405
 // https://medium.com/swlh/flutter-dynamic-themes-in-3-lines-c3b375f292e3
@@ -20,7 +20,7 @@ class ThemeController extends GetxHapi {
     theme.value = value;
     _themeMode = getThemeModeFromString(value);
     Get.changeThemeMode(_themeMode);
-    await s.write('theme', value);
+    await s.wr('theme', value);
     update();
   }
 
@@ -33,7 +33,7 @@ class ThemeController extends GetxHapi {
   }
 
   getThemeModeFromStore() async {
-    String _themeString = s.read('theme') ?? 'dark';
+    String _themeString = s.rd('theme') ?? 'dark';
     setThemeMode(_themeString);
   }
 

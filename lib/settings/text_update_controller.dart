@@ -1,4 +1,5 @@
 import 'package:hapi/getx_hapi.dart';
+import 'package:hapi/main_controller.dart';
 
 /// Used to detect things like profile text updates on the UI so we can disable
 /// UI elements like update to server, when not needed.
@@ -14,7 +15,7 @@ class TextUpdateController extends GetxHapi {
     // Only notify UI of update if the value toggles
     if (_isTextSame != value) {
       _isTextSame = value;
-      print('ProfileUpdateController isTextSame=$isTextSame');
+      l.d('ProfileUpdateController isTextSame=$isTextSame');
       update();
     }
   }
