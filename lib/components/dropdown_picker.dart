@@ -8,10 +8,11 @@ import 'package:flutter/material.dart';
 ///              onChanged: (value) => print('changed'),
 /// ),
 class DropdownPicker extends StatelessWidget {
-  const DropdownPicker(
-      {required this.menuOptions,
-      required this.selectedOption,
-      required this.onChanged});
+  const DropdownPicker({
+    required this.menuOptions,
+    required this.selectedOption,
+    required this.onChanged,
+  });
 
   final List<dynamic> menuOptions;
   final String selectedOption;

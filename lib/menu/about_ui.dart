@@ -1,7 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/settings/language/language_list_ui.dart';
@@ -84,9 +83,9 @@ class AboutUI extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20.0),
-                LanguageListUI(),
-                ThemeListUI(),
-                const SizedBox(height: 24.0),
+                SizedBox(height: 55, child: LanguageListUI()),
+                SizedBox(height: 55, child: ThemeListUI()),
+                const SizedBox(height: 20.0),
                 Center(
                   child: Hero(
                     tag: 'UPDATE PROFILE',

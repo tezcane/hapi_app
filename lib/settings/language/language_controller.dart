@@ -27,7 +27,7 @@ final List<SettingsOptionModel> languageOptions = [
 class LanguageController extends GetxController {
   static LanguageController get to => Get.find();
 
-  static const String defaultLanguage = 'en';
+  final String defaultLanguage = 'en';
 
   String _currentLanguage = '';
   String get currentLanguage => _currentLanguage;
@@ -50,12 +50,13 @@ class LanguageController extends GetxController {
     String currentLanguage = _currentLanguageStore;
     if (currentLanguage == '') {
       String deviceLanguage = ui.window.locale.toString();
+      l.d('setInitialLocalLanguage: ui.window.locale="$deviceLanguage"');
+
       //only get 1st 2 characters
       if (deviceLanguage.length > 2) {
         l.w('Device language "$deviceLanguage" is longer than 2 characters, shortening it.');
         deviceLanguage = deviceLanguage.substring(0, 2);
       }
-      l.d('setInitialLocalLanguage: ui.window.locale="${ui.window.locale.toString()}"');
       updateLanguage(deviceLanguage);
     } else {
       updateLanguage(currentLanguage);
@@ -74,13 +75,28 @@ class LanguageController extends GetxController {
     return Get.deviceLocale;
   }
 
+  bool isNotSupportedLanguage(String language) {
+    for (SettingsOptionModel optionModel in languageOptions) {
+      if (optionModel.key == language) return false; // language is supported
+    }
+    return true; // not found, language is no supported
+  }
+
   /// updates the language stored
-  Future<void> updateLanguage(String value) async {
-    await s.wr('language', value);
-    _currentLanguage = value;
+  Future<void> updateLanguage(String newLanguage) async {
+    if (isNotSupportedLanguage(newLanguage)) {
+      l.e('The language "$newLanguage", is not supported, using default $defaultLanguage');
+      newLanguage = defaultLanguage;
+    }
+
+    await s.wr('language', newLanguage);
+    _currentLanguage = newLanguage;
+
+    // TODO what does this do, needed/wanted?
     if (getLocale != null) {
       Get.updateLocale(getLocale!);
     }
+
     update();
   }
 }

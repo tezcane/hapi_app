@@ -7,16 +7,20 @@ class LanguageListUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<LanguageController>(
-      builder: (c) => ListTile(
-        title: Text('settings.language'.tr),
-        trailing: DropdownPicker(
-          menuOptions: languageOptions,
-          selectedOption: c.currentLanguage,
-          onChanged: (value) async {
-            await c.updateLanguage(value!);
-            Get.forceAppUpdate();
-          },
-        ),
+      builder: (c) => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text('settings.language'.tr),
+          DropdownPicker(
+            menuOptions: languageOptions,
+            selectedOption: c.currentLanguage,
+            onChanged: (value) async {
+              await c.updateLanguage(value!);
+              Get.forceAppUpdate();
+            },
+          ),
+        ],
       ),
     );
   }
