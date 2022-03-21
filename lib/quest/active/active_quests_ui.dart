@@ -14,8 +14,6 @@ import 'package:hapi/settings/theme/app_themes.dart';
 
 class ActiveQuestsUI extends StatelessWidget {
   static const TS tsAppBar = TS(Colors.white70);
-  static const TS tsAppBarTime =
-      TS(Colors.white70, fontWeight: FontWeight.normal);
 
   // TODO don't use white for all, Theme.of(context).textTheme.headline6!:
   static const TS tsFard = TS(Colors.red);
@@ -37,7 +35,7 @@ class ActiveQuestsUI extends StatelessWidget {
                   borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                   child: Container(
                     color: Colors.grey.shade800.withOpacity(.20),
-                    child: T(c.timeToNextZaman, tsAppBarTime, width: 85),
+                    child: T(c.timeToNextZaman, tsAppBar, width: 85),
                   ),
                 );
                 // return Row(
@@ -327,6 +325,8 @@ class ActiveQuestsUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ActiveQuestsController>(builder: (c) {
+      if (c.tod == null) return Container(); // not initialized yet
+
       double w = MediaQuery.of(context).size.width;
 
       bool isIshaDone = ActiveQuestsAjrController.to.isIshaIbadahComplete;
