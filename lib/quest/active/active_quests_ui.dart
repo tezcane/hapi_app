@@ -159,7 +159,7 @@ class ActiveQuestsUI extends StatelessWidget {
   Widget rowDuha(ActiveQuestsController c, bool isActive, double screenWidth) {
     TOD tod = TOD.Duha;
 
-    double w = screenWidth / 6; // -4 for some padding
+    double w = (screenWidth / 6) - 10; // - 10 because too big on screen
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -290,7 +290,7 @@ class ActiveQuestsUI extends StatelessWidget {
 
   /// Note: returns GetBuilder since has FlipCard()
   Widget rowLayl(TOD tod, bool isActive, double width) {
-    double w = (width / 6);
+    double w = (width / 6) - 10; // - 10 because too big on screen
 
     return Row(
       children: [
@@ -302,7 +302,7 @@ class ActiveQuestsUI extends StatelessWidget {
         _Cell(T('Sleep', tsText, width: w), isActive, tod, QUEST.LAYL_SLEEP),
 
         // Tahhajud and Witr after waking up
-        _Cell(T('Tahajjud', tsText, width: w), isActive, tod,
+        _Cell(T('Tahajjud', tsText, width: width / 6), isActive, tod,
             QUEST.LAYL_TAHAJJUD),
         _Cell(T('Witr', tsText, width: w), isActive, tod, QUEST.LAYL_WITR),
       ],
@@ -493,6 +493,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 class _Sliv extends StatelessWidget {
   const _Sliv(this.pinned, this.widget);
 
+  static const double sliverHeight = 32.0;
   final bool pinned;
   final Widget widget;
 
@@ -502,8 +503,8 @@ class _Sliv extends StatelessWidget {
       floating: false,
       pinned: pinned,
       delegate: _SliverAppBarDelegate(
-        minHeight: 32,
-        maxHeight: 32,
+        minHeight: sliverHeight,
+        maxHeight: sliverHeight,
         child: Container(
           decoration: BoxDecoration(
             color: Theme.of(context).backgroundColor,
@@ -632,24 +633,31 @@ class _SunCell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            _sunIcon,
-            const SizedBox(width: 3),
-            Text(
-              ActiveQuestsUI.getTimeRange(_time1, _time2),
-              style: _tsAdhkar,
-            ),
-          ],
-        ),
-        if (_label != '') Text(_label, style: _tsAdhkar),
-      ],
+    final double w = MediaQuery.of(context).size.width;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 3),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _sunIcon,
+          Column(
+            children: [
+              T(
+                _label,
+                _tsAdhkar,
+                width: (w / 3) - 38, // 38= 30 icon + 6 L/R padding + 2 selected
+                height: (_Sliv.sliverHeight / 2) - 1, // /2 sliv h + 1 selected
+              ),
+              T(
+                ActiveQuestsUI.getTimeRange(_time1, _time2),
+                _tsAdhkar,
+                width: (w / 3) - 38, // /3 = 1/3 screen (2 of 6 cells)
+                height: _Sliv.sliverHeight / 2 - 1, // /2 sliv h + 1 selected
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
@@ -659,22 +667,23 @@ class _IconSunrise extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Transform.rotate(angle: 4.71239, child: _IconSun()),
+        _IconSun(),
         Positioned(
-          top: 9,
-          left: 0,
+          top: _Sliv.sliverHeight / 2,
           child: Container(
             color: Theme.of(context).backgroundColor,
-            height: 10,
-            width: 20,
+            height: _Sliv.sliverHeight / 2,
+            width: 30,
           ),
         ),
         const Positioned(
-          top: 5.5,
-          left: .9,
-          child: Icon(Icons.arrow_drop_up_outlined,
-              color: Colors.white38, size: 16),
-        )
+          top: (_Sliv.sliverHeight / 4) + 2,
+          child: Icon(
+            Icons.arrow_drop_up_outlined,
+            color: Colors.white38,
+            size: 30,
+          ),
+        ),
       ],
     );
   }
@@ -685,22 +694,23 @@ class _IconSunset extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Transform.rotate(angle: 4.71239, child: _IconSun()),
+        _IconSun(),
         Positioned(
-          top: 9,
-          left: 0,
+          top: _Sliv.sliverHeight / 2,
           child: Container(
             color: Theme.of(context).backgroundColor,
-            height: 10,
-            width: 20,
+            height: _Sliv.sliverHeight / 2,
+            width: 30,
           ),
         ),
         const Positioned(
-          top: 5.5,
-          left: .9,
-          child: Icon(Icons.arrow_drop_down_outlined,
-              color: Colors.white38, size: 16),
-        )
+          top: (_Sliv.sliverHeight / 4) + 2,
+          child: Icon(
+            Icons.arrow_drop_down_outlined,
+            color: Colors.white38,
+            size: 30,
+          ),
+        ),
       ],
     );
   }
@@ -711,8 +721,8 @@ class _IconSun extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Icon(
       Icons.brightness_7_outlined,
-      color: Colors.orange,
-      size: 18,
+      color: Colors.orangeAccent,
+      size: 30,
     );
   }
 }
@@ -723,7 +733,7 @@ class _IconSunBright extends StatelessWidget {
     return const Icon(
       Icons.brightness_7_outlined,
       color: Colors.yellow,
-      size: 18,
+      size: 30,
     );
   }
 }
