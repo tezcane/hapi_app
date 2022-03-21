@@ -72,6 +72,7 @@ class MainController extends GetxHapi {
   }
 }
 
+/// "l" short for Log, use for all logging in app.
 Log l = Log();
 
 /// Log is used to globally write logs. TODO write logs to cloud
@@ -95,6 +96,7 @@ class Log {
   v(String msg) => {if (ll > llV5) debugPrint('HAPI_VRBS: $msg')};
 }
 
+/// "s" short for Storage, use for all Storage access in app.
 Storage s = Storage();
 
 /// TODO echo these settings to db?
@@ -137,4 +139,46 @@ class Storage {
     l.d('storage: s.wr($key)="$value"');
     return box.write(key, value);
   }
+}
+
+/// "T"/"t" short for Text, use to translate or fit text in UI.
+class T extends StatelessWidget {
+  const T(
+    this.t,
+    this.style, {
+    this.alignment = Alignment.center,
+    this.width = 80,
+    this.height = 30,
+  });
+
+  final String t;
+  final TextStyle style;
+  final Alignment alignment;
+  final double width;
+  final double height;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: width,
+      height: height,
+      child: FittedBox(
+        fit: BoxFit.contain, // BoxFit.fitHeight,
+        alignment: alignment, // use to align text,
+        child: Text(
+          t.tr,
+          style: style,
+          //textAlign: textAlign,
+        ),
+      ),
+    );
+  }
+}
+
+/// TS = TextStyle - helper class to make init code shorter
+class TS extends TextStyle {
+  const TS(
+    Color color, {
+    FontWeight fontWeight = FontWeight.normal,
+  }) : super(color: color, fontWeight: fontWeight);
 }

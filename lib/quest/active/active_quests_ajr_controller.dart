@@ -230,15 +230,6 @@ class ActiveQuestsAjrController extends GetxHapi {
   int _questsSkip = 0;
   int _questsMiss = 0;
 
-  bool _isIshaIbadahComplete = false;
-
-  bool get isIshaIbadahComplete => _isIshaIbadahComplete;
-  set isIshaIbadahComplete(bool value) {
-    _isIshaIbadahComplete = value;
-    //s.write('showSunnahKeys', value);
-    update();
-  }
-
   @override
   void onInit() {
     super.onInit();
@@ -361,6 +352,16 @@ class ActiveQuestsAjrController extends GetxHapi {
   bool isDone(QUEST q) => (_questsDone >> q.index) & 1 == 1;
   bool isSkip(QUEST q) => (_questsSkip >> q.index) & 1 == 1;
   bool isMiss(QUEST q) => (_questsMiss >> q.index) & 1 == 1;
+
+  isQuestComplete(QUEST q) => isDone(q) || isSkip(q) || isMiss(q);
+
+  bool get isIshaIbadahComplete =>
+      isQuestComplete(QUEST.ISHA_NAFLB) &&
+      isQuestComplete(QUEST.ISHA_FARD) &&
+      isQuestComplete(QUEST.ISHA_MUAKA) &&
+      isQuestComplete(QUEST.ISHA_NAFLA) &&
+      isQuestComplete(QUEST.ISHA_THIKR) &&
+      isQuestComplete(QUEST.ISHA_DUA);
 }
 
 // enum QUEST_TYPE {

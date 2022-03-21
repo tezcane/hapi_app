@@ -10,7 +10,7 @@ class ActiveQuestActionUI extends StatelessWidget {
   late final TOD _tod; // TODO use
   late final QUEST _quest;
   late final Widget _callerWidget;
-  late final bool _pinned;
+  late final bool _isActive;
 
   bool skipEnabled = true;
   bool doneEnabled = true;
@@ -23,7 +23,7 @@ class ActiveQuestActionUI extends StatelessWidget {
     _tod = Get.arguments['tod'];
     _quest = Get.arguments['quest'];
     _callerWidget = Get.arguments['widget'];
-    _pinned = Get.arguments['pinned'];
+    _isActive = Get.arguments['isActive'];
 
     // not allowed to skip fard
     if (_quest.isFard()) {
@@ -58,7 +58,7 @@ class ActiveQuestActionUI extends StatelessWidget {
         // if all row quests done, don't allow next row to be started yet
       } else {
         TOD currTOD = ZamanController.to.currTOD;
-        if ((!_pinned && !isPreviousQuest) ||
+        if ((!_isActive && !isPreviousQuest) ||
             // For Adhkhar/Duha times we don't allow user to start task until
             // the quest's time comes in:
             (_quest.isQuestCellTimeBound() &&

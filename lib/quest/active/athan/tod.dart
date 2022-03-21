@@ -12,8 +12,8 @@ enum TOD {
   Kerahat_Sun_Setting, // begin sunset (kerahat 3), also Evening Adhkar time
   Maghrib,
   Isha,
-  Middle_of_Night,
-  Last_1__3_of_Night,
+  Night__2,
+  Night__3,
   Fajr_Tomorrow,
   Sunrise_Tomorrow,
 }
@@ -48,8 +48,8 @@ extension EnumUtil on TOD {
         return 'MAGHRIB';
       case (TOD.Isha):
         return 'ISHA';
-      case (TOD.Middle_of_Night):
-      case (TOD.Last_1__3_of_Night):
+      case (TOD.Night__2):
+      case (TOD.Night__3):
       default:
         return 'LAYL';
     }
@@ -77,9 +77,9 @@ extension EnumUtil on TOD {
         return QUEST.MAGHRIB_FARD;
       case (TOD.Isha):
         return QUEST.ISHA_NAFLB;
-      case (TOD.Middle_of_Night):
+      case (TOD.Night__2):
         return QUEST.LAYL_QIYAM;
-      case (TOD.Last_1__3_of_Night):
+      case (TOD.Night__3):
         return QUEST.LAYL_QIYAM;
       default:
         return QUEST.LAYL_QIYAM;
@@ -108,9 +108,9 @@ extension EnumUtil on TOD {
         return QUEST.MAGHRIB_DUA;
       case (TOD.Isha):
         return QUEST.ISHA_DUA;
-      case (TOD.Middle_of_Night):
+      case (TOD.Night__2):
         return QUEST.LAYL_WITR;
-      case (TOD.Last_1__3_of_Night):
+      case (TOD.Night__3):
         return QUEST.LAYL_WITR;
       default:
         return QUEST.LAYL_WITR;

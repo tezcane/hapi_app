@@ -10,6 +10,7 @@ curr - Current
 dis  - Disabled  
 dn   - down (use with up: up/dn)  
 e    - exception/error  
+h    - height (use with width/w)  
 idx  - Index  
 L    - Left (use with Left/Right->L/R)  
 lat  - latitude  
@@ -33,6 +34,7 @@ ts   - text style
 thjd - Tahajjud  
 tz   - time zone  
 trkh - Tarikh  
+w    - width (use with height/h)  
 
 ## Islamic GLOSSARY  
 

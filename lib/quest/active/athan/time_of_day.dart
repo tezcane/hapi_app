@@ -279,9 +279,9 @@ class TimeOfDay {
       return _maghrib_09;
     } else if (tod == TOD.Isha) {
       return _isha_10;
-    } else if (tod == TOD.Middle_of_Night) {
+    } else if (tod == TOD.Night__2) {
       return _middleOfNight_11;
-    } else if (tod == TOD.Last_1__3_of_Night) {
+    } else if (tod == TOD.Night__3) {
       return _last3rdOfNight_12;
     } else if (tod == TOD.Fajr_Tomorrow) {
       return _fajrTomorrow_13;
@@ -294,20 +294,16 @@ class TimeOfDay {
   }
 
   TOD getCurrZaman(DateTime date) {
-    final ActiveQuestsController cQstA = ActiveQuestsController.to;
+    final ActiveQuestsController c = ActiveQuestsController.to;
 
     if (date.isAfter(_sunriseTomorrow_14)) {
       return TOD.Sunrise_Tomorrow;
     } else if (date.isAfter(_fajrTomorrow_13)) {
       return TOD.Fajr_Tomorrow;
-    } else if (cQstA.showSunnahLayl &&
-        cQstA.showLast3rdOfNight &&
-        date.isAfter(_last3rdOfNight_12)) {
-      return TOD.Last_1__3_of_Night;
-    } else if (cQstA.showSunnahLayl &&
-        !cQstA.showLast3rdOfNight &&
-        date.isAfter(_middleOfNight_11)) {
-      return TOD.Middle_of_Night;
+    } else if (c.showLast3rdOfNight && date.isAfter(_last3rdOfNight_12)) {
+      return TOD.Night__3;
+    } else if (!c.showLast3rdOfNight && date.isAfter(_middleOfNight_11)) {
+      return TOD.Night__2;
     } else if (date.isAfter(_isha_10)) {
       return TOD.Isha;
     } else if (date.isAfter(_maghrib_09)) {
@@ -318,47 +314,35 @@ class TimeOfDay {
       return TOD.Asr;
     } else if (date.isAfter(_dhuhr_06)) {
       return TOD.Dhuhr;
-    } else if (cQstA.showSunnahDuha && date.isAfter(_kerahatAdkharZawal_05)) {
+    } else if (date.isAfter(_kerahatAdkharZawal_05)) {
       return TOD.Kerahat_Zawal;
-    } else if (cQstA.showSunnahDuha && date.isAfter(_duhaPrayer_04)) {
+    } else if (date.isAfter(_duhaPrayer_04)) {
       return TOD.Duha;
-    } else if (cQstA.showSunnahDuha && date.isAfter(_ishraqPrayer_03)) {
+    } else if (date.isAfter(_ishraqPrayer_03)) {
       return TOD.Ishraq;
-    } else if (cQstA.showSunnahDuha && date.isAfter(_kerahatAdkharSunrise_02)) {
+    } else if (date.isAfter(_kerahatAdkharSunrise_02)) {
       return TOD.Kerahat_Sunrise;
-    } else if (!cQstA.showSunnahDuha &&
-        date.isAfter(_kerahatAdkharSunrise_02)) {
-      // special case, duha hidden so show duha during this TODO test
-      return TOD.Duha;
-/*  } else if (date.isAfter(_fajr_01)) {
-      return Zaman.Fajr; */
+    } else if (date.isAfter(_fajr_01)) {
+      return TOD.Fajr;
     } else {
+      l.e('getCurrZaman $date is not after fajr');
       return TOD.Fajr;
     }
   }
 
   TOD getNextZaman(DateTime date) {
-    final ActiveQuestsController cQstA = ActiveQuestsController.to;
+    final ActiveQuestsController c = ActiveQuestsController.to;
 
     if (date.isAfter(_fajrTomorrow_13)) {
       return TOD.Sunrise_Tomorrow;
-    } else if (cQstA.showSunnahLayl &&
-        cQstA.showLast3rdOfNight &&
-        date.isAfter(_last3rdOfNight_12)) {
+    } else if (c.showLast3rdOfNight && date.isAfter(_last3rdOfNight_12)) {
       return TOD.Fajr_Tomorrow;
-    } else if (cQstA.showSunnahLayl &&
-        !cQstA.showLast3rdOfNight &&
-        date.isAfter(_middleOfNight_11)) {
+    } else if (!c.showLast3rdOfNight && date.isAfter(_middleOfNight_11)) {
       return TOD.Fajr_Tomorrow;
-    } else if (date.isAfter(_isha_10)) {
-      if (cQstA.showSunnahLayl) {
-        if (cQstA.showLast3rdOfNight) {
-          return TOD.Last_1__3_of_Night; // 1/3 of night mode
-        } else {
-          return TOD.Middle_of_Night; // middle of night mode
-        }
-      }
-      return TOD.Fajr_Tomorrow; // show layl off, just show next fajr
+    } else if (c.showLast3rdOfNight && date.isAfter(_isha_10)) {
+      return TOD.Night__3; // 1/3 of night mode
+    } else if (!c.showLast3rdOfNight && date.isAfter(_isha_10)) {
+      return TOD.Night__2; // middle of night mode
     } else if (date.isAfter(_maghrib_09)) {
       return TOD.Isha;
     } else if (date.isAfter(_kerahatAdkharSunSetting_08)) {
@@ -369,18 +353,16 @@ class TimeOfDay {
       return TOD.Asr;
     } else if (date.isAfter(_kerahatAdkharZawal_05)) {
       return TOD.Dhuhr;
-    } else if (cQstA.showSunnahDuha && date.isAfter(_duhaPrayer_04)) {
+    } else if (date.isAfter(_duhaPrayer_04)) {
       return TOD.Kerahat_Zawal;
-    } else if (cQstA.showSunnahDuha && date.isAfter(_ishraqPrayer_03)) {
+    } else if (date.isAfter(_ishraqPrayer_03)) {
       return TOD.Duha;
-    } else if (cQstA.showSunnahDuha && date.isAfter(_kerahatAdkharSunrise_02)) {
+    } else if (date.isAfter(_kerahatAdkharSunrise_02)) {
       return TOD.Ishraq;
-    } else if (!cQstA.showSunnahDuha &&
-        date.isAfter(_kerahatAdkharSunrise_02)) {
-      return TOD.Dhuhr;
-/*  } else if (date.isAfter(_fajr_01)) {
-      return Zaman.Sunrise; */
+    } else if (date.isAfter(_fajr_01)) {
+      return TOD.Kerahat_Sunrise;
     } else {
+      l.e('getNextZaman $date is not after fajr');
       return TOD.Kerahat_Sunrise;
     }
   }

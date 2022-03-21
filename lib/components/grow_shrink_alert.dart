@@ -5,7 +5,7 @@ class GrowShrinkAlert extends StatefulWidget {
   const GrowShrinkAlert(
     this.child, {
     this.cycleMs = 2000,
-    this.repeatCount = 5,
+    this.repeatCount = 3,
   });
 
   /// The Widget to apply the effect to.
@@ -41,8 +41,8 @@ class _GrowShrinkAlertState extends State<GrowShrinkAlert>
 
     _controller.addListener(() => setState(() {}));
 
-    // grow from scale 1 to 2x:
-    _grow = Tween(begin: 1.0, end: 2.0).animate(
+    // grow from scale 1 to 1.5x:
+    _grow = Tween(begin: 1.0, end: 1.5).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeIn),
     );
 
