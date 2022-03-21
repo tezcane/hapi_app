@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 
-/// Animation to show an alert to the user, grows and shrinks a widget
-class GrowShrinkAlert extends StatefulWidget {
-  const GrowShrinkAlert(
-    this.child, {
-    this.cycleMs = 2000,
-    this.repeatCount = 3,
-  });
+/// Animation to show an alert to the user, bounces a widget
+class BounceAlert extends StatefulWidget {
+  const BounceAlert(this.child, {this.cycleMs = 1500, this.repeatCount = 5});
 
   /// The Widget to apply the effect to.
   final Widget child;
 
-  /// The duration to grow then shrink again (1 full cycle).
+  /// The duration to bounce (1 full cycle).
   final int cycleMs;
 
   /// Number of times to repeat the animation, 0 for infinity.
@@ -19,14 +15,14 @@ class GrowShrinkAlert extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return _GrowShrinkAlertState();
+    return _BounceAlertState();
   }
 }
 
-class _GrowShrinkAlertState extends State<GrowShrinkAlert>
+class _BounceAlertState extends State<BounceAlert>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Animation _grow;
+  late Animation _animation;
 
   int cycledCount = 0;
 
@@ -42,8 +38,8 @@ class _GrowShrinkAlertState extends State<GrowShrinkAlert>
     _controller.addListener(() => setState(() {}));
 
     // grow from scale 1 to 1.5x:
-    _grow = Tween(begin: 1.0, end: 1.5).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeIn),
+    _animation = Tween(begin: 1.0, end: 1.5).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.bounceIn),
     );
 
     _controller.addStatusListener((AnimationStatus status) {
@@ -54,6 +50,8 @@ class _GrowShrinkAlertState extends State<GrowShrinkAlert>
         case (AnimationStatus.dismissed): // animation stopped at the beginning.
           if (++cycledCount < widget.repeatCount) {
             _controller.forward(); // shrink done, now grow
+          } else if (widget.repeatCount == 0) {
+            _controller.forward(); // infinity, go forever
           }
           break;
         default:
@@ -72,6 +70,6 @@ class _GrowShrinkAlertState extends State<GrowShrinkAlert>
 
   @override
   Widget build(BuildContext context) {
-    return Transform.scale(scale: _grow.value, child: widget.child);
+    return Transform.scale(scale: _animation.value, child: widget.child);
   }
 }

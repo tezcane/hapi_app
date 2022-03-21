@@ -3,7 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:get/get.dart';
-import 'package:hapi/components/grow_shrink_alert.dart';
+import 'package:hapi/components/alerts/bounce_alert.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
@@ -430,12 +430,12 @@ class _SalahHeader extends StatelessWidget {
           children: [
             T(
               ActiveQuestsUI.getTimeRange(salahTimeStart, null),
-              Theme.of(context).textTheme.headline6!.copyWith(
-                    color: isActive
-                        ? Theme.of(context).textTheme.headline6!.color
-                        : Colors.grey.shade500,
-                    fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-                  ),
+              TS(
+                isActive
+                    ? Theme.of(context).textTheme.headline6!.color!
+                    : Colors.grey.shade500,
+                fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+              ),
               alignment: Alignment.centerRight,
             ),
             const SizedBox(width: 10),
@@ -505,12 +505,7 @@ class _Sliv extends StatelessWidget {
       delegate: _SliverAppBarDelegate(
         minHeight: sliverHeight,
         maxHeight: sliverHeight,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Theme.of(context).backgroundColor,
-          ),
-          child: widget,
-        ),
+        child: widget,
       ),
     );
   }
@@ -533,12 +528,8 @@ class _Cell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _ActionWidget _actionWidget = _ActionWidget(
-      isActive: _isActive,
-      tod: _tod,
-      quest: _quest,
-      widget: _widget,
-    );
+    bool isCurrQuest =
+        _isActive && ActiveQuestsAjrController.to.isQuestActive(_quest);
 
     return Expanded(
       flex: flex,
@@ -550,73 +541,65 @@ class _Cell extends StatelessWidget {
           'widget': _widget,
           'isActive': _isActive,
         }),
-        child: Container(
-          decoration: BoxDecoration(
-            color:
-                _isActive && ActiveQuestsAjrController.to.isQuestActive(_quest)
-                    ? Theme.of(context).scaffoldBackgroundColor
-                    : Colors.transparent,
-            border: // selects container around the current active quest
-                _isActive && ActiveQuestsAjrController.to.isQuestActive(_quest)
-                    ? Border.all(color: AppThemes.logoText)
-                    : null,
-            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-          ),
-          child: Stack(
-            children: [
-              _actionWidget,
-              if (ActiveQuestsAjrController.to.isDone(_quest))
-                const Center(
-                  child:
-                      Icon(Icons.check_outlined, size: 30, color: Colors.green),
+        child: isCurrQuest
+            ? Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).scaffoldBackgroundColor,
+                  border: Border.all(color: AppThemes.logoText),
+                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                 ),
-              if (ActiveQuestsAjrController.to.isSkip(_quest))
-                const Center(
-                  child: Icon(Icons.redo_outlined, size: 20, color: Colors.red),
+                child: Stack(
+                  children: [
+                    Center(
+                      child: BounceAlert(
+                        _quest == QUEST.NONE
+                            ? _widget
+                            : Hero(tag: _quest, child: _widget),
+                      ),
+                    ),
+                    if (ActiveQuestsAjrController.to.isDone(_quest))
+                      const Center(
+                        child: Icon(Icons.check_outlined,
+                            size: 30, color: Colors.green),
+                      ),
+                    if (ActiveQuestsAjrController.to.isSkip(_quest))
+                      const Center(
+                        child: Icon(Icons.redo_outlined,
+                            size: 20, color: Colors.red),
+                      ),
+                    if (ActiveQuestsAjrController.to.isMiss(_quest))
+                      const Center(
+                        child: Icon(Icons.close_outlined,
+                            size: 20, color: Colors.red),
+                      ),
+                  ],
                 ),
-              if (ActiveQuestsAjrController.to.isMiss(_quest))
-                const Center(
-                  child:
-                      Icon(Icons.close_outlined, size: 20, color: Colors.red),
-                ),
-            ],
-          ),
-          //child: AvatarGlow(endRadius: 100.0, showTwoGlows: true, glowColor: const Color(0xFFFFD700), duration: Duration(milliseconds: 1000), //shape: CircleBorder(),child: HeartBeat(beatsPerMinute: 120,//radius: 100,child: Text('Duha',style: actionDuhaTextStyle,),),
-        ),
+              )
+            : Stack(
+                children: [
+                  Center(
+                    child: _quest == QUEST.NONE
+                        ? _widget
+                        : Hero(tag: _quest, child: _widget),
+                  ),
+                  if (ActiveQuestsAjrController.to.isDone(_quest))
+                    const Center(
+                      child: Icon(Icons.check_outlined,
+                          size: 30, color: Colors.green),
+                    ),
+                  if (ActiveQuestsAjrController.to.isSkip(_quest))
+                    const Center(
+                      child: Icon(Icons.redo_outlined,
+                          size: 20, color: Colors.red),
+                    ),
+                  if (ActiveQuestsAjrController.to.isMiss(_quest))
+                    const Center(
+                      child: Icon(Icons.close_outlined,
+                          size: 20, color: Colors.red),
+                    ),
+                ],
+              ),
       ),
-    );
-  }
-}
-
-class _ActionWidget extends StatelessWidget {
-  const _ActionWidget({
-    Key? key,
-    required bool isActive,
-    required TOD tod,
-    required QUEST quest,
-    required Widget widget,
-  })  : _isActive = isActive,
-        _tod = tod,
-        _quest = quest,
-        _widget = widget,
-        super(key: key);
-
-  final bool _isActive;
-  final TOD _tod;
-  final QUEST _quest;
-  final Widget _widget;
-
-  @override
-  Widget build(BuildContext context) {
-    GrowShrinkAlert? growShrinkAlert;
-    if (_isActive && ActiveQuestsAjrController.to.isQuestActive(_quest)) {
-      growShrinkAlert = GrowShrinkAlert(
-        _quest == QUEST.NONE ? _widget : Hero(tag: _quest, child: _widget),
-      );
-    }
-    return Center(
-      child: growShrinkAlert ??
-          (_quest == QUEST.NONE ? _widget : Hero(tag: _quest, child: _widget)),
     );
   }
 }
