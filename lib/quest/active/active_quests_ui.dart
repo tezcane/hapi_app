@@ -14,6 +14,8 @@ import 'package:hapi/quest/active/athan/z.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 
+import 'sun_mover/sun_mover_ui.dart';
+
 const Color tsTextColor = Colors.grey; // Sun Icon and Text
 const TS tsText = TS(tsTextColor); // Duha and Layl color
 
@@ -346,6 +348,9 @@ class ActiveQuestsUI extends StatelessWidget {
 
           /// Fillers:
           sliverSpaceHeaderFiller(context), // height of the page
+
+          /// Now show sun movement
+          const _SlivSunMover(),
         ],
       );
     });
@@ -454,6 +459,27 @@ class _Sliv extends StatelessWidget {
         minHeight: sliverHeight,
         maxHeight: sliverHeight,
         child: widget,
+      ),
+    );
+  }
+}
+
+/// Used to Fill in the gaps that were between the salah row cells. Also, adds a
+/// border for nicer looks and returns a SliverPersistentHeader.
+class _SlivSunMover extends StatelessWidget {
+  const _SlivSunMover();
+
+  @override
+  SliverPersistentHeader build(BuildContext context) {
+    final double sliverHeight = h(context) / 2; // TODO optimize
+
+    return SliverPersistentHeader(
+      floating: false,
+      pinned: true,
+      delegate: _SliverAppBarDelegate(
+        minHeight: sliverHeight,
+        maxHeight: sliverHeight,
+        child: SunMoverUI(),
       ),
     );
   }
