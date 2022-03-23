@@ -35,6 +35,7 @@ class FabNavPage extends StatelessWidget {
             tooltip: 'Hide keyboard',
             onPressed: () =>
                 SystemChannels.textInput.invokeMethod('TextInput.hide'),
+            heroTag: navPage, // needed so tag is not null causing hero conflict
             child: const Icon(Icons.arrow_back_outlined, size: 30),
           ),
           body: MenuNav(
