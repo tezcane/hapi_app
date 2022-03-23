@@ -7,10 +7,10 @@ import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
+import 'package:hapi/quest/active/athan/athan.dart';
 import 'package:hapi/quest/active/athan/calculation_method.dart';
 import 'package:hapi/quest/active/athan/calculation_params.dart';
-import 'package:hapi/quest/active/athan/time_of_day.dart';
-import 'package:hapi/quest/active/athan/tod.dart';
+import 'package:hapi/quest/active/athan/z.dart';
 import 'package:timezone/timezone.dart' show Location, TZDateTime;
 
 /// Controls Islamic Times Of Day, e.g. Fajr, Duha, Sunset/Maghrib, etc. that
@@ -18,19 +18,24 @@ import 'package:timezone/timezone.dart' show Location, TZDateTime;
 class ZamanController extends GetxHapi {
   static ZamanController get to => Get.find();
 
-  TOD _currTOD = TOD.Dhuhr;
-  TOD _nextTOD = TOD.Asr;
-  DateTime _currTODTime = DUMMY_TIME;
-  DateTime _nextTODTime = DUMMY_TIME;
-  TOD get currTOD => _currTOD;
-  TOD get nextTOD => _nextTOD;
-  DateTime get currTODTime => _currTODTime;
-  DateTime get nextTODTime => _nextTODTime;
+  Z _currZ = Z.Dhuhr;
+  Z _nextZ = Z.Asr;
+  Z get currZ => _currZ;
+  Z get nextZ => _nextZ;
 
-  String _nextZaman = '-';
-  String get timeToNextZaman => _nextZaman;
+  /// Next zaman Timestamp used to countdown to and update the UI accordingly.
+  DateTime _nextZTime = DUMMY_TIME;
+  String _timeToNextZaman = '-';
+  String get timeToNextZaman => _timeToNextZaman;
 
   bool forceSalahRecalculation = false;
+
+  Athan? _athan;
+  Athan? get athan => _athan;
+  // set athan(Athan? athan) {
+  //   _athan = athan;
+  //   update();
+  // }
 
   @override
   void onInit() {
@@ -40,7 +45,7 @@ class ZamanController extends GetxHapi {
   }
 
   initLocation() async {
-    await TimeController.to.reinitTime(); // TODO call before timer runs down?
+    await TimeController.to.initTime(); // TODO call before timer runs down?
 
     // TODO is this even needed, getTime gets local time of user?
     Location timezoneLoc = await TimeController.to.getTimezoneLocation();
@@ -63,15 +68,16 @@ class ZamanController extends GetxHapi {
       kerahatSunSettingMins = 20;
     }
 
+    // TODO give user a way to change:
+    //   HighLatitudeRule, SalahAdjust, and precision
     var params = CalculationParams(
       calcMethod.params,
       madhab,
       kerahatSunRisingMins,
       kerahatSunZawalMins,
       kerahatSunSettingMins,
-      HighLatitudeRule.MiddleOfTheNight, // TODO give user a way to change this
+      HighLatitudeRule.MiddleOfTheNight,
       {
-        // TODO give user a way to tune salah times
         SalahAdjust.fajr: 0,
         SalahAdjust.sunrise: 0,
         SalahAdjust.dhuhr: 0,
@@ -81,25 +87,25 @@ class ZamanController extends GetxHapi {
       },
     );
 
-    // TODO precision and salah settings
-    // TODO fix all this, date should change at FAJR_TOMORROW hit only?
-    TimeOfDay tod = TimeOfDay(
-        LocationController.to.lastKnownCord, date, params, timezoneLoc, false);
-    // TODO asdf fdsa should not need to do this since it's main area is now set a few lines down:
-    ActiveQuestsController.to.tod = tod;
+    bool precision = false;
+    Athan athan = Athan(
+      LocationController.to.lastKnownCord,
+      date,
+      params,
+      timezoneLoc,
+      precision,
+    );
+    _athan = athan;
+    _currZ = athan.getCurrZaman(date);
+    _nextZ = athan.getNextZaman(date);
 
-    _currTOD = tod.getCurrZaman(date);
-    _currTODTime = tod.getZamanTime(_currTOD);
-
-    _nextTOD = tod.getNextZaman(date);
-    _nextTODTime = tod.getZamanTime(_nextTOD);
-
-    l.d('_currTODTime: $_currTODTime ($_currTOD)');
-    l.d('_nextTODTime: $_nextTODTime ($_nextTOD)');
+    _nextZTime = athan.getZamanTime(_nextZ);
+    l.d('_currZTime: $_currZ');
+    l.d('_nextZTime: $_nextZ');
 
     // TODO asdf fdsa, this is broken: reset at Maghrib time:
     // reset day:
-    if (currTOD == TOD.Fajr_Tomorrow) {
+    if (currZ == Z.Fajr_Tomorrow) {
       ActiveQuestsAjrController.to.clearAllQuests();
     }
     // For next prayer/day, set any missed quests and do other quest setup:
@@ -114,7 +120,7 @@ class ZamanController extends GetxHapi {
     while (true) {
       await Future.delayed(const Duration(seconds: 1));
 
-      Duration timeToNextZaman = nextTODTime.difference(
+      Duration timeToNextZaman = _nextZTime.difference(
         TZDateTime.from(
           await TimeController.to.now(),
           TimeController.to.tzLoc,
@@ -133,10 +139,10 @@ class ZamanController extends GetxHapi {
           // print once a minute to show thread is alive
           l.i('Next Zaman Timer Minute Tick: ${timeToNextZaman.inSeconds} '
               'secs left (${timeToNextZaman.inSeconds / 60} minutes)');
-        } else if (timeToNextZaman.inSeconds % 300 == 0) {
-          TimeController.to.reinitTime(); // TODO check cheater every 5 mins?
+        } else if (timeToNextZaman.inSeconds % 3600 == 0) {
+          TimeController.to.initTime(); // TODO check cheater every hour?
         }
-        _nextZaman = _printHourMinuteSeconds(timeToNextZaman);
+        _timeToNextZaman = _printHourMinuteSeconds(timeToNextZaman);
         update();
       }
     }
@@ -147,5 +153,44 @@ class ZamanController extends GetxHapi {
     String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
     String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
     return '${duration.inHours}:$twoDigitMinutes:$twoDigitSeconds';
+  }
+
+  /// Iterate through given Zs for a given salah row, see if it matches curr Z.
+  bool isSalahRowActive(Z z) {
+    List<Z> zs;
+
+    switch (z) {
+      case Z.Fajr:
+        zs = [Z.Fajr, Z.Fajr_Tomorrow];
+        break;
+      case Z.Duha:
+        zs = [Z.Kerahat_Sunrise, Z.Ishraq, Z.Duha, Z.Kerahat_Zawal];
+        break;
+      case Z.Dhuhr:
+        zs = [Z.Dhuhr];
+        break;
+      case Z.Asr:
+        zs = [Z.Asr, Z.Kerahat_Sun_Setting];
+        break;
+      case Z.Maghrib:
+        zs = [Z.Maghrib];
+        break;
+      case Z.Isha:
+        zs = [Z.Isha];
+        break;
+      case Z.Night__3:
+        zs = [Z.Isha, Z.Night__2, Z.Night__3];
+        break;
+      default:
+        var e = 'Invalid Zaman ($z) given when in isSalahRowActive called';
+        l.e(e);
+        throw e;
+    }
+
+    for (Z z in zs) {
+      if (z == _currZ) return true; // time of day is active
+    }
+
+    return false; // this time of day is not active
   }
 }

@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
-import 'package:hapi/quest/active/athan/tod.dart';
+import 'package:hapi/quest/active/athan/z.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
 
 // ONLY NEW VALUES CAN BE ADDED TO PRESERVE ENUM IN DB:
@@ -87,136 +87,136 @@ extension EnumUtil on QUEST {
     }
   }
 
-  TOD getStartZaman() {
+  Z getStartZaman() {
     switch (this) {
       case (QUEST.FAJR_MUAKB):
       case (QUEST.FAJR_FARD):
       case (QUEST.FAJR_THIKR):
       case (QUEST.FAJR_DUA):
-        return TOD.Fajr;
+        return Z.Fajr;
       case (QUEST.KERAHAT_ADHKAR_SUNRISE):
-        return TOD.Kerahat_Sunrise;
+        return Z.Kerahat_Sunrise;
       case (QUEST.DUHA_ISHRAQ):
-        return TOD.Ishraq;
+        return Z.Ishraq;
       case (QUEST.DUHA_DUHA):
-        return TOD.Duha;
+        return Z.Duha;
       case (QUEST.KERAHAT_ADHKAR_ZAWAL):
-        return TOD.Kerahat_Zawal;
+        return Z.Kerahat_Zawal;
       case (QUEST.DHUHR_MUAKB):
       case (QUEST.DHUHR_FARD):
       case (QUEST.DHUHR_MUAKA):
       case (QUEST.DHUHR_NAFLA):
       case (QUEST.DHUHR_THIKR):
       case (QUEST.DHUHR_DUA):
-        return TOD.Dhuhr;
+        return Z.Dhuhr;
       case (QUEST.ASR_NAFLB):
       case (QUEST.ASR_FARD):
       case (QUEST.ASR_THIKR):
       case (QUEST.ASR_DUA):
-        return TOD.Asr;
+        return Z.Asr;
       case (QUEST.KERAHAT_ADHKAR_SUNSET):
-        return TOD.Kerahat_Sun_Setting;
+        return Z.Kerahat_Sun_Setting;
       case (QUEST.MAGHRIB_FARD):
       case (QUEST.MAGHRIB_MUAKA):
       case (QUEST.MAGHRIB_NAFLA):
       case (QUEST.MAGHRIB_THIKR):
       case (QUEST.MAGHRIB_DUA):
-        return TOD.Maghrib;
+        return Z.Maghrib;
       case (QUEST.ISHA_NAFLB):
       case (QUEST.ISHA_FARD):
       case (QUEST.ISHA_MUAKA):
       case (QUEST.ISHA_NAFLA):
       case (QUEST.ISHA_THIKR):
       case (QUEST.ISHA_DUA):
-        return TOD.Isha;
+        return Z.Isha;
       case (QUEST.LAYL_QIYAM):
       case (QUEST.LAYL_THIKR):
       case (QUEST.LAYL_DUA):
       case (QUEST.LAYL_SLEEP):
       case (QUEST.LAYL_TAHAJJUD):
       case (QUEST.LAYL_WITR):
-        return TOD.Isha; // Note qiyam prayer can occur during isha
+        return Z.Isha; // Note qiyam prayer can occur during isha
       default:
-        return TOD.Isha;
+        return Z.Isha;
     }
   }
 
-  TOD getEndZaman() {
+  Z getEndZaman() {
     switch (this) {
       case (QUEST.FAJR_MUAKB):
-        return TOD.Kerahat_Sunrise;
+        return Z.Kerahat_Sunrise;
       case (QUEST.FAJR_FARD):
-        return TOD.Kerahat_Sunrise;
+        return Z.Kerahat_Sunrise;
       case (QUEST.FAJR_THIKR):
-        return TOD.Kerahat_Sunrise;
+        return Z.Kerahat_Sunrise;
       case (QUEST.FAJR_DUA):
-        return TOD.Kerahat_Sunrise;
+        return Z.Kerahat_Sunrise;
       case (QUEST.KERAHAT_ADHKAR_SUNRISE):
-        return TOD.Ishraq;
+        return Z.Ishraq;
       case (QUEST.DUHA_ISHRAQ):
-        return TOD.Duha;
+        return Z.Duha;
       case (QUEST.DUHA_DUHA):
-        return TOD.Kerahat_Zawal;
+        return Z.Kerahat_Zawal;
       case (QUEST.KERAHAT_ADHKAR_ZAWAL):
-        return TOD.Dhuhr;
+        return Z.Dhuhr;
       case (QUEST.DHUHR_MUAKB):
-        return TOD.Asr;
+        return Z.Asr;
       case (QUEST.DHUHR_FARD):
-        return TOD.Asr;
+        return Z.Asr;
       case (QUEST.DHUHR_MUAKA):
-        return TOD.Asr;
+        return Z.Asr;
       case (QUEST.DHUHR_NAFLA):
-        return TOD.Asr;
+        return Z.Asr;
       case (QUEST.DHUHR_THIKR):
-        return TOD.Asr;
+        return Z.Asr;
       case (QUEST.DHUHR_DUA):
-        return TOD.Kerahat_Sun_Setting;
+        return Z.Kerahat_Sun_Setting;
       case (QUEST.ASR_NAFLB):
-        return TOD.Kerahat_Sun_Setting;
+        return Z.Kerahat_Sun_Setting;
       case (QUEST.ASR_FARD):
-        return TOD.Kerahat_Sun_Setting;
+        return Z.Kerahat_Sun_Setting;
       case (QUEST.ASR_THIKR):
-        return TOD.Kerahat_Sun_Setting;
+        return Z.Kerahat_Sun_Setting;
       case (QUEST.ASR_DUA):
-        return TOD.Kerahat_Sun_Setting;
+        return Z.Kerahat_Sun_Setting;
       case (QUEST.KERAHAT_ADHKAR_SUNSET):
-        return TOD.Maghrib;
+        return Z.Maghrib;
       case (QUEST.MAGHRIB_FARD):
-        return TOD.Isha;
+        return Z.Isha;
       case (QUEST.MAGHRIB_MUAKA):
-        return TOD.Isha;
+        return Z.Isha;
       case (QUEST.MAGHRIB_NAFLA):
-        return TOD.Isha;
+        return Z.Isha;
       case (QUEST.MAGHRIB_THIKR):
-        return TOD.Isha;
+        return Z.Isha;
       case (QUEST.MAGHRIB_DUA):
-        return TOD.Isha;
+        return Z.Isha;
       case (QUEST.ISHA_NAFLB):
-        return TOD.Fajr_Tomorrow;
+        return Z.Fajr_Tomorrow;
       case (QUEST.ISHA_FARD):
-        return TOD.Fajr_Tomorrow;
+        return Z.Fajr_Tomorrow;
       case (QUEST.ISHA_MUAKA):
-        return TOD.Fajr_Tomorrow;
+        return Z.Fajr_Tomorrow;
       case (QUEST.ISHA_NAFLA):
-        return TOD.Fajr_Tomorrow;
+        return Z.Fajr_Tomorrow;
       case (QUEST.ISHA_THIKR):
-        return TOD.Fajr_Tomorrow;
+        return Z.Fajr_Tomorrow;
       case (QUEST.ISHA_DUA):
-        return TOD.Fajr_Tomorrow;
+        return Z.Fajr_Tomorrow;
       case (QUEST.LAYL_QIYAM):
-        return TOD.Fajr_Tomorrow;
+        return Z.Fajr_Tomorrow;
       case (QUEST.LAYL_THIKR):
-        return TOD.Fajr_Tomorrow;
+        return Z.Fajr_Tomorrow;
       case (QUEST.LAYL_DUA):
-        return TOD.Fajr_Tomorrow;
+        return Z.Fajr_Tomorrow;
       case (QUEST.LAYL_SLEEP):
-        return TOD.Fajr_Tomorrow;
+        return Z.Fajr_Tomorrow;
       case (QUEST.LAYL_TAHAJJUD):
-        return TOD.Fajr_Tomorrow;
+        return Z.Fajr_Tomorrow;
       case (QUEST.LAYL_WITR):
-        return TOD.Fajr_Tomorrow;
+        return Z.Fajr_Tomorrow;
       default:
-        return TOD.Fajr_Tomorrow;
+        return Z.Fajr_Tomorrow;
     }
   }
 }
@@ -259,7 +259,7 @@ class ActiveQuestsAjrController extends GetxHapi {
     int sleepBackoffSecs = 1;
 
     // No internet needed to init, but we put a back off just in case:
-    while (ActiveQuestsController.to.tod == null) {
+    while (ZamanController.to.athan == null) {
       l.w('ActiveQuestsAjrController.initCurrQuest: not ready, try again after sleeping $sleepBackoffSecs Secs...');
       await Future.delayed(Duration(seconds: sleepBackoffSecs));
       if (sleepBackoffSecs < 4) {
@@ -268,7 +268,7 @@ class ActiveQuestsAjrController extends GetxHapi {
     }
 
     for (QUEST quest in QUEST.values) {
-      if (quest.index == ZamanController.to.currTOD.getFirstQuest().index) {
+      if (quest.index == ZamanController.to.currZ.getFirstQuest().index) {
         l.i('Stopping init: $quest = $_questsMiss');
         break;
       }
@@ -301,8 +301,6 @@ class ActiveQuestsAjrController extends GetxHapi {
   int questsAll() => _questsDone | _questsSkip | _questsMiss;
 
   void setDone(QUEST quest) {
-    l.v('');
-    l.v('');
     l.v('setDone: $quest (index=${quest.index}) = $_questsMiss');
     printBinaryAll();
     _questsDone |= 1 << quest.index;
@@ -311,8 +309,6 @@ class ActiveQuestsAjrController extends GetxHapi {
   }
 
   void setSkip(QUEST quest) {
-    l.v('');
-    l.v('');
     l.v('setSkip: $quest (index=${quest.index}) = $_questsMiss');
     printBinaryAll();
     _questsSkip |= 1 << quest.index;
@@ -321,8 +317,6 @@ class ActiveQuestsAjrController extends GetxHapi {
   }
 
   void setMiss(QUEST quest) {
-    l.v('');
-    l.v('');
     l.v('setMiss: $quest (index=${quest.index}) = $_questsMiss');
     printBinaryAll();
     _questsMiss |= 1 << quest.index;
@@ -331,8 +325,6 @@ class ActiveQuestsAjrController extends GetxHapi {
   }
 
   void clearQuest(QUEST quest) {
-    l.v('');
-    l.v('');
     l.v('clearQuest: $quest (index=${quest.index}) = $_questsMiss');
     printBinaryAll();
     _questsDone &= ~(1 << quest.index);

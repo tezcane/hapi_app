@@ -182,3 +182,15 @@ class TS extends TextStyle {
     FontWeight fontWeight = FontWeight.normal,
   }) : super(color: color, fontWeight: fontWeight);
 }
+
+/// Common utility/helper functions so we don't have to type so much:
+///   w   - width (of screen)
+///   h   - height (of screen)
+///   cb - theme color background
+///   cs - theme color scaffold
+///   ct - theme color text
+double w(BuildContext context) => MediaQuery.of(context).size.width;
+double h(BuildContext context) => MediaQuery.of(context).size.height;
+Color cb(BuildContext context) => Theme.of(context).backgroundColor;
+Color cs(BuildContext context) => Theme.of(context).scaffoldBackgroundColor;
+Color ct(BuildContext context) => Theme.of(context).textTheme.headline6!.color!;

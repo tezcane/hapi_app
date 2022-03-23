@@ -33,6 +33,10 @@ class ActiveQuestsUI2 extends StatelessWidget {
   static final FlipCardController cflipCardFajr = FlipCardController();
   static final FlipCardController cflipCardDhuhr = FlipCardController();
   static final FlipCardController cflipCardLayl = FlipCardController();
+  // void toggleFlipCard(FlipCardController flipCardController) {
+  //   flipCardController.toggleCard();
+  //   update();
+  // }
 
   final double minAppBarHeight = 56;
 

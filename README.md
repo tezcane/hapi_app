@@ -5,6 +5,9 @@ Aft  - After
 Bef  - Before  
 btn  - Button  
 C    - Controller
+cb   - theme color background  
+cs   - theme color scaffold  
+ct   - theme color text  
 Cord - Coordinates
 curr - Current  
 dis  - Disabled  
@@ -29,12 +32,13 @@ R    - Right (use with Left/Right->L/R)
 Rkt  - Rakat  
 rv   - return value  
 s    - storage/Get Storage  
-t    - timeline  
+t    - timeline
 ts   - text style  
 thjd - Tahajjud  
 tz   - time zone  
 trkh - Tarikh  
 w    - width (use with height/h)  
+z    - Zaman (an Islamic point of a day, e.g. fajr, sunrise, karahat times, etc.)  
 
 ## Islamic GLOSSARY  
 

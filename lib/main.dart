@@ -71,10 +71,10 @@ void main() async {
       permanent: permOn); // requires AuthController
   Get.put<ActiveQuestsController>(ActiveQuestsController(),
       permanent: permOn); // requires AuthController
-  Get.put<ActiveQuestsAjrController>(ActiveQuestsAjrController(),
-      permanent: permOn); // requires ActiveQuestsController
   Get.put<ZamanController>(ZamanController(),
       permanent: permOn); // requires ActiveQuestsController
+  Get.put<ActiveQuestsAjrController>(ActiveQuestsAjrController(),
+      permanent: permOn); // requires ActiveQuestsController, ZamanController
   Get.put<ThemeController>(ThemeController());
   Get.put<LanguageController>(LanguageController());
 

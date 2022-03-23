@@ -6,11 +6,12 @@ import 'package:hapi/quest/active/athan/astronomical/astronomical.dart';
 import 'package:hapi/quest/active/athan/astronomical/solar_time.dart';
 import 'package:hapi/quest/active/athan/calculation_method.dart';
 import 'package:hapi/quest/active/athan/calculation_params.dart';
-import 'package:hapi/quest/active/athan/tod.dart';
+import 'package:hapi/quest/active/athan/z.dart';
 import 'package:timezone/timezone.dart';
 
-/// TODO Test against other athan libraries and software.
-class TimeOfDay {
+/// Get all the prayer and other times needed to track important salah and
+/// islamic activity around a single day.
+class Athan {
   final Cord cord;
   final DateTime date;
   final CalculationParams params;
@@ -46,15 +47,7 @@ class TimeOfDay {
   DateTime get fajrTomorrow => _fajrTomorrow_13;
   DateTime get sunriseTomorrow => _sunriseTomorrow_14;
 
-  // TODO: added precision
-  // rounded nightfraction
-  TimeOfDay(
-    this.cord,
-    this.date,
-    this.params,
-    this.tzLoc,
-    this.precision,
-  ) {
+  Athan(this.cord, this.date, this.params, this.tzLoc, this.precision) {
     CalcMethodParams method = params.method;
 
     SolarTime solarTime = SolarTime(date, cord);
@@ -65,8 +58,6 @@ class TimeOfDay {
     DateTime dateTomorrow = date.add(const Duration(days: 1));
     SolarTime solarTimeTomorrow = SolarTime(dateTomorrow, cord);
 
-    // todo
-    // print(calculationParameters.ishaAngle);
     //DateTime ishaYesterdayTime;
     DateTime fajrTime;
     DateTime asrTime;
@@ -105,6 +96,7 @@ class TimeOfDay {
     // special case for moonsighting committee above latitude 55
     if (method.calcMethod == CalcMethod.Moonsight_Committee &&
         cord.latitude >= 55) {
+      // TODO rounded nightfraction
       nightFraction = nightDurationInSecs / 7;
       fajrTime = dateByAddingSeconds(sunriseTime, -nightFraction.round());
       fajrTomorrowTime =
@@ -258,112 +250,112 @@ class TimeOfDay {
     return TZDateTime.from(date, tzLoc);
   }
 
-  DateTime getZamanTime(TOD tod) {
-    if (tod == TOD.Fajr) {
+  DateTime getZamanTime(Z z) {
+    if (z == Z.Fajr) {
       return _fajr_01;
-    } else if (tod == TOD.Kerahat_Sunrise) {
+    } else if (z == Z.Kerahat_Sunrise) {
       return _kerahatAdkharSunrise_02;
-    } else if (tod == TOD.Ishraq) {
+    } else if (z == Z.Ishraq) {
       return _ishraqPrayer_03;
-    } else if (tod == TOD.Duha) {
+    } else if (z == Z.Duha) {
       return _duhaPrayer_04;
-    } else if (tod == TOD.Kerahat_Zawal) {
+    } else if (z == Z.Kerahat_Zawal) {
       return _kerahatAdkharZawal_05;
-    } else if (tod == TOD.Dhuhr) {
+    } else if (z == Z.Dhuhr) {
       return _dhuhr_06;
-    } else if (tod == TOD.Asr) {
+    } else if (z == Z.Asr) {
       return _asr_07;
-    } else if (tod == TOD.Kerahat_Sun_Setting) {
+    } else if (z == Z.Kerahat_Sun_Setting) {
       return _kerahatAdkharSunSetting_08;
-    } else if (tod == TOD.Maghrib) {
+    } else if (z == Z.Maghrib) {
       return _maghrib_09;
-    } else if (tod == TOD.Isha) {
+    } else if (z == Z.Isha) {
       return _isha_10;
-    } else if (tod == TOD.Night__2) {
+    } else if (z == Z.Night__2) {
       return _middleOfNight_11;
-    } else if (tod == TOD.Night__3) {
+    } else if (z == Z.Night__3) {
       return _last3rdOfNight_12;
-    } else if (tod == TOD.Fajr_Tomorrow) {
+    } else if (z == Z.Fajr_Tomorrow) {
       return _fajrTomorrow_13;
-    } else if (tod == TOD.Sunrise_Tomorrow) {
+    } else if (z == Z.Sunrise_Tomorrow) {
       return _sunriseTomorrow_14;
     } else {
-      l.e('TimeOfDay:getZamanTime: unknown zaman: "$tod"');
+      l.e('TimeOfDay:getZamanTime: unknown zaman: "$z"');
       return _dhuhr_06;
     }
   }
 
-  TOD getCurrZaman(DateTime date) {
+  Z getCurrZaman(DateTime date) {
     final ActiveQuestsController c = ActiveQuestsController.to;
 
     if (date.isAfter(_sunriseTomorrow_14)) {
-      return TOD.Sunrise_Tomorrow;
+      return Z.Sunrise_Tomorrow;
     } else if (date.isAfter(_fajrTomorrow_13)) {
-      return TOD.Fajr_Tomorrow;
+      return Z.Fajr_Tomorrow;
     } else if (c.showLast3rdOfNight && date.isAfter(_last3rdOfNight_12)) {
-      return TOD.Night__3;
+      return Z.Night__3;
     } else if (!c.showLast3rdOfNight && date.isAfter(_middleOfNight_11)) {
-      return TOD.Night__2;
+      return Z.Night__2;
     } else if (date.isAfter(_isha_10)) {
-      return TOD.Isha;
+      return Z.Isha;
     } else if (date.isAfter(_maghrib_09)) {
-      return TOD.Maghrib;
+      return Z.Maghrib;
     } else if (date.isAfter(_kerahatAdkharSunSetting_08)) {
-      return TOD.Kerahat_Sun_Setting;
+      return Z.Kerahat_Sun_Setting;
     } else if (date.isAfter(_asr_07)) {
-      return TOD.Asr;
+      return Z.Asr;
     } else if (date.isAfter(_dhuhr_06)) {
-      return TOD.Dhuhr;
+      return Z.Dhuhr;
     } else if (date.isAfter(_kerahatAdkharZawal_05)) {
-      return TOD.Kerahat_Zawal;
+      return Z.Kerahat_Zawal;
     } else if (date.isAfter(_duhaPrayer_04)) {
-      return TOD.Duha;
+      return Z.Duha;
     } else if (date.isAfter(_ishraqPrayer_03)) {
-      return TOD.Ishraq;
+      return Z.Ishraq;
     } else if (date.isAfter(_kerahatAdkharSunrise_02)) {
-      return TOD.Kerahat_Sunrise;
+      return Z.Kerahat_Sunrise;
     } else if (date.isAfter(_fajr_01)) {
-      return TOD.Fajr;
+      return Z.Fajr;
     } else {
       l.e('getCurrZaman $date is not after fajr');
-      return TOD.Fajr;
+      return Z.Fajr;
     }
   }
 
-  TOD getNextZaman(DateTime date) {
+  Z getNextZaman(DateTime date) {
     final ActiveQuestsController c = ActiveQuestsController.to;
 
     if (date.isAfter(_fajrTomorrow_13)) {
-      return TOD.Sunrise_Tomorrow;
+      return Z.Sunrise_Tomorrow;
     } else if (c.showLast3rdOfNight && date.isAfter(_last3rdOfNight_12)) {
-      return TOD.Fajr_Tomorrow;
+      return Z.Fajr_Tomorrow;
     } else if (!c.showLast3rdOfNight && date.isAfter(_middleOfNight_11)) {
-      return TOD.Fajr_Tomorrow;
+      return Z.Fajr_Tomorrow;
     } else if (c.showLast3rdOfNight && date.isAfter(_isha_10)) {
-      return TOD.Night__3; // 1/3 of night mode
+      return Z.Night__3; // 1/3 of night mode
     } else if (!c.showLast3rdOfNight && date.isAfter(_isha_10)) {
-      return TOD.Night__2; // middle of night mode
+      return Z.Night__2; // middle of night mode
     } else if (date.isAfter(_maghrib_09)) {
-      return TOD.Isha;
+      return Z.Isha;
     } else if (date.isAfter(_kerahatAdkharSunSetting_08)) {
-      return TOD.Maghrib;
+      return Z.Maghrib;
     } else if (date.isAfter(_asr_07)) {
-      return TOD.Kerahat_Sun_Setting;
+      return Z.Kerahat_Sun_Setting;
     } else if (date.isAfter(_dhuhr_06)) {
-      return TOD.Asr;
+      return Z.Asr;
     } else if (date.isAfter(_kerahatAdkharZawal_05)) {
-      return TOD.Dhuhr;
+      return Z.Dhuhr;
     } else if (date.isAfter(_duhaPrayer_04)) {
-      return TOD.Kerahat_Zawal;
+      return Z.Kerahat_Zawal;
     } else if (date.isAfter(_ishraqPrayer_03)) {
-      return TOD.Duha;
+      return Z.Duha;
     } else if (date.isAfter(_kerahatAdkharSunrise_02)) {
-      return TOD.Ishraq;
+      return Z.Ishraq;
     } else if (date.isAfter(_fajr_01)) {
-      return TOD.Kerahat_Sunrise;
+      return Z.Kerahat_Sunrise;
     } else {
       l.e('getNextZaman $date is not after fajr');
-      return TOD.Kerahat_Sunrise;
+      return Z.Kerahat_Sunrise;
     }
   }
 }

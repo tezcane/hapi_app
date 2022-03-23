@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:hapi/controllers/connectivity_controller.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main_controller.dart';
+import 'package:intl/intl.dart';
 import 'package:ntp/ntp.dart';
 import 'package:timezone/timezone.dart'
     show Location, LocationNotFoundException, getLocation;
@@ -13,6 +14,30 @@ import 'package:timezone/timezone.dart'
 final DateTime DUMMY_TIME = DateTime.utc(2022, 2, 22, 22, 222, 222); // 2's day
 const int DUMMY_NTP_OFFSET = 222222222222222;
 const String DUMMY_TIMEZONE = 'America/Los_Angeles'; // TODO random Antartica?
+
+enum DAY_OF_WEEK {
+  Monday,
+  Tuesday,
+  Wednesday,
+  Thursday,
+  Friday,
+  Saturday,
+  Sunday
+}
+
+DAY_OF_WEEK getDayOfWeek(DateTime dateTime) {
+  // TODO test in other locales also // TODO test, used to be DateTime now()
+  String day = DateFormat('EEEE').format(dateTime);
+  for (var dayOfWeek in DAY_OF_WEEK.values) {
+    if (day == dayOfWeek.name) {
+      return dayOfWeek;
+    }
+  }
+
+  DAY_OF_WEEK defaultDayOfWeek = DAY_OF_WEEK.Monday;
+  l.e('getDayOfWeek: Invalid day of week, defaulting to; method found: $defaultDayOfWeek');
+  return defaultDayOfWeek;
+}
 
 /// Used to get accurate server UTC/NTP based time in case user's clock is off
 class TimeController extends GetxHapi {
@@ -31,6 +56,12 @@ class TimeController extends GetxHapi {
   Location _tzLoc = getLocation(DUMMY_TIMEZONE);
   Location get tzLoc => _tzLoc;
 
+  DAY_OF_WEEK _dayOfWeek = getDayOfWeek(DUMMY_TIME);
+  DAY_OF_WEEK get dayOfWeek => _dayOfWeek;
+  _updateDayOfWeek() async =>
+      _dayOfWeek = getDayOfWeek(await TimeController.to.now());
+  bool isFriday() => _dayOfWeek == DAY_OF_WEEK.Friday;
+
   @override
   void onInit() async {
     super.onInit();
@@ -40,13 +71,12 @@ class TimeController extends GetxHapi {
 
   /// Call to update time TODO use to detect irregular clock movement
   Future<void> initTime() async {
-    l.d('initTime called tz=$tzLoc, DateTime=${DateTime.now()}, ntpOffset=$_ntpOffset');
+    l.d('initTime called tz=$tzLoc, DateTime=${DateTime.now()}, ntpOffset=$_ntpOffset, dayOfWeek=$_dayOfWeek');
     await _updateNtpTime();
     await getTimezoneLocation();
-    l.d('initTime done tz=$tzLoc, DateTime=${DateTime.now()}, ntpOffset=$_ntpOffset}');
+    await _updateDayOfWeek();
+    l.d('initTime done tz=$tzLoc, DateTime=${DateTime.now()}, ntpOffset=$_ntpOffset}, dayOfWeek=$_dayOfWeek');
   }
-
-  Future<void> reinitTime() async {}
 
   /// Gets NTP time from server when called, if internet is on
   Future<void> _updateNtpTime() async {
@@ -93,7 +123,7 @@ class TimeController extends GetxHapi {
     if (_ntpOffset != DUMMY_NTP_OFFSET) {
       time = time.add(Duration(milliseconds: _ntpOffset));
     }
-    // print('cTime:now: (ntpOffset=$_ntpOffset) ${time.toLocal()}');
+    l.d('cTime.now2: (ntpOffset=$_ntpOffset) ${time.toLocal()}');
     return time.toLocal();
   }
 

@@ -1,8 +1,8 @@
 import 'package:hapi/quest/active/athan/calculation_method.dart';
 
-/// Holds all low level parameters needed to calculate salah and TOD times. It
-/// is passed into the TimeOfDay class which then uses these fields to calculate
-/// the different TOD times for the given time and location inputs.
+/// Holds all low level parameters needed to calculate salah and Zaman times. It
+/// is passed into the Athan class which then uses these fields to calculate
+/// the different Z times for the given time and location inputs.
 class CalculationParams {
   CalculationParams(
     this.method,

@@ -158,7 +158,7 @@ extension EnumUtil on CalcMethod {
 }
 
 /// CalcMethod helper used to assign each CalcMethod it's custom variables. This
-/// class holds all Salah/TOD calculation variables that originate from
+/// class holds all Salah/Z calculation variables that originate from
 /// differences in different CalculationMethods (e.g. ISNA vs Diyanet).
 class CalcMethodParams {
   CalcMethodParams(
