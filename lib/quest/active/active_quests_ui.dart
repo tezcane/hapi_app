@@ -110,8 +110,8 @@ class ActiveQuestsUI extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       children: [
         _Cell(
-          _SunCell(_IconSunUpDn(isActive, true), 'Morning Adhkar',
-              athan.sunrise, athan.ishraq),
+          _SunCell(_IconSunUpDn(isActive, true, QUEST.KERAHAT_ADHKAR_SUNRISE),
+              'Morning Adhkar', athan.sunrise, athan.ishraq),
           isActive,
           QUEST.KERAHAT_ADHKAR_SUNRISE,
           flex: 2000,
@@ -172,7 +172,7 @@ class ActiveQuestsUI extends StatelessWidget {
         // 4 of 4. Evening adhkar
         _Cell(
             _SunCell(
-              _IconSunUpDn(isActive, false),
+              _IconSunUpDn(isActive, false, QUEST.KERAHAT_ADHKAR_SUNSET),
               'Evening Adhkar',
               athan.sunSetting,
               athan.maghrib,
@@ -615,13 +615,17 @@ class _SunCell extends StatelessWidget {
 }
 
 class _IconSunUpDn extends StatelessWidget {
-  const _IconSunUpDn(this.isActive, this.isSunrise);
+  const _IconSunUpDn(this.isActive, this.isSunrise, this.quest);
 
   final bool isActive;
   final bool isSunrise;
+  final QUEST quest;
 
   @override
   Widget build(BuildContext context) {
+    final bool isCurrQuest =
+        isActive && ActiveQuestsAjrController.to.isQuestActive(quest);
+
     return Stack(
       children: [
         _IconSun(),
@@ -632,7 +636,7 @@ class _IconSunUpDn extends StatelessWidget {
               bottomLeft: Radius.circular(10.0), // stay in active border
             ),
             child: Container(
-              color: isActive ? cs(context) : cb(context),
+              color: isCurrQuest ? cs(context) : cb(context),
               height: _Sliv.sliverHeight / 2,
               width: 30,
             ),
