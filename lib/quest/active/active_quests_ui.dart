@@ -240,7 +240,7 @@ class ActiveQuestsUI extends StatelessWidget {
         _Cell(_IconDua(), isActive, QUEST.LAYL_DUA),
         _Cell(T('Sleep', tsText, width: w), isActive, QUEST.LAYL_SLEEP),
 
-        // Tahhajud and Witr after waking up
+        // Tahajjud and Witr after waking up
         _Cell(T('Tahajjud', tsText, width: width / 6), isActive,
             QUEST.LAYL_TAHAJJUD),
         _Cell(T('Witr', tsText, width: w), isActive, QUEST.LAYL_WITR),
