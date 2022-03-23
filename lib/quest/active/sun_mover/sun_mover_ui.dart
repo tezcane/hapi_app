@@ -1,3 +1,4 @@
+import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -43,9 +44,28 @@ class _CircleDayView extends StatelessWidget {
     // c.timeToNextZaman
 
     return GetBuilder<ZamanController>(builder: (c) {
-      return Planets();
-      //return Circles();
-      //return Spiral();
+      return Column(
+        children: [
+          SizedBox(height: 100),
+          //CustomPaint(painter: DrawCircle()), // shader
+          //MyHomePage(),
+          MultipleColorCircle(
+              //colorOccurrences: {Colors.blue: 2, Colors.green: 1},
+              colorOccurrences: {
+                Colors.red: 2,
+                Colors.yellow: 5,
+                Colors.red.shade700: 2,
+                Colors.blueAccent: 4,
+                Colors.purple: 10,
+                Colors.blueAccent.shade700: 4,
+                Colors.red.shade800: 2,
+                Colors.yellow.shade700: 5,
+              }, child: Planets()),
+          //Planets(),
+          //Circles(),
+          //Spiral(),
+        ],
+      );
     });
   }
 }
@@ -73,11 +93,11 @@ class _PlanetsState extends State<Planets> with TickerProviderStateMixin {
     super.initState();
     _controller1 = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 1),
+      duration: Duration(seconds: 5),
     );
     _controller2 = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 1),
+      duration: Duration(seconds: 5),
     );
   }
 
@@ -87,7 +107,7 @@ class _PlanetsState extends State<Planets> with TickerProviderStateMixin {
     return SizedBox(
       height: height / 2, // needed
       child: Scaffold(
-        backgroundColor: cb(context),
+        backgroundColor: Colors.transparent,
         body: Stack(
           children: [
             AnimatedBuilder(
@@ -216,7 +236,6 @@ class AtomPaint extends CustomPainter {
   }
 }
 
-/*
 class Circles extends StatefulWidget {
   @override
   _CirclesState createState() => _CirclesState();
@@ -242,6 +261,7 @@ class _CirclesState extends State<Circles> with SingleTickerProviderStateMixin {
     return SizedBox(
       height: h(context) / 2,
       child: Scaffold(
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -391,9 +411,7 @@ class CirclesPainter extends CustomPainter {
     return true;
   }
 }
-*/
 
-/*
 class Spiral extends StatefulWidget {
   @override
   _SpiralState createState() => _SpiralState();
@@ -418,6 +436,7 @@ class _SpiralState extends State<Spiral> with SingleTickerProviderStateMixin {
     return SizedBox(
       height: h(context) / 2,
       child: Scaffold(
+        backgroundColor: Colors.transparent,
         body: SafeArea(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -442,7 +461,7 @@ class _SpiralState extends State<Spiral> with SingleTickerProviderStateMixin {
               ),
               Row(
                 children: <Widget>[
-                  constPadding(
+                  const Padding(
                     padding: EdgeInsets.only(left: 24.0, right: 0.0),
                     child: Text('Show Dots'),
                   ),
@@ -566,4 +585,168 @@ class SpiralPainter extends CustomPainter {
     return true;
   }
 }
-*/
+
+class DrawGradientCircle extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..shader = LinearGradient(colors: [
+        Colors.blue,
+        Colors.black,
+      ]).createShader(Rect.fromCircle(center: Offset(0.0, 0.0), radius: 50));
+    canvas.drawCircle(Offset(0.0, 0.0), 50, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: w(context),
+      height: h(context),
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: Center(
+          child: TweenAnimationBuilder(
+            duration: const Duration(seconds: 2),
+            tween: Tween(begin: 0.0, end: 1.0),
+            curve: Curves.easeOutCubic,
+            builder: (BuildContext context, dynamic value, Widget? child) {
+              return CustomPaint(
+                painter: OpenPainter(
+                    totalQuestions: 300,
+                    learned: 75,
+                    notLearned: 75,
+                    range: value),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class OpenPainter extends CustomPainter {
+  final learned;
+  final notLearned;
+  final range;
+  final totalQuestions;
+  double pi = math.pi;
+
+  OpenPainter({this.learned, this.totalQuestions, this.notLearned, this.range});
+  @override
+  void paint(Canvas canvas, Size size) {
+    double strokeWidth = 7;
+    Rect myRect = const Offset(-50.0, -50.0) & const Size(100.0, 100.0);
+
+    var paint1 = Paint()
+      ..color = Colors.red
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke;
+    var paint2 = Paint()
+      ..color = Colors.green
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke;
+    var paint3 = Paint()
+      ..color = Colors.yellow
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke;
+
+    double firstLineRadianStart = 0;
+    double _unAnswered =
+        (totalQuestions - notLearned - learned) * range / totalQuestions;
+    double firstLineRadianEnd = (360 * _unAnswered) * math.pi / 180;
+    canvas.drawArc(
+        myRect, firstLineRadianStart, firstLineRadianEnd, false, paint1);
+
+    double _learned = (learned) * range / totalQuestions;
+    double secondLineRadianEnd = getRadians(_learned);
+    canvas.drawArc(
+        myRect, firstLineRadianEnd, secondLineRadianEnd, false, paint2);
+    double _notLearned = (notLearned) * range / totalQuestions;
+    double thirdLineRadianEnd = getRadians(_notLearned);
+    canvas.drawArc(myRect, firstLineRadianEnd + secondLineRadianEnd,
+        thirdLineRadianEnd, false, paint3);
+
+    //drawArc(Rect rect, double startAngle, double sweepAngle, bool useCenter, Paint paint)
+  }
+
+  double getRadians(double value) {
+    return (360 * value) * pi / 180;
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
+}
+
+class MultipleColorCircle extends StatelessWidget {
+  final Map<Color, int> colorOccurrences;
+  final double height;
+  final Widget? child;
+  @override
+  const MultipleColorCircle(
+      {required this.colorOccurrences, this.height = 150, this.child});
+  Widget build(BuildContext context) => Container(
+        height: height,
+        width: height,
+        child: CustomPaint(
+            size: Size(20, 20),
+            child: Center(child: child),
+            painter: _MultipleColorCirclePainter(
+              colorOccurrences: colorOccurrences,
+              height: height,
+            )),
+      );
+}
+
+class _MultipleColorCirclePainter extends CustomPainter {
+  final Map<Color, int> colorOccurrences;
+  final double height;
+  @override
+  _MultipleColorCirclePainter(
+      {required this.colorOccurrences, required this.height});
+  double pi = math.pi;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    double strokeWidth = 50;
+    Rect myRect =
+        Rect.fromCircle(center: Offset(height / 2, height / 2), radius: height);
+
+    double radianStart = 80; // was 0
+    double radianLength = 0;
+    int allOccurrences = 0;
+    //set denominator
+    colorOccurrences.forEach((color, occurrence) {
+      allOccurrences += occurrence;
+    });
+    colorOccurrences.forEach((color, occurrence) {
+      double percent = occurrence / allOccurrences;
+      radianLength = 2 * percent * math.pi;
+      canvas.drawArc(
+          myRect,
+          radianStart,
+          radianLength,
+          false,
+          Paint()
+            ..color = color
+            ..strokeWidth = strokeWidth
+            ..style = PaintingStyle.stroke);
+      radianStart += radianLength;
+    });
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
+}
