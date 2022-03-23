@@ -24,7 +24,7 @@ class ActiveQuestActionUI extends StatelessWidget {
   Widget build(BuildContext context) {
     bool skipEnabled = true;
     bool doneEnabled = true;
-    String? noActionMsg;
+    String noActionMsg = '';
 
     // not allowed to skip fard
     if (_quest.isFard()) {
@@ -159,10 +159,10 @@ class ActiveQuestActionUI extends StatelessWidget {
                     ),
                   ),
                 if (skipEnabled && doneEnabled) const SizedBox(width: 40),
-                if (noActionMsg != null)
+                if (noActionMsg != '')
                   Column(
                     children: [
-                      Text(noActionMsg!, style: tsMsg),
+                      Text(noActionMsg, style: tsMsg),
                       const SizedBox(height: 16),
                     ],
                   ),
