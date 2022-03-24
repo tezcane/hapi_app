@@ -210,7 +210,7 @@ class Astronomical {
     double H0 =
         (term1 / term2).abs() > 1 ? 1.0 : radiansToDegrees(acos(term1 / term2));
 
-    double m = afterTransit ? m0! + (H0 / 360) : m0! - (H0 / 360);
+    double m = afterTransit ? m0 + (H0 / 360) : m0 - (H0 / 360);
     double Theta = unwindAngle((Theta0 + (360.985647 * m)));
     double a = unwindAngle(Astronomical.interpolateAngles(a2, a1, a3, m)!);
     double delta = Astronomical.interpolate(d2, d1, d3, m)!;
