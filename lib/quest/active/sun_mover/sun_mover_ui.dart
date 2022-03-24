@@ -595,11 +595,12 @@ class DrawGradientCircle extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..shader = LinearGradient(colors: [
+      ..shader = const LinearGradient(colors: [
         Colors.blue,
         Colors.black,
-      ]).createShader(Rect.fromCircle(center: Offset(0.0, 0.0), radius: 50));
-    canvas.drawCircle(Offset(0.0, 0.0), 50, paint);
+      ]).createShader(
+          Rect.fromCircle(center: const Offset(0.0, 0.0), radius: 50));
+    canvas.drawCircle(const Offset(0.0, 0.0), 50, paint);
   }
 
   @override
