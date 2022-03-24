@@ -16,7 +16,6 @@ enum Z {
   Night__2,
   Night__3,
   Fajr_Tomorrow,
-  Sunrise_Tomorrow,
 }
 
 extension EnumUtil on Z {

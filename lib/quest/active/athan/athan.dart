@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:hapi/helpers/cord.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
@@ -35,7 +36,6 @@ class Athan {
   late final DateTime _middleOfNight_11;
   late final DateTime _last3rdOfNight_12;
   late final DateTime _fajrTomorrow_13;
-  late final DateTime _sunriseTomorrow_14;
   DateTime get fajr => _fajr_01;
   DateTime get sunrise => _kerahatAdkharSunrise_02;
   DateTime get ishraq => _ishraqPrayer_03;
@@ -49,7 +49,6 @@ class Athan {
   DateTime get middleOfNight => _middleOfNight_11;
   DateTime get last3rdOfNight => _last3rdOfNight_12;
   DateTime get fajrTomorrow => _fajrTomorrow_13;
-  DateTime get sunriseTomorrow => _sunriseTomorrow_14;
 
   void _calculateTimes() {
     CalcMethodParams method = params.method;
@@ -218,10 +217,6 @@ class Athan {
       fajrTomorrowTime,
       method.adjustSecs[Salah.fajr]!,
     );
-    _sunriseTomorrow_14 = _addSecsRoundDnAndGetTZ(
-      sunriseTimeTomorrow,
-      method.adjustSecs[Salah.sunrise]!,
-    );
 
     // Sunnah Times
     // Note: nightDuration starts from maghrib time
@@ -253,7 +248,6 @@ class Athan {
     l.d('middleOfNight:    $_middleOfNight_11');
     l.d('last3rdOfNight:   $_last3rdOfNight_12');
     l.d('fajr tomorrow:    $_fajrTomorrow_13');
-    l.d('sunrise tomorrow: $_sunriseTomorrow_14');
   }
 
   DateTime _safeFajr(
@@ -347,47 +341,44 @@ class Athan {
     return returnedDayOfYear;
   }
 
-  DateTime getZamanTime(Z z) {
+  /// Returns Object[] - idx 0 = Z's DateTime, index 1 = sun mover circle color.
+  List<Object> getZamanTime(Z z) {
     if (z == Z.Fajr) {
-      return _fajr_01;
+      return [_fajr_01, Colors.blue.shade700];
     } else if (z == Z.Kerahat_Sunrise) {
-      return _kerahatAdkharSunrise_02;
+      return [_kerahatAdkharSunrise_02, Colors.red];
     } else if (z == Z.Ishraq) {
-      return _ishraqPrayer_03;
+      return [_ishraqPrayer_03, Colors.green];
     } else if (z == Z.Duha) {
-      return _duhaPrayer_04;
+      return [_duhaPrayer_04, Colors.yellow.shade700];
     } else if (z == Z.Kerahat_Zawal) {
-      return _kerahatAdkharZawal_05;
+      return [_kerahatAdkharZawal_05, Colors.red.shade700];
     } else if (z == Z.Dhuhr) {
-      return _dhuhr_06;
+      return [_dhuhr_06, Colors.yellow.shade800];
     } else if (z == Z.Asr) {
-      return _asr_07;
+      return [_asr_07, Colors.yellow.shade900];
     } else if (z == Z.Kerahat_Sun_Setting) {
-      return _kerahatAdkharSunSetting_08;
+      return [_kerahatAdkharSunSetting_08, Colors.red.shade800];
     } else if (z == Z.Maghrib) {
-      return _maghrib_09;
+      return [_maghrib_09, Colors.blue.shade800];
     } else if (z == Z.Isha) {
-      return _isha_10;
+      return [_isha_10, Colors.purple.shade700];
     } else if (z == Z.Night__2) {
-      return _middleOfNight_11;
+      return [_middleOfNight_11, Colors.purple.shade800];
     } else if (z == Z.Night__3) {
-      return _last3rdOfNight_12;
+      return [_last3rdOfNight_12, Colors.purple.shade900];
     } else if (z == Z.Fajr_Tomorrow) {
-      return _fajrTomorrow_13;
-    } else if (z == Z.Sunrise_Tomorrow) {
-      return _sunriseTomorrow_14;
+      return [_fajrTomorrow_13, Colors.pink]; // should never show
     } else {
       l.e('TimeOfDay:getZamanTime: unknown zaman: "$z"');
-      return _dhuhr_06;
+      return [_dhuhr_06, Colors.yellow.shade800];
     }
   }
 
   Z getCurrZaman(DateTime date) {
     final ActiveQuestsController c = ActiveQuestsController.to;
 
-    if (date.isAfter(_sunriseTomorrow_14)) {
-      return Z.Sunrise_Tomorrow;
-    } else if (date.isAfter(_fajrTomorrow_13)) {
+    if (date.isAfter(_fajrTomorrow_13)) {
       return Z.Fajr_Tomorrow;
     } else if (c.showLast3rdOfNight && date.isAfter(_last3rdOfNight_12)) {
       return Z.Night__3;
@@ -422,9 +413,7 @@ class Athan {
   Z getNextZaman(DateTime date) {
     final ActiveQuestsController c = ActiveQuestsController.to;
 
-    if (date.isAfter(_fajrTomorrow_13)) {
-      return Z.Sunrise_Tomorrow;
-    } else if (c.showLast3rdOfNight && date.isAfter(_last3rdOfNight_12)) {
+    if (c.showLast3rdOfNight && date.isAfter(_last3rdOfNight_12)) {
       return Z.Fajr_Tomorrow;
     } else if (!c.showLast3rdOfNight && date.isAfter(_middleOfNight_11)) {
       return Z.Fajr_Tomorrow;

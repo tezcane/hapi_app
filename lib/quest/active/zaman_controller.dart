@@ -79,7 +79,7 @@ class ZamanController extends GetxHapi {
       HighLatitudeRule.MiddleOfTheNight,
     );
 
-    bool precision = false;
+    bool precision = true;
     Athan athan = Athan(
       params,
       date,
@@ -91,7 +91,7 @@ class ZamanController extends GetxHapi {
     _currZ = athan.getCurrZaman(date);
     _nextZ = athan.getNextZaman(date);
 
-    _nextZTime = athan.getZamanTime(_nextZ);
+    _nextZTime = athan.getZamanTime(_nextZ)[0] as DateTime;
     l.d('_currZTime: $_currZ');
     l.d('_nextZTime: $_nextZ');
 

@@ -2,7 +2,6 @@ import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/athan/athan.dart';
@@ -40,40 +39,92 @@ class _CircleDayView extends StatelessWidget {
 
   final int secondsInADay = 86400; //60 * 60 * 24;
 
+  String fill(String s, int fillLen) {
+    while (s.length < fillLen) {
+      s += ' ';
+    }
+    return s;
+  }
+
   @override
   Widget build(BuildContext context) {
     // c.timeToNextZaman
 
-    Map<Color, int> colorOccurrences = {};
+    Map<Color, double> colorOccurrences = {};
 
-    for (Z z in Z.values) {}
+    //DateTime date = athan.getZamanTime(Z.Fajr)[0] as DateTime;
+    // date = DateTime(date.year, date.month, date.day);
+    double totalSecs = 0.0;
+    int lastIdx = Z.values.length - 2; // don't go to FajrTomorrow
+    for (var zIdx = lastIdx; zIdx >= 0; zIdx--) {
+      Z currZ = Z.values[zIdx];
+      Z nextZ = Z.values[zIdx + 1];
 
-    return GetBuilder<ZamanController>(builder: (c) {
-      return Column(
-        children: [
-          SizedBox(height: 100),
-          //CustomPaint(painter: DrawCircle()), // shader
-          //MyHomePage(),
-          MultipleColorCircle(
-              //colorOccurrences: {Colors.blue: 2, Colors.green: 1},
-              colorOccurrences: {
-                Colors.red: 2,
-                Colors.yellow: 6,
-                Colors.red.shade700: 2,
-                Colors.blueAccent: 1,
-                Colors.purple: 4,
-                Colors.purple.shade700: 13,
-                Colors.blueAccent.shade700: 1,
-                Colors.red.shade800: 2,
-                Colors.yellow.shade700: 4,
-                Colors.yellow.shade900: 3,
-              }, child: Planets()),
-          //Planets(),
-          //Circles(),
-          //Spiral(),
-        ],
-      );
-    });
+      List<Object> currZValues = athan.getZamanTime(currZ);
+      DateTime currZTime = currZValues[0] as DateTime;
+      Color currZColor = currZValues[1] as Color;
+
+      List<Object> nextZValues = athan.getZamanTime(nextZ);
+      DateTime nextZTime = nextZValues[0] as DateTime;
+
+      double elapsedSecs =
+          nextZTime.difference(currZTime).inMilliseconds / 1000;
+      colorOccurrences[currZColor] = elapsedSecs;
+      totalSecs += elapsedSecs;
+      l.d('${fill(currZ.niceName, 10)} secs=$elapsedSecs (mins=${elapsedSecs / 60}), totalSecs=$totalSecs (mins=${totalSecs / 60})');
+    }
+    double secsOff = secondsInADay - totalSecs;
+    l.d('totalSecs=$totalSecs of 86400, $secsOff secs off (mins=${secsOff / 60})');
+
+    // //DateTime date = athan.getZamanTime(Z.Fajr)[0] as DateTime;
+    // // date = DateTime(date.year, date.month, date.day);
+    // int totalSecs = 0;
+    // int lastIdx = Z.values.length - 1; // don't go to FajrTomorrow
+    // for (var i = 0; i < lastIdx; i++) {
+    //   Z currZ = Z.values[i];
+    //   Z nextZ = Z.values[i + 1];
+    //
+    //   List<Object> currZValues = athan.getZamanTime(currZ);
+    //   DateTime currZTime = currZValues[0] as DateTime;
+    //   Color currZColor = currZValues[1] as Color;
+    //
+    //   List<Object> nextZValues = athan.getZamanTime(nextZ);
+    //   DateTime nextZTime = nextZValues[0] as DateTime;
+    //
+    //   int elapsedSecs = nextZTime.difference(currZTime).inSeconds;
+    //   colorOccurrences[currZColor] = elapsedSecs;
+    //   totalSecs += elapsedSecs;
+    //   l.d('${fill(currZ.niceName, 10)} secs=$elapsedSecs (mins=${elapsedSecs / 60}), totalSecs=$totalSecs (mins=${totalSecs / 60})');
+    // }
+    // int secsOff = secondsInADay - totalSecs;
+    // l.d('totalSecs=$totalSecs of 86400, $secsOff secs off (mins=${secsOff / 60})');
+
+    return Column(
+      children: [
+        SizedBox(height: 100),
+        //CustomPaint(painter: DrawCircle()), // shader
+        //MyHomePage(),
+        MultipleColorCircle(
+          // colorOccurrences: {Colors.blue: 2, Colors.green: 1},
+          // colorOccurrences: {
+          //   Colors.red: 2,
+          //   Colors.yellow: 6,
+          //   Colors.red.shade700: 2,
+          //   Colors.blueAccent: 1,
+          //   Colors.purple: 4,
+          //   Colors.purple.shade700: 13,
+          //   Colors.blueAccent.shade700: 1,
+          //   Colors.red.shade800: 2,
+          //   Colors.yellow.shade700: 4,
+          //   Colors.yellow.shade900: 3,
+          colorOccurrences: colorOccurrences,
+          child: Planets(),
+        ),
+        //Planets(),
+        //Circles(),
+        //Spiral(),
+      ],
+    );
   }
 }
 
@@ -698,31 +749,31 @@ class OpenPainter extends CustomPainter {
 }
 
 class MultipleColorCircle extends StatelessWidget {
-  final Map<Color, int> colorOccurrences;
+  final Map<Color, double> colorOccurrences;
   final double height;
   final Widget? child;
   @override
   const MultipleColorCircle(
       {required this.colorOccurrences, this.height = 150, this.child});
-  Widget build(BuildContext context) => Container(
+  Widget build(BuildContext context) => SizedBox(
         height: height,
         width: height,
         child: CustomPaint(
-            size: Size(20, 20),
-            child: Center(child: child),
-            painter: _MultipleColorCirclePainter(
-              colorOccurrences: colorOccurrences,
-              height: height,
-            )),
+          size: const Size(20, 20),
+          child: Center(child: child),
+          painter: _MultipleColorCirclePainter(
+            colorOccurrences,
+            height,
+          ),
+        ),
       );
 }
 
 class _MultipleColorCirclePainter extends CustomPainter {
-  final Map<Color, int> colorOccurrences;
+  final Map<Color, double> colorOccurrences;
   final double height;
   @override
-  _MultipleColorCirclePainter(
-      {required this.colorOccurrences, required this.height});
+  _MultipleColorCirclePainter(this.colorOccurrences, this.height);
   double pi = math.pi;
 
   @override
@@ -731,12 +782,13 @@ class _MultipleColorCirclePainter extends CustomPainter {
     Rect myRect =
         Rect.fromCircle(center: Offset(height / 2, height / 2), radius: height);
 
-    double radianStart = 80; // was 0
+    double radianStart = 0;
     double radianLength = 0;
-    int allOccurrences = 0;
+    double allOccurrences = 0;
     //set denominator
     colorOccurrences.forEach((color, occurrence) {
       allOccurrences += occurrence;
+      l.d('allOccurrences=$allOccurrences');
     });
     colorOccurrences.forEach((color, occurrence) {
       double percent = occurrence / allOccurrences;
