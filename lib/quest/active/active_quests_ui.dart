@@ -477,7 +477,7 @@ class _SlivSunMover extends StatelessWidget {
       floating: false,
       pinned: true,
       delegate: _SliverAppBarDelegate(
-        minHeight: sliverHeight,
+        minHeight: sliverHeight / 2,
         maxHeight: sliverHeight,
         child: SunMoverUI(),
       ),

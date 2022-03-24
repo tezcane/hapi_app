@@ -16,17 +16,14 @@ class SunMoverUI extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double height = h(context);
-
-    return SizedBox(
-      height: height,
-      child: Column(
-        children: [
-          _CircleDayView(today, athan),
-          //const SizedBox(height: 10),
-          //_PastNowFutureButtonPanel(today)
-        ],
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        _CircleDayView(today, athan),
+        const SizedBox(height: 15),
+        //_PastNowFutureButtonPanel(today)
+        //SizedBox(height: 100),
+      ],
     );
   }
 }
@@ -52,8 +49,6 @@ class _CircleDayView extends StatelessWidget {
 
     Map<Color, double> colorOccurrences = {};
 
-    //DateTime date = athan.getZamanTime(Z.Fajr)[0] as DateTime;
-    // date = DateTime(date.year, date.month, date.day);
     double totalSecs = 0.0;
     int lastIdx = Z.values.length - 2; // don't go to FajrTomorrow
     for (var zIdx = lastIdx; zIdx >= 0; zIdx--) {
@@ -76,50 +71,11 @@ class _CircleDayView extends StatelessWidget {
     double secsOff = secondsInADay - totalSecs;
     l.d('totalSecs=$totalSecs of 86400, $secsOff secs off (mins=${secsOff / 60})');
 
-    // //DateTime date = athan.getZamanTime(Z.Fajr)[0] as DateTime;
-    // // date = DateTime(date.year, date.month, date.day);
-    // int totalSecs = 0;
-    // int lastIdx = Z.values.length - 1; // don't go to FajrTomorrow
-    // for (var i = 0; i < lastIdx; i++) {
-    //   Z currZ = Z.values[i];
-    //   Z nextZ = Z.values[i + 1];
-    //
-    //   List<Object> currZValues = athan.getZamanTime(currZ);
-    //   DateTime currZTime = currZValues[0] as DateTime;
-    //   Color currZColor = currZValues[1] as Color;
-    //
-    //   List<Object> nextZValues = athan.getZamanTime(nextZ);
-    //   DateTime nextZTime = nextZValues[0] as DateTime;
-    //
-    //   int elapsedSecs = nextZTime.difference(currZTime).inSeconds;
-    //   colorOccurrences[currZColor] = elapsedSecs;
-    //   totalSecs += elapsedSecs;
-    //   l.d('${fill(currZ.niceName, 10)} secs=$elapsedSecs (mins=${elapsedSecs / 60}), totalSecs=$totalSecs (mins=${totalSecs / 60})');
-    // }
-    // int secsOff = secondsInADay - totalSecs;
-    // l.d('totalSecs=$totalSecs of 86400, $secsOff secs off (mins=${secsOff / 60})');
-
     return Column(
       children: [
-        SizedBox(height: 100),
+        MultipleColorCircle(colorOccurrences, 150, Planets()),
         //CustomPaint(painter: DrawCircle()), // shader
         //MyHomePage(),
-        MultipleColorCircle(
-          // colorOccurrences: {Colors.blue: 2, Colors.green: 1},
-          // colorOccurrences: {
-          //   Colors.red: 2,
-          //   Colors.yellow: 6,
-          //   Colors.red.shade700: 2,
-          //   Colors.blueAccent: 1,
-          //   Colors.purple: 4,
-          //   Colors.purple.shade700: 13,
-          //   Colors.blueAccent.shade700: 1,
-          //   Colors.red.shade800: 2,
-          //   Colors.yellow.shade700: 4,
-          //   Colors.yellow.shade900: 3,
-          colorOccurrences: colorOccurrences,
-          child: Planets(),
-        ),
         //Planets(),
         //Circles(),
         //Spiral(),
@@ -149,21 +105,15 @@ class _PlanetsState extends State<Planets> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _controller1 = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 5),
-    );
-    _controller2 = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 5),
-    );
+    _controller1 =
+        AnimationController(vsync: this, duration: const Duration(seconds: 5));
+    _controller2 =
+        AnimationController(vsync: this, duration: const Duration(seconds: 5));
   }
 
   @override
   Widget build(BuildContext context) {
-    final double height = h(context);
     return SizedBox(
-      height: height / 2, // needed
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: Stack(
@@ -307,10 +257,8 @@ class _CirclesState extends State<Circles> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      vsync: this,
-      duration: Duration(seconds: 3),
-    );
+    _controller =
+        AnimationController(vsync: this, duration: const Duration(seconds: 3));
     _controller.value = 1.0;
   }
 
@@ -401,7 +349,7 @@ class _CirclesState extends State<Circles> with SingleTickerProviderStateMixin {
               ),
               Center(
                 child: RaisedButton(
-                  child: Text('Animate'),
+                  child: const Text('Animate'),
                   onPressed: () {
                     _controller.reset();
                     _controller.forward();
@@ -484,7 +432,7 @@ class _SpiralState extends State<Spiral> with SingleTickerProviderStateMixin {
     super.initState();
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(seconds: 5),
+      duration: const Duration(seconds: 5),
     );
     _controller.value = 1.0;
   }
@@ -492,7 +440,6 @@ class _SpiralState extends State<Spiral> with SingleTickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: h(context) / 2,
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: SafeArea(
@@ -503,7 +450,7 @@ class _SpiralState extends State<Spiral> with SingleTickerProviderStateMixin {
               AnimatedBuilder(
                 animation: _controller,
                 builder: (context, child) {
-                  print('${_controller.value}');
+                  l.v('${_controller.value}');
                   return Expanded(
                     child: Center(
                       child: CustomPaint(
@@ -669,26 +616,22 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: w(context),
-      height: h(context),
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Center(
-          child: TweenAnimationBuilder(
-            duration: const Duration(seconds: 2),
-            tween: Tween(begin: 0.0, end: 1.0),
-            curve: Curves.easeOutCubic,
-            builder: (BuildContext context, dynamic value, Widget? child) {
-              return CustomPaint(
-                painter: OpenPainter(
-                    totalQuestions: 300,
-                    learned: 75,
-                    notLearned: 75,
-                    range: value),
-              );
-            },
-          ),
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: Center(
+        child: TweenAnimationBuilder(
+          duration: const Duration(seconds: 2),
+          tween: Tween(begin: 0.0, end: 1.0),
+          curve: Curves.easeOutCubic,
+          builder: (BuildContext context, dynamic value, Widget? child) {
+            return CustomPaint(
+              painter: OpenPainter(
+                  totalQuestions: 300,
+                  learned: 75,
+                  notLearned: 75,
+                  range: value),
+            );
+          },
         ),
       ),
     );
@@ -749,22 +692,20 @@ class OpenPainter extends CustomPainter {
 }
 
 class MultipleColorCircle extends StatelessWidget {
+  const MultipleColorCircle(this.colorOccurrences, this.height, this.child);
+
   final Map<Color, double> colorOccurrences;
   final double height;
-  final Widget? child;
+  final Widget child;
+
   @override
-  const MultipleColorCircle(
-      {required this.colorOccurrences, this.height = 150, this.child});
   Widget build(BuildContext context) => SizedBox(
         height: height,
         width: height,
         child: CustomPaint(
           size: const Size(20, 20),
           child: Center(child: child),
-          painter: _MultipleColorCirclePainter(
-            colorOccurrences,
-            height,
-          ),
+          painter: _MultipleColorCirclePainter(colorOccurrences, height),
         ),
       );
 }
@@ -782,7 +723,7 @@ class _MultipleColorCirclePainter extends CustomPainter {
     Rect myRect =
         Rect.fromCircle(center: Offset(height / 2, height / 2), radius: height);
 
-    double radianStart = 0;
+    double radianStart = .45;
     double radianLength = 0;
     double allOccurrences = 0;
     //set denominator
