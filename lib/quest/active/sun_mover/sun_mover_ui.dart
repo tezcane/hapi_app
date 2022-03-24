@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/athan/athan.dart';
+import 'package:hapi/quest/active/athan/z.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
 
 class SunMoverUI extends StatelessWidget {
@@ -43,6 +44,10 @@ class _CircleDayView extends StatelessWidget {
   Widget build(BuildContext context) {
     // c.timeToNextZaman
 
+    Map<Color, int> colorOccurrences = {};
+
+    for (Z z in Z.values) {}
+
     return GetBuilder<ZamanController>(builder: (c) {
       return Column(
         children: [
@@ -53,13 +58,15 @@ class _CircleDayView extends StatelessWidget {
               //colorOccurrences: {Colors.blue: 2, Colors.green: 1},
               colorOccurrences: {
                 Colors.red: 2,
-                Colors.yellow: 5,
+                Colors.yellow: 6,
                 Colors.red.shade700: 2,
-                Colors.blueAccent: 4,
-                Colors.purple: 10,
-                Colors.blueAccent.shade700: 4,
+                Colors.blueAccent: 1,
+                Colors.purple: 4,
+                Colors.purple.shade700: 13,
+                Colors.blueAccent.shade700: 1,
                 Colors.red.shade800: 2,
-                Colors.yellow.shade700: 5,
+                Colors.yellow.shade700: 4,
+                Colors.yellow.shade900: 3,
               }, child: Planets()),
           //Planets(),
           //Circles(),

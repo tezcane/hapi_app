@@ -33,60 +33,60 @@ extension EnumUtil on CalcMethod {
   }
 
   CalcMethodParams get params {
-    final Map<SalahAdjust, int> ma = {
-      SalahAdjust.fajr: 0,
-      SalahAdjust.sunrise: 0,
-      SalahAdjust.dhuhr: 0,
-      SalahAdjust.asr: 0,
-      SalahAdjust.maghrib: 0,
-      SalahAdjust.isha: 0,
+    final Map<Salah, int> adjustSecs = {
+      Salah.fajr: 0,
+      Salah.sunrise: 0,
+      Salah.dhuhr: 0,
+      Salah.asr: 0,
+      Salah.maghrib: 0,
+      Salah.isha: 0,
     };
 
     switch (this) {
       case (CalcMethod.Singapore):
-        ma[SalahAdjust.dhuhr] = 1;
-        return CalcMethodParams(this, 20.0, 18.0, 0, 0.0, ma);
+        adjustSecs[Salah.dhuhr] = 1 * 60;
+        return CalcMethodParams(this, 20.0, 18.0, 0, 0.0, adjustSecs);
       case (CalcMethod.Egypt____GAS___):
-        ma[SalahAdjust.dhuhr] = 1;
-        return CalcMethodParams(this, 19.5, 17.5, 0, 0.0, ma);
+        adjustSecs[Salah.dhuhr] = 1 * 60;
+        return CalcMethodParams(this, 19.5, 17.5, 0, 0.0, adjustSecs);
       case (CalcMethod.Morocco____MHIA___):
-        ma[SalahAdjust.sunrise] = -3;
-        ma[SalahAdjust.dhuhr] = 5;
-        ma[SalahAdjust.maghrib] = 5;
-        return CalcMethodParams(this, 19.0, 17.0, 0, 0.0, ma);
+        adjustSecs[Salah.sunrise] = -3 * 60;
+        adjustSecs[Salah.dhuhr] = 5 * 60;
+        adjustSecs[Salah.maghrib] = 5 * 60;
+        return CalcMethodParams(this, 19.0, 17.0, 0, 0.0, adjustSecs);
       case (CalcMethod.Dubai):
-        ma[SalahAdjust.sunrise] = -3;
-        ma[SalahAdjust.dhuhr] = 3;
-        ma[SalahAdjust.asr] = 3;
-        ma[SalahAdjust.maghrib] = 3;
-        return CalcMethodParams(this, 18.2, 18.2, 0, 0.0, ma);
+        adjustSecs[Salah.sunrise] = -3 * 60;
+        adjustSecs[Salah.dhuhr] = 3 * 60;
+        adjustSecs[Salah.asr] = 3 * 60;
+        adjustSecs[Salah.maghrib] = 3 * 60;
+        return CalcMethodParams(this, 18.2, 18.2, 0, 0.0, adjustSecs);
       case (CalcMethod.Moonsight_Committee):
-        ma[SalahAdjust.dhuhr] = 5;
-        ma[SalahAdjust.maghrib] = 3;
-        return CalcMethodParams(this, 18.0, 18.0, 0, 0.0, ma);
+        adjustSecs[Salah.dhuhr] = 5 * 60;
+        adjustSecs[Salah.maghrib] = 3 * 60;
+        return CalcMethodParams(this, 18.0, 18.0, 0, 0.0, adjustSecs);
       case (CalcMethod.Karachi____UIS___):
-        ma[SalahAdjust.dhuhr] = 1;
-        return CalcMethodParams(this, 18.0, 18.0, 0, 0.0, ma);
+        adjustSecs[Salah.dhuhr] = 1 * 60;
+        return CalcMethodParams(this, 18.0, 18.0, 0, 0.0, adjustSecs);
       case (CalcMethod.Kuwait):
-        return CalcMethodParams(this, 18.0, 17.5, 0, 0.0, ma);
+        return CalcMethodParams(this, 18.0, 17.5, 0, 0.0, adjustSecs);
       case (CalcMethod.Turkey____Diyanet___):
-        ma[SalahAdjust.sunrise] = -7;
-        ma[SalahAdjust.dhuhr] = 5;
-        ma[SalahAdjust.asr] = 4;
-        ma[SalahAdjust.maghrib] = 7;
-        return CalcMethodParams(this, 18.0, 17.0, 0, 0.0, ma);
+        adjustSecs[Salah.sunrise] = -7 * 60;
+        adjustSecs[Salah.dhuhr] = 5 * 60;
+        adjustSecs[Salah.asr] = 4 * 60;
+        adjustSecs[Salah.maghrib] = 7 * 60;
+        return CalcMethodParams(this, 18.0, 17.0, 0, 0.0, adjustSecs);
       case (CalcMethod.Muslim_World_League):
-        ma[SalahAdjust.dhuhr] = 1;
-        return CalcMethodParams(this, 18.0, 17.0, 0, 0.0, ma);
+        adjustSecs[Salah.dhuhr] = 1 * 60;
+        return CalcMethodParams(this, 18.0, 17.0, 0, 0.0, adjustSecs);
       case (CalcMethod.Umm_Al__Qura____UM___):
-        return CalcMethodParams(this, 18.5, 0.0, 90, 0.0, ma);
+        return CalcMethodParams(this, 18.5, 0.0, 90, 0.0, adjustSecs);
       case (CalcMethod.Qatar):
-        return CalcMethodParams(this, 18.0, 0.0, 90, 0.0, ma);
+        return CalcMethodParams(this, 18.0, 0.0, 90, 0.0, adjustSecs);
       case (CalcMethod.Tehran____IGUT___):
-        return CalcMethodParams(this, 17.7, 14.0, 0, 4.5, ma);
+        return CalcMethodParams(this, 17.7, 14.0, 0, 4.5, adjustSecs);
       case (CalcMethod.America____ISNA___):
-        ma[SalahAdjust.dhuhr] = 1;
-        return CalcMethodParams(this, 15.0, 15.0, 0, 0.0, ma);
+        adjustSecs[Salah.dhuhr] = 1 * 60;
+        return CalcMethodParams(this, 15.0, 15.0, 0, 0.0, adjustSecs);
       case (CalcMethod.Custom):
       default:
         CalcMethod calcMethod = CalcMethod
@@ -96,13 +96,13 @@ extension EnumUtil on CalcMethod {
         int ishaInterval = s.rd('calcMethod_ishaInterval') ?? 0;
         double maghribAngle = s.rd('calcMethod_maghribAngle') ?? 0.0;
 
-        final Map<SalahAdjust, int> ma = {
-          SalahAdjust.fajr: s.rd('calcMethod_maFajr') ?? 0,
-          SalahAdjust.sunrise: s.rd('calcMethod_maSunrise') ?? 0,
-          SalahAdjust.dhuhr: s.rd('calcMethod_maDhuhr') ?? 0,
-          SalahAdjust.asr: s.rd('calcMethod_maAsr') ?? 0,
-          SalahAdjust.maghrib: s.rd('calcMethod_maMaghrib') ?? 0,
-          SalahAdjust.isha: s.rd('calcMethod_maIsha') ?? 0,
+        final Map<Salah, int> adjustSecs = {
+          Salah.fajr: s.rd('calcMethod_asFajr') ?? 0,
+          Salah.sunrise: s.rd('calcMethod_asSunrise') ?? 0,
+          Salah.dhuhr: s.rd('calcMethod_asDhuhr') ?? 0,
+          Salah.asr: s.rd('calcMethod_asAsr') ?? 0,
+          Salah.maghrib: s.rd('calcMethod_asMaghrib') ?? 0,
+          Salah.isha: s.rd('calcMethod_asIsha') ?? 0,
         };
         return CalcMethodParams(
           calcMethod,
@@ -110,7 +110,7 @@ extension EnumUtil on CalcMethod {
           ishaAngle,
           ishaInterval,
           maghribAngle,
-          ma,
+          adjustSecs,
         );
     }
   }
@@ -124,15 +124,15 @@ extension EnumUtil on CalcMethod {
     var params1 = params; // regenerate these once
     var params2 = calcMethod.params;
 
-    Map<SalahAdjust, int> ma1 = params1.methodAdjustments; // to fit on line
-    Map<SalahAdjust, int> ma2 = params2.methodAdjustments;
+    Map<Salah, int> as1 = params1.adjustSecs; // to fit on line
+    Map<Salah, int> as2 = params2.adjustSecs;
 
-    return ma1[SalahAdjust.fajr] == ma2[SalahAdjust.fajr] &&
-        ma1[SalahAdjust.sunrise] == ma2[SalahAdjust.sunrise] &&
-        ma1[SalahAdjust.dhuhr] == ma2[SalahAdjust.dhuhr] &&
-        ma1[SalahAdjust.asr] == ma2[SalahAdjust.asr] &&
-        ma1[SalahAdjust.maghrib] == ma2[SalahAdjust.maghrib] &&
-        ma1[SalahAdjust.isha] == ma2[SalahAdjust.isha] &&
+    return as1[Salah.fajr] == as2[Salah.fajr] &&
+        as1[Salah.sunrise] == as2[Salah.sunrise] &&
+        as1[Salah.dhuhr] == as2[Salah.dhuhr] &&
+        as1[Salah.asr] == as2[Salah.asr] &&
+        as1[Salah.maghrib] == as2[Salah.maghrib] &&
+        as1[Salah.isha] == as2[Salah.isha] &&
         params1.fajrAngle == params2.fajrAngle &&
         params1.ishaAngle == params2.ishaAngle &&
         params1.ishaIntervalMins == params2.ishaIntervalMins &&
@@ -167,7 +167,7 @@ class CalcMethodParams {
     this.ishaAngle,
     this.ishaIntervalMins,
     this.maghribAngle,
-    this.methodAdjustments,
+    this.adjustSecs,
   ) {
     if (calcMethod == CalcMethod.Custom) {
       s.wr('calcMethod_idx', CalcMethod.Custom.index);
@@ -176,12 +176,12 @@ class CalcMethodParams {
       s.wr('calcMethod_ishaInterval', ishaIntervalMins);
       s.wr('calcMethod_maghribAngle', maghribAngle);
 
-      s.wr('calcMethod_maFajr', methodAdjustments[SalahAdjust.fajr]);
-      s.wr('calcMethod_maSunrise', methodAdjustments[SalahAdjust.sunrise]);
-      s.wr('calcMethod_maDhuhr', methodAdjustments[SalahAdjust.dhuhr]);
-      s.wr('calcMethod_maAsr', methodAdjustments[SalahAdjust.asr]);
-      s.wr('calcMethod_maMaghrib', methodAdjustments[SalahAdjust.maghrib]);
-      s.wr('calcMethod_maIsha', methodAdjustments[SalahAdjust.isha]);
+      s.wr('calcMethod_asFajr', adjustSecs[Salah.fajr]);
+      s.wr('calcMethod_asSunrise', adjustSecs[Salah.sunrise]);
+      s.wr('calcMethod_asDhuhr', adjustSecs[Salah.dhuhr]);
+      s.wr('calcMethod_asAsr', adjustSecs[Salah.asr]);
+      s.wr('calcMethod_asMaghrib', adjustSecs[Salah.maghrib]);
+      s.wr('calcMethod_asIsha', adjustSecs[Salah.isha]);
     }
   }
 
@@ -189,14 +189,14 @@ class CalcMethodParams {
   /// quick comparisons, niceName printing needs, etc.
   final CalcMethod calcMethod;
 
-  /// Must have all these SalahAdjust values:
+  /// Must have all these SalahAdjust values, +/- seconds to tune a salah time:
   ///     'fajr': 0
   ///     'sunrise': 0
   ///     'dhuhr': 0
   ///     'asr': 0
   ///     'maghrib': 0
   ///     'isha': 0
-  final Map<SalahAdjust, int> methodAdjustments;
+  final Map<Salah, int> adjustSecs;
 
   /// Angle of sun below horizon marking start of fajr
   final double fajrAngle;

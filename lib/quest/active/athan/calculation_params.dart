@@ -1,3 +1,4 @@
+import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/athan/calculation_method.dart';
 
 /// Holds all low level parameters needed to calculate salah and Zaman times. It
@@ -7,48 +8,43 @@ class CalculationParams {
   CalculationParams(
     this.method,
     this.madhab,
-    this.kerahatSunRisingMins,
-    this.kerahatSunZawalMins,
-    this.kerahatSunSettingMins,
+    this.kerahatSunRisingSecs,
+    this.kerahatSunZawalSecs,
+    this.kerahatSunSettingSecs,
     this.highLatitudeRule,
-    this.adjustments,
   );
 
   final CalcMethodParams method;
   final Madhab madhab;
-  final int kerahatSunRisingMins;
-  final int kerahatSunZawalMins;
-  final int kerahatSunSettingMins;
+  final int kerahatSunRisingSecs;
+  // ensure kerahatSunZawalSecs always end in an even number (we divide by 2)
+  final int kerahatSunZawalSecs;
+  final int kerahatSunSettingSecs;
   final HighLatitudeRule highLatitudeRule;
 
-  /// Must have all these values:
-  ///     'fajr': 0
-  ///     'sunrise': 0
-  ///     'dhuhr': 0
-  ///     'asr': 0
-  ///     'maghrib': 0
-  ///     'isha': 0
-  final Map<SalahAdjust, int> adjustments;
-
-  Map<SalahAdjust, double> nightPortions() {
+  Map<Salah, double> nightPortions() {
     switch (highLatitudeRule) {
       case HighLatitudeRule.MiddleOfTheNight:
         return {
-          SalahAdjust.fajr: 1 / 2,
-          SalahAdjust.isha: 1 / 2,
+          Salah.fajr: 1 / 2,
+          Salah.isha: 1 / 2,
         };
       case HighLatitudeRule.SeventhOfTheNight:
         return {
-          SalahAdjust.fajr: 1 / 7,
-          SalahAdjust.isha: 1 / 7,
+          Salah.fajr: 1 / 7,
+          Salah.isha: 1 / 7,
         };
       case HighLatitudeRule.TwilightAngle:
         return {
-          SalahAdjust.fajr: method.fajrAngle / 60, // default 0:, 0/60 = 1
-          SalahAdjust.isha: method.ishaAngle / 60, // default 0:, 0/60 = 1
+          Salah.fajr: method.fajrAngle / 60, // default 0:, 0/60 = 1
+          Salah.isha: method.ishaAngle / 60, // default 0:, 0/60 = 1
         };
       default:
-        throw 'Invalid high latitude rule found when attempting to compute night portions: $highLatitudeRule';
+        l.e('Invalid high latitude rule found: $highLatitudeRule, defaulting to ${HighLatitudeRule.MiddleOfTheNight.name}');
+        return {
+          Salah.fajr: 1 / 2,
+          Salah.isha: 1 / 2,
+        };
     }
   }
 }
@@ -62,10 +58,11 @@ enum Madhab {
 }
 
 extension EnumUtil on Madhab {
-  int get shadowLength => this == Madhab.Hanafi ? 2 : 1;
+  int get asrShadowLength => this == Madhab.Hanafi ? 2 : 1;
 }
 
-enum SalahAdjust {
+/// Used as key in salah adjust secs, night fraction calculations, etc.
+enum Salah {
   fajr,
   sunrise,
   dhuhr,

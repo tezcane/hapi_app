@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:hapi/helpers/cord.dart';
-import 'package:hapi/helpers/date_utils.dart';
 import 'package:hapi/helpers/math_utils.dart';
 
 class Astronomical {
@@ -190,7 +189,7 @@ class Astronomical {
       declination,
       previousDeclination,
       nextDeclination) {
-    double? m0 = approximateTransit;
+    double m0 = approximateTransit;
     double h0 = angle;
     double Theta0 = siderealTime;
     double a2 = rightAscension;
@@ -312,7 +311,7 @@ class Astronomical {
       }
     }
 
-    return dateByAddingSeconds(sunrise, (adjustment() * -60.0).round());
+    return sunrise.add(Duration(seconds: (adjustment() * -60.0).round()));
   }
 
   static DateTime seasonAdjustedEveningTwilight(
@@ -339,7 +338,7 @@ class Astronomical {
       }
     }
 
-    return dateByAddingSeconds(sunset, (adjustment() * 60.0).round());
+    return sunset.add(Duration(seconds: (adjustment() * 60.0).round()));
   }
 
   static int daysSinceSolstice(int dayOfYear, int year, double latitude) {

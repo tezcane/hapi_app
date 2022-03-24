@@ -59,13 +59,13 @@ class ZamanController extends GetxHapi {
       madhab = Madhab.Shafi;
     }
 
-    int kerahatSunRisingMins = 40;
-    int kerahatSunZawalMins = 30;
-    int kerahatSunSettingMins = 40;
+    int kerahatSunRisingSecs = 40 * 60;
+    int kerahatSunZawalSecs = 30 * 60;
+    int kerahatSunSettingSecs = 40 * 60;
     if (!ActiveQuestsController.to.salahKerahatSafe) {
-      kerahatSunRisingMins = 20;
-      kerahatSunZawalMins = 15;
-      kerahatSunSettingMins = 20;
+      kerahatSunRisingSecs = 20 * 60;
+      kerahatSunZawalSecs = 15 * 60;
+      kerahatSunSettingSecs = 20 * 60;
     }
 
     // TODO give user a way to change:
@@ -73,25 +73,17 @@ class ZamanController extends GetxHapi {
     var params = CalculationParams(
       calcMethod.params,
       madhab,
-      kerahatSunRisingMins,
-      kerahatSunZawalMins,
-      kerahatSunSettingMins,
+      kerahatSunRisingSecs,
+      kerahatSunZawalSecs,
+      kerahatSunSettingSecs,
       HighLatitudeRule.MiddleOfTheNight,
-      {
-        SalahAdjust.fajr: 0,
-        SalahAdjust.sunrise: 0,
-        SalahAdjust.dhuhr: 0,
-        SalahAdjust.asr: 0,
-        SalahAdjust.maghrib: 0,
-        SalahAdjust.isha: 0
-      },
     );
 
     bool precision = false;
     Athan athan = Athan(
-      LocationController.to.lastKnownCord,
-      date,
       params,
+      date,
+      LocationController.to.lastKnownCord,
       timezoneLoc,
       precision,
     );

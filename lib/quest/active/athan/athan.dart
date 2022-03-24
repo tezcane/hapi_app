@@ -1,5 +1,4 @@
 import 'package:hapi/helpers/cord.dart';
-import 'package:hapi/helpers/date_utils.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/astronomical/astronomical.dart';
@@ -12,26 +11,31 @@ import 'package:timezone/timezone.dart';
 /// Get all the prayer and other times needed to track important salah and
 /// islamic activity around a single day.
 class Athan {
-  final Cord cord;
-  final DateTime date;
+  Athan(this.params, this.date, this.cord, this.tzLoc, this.precision) {
+    _calculateTimes();
+  }
+
   final CalculationParams params;
+  final DateTime date;
+  final Cord cord;
   final Location tzLoc; // timezone
   final bool precision;
 
-  late DateTime _fajr_01;
-  late DateTime _kerahatAdkharSunrise_02; // sunrise - kerahat 1
-  late DateTime _ishraqPrayer_03;
-  late DateTime _duhaPrayer_04;
-  late DateTime _kerahatAdkharZawal_05; // sun zenith/peak - kerahat 2
-  late DateTime _dhuhr_06;
-  late DateTime _asr_07;
-  late DateTime _kerahatAdkharSunSetting_08; // sun begins setting - kerahat 3
-  late DateTime _maghrib_09; // actual sunset
-  late DateTime _isha_10;
-  late DateTime _middleOfNight_11;
-  late DateTime _last3rdOfNight_12;
-  late DateTime _fajrTomorrow_13;
-  late DateTime _sunriseTomorrow_14;
+  // _calculateTimes() must initialize all this:
+  late final DateTime _fajr_01;
+  late final DateTime _kerahatAdkharSunrise_02; // sunrise - kerahat 1
+  late final DateTime _ishraqPrayer_03;
+  late final DateTime _duhaPrayer_04;
+  late final DateTime _kerahatAdkharZawal_05; // sun zenith/peak - kerahat 2
+  late final DateTime _dhuhr_06;
+  late final DateTime _asr_07;
+  late final DateTime _kerahatAdkharSunSetting_08; // sun setting - kerahat 3
+  late final DateTime _maghrib_09; // actual sunset
+  late final DateTime _isha_10;
+  late final DateTime _middleOfNight_11;
+  late final DateTime _last3rdOfNight_12;
+  late final DateTime _fajrTomorrow_13;
+  late final DateTime _sunriseTomorrow_14;
   DateTime get fajr => _fajr_01;
   DateTime get sunrise => _kerahatAdkharSunrise_02;
   DateTime get ishraq => _ishraqPrayer_03;
@@ -47,7 +51,7 @@ class Athan {
   DateTime get fajrTomorrow => _fajrTomorrow_13;
   DateTime get sunriseTomorrow => _sunriseTomorrow_14;
 
-  Athan(this.cord, this.date, this.params, this.tzLoc, this.precision) {
+  void _calculateTimes() {
     CalcMethodParams method = params.method;
 
     SolarTime solarTime = SolarTime(date, cord);
@@ -65,71 +69,63 @@ class Athan {
     DateTime ishaTime;
     DateTime fajrTomorrowTime;
 
-    double? nightFraction;
+    // sun at zenith
+    DateTime highNoonTime = _TimeComponent(solarTime.transit)
+        .utcDate(date.year, date.month, date.day);
+    DateTime sunriseTime = _TimeComponent(solarTime.sunrise)
+        .utcDate(date.year, date.month, date.day);
+    DateTime sunsetTime = _TimeComponent(solarTime.sunset)
+        .utcDate(date.year, date.month, date.day);
 
-    DateTime dhuhrTime = TimeComponent(solarTime.transit)
-        .utcDate(date.year, date.month, date.day);
-    DateTime sunriseTime = TimeComponent(solarTime.sunrise)
-        .utcDate(date.year, date.month, date.day);
-    DateTime sunsetTime = TimeComponent(solarTime.sunset)
-        .utcDate(date.year, date.month, date.day);
-
-    DateTime sunriseTimeTomorrow = TimeComponent(solarTimeTomorrow.sunrise)
+    DateTime sunriseTimeTomorrow = _TimeComponent(solarTimeTomorrow.sunrise)
         .utcDate(dateTomorrow.year, dateTomorrow.month, dateTomorrow.day);
-    // DateTime sunsetTimeYesteray = TimeComponents(solarTimeYesterday.sunset)
+    // DateTime sunsetTimeYesterday = TimeComponents(solarTimeYesterday.sunset)
     //     .utcDate(dateYesterday.year, dateYesterday.month, dateYesterday.day);
 
-    asrTime = TimeComponent(solarTime.afternoon(params.madhab.shadowLength))
+    asrTime = _TimeComponent(solarTime.afternoon(params.madhab.asrShadowLength))
         .utcDate(date.year, date.month, date.day);
 
-    int nightDurationInSecs =
-        (sunriseTimeTomorrow.difference(sunsetTime)).inSeconds;
+    fajrTime = _TimeComponent(solarTime.hourAngle(-1 * method.fajrAngle, false))
+        .utcDate(date.year, date.month, date.day);
 
-    fajrTime =
-        TimeComponent(solarTime.hourAngle(-1 * params.method.fajrAngle, false))
-            .utcDate(date.year, date.month, date.day);
-
-    fajrTomorrowTime =
-        TimeComponent(solarTimeTomorrow.hourAngle(-1 * method.fajrAngle, false))
-            .utcDate(dateTomorrow.year, dateTomorrow.month, dateTomorrow.day);
+    fajrTomorrowTime = _TimeComponent(
+            solarTimeTomorrow.hourAngle(-1 * method.fajrAngle, false))
+        .utcDate(dateTomorrow.year, dateTomorrow.month, dateTomorrow.day);
 
     // special case for moonsighting committee above latitude 55
     if (method.calcMethod == CalcMethod.Moonsight_Committee &&
         cord.latitude >= 55) {
-      // TODO rounded nightfraction
-      nightFraction = nightDurationInSecs / 7;
-      fajrTime = dateByAddingSeconds(sunriseTime, -nightFraction.round());
-      fajrTomorrowTime =
-          dateByAddingSeconds(sunriseTimeTomorrow, -nightFraction.round());
+      int nightDurationInSecs =
+          (sunriseTimeTomorrow.difference(sunsetTime)).inSeconds;
+      double nightFraction = nightDurationInSecs / 7;
+      fajrTime = sunriseTime.subtract(Duration(seconds: nightFraction.round()));
+      fajrTomorrowTime = sunriseTimeTomorrow
+          .subtract(Duration(seconds: nightFraction.round()));
     }
 
-    DateTime safeFajr(DateTime day) {
-      if (method.calcMethod == CalcMethod.Moonsight_Committee) {
-        return Astronomical.seasonAdjustedMorningTwilight(
-            cord.latitude, dayOfYear(day), day.year, sunriseTime);
-      } else {
-        double portion = params.nightPortions()[SalahAdjust.fajr]!;
-        nightFraction = portion * nightDurationInSecs;
-        return dateByAddingSeconds(sunriseTime, -nightFraction!.round());
-      }
-    }
-
+    DateTime safeFajrTime =
+        _safeFajr(date, sunriseTime, sunsetTime, sunriseTimeTomorrow);
     if (fajrTime.millisecondsSinceEpoch == double.nan ||
-        safeFajr(date).isAfter(fajrTime)) {
-      fajrTime = safeFajr(date);
+        safeFajrTime.isAfter(fajrTime)) {
+      l.w('Using safe Fajr time=$safeFajrTime (is after fajrTime=$fajrTime)');
+      fajrTime = safeFajrTime;
     }
 
+    DateTime safeFajrTomorrowTime =
+        _safeFajr(dateTomorrow, sunriseTime, sunsetTime, sunriseTimeTomorrow);
     if (fajrTomorrowTime.millisecondsSinceEpoch == double.nan ||
-        safeFajr(dateTomorrow).isAfter(fajrTomorrowTime)) {
-      fajrTomorrowTime = safeFajr(dateTomorrow);
+        safeFajrTomorrowTime.isAfter(fajrTomorrowTime)) {
+      l.w('Using Safe Fajr Tomorrow Time=$safeFajrTomorrowTime (is after fajrTomorrowTime=$fajrTomorrowTime)');
+      fajrTomorrowTime = safeFajrTomorrowTime;
     }
 
     if (method.ishaIntervalMins > 0) {
-      ishaTime = dateByAddingMinutes(sunsetTime, method.ishaIntervalMins);
+      ishaTime =
+          sunsetTime.add(Duration(seconds: method.ishaIntervalMins * 60));
       // ishaYesterdayTime = dateByAddingMinutes(
-      //     sunsetTimeYesteray, calculationParameters.ishaInterval);
+      //     sunsetTimeYesterday, calculationParameters.ishaInterval);
     } else {
-      ishaTime = TimeComponent(solarTime.hourAngle(-1 * method.ishaAngle, true))
+      ishaTime = _TimeComponent(solarTime.hourAngle(-method.ishaAngle, true))
           .utcDate(date.year, date.month, date.day);
       // ishaYesterdayTime = TimeComponents(solarTimeYesterday.hourAngle(
       //         -1 * calculationParameters.ishaAngle, true))
@@ -137,26 +133,19 @@ class Athan {
       // special case for moonsighting committee above latitude 55
       if (method.calcMethod == CalcMethod.Moonsight_Committee &&
           cord.latitude >= 55) {
-        nightFraction = nightDurationInSecs / 7;
-        ishaTime = dateByAddingSeconds(sunsetTime, nightFraction!.round());
+        int nightDurationInSecs =
+            (sunriseTimeTomorrow.difference(sunsetTime)).inSeconds;
+        double nightFraction = nightDurationInSecs / 7;
+        ishaTime = sunsetTime.add(Duration(seconds: nightFraction.round()));
         // ishaYesterdayTime =
-        //     dateByAddingSeconds(sunsetTimeYesteray, nightFraction!.round());
+        //     dateByAddingSeconds(sunsetTimeYesterday, nightFraction.round());
       }
 
-      DateTime safeIsha(DateTime day) {
-        if (method.calcMethod == CalcMethod.Moonsight_Committee) {
-          return Astronomical.seasonAdjustedEveningTwilight(
-              cord.latitude, dayOfYear(day), day.year, sunsetTime);
-        } else {
-          double portion = params.nightPortions()[SalahAdjust.isha]!;
-          nightFraction = portion * nightDurationInSecs;
-          return dateByAddingSeconds(sunsetTime, nightFraction!.round());
-        }
-      }
-
+      DateTime safeIshaTime = _safeIsha(date, sunsetTime, sunriseTimeTomorrow);
       if (ishaTime.millisecondsSinceEpoch == double.nan ||
-          safeIsha(date).isBefore(ishaTime)) {
-        ishaTime = safeIsha(date);
+          safeIshaTime.isBefore(ishaTime)) {
+        l.w('Using safe Isha time=$safeIshaTime (is before ishaTime=$ishaTime)');
+        ishaTime = safeIshaTime;
       }
 
       // if (ishaYesterdayTime.millisecondsSinceEpoch == double.nan ||
@@ -168,86 +157,194 @@ class Athan {
     maghribTime = sunsetTime;
     if (method.maghribAngle > 0.0) {
       DateTime angleBasedMaghrib =
-          TimeComponent(solarTime.hourAngle(-1 * method.maghribAngle, true))
+          _TimeComponent(solarTime.hourAngle(-method.maghribAngle, true))
               .utcDate(date.year, date.month, date.day);
       if (sunsetTime.isBefore(angleBasedMaghrib) &&
           ishaTime.isAfter(angleBasedMaghrib)) {
+        l.w('Using angle based maghrib time=$angleBasedMaghrib  (sunsetTime=$sunsetTime is before it and ishaTime=$ishaTime is after it)');
         maghribTime = angleBasedMaghrib;
       }
     }
 
-    final Map<SalahAdjust, int> salahAdjustments = {};
-    for (SalahAdjust salahAdjust in SalahAdjust.values) {
-      salahAdjustments[salahAdjust] = params.adjustments[salahAdjust]! +
-          method.methodAdjustments[salahAdjust]!;
-    }
-
     // _ishaYesterday = getTime(ishaYesterdayTime, ishaAdjustment);
 
-    _fajr_01 = getTime(fajrTime, salahAdjustments[SalahAdjust.fajr]!);
-    _kerahatAdkharSunrise_02 =
-        getTime(sunriseTime, salahAdjustments[SalahAdjust.sunrise]!);
-    _ishraqPrayer_03 = getTZ(_kerahatAdkharSunrise_02.add(
-      Duration(minutes: params.kerahatSunRisingMins),
-    ));
-    _duhaPrayer_04 = getTZ(_ishraqPrayer_03.add(
-      const Duration(minutes: 10), // TODO 10 minutes good?
-    ));
-    _dhuhr_06 = getTime(dhuhrTime, salahAdjustments[SalahAdjust.dhuhr]!);
-    _kerahatAdkharZawal_05 = getTZ(_dhuhr_06.subtract(
-      Duration(minutes: params.kerahatSunZawalMins),
-    ));
-    _asr_07 = getTime(asrTime, salahAdjustments[SalahAdjust.asr]!);
-    _maghrib_09 = getTime(maghribTime, salahAdjustments[SalahAdjust.maghrib]!);
-    _kerahatAdkharSunSetting_08 = _maghrib_09.subtract(
-      Duration(minutes: params.kerahatSunSettingMins),
+    _fajr_01 = _addSecsRoundUpAndGetTZ(
+      fajrTime,
+      method.adjustSecs[Salah.fajr]!,
     );
-    _isha_10 = getTime(ishaTime, salahAdjustments[SalahAdjust.isha]!);
+    _kerahatAdkharSunrise_02 = _addSecsRoundDnAndGetTZ(
+      sunriseTime,
+      method.adjustSecs[Salah.sunrise]!,
+    );
+    _ishraqPrayer_03 = _addSecsRoundUpAndGetTZ(
+      _kerahatAdkharSunrise_02,
+      params.kerahatSunRisingSecs,
+    );
+    _duhaPrayer_04 = _addSecsRoundUpAndGetTZ(
+      _ishraqPrayer_03,
+      900, // 15 mins (15 * 60 = 900), TODO 15 minutes good?
+    );
 
-    _fajrTomorrow_13 =
-        getTime(fajrTomorrowTime, salahAdjustments[SalahAdjust.fajr]!);
-    _sunriseTomorrow_14 =
-        getTime(sunriseTimeTomorrow, salahAdjustments[SalahAdjust.sunrise]!);
+    // NOTE: Subtracts half of karahat time from zenith/high noon
+    _kerahatAdkharZawal_05 = _subtractSecsRoundDnAndGetTZ(
+      highNoonTime,
+      -method.adjustSecs[Salah.dhuhr]! + (params.kerahatSunZawalSecs ~/ 2),
+    );
+    _dhuhr_06 = _addSecsRoundUpAndGetTZ(
+      _kerahatAdkharZawal_05,
+      params.kerahatSunZawalSecs, // dhuhr starts after karahat time ends
+    );
+
+    _asr_07 = _addSecsRoundUpAndGetTZ(
+      asrTime,
+      method.adjustSecs[Salah.asr]!,
+    );
+
+    _kerahatAdkharSunSetting_08 = _subtractSecsRoundDnAndGetTZ(
+      maghribTime,
+      -method.adjustSecs[Salah.maghrib]! + params.kerahatSunSettingSecs,
+    );
+    _maghrib_09 = _addSecsRoundUpAndGetTZ(
+      _kerahatAdkharSunSetting_08,
+      params.kerahatSunSettingSecs,
+    );
+
+    _isha_10 = _addSecsRoundUpAndGetTZ(
+      ishaTime,
+      method.adjustSecs[Salah.isha]!,
+    );
+
+    _fajrTomorrow_13 = _addSecsRoundUpAndGetTZ(
+      fajrTomorrowTime,
+      method.adjustSecs[Salah.fajr]!,
+    );
+    _sunriseTomorrow_14 = _addSecsRoundDnAndGetTZ(
+      sunriseTimeTomorrow,
+      method.adjustSecs[Salah.sunrise]!,
+    );
 
     // Sunnah Times
+    // Note: nightDuration starts from maghrib time
     Duration nightDuration = _fajrTomorrow_13.difference(_maghrib_09);
-    _middleOfNight_11 = roundedMinute(
-        dateByAddingSeconds(_maghrib_09, (nightDuration.inSeconds / 2).floor()),
-        precision: precision);
-    _last3rdOfNight_12 = roundedMinute(
-        dateByAddingSeconds(
-            _maghrib_09, (nightDuration.inSeconds * (2 / 3)).floor()),
-        precision: precision);
+    _middleOfNight_11 = _addSecsRoundUpAndGetTZ(
+      _maghrib_09,
+      (nightDuration.inSeconds / 2).ceil(),
+    );
+    _last3rdOfNight_12 = _addSecsRoundUpAndGetTZ(
+      _maghrib_09,
+      (nightDuration.inSeconds * (2 / 3)).ceil(),
+    );
 
     // Convenience Utilities
-    l.v('***** Current Local Time: $date');
-    l.v('***** Time Zone: "${date.timeZoneName}"');
-
-    l.v('***** Times Of Day:');
-    //v('isha yesterday:   $_ishaYesterday');
-    l.v('fajr:             $_fajr_01');
-    l.v('sunrise:          $_kerahatAdkharSunrise_02');
-    l.v('ishrak:           $_ishraqPrayer_03');
-    l.v('duha:             $_duhaPrayer_04');
-    l.v('zawal:            $_kerahatAdkharZawal_05');
-    l.v('dhuhr:            $_dhuhr_06');
-    l.v('asr:              $_asr_07');
-    l.v('sunset:           $_kerahatAdkharSunSetting_08');
-    l.v('maghrib:          $_maghrib_09');
-    l.v('isha:             $_isha_10');
-    l.v('middleOfight:     $_middleOfNight_11');
-    l.v('last3rdOfNight:   $_last3rdOfNight_12');
-    l.v('fajr tomorrow:    $_fajrTomorrow_13');
-    l.v('sunrise tomorrow: $_sunriseTomorrow_14');
+    l.d('***** Current Local Time: $date *****');
+    l.d('***** Time Zone: "${date.timeZoneName}" *****');
+    l.d('***** Times Of Day: *****');
+    //d('isha yesterday:   $_ishaYesterday');
+    l.d('fajr:             $_fajr_01');
+    l.d('sunrise:          $_kerahatAdkharSunrise_02');
+    l.d('ishrak:           $_ishraqPrayer_03');
+    l.d('duha:             $_duhaPrayer_04');
+    l.d('zawal:            $_kerahatAdkharZawal_05');
+    l.d('dhuhr:            $_dhuhr_06');
+    l.d('asr:              $_asr_07');
+    l.d('sunset:           $_kerahatAdkharSunSetting_08');
+    l.d('maghrib:          $_maghrib_09');
+    l.d('isha:             $_isha_10');
+    l.d('middleOfNight:    $_middleOfNight_11');
+    l.d('last3rdOfNight:   $_last3rdOfNight_12');
+    l.d('fajr tomorrow:    $_fajrTomorrow_13');
+    l.d('sunrise tomorrow: $_sunriseTomorrow_14');
   }
 
-  DateTime getTime(DateTime date, int adjustment) {
-    return getTZ(roundedMinute(dateByAddingMinutes(date, adjustment),
-        precision: precision));
+  DateTime _safeFajr(
+    DateTime day,
+    DateTime sunriseTime,
+    DateTime sunsetTime,
+    DateTime sunriseTimeTomorrow,
+  ) {
+    if (params.method.calcMethod == CalcMethod.Moonsight_Committee) {
+      return Astronomical.seasonAdjustedMorningTwilight(
+          cord.latitude, _dayOfYear(day), day.year, sunriseTime);
+    } else {
+      int nightDurationInSecs =
+          (sunriseTimeTomorrow.difference(sunsetTime)).inSeconds;
+      double portion = params.nightPortions()[Salah.fajr]!;
+      double nightFraction = portion * nightDurationInSecs;
+      return sunriseTime.subtract(Duration(seconds: nightFraction.round()));
+    }
   }
 
-  DateTime getTZ(DateTime date) {
-    return TZDateTime.from(date, tzLoc);
+  DateTime _safeIsha(
+    DateTime day,
+    DateTime sunsetTime,
+    DateTime sunriseTimeTomorrow,
+  ) {
+    if (params.method.calcMethod == CalcMethod.Moonsight_Committee) {
+      return Astronomical.seasonAdjustedEveningTwilight(
+          cord.latitude, _dayOfYear(day), day.year, sunsetTime);
+    } else {
+      int nightDurationInSecs =
+          (sunriseTimeTomorrow.difference(sunsetTime)).inSeconds;
+      double portion = params.nightPortions()[Salah.isha]!;
+      double nightFraction = portion * nightDurationInSecs;
+      return sunsetTime.add(Duration(seconds: nightFraction.round()));
+    }
+  }
+
+  DateTime _addSecsRoundUpAndGetTZ(DateTime date, int adjustSecs) =>
+      TZDateTime.from(
+        _roundMinuteUp(
+          date.add(Duration(seconds: adjustSecs)),
+        ),
+        tzLoc,
+      );
+
+  DateTime _addSecsRoundDnAndGetTZ(DateTime date, int adjustSecs) =>
+      TZDateTime.from(
+        _roundMinuteDn(
+          date.add(Duration(seconds: adjustSecs)),
+        ),
+        tzLoc,
+      );
+
+  DateTime _subtractSecsRoundDnAndGetTZ(DateTime date, int adjustSecs) =>
+      TZDateTime.from(
+        _roundMinuteDn(
+          date.subtract(Duration(seconds: adjustSecs)),
+        ),
+        tzLoc,
+      );
+
+  /// Round time to up to next minute if there is any remaining seconds.
+  /// If precision true, don't round up time to next minute
+  DateTime _roundMinuteUp(DateTime date) {
+    if (precision) return date;
+
+    int offsetSecs = date.second % 60;
+    if (offsetSecs == 0) {
+      return date; // no time to add
+    } else {
+      return date.add(Duration(seconds: 60 - offsetSecs));
+    }
+  }
+
+  /// Round time to down to previous minute if there is any remaining seconds.
+  /// If precision true, don't round down time to previous minute
+  DateTime _roundMinuteDn(DateTime date) {
+    if (precision) return date;
+
+    int offsetSecs = date.second % 60;
+    if (offsetSecs == 0) {
+      return date; // no time to add
+    } else {
+      return date.subtract(Duration(seconds: offsetSecs));
+    }
+  }
+
+  int _dayOfYear(DateTime date) {
+    Duration diff = date.difference(DateTime(date.year, 1, 1, 0, 0));
+    int returnedDayOfYear = diff.inDays + 1; // 1st Jan should be day 1
+    return returnedDayOfYear;
   }
 
   DateTime getZamanTime(Z z) {
@@ -358,4 +455,19 @@ class Athan {
       return Z.Kerahat_Sunrise;
     }
   }
+}
+
+class _TimeComponent {
+  late final int hours;
+  late final int minutes;
+  late final int seconds;
+
+  _TimeComponent(double number) {
+    hours = number.floor();
+    minutes = ((number - hours) * 60).floor();
+    seconds = ((number - (hours + minutes / 60)) * 3600).floor();
+  }
+
+  DateTime utcDate(int year, int month, int date) =>
+      DateTime.utc(year, month, date, hours, minutes, seconds);
 }

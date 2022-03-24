@@ -11,7 +11,7 @@ class SolarTime {
   late SolarCoordinates prevSolar;
   late SolarCoordinates nextSolar;
 
-  double? approxTransit;
+  late double approxTransit;
   late double transit;
   late double sunrise;
   late double sunset;
