@@ -72,6 +72,9 @@ class MainController extends GetxHapi {
   }
 }
 
+/// Golden Ratio
+const GR = 1.618033; // GOLDEN RATIO
+
 /// "l" short for Log, use for all logging in app.
 Log l = Log();
 
@@ -147,21 +150,21 @@ class T extends StatelessWidget {
     this.t,
     this.style, {
     this.alignment = Alignment.center,
-    this.width = 80,
-    this.height = 30,
+    this.w = 80,
+    this.h = 30,
   });
 
   final String t;
   final TextStyle style;
   final Alignment alignment;
-  final double width;
-  final double height;
+  final double w;
+  final double h;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: width,
-      height: height,
+      width: w,
+      height: h,
       child: FittedBox(
         fit: BoxFit.contain, // BoxFit.fitHeight,
         alignment: alignment, // use to align text,

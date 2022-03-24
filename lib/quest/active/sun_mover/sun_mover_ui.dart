@@ -2,25 +2,23 @@ import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/athan/athan.dart';
 import 'package:hapi/quest/active/athan/z.dart';
-import 'package:hapi/quest/active/zaman_controller.dart';
 
 class SunMoverUI extends StatelessWidget {
-  //SunMoverUI(this.today);
+  const SunMoverUI(this.athan, this.diameter);
 
-  final DateTime today = TimeController.to.now2();
-  final Athan athan = ZamanController.to.athan!;
+  final Athan athan;
+  final double diameter;
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        _CircleDayView(today, athan),
-        const SizedBox(height: 15),
+        CircleDayView(athan, diameter),
+        //const SizedBox(height: 15),
         //_PastNowFutureButtonPanel(today)
         //SizedBox(height: 100),
       ],
@@ -28,11 +26,11 @@ class SunMoverUI extends StatelessWidget {
   }
 }
 
-class _CircleDayView extends StatelessWidget {
-  const _CircleDayView(this.today, this.athan);
+class CircleDayView extends StatelessWidget {
+  const CircleDayView(this.athan, this.diameter);
 
-  final DateTime today;
   final Athan athan;
+  final double diameter;
 
   final int secondsInADay = 86400; //60 * 60 * 24;
 
@@ -71,16 +69,7 @@ class _CircleDayView extends StatelessWidget {
     double secsOff = secondsInADay - totalSecs;
     l.d('totalSecs=$totalSecs of 86400, $secsOff secs off (mins=${secsOff / 60})');
 
-    return Column(
-      children: [
-        MultipleColorCircle(colorOccurrences, 150, Planets()),
-        //CustomPaint(painter: DrawCircle()), // shader
-        //MyHomePage(),
-        //Planets(),
-        //Circles(),
-        //Spiral(),
-      ],
-    );
+    return MultipleColorCircle(colorOccurrences, diameter);
   }
 }
 
@@ -93,14 +82,18 @@ class _CircleDayView extends StatelessWidget {
 //   Widget build(BuildContext context) {}
 // }
 
-class Planets extends StatefulWidget {
+class GumbiAndMe extends StatefulWidget {
+  const GumbiAndMe(this.diameter);
+
+  final double diameter;
+
   @override
-  _PlanetsState createState() => _PlanetsState();
+  _GumbiAndMeState createState() => _GumbiAndMeState();
 }
 
-class _PlanetsState extends State<Planets> with TickerProviderStateMixin {
-  late AnimationController _controller1;
-  late AnimationController _controller2;
+class _GumbiAndMeState extends State<GumbiAndMe> with TickerProviderStateMixin {
+  late final AnimationController _controller1;
+  late final AnimationController _controller2;
 
   @override
   void initState() {
@@ -128,6 +121,7 @@ class _PlanetsState extends State<Planets> with TickerProviderStateMixin {
                       //value: _controller.value,
                       moon: _controller1.value,
                       sun: _controller2.value,
+                      diameter: widget.diameter,
                     ),
                   ),
                 );
@@ -136,14 +130,14 @@ class _PlanetsState extends State<Planets> with TickerProviderStateMixin {
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                //crossAxisAlignment: CrossAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 //mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    width: 140,
-                    height: 70,
+                    width: widget.diameter - 58, // top arc
+                    height: (widget.diameter - 58) / 2, // half of a circle
                     decoration: const BoxDecoration(
-                      color: Colors.blueGrey,
+                      color: Colors.blue,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(100),
                         topRight: Radius.circular(100),
@@ -151,8 +145,8 @@ class _PlanetsState extends State<Planets> with TickerProviderStateMixin {
                     ),
                   ),
                   Container(
-                    width: 140,
-                    height: 70,
+                    width: widget.diameter - 58, // bottom arc
+                    height: (widget.diameter - 58) / 2, // half of a circle
                     decoration: const BoxDecoration(
                       color: Colors.green,
                       borderRadius: BorderRadius.only(
@@ -165,10 +159,7 @@ class _PlanetsState extends State<Planets> with TickerProviderStateMixin {
               ),
             ),
             const Center(
-              child: Icon(
-                Icons.escalator_warning_rounded,
-                size: 50,
-              ),
+              child: Icon(Icons.escalator_warning_rounded, size: 50),
             )
           ],
         ),
@@ -193,6 +184,7 @@ class AtomPaint extends CustomPainter {
     required this.context,
     required this.moon,
     required this.sun,
+    required this.diameter,
   }) {
     _sunAxisPaint = Paint()
       ..color = ct(context)
@@ -205,18 +197,19 @@ class AtomPaint extends CustomPainter {
   }
 
   final BuildContext context;
-  final double moon, sun;
+  final double moon, sun, diameter;
 
   late final Paint _sunAxisPaint;
   late final Paint _moonAxisPaint;
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawCircle(
-        const Offset(0, 0), 72.0, Paint()..color = Colors.blueAccent);
+    canvas.drawCircle(const Offset(0, 0), (diameter / 2) - 31,
+        Paint()..color = Colors.blueAccent);
 
-    drawAxis(_sunAxisPaint, sun, canvas, 138, Paint()..color = Colors.yellow);
-    drawAxis(_moonAxisPaint, moon, canvas, 105,
+    drawAxis(_sunAxisPaint, sun, canvas, (diameter / 2) + 30,
+        Paint()..color = Colors.yellow);
+    drawAxis(_moonAxisPaint, moon, canvas, (diameter / 2) - 30,
         Paint()..color = Colors.grey.shade500);
   }
 
@@ -231,7 +224,9 @@ class AtomPaint extends CustomPainter {
         var metric = extractPath.computeMetrics().first;
         final offset = metric.getTangentForOffset(metric.length)!.position;
         canvas.drawCircle(offset, 12.0, paint);
-      } catch (e) {}
+      } catch (e) {
+        l.w('AtomPaint.drawAxis caught e: $e');
+      }
     }
   }
 
@@ -244,6 +239,89 @@ class AtomPaint extends CustomPainter {
   }
 }
 
+class DrawGradientCircle extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..shader = const LinearGradient(colors: [
+        Colors.blue,
+        Colors.black,
+      ]).createShader(
+          Rect.fromCircle(center: const Offset(0.0, 0.0), radius: 50));
+    canvas.drawCircle(const Offset(0.0, 0.0), 50, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
+  }
+}
+
+class MultipleColorCircle extends StatelessWidget {
+  const MultipleColorCircle(this.colorOccurrences, this.diameter);
+
+  final Map<Color, double> colorOccurrences;
+  final double diameter;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: SizedBox(
+        height: diameter,
+        width: diameter,
+        child: CustomPaint(
+          size: const Size(20, 20),
+          child: GumbiAndMe(diameter),
+          painter: _MultipleColorCirclePainter(colorOccurrences, diameter),
+        ),
+      ),
+    );
+  }
+}
+
+class _MultipleColorCirclePainter extends CustomPainter {
+  final Map<Color, double> colorOccurrences;
+  final double diameter;
+  @override
+  _MultipleColorCirclePainter(this.colorOccurrences, this.diameter);
+  double pi = math.pi;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    double strokeWidth = 60; // TODO asdf pass this around
+    double radius = diameter / 2;
+    Rect myRect =
+        Rect.fromCircle(center: Offset(radius, radius), radius: radius);
+
+    double radianStart = .45;
+    double radianLength = 0;
+    double allOccurrences = 0;
+    //set denominator
+    colorOccurrences.forEach((color, occurrence) {
+      allOccurrences += occurrence;
+    });
+    l.d('_MultipleColorCirclePainter: allOccurrences=$allOccurrences');
+    colorOccurrences.forEach((color, occurrence) {
+      double percent = occurrence / allOccurrences;
+      radianLength = 2 * percent * math.pi;
+      canvas.drawArc(
+          myRect,
+          radianStart,
+          radianLength,
+          false,
+          Paint()
+            ..color = color
+            ..strokeWidth = strokeWidth
+            ..style = PaintingStyle.stroke);
+      radianStart += radianLength;
+    });
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
+}
+
+/*
 class Circles extends StatefulWidget {
   @override
   _CirclesState createState() => _CirclesState();
@@ -417,7 +495,9 @@ class CirclesPainter extends CustomPainter {
     return true;
   }
 }
+*/
 
+/*
 class Spiral extends StatefulWidget {
   @override
   _SpiralState createState() => _SpiralState();
@@ -590,25 +670,9 @@ class SpiralPainter extends CustomPainter {
     return true;
   }
 }
+*/
 
-class DrawGradientCircle extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..shader = const LinearGradient(colors: [
-        Colors.blue,
-        Colors.black,
-      ]).createShader(
-          Rect.fromCircle(center: const Offset(0.0, 0.0), radius: 50));
-    canvas.drawCircle(const Offset(0.0, 0.0), 50, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
-  }
-}
-
+/*
 class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -692,62 +756,4 @@ class OpenPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
 
-class MultipleColorCircle extends StatelessWidget {
-  const MultipleColorCircle(this.colorOccurrences, this.height, this.child);
-
-  final Map<Color, double> colorOccurrences;
-  final double height;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) => SizedBox(
-        height: height,
-        width: height,
-        child: CustomPaint(
-          size: const Size(20, 20),
-          child: Center(child: child),
-          painter: _MultipleColorCirclePainter(colorOccurrences, height),
-        ),
-      );
-}
-
-class _MultipleColorCirclePainter extends CustomPainter {
-  final Map<Color, double> colorOccurrences;
-  final double height;
-  @override
-  _MultipleColorCirclePainter(this.colorOccurrences, this.height);
-  double pi = math.pi;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    double strokeWidth = 50;
-    Rect myRect =
-        Rect.fromCircle(center: Offset(height / 2, height / 2), radius: height);
-
-    double radianStart = .45;
-    double radianLength = 0;
-    double allOccurrences = 0;
-    //set denominator
-    colorOccurrences.forEach((color, occurrence) {
-      allOccurrences += occurrence;
-      l.d('allOccurrences=$allOccurrences');
-    });
-    colorOccurrences.forEach((color, occurrence) {
-      double percent = occurrence / allOccurrences;
-      radianLength = 2 * percent * math.pi;
-      canvas.drawArc(
-          myRect,
-          radianStart,
-          radianLength,
-          false,
-          Paint()
-            ..color = color
-            ..strokeWidth = strokeWidth
-            ..style = PaintingStyle.stroke);
-      radianStart += radianLength;
-    });
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
-}
+ */

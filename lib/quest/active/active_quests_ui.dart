@@ -116,8 +116,8 @@ class ActiveQuestsUI extends StatelessWidget {
           QUEST.KERAHAT_ADHKAR_SUNRISE,
           flex: 2000,
         ),
-        _Cell(T('Ishraq', tsText, width: w), isActive, QUEST.DUHA_ISHRAQ),
-        _Cell(T('Duha', tsText, width: w), isActive, QUEST.DUHA_DUHA),
+        _Cell(T('Ishraq', tsText, w: w), isActive, QUEST.DUHA_ISHRAQ),
+        _Cell(T('Duha', tsText, w: w), isActive, QUEST.DUHA_DUHA),
         _Cell(
           _SunCell(_IconSunBright(), 'Zawal', athan.zawal, athan.dhuhr),
           isActive,
@@ -233,17 +233,17 @@ class ActiveQuestsUI extends StatelessWidget {
 
     return Row(
       children: [
-        _Cell(T('Qiyam', tsText, width: w), isActive, QUEST.LAYL_QIYAM),
+        _Cell(T('Qiyam', tsText, w: w), isActive, QUEST.LAYL_QIYAM),
 
         // Thikr and Dua before bed:
         _Cell(_IconThikr(), isActive, QUEST.LAYL_THIKR),
         _Cell(_IconDua(), isActive, QUEST.LAYL_DUA),
-        _Cell(T('Sleep', tsText, width: w), isActive, QUEST.LAYL_SLEEP),
+        _Cell(T('Sleep', tsText, w: w), isActive, QUEST.LAYL_SLEEP),
 
         // Tahajjud and Witr after waking up
-        _Cell(T('Tahajjud', tsText, width: width / 6), isActive,
-            QUEST.LAYL_TAHAJJUD),
-        _Cell(T('Witr', tsText, width: w), isActive, QUEST.LAYL_WITR),
+        _Cell(
+            T('Tahajjud', tsText, w: width / 6), isActive, QUEST.LAYL_TAHAJJUD),
+        _Cell(T('Witr', tsText, w: w), isActive, QUEST.LAYL_WITR),
       ],
     );
   }
@@ -268,8 +268,6 @@ class ActiveQuestsUI extends StatelessWidget {
       if (zc.athan == null) return Container(); // not initialized yet, return
       final Athan athan = zc.athan!;
 
-      final double w = MediaQuery.of(context).size.width;
-
       final bool isIshaDone = ActiveQuestsAjrController.to.isIshaIbadahComplete;
 
       final bool isFajr = zc.isSalahRowActive(Z.Fajr);
@@ -289,28 +287,28 @@ class ActiveQuestsUI extends StatelessWidget {
 
       final bool isJ = TimeController.to.isFriday() && c.showJummahOnFriday;
 
+      final double width = w(context);
+//    final double height = h(context);
+
       return CustomScrollView(
         slivers: <Widget>[
           /// Show Top App Bar
           SliverAppBar(
-            backgroundColor: Colors.grey.shade800,
+            backgroundColor: cb(context), //Colors.grey.shade800,
             expandedHeight: 175.0,
-            collapsedHeight: 90.0,
-            floating: true,
-            pinned: false,
+            collapsedHeight: 56.0, // any smaller is exception
+            floating: true, // allows picture to dragged out after fully compact
+            pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
               titlePadding: const EdgeInsets.all(7.0),
-              title: Align(
-                alignment: Alignment.bottomCenter,
-                child: ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                  child: Container(
-                    color: Colors.grey.shade800.withOpacity(.20),
-                    child: GetBuilder<ZamanController>(builder: (c) {
-                      return T(c.timeToNextZaman, tsAppBar, width: 85);
-                    }),
-                  ),
+              title: ClipRRect(
+                borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                child: Container(
+                  color: Colors.grey.shade800.withOpacity(.20),
+                  child: GetBuilder<ZamanController>(builder: (c) {
+                    return T(c.timeToNextZaman, tsAppBar, w: 90, h: 45);
+                  }),
                 ),
               ),
               background: Swiper(
@@ -329,7 +327,7 @@ class ActiveQuestsUI extends StatelessWidget {
           _Sliv(isFajr && c.showActiveSalah, rowFajr(isFajr)),
 
           _Sliv(true, _SalahHeader(Z.Duha, isDuha, athan.sunrise)),
-          _Sliv(isDuha && c.showActiveSalah, rowDuha(athan, isDuha, w)),
+          _Sliv(isDuha && c.showActiveSalah, rowDuha(athan, isDuha, width)),
 
           _Sliv(true, _SalahHeader(Z.Dhuhr, isDhhr, athan.dhuhr, isJ: isJ)),
           _Sliv(isDhhr && c.showActiveSalah, rowDhuhr(isDhhr, isJ)),
@@ -344,13 +342,13 @@ class ActiveQuestsUI extends StatelessWidget {
           _Sliv(isIsha && c.showActiveSalah, rowIsha(isIsha)),
 
           _Sliv(true, _SalahHeader(laylZ, isLayl, laylDate)),
-          _Sliv(isLayl && c.showActiveSalah, rowLayl(isLayl, w)),
+          _Sliv(isLayl && c.showActiveSalah, rowLayl(isLayl, width)),
 
           /// Fillers:
           sliverSpaceHeaderFiller(context), // height of the page
 
           /// Now show sun movement
-          const _SlivSunMover(),
+          _SlivSunMover(athan),
         ],
       );
     });
@@ -427,7 +425,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
       BuildContext context, double shrinkOffset, bool overlapsContent) {
     return SizedBox.expand(
       child: Container(
-        color: Theme.of(context).backgroundColor,
+        //color: Theme.of(context).backgroundColor,
         child: child,
       ),
     );
@@ -467,19 +465,26 @@ class _Sliv extends StatelessWidget {
 /// Used to Fill in the gaps that were between the salah row cells. Also, adds a
 /// border for nicer looks and returns a SliverPersistentHeader.
 class _SlivSunMover extends StatelessWidget {
-  const _SlivSunMover();
+  const _SlivSunMover(this.athan);
+
+  final Athan athan;
 
   @override
   SliverPersistentHeader build(BuildContext context) {
-    final double sliverHeight = h(context) / 2; // TODO optimize
-
+    final double height = h(context) / GR;
     return SliverPersistentHeader(
       floating: false,
       pinned: true,
       delegate: _SliverAppBarDelegate(
-        minHeight: sliverHeight / 2,
-        maxHeight: sliverHeight,
-        child: SunMoverUI(),
+        minHeight: height,
+        maxHeight: height,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            const SizedBox(height: 55), // needed for small gap
+            CircleDayView(athan, w(context) / GR),
+          ],
+        ),
       ),
     );
   }
@@ -597,14 +602,14 @@ class _SunCell extends StatelessWidget {
               T(
                 _label,
                 tsText,
-                width: (w / 3) - 38, // 38= 30 icon + 6 L/R padding + 2 selected
-                height: (_Sliv.sliverHeight / 2) - 1, // /2 sliv h + 1 selected
+                w: (w / 3) - 38, // 38= 30 icon + 6 L/R padding + 2 selected
+                h: (_Sliv.sliverHeight / 2) - 1, // /2 sliv h + 1 selected
               ),
               T(
                 ActiveQuestsUI.getTimeRange(_time1, _time2),
                 tsText,
-                width: (w / 3) - 38, // /3 = 1/3 screen (2 of 6 cells)
-                height: _Sliv.sliverHeight / 2 - 1, // /2 sliv h + 1 selected
+                w: (w / 3) - 38, // /3 = 1/3 screen (2 of 6 cells)
+                h: _Sliv.sliverHeight / 2 - 1, // /2 sliv h + 1 selected
               ),
             ],
           ),
