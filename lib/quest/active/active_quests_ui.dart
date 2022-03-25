@@ -309,6 +309,7 @@ class ActiveQuestsUI extends StatelessWidget {
             backgroundColor: cb(context), //Colors.grey.shade800,
             expandedHeight: 175.0,
             collapsedHeight: 56.0, // any smaller is exception
+            snap: true,
             floating: true, // allows picture to dragged out after fully compact
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
