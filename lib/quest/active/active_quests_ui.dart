@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:get/get.dart';
 import 'package:hapi/components/alerts/bounce_alert.dart';
+import 'package:hapi/components/half_filled_icon.dart';
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/menu_controller.dart';
@@ -106,12 +107,15 @@ class ActiveQuestsUI extends StatelessWidget {
 
   Widget rowDuha(Athan athan, bool isActive, double screenWidth) {
     double w = (screenWidth / 6) - 10; // - 10 because too big on screen
+    final bool isCurrQuest = isActive &&
+        ActiveQuestsAjrController.to
+            .isQuestActive(QUEST.KERAHAT_ADHKAR_SUNRISE);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         _Cell(
-          _SunCell(_IconSunUpDn(isActive, true, QUEST.KERAHAT_ADHKAR_SUNRISE),
-              'Morning Adhkar', athan.sunrise, athan.ishraq),
+          _SunCell(_IconSunUpDn(isCurrQuest, true), 'Morning Adhkar',
+              athan.sunrise, athan.ishraq),
           isActive,
           QUEST.KERAHAT_ADHKAR_SUNRISE,
           flex: 2000,
@@ -119,7 +123,12 @@ class ActiveQuestsUI extends StatelessWidget {
         _Cell(T('Ishraq', tsText, w: w), isActive, QUEST.DUHA_ISHRAQ),
         _Cell(T('Duha', tsText, w: w), isActive, QUEST.DUHA_DUHA),
         _Cell(
-          _SunCell(_IconSunBright(), 'Zawal', athan.zawal, athan.dhuhr),
+          _SunCell(
+              const Icon(Icons.brightness_7_outlined,
+                  color: Colors.yellowAccent, size: 30),
+              'Zawal',
+              athan.zawal,
+              athan.dhuhr),
           isActive,
           QUEST.KERAHAT_ADHKAR_ZAWAL,
           flex: 2000,
@@ -160,6 +169,8 @@ class ActiveQuestsUI extends StatelessWidget {
     String naflBef = '4';
     String fardRkt = '4';
 
+    final bool isCurrQuest = isActive &&
+        ActiveQuestsAjrController.to.isQuestActive(QUEST.KERAHAT_ADHKAR_SUNSET);
     return Row(
       children: [
         // 1 of 4. sunnah before fard column item:
@@ -172,7 +183,7 @@ class ActiveQuestsUI extends StatelessWidget {
         // 4 of 4. Evening adhkar
         _Cell(
             _SunCell(
-              _IconSunUpDn(isActive, false, QUEST.KERAHAT_ADHKAR_SUNSET),
+              _IconSunUpDn(isCurrQuest, false),
               'Evening Adhkar',
               athan.sunSetting,
               athan.maghrib,
@@ -620,32 +631,21 @@ class _SunCell extends StatelessWidget {
 }
 
 class _IconSunUpDn extends StatelessWidget {
-  const _IconSunUpDn(this.isActive, this.isSunrise, this.quest);
+  const _IconSunUpDn(this.isCurrQuest, this.isSunrise);
 
-  final bool isActive;
+  final bool isCurrQuest;
   final bool isSunrise;
-  final QUEST quest;
 
   @override
   Widget build(BuildContext context) {
-    final bool isCurrQuest =
-        isActive && ActiveQuestsAjrController.to.isQuestActive(quest);
-
     return Stack(
       children: [
-        _IconSun(),
-        Positioned(
-          top: _Sliv.sliverHeight / 2,
-          child: ClipRRect(
-            borderRadius: const BorderRadius.only(
-              bottomLeft: Radius.circular(10.0), // stay in active border
-            ),
-            child: Container(
-              color: isCurrQuest ? cs(context) : cb(context),
-              height: _Sliv.sliverHeight / 2,
-              width: 30,
-            ),
-          ),
+        TwoColoredIcon(
+          Icons.circle,
+          30,
+          const [Colors.orangeAccent, Colors.red, Colors.transparent],
+          isCurrQuest ? cs(context) : cb(context),
+          fillPercent: .60,
         ),
         Positioned(
           top: (_Sliv.sliverHeight / 4) + 2,
@@ -658,28 +658,6 @@ class _IconSunUpDn extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _IconSun extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return const Icon(
-      Icons.brightness_7_outlined,
-      color: Colors.orangeAccent,
-      size: 30,
-    );
-  }
-}
-
-class _IconSunBright extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return const Icon(
-      Icons.brightness_7_outlined,
-      color: Colors.yellow,
-      size: 30,
     );
   }
 }
