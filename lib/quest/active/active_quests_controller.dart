@@ -46,21 +46,21 @@ class ActiveQuestsController extends GetxController {
     _salahCalcMethod = value;
     s.wr('salahCalcMethod', value);
     ZamanController.to.forceSalahRecalculation = true;
-    update();
+    //update();
   }
 
   set salahAsrSafe(bool value) {
     _salahAsrSafe = value;
     s.wr('salahAsrSafe', value);
     ZamanController.to.forceSalahRecalculation = true;
-    update();
+    //update();
   }
 
   set salahKerahatSafe(bool value) {
     _salahKerahatSafe = value;
     s.wr('salahKerahatSafe', value);
     ZamanController.to.forceSalahRecalculation = true;
-    update();
+    //update();
   }
 
   set showJummahOnFriday(bool value) {

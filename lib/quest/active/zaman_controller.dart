@@ -105,6 +105,11 @@ class ZamanController extends GetxHapi {
 
     update(); // update UI with above changes (needed at app init)
 
+    // We need to update the ActiveQuestsController here after athan is updated
+    // Was a bug where when forceSalahRecalculation = true was set in
+    // ActiveQuestsController, it's update() was called before athan updated.
+    ActiveQuestsController.to.update();
+
     startNextZamanCountdownTimer();
   }
 
@@ -125,7 +130,7 @@ class ZamanController extends GetxHapi {
             '${timeToNextZaman.inSeconds} secs left');
         forceSalahRecalculation = false;
         initLocation(); // does eventually call startNextZamanCountdownTimer();
-        return;
+        return; // quits this while loop, wills tart again in initLocation()
       } else {
         if (timeToNextZaman.inSeconds % 60 == 0) {
           // print once a minute to show thread is alive
