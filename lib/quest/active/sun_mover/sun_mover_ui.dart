@@ -266,7 +266,7 @@ class DrawGradientCircle extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
 
 class MultipleColorCircle extends StatelessWidget {
@@ -343,7 +343,7 @@ class _MultipleColorCirclePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
 
 /*
