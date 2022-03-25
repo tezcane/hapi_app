@@ -26,6 +26,13 @@ class ActiveQuestsController extends GetxController {
   bool _showActiveSalah = true; // true shows salah actions, false hides them
   bool get showActiveSalah => _showActiveSalah;
 
+  bool _swiperAutoPlayEnabled = true;
+  bool get swiperAutoPlayEnabled => _swiperAutoPlayEnabled;
+  int _swiperImageIdx = -1;
+  int get swiperImageIdx => _swiperImageIdx;
+  int _swiperLastIdx = 0;
+  int get swiperLastIdx => _swiperLastIdx;
+
   @override
   void onInit() {
     super.onInit();
@@ -40,27 +47,30 @@ class ActiveQuestsController extends GetxController {
     _show12HourClock = s.rd('show12HourClock') ?? true;
 
     _showActiveSalah = s.rd('showActiveSalah') ?? true;
+
+    _swiperAutoPlayEnabled = s.rd('swiperAutoPlayEnabled') ?? true;
+    _swiperImageIdx = s.rd('swiperImageIdx') ?? -1;
   }
 
   set salahCalcMethod(int value) {
     _salahCalcMethod = value;
     s.wr('salahCalcMethod', value);
     ZamanController.to.forceSalahRecalculation = true;
-    //update();
+    //update(); update needs to be done later after athan recalculated
   }
 
   set salahAsrSafe(bool value) {
     _salahAsrSafe = value;
     s.wr('salahAsrSafe', value);
     ZamanController.to.forceSalahRecalculation = true;
-    //update();
+    //update(); update needs to be done later after athan recalculated
   }
 
   set salahKerahatSafe(bool value) {
     _salahKerahatSafe = value;
     s.wr('salahKerahatSafe', value);
     ZamanController.to.forceSalahRecalculation = true;
-    //update();
+    //update(); update needs to be done later after athan recalculated
   }
 
   set showJummahOnFriday(bool value) {
@@ -84,6 +94,28 @@ class ActiveQuestsController extends GetxController {
   void toggleShowActiveSalah() {
     _showActiveSalah = !_showActiveSalah;
     s.wr('showActiveSalah', _showActiveSalah);
+    update();
+  }
+
+  void toggleSwiperAutoPlayEnabled(int idx) {
+    if (_swiperAutoPlayEnabled) {
+      // if auto playing, just disable it and set swiper image idx
+      _swiperAutoPlayEnabled = false;
+      _swiperImageIdx = idx;
+    } else {
+      // if autoplay is already off
+      if (idx == _swiperImageIdx) {
+        // and same image is tapped, then re-enable autoplay
+        _swiperAutoPlayEnabled = true;
+        _swiperLastIdx = idx; // to resume swipe animation from current image
+        _swiperImageIdx = -1;
+      } else {
+        // and different image is tapped (after swiped), then just pin new image
+        _swiperImageIdx = idx;
+      }
+    }
+    s.wr('swiperAutoPlayEnabled', _swiperAutoPlayEnabled);
+    s.wr('swiperImageIdx', _swiperImageIdx);
     update();
   }
 }

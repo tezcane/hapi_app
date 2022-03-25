@@ -325,13 +325,33 @@ class ActiveQuestsUI extends StatelessWidget {
                 ),
               ),
               background: Swiper(
-                itemCount: 3, //TODO add more images
-                itemBuilder: (BuildContext context, int index) => Image.asset(
-                  'assets/images/quests/active$index.jpg',
-                  fit: BoxFit.cover,
-                ),
-                autoplay: true,
-                autoplayDelay: 10000,
+                itemCount: 3, // TODO add more images
+                itemBuilder: (BuildContext context, int index) {
+                  return Stack(
+                    children: [
+                      Positioned.fill(
+                        child: Image.asset(
+                          'assets/images/quests/active$index.jpg',
+                          fit: BoxFit.cover, // .fill will stretch image
+                        ),
+                      ),
+                      if (index == c.swiperImageIdx) // if pinned show icon
+                        const Align(
+                          alignment: Alignment.bottomRight,
+                          child: Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Icon(Icons.play_arrow),
+                          ),
+                        )
+                    ],
+                  );
+                },
+                index:
+                    c.swiperImageIdx != -1 ? c.swiperImageIdx : c.swiperLastIdx,
+                autoplay: c.swiperAutoPlayEnabled,
+                onTap: (idx) => c.toggleSwiperAutoPlayEnabled(idx),
+                autoplayDelay: 10000, // ms to show picture
+                duration: 1250, // ms to transition/animate to new picture
               ),
             ),
           ),
