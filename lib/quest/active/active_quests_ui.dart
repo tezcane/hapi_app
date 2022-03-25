@@ -433,21 +433,19 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => math.max(maxHeight, minHeight);
   @override
   Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return SizedBox.expand(
+      BuildContext context, double shrinkOffset, bool overlapsContent) =>
+    SizedBox.expand(
       child: Container(
         //color: Theme.of(context).backgroundColor,
         child: child,
       ),
     );
-  }
 
   @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return maxHeight != oldDelegate.maxHeight ||
-        minHeight != oldDelegate.minHeight ||
-        child != oldDelegate.child;
-  }
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) =>
+      maxHeight != oldDelegate.maxHeight ||
+      minHeight != oldDelegate.minHeight ||
+      child != oldDelegate.child;
 }
 
 /// Used to Fill in the gaps that were between the salah row cells. Also, adds a
@@ -651,8 +649,8 @@ class _IconSunUpDn extends StatelessWidget {
           top: (_Sliv.sliverHeight / 4) + 2,
           child: Icon(
             isSunrise
-                ? Icons.arrow_drop_up_outlined
-                : Icons.arrow_drop_down_outlined,
+                ? Icons.arrow_drop_up_outlined // sunrise
+                : Icons.arrow_drop_down_outlined, // sunset
             color: tsTextColor,
             size: 30,
           ),
@@ -685,7 +683,6 @@ class _IconThikr extends StatelessWidget {
 
 class _IconDua extends StatelessWidget {
   @override
-  Widget build(BuildContext context) {
-    return const Icon(Icons.volunteer_activism, color: Colors.grey, size: 25);
-  }
+  Widget build(BuildContext context) =>
+      const Icon(Icons.volunteer_activism, color: Colors.grey, size: 25);
 }
