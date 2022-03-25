@@ -79,8 +79,15 @@ class CircleDayView extends StatelessWidget {
     double degreeCorrection = 365 * ((elapsedSecs / totalSecs) - .25);
     double radianCorrection = degreesToRadians(degreeCorrection);
 
-    return MultipleColorCircle(
-        colorOccurrences, totalSecs, diameter, radianCorrection);
+    // RepaintBoundary prevents the ALWAYS repaint on ANY page update
+    return RepaintBoundary(
+      child: MultipleColorCircle(
+        colorOccurrences,
+        totalSecs,
+        diameter,
+        radianCorrection,
+      ),
+    );
   }
 }
 
@@ -281,7 +288,10 @@ class MultipleColorCircle extends StatelessWidget {
         width: diameter,
         child: CustomPaint(
           size: const Size(20, 20),
-          child: GumbiAndMe(diameter),
+          // prevent other painting when this is updating
+          child: RepaintBoundary(
+            child: GumbiAndMe(diameter),
+          ),
           painter: _MultipleColorCirclePainter(
             colorOccurrences,
             totalSecs,
