@@ -28,6 +28,7 @@ class Athan {
   late final DateTime _ishraqPrayer_03;
   late final DateTime _duhaPrayer_04;
   late final DateTime _kerahatAdkharZawal_05; // sun zenith/peak - kerahat 2
+  late final DateTime _highNoon; // used for radian correction
   late final DateTime _dhuhr_06;
   late final DateTime _asr_07;
   late final DateTime _kerahatAdkharSunSetting_08; // sun setting - kerahat 3
@@ -41,6 +42,7 @@ class Athan {
   DateTime get ishraq => _ishraqPrayer_03;
   DateTime get duha => _duhaPrayer_04;
   DateTime get zawal => _kerahatAdkharZawal_05;
+  DateTime get highNoon => _highNoon;
   DateTime get dhuhr => _dhuhr_06;
   DateTime get asr => _asr_07;
   DateTime get sunSetting => _kerahatAdkharSunSetting_08;
@@ -69,7 +71,7 @@ class Athan {
     DateTime fajrTomorrowTime;
 
     // sun at zenith
-    DateTime highNoonTime = _TimeComponent(solarTime.transit)
+    _highNoon = _TimeComponent(solarTime.transit)
         .utcDate(date.year, date.month, date.day);
     DateTime sunriseTime = _TimeComponent(solarTime.sunrise)
         .utcDate(date.year, date.month, date.day);
@@ -186,7 +188,7 @@ class Athan {
 
     // NOTE: Subtracts half of karahat time from zenith/high noon
     _kerahatAdkharZawal_05 = _subtractSecsRoundDnAndGetTZ(
-      highNoonTime,
+      _highNoon,
       -method.adjustSecs[Salah.dhuhr]! + (params.kerahatSunZawalSecs ~/ 2),
     );
     _dhuhr_06 = _addSecsRoundUpAndGetTZ(

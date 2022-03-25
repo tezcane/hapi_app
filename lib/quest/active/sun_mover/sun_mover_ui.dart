@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:hapi/helpers/math_utils.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/athan/athan.dart';
 import 'package:hapi/quest/active/athan/z.dart';
@@ -69,7 +70,15 @@ class CircleDayView extends StatelessWidget {
     double secsOff = secondsInADay - totalSecs;
     l.d('totalSecs=$totalSecs of 86400, $secsOff secs off (mins=${secsOff / 60})');
 
-    return MultipleColorCircle(colorOccurrences, diameter);
+    // calculate high noon degree offset so we align SunMover circle around it
+    List<Object> currZValues = athan.getZamanTime(Z.Fajr);
+    DateTime currZTime = currZValues[0] as DateTime;
+    DateTime nextZTime = athan.highNoon;
+    double elapsedSecs = nextZTime.difference(currZTime).inMilliseconds / 1000;
+    double degreeCorrection = 365 * ((elapsedSecs / totalSecs) - .25);
+    double radianCorrection = degreesToRadians(degreeCorrection);
+
+    return MultipleColorCircle(colorOccurrences, diameter, radianCorrection);
   }
 }
 
@@ -258,10 +267,14 @@ class DrawGradientCircle extends CustomPainter {
 }
 
 class MultipleColorCircle extends StatelessWidget {
-  const MultipleColorCircle(this.colorOccurrences, this.diameter);
+  const MultipleColorCircle(
+    this.colorOccurrences,
+    this.diameter,
+    this.radianCorrection,
+  );
 
   final Map<Color, double> colorOccurrences;
-  final double diameter;
+  final double diameter, radianCorrection;
 
   @override
   Widget build(BuildContext context) {
@@ -272,7 +285,11 @@ class MultipleColorCircle extends StatelessWidget {
         child: CustomPaint(
           size: const Size(20, 20),
           child: GumbiAndMe(diameter),
-          painter: _MultipleColorCirclePainter(colorOccurrences, diameter),
+          painter: _MultipleColorCirclePainter(
+            colorOccurrences,
+            diameter,
+            radianCorrection,
+          ),
         ),
       ),
     );
@@ -280,10 +297,14 @@ class MultipleColorCircle extends StatelessWidget {
 }
 
 class _MultipleColorCirclePainter extends CustomPainter {
+  _MultipleColorCirclePainter(
+    this.colorOccurrences,
+    this.diameter,
+    this.radianCorrection,
+  );
+
   final Map<Color, double> colorOccurrences;
-  final double diameter;
-  @override
-  _MultipleColorCirclePainter(this.colorOccurrences, this.diameter);
+  final double diameter, radianCorrection;
   double pi = math.pi;
 
   @override
@@ -293,7 +314,7 @@ class _MultipleColorCirclePainter extends CustomPainter {
     Rect myRect =
         Rect.fromCircle(center: Offset(radius, radius), radius: radius);
 
-    double radianStart = .45;
+    double radianStart = radianCorrection; // used to be 0
     double radianLength = 0;
     double allOccurrences = 0;
     //set denominator
