@@ -79,7 +79,8 @@ class CircleDayView extends StatelessWidget {
     double degreeCorrection = 365 * ((elapsedSecs / totalSecs) - .25);
     double radianCorrection = degreesToRadians(degreeCorrection);
 
-    return MultipleColorCircle(colorOccurrences, diameter, radianCorrection);
+    return MultipleColorCircle(
+        colorOccurrences, totalSecs, diameter, radianCorrection);
   }
 }
 
@@ -144,8 +145,8 @@ class _GumbiAndMeState extends State<GumbiAndMe> with TickerProviderStateMixin {
                 //mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
-                    width: widget.diameter - 58, // top arc
-                    height: (widget.diameter - 58) / 2, // half of a circle
+                    width: widget.diameter - 60 - 3, // top arc
+                    height: (widget.diameter - 60 - 3) / 2, // half of a circle
                     decoration: const BoxDecoration(
                       color: Colors.blue,
                       borderRadius: BorderRadius.only(
@@ -155,8 +156,8 @@ class _GumbiAndMeState extends State<GumbiAndMe> with TickerProviderStateMixin {
                     ),
                   ),
                   Container(
-                    width: widget.diameter - 58, // bottom arc
-                    height: (widget.diameter - 58) / 2, // half of a circle
+                    width: widget.diameter - 60 - 3, // bottom arc
+                    height: (widget.diameter - 60 - 3) / 2, // half of a circle
                     decoration: const BoxDecoration(
                       color: Colors.green,
                       borderRadius: BorderRadius.only(
@@ -168,9 +169,7 @@ class _GumbiAndMeState extends State<GumbiAndMe> with TickerProviderStateMixin {
                 ],
               ),
             ),
-            const Center(
-              child: Icon(Icons.escalator_warning_rounded, size: 50),
-            )
+            const Center(child: Icon(Icons.escalator_warning_rounded, size: 55))
           ],
         ),
         floatingActionButton: FloatingActionButton(
@@ -198,11 +197,11 @@ class AtomPaint extends CustomPainter {
   }) {
     _sunAxisPaint = Paint()
       ..color = ct(context)
-      ..strokeWidth = 0.001
+      ..strokeWidth = .5
       ..style = PaintingStyle.stroke;
     _moonAxisPaint = Paint()
       ..color = ct(context)
-      ..strokeWidth = 0.001
+      ..strokeWidth = .5
       ..style = PaintingStyle.stroke;
   }
 
@@ -244,9 +243,7 @@ class AtomPaint extends CustomPainter {
     ..addOval(Rect.fromCircle(center: const Offset(0, 0), radius: radius));
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
-  }
+  bool shouldRepaint(CustomPainter oldDelegate) => true; // leave as true
 }
 
 class DrawGradientCircle extends CustomPainter {
@@ -262,20 +259,19 @@ class DrawGradientCircle extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
-  }
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 class MultipleColorCircle extends StatelessWidget {
   const MultipleColorCircle(
     this.colorOccurrences,
+    this.totalSecs,
     this.diameter,
     this.radianCorrection,
   );
 
   final Map<Color, double> colorOccurrences;
-  final double diameter, radianCorrection;
+  final double totalSecs, diameter, radianCorrection;
 
   @override
   Widget build(BuildContext context) {
@@ -288,6 +284,7 @@ class MultipleColorCircle extends StatelessWidget {
           child: GumbiAndMe(diameter),
           painter: _MultipleColorCirclePainter(
             colorOccurrences,
+            totalSecs,
             diameter,
             radianCorrection,
           ),
@@ -298,15 +295,15 @@ class MultipleColorCircle extends StatelessWidget {
 }
 
 class _MultipleColorCirclePainter extends CustomPainter {
-  _MultipleColorCirclePainter(
+  const _MultipleColorCirclePainter(
     this.colorOccurrences,
+    this.totalSecs,
     this.diameter,
     this.radianCorrection,
   );
 
   final Map<Color, double> colorOccurrences;
-  final double diameter, radianCorrection;
-  double pi = math.pi;
+  final double totalSecs, diameter, radianCorrection;
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -317,14 +314,10 @@ class _MultipleColorCirclePainter extends CustomPainter {
 
     double radianStart = radianCorrection; // used to be 0
     double radianLength = 0;
-    double allOccurrences = 0;
-    //set denominator
+
+    l.d('_MultipleColorCirclePainter: allOccurrences=$totalSecs');
     colorOccurrences.forEach((color, occurrence) {
-      allOccurrences += occurrence;
-    });
-    l.d('_MultipleColorCirclePainter: allOccurrences=$allOccurrences');
-    colorOccurrences.forEach((color, occurrence) {
-      double percent = occurrence / allOccurrences;
+      double percent = occurrence / totalSecs;
       radianLength = 2 * percent * math.pi;
       canvas.drawArc(
           myRect,
@@ -340,7 +333,7 @@ class _MultipleColorCirclePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
 
 /*

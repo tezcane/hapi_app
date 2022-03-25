@@ -275,6 +275,7 @@ class ActiveQuestsUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ActiveQuestsController>(builder: (c) {
+      l.d('ActiveQuestsUI.build()');
       var zc = ZamanController.to;
       if (zc.athan == null) return Container(); // not initialized yet, return
       final Athan athan = zc.athan!;
@@ -433,13 +434,13 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   double get maxExtent => math.max(maxHeight, minHeight);
   @override
   Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) =>
-    SizedBox.expand(
-      child: Container(
-        //color: Theme.of(context).backgroundColor,
-        child: child,
-      ),
-    );
+          BuildContext context, double shrinkOffset, bool overlapsContent) =>
+      SizedBox.expand(
+        child: Container(
+          //color: Theme.of(context).backgroundColor,
+          child: child,
+        ),
+      );
 
   @override
   bool shouldRebuild(_SliverAppBarDelegate oldDelegate) =>
