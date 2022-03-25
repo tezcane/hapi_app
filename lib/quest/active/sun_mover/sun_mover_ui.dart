@@ -75,6 +75,7 @@ class CircleDayView extends StatelessWidget {
     DateTime currZTime = currZValues[0] as DateTime;
     DateTime nextZTime = athan.highNoon;
     double elapsedSecs = nextZTime.difference(currZTime).inMilliseconds / 1000;
+    // high noon/Sun zenith is constant at top of circle, at 25%/quarter turn
     double degreeCorrection = 365 * ((elapsedSecs / totalSecs) - .25);
     double radianCorrection = degreesToRadians(degreeCorrection);
 
