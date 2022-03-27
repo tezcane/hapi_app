@@ -12,12 +12,12 @@ enum QUEST {
   FAJR_THIKR,
   FAJR_DUA,
 
-  KERAHAT_ADHKAR_SUNRISE,
+  KARAHAT_ADHKAR_SUNRISE,
 
   DUHA_ISHRAQ,
   DUHA_DUHA,
 
-  KERAHAT_ADHKAR_ZAWAL, // TODO does this have a adkhar too?
+  KARAHAT_ADHKAR_ZAWAL,
 
   DHUHR_MUAKB,
   DHUHR_FARD,
@@ -31,7 +31,7 @@ enum QUEST {
   ASR_THIKR,
   ASR_DUA,
 
-  KERAHAT_ADHKAR_SUNSET,
+  KARAHAT_ADHKAR_SUNSET,
 
   MAGHRIB_FARD,
   MAGHRIB_MUAKA,
@@ -58,9 +58,7 @@ enum QUEST {
 
 extension EnumUtil on QUEST {
   /// Returns first part enum (must be uppercase), so: FAJR_FARD -> returns FAJR
-  String salahRow() {
-    return name.split('_').first;
-  }
+  String salahRow() => name.split('_').first;
 
   bool isFard() => name.endsWith('FARD');
   bool isMuak() => name.contains('MUAK');
@@ -76,11 +74,11 @@ extension EnumUtil on QUEST {
 
   bool isQuestCellTimeBound() {
     switch (this) {
-      case (QUEST.KERAHAT_ADHKAR_SUNRISE):
+      case (QUEST.KARAHAT_ADHKAR_SUNRISE):
       case (QUEST.DUHA_ISHRAQ):
       case (QUEST.DUHA_DUHA):
-      case (QUEST.KERAHAT_ADHKAR_ZAWAL):
-      case (QUEST.KERAHAT_ADHKAR_SUNSET):
+      case (QUEST.KARAHAT_ADHKAR_ZAWAL):
+      case (QUEST.KARAHAT_ADHKAR_SUNSET):
         return true;
       default:
         return false;
@@ -94,14 +92,14 @@ extension EnumUtil on QUEST {
       case (QUEST.FAJR_THIKR):
       case (QUEST.FAJR_DUA):
         return Z.Fajr;
-      case (QUEST.KERAHAT_ADHKAR_SUNRISE):
-        return Z.Kerahat_Sunrise;
+      case (QUEST.KARAHAT_ADHKAR_SUNRISE):
+        return Z.Karahat_Morning_Adhkar;
       case (QUEST.DUHA_ISHRAQ):
         return Z.Ishraq;
       case (QUEST.DUHA_DUHA):
         return Z.Duha;
-      case (QUEST.KERAHAT_ADHKAR_ZAWAL):
-        return Z.Kerahat_Zawal;
+      case (QUEST.KARAHAT_ADHKAR_ZAWAL):
+        return Z.Karahat_Zawal;
       case (QUEST.DHUHR_MUAKB):
       case (QUEST.DHUHR_FARD):
       case (QUEST.DHUHR_MUAKA):
@@ -114,8 +112,8 @@ extension EnumUtil on QUEST {
       case (QUEST.ASR_THIKR):
       case (QUEST.ASR_DUA):
         return Z.Asr;
-      case (QUEST.KERAHAT_ADHKAR_SUNSET):
-        return Z.Kerahat_Sun_Setting;
+      case (QUEST.KARAHAT_ADHKAR_SUNSET):
+        return Z.Karahat_Evening_Adhkar;
       case (QUEST.MAGHRIB_FARD):
       case (QUEST.MAGHRIB_MUAKA):
       case (QUEST.MAGHRIB_NAFLA):
@@ -144,20 +142,20 @@ extension EnumUtil on QUEST {
   Z getEndZaman() {
     switch (this) {
       case (QUEST.FAJR_MUAKB):
-        return Z.Kerahat_Sunrise;
+        return Z.Karahat_Morning_Adhkar;
       case (QUEST.FAJR_FARD):
-        return Z.Kerahat_Sunrise;
+        return Z.Karahat_Morning_Adhkar;
       case (QUEST.FAJR_THIKR):
-        return Z.Kerahat_Sunrise;
+        return Z.Karahat_Morning_Adhkar;
       case (QUEST.FAJR_DUA):
-        return Z.Kerahat_Sunrise;
-      case (QUEST.KERAHAT_ADHKAR_SUNRISE):
+        return Z.Karahat_Morning_Adhkar;
+      case (QUEST.KARAHAT_ADHKAR_SUNRISE):
         return Z.Ishraq;
       case (QUEST.DUHA_ISHRAQ):
         return Z.Duha;
       case (QUEST.DUHA_DUHA):
-        return Z.Kerahat_Zawal;
-      case (QUEST.KERAHAT_ADHKAR_ZAWAL):
+        return Z.Karahat_Zawal;
+      case (QUEST.KARAHAT_ADHKAR_ZAWAL):
         return Z.Dhuhr;
       case (QUEST.DHUHR_MUAKB):
         return Z.Asr;
@@ -170,16 +168,16 @@ extension EnumUtil on QUEST {
       case (QUEST.DHUHR_THIKR):
         return Z.Asr;
       case (QUEST.DHUHR_DUA):
-        return Z.Kerahat_Sun_Setting;
+        return Z.Karahat_Evening_Adhkar;
       case (QUEST.ASR_NAFLB):
-        return Z.Kerahat_Sun_Setting;
+        return Z.Karahat_Evening_Adhkar;
       case (QUEST.ASR_FARD):
-        return Z.Kerahat_Sun_Setting;
+        return Z.Karahat_Evening_Adhkar;
       case (QUEST.ASR_THIKR):
-        return Z.Kerahat_Sun_Setting;
+        return Z.Karahat_Evening_Adhkar;
       case (QUEST.ASR_DUA):
-        return Z.Kerahat_Sun_Setting;
-      case (QUEST.KERAHAT_ADHKAR_SUNSET):
+        return Z.Karahat_Evening_Adhkar;
+      case (QUEST.KARAHAT_ADHKAR_SUNSET):
         return Z.Maghrib;
       case (QUEST.MAGHRIB_FARD):
         return Z.Isha;

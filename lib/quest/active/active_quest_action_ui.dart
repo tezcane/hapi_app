@@ -7,17 +7,17 @@ import 'package:hapi/quest/active/athan/z.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
 
 class ActiveQuestActionUI extends StatelessWidget {
-  late final QUEST _quest;
-  late final Widget _callerWidget;
-  late final bool _isActive;
+  late final QUEST quest;
+  late final Widget callerWidget;
+  late final bool isCurrQuest;
 
   static const TextStyle tsBtn = TextStyle(fontSize: 32);
   static const TextStyle tsMsg = TextStyle(fontSize: 15, color: Colors.red);
 
   ActiveQuestActionUI() {
-    _quest = Get.arguments['quest'];
-    _callerWidget = Get.arguments['widget'];
-    _isActive = Get.arguments['isActive'];
+    quest = Get.arguments['quest'];
+    callerWidget = Get.arguments['widget'];
+    isCurrQuest = Get.arguments['isCurrQuest'];
   }
 
   @override
@@ -27,14 +27,14 @@ class ActiveQuestActionUI extends StatelessWidget {
     String noActionMsg = '';
 
     // not allowed to skip fard
-    if (_quest.isFard()) {
+    if (quest.isFard()) {
       skipEnabled = false;
     }
 
     ActiveQuestsAjrController cAjrA = ActiveQuestsAjrController.to;
 
     // if active quest is not completed, we can undo last quest
-    bool isPreviousQuest = cAjrA.getPrevQuest() == _quest;
+    bool isPreviousQuest = cAjrA.getPrevQuest() == quest;
 
     // ACTUALLY: it is ok to change last time ALWAYS (to be nice)
     // // don't count as previous quest if it was in another salah row/time:
@@ -45,38 +45,38 @@ class ActiveQuestActionUI extends StatelessWidget {
     // }
 
     // TODO Cleanup logic when mind is fresh
-    if (!isPreviousQuest || cAjrA.isDone(_quest)) {
-      if (!cAjrA.isQuestActive(_quest)) {
+    if (!isPreviousQuest || cAjrA.isDone(quest)) {
+      if (!cAjrA.isQuestActive(quest)) {
         skipEnabled = false;
         doneEnabled = false;
         noActionMsg = 'Complete other quests first';
       }
 
-      if (cAjrA.isMiss(_quest)) {
+      if (cAjrA.isMiss(quest)) {
         skipEnabled = false;
         doneEnabled = false;
         noActionMsg = 'Quest expired, try again tomorrow';
         // if all row quests done, don't allow next row to be started yet
       } else {
         Z currZ = ZamanController.to.currZ;
-        if ((!_isActive && !isPreviousQuest) ||
+        if ((!isCurrQuest && !isPreviousQuest) ||
             // For Adhkhar/Duha times we don't allow user to start task until
             // the quest's time comes in:
-            (_quest.isQuestCellTimeBound() &&
-                _quest.index != currZ.getFirstQuest().index)) {
+            (quest.isQuestCellTimeBound() &&
+                quest.index != currZ.getFirstQuest().index)) {
           skipEnabled = false;
           doneEnabled = false;
           noActionMsg = 'Quest not active yet';
         }
       }
 
-      if (cAjrA.isSkip(_quest)) {
+      if (cAjrA.isSkip(quest)) {
         skipEnabled = false;
         doneEnabled = false;
         noActionMsg = 'Quest was skipped';
       }
 
-      if (cAjrA.isDone(_quest)) {
+      if (cAjrA.isDone(quest)) {
         skipEnabled = false;
         doneEnabled = false;
         noActionMsg = 'Quest already completed';
@@ -96,12 +96,12 @@ class ActiveQuestActionUI extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // TODO internationalize/add text
-                Text('pre ' + _quest.salahRow() + ' '),
+                Text('pre ' + quest.salahRow() + ' '),
                 Hero(
-                  tag: _quest,
-                  child: _callerWidget,
+                  tag: quest,
+                  child: callerWidget,
                 ),
-                Text(' post ' + _quest.salahRow()),
+                Text(' post ' + quest.salahRow()),
               ],
             ),
 
@@ -120,13 +120,13 @@ class ActiveQuestActionUI extends StatelessWidget {
                       label: Text('Skip', style: tsBtn),
                       icon: const Icon(Icons.redo_outlined),
                       onPressed: () {
-                        if (cAjrA.isDone(_quest) || cAjrA.isMiss(_quest)) {
-                          if (cAjrA.isDone(_quest)) {
+                        if (cAjrA.isDone(quest) || cAjrA.isMiss(quest)) {
+                          if (cAjrA.isDone(quest)) {
                             //TODO remove points
                           }
-                          cAjrA.clearQuest(_quest);
+                          cAjrA.clearQuest(quest);
                         }
-                        cAjrA.setSkip(_quest);
+                        cAjrA.setSkip(quest);
                         // Handle's the sub page back button functionality
                         MenuController.to.handlePressedFAB();
                       },
@@ -144,10 +144,10 @@ class ActiveQuestActionUI extends StatelessWidget {
                       label: Text('Done', style: tsBtn),
                       icon: const Icon(Icons.check_outlined),
                       onPressed: () {
-                        if (cAjrA.isSkip(_quest) || cAjrA.isMiss(_quest)) {
-                          cAjrA.clearQuest(_quest);
+                        if (cAjrA.isSkip(quest) || cAjrA.isMiss(quest)) {
+                          cAjrA.clearQuest(quest);
                         }
-                        cAjrA.setDone(_quest); //TODO add points
+                        cAjrA.setDone(quest); //TODO add points
                         // Handle's the sub page back button functionality
                         MenuController.to.handlePressedFAB();
                         MenuController.to.playConfetti();

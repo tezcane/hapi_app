@@ -150,8 +150,9 @@ class T extends StatelessWidget {
     this.t,
     this.style, {
     this.alignment = Alignment.center,
-    this.w = 80,
-    this.h = 30,
+    this.w = 80, // size of #'s on Active Quests
+    this.h = 27, // size of #'s on Active Quests
+    this.boxFit = BoxFit.contain, // BoxFit.fitHeight, BoxFit.fitWidth
   });
 
   final String t;
@@ -159,19 +160,19 @@ class T extends StatelessWidget {
   final Alignment alignment;
   final double w;
   final double h;
+  final BoxFit boxFit;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: w,
-      height: h,
-      child: FittedBox(
-        fit: BoxFit.contain, // BoxFit.fitHeight,
-        alignment: alignment, // use to align text,
-        child: Text(
-          t.tr,
-          style: style,
-          //textAlign: textAlign,
+    return Center(
+      // wrap with center to prevent expand into container
+      child: SizedBox(
+        width: w,
+        height: h,
+        child: FittedBox(
+          fit: boxFit,
+          alignment: alignment, // use to align text,
+          child: Text(t.tr, style: style), // NOTE: Translation done here
         ),
       ),
     );

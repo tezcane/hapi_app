@@ -2,44 +2,42 @@ import 'package:flutter/material.dart';
 
 /// Change an icon into two color parts (50/50 by default):
 ///   1. One solid color (on bottom). This can also be changed to the background
-///      color to cut an icon in half.
-///   2. One gradient color (on top) but you can input the same color if not desired.
+///      color to make it look like the icon is cut in half.
+///   2. One gradient color (on top), or use 2 or 3 of same color to ignore.
 ///
-///   The top/bottom can be rotated to left/right with the radianAngle param.
+///   Can rotate top/bottom to left/right, etc. with alignmentBegin/End params.
 class TwoColoredIcon extends StatelessWidget {
   const TwoColoredIcon(
     this.icon,
-    this.size,
+    this.iconSize,
     this.colors,
     this.bottomColor, {
     this.fillPercent = .5,
-    this.radianAngle = 1.5708,
+    this.alignmentBegin = Alignment.topCenter,
+    this.alignmentEnd = Alignment.bottomCenter,
   });
 
   final IconData icon;
-  final double size;
+  final double iconSize;
   final List<Color> colors;
   final Color bottomColor;
-  final double fillPercent, radianAngle;
+  final double fillPercent;
+  final Alignment alignmentBegin;
+  final Alignment alignmentEnd;
 
   @override
   Widget build(BuildContext context) {
-    return Transform.rotate(
-      angle: radianAngle,
-      child: ShaderMask(
-        blendMode: BlendMode.srcATop,
-        shaderCallback: (Rect rect) {
-          return LinearGradient(
-            stops: [0, fillPercent, fillPercent],
-            colors: colors,
-          ).createShader(rect);
-        },
-        child: SizedBox(
-          width: size,
-          height: size,
-          child: Icon(icon, size: size, color: bottomColor),
-        ),
-      ),
+    return ShaderMask(
+      blendMode: BlendMode.srcATop,
+      shaderCallback: (Rect rect) {
+        return LinearGradient(
+          begin: alignmentBegin,
+          end: alignmentEnd,
+          stops: [0, fillPercent, fillPercent],
+          colors: colors,
+        ).createShader(rect);
+      },
+      child: Icon(icon, size: iconSize, color: bottomColor),
     );
   }
 }

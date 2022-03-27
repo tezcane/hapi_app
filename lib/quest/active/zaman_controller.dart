@@ -161,13 +161,13 @@ class ZamanController extends GetxHapi {
         zs = [Z.Fajr, Z.Fajr_Tomorrow];
         break;
       case Z.Duha:
-        zs = [Z.Kerahat_Sunrise, Z.Ishraq, Z.Duha, Z.Kerahat_Zawal];
+        zs = [Z.Karahat_Morning_Adhkar, Z.Ishraq, Z.Duha, Z.Karahat_Zawal];
         break;
       case Z.Dhuhr:
         zs = [Z.Dhuhr];
         break;
       case Z.Asr:
-        zs = [Z.Asr, Z.Kerahat_Sun_Setting];
+        zs = [Z.Asr, Z.Karahat_Evening_Adhkar];
         break;
       case Z.Maghrib:
         zs = [Z.Maghrib];

@@ -33,12 +33,9 @@ class ActiveQuestsUI extends StatelessWidget {
   }
 
   static String getTimeRange(DateTime? startTime, DateTime? endTime) {
-    if (startTime == null) {
-      return '-';
-    }
+    if (startTime == null) return '-';
 
     int startHour = startTime.hour;
-    int startMinute = startTime.minute;
     String startAmPm = '';
     if (ActiveQuestsController.to.show12HourClock) {
       if (startHour >= 12) {
@@ -47,9 +44,7 @@ class ActiveQuestsUI extends StatelessWidget {
       } else {
         startAmPm = ' AM';
       }
-      if (startHour == 0) {
-        startHour = 12;
-      }
+      if (startHour == 0) startHour = 12;
     }
 
     String endTimeString = '';
@@ -65,23 +60,28 @@ class ActiveQuestsUI extends StatelessWidget {
         } else {
           endAmPm = ' AM';
         }
-        if (endHour == 0) {
-          endHour = 12;
-        }
+        if (endHour == 0) endHour = 12;
 
         endTimeString =
             '-${endHour.toString()}:${endMinute.toString().padLeft(2, '0')}$endAmPm';
 
-        if (startAmPm == endAmPm) {
-          startAmPm = ''; // if AM/PM are same, don't show twice
-        }
+        // if AM/PM are same, don't show twice
+        if (startAmPm == endAmPm) startAmPm = '';
       } else {
         endTimeString =
             '-${endHour.toString()}:${endMinute.toString().padLeft(2, '0')}';
       }
     }
 
-    return '${startHour.toString()}:${startMinute.toString().padLeft(2, '0')}$startAmPm$endTimeString';
+    // pad hour and minutes so looks good on UI
+    String hour = startHour.toString();
+    if (startHour < 10) hour = '  $hour'; // TODO NOTE: double space to align
+
+    int startMinute = startTime.minute;
+    String minutes = startMinute.toString();
+    if (startMinute < 10) minutes = '0$minutes'; // pad so looks good on UI
+
+    return '$hour:$minutes$startAmPm$endTimeString';
   }
 
   /// Note: returns GetBuilder since has FlipCard()
@@ -96,7 +96,7 @@ class ActiveQuestsUI extends StatelessWidget {
         // 2 of 4. fard column item:
         _Cell(T(fardRkt, tsFard), isActive, QUEST.FAJR_FARD),
         // 3 of 4. Sunnah after fard column items:
-        _Cell(T('', tsMuak), isActive, QUEST.NONE),
+        _Cell(const T('', tsMuak), isActive, QUEST.NONE),
         _Cell(T('', tsNafl), isActive, QUEST.NONE),
         // 4 of 4. Thikr and Dua after fard:
         _Cell(_IconThikr(), isActive, QUEST.FAJR_THIKR),
@@ -106,31 +106,38 @@ class ActiveQuestsUI extends StatelessWidget {
   }
 
   Widget rowDuha(Athan athan, bool isActive, double screenWidth) {
-    double w = (screenWidth / 6) - 10; // - 10 because too big on screen
+    double w6 = (screenWidth / 6) - 10; // - 10 because too big on screen
     final bool isCurrQuest = isActive &&
         ActiveQuestsAjrController.to
-            .isQuestActive(QUEST.KERAHAT_ADHKAR_SUNRISE);
+            .isQuestActive(QUEST.KARAHAT_ADHKAR_SUNRISE);
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         _Cell(
-          _SunCell(_IconSunUpDn(isCurrQuest, true), 'Morning Adhkar',
-              athan.sunrise, athan.ishraq),
+          _SunCell(
+            _IconSunUpDn(isCurrQuest, true),
+            Z.Karahat_Morning_Adhkar.niceName,
+            athan.sunrise,
+            athan.ishraq,
+            true, // align left
+          ),
           isActive,
-          QUEST.KERAHAT_ADHKAR_SUNRISE,
+          QUEST.KARAHAT_ADHKAR_SUNRISE,
           flex: 2000,
         ),
-        _Cell(T('Ishraq', tsText, w: w), isActive, QUEST.DUHA_ISHRAQ),
-        _Cell(T('Duha', tsText, w: w), isActive, QUEST.DUHA_DUHA),
+        _Cell(T('Ishraq', tsText, w: w6), isActive, QUEST.DUHA_ISHRAQ),
+        _Cell(T('Duha', tsText, w: w6), isActive, QUEST.DUHA_DUHA),
         _Cell(
           _SunCell(
-              const Icon(Icons.brightness_7_outlined,
-                  color: Colors.yellowAccent, size: 30),
-              'Zawal',
-              athan.zawal,
-              athan.dhuhr),
+            const Icon(Icons.brightness_7_outlined,
+                color: Colors.yellowAccent, size: 30),
+            Z.Karahat_Zawal.niceName,
+            athan.zawal,
+            athan.dhuhr,
+            false, // align right
+          ),
           isActive,
-          QUEST.KERAHAT_ADHKAR_ZAWAL,
+          QUEST.KARAHAT_ADHKAR_ZAWAL,
           flex: 2000,
         ),
       ],
@@ -165,12 +172,12 @@ class ActiveQuestsUI extends StatelessWidget {
     );
   }
 
-  Widget rowAsr(Athan athan, final bool isActive) {
+  Widget rowAsr(Athan athan, bool isActive) {
     String naflBef = '4';
     String fardRkt = '4';
 
     final bool isCurrQuest = isActive &&
-        ActiveQuestsAjrController.to.isQuestActive(QUEST.KERAHAT_ADHKAR_SUNSET);
+        ActiveQuestsAjrController.to.isQuestActive(QUEST.KARAHAT_ADHKAR_SUNSET);
     return Row(
       children: [
         // 1 of 4. sunnah before fard column item:
@@ -182,15 +189,17 @@ class ActiveQuestsUI extends StatelessWidget {
         _Cell(_IconDua(), isActive, QUEST.ASR_DUA),
         // 4 of 4. Evening adhkar
         _Cell(
-            _SunCell(
-              _IconSunUpDn(isCurrQuest, false),
-              'Evening Adhkar',
-              athan.sunSetting,
-              athan.maghrib,
-            ),
-            isActive,
-            QUEST.KERAHAT_ADHKAR_SUNSET,
-            flex: 2000),
+          _SunCell(
+            _IconSunUpDn(isCurrQuest, false),
+            Z.Karahat_Evening_Adhkar.niceName,
+            athan.sunSetting,
+            athan.maghrib,
+            false, // align right
+          ),
+          isActive,
+          QUEST.KARAHAT_ADHKAR_SUNSET,
+          flex: 2000,
+        ),
       ],
     );
   }
@@ -240,21 +249,21 @@ class ActiveQuestsUI extends StatelessWidget {
 
   /// Note: returns GetBuilder since has FlipCard()
   Widget rowLayl(bool isActive, double width) {
-    double w = (width / 6) - 10; // - 10 because too big on screen
+    double w6 = (width / 6) - 10; // - 10 because too big on screen
 
     return Row(
       children: [
-        _Cell(T('Qiyam', tsText, w: w), isActive, QUEST.LAYL_QIYAM),
+        _Cell(T('Qiyam', tsText, w: w6), isActive, QUEST.LAYL_QIYAM),
 
         // Thikr and Dua before bed:
         _Cell(_IconThikr(), isActive, QUEST.LAYL_THIKR),
         _Cell(_IconDua(), isActive, QUEST.LAYL_DUA),
-        _Cell(T('Sleep', tsText, w: w), isActive, QUEST.LAYL_SLEEP),
+        _Cell(T('Sleep', tsText, w: w6), isActive, QUEST.LAYL_SLEEP),
 
         // Tahajjud and Witr after waking up
         _Cell(
             T('Tahajjud', tsText, w: width / 6), isActive, QUEST.LAYL_TAHAJJUD),
-        _Cell(T('Witr', tsText, w: w), isActive, QUEST.LAYL_WITR),
+        _Cell(T('Witr', tsText, w: w6), isActive, QUEST.LAYL_WITR),
       ],
     );
   }
@@ -300,7 +309,6 @@ class ActiveQuestsUI extends StatelessWidget {
       final bool isJ = TimeController.to.isFriday() && c.showJummahOnFriday;
 
       final double width = w(context);
-//    final double height = h(context);
 
       return CustomScrollView(
         slivers: <Widget>[
@@ -475,7 +483,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 class _Sliv extends StatelessWidget {
   const _Sliv(this.pinned, this.widget);
 
-  static const double sliverHeight = 32.0;
+  static const double slivH = 32.0;
   final bool pinned;
   final Widget widget;
 
@@ -485,13 +493,30 @@ class _Sliv extends StatelessWidget {
       floating: false,
       pinned: pinned,
       delegate: _SliverAppBarDelegate(
-        minHeight: sliverHeight,
-        maxHeight: sliverHeight,
+        minHeight: slivH,
+        maxHeight: slivH,
         child: widget,
       ),
     );
   }
 }
+
+// /// Sliver Child
+// class _SlivC extends StatelessWidget {
+//   const _SlivC(this.pinned, this.widget);
+//
+//   static const double sliverHeight = 32.0;
+//   final bool pinned;
+//   final Widget widget;
+//
+//   @override
+//   SliverFixedExtentList build(BuildContext context) {
+//     return SliverFixedExtentList(
+//       itemExtent: sliverHeight,
+//       delegate: SliverChildListDelegate([widget]),
+//     );
+//   }
+// }
 
 /// Used to Fill in the gaps that were between the salah row cells. Also, adds a
 /// border for nicer looks and returns a SliverPersistentHeader.
@@ -523,129 +548,122 @@ class _SlivSunMover extends StatelessWidget {
 
 class _Cell extends StatelessWidget {
   const _Cell(
-    this._widget,
-    this._isActive,
-    this._quest, {
+    this.widget,
+    this.isActive,
+    this.quest, {
     this.flex = 1000,
   });
 
-  final Widget _widget;
-  final bool _isActive;
-  final QUEST _quest;
+  final Widget widget;
+  final bool isActive;
+  final QUEST quest;
   final int flex;
 
   @override
   Widget build(BuildContext context) {
     bool isCurrQuest =
-        _isActive && ActiveQuestsAjrController.to.isQuestActive(_quest);
+        isActive && ActiveQuestsAjrController.to.isQuestActive(quest);
 
     return Expanded(
       flex: flex,
       child: InkWell(
         onTap: () => MenuController.to
             .pushSubPage(SubPage.Active_Quest_Action, arguments: {
-          'quest': _quest,
-          'widget': _widget,
-          'isActive': _isActive,
+          'quest': quest,
+          'widget': widget,
+          'isCurrQuest': isCurrQuest,
         }),
-        child: isCurrQuest
-            ? Container(
-                decoration: BoxDecoration(
-                  color: Theme.of(context).scaffoldBackgroundColor,
-                  border: Border.all(color: AppThemes.logoText),
-                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+        child: Container(
+          height: 32, // for duha/asr sun slide up sticky sliver effect
+          width: w(context),
+          color: cb(context), // fill in around border radius with bg color
+          child: Container(
+            // if current quest, draw red border and change color
+            decoration: isCurrQuest
+                ? BoxDecoration(
+                    color: Theme.of(context).scaffoldBackgroundColor,
+                    border: Border.all(color: AppThemes.logoText),
+                    borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                  )
+                : null,
+            child: Stack(
+              children: [
+                Center(
+                  child: isCurrQuest
+                      ? BounceAlert(Hero(tag: quest, child: widget))
+                      : quest == QUEST.NONE // UI has 1+, can't hero tag
+                          ? widget
+                          : Hero(tag: quest, child: widget),
                 ),
-                child: Stack(
-                  children: [
-                    Center(
-                      child: BounceAlert(
-                        _quest == QUEST.NONE
-                            ? _widget
-                            : Hero(tag: _quest, child: _widget),
-                      ),
-                    ),
-                    if (ActiveQuestsAjrController.to.isDone(_quest))
-                      const Center(
-                        child: Icon(Icons.check_outlined,
-                            size: 30, color: Colors.green),
-                      ),
-                    if (ActiveQuestsAjrController.to.isSkip(_quest))
-                      const Center(
-                        child: Icon(Icons.redo_outlined,
-                            size: 20, color: Colors.red),
-                      ),
-                    if (ActiveQuestsAjrController.to.isMiss(_quest))
-                      const Center(
-                        child: Icon(Icons.close_outlined,
-                            size: 20, color: Colors.red),
-                      ),
-                  ],
-                ),
-              )
-            : Stack(
-                children: [
-                  Center(
-                    child: _quest == QUEST.NONE
-                        ? _widget
-                        : Hero(tag: _quest, child: _widget),
+                if (ActiveQuestsAjrController.to.isDone(quest))
+                  const Center(
+                    child: Icon(Icons.check_outlined,
+                        size: 30, color: Colors.green),
                   ),
-                  if (ActiveQuestsAjrController.to.isDone(_quest))
-                    const Center(
-                      child: Icon(Icons.check_outlined,
-                          size: 30, color: Colors.green),
-                    ),
-                  if (ActiveQuestsAjrController.to.isSkip(_quest))
-                    const Center(
-                      child: Icon(Icons.redo_outlined,
-                          size: 20, color: Colors.red),
-                    ),
-                  if (ActiveQuestsAjrController.to.isMiss(_quest))
-                    const Center(
-                      child: Icon(Icons.close_outlined,
-                          size: 20, color: Colors.red),
-                    ),
-                ],
-              ),
+                if (ActiveQuestsAjrController.to.isSkip(quest))
+                  const Center(
+                    child:
+                        Icon(Icons.redo_outlined, size: 20, color: Colors.red),
+                  ),
+                if (ActiveQuestsAjrController.to.isMiss(quest))
+                  const Center(
+                    child:
+                        Icon(Icons.close_outlined, size: 20, color: Colors.red),
+                  ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
 }
 
 class _SunCell extends StatelessWidget {
-  const _SunCell(this._sunIcon, this._label, this._time1, this._time2);
+  const _SunCell(
+    this._sunIcon,
+    this._label,
+    this._time1,
+    this._time2,
+    this.alignLeft,
+  );
 
   final Widget _sunIcon;
   final String _label;
   final DateTime _time1;
-  final DateTime? _time2;
+  final DateTime _time2;
+  final bool alignLeft;
 
   @override
   Widget build(BuildContext context) {
-    final double w = MediaQuery.of(context).size.width;
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 3),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _sunIcon,
-          Column(
-            children: [
-              T(
-                _label,
-                tsText,
-                w: (w / 3) - 38, // 38= 30 icon + 6 L/R padding + 2 selected
-                h: (_Sliv.sliverHeight / 2) - 1, // /2 sliv h + 1 selected
-              ),
-              T(
-                ActiveQuestsUI.getTimeRange(_time1, _time2),
-                tsText,
-                w: (w / 3) - 38, // /3 = 1/3 screen (2 of 6 cells)
-                h: _Sliv.sliverHeight / 2 - 1, // /2 sliv h + 1 selected
-              ),
-            ],
-          ),
-        ],
-      ),
+    final double w3 = MediaQuery.of(context).size.width / 3; // /3= 2 of 6 cells
+    const double h2 = _Sliv.slivH / 2; // /2 = half a sliver size
+
+    return Row(
+      mainAxisAlignment:
+          alignLeft ? MainAxisAlignment.start : MainAxisAlignment.end,
+      children: [
+        _sunIcon,
+        Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment:
+              alignLeft ? CrossAxisAlignment.start : CrossAxisAlignment.end,
+          children: [
+            T(
+              _label,
+              tsText,
+              w: w3 - 40,
+              h: h2 - 1,
+            ),
+            T(
+              ActiveQuestsUI.getTimeRange(_time1, _time2),
+              tsText,
+              w: w3 - 40, // 40 = 32 icon + 2 selected + 6 sun shift
+              h: h2 - 1, // - 1 selected for red selection around
+            ),
+          ],
+        ),
+      ],
     );
   }
 }

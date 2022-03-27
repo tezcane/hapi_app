@@ -3,6 +3,7 @@
 AC   - AnimationController  
 Aft  - After  
 Bef  - Before  
+bg   - background (like bg color)  
 btn  - Button  
 C    - Controller
 cb   - theme color background  
@@ -32,6 +33,7 @@ R    - Right (use with Left/Right->L/R)
 Rkt  - Rakat  
 rv   - return value  
 s    - storage/Get Storage  
+sliv - sliver  
 t    - timeline
 ts   - text style  
 thjd - Tahajjud  

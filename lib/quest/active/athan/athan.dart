@@ -347,19 +347,19 @@ class Athan {
   List<Object> getZamanTime(Z z) {
     if (z == Z.Fajr) {
       return [_fajr_01, Colors.blue.shade700];
-    } else if (z == Z.Kerahat_Sunrise) {
+    } else if (z == Z.Karahat_Morning_Adhkar) {
       return [_kerahatAdkharSunrise_02, Colors.red];
     } else if (z == Z.Ishraq) {
       return [_ishraqPrayer_03, Colors.green];
     } else if (z == Z.Duha) {
       return [_duhaPrayer_04, Colors.yellow.shade700];
-    } else if (z == Z.Kerahat_Zawal) {
+    } else if (z == Z.Karahat_Zawal) {
       return [_kerahatAdkharZawal_05, Colors.red.shade700];
     } else if (z == Z.Dhuhr) {
       return [_dhuhr_06, Colors.yellow.shade800];
     } else if (z == Z.Asr) {
       return [_asr_07, Colors.yellow.shade900];
-    } else if (z == Z.Kerahat_Sun_Setting) {
+    } else if (z == Z.Karahat_Evening_Adhkar) {
       return [_kerahatAdkharSunSetting_08, Colors.red.shade800];
     } else if (z == Z.Maghrib) {
       return [_maghrib_09, Colors.blue.shade800];
@@ -391,19 +391,19 @@ class Athan {
     } else if (date.isAfter(_maghrib_09)) {
       return Z.Maghrib;
     } else if (date.isAfter(_kerahatAdkharSunSetting_08)) {
-      return Z.Kerahat_Sun_Setting;
+      return Z.Karahat_Evening_Adhkar;
     } else if (date.isAfter(_asr_07)) {
       return Z.Asr;
     } else if (date.isAfter(_dhuhr_06)) {
       return Z.Dhuhr;
     } else if (date.isAfter(_kerahatAdkharZawal_05)) {
-      return Z.Kerahat_Zawal;
+      return Z.Karahat_Zawal;
     } else if (date.isAfter(_duhaPrayer_04)) {
       return Z.Duha;
     } else if (date.isAfter(_ishraqPrayer_03)) {
       return Z.Ishraq;
     } else if (date.isAfter(_kerahatAdkharSunrise_02)) {
-      return Z.Kerahat_Sunrise;
+      return Z.Karahat_Morning_Adhkar;
     } else if (date.isAfter(_fajr_01)) {
       return Z.Fajr;
     } else {
@@ -428,22 +428,22 @@ class Athan {
     } else if (date.isAfter(_kerahatAdkharSunSetting_08)) {
       return Z.Maghrib;
     } else if (date.isAfter(_asr_07)) {
-      return Z.Kerahat_Sun_Setting;
+      return Z.Karahat_Evening_Adhkar;
     } else if (date.isAfter(_dhuhr_06)) {
       return Z.Asr;
     } else if (date.isAfter(_kerahatAdkharZawal_05)) {
       return Z.Dhuhr;
     } else if (date.isAfter(_duhaPrayer_04)) {
-      return Z.Kerahat_Zawal;
+      return Z.Karahat_Zawal;
     } else if (date.isAfter(_ishraqPrayer_03)) {
       return Z.Duha;
     } else if (date.isAfter(_kerahatAdkharSunrise_02)) {
       return Z.Ishraq;
     } else if (date.isAfter(_fajr_01)) {
-      return Z.Kerahat_Sunrise;
+      return Z.Karahat_Morning_Adhkar;
     } else {
       l.e('getNextZaman $date is not after fajr');
-      return Z.Kerahat_Sunrise;
+      return Z.Karahat_Morning_Adhkar;
     }
   }
 }
