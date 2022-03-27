@@ -164,16 +164,14 @@ class T extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      // wrap with center to prevent expand into container
-      child: SizedBox(
-        width: w,
-        height: h,
-        child: FittedBox(
-          fit: boxFit,
-          alignment: alignment, // use to align text,
-          child: Text(t.tr, style: style), // NOTE: Translation done here
-        ),
+    // NOTE: wrap with center to prevent expand into container broke SWIPER UI
+    return SizedBox(
+      width: w,
+      height: h,
+      child: FittedBox(
+        fit: boxFit,
+        alignment: alignment, // use to align text,
+        child: Text(t.tr, style: style), // NOTE: Translation done here
       ),
     );
   }
