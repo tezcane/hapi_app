@@ -41,6 +41,7 @@ dependencies:
 #  flare_dart: 2.2.5 flare_flutter: 1.6.5  # works but clips TODO get newer versions working, use RIVE though instead
   flare_dart: 1.4.6 # 1.4.6 works (original was 1.4.4), 1.4.7+ broken
   flare_flutter: 1.5.6 # 1.5.6 works (original was 1.5.5), # v1.5.7+ clips artwork
+  value_layout_builder: 
   nima: ^1.0.5
   flutter_markdown: ^0.6.9
   share: ^2.0.4

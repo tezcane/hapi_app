@@ -1,16 +1,7 @@
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:hapi/components/sticky_sliver/render_sticky_sliver.dart';
-import 'package:value_layout_builder/value_layout_builder.dart';
 
-/// Signature used by [SliverStickyHeader.builder] to build the header
-/// when the sticky header state has changed.
-typedef Widget SliverStickyHeaderWidgetBuilder(
-  BuildContext context,
-  SliverStickyHeaderState state,
-);
-
-/// A
 class StickyHeaderController with ChangeNotifier {
   /// The offset to use in order to jump to the first item
   /// of current the sticky header.
@@ -155,33 +146,8 @@ class SliverStickyHeader extends RenderObjectWidget {
     this.overlapsContent: false,
     this.sticky = true,
     this.controller,
+    //required this.headerSize,
   }) : super(key: key);
-
-  /// Creates a widget that builds the header of a [SliverStickyHeader]
-  /// each time its scroll percentage changes.
-  ///
-  /// The [builder], [overlapsContent] and [sticky] arguments must not be null.
-  ///
-  /// If a [StickyHeaderController] is not provided, then the value of
-  /// [DefaultStickyHeaderController.of] will be used.
-  SliverStickyHeader.builder({
-    Key? key,
-    required SliverStickyHeaderWidgetBuilder builder,
-    Widget? sliver,
-    bool overlapsContent: false,
-    bool sticky = true,
-    StickyHeaderController? controller,
-  }) : this(
-          key: key,
-          header: ValueLayoutBuilder<SliverStickyHeaderState>(
-            builder: (context, constraints) =>
-                builder(context, constraints.value),
-          ),
-          sliver: sliver,
-          overlapsContent: overlapsContent,
-          sticky: sticky,
-          controller: controller,
-        );
 
   /// The header to display before the sliver.
   final Widget? header;
@@ -225,67 +191,6 @@ class SliverStickyHeader extends RenderObjectWidget {
       ..overlapsContent = overlapsContent
       ..sticky = sticky
       ..controller = controller ?? DefaultStickyHeaderController.of(context);
-  }
-}
-
-/// A widget that builds a [SliverStickyHeader] and calls a [SliverStickyHeaderWidgetBuilder] when
-/// the header scroll percentage changes.
-///
-/// This is useful if you want to change the header layout when it starts to scroll off the viewport.
-/// You cannot change the main axis extent of the header in this builder otherwise it could result
-/// in strange behavior.
-@Deprecated('Use SliverStickyHeader.builder instead.')
-class SliverStickyHeaderBuilder extends StatelessWidget {
-  /// Creates a widget that builds the header of a [SliverStickyHeader]
-  /// each time its scroll percentage changes.
-  ///
-  /// The [builder], [overlapsContent] and [sticky] arguments must not be null.
-  ///
-  /// If a [StickyHeaderController] is not provided, then the value of [DefaultStickyHeaderController.of]
-  /// will be used.
-  const SliverStickyHeaderBuilder({
-    Key? key,
-    required this.builder,
-    this.sliver,
-    this.overlapsContent: false,
-    this.sticky = true,
-    this.controller,
-  }) : super(key: key);
-
-  /// Called to build the [SliverStickyHeader]'s header.
-  ///
-  /// This function is called when the [SliverStickyHeader]'s header
-  /// scroll percentage changes.
-  final SliverStickyHeaderWidgetBuilder builder;
-
-  /// The sliver to display after the header.
-  final Widget? sliver;
-
-  /// Whether the header should be drawn on top of the sliver
-  /// instead of before.
-  final bool overlapsContent;
-
-  /// Whether to stick the header.
-  /// Defaults to true.
-  final bool sticky;
-
-  /// The controller used to interact with this sliver.
-  ///
-  /// If a [StickyHeaderController] is not provided, then the value of [DefaultStickyHeaderController.of]
-  /// will be used.
-  final StickyHeaderController? controller;
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverStickyHeader(
-      overlapsContent: overlapsContent,
-      sliver: sliver,
-      sticky: sticky,
-      controller: controller,
-      header: ValueLayoutBuilder<SliverStickyHeaderState>(
-        builder: (context, constraints) => builder(context, constraints.value),
-      ),
-    );
   }
 }
 
