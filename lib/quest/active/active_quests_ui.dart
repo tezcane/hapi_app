@@ -257,26 +257,24 @@ class SalahRow extends StatelessWidget {
       isActive &= ActiveQuestsAjrController.to.isIshaIbadahComplete;
     }
 
-    const Separator separator = Separator(.5, .5, .5);
-
     return isActive && c.showActiveSalah // salah row is pinned under header
         ? MultiSliver(children: [
-            const _Sliv(separator, minHeight: 2, maxHeight: 2), // draw over UI
+            const _Sliv(Separator(.5, .5, .5), minHeight: 2, maxHeight: 2),
             _Sliv(_salahHeader()),
             _Sliv(_salahActions()),
-            const _Sliv(separator, minHeight: 2, maxHeight: 2), // draw under UI
+            const _Sliv(Separator(.5, .5, .5), minHeight: 2, maxHeight: 2),
           ])
         // salah row not pinned, shrink it into the salah header
         : SliverStack(
             children: [
-              // add separator if next salah row won't add too (draw over UI)
+              // add separator if next salah row won't add too (top sep. above)
               if (!c.showActiveSalah || // if not pinned, always put Separator
                   !ZamanController.to.isNextSalahRowActive(z))
                 _Sliv(
                   // Start salah separator at end to give overlap effect
                   Column(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: const [separator],
+                    children: const [Separator(.5, .5, .5)],
                   ),
                   minHeight: 2,
                   maxHeight: (_Sliv.slivH * 2) + 2, // so UI gets overlap effect
