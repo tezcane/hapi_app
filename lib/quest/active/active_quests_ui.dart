@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:get/get.dart';
@@ -14,6 +12,7 @@ import 'package:hapi/quest/active/athan/athan.dart';
 import 'package:hapi/quest/active/athan/z.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
+import 'package:sliver_tools/sliver_tools.dart';
 
 import 'sun_mover/sun_mover_ui.dart';
 
@@ -310,11 +309,13 @@ class ActiveQuestsUI extends StatelessWidget {
 
       final double width = w(context);
 
+      final Color bg = cb(context);
+
       return CustomScrollView(
         slivers: <Widget>[
           /// Show Top App Bar
           SliverAppBar(
-            backgroundColor: cb(context), //Colors.grey.shade800,
+            backgroundColor: bg,
             expandedHeight: 175.0,
             collapsedHeight: 56.0, // any smaller is exception
             snap: true,
@@ -322,11 +323,11 @@ class ActiveQuestsUI extends StatelessWidget {
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
-              titlePadding: const EdgeInsets.all(7.0),
+              titlePadding: const EdgeInsets.all(0.0),
               title: ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                 child: Container(
-                  color: Colors.grey.shade800.withOpacity(.20),
+                  color: bg.withOpacity(.10),
                   child: GetBuilder<ZamanController>(builder: (c) {
                     return T(c.timeToNextZaman, tsAppBar, w: 90, h: 45);
                   }),
@@ -367,14 +368,18 @@ class ActiveQuestsUI extends StatelessWidget {
           _Sliv(true, _SalahHeader(Z.Fajr, isFajr, athan.fajr)),
           _Sliv(isFajr && c.showActiveSalah, rowFajr(isFajr)),
 
-          _Sliv(true, _SalahHeader(Z.Duha, isDuha, athan.sunrise)),
-          _Sliv(isDuha && c.showActiveSalah, rowDuha(athan, isDuha, width)),
+          SunRow(
+            _SalahHeader(Z.Duha, isDuha, athan.sunrise),
+            rowDuha(athan, isDuha, width),
+          ),
 
           _Sliv(true, _SalahHeader(Z.Dhuhr, isDhhr, athan.dhuhr, isJ: isJ)),
           _Sliv(isDhhr && c.showActiveSalah, rowDhuhr(isDhhr, isJ)),
 
-          _Sliv(true, _SalahHeader(Z.Asr, isAasr, athan.asr)),
-          _Sliv(isAasr && c.showActiveSalah, rowAsr(athan, isAasr)),
+          SunRow(
+            _SalahHeader(Z.Asr, isAasr, athan.asr),
+            rowAsr(athan, isAasr),
+          ),
 
           _Sliv(true, _SalahHeader(Z.Maghrib, isMgrb, athan.maghrib)),
           _Sliv(isMgrb && c.showActiveSalah, rowMaghrib(isMgrb)),
@@ -412,34 +417,60 @@ class _SalahHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final ActiveQuestsController c = ActiveQuestsController.to;
+    final Color bg = cb(context);
+    final double w6 = w(context) / 6;
 
     return InkWell(
       onTap: isActive ? () => c.toggleShowActiveSalah() : null,
       child: Center(
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           mainAxisSize: MainAxisSize.min,
           children: [
-            T(
-              ActiveQuestsUI.getTimeRange(salahTimeStart, null),
-              TS(
-                isActive
-                    ? Theme.of(context).textTheme.headline6!.color!
-                    : Colors.grey.shade500,
-                fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-              ),
-              alignment: Alignment.centerRight,
+            Container(
+              color: z == Z.Duha ? Colors.transparent : bg,
+              width: (w6 * 2),
+              height: _Sliv.slivH, // fills gaps
             ),
-            const SizedBox(width: 10),
-            T(
-              isJ ? 'Jummah' : z.niceName,
-              Theme.of(context).textTheme.headline6!.copyWith(
-                    color: isActive
-                        ? Theme.of(context).textTheme.headline6!.color
-                        : Colors.grey.shade500,
-                    fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
-                  ),
-              alignment: Alignment.centerLeft,
+            Container(
+              height: _Sliv.slivH,
+              color: bg, // middle Zaman name always colored
+              child: T(
+                isJ ? 'Jummah' : z.niceNamePadded,
+                Theme.of(context).textTheme.headline6!.copyWith(
+                      color: isActive
+                          ? Theme.of(context).textTheme.headline6!.color
+                          : Colors.grey.shade500,
+                      fontWeight:
+                          isActive ? FontWeight.bold : FontWeight.normal,
+                    ),
+                alignment: Alignment.centerLeft,
+                w: w6 -
+                    1 - // -1 for middle spacer
+                    (ActiveQuestsController.to.show12HourClock ? 8 : -3),
+              ),
+            ),
+            // middle spacer always colored
+            Container(color: bg, width: 1, height: _Sliv.slivH),
+            Container(
+              height: _Sliv.slivH,
+              color: bg, // middle athan time always colored
+              child: T(
+                ActiveQuestsUI.getTime(salahTimeStart),
+                TS(
+                  isActive ? ct(context) : Colors.grey.shade500,
+                  fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+                ),
+                alignment: ActiveQuestsController.to.show12HourClock
+                    ? Alignment.centerRight
+                    : Alignment.centerLeft,
+                w: w6 + (ActiveQuestsController.to.show12HourClock ? 8 : -3),
+              ),
+            ),
+            Container(
+              color: z == Z.Duha || z == Z.Asr ? Colors.transparent : bg,
+              width: (w6 * 2),
+              height: _Sliv.slivH, // fills gaps
             ),
           ],
         ),
@@ -460,7 +491,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   double get minExtent => minHeight;
   @override
-  double get maxExtent => math.max(maxHeight, minHeight);
+  double get maxExtent => maxHeight;
   @override
   Widget build(
           BuildContext context, double shrinkOffset, bool overlapsContent) =>
@@ -472,20 +503,20 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
       );
 
   @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) =>
-      maxHeight != oldDelegate.maxHeight ||
-      minHeight != oldDelegate.minHeight ||
-      child != oldDelegate.child;
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) => false;
+  // maxHeight != oldDelegate.maxHeight ||
+  // minHeight != oldDelegate.minHeight ||
+  // child != oldDelegate.child;
 }
 
-/// Used to Fill in the gaps that were between the salah row cells. Also, adds a
-/// border for nicer looks and returns a SliverPersistentHeader.
+/// Sliver Header used for both header and it's child (salah actions)
 class _Sliv extends StatelessWidget {
-  const _Sliv(this.pinned, this.widget);
+  const _Sliv(this.pinned, this.widget, {this.stackMode = false});
 
   static const double slivH = 32.0;
   final bool pinned;
   final Widget widget;
+  final bool stackMode;
 
   @override
   SliverPersistentHeader build(BuildContext context) {
@@ -493,10 +524,38 @@ class _Sliv extends StatelessWidget {
       floating: false,
       pinned: pinned,
       delegate: _SliverAppBarDelegate(
-        minHeight: slivH,
-        maxHeight: slivH,
+        minHeight: slivH, // 0 to hide salah row in stack mode
+        maxHeight: stackMode ? slivH * 2 : slivH, // * 2 = hide salah row
         child: widget,
       ),
+    );
+  }
+}
+
+/// SunRow is used to display the other times for a salah row, i.e. karahat
+/// sunrise and karahat zawal and for duha and karahat sunsetting for asr.
+class SunRow extends StatelessWidget {
+  const SunRow(this.header, this.salahActions);
+
+  final Widget header;
+  final Widget salahActions;
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverStack(
+      insetOnOverlap: false, // defaults to false
+      children: [
+        _Sliv(true, Container(color: cb(context))), // hide UIs when sun back dn
+        _Sliv(
+          true,
+          Column(
+            mainAxisAlignment: MainAxisAlignment.end, // Push actions down
+            children: [salahActions],
+          ),
+          stackMode: true, // doubles size of sliver to give UI combine effect
+        ),
+        _Sliv(true, header), // do last, header hides all but sun on edges
+      ],
     );
   }
 }
@@ -678,21 +737,27 @@ class _IconSunUpDn extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        TwoColoredIcon(
-          Icons.circle,
-          30,
-          const [Colors.orangeAccent, Colors.red, Colors.transparent],
-          isCurrQuest ? cs(context) : cb(context),
-          fillPercent: .60,
+        // needed for positioned to work on sun icon:
+        const SizedBox(width: _Sliv.slivH + 6, height: _Sliv.slivH),
+        Positioned(
+          left: 6,
+          child: TwoColoredIcon(
+            Icons.circle,
+            _Sliv.slivH,
+            const [Colors.orangeAccent, Colors.red, Colors.transparent],
+            isCurrQuest ? cs(context) : cb(context),
+            fillPercent: .60,
+          ),
         ),
         Positioned(
-          top: (_Sliv.sliverHeight / 4) + 2,
+          left: 6,
+          top: (_Sliv.slivH / 4) + 2, // 25% down from center
           child: Icon(
             isSunrise
                 ? Icons.arrow_drop_up_outlined // sunrise
                 : Icons.arrow_drop_down_outlined, // sunset
             color: tsTextColor,
-            size: 30,
+            size: _Sliv.slivH,
           ),
         ),
       ],
