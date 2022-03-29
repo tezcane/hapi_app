@@ -10,22 +10,16 @@ import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/athan.dart';
 import 'package:hapi/quest/active/athan/z.dart';
+import 'package:hapi/quest/active/sun_mover/sun_mover_ui.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-
-import 'sun_mover/sun_mover_ui.dart';
 
 const Color tsTextColor = Colors.grey; // Sun Icon and Text
 const TS tsText = TS(tsTextColor); // Duha and Layl color
 
 class ActiveQuestsUI extends StatelessWidget {
   static const TS tsAppBar = TS(Colors.white70);
-
-  // TODO don't use white for all, Theme.of(context).textTheme.headline6!:
-  static const TS tsFard = TS(Colors.red);
-  static const TS tsMuak = TS(Colors.green);
-  static final TS tsNafl = TS(Colors.amber.shade700);
 
   static String getTime(DateTime? time) {
     return getTimeRange(time, null);
@@ -83,231 +77,13 @@ class ActiveQuestsUI extends StatelessWidget {
     return '$hour:$minutes$startAmPm$endTimeString';
   }
 
-  /// Note: returns GetBuilder since has FlipCard()
-  Widget rowFajr(final bool isActive) {
-    String muakBef = '2';
-    String fardRkt = '2';
-
-    return Row(
-      children: [
-        // 1 of 4. sunnah before fard column item:
-        _Cell(T(muakBef, tsMuak), isActive, QUEST.FAJR_MUAKB),
-        // 2 of 4. fard column item:
-        _Cell(T(fardRkt, tsFard), isActive, QUEST.FAJR_FARD),
-        // 3 of 4. Sunnah after fard column items:
-        _Cell(const T('', tsMuak), isActive, QUEST.NONE),
-        _Cell(T('', tsNafl), isActive, QUEST.NONE),
-        // 4 of 4. Thikr and Dua after fard:
-        _Cell(_IconThikr(), isActive, QUEST.FAJR_THIKR),
-        _Cell(_IconDua(), isActive, QUEST.FAJR_DUA),
-      ],
-    );
-  }
-
-  Widget rowDuha(Athan athan, bool isActive, double screenWidth) {
-    double w6 = (screenWidth / 6) - 10; // - 10 because too big on screen
-    final bool isCurrQuest = isActive &&
-        ActiveQuestsAjrController.to
-            .isQuestActive(QUEST.KARAHAT_ADHKAR_SUNRISE);
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _Cell(
-          _SunCell(
-            _IconSunUpDn(isCurrQuest, true),
-            Z.Karahat_Morning_Adhkar.niceName,
-            athan.sunrise,
-            athan.ishraq,
-            true, // align left
-          ),
-          isActive,
-          QUEST.KARAHAT_ADHKAR_SUNRISE,
-          flex: 2000,
-        ),
-        _Cell(T('Ishraq', tsText, w: w6), isActive, QUEST.DUHA_ISHRAQ),
-        _Cell(T('Duha', tsText, w: w6), isActive, QUEST.DUHA_DUHA),
-        _Cell(
-          _SunCell(
-            const Icon(Icons.brightness_7_outlined,
-                color: Colors.yellowAccent, size: 30),
-            Z.Karahat_Zawal.niceName,
-            athan.zawal,
-            athan.dhuhr,
-            false, // align right
-          ),
-          isActive,
-          QUEST.KARAHAT_ADHKAR_ZAWAL,
-          flex: 2000,
-        ),
-      ],
-    );
-  }
-
-  /// Note: returns GetBuilder since has FlipCard()
-  Widget rowDhuhr(bool isActive, bool isJummah) {
-    String muakBef = '4';
-    String fardRkt = '4';
-    String muakAft = '2';
-    String naflAft = '2';
-
-    if (isJummah) {
-      fardRkt = '2';
-      muakAft = '6';
-    }
-
-    return Row(
-      children: [
-        // 1 of 4. sunnah before fard column item:
-        _Cell(T(muakBef, tsMuak), isActive, QUEST.DHUHR_MUAKB),
-        // 2 of 4. fard column item:
-        _Cell(T(fardRkt, tsFard), isActive, QUEST.DHUHR_FARD),
-        // 3 of 4. Option 2: sunnah after fard column items:
-        _Cell(T(muakAft, tsMuak), isActive, QUEST.DHUHR_MUAKA),
-        _Cell(T(naflAft, tsNafl), isActive, QUEST.DHUHR_NAFLA),
-        // 4 of 4. Thikr and Dua after fard:
-        _Cell(_IconThikr(), isActive, QUEST.DHUHR_THIKR),
-        _Cell(_IconDua(), isActive, QUEST.DHUHR_DUA),
-      ],
-    );
-  }
-
-  Widget rowAsr(Athan athan, bool isActive) {
-    String naflBef = '4';
-    String fardRkt = '4';
-
-    final bool isCurrQuest = isActive &&
-        ActiveQuestsAjrController.to.isQuestActive(QUEST.KARAHAT_ADHKAR_SUNSET);
-    return Row(
-      children: [
-        // 1 of 4. sunnah before fard column item:
-        _Cell(T(naflBef, tsNafl), isActive, QUEST.ASR_NAFLB),
-        // 2 of 4. fard column item:
-        _Cell(T(fardRkt, tsFard), isActive, QUEST.ASR_FARD),
-        // 3 of 4. Thikr and Dua after fard:
-        _Cell(_IconThikr(), isActive, QUEST.ASR_THIKR),
-        _Cell(_IconDua(), isActive, QUEST.ASR_DUA),
-        // 4 of 4. Evening adhkar
-        _Cell(
-          _SunCell(
-            _IconSunUpDn(isCurrQuest, false),
-            Z.Karahat_Evening_Adhkar.niceName,
-            athan.sunSetting,
-            athan.maghrib,
-            false, // align right
-          ),
-          isActive,
-          QUEST.KARAHAT_ADHKAR_SUNSET,
-          flex: 2000,
-        ),
-      ],
-    );
-  }
-
-  Widget rowMaghrib(final bool isActive) {
-    String fardRkt = '3';
-    String muakAft = '2';
-    String naflAft = '2';
-
-    return Row(
-      children: [
-        // 1 of 4. sunnah before fard column item:
-        _Cell(const T('', TS(Colors.transparent)), isActive, QUEST.NONE),
-        // 2 of 4. fard column item:
-        _Cell(T(fardRkt, tsFard), isActive, QUEST.MAGHRIB_FARD),
-        // 3 of 4. Option 2: sunnah after fard column items:
-        _Cell(T(muakAft, tsMuak), isActive, QUEST.MAGHRIB_MUAKA),
-        _Cell(T(naflAft, tsNafl), isActive, QUEST.MAGHRIB_NAFLA),
-        // 4 of 4. Thikr and Dua after fard:
-        _Cell(_IconThikr(), isActive, QUEST.MAGHRIB_THIKR),
-        _Cell(_IconDua(), isActive, QUEST.MAGHRIB_DUA),
-      ],
-    );
-  }
-
-  Widget rowIsha(final bool isActive) {
-    String naflBef = '4';
-    String fardRkt = '4';
-    String muakAft = '2';
-    String naflAft = '2';
-
-    return Row(
-      children: [
-        // 1 of 4. sunnah before fard column item:
-        _Cell(T(naflBef, tsNafl), isActive, QUEST.ISHA_NAFLB),
-        // 2 of 4. fard column item:
-        _Cell(T(fardRkt, tsFard), isActive, QUEST.ISHA_FARD),
-        // 3 of 4. Option 1: sunnah after fard column items:
-        _Cell(T(muakAft, tsMuak), isActive, QUEST.ISHA_MUAKA),
-        _Cell(T(naflAft, tsNafl), isActive, QUEST.ISHA_NAFLA),
-        // 4 of 4. Thikr and Dua after fard:
-        _Cell(_IconThikr(), isActive, QUEST.ISHA_THIKR),
-        _Cell(_IconDua(), isActive, QUEST.ISHA_DUA),
-      ],
-    );
-  }
-
-  /// Note: returns GetBuilder since has FlipCard()
-  Widget rowLayl(bool isActive, double width) {
-    double w6 = (width / 6) - 10; // - 10 because too big on screen
-
-    return Row(
-      children: [
-        _Cell(T('Qiyam', tsText, w: w6), isActive, QUEST.LAYL_QIYAM),
-
-        // Thikr and Dua before bed:
-        _Cell(_IconThikr(), isActive, QUEST.LAYL_THIKR),
-        _Cell(_IconDua(), isActive, QUEST.LAYL_DUA),
-        _Cell(T('Sleep', tsText, w: w6), isActive, QUEST.LAYL_SLEEP),
-
-        // Tahajjud and Witr after waking up
-        _Cell(
-            T('Tahajjud', tsText, w: width / 6), isActive, QUEST.LAYL_TAHAJJUD),
-        _Cell(T('Witr', tsText, w: w6), isActive, QUEST.LAYL_WITR),
-      ],
-    );
-  }
-
-  /// Use to make scrolling of active salah always pin when scrolling up.
-  SliverPersistentHeader sliverSpaceHeaderFiller(BuildContext context) {
-    final double height = MediaQuery.of(context).size.height;
-    return SliverPersistentHeader(
-      pinned: false,
-      delegate: _SliverAppBarDelegate(
-        minHeight: height,
-        maxHeight: height,
-        child: const SizedBox(),
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ActiveQuestsController>(builder: (c) {
       l.d('ActiveQuestsUI.build()');
-      var zc = ZamanController.to;
+      ZamanController zc = ZamanController.to;
       if (zc.athan == null) return Container(); // not initialized yet, return
       final Athan athan = zc.athan!;
-
-      final bool isIshaDone = ActiveQuestsAjrController.to.isIshaIbadahComplete;
-
-      final bool isFajr = zc.isSalahRowActive(Z.Fajr);
-      final bool isDuha = zc.isSalahRowActive(Z.Duha);
-      final bool isDhhr = zc.isSalahRowActive(Z.Dhuhr);
-      final bool isAasr = zc.isSalahRowActive(Z.Asr);
-      final bool isMgrb = zc.isSalahRowActive(Z.Maghrib);
-      final bool isIsha = zc.isSalahRowActive(Z.Isha) && !isIshaDone;
-      final bool isLayl = zc.isSalahRowActive(Z.Night__3) && isIshaDone;
-
-      Z laylZ = Z.Night__3;
-      DateTime laylDate = athan.last3rdOfNight;
-      if (!c.showLast3rdOfNight) {
-        laylZ = Z.Night__2;
-        laylDate = athan.middleOfNight;
-      }
-
-      final bool isJ = TimeController.to.isFriday() && c.showJummahOnFriday;
-
-      final double width = w(context);
 
       final Color bg = cb(context);
 
@@ -365,33 +141,17 @@ class ActiveQuestsUI extends StatelessWidget {
             ),
           ),
 
-          _Sliv(true, _SalahHeader(Z.Fajr, isFajr, athan.fajr)),
-          _Sliv(isFajr && c.showActiveSalah, rowFajr(isFajr)),
+          SalahRow(athan, c, Z.Fajr),
+          SalahRow(athan, c, Z.Duha),
+          SalahRow(athan, c, Z.Dhuhr),
+          SalahRow(athan, c, Z.Asr),
+          SalahRow(athan, c, Z.Maghrib),
+          SalahRow(athan, c, Z.Isha),
+          if (c.showLast3rdOfNight) SalahRow(athan, c, Z.Night__3),
+          if (!c.showLast3rdOfNight) SalahRow(athan, c, Z.Night__2),
 
-          SunRow(
-            _SalahHeader(Z.Duha, isDuha, athan.sunrise),
-            rowDuha(athan, isDuha, width),
-          ),
-
-          _Sliv(true, _SalahHeader(Z.Dhuhr, isDhhr, athan.dhuhr, isJ: isJ)),
-          _Sliv(isDhhr && c.showActiveSalah, rowDhuhr(isDhhr, isJ)),
-
-          SunRow(
-            _SalahHeader(Z.Asr, isAasr, athan.asr),
-            rowAsr(athan, isAasr),
-          ),
-
-          _Sliv(true, _SalahHeader(Z.Maghrib, isMgrb, athan.maghrib)),
-          _Sliv(isMgrb && c.showActiveSalah, rowMaghrib(isMgrb)),
-
-          _Sliv(true, _SalahHeader(Z.Isha, isIsha, athan.isha)),
-          _Sliv(isIsha && c.showActiveSalah, rowIsha(isIsha)),
-
-          _Sliv(true, _SalahHeader(laylZ, isLayl, laylDate)),
-          _Sliv(isLayl && c.showActiveSalah, rowLayl(isLayl, width)),
-
-          /// Fillers:
-          sliverSpaceHeaderFiller(context), // height of the page
+          /// Use to make scrolling of active salah always pin when scrolling up.
+          const SliverFillRemaining(), // height of the page
 
           /// Now show sun movement
           _SlivSunMover(athan),
@@ -401,24 +161,107 @@ class ActiveQuestsUI extends StatelessWidget {
   }
 }
 
-class _SalahHeader extends StatelessWidget {
-  const _SalahHeader(
-    this.z,
-    this.isActive,
-    this.salahTimeStart, {
-    this.isJ = false, // isJummah
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  const _SliverAppBarDelegate({
+    required this.minHeight,
+    required this.maxHeight,
+    required this.child,
   });
+  final double minHeight;
+  final double maxHeight;
+  final Widget child;
+  @override
+  double get minExtent => minHeight;
+  @override
+  double get maxExtent => maxHeight;
+  @override
+  Widget build(BuildContext context, double shrinkOffset, bool overlaps) =>
+      SizedBox.expand(child: Container(child: child));
 
+  @override
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) =>
+      maxHeight != oldDelegate.maxHeight || // these are needed or won't update
+      minHeight != oldDelegate.minHeight ||
+      child != oldDelegate.child;
+}
+
+/// Sliver Header used for both header and it's child (salah actions)
+class _Sliv extends StatelessWidget {
+  const _Sliv(this.widget, {this.stackMode = false});
+
+  static const double slivH = 32.0;
+  final Widget widget;
+  final bool stackMode;
+
+  @override
+  SliverPersistentHeader build(BuildContext context) {
+    return SliverPersistentHeader(
+      floating: false,
+      pinned: true,
+      delegate: _SliverAppBarDelegate(
+        minHeight: slivH, // 0 to hide salah row in stack mode
+        maxHeight: stackMode ? slivH * 2 : slivH, // * 2 = hide salah row
+        child: widget,
+      ),
+    );
+  }
+}
+
+/// SunRow is used to display the other times for a salah row, i.e. karahat
+/// sunrise and karahat zawal and for duha and karahat sunsetting for asr.
+class SalahRow extends StatelessWidget {
+  SalahRow(this.athan, this.c, this.z);
+
+  final Athan athan;
+  final ActiveQuestsController c;
   final Z z;
-  final bool isActive;
-  final DateTime salahTimeStart;
-  final bool isJ;
+
+  late final double width;
+  late final Color bg;
+  late final TextStyle textStyle;
+
+  late bool isActive;
+
+  // TODO don't use white for all, Theme.of(context).textTheme.headline6!:
+  static const TS tsFard = TS(Colors.red);
+  static const TS tsMuak = TS(Colors.green);
+  static final TS tsNafl = TS(Colors.amber.shade700);
 
   @override
   Widget build(BuildContext context) {
-    final ActiveQuestsController c = ActiveQuestsController.to;
-    final Color bg = cb(context);
-    final double w6 = w(context) / 6;
+    width = w(context);
+    bg = cb(context);
+    textStyle = Theme.of(context).textTheme.headline6!;
+
+    // special logic for isha and layl, to know when to highlight layl or not:
+    isActive = ZamanController.to.isSalahRowActive(z);
+    if (z == Z.Isha) {
+      isActive &= !ActiveQuestsAjrController.to.isIshaIbadahComplete;
+    } else if (z == Z.Night__3 || z == Z.Night__2) {
+      isActive &= ActiveQuestsAjrController.to.isIshaIbadahComplete;
+    }
+
+    return isActive && c.showActiveSalah // salah row is pinned under header
+        ? MultiSliver(children: [_Sliv(_salahHeader()), _Sliv(_salahActions())])
+        // salah row not pinned, shrink it into the salah header
+        : SliverStack(
+            children: [
+              _Sliv(
+                // Start salah actions at end to give overlap effect
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [_salahActions()],
+                ),
+                stackMode: true, // doubles sliv size, so UI gets overlap effect
+              ),
+              // do last, header hides all but sun on edges
+              _Sliv(_salahHeader()),
+            ],
+          );
+  }
+
+  Widget _salahHeader() {
+    final double w6 = width / 6;
 
     return InkWell(
       onTap: isActive ? () => c.toggleShowActiveSalah() : null,
@@ -436,14 +279,13 @@ class _SalahHeader extends StatelessWidget {
               height: _Sliv.slivH,
               color: bg, // middle Zaman name always colored
               child: T(
-                isJ ? 'Jummah' : z.niceNamePadded,
-                Theme.of(context).textTheme.headline6!.copyWith(
-                      color: isActive
-                          ? Theme.of(context).textTheme.headline6!.color
-                          : Colors.grey.shade500,
-                      fontWeight:
-                          isActive ? FontWeight.bold : FontWeight.normal,
-                    ),
+                TimeController.to.isFriday() && c.showJummahOnFriday
+                    ? 'Jummah'
+                    : z.niceNamePadded,
+                textStyle.copyWith(
+                  color: isActive ? textStyle.color : tsTextColor,
+                  fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+                ),
                 alignment: Alignment.centerLeft,
                 w: w6 -
                     1 - // -1 for middle spacer
@@ -456,9 +298,9 @@ class _SalahHeader extends StatelessWidget {
               height: _Sliv.slivH,
               color: bg, // middle athan time always colored
               child: T(
-                ActiveQuestsUI.getTime(salahTimeStart),
-                TS(
-                  isActive ? ct(context) : Colors.grey.shade500,
+                ActiveQuestsUI.getTime(athan.getStartTime(z)),
+                textStyle.copyWith(
+                  color: isActive ? textStyle.color : tsTextColor,
                   fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
                 ),
                 alignment: ActiveQuestsController.to.show12HourClock
@@ -477,105 +319,213 @@ class _SalahHeader extends StatelessWidget {
       ),
     );
   }
-}
 
-class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-  const _SliverAppBarDelegate({
-    required this.minHeight,
-    required this.maxHeight,
-    required this.child,
-  });
-  final double minHeight;
-  final double maxHeight;
-  final Widget child;
-  @override
-  double get minExtent => minHeight;
-  @override
-  double get maxExtent => maxHeight;
-  @override
-  Widget build(
-          BuildContext context, double shrinkOffset, bool overlapsContent) =>
-      SizedBox.expand(
-        child: Container(
-          //color: Theme.of(context).backgroundColor,
-          child: child,
-        ),
-      );
+  Widget _salahActions() {
+    switch (z) {
+      case (Z.Fajr):
+        return rowFajr();
+      case (Z.Duha):
+        return rowDuha();
+      case (Z.Dhuhr):
+        return rowDhuhr();
+      case (Z.Asr):
+        return rowAsr();
+      case (Z.Maghrib):
+        return rowMaghrib();
+      case (Z.Isha):
+        return rowIsha();
+      case (Z.Night__2):
+      case (Z.Night__3):
+        return rowLayl();
+      default:
+        String e = 'SunRow: unexpected zaman given: "$z"';
+        l.e(e);
+        throw e;
+    }
+  }
 
-  @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) => false;
-  // maxHeight != oldDelegate.maxHeight ||
-  // minHeight != oldDelegate.minHeight ||
-  // child != oldDelegate.child;
-}
+  Widget rowFajr() {
+    String muakBef = '2';
+    String fardRkt = '2';
 
-/// Sliver Header used for both header and it's child (salah actions)
-class _Sliv extends StatelessWidget {
-  const _Sliv(this.pinned, this.widget, {this.stackMode = false});
-
-  static const double slivH = 32.0;
-  final bool pinned;
-  final Widget widget;
-  final bool stackMode;
-
-  @override
-  SliverPersistentHeader build(BuildContext context) {
-    return SliverPersistentHeader(
-      floating: false,
-      pinned: pinned,
-      delegate: _SliverAppBarDelegate(
-        minHeight: slivH, // 0 to hide salah row in stack mode
-        maxHeight: stackMode ? slivH * 2 : slivH, // * 2 = hide salah row
-        child: widget,
-      ),
+    return Row(
+      children: [
+        // 1 of 4. sunnah before fard column item:
+        _Cell(T(muakBef, tsMuak), isActive, QUEST.FAJR_MUAKB),
+        // 2 of 4. fard column item:
+        _Cell(T(fardRkt, tsFard), isActive, QUEST.FAJR_FARD),
+        // 3 of 4. Sunnah after fard column items:
+        _Cell(const T('', tsMuak), isActive, QUEST.NONE),
+        _Cell(T('', tsNafl), isActive, QUEST.NONE),
+        // 4 of 4. Thikr and Dua after fard:
+        _Cell(_IconThikr(), isActive, QUEST.FAJR_THIKR),
+        _Cell(_IconDua(), isActive, QUEST.FAJR_DUA),
+      ],
     );
   }
-}
 
-/// SunRow is used to display the other times for a salah row, i.e. karahat
-/// sunrise and karahat zawal and for duha and karahat sunsetting for asr.
-class SunRow extends StatelessWidget {
-  const SunRow(this.header, this.salahActions);
-
-  final Widget header;
-  final Widget salahActions;
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverStack(
-      insetOnOverlap: false, // defaults to false
+  Widget rowDuha() {
+    double w6 = (width / 6) - 10; // - 10 because too big on screen
+    final bool isCurrQuest = isActive &&
+        ActiveQuestsAjrController.to
+            .isQuestActive(QUEST.KARAHAT_ADHKAR_SUNRISE);
+    return Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
-        _Sliv(true, Container(color: cb(context))), // hide UIs when sun back dn
-        _Sliv(
-          true,
-          Column(
-            mainAxisAlignment: MainAxisAlignment.end, // Push actions down
-            children: [salahActions],
+        _Cell(
+          _SunCell(
+            _IconSunUpDn(isCurrQuest, true),
+            Z.Karahat_Morning_Adhkar.niceName,
+            athan.sunrise,
+            athan.ishraq,
+            true, // align left
           ),
-          stackMode: true, // doubles size of sliver to give UI combine effect
+          isActive,
+          QUEST.KARAHAT_ADHKAR_SUNRISE,
+          flex: 2000,
         ),
-        _Sliv(true, header), // do last, header hides all but sun on edges
+        _Cell(T('Ishraq', tsText, w: w6), isActive, QUEST.DUHA_ISHRAQ),
+        _Cell(T('Duha', tsText, w: w6), isActive, QUEST.DUHA_DUHA),
+        _Cell(
+          _SunCell(
+            const Icon(Icons.brightness_7_outlined,
+                color: Colors.yellowAccent, size: 30),
+            Z.Karahat_Zawal.niceName,
+            athan.zawal,
+            athan.dhuhr,
+            false, // align right
+          ),
+          isActive,
+          QUEST.KARAHAT_ADHKAR_ZAWAL,
+          flex: 2000,
+        ),
+      ],
+    );
+  }
+
+  /// Note: returns GetBuilder since has FlipCard()
+  Widget rowDhuhr() {
+    String muakBef = '4';
+    String fardRkt = '4';
+    String muakAft = '2';
+    String naflAft = '2';
+
+    if (TimeController.to.isFriday() && c.showJummahOnFriday) {
+      fardRkt = '2';
+      muakAft = '6';
+    }
+
+    return Row(
+      children: [
+        // 1 of 4. sunnah before fard column item:
+        _Cell(T(muakBef, tsMuak), isActive, QUEST.DHUHR_MUAKB),
+        // 2 of 4. fard column item:
+        _Cell(T(fardRkt, tsFard), isActive, QUEST.DHUHR_FARD),
+        // 3 of 4. Option 2: sunnah after fard column items:
+        _Cell(T(muakAft, tsMuak), isActive, QUEST.DHUHR_MUAKA),
+        _Cell(T(naflAft, tsNafl), isActive, QUEST.DHUHR_NAFLA),
+        // 4 of 4. Thikr and Dua after fard:
+        _Cell(_IconThikr(), isActive, QUEST.DHUHR_THIKR),
+        _Cell(_IconDua(), isActive, QUEST.DHUHR_DUA),
+      ],
+    );
+  }
+
+  Widget rowAsr() {
+    String naflBef = '4';
+    String fardRkt = '4';
+
+    final bool isCurrQuest = isActive &&
+        ActiveQuestsAjrController.to.isQuestActive(QUEST.KARAHAT_ADHKAR_SUNSET);
+    return Row(
+      children: [
+        // 1 of 4. sunnah before fard column item:
+        _Cell(T(naflBef, tsNafl), isActive, QUEST.ASR_NAFLB),
+        // 2 of 4. fard column item:
+        _Cell(T(fardRkt, tsFard), isActive, QUEST.ASR_FARD),
+        // 3 of 4. Thikr and Dua after fard:
+        _Cell(_IconThikr(), isActive, QUEST.ASR_THIKR),
+        _Cell(_IconDua(), isActive, QUEST.ASR_DUA),
+        // 4 of 4. Evening adhkar
+        _Cell(
+          _SunCell(
+            _IconSunUpDn(isCurrQuest, false),
+            Z.Karahat_Evening_Adhkar.niceName,
+            athan.sunSetting,
+            athan.maghrib,
+            false, // align right
+          ),
+          isActive,
+          QUEST.KARAHAT_ADHKAR_SUNSET,
+          flex: 2000,
+        ),
+      ],
+    );
+  }
+
+  Widget rowMaghrib() {
+    String fardRkt = '3';
+    String muakAft = '2';
+    String naflAft = '2';
+
+    return Row(
+      children: [
+        // 1 of 4. sunnah before fard column item:
+        _Cell(const T('', TS(Colors.transparent)), isActive, QUEST.NONE),
+        // 2 of 4. fard column item:
+        _Cell(T(fardRkt, tsFard), isActive, QUEST.MAGHRIB_FARD),
+        // 3 of 4. Option 2: sunnah after fard column items:
+        _Cell(T(muakAft, tsMuak), isActive, QUEST.MAGHRIB_MUAKA),
+        _Cell(T(naflAft, tsNafl), isActive, QUEST.MAGHRIB_NAFLA),
+        // 4 of 4. Thikr and Dua after fard:
+        _Cell(_IconThikr(), isActive, QUEST.MAGHRIB_THIKR),
+        _Cell(_IconDua(), isActive, QUEST.MAGHRIB_DUA),
+      ],
+    );
+  }
+
+  Widget rowIsha() {
+    String naflBef = '4';
+    String fardRkt = '4';
+    String muakAft = '2';
+    String naflAft = '2';
+
+    return Row(
+      children: [
+        // 1 of 4. sunnah before fard column item:
+        _Cell(T(naflBef, tsNafl), isActive, QUEST.ISHA_NAFLB),
+        // 2 of 4. fard column item:
+        _Cell(T(fardRkt, tsFard), isActive, QUEST.ISHA_FARD),
+        // 3 of 4. Option 1: sunnah after fard column items:
+        _Cell(T(muakAft, tsMuak), isActive, QUEST.ISHA_MUAKA),
+        _Cell(T(naflAft, tsNafl), isActive, QUEST.ISHA_NAFLA),
+        // 4 of 4. Thikr and Dua after fard:
+        _Cell(_IconThikr(), isActive, QUEST.ISHA_THIKR),
+        _Cell(_IconDua(), isActive, QUEST.ISHA_DUA),
+      ],
+    );
+  }
+
+  /// Note: returns GetBuilder since has FlipCard()
+  Widget rowLayl() {
+    double w6 = width / 6;
+
+    return Row(
+      children: [
+        _Cell(T('Qiyam', tsText, w: w6 - 10), isActive, QUEST.LAYL_QIYAM),
+
+        // Thikr and Dua before bed:
+        _Cell(_IconThikr(), isActive, QUEST.LAYL_THIKR),
+        _Cell(_IconDua(), isActive, QUEST.LAYL_DUA),
+        _Cell(T('Sleep', tsText, w: w6 - 10), isActive, QUEST.LAYL_SLEEP),
+
+        // Tahajjud and Witr after waking up, no -10 on Tahajjud, it's small
+        _Cell(T('Tahajjud', tsText, w: w6), isActive, QUEST.LAYL_TAHAJJUD),
+        _Cell(T('Witr', tsText, w: w6 - 10), isActive, QUEST.LAYL_WITR),
       ],
     );
   }
 }
-
-// /// Sliver Child
-// class _SlivC extends StatelessWidget {
-//   const _SlivC(this.pinned, this.widget);
-//
-//   static const double sliverHeight = 32.0;
-//   final bool pinned;
-//   final Widget widget;
-//
-//   @override
-//   SliverFixedExtentList build(BuildContext context) {
-//     return SliverFixedExtentList(
-//       itemExtent: sliverHeight,
-//       delegate: SliverChildListDelegate([widget]),
-//     );
-//   }
-// }
 
 /// Used to Fill in the gaps that were between the salah row cells. Also, adds a
 /// border for nicer looks and returns a SliverPersistentHeader.
@@ -774,7 +724,7 @@ class _IconThikr extends StatelessWidget {
       child: Stack(
         children: const [
           Center(
-            child: Icon(Icons.favorite_outlined, color: Colors.grey, size: 33),
+            child: Icon(Icons.favorite_outlined, color: tsTextColor, size: 33),
           ),
           Center(
             child: Icon(Icons.psychology_outlined,
@@ -789,5 +739,5 @@ class _IconThikr extends StatelessWidget {
 class _IconDua extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
-      const Icon(Icons.volunteer_activism, color: Colors.grey, size: 25);
+      const Icon(Icons.volunteer_activism, color: tsTextColor, size: 25);
 }

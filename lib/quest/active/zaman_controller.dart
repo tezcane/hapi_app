@@ -175,6 +175,7 @@ class ZamanController extends GetxHapi {
       case Z.Isha:
         zs = [Z.Isha];
         break;
+      case Z.Night__2:
       case Z.Night__3:
         zs = [Z.Isha, Z.Night__2, Z.Night__3];
         break;

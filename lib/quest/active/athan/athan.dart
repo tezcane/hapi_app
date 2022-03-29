@@ -377,6 +377,32 @@ class Athan {
     }
   }
 
+  /// Each salah header on active quests has a start time, return it here.
+  DateTime getStartTime(Z z) {
+    switch (z) {
+      case (Z.Fajr):
+        return _fajr_01;
+      case (Z.Duha):
+        return _kerahatAdkharSunrise_02;
+      case (Z.Dhuhr):
+        return _dhuhr_06;
+      case (Z.Asr):
+        return _asr_07;
+      case (Z.Maghrib):
+        return _maghrib_09;
+      case (Z.Isha):
+        return _isha_10;
+      case (Z.Night__2):
+        return _middleOfNight_11;
+      case (Z.Night__3):
+        return _last3rdOfNight_12;
+      default:
+        String e = 'TimeOfDay:getStartTime: unexpected zaman given: "$z"';
+        l.e(e);
+        throw e;
+    }
+  }
+
   Z getCurrZaman(DateTime date) {
     final ActiveQuestsController c = ActiveQuestsController.to;
 
