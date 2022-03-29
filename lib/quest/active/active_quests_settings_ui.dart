@@ -99,9 +99,9 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
             const SizedBox(height: 10),
             Tooltip(
               message:
-                  'Ulema opinions on kerahat times are around 40 or 20 for sunset and sunrise kerahat times and around 30 or 15 minutes for the noon kerahat time',
+                  'Ulema opinions on karahat times are around 40 or 20 for sunset and sunrise karahat times and around 30 or 15 minutes for the noon karahat time',
               child: Text(
-                'Kerahat Times (Minutes)',
+                'Karahat Times (Minutes)',
                 textAlign: TextAlign.center,
                 style: textStyleTitle,
               ),
@@ -111,7 +111,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
               minWidth: 100.0,
               minHeight: 45.0,
               fontSize: 14,
-              initialLabelIndex: c.salahKerahatSafe ? 0 : 1,
+              initialLabelIndex: c.salahKarahatSafe ? 0 : 1,
               labels: ['40/30/40', '20/15/20'],
               //cornerRadius: 20.0,
               activeBgColor: AppThemes.selected,
@@ -120,9 +120,9 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
               inactiveFgColor: Colors.white,
               onToggle: (index) {
                 if (index == 0) {
-                  c.salahKerahatSafe = true;
+                  c.salahKarahatSafe = true;
                 } else {
-                  c.salahKerahatSafe = false;
+                  c.salahKarahatSafe = false;
                 }
               },
             ),

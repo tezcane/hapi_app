@@ -55,13 +55,13 @@ class ZamanController extends GetxHapi {
       madhab = Madhab.Shafi;
     }
 
-    int kerahatSunRisingSecs = 40 * 60;
-    int kerahatSunZawalSecs = 30 * 60;
-    int kerahatSunSettingSecs = 40 * 60;
-    if (!ActiveQuestsController.to.salahKerahatSafe) {
-      kerahatSunRisingSecs = 20 * 60;
-      kerahatSunZawalSecs = 15 * 60;
-      kerahatSunSettingSecs = 20 * 60;
+    int karahatSunRisingSecs = 40 * 60;
+    int karahatSunZawalSecs = 30 * 60;
+    int karahatSunSettingSecs = 40 * 60;
+    if (!ActiveQuestsController.to.salahKarahatSafe) {
+      karahatSunRisingSecs = 20 * 60;
+      karahatSunZawalSecs = 15 * 60;
+      karahatSunSettingSecs = 20 * 60;
     }
 
     // TODO give user a way to change:
@@ -69,9 +69,9 @@ class ZamanController extends GetxHapi {
     var params = CalculationParams(
       calcMethod.params,
       madhab,
-      kerahatSunRisingSecs,
-      kerahatSunZawalSecs,
-      kerahatSunSettingSecs,
+      karahatSunRisingSecs,
+      karahatSunZawalSecs,
+      karahatSunSettingSecs,
       HighLatitudeRule.MiddleOfTheNight,
     );
 

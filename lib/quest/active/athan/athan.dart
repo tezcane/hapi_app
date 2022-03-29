@@ -24,28 +24,28 @@ class Athan {
 
   // _calculateTimes() must initialize all this:
   late final DateTime _fajr_01;
-  late final DateTime _kerahatAdkharSunrise_02; // sunrise - kerahat 1
+  late final DateTime _karahatAdkharSunrise_02; // sunrise - karahat 1
   late final DateTime _ishraqPrayer_03;
   late final DateTime _duhaPrayer_04;
-  late final DateTime _kerahatAdkharZawal_05; // sun zenith/peak - kerahat 2
+  late final DateTime _karahatAdkharZawal_05; // sun zenith/peak - karahat 2
   late final DateTime _highNoon; // used for radian correction
   late final DateTime _dhuhr_06;
   late final DateTime _asr_07;
-  late final DateTime _kerahatAdkharSunSetting_08; // sun setting - kerahat 3
+  late final DateTime _karahatAdkharSunSetting_08; // sun setting - karahat 3
   late final DateTime _maghrib_09; // actual sunset
   late final DateTime _isha_10;
   late final DateTime _middleOfNight_11;
   late final DateTime _last3rdOfNight_12;
   late final DateTime _fajrTomorrow_13;
   DateTime get fajr => _fajr_01;
-  DateTime get sunrise => _kerahatAdkharSunrise_02;
+  DateTime get sunrise => _karahatAdkharSunrise_02;
   DateTime get ishraq => _ishraqPrayer_03;
   DateTime get duha => _duhaPrayer_04;
-  DateTime get zawal => _kerahatAdkharZawal_05;
+  DateTime get zawal => _karahatAdkharZawal_05;
   DateTime get highNoon => _highNoon;
   DateTime get dhuhr => _dhuhr_06;
   DateTime get asr => _asr_07;
-  DateTime get sunSetting => _kerahatAdkharSunSetting_08;
+  DateTime get sunSetting => _karahatAdkharSunSetting_08;
   DateTime get maghrib => _maghrib_09;
   DateTime get isha => _isha_10;
   DateTime get middleOfNight => _middleOfNight_11;
@@ -173,13 +173,13 @@ class Athan {
       fajrTime,
       method.adjustSecs[Salah.fajr]!,
     );
-    _kerahatAdkharSunrise_02 = _addSecsRoundDnAndGetTZ(
+    _karahatAdkharSunrise_02 = _addSecsRoundDnAndGetTZ(
       sunriseTime,
       method.adjustSecs[Salah.sunrise]!,
     );
     _ishraqPrayer_03 = _addSecsRoundUpAndGetTZ(
-      _kerahatAdkharSunrise_02,
-      params.kerahatSunRisingSecs,
+      _karahatAdkharSunrise_02,
+      params.karahatSunRisingSecs,
     );
     _duhaPrayer_04 = _addSecsRoundUpAndGetTZ(
       _ishraqPrayer_03,
@@ -187,13 +187,13 @@ class Athan {
     );
 
     // NOTE: Subtracts half of karahat time from zenith/high noon
-    _kerahatAdkharZawal_05 = _subtractSecsRoundDnAndGetTZ(
+    _karahatAdkharZawal_05 = _subtractSecsRoundDnAndGetTZ(
       _highNoon,
-      -method.adjustSecs[Salah.dhuhr]! + (params.kerahatSunZawalSecs ~/ 2),
+      -method.adjustSecs[Salah.dhuhr]! + (params.karahatSunZawalSecs ~/ 2),
     );
     _dhuhr_06 = _addSecsRoundUpAndGetTZ(
-      _kerahatAdkharZawal_05,
-      params.kerahatSunZawalSecs, // dhuhr starts after karahat time ends
+      _karahatAdkharZawal_05,
+      params.karahatSunZawalSecs, // dhuhr starts after karahat time ends
     );
 
     _asr_07 = _addSecsRoundUpAndGetTZ(
@@ -201,13 +201,13 @@ class Athan {
       method.adjustSecs[Salah.asr]!,
     );
 
-    _kerahatAdkharSunSetting_08 = _subtractSecsRoundDnAndGetTZ(
+    _karahatAdkharSunSetting_08 = _subtractSecsRoundDnAndGetTZ(
       maghribTime,
-      -method.adjustSecs[Salah.maghrib]! + params.kerahatSunSettingSecs,
+      -method.adjustSecs[Salah.maghrib]! + params.karahatSunSettingSecs,
     );
     _maghrib_09 = _addSecsRoundUpAndGetTZ(
-      _kerahatAdkharSunSetting_08,
-      params.kerahatSunSettingSecs,
+      _karahatAdkharSunSetting_08,
+      params.karahatSunSettingSecs,
     );
 
     _isha_10 = _addSecsRoundUpAndGetTZ(
@@ -238,13 +238,13 @@ class Athan {
     l.d('***** Times Of Day: *****');
     //d('isha yesterday:   $_ishaYesterday');
     l.d('fajr:             $_fajr_01');
-    l.d('sunrise:          $_kerahatAdkharSunrise_02');
+    l.d('sunrise:          $_karahatAdkharSunrise_02');
     l.d('ishrak:           $_ishraqPrayer_03');
     l.d('duha:             $_duhaPrayer_04');
-    l.d('zawal:            $_kerahatAdkharZawal_05');
+    l.d('zawal:            $_karahatAdkharZawal_05');
     l.d('dhuhr:            $_dhuhr_06');
     l.d('asr:              $_asr_07');
-    l.d('sunset:           $_kerahatAdkharSunSetting_08');
+    l.d('sunset:           $_karahatAdkharSunSetting_08');
     l.d('maghrib:          $_maghrib_09');
     l.d('isha:             $_isha_10');
     l.d('middleOfNight:    $_middleOfNight_11');
@@ -348,19 +348,19 @@ class Athan {
     if (z == Z.Fajr) {
       return [_fajr_01, Colors.blue.shade700];
     } else if (z == Z.Karahat_Morning_Adhkar) {
-      return [_kerahatAdkharSunrise_02, Colors.red];
+      return [_karahatAdkharSunrise_02, Colors.red];
     } else if (z == Z.Ishraq) {
       return [_ishraqPrayer_03, Colors.green];
     } else if (z == Z.Duha) {
       return [_duhaPrayer_04, Colors.yellow.shade700];
     } else if (z == Z.Karahat_Zawal) {
-      return [_kerahatAdkharZawal_05, Colors.red.shade700];
+      return [_karahatAdkharZawal_05, Colors.red.shade700];
     } else if (z == Z.Dhuhr) {
       return [_dhuhr_06, Colors.yellow.shade800];
     } else if (z == Z.Asr) {
       return [_asr_07, Colors.yellow.shade900];
     } else if (z == Z.Karahat_Evening_Adhkar) {
-      return [_kerahatAdkharSunSetting_08, Colors.red.shade800];
+      return [_karahatAdkharSunSetting_08, Colors.red.shade800];
     } else if (z == Z.Maghrib) {
       return [_maghrib_09, Colors.blue.shade800];
     } else if (z == Z.Isha) {
@@ -383,7 +383,7 @@ class Athan {
       case (Z.Fajr):
         return _fajr_01;
       case (Z.Duha):
-        return _kerahatAdkharSunrise_02;
+        return _karahatAdkharSunrise_02;
       case (Z.Dhuhr):
         return _dhuhr_06;
       case (Z.Asr):
@@ -416,19 +416,19 @@ class Athan {
       return Z.Isha;
     } else if (date.isAfter(_maghrib_09)) {
       return Z.Maghrib;
-    } else if (date.isAfter(_kerahatAdkharSunSetting_08)) {
+    } else if (date.isAfter(_karahatAdkharSunSetting_08)) {
       return Z.Karahat_Evening_Adhkar;
     } else if (date.isAfter(_asr_07)) {
       return Z.Asr;
     } else if (date.isAfter(_dhuhr_06)) {
       return Z.Dhuhr;
-    } else if (date.isAfter(_kerahatAdkharZawal_05)) {
+    } else if (date.isAfter(_karahatAdkharZawal_05)) {
       return Z.Karahat_Zawal;
     } else if (date.isAfter(_duhaPrayer_04)) {
       return Z.Duha;
     } else if (date.isAfter(_ishraqPrayer_03)) {
       return Z.Ishraq;
-    } else if (date.isAfter(_kerahatAdkharSunrise_02)) {
+    } else if (date.isAfter(_karahatAdkharSunrise_02)) {
       return Z.Karahat_Morning_Adhkar;
     } else if (date.isAfter(_fajr_01)) {
       return Z.Fajr;
@@ -451,19 +451,19 @@ class Athan {
       return Z.Night__2; // middle of night mode
     } else if (date.isAfter(_maghrib_09)) {
       return Z.Isha;
-    } else if (date.isAfter(_kerahatAdkharSunSetting_08)) {
+    } else if (date.isAfter(_karahatAdkharSunSetting_08)) {
       return Z.Maghrib;
     } else if (date.isAfter(_asr_07)) {
       return Z.Karahat_Evening_Adhkar;
     } else if (date.isAfter(_dhuhr_06)) {
       return Z.Asr;
-    } else if (date.isAfter(_kerahatAdkharZawal_05)) {
+    } else if (date.isAfter(_karahatAdkharZawal_05)) {
       return Z.Dhuhr;
     } else if (date.isAfter(_duhaPrayer_04)) {
       return Z.Karahat_Zawal;
     } else if (date.isAfter(_ishraqPrayer_03)) {
       return Z.Duha;
-    } else if (date.isAfter(_kerahatAdkharSunrise_02)) {
+    } else if (date.isAfter(_karahatAdkharSunrise_02)) {
       return Z.Ishraq;
     } else if (date.isAfter(_fajr_01)) {
       return Z.Karahat_Morning_Adhkar;

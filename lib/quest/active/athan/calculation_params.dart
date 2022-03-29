@@ -8,18 +8,18 @@ class CalculationParams {
   CalculationParams(
     this.method,
     this.madhab,
-    this.kerahatSunRisingSecs,
-    this.kerahatSunZawalSecs,
-    this.kerahatSunSettingSecs,
+    this.karahatSunRisingSecs,
+    this.karahatSunZawalSecs,
+    this.karahatSunSettingSecs,
     this.highLatitudeRule,
   );
 
   final CalcMethodParams method;
   final Madhab madhab;
-  final int kerahatSunRisingSecs;
-  // ensure kerahatSunZawalSecs always end in an even number (we divide by 2)
-  final int kerahatSunZawalSecs;
-  final int kerahatSunSettingSecs;
+  final int karahatSunRisingSecs;
+  // ensure karahatSunZawalSecs always end in an even number (we divide by 2)
+  final int karahatSunZawalSecs;
+  final int karahatSunSettingSecs;
   final HighLatitudeRule highLatitudeRule;
 
   Map<Salah, double> nightPortions() {

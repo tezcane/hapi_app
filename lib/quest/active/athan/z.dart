@@ -4,13 +4,13 @@ import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 /// Used with Athan class to match up those calculated times to this enum.
 enum Z {
   Fajr,
-  Karahat_Morning_Adhkar, // begin sunrise (kerahat 1), also Morning Adhkar time
+  Karahat_Morning_Adhkar, // begin sunrise (karahat 1), also Morning Adhkar time
   Ishraq,
   Duha,
-  Karahat_Zawal, // begin sun zentih/peaking (kerahat 2)
+  Karahat_Zawal, // begin sun zentih/peaking (karahat 2)
   Dhuhr,
   Asr,
-  Karahat_Evening_Adhkar, // begin sunset (kerahat 3), also Evening Adhkar time
+  Karahat_Evening_Adhkar, // begin sunset (karahat 3), also Evening Adhkar time
   Maghrib,
   Isha,
   Night__2,
@@ -20,7 +20,7 @@ enum Z {
 
 extension EnumUtil on Z {
   /// Special logic and rules here to rename enum to a nice name:
-  ///     Kerahat_ -> '' (blank)
+  ///     Karahat_ -> '' (blank)
   ///           __ -> /
   ///            _ -> ' ' (space)
   String get niceName => name

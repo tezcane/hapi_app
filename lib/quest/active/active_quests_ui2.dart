@@ -337,7 +337,7 @@ class ActiveQuestsUI2 extends StatelessWidget {
                 ),
                 pinned,
                 tod,
-                QUEST.KERAHAT_ADHKAR_SUNRISE,
+                QUEST.KARAHAT_ADHKAR_SUNRISE,
                 flex: 2000,
               ),
               _Cell(T('Ishraq', tsIshr), pinned, tod, QUEST.DUHA_ISHRAQ),
@@ -351,7 +351,7 @@ class ActiveQuestsUI2 extends StatelessWidget {
                 ),
                 pinned,
                 tod,
-                QUEST.KERAHAT_ADHKAR_ZAWAL,
+                QUEST.KARAHAT_ADHKAR_ZAWAL,
                 flex: 2000,
               ),
             ],
@@ -444,7 +444,7 @@ class ActiveQuestsUI2 extends StatelessWidget {
                       c.tod!.sunSetting, c.tod!.maghrib),
                   pinned,
                   tod,
-                  QUEST.KERAHAT_ADHKAR_SUNSET,
+                  QUEST.KARAHAT_ADHKAR_SUNSET,
                   flex: 2000),
             ],
           ),
@@ -623,9 +623,9 @@ class ActiveQuestsUI2 extends StatelessWidget {
       final bool pinnedFajr = isPinned([TOD.Fajr, TOD.Fajr_Tomorrow]);
       final bool pinnedDuha = c.showSunnahDuha &&
           isPinned(
-              [TOD.Kerahat_Sunrise, TOD.Ishraq, TOD.Duha, TOD.Kerahat_Zawal]);
+              [TOD.Karahat_Sunrise, TOD.Ishraq, TOD.Duha, TOD.Karahat_Zawal]);
       final bool pinnedDuhr = isPinned([TOD.Dhuhr]);
-      final bool pinnedAsr = isPinned([TOD.Asr, TOD.Kerahat_Sun_Setting]);
+      final bool pinnedAsr = isPinned([TOD.Asr, TOD.Karahat_Sun_Setting]);
       final bool pinnedMaghrib = isPinned([TOD.Maghrib]);
       final bool pinnedIsha = isPinned([TOD.Isha]);
       final bool pinnedLayl = c.showSunnahLayl &&
