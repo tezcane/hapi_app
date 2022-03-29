@@ -104,9 +104,16 @@ class ActiveQuestsUI extends StatelessWidget {
                 borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                 child: Container(
                   color: bg.withOpacity(.10),
-                  child: GetBuilder<ZamanController>(builder: (c) {
-                    return T(c.timeToNextZaman, tsAppBar, w: 90, h: 45);
-                  }),
+                  child: Tooltip(
+                    message: 'Time until ' +
+                        ZamanController.to.currZ.niceName +
+                        ' ends and ' +
+                        ZamanController.to.nextZ.niceName +
+                        ' begins',
+                    child: GetBuilder<ZamanController>(builder: (c) {
+                      return T(c.timeToNextZaman, tsAppBar, w: 90, h: 45);
+                    }),
+                  ),
                 ),
               ),
               background: Swiper(

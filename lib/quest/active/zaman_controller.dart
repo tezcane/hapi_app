@@ -32,10 +32,6 @@ class ZamanController extends GetxHapi {
 
   Athan? _athan;
   Athan? get athan => _athan;
-  // set athan(Athan? athan) {
-  //   _athan = athan;
-  //   update();
-  // }
 
   @override
   void onInit() {
