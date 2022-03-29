@@ -148,7 +148,7 @@ class ZamanController extends GetxHapi {
     return '${duration.inHours}:$twoDigitMinutes:$twoDigitSeconds';
   }
 
-  /// Iterate through given Zs for a given salah row, see if it matches curr Z.
+  /// See if given salah row is currently active/current Z time.
   bool isSalahRowActive(Z z) {
     List<Z> zs;
 
@@ -173,7 +173,7 @@ class ZamanController extends GetxHapi {
         break;
       case Z.Night__2:
       case Z.Night__3:
-        zs = [Z.Isha, Z.Night__2, Z.Night__3];
+        zs = [Z.Isha, Z.Night__2, Z.Night__3]; // Isha still valid for layl
         break;
       default:
         var e = 'Invalid Zaman ($z) given when in isSalahRowActive called';
@@ -185,6 +185,31 @@ class ZamanController extends GetxHapi {
       if (z == _currZ) return true; // time of day is active
     }
 
-    return false; // this time of day is not active
+    return false; // gets here from isNextSalahRowActive search
+  }
+
+  /// See if next salah row of given Z, will be the next active/curr Z time.
+  bool isNextSalahRowActive(Z z) {
+    switch (z) {
+      case Z.Fajr:
+        return isSalahRowActive(Z.Duha);
+      case Z.Duha:
+        return isSalahRowActive(Z.Dhuhr);
+      case Z.Dhuhr:
+        return isSalahRowActive(Z.Asr);
+      case Z.Asr:
+        return isSalahRowActive(Z.Maghrib);
+      case Z.Maghrib:
+        return isSalahRowActive(Z.Isha);
+      case Z.Isha:
+        return isSalahRowActive(Z.Night__3);
+      case Z.Night__2:
+      case Z.Night__3:
+        return isSalahRowActive(Z.Night__3);
+      default:
+        var e = 'Invalid Zaman ($z) given when in isNextSalahRowActive called';
+        l.e(e);
+        throw e;
+    }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hapi/components/seperator.dart';
 import 'package:hapi/menu/fab_nav_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/tarikh/main_menu/main_menu_section.dart';
@@ -106,18 +107,7 @@ class TarikhMenuUI extends StatelessWidget {
                   }),
 
                   /// this is the little line that shows under the vignettes
-                  Container(
-                    margin: const EdgeInsets.only(top: 43.0),
-                    height: 2.0,
-                    color: const Color.fromRGBO(151, 151, 151, 0.29),
-                  ),
-
-                  /// this is the little line that shows under the vignettes
-                  Container(
-                    margin: const EdgeInsets.only(bottom: 22),
-                    height: 2.0,
-                    color: const Color.fromRGBO(239, 227, 227, 0.29),
-                  ),
+                  const Separator(43, 22, 2),
                 ],
               ),
             ),

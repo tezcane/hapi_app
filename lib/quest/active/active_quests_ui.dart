@@ -3,6 +3,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:get/get.dart';
 import 'package:hapi/components/alerts/bounce_alert.dart';
 import 'package:hapi/components/half_filled_icon.dart';
+import 'package:hapi/components/seperator.dart';
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/menu_controller.dart';
@@ -105,7 +106,7 @@ class ActiveQuestsUI extends StatelessWidget {
                 child: Container(
                   color: bg.withOpacity(.10),
                   child: Tooltip(
-                    message: 'Time until ' +
+                    message: 'Time (hours:minutes:seconds) until ' +
                         ZamanController.to.currZ.niceName +
                         ' ends and ' +
                         ZamanController.to.nextZ.niceName +
@@ -194,20 +195,28 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 
 /// Sliver Header used for both header and it's child (salah actions)
 class _Sliv extends StatelessWidget {
-  const _Sliv(this.widget, {this.stackMode = false});
+  const _Sliv(
+    this.widget, {
+    this.minHeight = _Sliv.slivH,
+    this.maxHeight = _Sliv.slivH,
+    this.pinned = true,
+  });
+
+  final Widget widget;
+  final double minHeight;
+  final double maxHeight;
+  final bool pinned;
 
   static const double slivH = 32.0;
-  final Widget widget;
-  final bool stackMode;
 
   @override
   SliverPersistentHeader build(BuildContext context) {
     return SliverPersistentHeader(
       floating: false,
-      pinned: true,
+      pinned: pinned,
       delegate: _SliverAppBarDelegate(
-        minHeight: slivH, // 0 to hide salah row in stack mode
-        maxHeight: stackMode ? slivH * 2 : slivH, // * 2 = hide salah row
+        minHeight: minHeight,
+        maxHeight: maxHeight,
         child: widget,
       ),
     );
@@ -248,18 +257,37 @@ class SalahRow extends StatelessWidget {
       isActive &= ActiveQuestsAjrController.to.isIshaIbadahComplete;
     }
 
+    const Separator separator = Separator(.5, .5, .5);
+
     return isActive && c.showActiveSalah // salah row is pinned under header
-        ? MultiSliver(children: [_Sliv(_salahHeader()), _Sliv(_salahActions())])
+        ? MultiSliver(children: [
+            const _Sliv(separator, minHeight: 2, maxHeight: 2), // draw over UI
+            _Sliv(_salahHeader()),
+            _Sliv(_salahActions()),
+            const _Sliv(separator, minHeight: 2, maxHeight: 2), // draw under UI
+          ])
         // salah row not pinned, shrink it into the salah header
         : SliverStack(
             children: [
+              // add separator if next salah row won't add too (draw over UI)
+              if (!c.showActiveSalah || // if not pinned, always put Separator
+                  !ZamanController.to.isNextSalahRowActive(z))
+                _Sliv(
+                  // Start salah separator at end to give overlap effect
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: const [separator],
+                  ),
+                  minHeight: 2,
+                  maxHeight: (_Sliv.slivH * 2) + 2, // so UI gets overlap effect
+                ),
               _Sliv(
                 // Start salah actions at end to give overlap effect
                 Column(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [_salahActions()],
                 ),
-                stackMode: true, // doubles sliv size, so UI gets overlap effect
+                maxHeight: _Sliv.slivH * 2, // so UI gets overlap effect
               ),
               // do last, header hides all but sun on edges
               _Sliv(_salahHeader()),
