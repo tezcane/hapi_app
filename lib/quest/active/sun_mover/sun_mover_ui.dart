@@ -111,7 +111,7 @@ class GumbiAndMeWithFamily extends StatelessWidget {
     return Stack(children: [
       Positioned.fill(
         // dad, kid and mom in middle
-        left: -10,
+        left: -17,
         bottom: 0,
         child: Align(
           alignment: Alignment.center,
@@ -124,7 +124,7 @@ class GumbiAndMeWithFamily extends StatelessWidget {
       ),
       Positioned.fill(
         // mom and kid on right
-        left: 32.6,
+        left: 25.6,
         bottom: 0,
         child: Align(
           alignment: Alignment.center,
@@ -138,7 +138,7 @@ class GumbiAndMeWithFamily extends StatelessWidget {
       ),
       Positioned.fill(
         // dad and kid on left
-        left: 60,
+        left: 53,
         bottom: 10.60,
         child: Align(
           alignment: Alignment.center,
@@ -152,7 +152,7 @@ class GumbiAndMeWithFamily extends StatelessWidget {
       ),
       Positioned.fill(
         // baby car
-        left: 89,
+        left: 82,
         top: 15,
         child: Align(
           alignment: Alignment.center,
@@ -161,7 +161,7 @@ class GumbiAndMeWithFamily extends StatelessWidget {
       ),
       Positioned.fill(
         // Mom's dress
-        left: 21,
+        left: 14,
         top: 17,
         child: Align(
           alignment: Alignment.center,
@@ -170,7 +170,7 @@ class GumbiAndMeWithFamily extends StatelessWidget {
       ),
       Positioned.fill(
         // Edi's dress
-        left: 51.5,
+        left: 44.5,
         top: 17,
         child: Align(
           alignment: Alignment.center,
@@ -179,7 +179,7 @@ class GumbiAndMeWithFamily extends StatelessWidget {
       ),
       Positioned.fill(
         // Cimi's dress
-        left: -8,
+        left: -15,
         top: 20.5,
         child: Align(
           alignment: Alignment.center,
@@ -188,7 +188,7 @@ class GumbiAndMeWithFamily extends StatelessWidget {
       ),
       Positioned.fill(
         // Gumbi's head
-        left: 82,
+        left: 75,
         top: 5,
         child: Align(
           alignment: Alignment.center,
@@ -254,7 +254,7 @@ class _GumbiAndMeState extends State<GumbiAndMe> with TickerProviderStateMixin {
                     width: widget.diameter - 60 - 3, // top arc
                     height: (widget.diameter - 60 - 3) / 2, // half of a circle
                     decoration: const BoxDecoration(
-                      color: Colors.blue,
+                      color: Colors.lightBlueAccent,
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(100),
                         topRight: Radius.circular(100),
