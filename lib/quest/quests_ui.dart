@@ -42,7 +42,7 @@ class QuestsUI extends StatelessWidget {
       navPage,
       const DoListUI(),
       null,
-      Colors.yellow,
+      const Color(0xFFF1AC44),
       Icons.brightness_high_outlined,
       Quests.Daily.name,
       '${Quests.Daily.name} Quests to build good habits',

@@ -16,7 +16,7 @@ import 'package:hapi/quest/active/zaman_controller.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
-const Color tsTextColor = Colors.grey; // Sun Icon and Text
+const Color tsTextColor = Color(0xFF7F8B88);
 const TS tsText = TS(tsTextColor); // Duha and Layl color
 
 class ActiveQuestsUI extends StatelessWidget {
@@ -86,13 +86,13 @@ class ActiveQuestsUI extends StatelessWidget {
       if (zc.athan == null) return Container(); // not initialized yet, return
       final Athan athan = zc.athan!;
 
-      final Color bg = cb(context);
+      final Color sc = cs(context);
 
       return CustomScrollView(
         slivers: <Widget>[
           /// Show Top App Bar
           SliverAppBar(
-            backgroundColor: bg,
+            backgroundColor: sc,
             expandedHeight: 175.0,
             collapsedHeight: 56.0, // any smaller is exception
             snap: true,
@@ -100,11 +100,11 @@ class ActiveQuestsUI extends StatelessWidget {
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               centerTitle: true,
-              titlePadding: const EdgeInsets.all(0.0),
+              titlePadding: const EdgeInsets.all(12.0),
               title: ClipRRect(
                 borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                 child: Container(
-                  color: bg.withOpacity(.10),
+                  color: sc.withOpacity(.20),
                   child: Tooltip(
                     message: 'Time (hours:minutes:seconds) until ' +
                         ZamanController.to.currZ.niceName +
@@ -112,7 +112,7 @@ class ActiveQuestsUI extends StatelessWidget {
                         ZamanController.to.nextZ.niceName +
                         ' begins',
                     child: GetBuilder<ZamanController>(builder: (c) {
-                      return T(c.timeToNextZaman, tsAppBar, w: 90, h: 45);
+                      return T(c.timeToNextZaman, tsAppBar, w: 90, h: 30);
                     }),
                   ),
                 ),
@@ -241,7 +241,7 @@ class SalahRow extends StatelessWidget {
   // TODO don't use white for all, Theme.of(context).textTheme.headline6!:
   static const TS tsFard = TS(Colors.red);
   static const TS tsMuak = TS(Colors.green);
-  static final TS tsNafl = TS(Colors.amber.shade700);
+  static const TS tsNafl = TS(Colors.purple);
 
   @override
   Widget build(BuildContext context) {
