@@ -100,6 +100,74 @@ class CircleDayView extends StatelessWidget {
 //   Widget build(BuildContext context) {}
 // }
 
+class GumbiAndMeWithFamily extends StatelessWidget {
+  const GumbiAndMeWithFamily(this.color);
+
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(children: [
+      Positioned.fill(
+        // dad, kid and mom in middle
+        left: -10,
+        bottom: 0,
+        child: Align(
+          alignment: Alignment.center,
+          child: Icon(
+            Icons.family_restroom_outlined,
+            size: 45,
+            color: color,
+          ),
+        ),
+      ),
+      Positioned.fill(
+        // mom and kid on right
+        left: 34.5,
+        bottom: .5,
+        child: Align(
+          alignment: Alignment.center,
+          child: Icon(
+            Icons.escalator_warning_outlined,
+            size: 48,
+            color: color,
+          ),
+        ),
+      ),
+      Positioned.fill(
+        // dad and kid on left
+        left: 60,
+        bottom: 12,
+        child: Align(
+          alignment: Alignment.center,
+          child: Transform(
+            alignment: Alignment.bottomLeft,
+            transform: Matrix4.rotationY(math.pi),
+            child: Icon(
+              Icons.escalator_warning_outlined,
+              size: 60,
+              color: color,
+            ),
+          ),
+        ),
+      ),
+      Positioned.fill(
+        // baby car
+        left: 92,
+        top: 15,
+        child: Align(
+          alignment: Alignment.center,
+          child: Icon(
+            Icons.child_friendly_rounded,
+            size: 33,
+            color: color,
+          ),
+        ),
+      ),
+    ]);
+  }
+}
+
 class GumbiAndMe extends StatefulWidget {
   const GumbiAndMe(this.diameter);
 
@@ -176,7 +244,7 @@ class _GumbiAndMeState extends State<GumbiAndMe> with TickerProviderStateMixin {
                 ],
               ),
             ),
-            const Center(child: Icon(Icons.escalator_warning_rounded, size: 55))
+            const GumbiAndMeWithFamily(Colors.white),
           ],
         ),
         floatingActionButton: FloatingActionButton(
