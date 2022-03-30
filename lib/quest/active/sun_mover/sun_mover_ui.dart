@@ -28,10 +28,10 @@ class SunMoverUI extends StatelessWidget {
 }
 
 class CircleDayView extends StatelessWidget {
-  const CircleDayView(this.athan, this.diameter);
+  const CircleDayView(this.athan, this.diameter, {this.strokeWidth = 36});
 
   final Athan athan;
-  final double diameter;
+  final double diameter, strokeWidth;
 
   final int secondsInADay = 86400; //60 * 60 * 24;
 
@@ -86,6 +86,7 @@ class CircleDayView extends StatelessWidget {
         totalSecs,
         diameter,
         radianCorrection,
+        strokeWidth,
       ),
     );
   }
@@ -373,10 +374,11 @@ class MultipleColorCircle extends StatelessWidget {
     this.totalSecs,
     this.diameter,
     this.radianCorrection,
+    this.strokeWidth,
   );
 
   final Map<Color, double> colorOccurrences;
-  final double totalSecs, diameter, radianCorrection;
+  final double totalSecs, diameter, radianCorrection, strokeWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -395,6 +397,7 @@ class MultipleColorCircle extends StatelessWidget {
             totalSecs,
             diameter,
             radianCorrection,
+            strokeWidth,
           ),
         ),
       ),
@@ -408,10 +411,12 @@ class _MultipleColorCirclePainter extends CustomPainter {
     this.totalSecs,
     this.diameter,
     this.radianCorrection,
+    this.strokeWidth,
   );
 
   final Map<Color, double> colorOccurrences;
   final double totalSecs, diameter, radianCorrection;
+  final double strokeWidth;
 
   @override
   void paint(Canvas canvas, Size size) {
