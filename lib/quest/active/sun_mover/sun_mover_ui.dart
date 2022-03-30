@@ -114,54 +114,84 @@ class GumbiAndMeWithFamily extends StatelessWidget {
         bottom: 0,
         child: Align(
           alignment: Alignment.center,
-          child: Icon(
-            Icons.family_restroom_outlined,
-            size: 45,
-            color: color,
+          child: Transform.scale(
+            scaleX: 1,
+            scaleY: .98,
+            child: Icon(Icons.family_restroom_outlined, size: 45, color: color),
           ),
         ),
       ),
       Positioned.fill(
         // mom and kid on right
-        left: 34.5,
-        bottom: .5,
+        left: 32.6,
+        bottom: 0,
         child: Align(
           alignment: Alignment.center,
-          child: Icon(
-            Icons.escalator_warning_outlined,
-            size: 48,
-            color: color,
+          child: Transform.scale(
+            scaleX: .9,
+            scaleY: 1,
+            child:
+                Icon(Icons.escalator_warning_outlined, size: 49, color: color),
           ),
         ),
       ),
       Positioned.fill(
         // dad and kid on left
         left: 60,
-        bottom: 12,
+        bottom: 10.60,
         child: Align(
           alignment: Alignment.center,
           child: Transform(
             alignment: Alignment.bottomLeft,
             transform: Matrix4.rotationY(math.pi),
-            child: Icon(
-              Icons.escalator_warning_outlined,
-              size: 60,
-              color: color,
-            ),
+            child:
+                Icon(Icons.escalator_warning_outlined, size: 60, color: color),
           ),
         ),
       ),
       Positioned.fill(
         // baby car
-        left: 92,
+        left: 89,
         top: 15,
         child: Align(
           alignment: Alignment.center,
-          child: Icon(
-            Icons.child_friendly_rounded,
-            size: 33,
-            color: color,
-          ),
+          child: Icon(Icons.child_friendly_rounded, size: 33, color: color),
+        ),
+      ),
+      Positioned.fill(
+        // Mom's dress
+        left: 21,
+        top: 17,
+        child: Align(
+          alignment: Alignment.center,
+          child: Icon(Icons.warning_sharp, size: 19, color: color),
+        ),
+      ),
+      Positioned.fill(
+        // Edi's dress
+        left: 51.5,
+        top: 17,
+        child: Align(
+          alignment: Alignment.center,
+          child: Icon(Icons.warning_sharp, size: 17, color: color),
+        ),
+      ),
+      Positioned.fill(
+        // Cimi's dress
+        left: -8,
+        top: 20.5,
+        child: Align(
+          alignment: Alignment.center,
+          child: Icon(Icons.warning_sharp, size: 14, color: color),
+        ),
+      ),
+      Positioned.fill(
+        // Gumbi's head
+        left: 82,
+        top: 5,
+        child: Align(
+          alignment: Alignment.center,
+          child: Icon(Icons.circle, size: 5.8, color: color),
         ),
       ),
     ]);
@@ -385,7 +415,6 @@ class _MultipleColorCirclePainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    double strokeWidth = 60; // TODO asdf pass this around
     double radius = diameter / 2;
     Rect myRect =
         Rect.fromCircle(center: Offset(radius, radius), radius: radius);
