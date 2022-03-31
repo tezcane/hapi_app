@@ -239,9 +239,9 @@ class SalahRow extends StatelessWidget {
   late bool isActive;
 
   // TODO don't use white for all, Theme.of(context).textTheme.headline6!:
-  static const TS tsFard = TS(Colors.red);
-  static const TS tsMuak = TS(Colors.green);
-  static const TS tsNafl = TS(Colors.purple);
+  static const TS tsFard = TS(Colors.green);
+  static const TS tsMuak = TS(Colors.purple);
+  static const TS tsNafl = TS(Colors.orangeAccent);
 
   @override
   Widget build(BuildContext context) {
@@ -757,11 +757,12 @@ class _IconThikr extends StatelessWidget {
       child: Stack(
         children: const [
           Center(
-            child: Icon(Icons.favorite_outlined, color: tsTextColor, size: 33),
+            child: Icon(Icons.favorite_outlined,
+                color: Colors.pinkAccent, size: 33),
           ),
           Center(
             child: Icon(Icons.psychology_outlined,
-                color: Colors.white38, size: 21),
+                color: Colors.white70, size: 21),
           ),
         ],
       ),
@@ -772,5 +773,12 @@ class _IconThikr extends StatelessWidget {
 class _IconDua extends StatelessWidget {
   @override
   Widget build(BuildContext context) =>
-      const Icon(Icons.volunteer_activism, color: tsTextColor, size: 25);
+      //const Icon(Icons.volunteer_activism, color: Colors.blueAccent, size: 25);
+      const TwoColoredIcon(
+        Icons.volunteer_activism,
+        25,
+        [Colors.pinkAccent, Colors.blueAccent, Colors.blueAccent],
+        Colors.blueAccent,
+        fillPercent: .75,
+      );
 }
