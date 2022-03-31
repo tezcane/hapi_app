@@ -2,6 +2,7 @@ import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:hapi/components/half_filled_icon.dart';
 import 'package:hapi/helpers/math_utils.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/athan/athan.dart';
@@ -28,13 +29,15 @@ class SunMoverUI extends StatelessWidget {
 }
 
 class CircleDayView extends StatelessWidget {
-  const CircleDayView(this.athan, this.diameter, {this.strokeWidth = 36});
+  const CircleDayView(this.athan, this.diameter);
 
   final Athan athan;
-  final double diameter, strokeWidth;
+  final double diameter;
 
+  final double strokeWidth = 30;
   final int secondsInADay = 86400; //60 * 60 * 24;
 
+  // TODO remove
   String fill(String s, int fillLen) {
     while (s.length < fillLen) {
       s += ' ';
@@ -71,22 +74,33 @@ class CircleDayView extends StatelessWidget {
     l.d('totalSecs=$totalSecs of 86400, $secsOff secs off (mins=${secsOff / 60})');
 
     // calculate high noon degree offset so we align SunMover circle around it
-    List<Object> currZValues = athan.getZamanTime(Z.Fajr);
-    DateTime currZTime = currZValues[0] as DateTime;
+    DateTime currZTime = athan.getZamanTime(Z.Fajr)[0] as DateTime;
     DateTime nextZTime = athan.highNoon;
     double elapsedSecs = nextZTime.difference(currZTime).inMilliseconds / 1000;
-    // high noon/Sun zenith is constant at top of circle, at 25%/quarter turn
+    // high noon/Sun zenith is constant at very top of circle (25%=quarter turn)
     double degreeCorrection = 365 * ((elapsedSecs / totalSecs) - .25);
-    double radianCorrection = degreesToRadians(degreeCorrection);
+    double noonCorrection = degreesToRadians(degreeCorrection);
+
+    // calculate sunrise on the horizon
+    currZTime = athan.getZamanTime(Z.Fajr)[0] as DateTime;
+    nextZTime = athan.sunrise;
+    elapsedSecs = nextZTime.difference(currZTime).inMilliseconds / 1000;
+    // Sunrise is constant at very right of circle, (no turn)
+    degreeCorrection = 365 * (elapsedSecs / totalSecs);
+    //degreeCorrection = elapsedSecs / totalSecs;
+    //double sunriseCorrection = degreeCorrection / 2; // TODO check
+    double sunriseCorrection = (.5 - degreesToRadians(degreeCorrection)) / 2;
+    l.d('degreeCorrection=$degreeCorrection->sunriseCorrection=$sunriseCorrection');
 
     // RepaintBoundary prevents the ALWAYS repaint on ANY page update
     return RepaintBoundary(
       child: MultipleColorCircle(
+        diameter,
+        strokeWidth,
         colorOccurrences,
         totalSecs,
-        diameter,
-        radianCorrection,
-        strokeWidth,
+        noonCorrection,
+        sunriseCorrection,
       ),
     );
   }
@@ -200,24 +214,21 @@ class GumbiAndMeWithFamily extends StatelessWidget {
 }
 
 class GumbiAndMe extends StatefulWidget {
-  const GumbiAndMe(this.diameter);
+  const GumbiAndMe(this.diameter, this.strokeWidth, this.sunriseCorrection);
 
-  final double diameter;
+  final double diameter, strokeWidth, sunriseCorrection;
 
   @override
   _GumbiAndMeState createState() => _GumbiAndMeState();
 }
 
 class _GumbiAndMeState extends State<GumbiAndMe> with TickerProviderStateMixin {
-  late final AnimationController _controller1;
-  late final AnimationController _controller2;
+  late final AnimationController _sunController;
 
   @override
   void initState() {
     super.initState();
-    _controller1 =
-        AnimationController(vsync: this, duration: const Duration(seconds: 5));
-    _controller2 =
+    _sunController =
         AnimationController(vsync: this, duration: const Duration(seconds: 5));
   }
 
@@ -228,65 +239,40 @@ class _GumbiAndMeState extends State<GumbiAndMe> with TickerProviderStateMixin {
         backgroundColor: Colors.transparent,
         body: Stack(
           children: [
+            Center(
+              child: TwoColoredIcon(
+                Icons.circle,
+                widget.diameter,
+                const [Colors.orangeAccent, Colors.red, Colors.transparent],
+                Colors.green,
+                fillPercent: .5 + widget.sunriseCorrection,
+              ),
+            ),
+            const GumbiAndMeWithFamily(Colors.white),
             AnimatedBuilder(
-              animation: _controller1,
+              animation: _sunController,
               builder: (context, snapshot) {
                 return Center(
                   child: CustomPaint(
                     painter: AtomPaint(
                       context: context,
-                      //value: _controller.value,
-                      moon: _controller1.value,
-                      sun: _controller2.value,
+                      //value: _sunController.value,
+                      sun: _sunController.value,
                       diameter: widget.diameter,
+                      strokeWidth: widget.strokeWidth,
                     ),
                   ),
                 );
               },
             ),
-            Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                //mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    width: widget.diameter - 60 - 3, // top arc
-                    height: (widget.diameter - 60 - 3) / 2, // half of a circle
-                    decoration: const BoxDecoration(
-                      color: Colors.lightBlueAccent,
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(100),
-                        topRight: Radius.circular(100),
-                      ),
-                    ),
-                  ),
-                  Container(
-                    width: widget.diameter - 60 - 3, // bottom arc
-                    height: (widget.diameter - 60 - 3) / 2, // half of a circle
-                    decoration: const BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(100),
-                        bottomRight: Radius.circular(100),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const GumbiAndMeWithFamily(Colors.white),
           ],
         ),
         floatingActionButton: FloatingActionButton(
           child: const Icon(Icons.play_arrow),
           onPressed: () {
-            _controller1.reset();
-            _controller2.reset();
-            // _controller1.forward();
+            _sunController.reset();
             // _controller2.forward();
-            _controller1.reverse(from: 1.0);
-            _controller2.reverse(from: 1.0);
+            _sunController.reverse(from: 1.0);
           },
         ),
       ),
@@ -297,35 +283,30 @@ class _GumbiAndMeState extends State<GumbiAndMe> with TickerProviderStateMixin {
 class AtomPaint extends CustomPainter {
   AtomPaint({
     required this.context,
-    required this.moon,
     required this.sun,
     required this.diameter,
+    required this.strokeWidth,
   }) {
     _sunAxisPaint = Paint()
-      ..color = ct(context)
-      ..strokeWidth = .5
-      ..style = PaintingStyle.stroke;
-    _moonAxisPaint = Paint()
       ..color = ct(context)
       ..strokeWidth = .5
       ..style = PaintingStyle.stroke;
   }
 
   final BuildContext context;
-  final double moon, sun, diameter;
+  final double sun, diameter, strokeWidth;
 
   late final Paint _sunAxisPaint;
-  late final Paint _moonAxisPaint;
 
   @override
   void paint(Canvas canvas, Size size) {
-    canvas.drawCircle(const Offset(0, 0), (diameter / 2) - 31,
-        Paint()..color = Colors.blueAccent);
-
-    drawAxis(_sunAxisPaint, sun, canvas, (diameter / 2) + 30,
-        Paint()..color = Colors.yellow);
-    drawAxis(_moonAxisPaint, moon, canvas, (diameter / 2) - 30,
-        Paint()..color = Colors.grey.shade500);
+    drawAxis(
+      _sunAxisPaint,
+      sun,
+      canvas,
+      (diameter / 2) - (strokeWidth / 2),
+      Paint()..color = Colors.yellow,
+    );
   }
 
   drawAxis(
@@ -370,15 +351,17 @@ class DrawGradientCircle extends CustomPainter {
 
 class MultipleColorCircle extends StatelessWidget {
   const MultipleColorCircle(
+    this.diameter,
+    this.strokeWidth,
     this.colorOccurrences,
     this.totalSecs,
-    this.diameter,
-    this.radianCorrection,
-    this.strokeWidth,
+    this.noonCorrection,
+    this.sunriseCorrection,
   );
 
+  final double diameter, strokeWidth;
   final Map<Color, double> colorOccurrences;
-  final double totalSecs, diameter, radianCorrection, strokeWidth;
+  final double totalSecs, noonCorrection, sunriseCorrection;
 
   @override
   Widget build(BuildContext context) {
@@ -390,13 +373,13 @@ class MultipleColorCircle extends StatelessWidget {
           size: const Size(20, 20),
           // prevent other painting when this is updating
           child: RepaintBoundary(
-            child: GumbiAndMe(diameter),
+            child: GumbiAndMe(diameter, strokeWidth, sunriseCorrection),
           ),
           painter: _MultipleColorCirclePainter(
             colorOccurrences,
             totalSecs,
             diameter,
-            radianCorrection,
+            noonCorrection,
             strokeWidth,
           ),
         ),
@@ -410,12 +393,12 @@ class _MultipleColorCirclePainter extends CustomPainter {
     this.colorOccurrences,
     this.totalSecs,
     this.diameter,
-    this.radianCorrection,
+    this.noonCorrection,
     this.strokeWidth,
   );
 
   final Map<Color, double> colorOccurrences;
-  final double totalSecs, diameter, radianCorrection;
+  final double totalSecs, diameter, noonCorrection;
   final double strokeWidth;
 
   @override
@@ -424,7 +407,7 @@ class _MultipleColorCirclePainter extends CustomPainter {
     Rect myRect =
         Rect.fromCircle(center: Offset(radius, radius), radius: radius);
 
-    double radianStart = radianCorrection; // used to be 0
+    double radianStart = noonCorrection; // used to be 0
     double radianLength = 0;
 
     l.d('_MultipleColorCirclePainter: allOccurrences=$totalSecs');
