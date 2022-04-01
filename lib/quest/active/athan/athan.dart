@@ -232,6 +232,11 @@ class Athan {
       method.adjustSecs[Salah.isha]!,
     );
 
+    _fajrTomorrow_14 = _addSecsRoundUpAndGetTZ(
+      fajrTomorrowTime,
+      method.adjustSecs[Salah.fajr]!,
+    );
+
     // Sunnah Times
     // Note: nightDuration starts from maghrib time
     Duration nightDuration = _fajrTomorrow_14.difference(_maghrib_10);
@@ -242,11 +247,6 @@ class Athan {
     _last3rdOfNight_13 = _addSecsRoundUpAndGetTZ(
       _maghrib_10,
       (nightDuration.inSeconds * (2 / 3)).ceil(),
-    );
-
-    _fajrTomorrow_14 = _addSecsRoundUpAndGetTZ(
-      fajrTomorrowTime,
-      method.adjustSecs[Salah.fajr]!,
     );
 
     // Convenience Utilities
