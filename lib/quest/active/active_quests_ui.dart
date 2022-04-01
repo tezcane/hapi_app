@@ -107,9 +107,9 @@ class ActiveQuestsUI extends StatelessWidget {
                   color: sc.withOpacity(.20),
                   child: Tooltip(
                     message: 'Time (hours:minutes:seconds) until ' +
-                        ZamanController.to.currZ.niceName +
+                        ZamanController.to.currZ.niceName() +
                         ' ends and ' +
-                        ZamanController.to.nextZ.niceName +
+                        ZamanController.to.nextZ.niceName() +
                         ' begins',
                     child: GetBuilder<ZamanController>(builder: (c) {
                       return T(c.timeToNextZaman, tsAppBar, w: 90, h: 30);
@@ -152,7 +152,8 @@ class ActiveQuestsUI extends StatelessWidget {
           SalahRow(athan, c, Z.Fajr),
           SalahRow(athan, c, Z.Duha),
           SalahRow(athan, c, Z.Dhuhr),
-          SalahRow(athan, c, Z.Asr),
+          if (c.salahAsrSafe) SalahRow(athan, c, Z.Asr_Later),
+          if (!c.salahAsrSafe) SalahRow(athan, c, Z.Asr_Earlier),
           SalahRow(athan, c, Z.Maghrib),
           SalahRow(athan, c, Z.Isha),
           if (c.showLast3rdOfNight) SalahRow(athan, c, Z.Night__3),
@@ -346,7 +347,9 @@ class SalahRow extends StatelessWidget {
               ),
             ),
             Container(
-              color: z == Z.Duha || z == Z.Asr ? Colors.transparent : bg,
+              color: z == Z.Duha || z == Z.Asr_Later || z == Z.Asr_Earlier
+                  ? Colors.transparent
+                  : bg,
               width: (w6 * 2),
               height: _Sliv.slivH, // fills gaps
             ),
@@ -364,14 +367,15 @@ class SalahRow extends StatelessWidget {
         return rowDuha();
       case (Z.Dhuhr):
         return rowDhuhr();
-      case (Z.Asr):
+      case (Z.Asr_Later):
+      case (Z.Asr_Earlier):
         return rowAsr();
       case (Z.Maghrib):
         return rowMaghrib();
       case (Z.Isha):
         return rowIsha();
-      case (Z.Night__2):
       case (Z.Night__3):
+      case (Z.Night__2):
         return rowLayl();
       default:
         String e = 'SunRow: unexpected zaman given: "$z"';
@@ -411,7 +415,7 @@ class SalahRow extends StatelessWidget {
         _Cell(
           _SunCell(
             _IconSunUpDn(isCurrQuest, true),
-            Z.Karahat_Morning_Adhkar.niceName,
+            Z.Karahat_Morning_Adhkar.niceName(),
             athan.sunrise,
             athan.ishraq,
             true, // align left
@@ -426,7 +430,7 @@ class SalahRow extends StatelessWidget {
           _SunCell(
             const Icon(Icons.brightness_7_outlined,
                 color: Colors.yellowAccent, size: 30),
-            Z.Karahat_Zawal.niceName,
+            Z.Karahat_Zawal.niceName(),
             athan.zawal,
             athan.dhuhr,
             false, // align right
@@ -486,7 +490,7 @@ class SalahRow extends StatelessWidget {
         _Cell(
           _SunCell(
             _IconSunUpDn(isCurrQuest, false),
-            Z.Karahat_Evening_Adhkar.niceName,
+            Z.Karahat_Evening_Adhkar.niceName(),
             athan.sunSetting,
             athan.maghrib,
             false, // align right

@@ -111,7 +111,9 @@ extension EnumUtil on QUEST {
       case (QUEST.ASR_FARD):
       case (QUEST.ASR_THIKR):
       case (QUEST.ASR_DUA):
-        return Z.Asr;
+        return ActiveQuestsController.to.salahAsrSafe
+            ? Z.Asr_Later
+            : Z.Asr_Earlier;
       case (QUEST.KARAHAT_ADHKAR_SUNSET):
         return Z.Karahat_Evening_Adhkar;
       case (QUEST.MAGHRIB_FARD):
@@ -135,18 +137,18 @@ extension EnumUtil on QUEST {
       case (QUEST.LAYL_WITR):
         return Z.Isha; // Note qiyam prayer can occur during isha
       default:
-        return Z.Isha;
+        String e =
+            'ActiveQuestAjrController:getStartZaman: Invalid Quest "$QUEST" given';
+        l.e(e);
+        throw e;
     }
   }
 
   Z getEndZaman() {
     switch (this) {
       case (QUEST.FAJR_MUAKB):
-        return Z.Karahat_Morning_Adhkar;
       case (QUEST.FAJR_FARD):
-        return Z.Karahat_Morning_Adhkar;
       case (QUEST.FAJR_THIKR):
-        return Z.Karahat_Morning_Adhkar;
       case (QUEST.FAJR_DUA):
         return Z.Karahat_Morning_Adhkar;
       case (QUEST.KARAHAT_ADHKAR_SUNRISE):
@@ -158,63 +160,45 @@ extension EnumUtil on QUEST {
       case (QUEST.KARAHAT_ADHKAR_ZAWAL):
         return Z.Dhuhr;
       case (QUEST.DHUHR_MUAKB):
-        return Z.Asr;
       case (QUEST.DHUHR_FARD):
-        return Z.Asr;
       case (QUEST.DHUHR_MUAKA):
-        return Z.Asr;
       case (QUEST.DHUHR_NAFLA):
-        return Z.Asr;
       case (QUEST.DHUHR_THIKR):
-        return Z.Asr;
       case (QUEST.DHUHR_DUA):
-        return Z.Karahat_Evening_Adhkar;
+        return ActiveQuestsController.to.salahAsrSafe
+            ? Z.Asr_Later
+            : Z.Asr_Earlier;
       case (QUEST.ASR_NAFLB):
-        return Z.Karahat_Evening_Adhkar;
       case (QUEST.ASR_FARD):
-        return Z.Karahat_Evening_Adhkar;
       case (QUEST.ASR_THIKR):
-        return Z.Karahat_Evening_Adhkar;
       case (QUEST.ASR_DUA):
         return Z.Karahat_Evening_Adhkar;
       case (QUEST.KARAHAT_ADHKAR_SUNSET):
         return Z.Maghrib;
       case (QUEST.MAGHRIB_FARD):
-        return Z.Isha;
       case (QUEST.MAGHRIB_MUAKA):
-        return Z.Isha;
       case (QUEST.MAGHRIB_NAFLA):
-        return Z.Isha;
       case (QUEST.MAGHRIB_THIKR):
-        return Z.Isha;
       case (QUEST.MAGHRIB_DUA):
         return Z.Isha;
       case (QUEST.ISHA_NAFLB):
-        return Z.Fajr_Tomorrow;
       case (QUEST.ISHA_FARD):
-        return Z.Fajr_Tomorrow;
       case (QUEST.ISHA_MUAKA):
-        return Z.Fajr_Tomorrow;
       case (QUEST.ISHA_NAFLA):
-        return Z.Fajr_Tomorrow;
       case (QUEST.ISHA_THIKR):
-        return Z.Fajr_Tomorrow;
       case (QUEST.ISHA_DUA):
-        return Z.Fajr_Tomorrow;
-      case (QUEST.LAYL_QIYAM):
-        return Z.Fajr_Tomorrow;
+      case (QUEST.LAYL_QIYAM): // After Isha salah done, layl can start anytime
       case (QUEST.LAYL_THIKR):
-        return Z.Fajr_Tomorrow;
       case (QUEST.LAYL_DUA):
-        return Z.Fajr_Tomorrow;
       case (QUEST.LAYL_SLEEP):
-        return Z.Fajr_Tomorrow;
       case (QUEST.LAYL_TAHAJJUD):
-        return Z.Fajr_Tomorrow;
       case (QUEST.LAYL_WITR):
         return Z.Fajr_Tomorrow;
       default:
-        return Z.Fajr_Tomorrow;
+        String e =
+            'ActiveQuestAjrController:getEndZaman: Invalid Quest "$QUEST" given';
+        l.e(e);
+        throw e;
     }
   }
 }
@@ -260,9 +244,7 @@ class ActiveQuestsAjrController extends GetxHapi {
     while (ZamanController.to.athan == null) {
       l.w('ActiveQuestsAjrController.initCurrQuest: not ready, try again after sleeping $sleepBackoffSecs Secs...');
       await Future.delayed(Duration(seconds: sleepBackoffSecs));
-      if (sleepBackoffSecs < 4) {
-        sleepBackoffSecs++;
-      }
+      if (sleepBackoffSecs < 4) sleepBackoffSecs++;
     }
 
     for (QUEST quest in QUEST.values) {

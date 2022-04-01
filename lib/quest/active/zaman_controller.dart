@@ -19,7 +19,7 @@ class ZamanController extends GetxHapi {
   static ZamanController get to => Get.find();
 
   Z _currZ = Z.Dhuhr;
-  Z _nextZ = Z.Asr;
+  Z _nextZ = Z.Asr_Later;
   Z get currZ => _currZ;
   Z get nextZ => _nextZ;
 
@@ -51,9 +51,7 @@ class ZamanController extends GetxHapi {
         CalcMethod.values[ActiveQuestsController.to.salahCalcMethod];
 
     var madhab = Madhab.Hanafi;
-    if (!ActiveQuestsController.to.salahAsrSafe) {
-      madhab = Madhab.Shafi;
-    }
+    if (!ActiveQuestsController.to.salahAsrSafe) madhab = Madhab.Shafi;
 
     int karahatSunRisingSecs = 40 * 60;
     int karahatSunZawalSecs = 30 * 60;
@@ -163,8 +161,9 @@ class ZamanController extends GetxHapi {
       case Z.Dhuhr:
         zs = [Z.Dhuhr];
         break;
-      case Z.Asr:
-        zs = [Z.Asr, Z.Karahat_Evening_Adhkar];
+      case Z.Asr_Later:
+      case Z.Asr_Earlier:
+        zs = [Z.Asr_Earlier, Z.Asr_Later, Z.Karahat_Evening_Adhkar];
         break;
       case Z.Maghrib:
         zs = [Z.Maghrib];
@@ -172,8 +171,8 @@ class ZamanController extends GetxHapi {
       case Z.Isha:
         zs = [Z.Isha];
         break;
-      case Z.Night__2:
       case Z.Night__3:
+      case Z.Night__2:
         zs = [Z.Isha, Z.Night__2, Z.Night__3]; // Isha still valid for layl
         break;
       default:
@@ -197,15 +196,16 @@ class ZamanController extends GetxHapi {
       case Z.Duha:
         return isSalahRowActive(Z.Dhuhr);
       case Z.Dhuhr:
-        return isSalahRowActive(Z.Asr);
-      case Z.Asr:
+        return isSalahRowActive(Z.Asr_Later);
+      case Z.Asr_Later:
+      case Z.Asr_Earlier:
         return isSalahRowActive(Z.Maghrib);
       case Z.Maghrib:
         return isSalahRowActive(Z.Isha);
       case Z.Isha:
         return isSalahRowActive(Z.Night__3);
-      case Z.Night__2:
       case Z.Night__3:
+      case Z.Night__2:
         return isSalahRowActive(Z.Night__3);
       default:
         var e = 'Invalid Zaman ($z) given when in isNextSalahRowActive called';

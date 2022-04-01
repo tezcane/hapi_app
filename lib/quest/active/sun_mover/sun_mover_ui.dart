@@ -77,7 +77,7 @@ class CircleDayView extends StatelessWidget {
           nextZTime.difference(currZTime).inMilliseconds / 1000;
       colorOccurrences[currZColor] = elapsedSecs;
       totalSecs += elapsedSecs;
-      l.d('${fill(currZ.niceName, 10)} secs=$elapsedSecs (mins=${elapsedSecs / 60}), totalSecs=$totalSecs (mins=${totalSecs / 60})');
+      l.d('${fill(currZ.niceName(withAsr: false), 10)} secs=$elapsedSecs (mins=${elapsedSecs / 60}), totalSecs=$totalSecs (mins=${totalSecs / 60})');
     }
     double secsOff = secondsInADay - totalSecs;
     l.d('totalSecs=$totalSecs of 86400, $secsOff secs off (mins=${secsOff / 60})');

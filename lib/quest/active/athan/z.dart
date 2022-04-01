@@ -1,3 +1,4 @@
+import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 
 /// Z = Zaman/Time Of Day, enum that goes with each important islamic day point.
@@ -7,9 +8,10 @@ enum Z {
   Karahat_Morning_Adhkar, // begin sunrise (karahat 1), also Morning Adhkar time
   Ishraq,
   Duha,
-  Karahat_Zawal, // begin sun zentih/peaking (karahat 2)
+  Karahat_Zawal, // begin sun zenith/peaking (karahat 2)
   Dhuhr,
-  Asr,
+  Asr_Earlier,
+  Asr_Later,
   Karahat_Evening_Adhkar, // begin sunset (karahat 3), also Evening Adhkar time
   Maghrib,
   Isha,
@@ -23,17 +25,26 @@ extension EnumUtil on Z {
   ///     Karahat_ -> '' (blank)
   ///           __ -> /
   ///            _ -> ' ' (space)
-  String get niceName => name
-      .replaceFirst('Karahat_', '')
-      .replaceFirst('__', '/')
-      .replaceAll('_', ' ');
+  /// Optional withAsr flag set to fal will also remove:
+  ///       _Later ->  '' (blank)
+  ///     _Earlier ->  '' (blank)
+  String niceName({bool withAsr = true}) {
+    String rv = name;
+    if (withAsr) {
+      rv = name.replaceFirst('_Later', '').replaceFirst('_Earlier', '');
+    }
+    return rv
+        .replaceFirst('Karahat_', '')
+        .replaceFirst('__', '/')
+        .replaceAll('_', ' ');
+  }
 
   /// Sometimes to make UI look nice we need to make pad the length of this for
   /// main_controller.T() prints.
   String get niceNamePadded {
-    String name = niceName;
+    String name = niceName();
     while (name.length < 7) {
-      name += ' '; // add until we match maghrib and night/X 7 chars long
+      name += '  '; // add until we match maghrib and night/X 7 chars long
     }
     return name;
   }
@@ -49,7 +60,8 @@ extension EnumUtil on Z {
         return 'DUHA';
       case (Z.Dhuhr):
         return 'DHUHR';
-      case (Z.Asr):
+      case (Z.Asr_Later):
+      case (Z.Asr_Earlier):
       case (Z.Karahat_Evening_Adhkar):
         return 'ASR';
       case (Z.Maghrib):
@@ -58,8 +70,11 @@ extension EnumUtil on Z {
         return 'ISHA';
       case (Z.Night__2):
       case (Z.Night__3):
-      default:
         return 'LAYL';
+      default:
+        String e = 'Z:salahRow: Invalid Z "$this" given';
+        l.e(e);
+        throw e;
     }
   }
 
@@ -77,7 +92,8 @@ extension EnumUtil on Z {
         return QUEST.KARAHAT_ADHKAR_ZAWAL;
       case (Z.Dhuhr):
         return QUEST.DHUHR_MUAKB;
-      case (Z.Asr):
+      case (Z.Asr_Earlier):
+      case (Z.Asr_Later):
         return QUEST.ASR_NAFLB;
       case (Z.Karahat_Evening_Adhkar):
         return QUEST.KARAHAT_ADHKAR_SUNSET;
@@ -90,7 +106,9 @@ extension EnumUtil on Z {
       case (Z.Night__3):
         return QUEST.LAYL_QIYAM;
       default:
-        return QUEST.LAYL_QIYAM;
+        String e = 'Z:getFirstQuest: Invalid Z "$this" given';
+        l.e(e);
+        throw e;
     }
   }
 
@@ -108,7 +126,8 @@ extension EnumUtil on Z {
         return QUEST.KARAHAT_ADHKAR_ZAWAL;
       case (Z.Dhuhr):
         return QUEST.DHUHR_DUA;
-      case (Z.Asr):
+      case (Z.Asr_Earlier):
+      case (Z.Asr_Later):
         return QUEST.ASR_DUA;
       case (Z.Karahat_Evening_Adhkar):
         return QUEST.KARAHAT_ADHKAR_SUNSET;
@@ -121,7 +140,9 @@ extension EnumUtil on Z {
       case (Z.Night__3):
         return QUEST.LAYL_WITR;
       default:
-        return QUEST.LAYL_WITR;
+        String e = 'Z:getLastQuest: Invalid Z "$this" given';
+        l.e(e);
+        throw e;
     }
   }
 }
