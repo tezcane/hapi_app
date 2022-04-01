@@ -1,5 +1,7 @@
+import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
+import 'package:hapi/quest/active/active_quests_controller.dart';
 
 /// Z = Zaman/Time Of Day, enum that goes with each important islamic day point.
 /// Used with Athan class to match up those calculated times to this enum.
@@ -43,9 +45,19 @@ extension EnumUtil on Z {
   /// main_controller.T() prints.
   String get niceNamePadded {
     String name = niceName();
+    if (this == Z.Dhuhr &&
+        TimeController.to.isFriday() &&
+        ActiveQuestsController.to.showJummahOnFriday) {
+      return 'Jummah';
+    }
+
     while (name.length < 7) {
       name += '  '; // add until we match maghrib and night/X 7 chars long
     }
+
+    // still too small, so add manually: TODO still bad
+    if (this == Z.Fajr || this == Z.Isha) name += ' ';
+    if (this == Z.Asr_Earlier || this == Z.Asr_Later) name += '  ';
     return name;
   }
 

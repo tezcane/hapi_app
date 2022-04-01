@@ -316,11 +316,7 @@ class SalahRow extends StatelessWidget {
               height: _Sliv.slivH,
               color: bg, // middle Zaman name always colored
               child: T(
-                z == Z.Dhuhr &&
-                        TimeController.to.isFriday() &&
-                        c.showJummahOnFriday
-                    ? 'Jummah'
-                    : z.niceNamePadded,
+                z.niceNamePadded,
                 textStyle.copyWith(
                   color: isActive ? textStyle.color : tsTextColor,
                   fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
