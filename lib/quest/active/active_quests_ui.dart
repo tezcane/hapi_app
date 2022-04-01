@@ -69,7 +69,7 @@ class ActiveQuestsUI extends StatelessWidget {
 
     // pad hour and minutes so looks good on UI
     String hour = startHour.toString();
-    if (startHour < 10) hour = '  $hour'; // TODO NOTE: double space to align
+    if (startHour < 10) hour = '  $hour'; // NOTE: double space to align
 
     int startMinute = startTime.minute;
     String minutes = startMinute.toString();
@@ -313,35 +313,46 @@ class SalahRow extends StatelessWidget {
               height: _Sliv.slivH, // fills gaps
             ),
             Container(
-              height: _Sliv.slivH,
+              height: _Sliv.slivH, // needed
               color: bg, // middle Zaman name always colored
-              child: T(
-                z.niceNamePadded,
-                textStyle.copyWith(
-                  color: isActive ? textStyle.color : tsTextColor,
-                  fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+              child: Center(
+                // Center needed to make fit height work
+                child: T(
+                  z.niceName(shortenAsrName: true),
+                  textStyle.copyWith(
+                    color: isActive ? textStyle.color : tsTextColor,
+                    fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+                  ),
+                  alignment: Alignment.centerLeft,
+                  w: w6 - // Note below uses + for below
+                      // if 12h time gets > width, else 24h name gets > width:
+                      (ActiveQuestsController.to.show12HourClock ? 8 : -3),
+                  h: 23, // tuned to find best value in all cases
                 ),
-                alignment: Alignment.centerLeft,
-                w: w6 -
-                    1 - // -1 for middle spacer
-                    (ActiveQuestsController.to.show12HourClock ? 8 : -3),
               ),
             ),
             // middle spacer always colored
-            Container(color: bg, width: 1, height: _Sliv.slivH),
+            Container(color: bg, width: 1),
             Container(
-              height: _Sliv.slivH,
+              height: _Sliv.slivH, // needed
               color: bg, // middle athan time always colored
-              child: T(
-                ActiveQuestsUI.getTime(athan.getStartTime(z)),
-                textStyle.copyWith(
-                  color: isActive ? textStyle.color : tsTextColor,
-                  fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+              child: Center(
+                // Center needed to make fit height work
+                child: T(
+                  ActiveQuestsUI.getTime(athan.getStartTime(z)),
+                  textStyle.copyWith(
+                    color: isActive ? textStyle.color : tsTextColor,
+                    fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+                  ),
+                  alignment: ActiveQuestsController.to.show12HourClock
+                      ? Alignment.centerRight
+                      : Alignment.centerLeft,
+                  w: w6 -
+                      1 // -1 for middle divider
+                      + // if 24h name gets > width, else name gets > width:
+                      (ActiveQuestsController.to.show12HourClock ? 8 : -3),
+                  h: 23, // tuned to find best value in all cases
                 ),
-                alignment: ActiveQuestsController.to.show12HourClock
-                    ? Alignment.centerRight
-                    : Alignment.centerLeft,
-                w: w6 + (ActiveQuestsController.to.show12HourClock ? 8 : -3),
               ),
             ),
             Container(

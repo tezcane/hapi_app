@@ -30,10 +30,16 @@ extension EnumUtil on Z {
   /// Optional withAsr flag set to fal will also remove:
   ///       _Later ->  '' (blank)
   ///     _Earlier ->  '' (blank)
-  String niceName({bool withAsr = true}) {
+  String niceName({bool shortenAsrName = true}) {
+    if (this == Z.Dhuhr &&
+        TimeController.to.isFriday() &&
+        ActiveQuestsController.to.showJummahOnFriday) {
+      return 'Jummah';
+    }
+
     String rv = name;
-    if (withAsr) {
-      rv = name.replaceFirst('_Later', '').replaceFirst('_Earlier', '');
+    if (shortenAsrName) {
+      rv = rv.replaceFirst('_Later', '').replaceFirst('_Earlier', '');
     }
     return rv
         .replaceFirst('Karahat_', '')
@@ -41,25 +47,20 @@ extension EnumUtil on Z {
         .replaceAll('_', ' ');
   }
 
-  /// Sometimes to make UI look nice we need to make pad the length of this for
-  /// main_controller.T() prints.
-  String get niceNamePadded {
-    String name = niceName();
-    if (this == Z.Dhuhr &&
-        TimeController.to.isFriday() &&
-        ActiveQuestsController.to.showJummahOnFriday) {
-      return 'Jummah';
-    }
-
-    while (name.length < 7) {
-      name += '  '; // add until we match maghrib and night/X 7 chars long
-    }
-
-    // still too small, so add manually: TODO still bad
-    if (this == Z.Fajr || this == Z.Isha) name += ' ';
-    if (this == Z.Asr_Earlier || this == Z.Asr_Later) name += '  ';
-    return name;
-  }
+  // /// Sometimes to make UI look nice we need to make pad the length of this for
+  // /// main_controller.T() prints.
+  // String get niceNamePadded {
+  //   String name = niceName();
+  //
+  //   while (name.length < 7) {
+  //     name += '  '; // add until we match maghrib and night/X 7 chars long
+  //   }
+  //
+  //   // still too small, so add manually:
+  //   if (this == Z.Fajr || this == Z.Isha) name += ' ';
+  //   if (this == Z.Asr_Earlier || this == Z.Asr_Later) name += '  ';
+  //   return name;
+  // }
 
   String salahRow() {
     switch (this) {

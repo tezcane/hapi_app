@@ -150,8 +150,8 @@ class T extends StatelessWidget {
     this.t,
     this.style, {
     this.alignment = Alignment.center,
-    this.w = 80, // size of #'s on Active Quests
-    this.h = 27, // size of #'s on Active Quests
+    this.w = 80,
+    this.h = 21, // Slightly smaller than salah header, and fits Tahajjud nicely
     this.boxFit = BoxFit.contain, // BoxFit.fitHeight, BoxFit.fitWidth
   });
 
