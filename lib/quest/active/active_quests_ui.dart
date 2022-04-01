@@ -159,10 +159,13 @@ class ActiveQuestsUI extends StatelessWidget {
           if (!c.showLast3rdOfNight) SalahRow(athan, c, Z.Night__2),
 
           /// Use to make scrolling of active salah always pin when scrolling up.
-          const SliverFillRemaining(), // height of the page
+          const SliverFillRemaining(), // allow SunMover to scroll down
 
           /// Now show sun movement
           _SlivSunMover(athan),
+
+          /// Use to make scrolling of active salah always pin when scrolling up.
+          const SliverFillRemaining(), // allow SunMover to scroll up
         ],
       );
     });
@@ -569,20 +572,16 @@ class _SlivSunMover extends StatelessWidget {
 
   @override
   SliverPersistentHeader build(BuildContext context) {
-    final double height = h(context) / GR;
+    const double strokeWidth = 30;
+    final double diameter = w(context) / GR;
+    final double width = diameter + strokeWidth;
     return SliverPersistentHeader(
       floating: false,
       pinned: true,
       delegate: _SliverAppBarDelegate(
-        minHeight: height,
-        maxHeight: height,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            const SizedBox(height: 55), // needed for small gap
-            CircleDayView(athan, w(context) / GR),
-          ],
-        ),
+        minHeight: width,
+        maxHeight: width,
+        child: CircleDayView(athan, diameter - strokeWidth / 2, strokeWidth),
       ),
     );
   }

@@ -8,33 +8,42 @@ import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/athan/athan.dart';
 import 'package:hapi/quest/active/athan/z.dart';
 
-class SunMoverUI extends StatelessWidget {
-  const SunMoverUI(this.athan, this.diameter);
-
-  final Athan athan;
-  final double diameter;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        CircleDayView(athan, diameter),
-        //const SizedBox(height: 15),
-        //_PastNowFutureButtonPanel(today)
-        //SizedBox(height: 100),
-      ],
-    );
-  }
-}
+// class SunMoverUI extends StatelessWidget {
+//   const SunMoverUI(this.athan, this.diameter);
+//
+//   final Athan athan;
+//   final double diameter;
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       mainAxisAlignment: MainAxisAlignment.start,
+//       children: [
+//         CircleDayView(athan, diameter, ),
+//         //const SizedBox(height: 15),
+//         //_PastNowFutureButtonPanel(today)
+//         //SizedBox(height: 100),
+//       ],
+//     );
+//   }
+// }
+//
+// class _PastNowFutureButtonPanel extends StatelessWidget {
+//   const _PastNowFutureButtonPanel(this.today);
+//
+//   final DateTime today;
+//
+//   @override
+//   Widget build(BuildContext context) {}
+// }
 
 class CircleDayView extends StatelessWidget {
-  const CircleDayView(this.athan, this.diameter);
+  const CircleDayView(this.athan, this.diameter, this.strokeWidth);
 
   final Athan athan;
   final double diameter;
 
-  final double strokeWidth = 30;
+  final double strokeWidth;
   final int secondsInADay = 86400; //60 * 60 * 24;
 
   // TODO remove
@@ -93,136 +102,154 @@ class CircleDayView extends StatelessWidget {
     l.d('degreeCorrection=$degreeCorrection->sunriseCorrection=$sunriseCorrection');
 
     // RepaintBoundary prevents the ALWAYS repaint on ANY page update
-    return RepaintBoundary(
-      child: MultipleColorCircle(
-        diameter,
-        strokeWidth,
-        colorOccurrences,
-        totalSecs,
-        noonCorrection,
-        sunriseCorrection,
+    return Center(
+      child: SizedBox(
+        width: diameter,
+        height: diameter,
+        child: Stack(
+          children: [
+            Center(
+              child: TwoColoredIcon(
+                Icons.circle,
+                diameter,
+                const [Colors.orangeAccent, Colors.red, Colors.transparent],
+                Colors.green,
+                fillPercent: .5 + sunriseCorrection,
+              ),
+            ),
+            const _GumbiAndMeWithFamily(Colors.white),
+            // RepaintBoundary needed or it will repaint on every second tick
+            RepaintBoundary(
+              child: CustomPaint(
+                painter: _MultipleColorCirclePainter(
+                  colorOccurrences,
+                  totalSecs,
+                  diameter,
+                  noonCorrection,
+                  strokeWidth,
+                ),
+              ),
+            ),
+            _SunPathAnimator(diameter, strokeWidth),
+          ],
+        ),
       ),
     );
   }
 }
 
-// class _PastNowFutureButtonPanel extends StatelessWidget {
-//   const _PastNowFutureButtonPanel(this.today);
-//
-//   final DateTime today;
-//
-//   @override
-//   Widget build(BuildContext context) {}
-// }
-
-class GumbiAndMeWithFamily extends StatelessWidget {
-  const GumbiAndMeWithFamily(this.color);
+class _GumbiAndMeWithFamily extends StatelessWidget {
+  const _GumbiAndMeWithFamily(this.color);
 
   final Color color;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      Positioned.fill(
-        // dad, kid and mom in middle
-        left: -17,
-        bottom: 0,
-        child: Align(
-          alignment: Alignment.center,
-          child: Transform.scale(
-            scaleX: 1,
-            scaleY: .98,
-            child: Icon(Icons.family_restroom_outlined, size: 45, color: color),
+    return Stack(
+      children: [
+        Positioned.fill(
+          // dad, kid and mom in middle
+          left: -17,
+          bottom: 0,
+          child: Align(
+            alignment: Alignment.center,
+            child: Transform.scale(
+              scaleX: 1,
+              scaleY: .98,
+              child:
+                  Icon(Icons.family_restroom_outlined, size: 45, color: color),
+            ),
           ),
         ),
-      ),
-      Positioned.fill(
-        // mom and kid on right
-        left: 25.6,
-        bottom: 0,
-        child: Align(
-          alignment: Alignment.center,
-          child: Transform.scale(
-            scaleX: .9,
-            scaleY: 1,
-            child:
-                Icon(Icons.escalator_warning_outlined, size: 49, color: color),
+        Positioned.fill(
+          // mom and kid on right
+          left: 25.6,
+          bottom: 0,
+          child: Align(
+            alignment: Alignment.center,
+            child: Transform.scale(
+              scaleX: .9,
+              scaleY: 1,
+              child: Icon(Icons.escalator_warning_outlined,
+                  size: 49, color: color),
+            ),
           ),
         ),
-      ),
-      Positioned.fill(
-        // dad and kid on left
-        left: 53,
-        bottom: 10.60,
-        child: Align(
-          alignment: Alignment.center,
-          child: Transform(
-            alignment: Alignment.bottomLeft,
-            transform: Matrix4.rotationY(math.pi),
-            child:
-                Icon(Icons.escalator_warning_outlined, size: 60, color: color),
+        Positioned.fill(
+          // dad and kid on left
+          left: 53,
+          bottom: 10.60,
+          child: Align(
+            alignment: Alignment.center,
+            child: Transform(
+              alignment: Alignment.bottomLeft,
+              transform: Matrix4.rotationY(math.pi),
+              child: Icon(Icons.escalator_warning_outlined,
+                  size: 60, color: color),
+            ),
           ),
         ),
-      ),
-      Positioned.fill(
-        // baby car
-        left: 82,
-        top: 15,
-        child: Align(
-          alignment: Alignment.center,
-          child: Icon(Icons.child_friendly_rounded, size: 33, color: color),
+        Positioned.fill(
+          // baby car
+          left: 82,
+          top: 15,
+          child: Align(
+            alignment: Alignment.center,
+            child: Icon(Icons.child_friendly_rounded, size: 33, color: color),
+          ),
         ),
-      ),
-      Positioned.fill(
-        // Mom's dress
-        left: 14,
-        top: 17,
-        child: Align(
-          alignment: Alignment.center,
-          child: Icon(Icons.warning_sharp, size: 19, color: color),
+        Positioned.fill(
+          // Mom's dress
+          left: 14,
+          top: 17,
+          child: Align(
+            alignment: Alignment.center,
+            child: Icon(Icons.warning_sharp, size: 19, color: color),
+          ),
         ),
-      ),
-      Positioned.fill(
-        // Edi's dress
-        left: 44.5,
-        top: 17,
-        child: Align(
-          alignment: Alignment.center,
-          child: Icon(Icons.warning_sharp, size: 17, color: color),
+        Positioned.fill(
+          // Edi's dress
+          left: 44.5,
+          top: 17,
+          child: Align(
+            alignment: Alignment.center,
+            child: Icon(Icons.warning_sharp, size: 17, color: color),
+          ),
         ),
-      ),
-      Positioned.fill(
-        // Cimi's dress
-        left: -15,
-        top: 20.5,
-        child: Align(
-          alignment: Alignment.center,
-          child: Icon(Icons.warning_sharp, size: 14, color: color),
+        Positioned.fill(
+          // Cimi's dress
+          left: -15,
+          top: 20.5,
+          child: Align(
+            alignment: Alignment.center,
+            child: Icon(Icons.warning_sharp, size: 14, color: color),
+          ),
         ),
-      ),
-      Positioned.fill(
-        // Gumbi's head
-        left: 75,
-        top: 5,
-        child: Align(
-          alignment: Alignment.center,
-          child: Icon(Icons.circle, size: 5.8, color: color),
+        Positioned.fill(
+          // Gumbi's head
+          left: 75,
+          top: 5,
+          child: Align(
+            alignment: Alignment.center,
+            child: Icon(Icons.circle, size: 5.8, color: color),
+          ),
         ),
-      ),
-    ]);
+      ],
+    );
   }
 }
 
-class GumbiAndMe extends StatefulWidget {
-  const GumbiAndMe(this.diameter, this.strokeWidth, this.sunriseCorrection);
+class _SunPathAnimator extends StatefulWidget {
+  const _SunPathAnimator(this.diameter, this.strokeWidth);
 
-  final double diameter, strokeWidth, sunriseCorrection;
+  final double diameter, strokeWidth;
 
   @override
-  _GumbiAndMeState createState() => _GumbiAndMeState();
+  _SunPathAnimatorState createState() => _SunPathAnimatorState();
 }
 
-class _GumbiAndMeState extends State<GumbiAndMe> with TickerProviderStateMixin {
+class _SunPathAnimatorState extends State<_SunPathAnimator>
+    with TickerProviderStateMixin {
   late final AnimationController _sunController;
 
   @override
@@ -239,16 +266,6 @@ class _GumbiAndMeState extends State<GumbiAndMe> with TickerProviderStateMixin {
         backgroundColor: Colors.transparent,
         body: Stack(
           children: [
-            Center(
-              child: TwoColoredIcon(
-                Icons.circle,
-                widget.diameter,
-                const [Colors.orangeAccent, Colors.red, Colors.transparent],
-                Colors.green,
-                fillPercent: .5 + widget.sunriseCorrection,
-              ),
-            ),
-            const GumbiAndMeWithFamily(Colors.white),
             AnimatedBuilder(
               animation: _sunController,
               builder: (context, snapshot) {
@@ -333,61 +350,6 @@ class AtomPaint extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => true; // leave as true
 }
 
-class DrawGradientCircle extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..shader = const LinearGradient(colors: [
-        Colors.blue,
-        Colors.black,
-      ]).createShader(
-          Rect.fromCircle(center: const Offset(0.0, 0.0), radius: 50));
-    canvas.drawCircle(const Offset(0.0, 0.0), 50, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
-}
-
-class MultipleColorCircle extends StatelessWidget {
-  const MultipleColorCircle(
-    this.diameter,
-    this.strokeWidth,
-    this.colorOccurrences,
-    this.totalSecs,
-    this.noonCorrection,
-    this.sunriseCorrection,
-  );
-
-  final double diameter, strokeWidth;
-  final Map<Color, double> colorOccurrences;
-  final double totalSecs, noonCorrection, sunriseCorrection;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: SizedBox(
-        height: diameter,
-        width: diameter,
-        child: CustomPaint(
-          size: const Size(20, 20),
-          // prevent other painting when this is updating
-          child: RepaintBoundary(
-            child: GumbiAndMe(diameter, strokeWidth, sunriseCorrection),
-          ),
-          painter: _MultipleColorCirclePainter(
-            colorOccurrences,
-            totalSecs,
-            diameter,
-            noonCorrection,
-            strokeWidth,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
 class _MultipleColorCirclePainter extends CustomPainter {
   const _MultipleColorCirclePainter(
     this.colorOccurrences,
@@ -430,6 +392,24 @@ class _MultipleColorCirclePainter extends CustomPainter {
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
+
+/*
+class DrawGradientCircle extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..shader = const LinearGradient(colors: [
+        Colors.blue,
+        Colors.black,
+      ]).createShader(
+          Rect.fromCircle(center: const Offset(0.0, 0.0), radius: 50));
+    canvas.drawCircle(const Offset(0.0, 0.0), 50, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+}
+*/
 
 /*
 class Circles extends StatefulWidget {
