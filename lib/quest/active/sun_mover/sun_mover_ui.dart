@@ -144,12 +144,22 @@ class CircleDayView extends StatelessWidget {
               builder: (c) {
                 double sunValue =
                     (c.secsSinceFajr / totalSecs) - fajrStartPercentCorrection;
-                //l.d('newValue $sunValue = ${c.secsSinceFajr}/$totalSecs (noonDegreeCorrection=$noonDegreeCorrection, rad:noonCorrection=$noonCorrection)');
+                l.v('sunValue percent $sunValue = (${(c.secsSinceFajr / totalSecs)}=${c.secsSinceFajr}/$totalSecs) - (fajrStartPercentCorrection=$fajrStartPercentCorrection)');
+                if (sunValue > 0) {
+                  // it's passed fajr time:
+                  sunValue = 1 - sunValue; // 1 - to go backward;
+                  l.v('1 - sunValue = $sunValue');
+                } else {
+                  // it's fajr time, so negative number and must take abs of it:
+                  sunValue = sunValue.abs();
+                  l.v('sunValue.abs = $sunValue');
+                }
+
                 return Center(
                   child: CustomPaint(
                     painter: AtomPaint(
                       context: context,
-                      sunValue: 1 - sunValue, // -1 to go backward;
+                      sunValue: sunValue,
                       diameter: diameter,
                       strokeWidth: strokeWidth,
                     ),
