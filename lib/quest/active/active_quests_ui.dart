@@ -156,8 +156,8 @@ class ActiveQuestsUI extends StatelessWidget {
           if (!c.salahAsrSafe) SalahRow(athan, c, Z.Asr_Earlier),
           SalahRow(athan, c, Z.Maghrib),
           SalahRow(athan, c, Z.Isha),
-          if (c.showLast3rdOfNight) SalahRow(athan, c, Z.Night__3),
-          if (!c.showLast3rdOfNight) SalahRow(athan, c, Z.Night__2),
+          if (c.last3rdOfNight) SalahRow(athan, c, Z.Night__3),
+          if (!c.last3rdOfNight) SalahRow(athan, c, Z.Night__2),
 
           /// Use to make scrolling of active salah always pin when scrolling up.
           const SliverFillRemaining(), // allow SunMover to scroll down

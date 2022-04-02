@@ -52,7 +52,7 @@ class Athan {
   DateTime get sunSetting => _karahatAdkharSunSetting_09;
   DateTime get maghrib => _maghrib_10;
   DateTime get isha => _isha_11;
-  DateTime get layl => ActiveQuestsController.to.showLast3rdOfNight
+  DateTime get layl => ActiveQuestsController.to.last3rdOfNight
       ? _last3rdOfNight_13
       : _middleOfNight_12;
   DateTime get middleOfNight => _middleOfNight_12;
@@ -430,9 +430,9 @@ class Athan {
 
     if (date.isAfter(_fajrTomorrow_14)) {
       return Z.Fajr_Tomorrow;
-    } else if (c.showLast3rdOfNight && date.isAfter(_last3rdOfNight_13)) {
+    } else if (c.last3rdOfNight && date.isAfter(_last3rdOfNight_13)) {
       return Z.Night__3;
-    } else if (!c.showLast3rdOfNight && date.isAfter(_middleOfNight_12)) {
+    } else if (!c.last3rdOfNight && date.isAfter(_middleOfNight_12)) {
       return Z.Night__2;
     } else if (date.isAfter(_isha_11)) {
       return Z.Isha;
@@ -465,13 +465,13 @@ class Athan {
   Z getNextZaman(DateTime date) {
     final ActiveQuestsController c = ActiveQuestsController.to;
 
-    if (c.showLast3rdOfNight && date.isAfter(_last3rdOfNight_13)) {
+    if (c.last3rdOfNight && date.isAfter(_last3rdOfNight_13)) {
       return Z.Fajr_Tomorrow;
-    } else if (!c.showLast3rdOfNight && date.isAfter(_middleOfNight_12)) {
+    } else if (!c.last3rdOfNight && date.isAfter(_middleOfNight_12)) {
       return Z.Fajr_Tomorrow;
-    } else if (c.showLast3rdOfNight && date.isAfter(_isha_11)) {
+    } else if (c.last3rdOfNight && date.isAfter(_isha_11)) {
       return Z.Night__3; // 1/3 of night mode
-    } else if (!c.showLast3rdOfNight && date.isAfter(_isha_11)) {
+    } else if (!c.last3rdOfNight && date.isAfter(_isha_11)) {
       return Z.Night__2; // middle of night mode
     } else if (date.isAfter(_maghrib_10)) {
       return Z.Isha;

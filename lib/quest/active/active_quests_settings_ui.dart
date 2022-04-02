@@ -99,6 +99,36 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
             const SizedBox(height: 10),
             Tooltip(
               message:
+                  'Choice between showing Last 1/3 of the night or middle of the night, for Tahajjud alarm',
+              child: Text(
+                'Night Default',
+                textAlign: TextAlign.center,
+                style: textStyleTitle,
+              ),
+            ),
+            const SizedBox(height: 3),
+            ToggleSwitch(
+              minWidth: 100.0,
+              minHeight: 45.0,
+              fontSize: 14,
+              initialLabelIndex: c.last3rdOfNight ? 0 : 1,
+              labels: ['Last 1/3', 'Middle'],
+              //cornerRadius: 20.0,
+              activeBgColor: AppThemes.selected,
+              activeFgColor: Colors.white,
+              inactiveBgColor: Colors.grey, //const Color(0xFF1D1E33),
+              inactiveFgColor: Colors.white,
+              onToggle: (index) {
+                if (index == 0) {
+                  c.last3rdOfNight = true;
+                } else {
+                  c.last3rdOfNight = false;
+                }
+              },
+            ),
+            const SizedBox(height: 10),
+            Tooltip(
+              message:
                   'Ulema opinions on karahat times are around 40 or 20 for sunset and sunrise karahat times and around 30 or 15 minutes for the noon karahat time',
               child: Text(
                 'Karahat Times (Minutes)',
@@ -153,36 +183,6 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
                   c.showJummahOnFriday = true;
                 } else {
                   c.showJummahOnFriday = false;
-                }
-              },
-            ),
-            const SizedBox(height: 10),
-            Tooltip(
-              message:
-                  'Choice between showing Last 1/3 of the night or middle of the night, for Tahajjud alarm',
-              child: Text(
-                'Night Default',
-                textAlign: TextAlign.center,
-                style: textStyleTitle,
-              ),
-            ),
-            const SizedBox(height: 3),
-            ToggleSwitch(
-              minWidth: 100.0,
-              minHeight: 45.0,
-              fontSize: 14,
-              initialLabelIndex: c.showLast3rdOfNight ? 0 : 1,
-              labels: ['Last 1/3', 'Middle'],
-              //cornerRadius: 20.0,
-              activeBgColor: AppThemes.selected,
-              activeFgColor: Colors.white,
-              inactiveBgColor: Colors.grey, //const Color(0xFF1D1E33),
-              inactiveFgColor: Colors.white,
-              onToggle: (index) {
-                if (index == 0) {
-                  c.showLast3rdOfNight = true;
-                } else {
-                  c.showLast3rdOfNight = false;
                 }
               },
             ),

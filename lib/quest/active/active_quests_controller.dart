@@ -11,14 +11,13 @@ class ActiveQuestsController extends GetxController {
   int get salahCalcMethod => _salahCalcMethod;
   bool _salahAsrSafe = true; // true hanafi, false other
   bool get salahAsrSafe => _salahAsrSafe;
+  bool _last3rdOfNight = true; // true=last 1/3, false=middle night
+  bool get last3rdOfNight => _last3rdOfNight;
   bool _salahKarahatSafe = true; // true hanafi, false other
   bool get salahKarahatSafe => _salahKarahatSafe;
 
   bool _showJummahOnFriday = true; // if friday=true, shows jummah
   bool get showJummahOnFriday => _showJummahOnFriday;
-
-  bool _show3rdOfNight = true; // true=last 1/3, false=middle night
-  bool get showLast3rdOfNight => _show3rdOfNight;
 
   bool _show12HourClock = true; // false = 24h clock/military time
   bool get show12HourClock => _show12HourClock;
@@ -40,10 +39,10 @@ class ActiveQuestsController extends GetxController {
     _salahCalcMethod =
         s.rd('salahCalcMethod') ?? CalcMethod.America____ISNA___.index;
     _salahAsrSafe = s.rd('salahAsrSafe') ?? true;
+    _last3rdOfNight = s.rd('last3rdOfNight') ?? true;
     _salahKarahatSafe = s.rd('salahKarahatSafe') ?? true;
 
     _showJummahOnFriday = s.rd('showJummahOnFriday') ?? true;
-    _show3rdOfNight = s.rd('show3rdOfNight') ?? true;
     _show12HourClock = s.rd('show12HourClock') ?? true;
 
     _showActiveSalah = s.rd('showActiveSalah') ?? true;
@@ -66,6 +65,13 @@ class ActiveQuestsController extends GetxController {
     //update(); update needs to be done later after athan recalculated
   }
 
+  set last3rdOfNight(bool value) {
+    _last3rdOfNight = value;
+    s.wr('last3rdOfNight', value);
+    ZamanController.to.forceSalahRecalculation = true; // update countdown timer
+    //update(); update needs to be done later after athan recalculated
+  }
+
   set salahKarahatSafe(bool value) {
     _salahKarahatSafe = value;
     s.wr('salahKarahatSafe', value);
@@ -76,12 +82,6 @@ class ActiveQuestsController extends GetxController {
   set showJummahOnFriday(bool value) {
     _showJummahOnFriday = value;
     s.wr('showJummahOnFriday', value);
-    update();
-  }
-
-  set showLast3rdOfNight(bool value) {
-    _show3rdOfNight = value;
-    s.wr('show3rdOfNight', value);
     update();
   }
 
