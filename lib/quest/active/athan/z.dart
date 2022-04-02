@@ -158,4 +158,29 @@ extension EnumUtil on Z {
         throw e;
     }
   }
+
+  bool isAboveHorizon() {
+    switch (this) {
+      case (Z.Karahat_Morning_Adhkar):
+      case (Z.Ishraq):
+      case (Z.Duha):
+      case (Z.Karahat_Zawal):
+      case (Z.Dhuhr):
+      case (Z.Asr_Earlier):
+      case (Z.Asr_Later):
+      case (Z.Karahat_Evening_Adhkar):
+        return true;
+      case (Z.Maghrib):
+      case (Z.Isha):
+      case (Z.Night__2):
+      case (Z.Night__3):
+      case (Z.Fajr):
+      case (Z.Fajr_Tomorrow):
+        return false;
+      default:
+        String e = 'Z:isSunAboveHorizon: Invalid Z "$this" given';
+        l.e(e);
+        throw e;
+    }
+  }
 }

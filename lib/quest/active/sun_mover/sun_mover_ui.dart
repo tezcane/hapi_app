@@ -108,6 +108,8 @@ class CircleDayView extends StatelessWidget {
 
     //l.d('sunriseDegreeCorrection=$sunriseDegreeCorrection, fajrStartCorrection=$fajrStartCorrection->sunriseCorrection=$sunriseCorrection');
 
+    bool isSunAboveHorizon = ZamanController.to.currZ.isAboveHorizon();
+
     // RepaintBoundary prevents the ALWAYS repaint on ANY page update
     return Center(
       child: SizedBox(
@@ -115,16 +117,6 @@ class CircleDayView extends StatelessWidget {
         height: diameter,
         child: Stack(
           children: [
-            Center(
-              child: TwoColoredIcon(
-                Icons.circle,
-                diameter,
-                const [Colors.orangeAccent, Colors.red, Colors.transparent],
-                Colors.green,
-                fillPercent: sunriseCorrection,
-              ),
-            ),
-            const _GumbiAndMeWithFamily(Colors.white),
             // RepaintBoundary needed or it will repaint on every second tick
             RepaintBoundary(
               child: CustomPaint(
@@ -137,6 +129,17 @@ class CircleDayView extends StatelessWidget {
                 ),
               ),
             ),
+            if (isSunAboveHorizon)
+              Center(
+                child: TwoColoredIcon(
+                  Icons.circle,
+                  diameter,
+                  const [Colors.orangeAccent, Colors.red, Colors.transparent],
+                  Colors.green,
+                  fillPercent: sunriseCorrection,
+                ),
+              ),
+            if (isSunAboveHorizon) const _GumbiAndMeWithFamily(Colors.white),
             GetBuilder<ZamanController>(
               builder: (c) {
                 double sunValue =
@@ -154,6 +157,17 @@ class CircleDayView extends StatelessWidget {
                 );
               },
             ),
+            if (!isSunAboveHorizon)
+              Center(
+                child: TwoColoredIcon(
+                  Icons.circle,
+                  diameter,
+                  const [Colors.orangeAccent, Colors.red, Colors.transparent],
+                  Colors.green,
+                  fillPercent: sunriseCorrection,
+                ),
+              ),
+            if (!isSunAboveHorizon) const _GumbiAndMeWithFamily(Colors.white),
           ],
         ),
       ),
@@ -268,40 +282,41 @@ class AtomPaint extends CustomPainter {
     required this.sunValue,
     required this.diameter,
     required this.strokeWidth,
-  }) {
-    _sunAxisPaint = Paint()
-      ..color = ct(context)
-      ..strokeWidth = .5
-      ..style = PaintingStyle.stroke;
-  }
+  });
 
   final BuildContext context;
   final double sunValue, diameter, strokeWidth;
 
-  late final Paint _sunAxisPaint;
-
   @override
   void paint(Canvas canvas, Size size) {
+    // draw big sun
     drawAxis(
-      _sunAxisPaint,
       sunValue,
       canvas,
       (diameter / 2) - (strokeWidth / 2) - 2.5, // -5 to be on GumbiAndMe
       Paint()..color = Colors.yellow,
+      15,
+    );
+    // draw tiny nub on sun's edge to show actual spot of sun easier
+    drawAxis(
+      sunValue,
+      canvas,
+      (diameter / 2) - 2.6,
+      Paint()..color = Colors.yellow,
+      1,
     );
   }
 
   drawAxis(
-      Paint axis, double value, Canvas canvas, double radius, Paint paint) {
+      double value, Canvas canvas, double radius, Paint paint, double sunSize) {
     var firstAxis = getCirclePath(radius);
-    canvas.drawPath(firstAxis, axis);
     PathMetrics pathMetrics = firstAxis.computeMetrics();
     for (PathMetric pathMetric in pathMetrics) {
       Path extractPath = pathMetric.extractPath(0.0, pathMetric.length * value);
       try {
         var metric = extractPath.computeMetrics().first;
         final offset = metric.getTangentForOffset(metric.length)!.position;
-        canvas.drawCircle(offset, 15, paint); // sun's size
+        canvas.drawCircle(offset, sunSize, paint);
       } catch (e) {
         l.w('AtomPaint.drawAxis caught e: $e');
       }
