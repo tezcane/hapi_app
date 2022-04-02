@@ -2,11 +2,13 @@ import 'dart:math' as math;
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hapi/components/half_filled_icon.dart';
 import 'package:hapi/helpers/math_utils.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/athan/athan.dart';
 import 'package:hapi/quest/active/athan/z.dart';
+import 'package:hapi/quest/active/zaman_controller.dart';
 
 // class SunMoverUI extends StatelessWidget {
 //   const SunMoverUI(this.athan, this.diameter);
@@ -44,6 +46,7 @@ class CircleDayView extends StatelessWidget {
   final double diameter;
 
   final double strokeWidth;
+
   final int secondsInADay = 86400; //60 * 60 * 24;
 
   // TODO remove
@@ -56,8 +59,6 @@ class CircleDayView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // c.timeToNextZaman
-
     Map<Color, double> colorOccurrences = {};
 
     double totalSecs = 0.0;
@@ -87,19 +88,25 @@ class CircleDayView extends StatelessWidget {
     DateTime nextZTime = athan.highNoon;
     double elapsedSecs = nextZTime.difference(currZTime).inMilliseconds / 1000;
     // high noon/Sun zenith is constant at very top of circle (25%=quarter turn)
-    double degreeCorrection = 365 * ((elapsedSecs / totalSecs) - .25);
-    double noonCorrection = degreesToRadians(degreeCorrection);
+    double noonDegreeCorrection = 365 * ((elapsedSecs / totalSecs) - .25);
+    double noonRadianCorrection = degreesToRadians(noonDegreeCorrection);
 
-    // calculate sunrise on the horizon
+    // get offset where fajr is so we can rotate sun from correct spot
+    double fajrStartPercentCorrection = noonDegreeCorrection / 365;
+    //l.d('noonDegreeCorrection=$noonDegreeCorrection, noonCorrection=$noonCorrection, fajrStartCorrection=$fajrStartCorrection');
+
+    // calculate sunrise on the horizon, so we can set horizon right for gumbi and me
     currZTime = athan.getZamanTime(Z.Fajr)[0] as DateTime;
     nextZTime = athan.sunrise;
     elapsedSecs = nextZTime.difference(currZTime).inMilliseconds / 1000;
+
     // Sunrise is constant at very right of circle, (no turn)
-    degreeCorrection = 365 * (elapsedSecs / totalSecs);
-    //degreeCorrection = elapsedSecs / totalSecs;
-    //double sunriseCorrection = degreeCorrection / 2; // TODO check
-    double sunriseCorrection = (.5 - degreesToRadians(degreeCorrection)) / 2;
-    l.d('degreeCorrection=$degreeCorrection->sunriseCorrection=$sunriseCorrection');
+    double sunrisePercentCorrection =
+        (((elapsedSecs / totalSecs) / 365) - fajrStartPercentCorrection) / 2;
+    double sunriseCorrection = .5 - sunrisePercentCorrection;
+    //double sunriseCorrection = 2 * degreeCorrection * math.pi;
+
+    //l.d('sunriseDegreeCorrection=$sunriseDegreeCorrection, fajrStartCorrection=$fajrStartCorrection->sunriseCorrection=$sunriseCorrection');
 
     // RepaintBoundary prevents the ALWAYS repaint on ANY page update
     return Center(
@@ -114,7 +121,7 @@ class CircleDayView extends StatelessWidget {
                 diameter,
                 const [Colors.orangeAccent, Colors.red, Colors.transparent],
                 Colors.green,
-                fillPercent: .5 + sunriseCorrection,
+                fillPercent: sunriseCorrection,
               ),
             ),
             const _GumbiAndMeWithFamily(Colors.white),
@@ -125,12 +132,28 @@ class CircleDayView extends StatelessWidget {
                   colorOccurrences,
                   totalSecs,
                   diameter,
-                  noonCorrection,
+                  noonRadianCorrection,
                   strokeWidth,
                 ),
               ),
             ),
-            _SunPathAnimator(diameter, strokeWidth),
+            GetBuilder<ZamanController>(
+              builder: (c) {
+                double sunValue =
+                    (c.secsSinceFajr / totalSecs) - fajrStartPercentCorrection;
+                //l.d('newValue $sunValue = ${c.secsSinceFajr}/$totalSecs (noonDegreeCorrection=$noonDegreeCorrection, rad:noonCorrection=$noonCorrection)');
+                return Center(
+                  child: CustomPaint(
+                    painter: AtomPaint(
+                      context: context,
+                      sunValue: 1 - sunValue, // -1 to go backward;
+                      diameter: diameter,
+                      strokeWidth: strokeWidth,
+                    ),
+                  ),
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -239,68 +262,10 @@ class _GumbiAndMeWithFamily extends StatelessWidget {
   }
 }
 
-class _SunPathAnimator extends StatefulWidget {
-  const _SunPathAnimator(this.diameter, this.strokeWidth);
-
-  final double diameter, strokeWidth;
-
-  @override
-  _SunPathAnimatorState createState() => _SunPathAnimatorState();
-}
-
-class _SunPathAnimatorState extends State<_SunPathAnimator>
-    with TickerProviderStateMixin {
-  late final AnimationController _sunController;
-
-  @override
-  void initState() {
-    super.initState();
-    _sunController =
-        AnimationController(vsync: this, duration: const Duration(seconds: 5));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      child: Scaffold(
-        backgroundColor: Colors.transparent,
-        body: Stack(
-          children: [
-            AnimatedBuilder(
-              animation: _sunController,
-              builder: (context, snapshot) {
-                return Center(
-                  child: CustomPaint(
-                    painter: AtomPaint(
-                      context: context,
-                      //value: _sunController.value,
-                      sun: _sunController.value,
-                      diameter: widget.diameter,
-                      strokeWidth: widget.strokeWidth,
-                    ),
-                  ),
-                );
-              },
-            ),
-          ],
-        ),
-        floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.play_arrow),
-          onPressed: () {
-            _sunController.reset();
-            // _controller2.forward();
-            _sunController.reverse(from: 1.0);
-          },
-        ),
-      ),
-    );
-  }
-}
-
 class AtomPaint extends CustomPainter {
   AtomPaint({
     required this.context,
-    required this.sun,
+    required this.sunValue,
     required this.diameter,
     required this.strokeWidth,
   }) {
@@ -311,7 +276,7 @@ class AtomPaint extends CustomPainter {
   }
 
   final BuildContext context;
-  final double sun, diameter, strokeWidth;
+  final double sunValue, diameter, strokeWidth;
 
   late final Paint _sunAxisPaint;
 
@@ -319,9 +284,9 @@ class AtomPaint extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     drawAxis(
       _sunAxisPaint,
-      sun,
+      sunValue,
       canvas,
-      (diameter / 2) - (strokeWidth / 2),
+      (diameter / 2) - (strokeWidth / 2) - 2.5, // -5 to be on GumbiAndMe
       Paint()..color = Colors.yellow,
     );
   }
@@ -336,7 +301,7 @@ class AtomPaint extends CustomPainter {
       try {
         var metric = extractPath.computeMetrics().first;
         final offset = metric.getTangentForOffset(metric.length)!.position;
-        canvas.drawCircle(offset, 12.0, paint);
+        canvas.drawCircle(offset, 15, paint); // sun's size
       } catch (e) {
         l.w('AtomPaint.drawAxis caught e: $e');
       }

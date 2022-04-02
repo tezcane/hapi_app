@@ -28,6 +28,9 @@ class ZamanController extends GetxHapi {
   String _timeToNextZaman = '-';
   String get timeToNextZaman => _timeToNextZaman;
 
+  int _secsSinceFajr = 0;
+  int get secsSinceFajr => _secsSinceFajr;
+
   bool forceSalahRecalculation = false;
 
   Athan? _athan;
@@ -111,12 +114,14 @@ class ZamanController extends GetxHapi {
     while (true) {
       await Future.delayed(const Duration(seconds: 1));
 
+      DateTime now = await TimeController.to.now();
       Duration timeToNextZaman = _nextZTime.difference(
-        TZDateTime.from(
-          await TimeController.to.now(),
-          TimeController.to.tzLoc,
-        ),
+        TZDateTime.from(now, TimeController.to.tzLoc),
       );
+
+      _secsSinceFajr = now
+          .difference(TZDateTime.from(_athan!.fajr, TimeController.to.tzLoc))
+          .inSeconds;
 
       // if we hit the end of a timer (or forced), recalculate zaman times:
       if (forceSalahRecalculation || timeToNextZaman.inSeconds <= 0) {
