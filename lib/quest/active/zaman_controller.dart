@@ -87,16 +87,14 @@ class ZamanController extends GetxHapi {
     _athan = athan;
     _currZ = athan.getCurrZaman(date);
     _nextZ = athan.getNextZaman(date);
-
-    _nextZTime = athan.getZamanTime(_nextZ)[0] as DateTime;
     l.d('_currZTime: $_currZ');
     l.d('_nextZTime: $_nextZ');
+    _nextZTime = athan.getZamanTime(_nextZ)[0] as DateTime;
 
     // TODO asdf fdsa, this is broken: reset at Maghrib time:
     // reset day:
-    if (currZ == Z.Fajr_Tomorrow) {
-      ActiveQuestsAjrController.to.clearAllQuests();
-    }
+    if (currZ == Z.Fajr_Tomorrow) ActiveQuestsAjrController.to.clearAllQuests();
+
     // For next prayer/day, set any missed quests and do other quest setup:
     ActiveQuestsAjrController.to.initCurrQuest();
 
@@ -181,7 +179,7 @@ class ZamanController extends GetxHapi {
         zs = [Z.Isha, Z.Night__2, Z.Night__3]; // Isha still valid for layl
         break;
       default:
-        var e = 'Invalid Zaman ($z) given when in isSalahRowActive called';
+        var e = 'Invalid Zaman "$z" given when in isSalahRowActive called';
         l.e(e);
         throw e;
     }
@@ -213,7 +211,7 @@ class ZamanController extends GetxHapi {
       case Z.Night__2:
         return isSalahRowActive(Z.Night__3);
       default:
-        var e = 'Invalid Zaman ($z) given when in isNextSalahRowActive called';
+        var e = 'Invalid Zaman "$z" given when in isNextSalahRowActive called';
         l.e(e);
         throw e;
     }
