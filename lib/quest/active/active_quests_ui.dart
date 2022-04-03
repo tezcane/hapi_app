@@ -265,7 +265,7 @@ class SalahRow extends StatelessWidget {
         ? MultiSliver(children: [
             _Sliv(_getSalahHeader()),
             _Sliv(_getSalahActions()),
-            _Sliv(_getSalahResults(), minHeight: 2, maxHeight: 2),
+            _Sliv(_getSalahResults(), minHeight: 6, maxHeight: 6),
           ])
         // salah row not pinned, shrink it into the salah header
         : SliverStack(
@@ -278,7 +278,7 @@ class SalahRow extends StatelessWidget {
                   child: _getSalahResults(),
                 ),
                 minHeight: 2,
-                maxHeight: (_Sliv.slivH * 2) + 2, // so UI gets overlap effect
+                maxHeight: (_Sliv.slivH * 2) + 6, // so UI gets overlap effect
               ),
               // salah actions folds second
               _Sliv(
@@ -654,7 +654,7 @@ class SalahRow extends StatelessWidget {
         _getResult(QUEST.ASR_THIKR),
         _getResult(QUEST.ASR_DUA),
         // 4 of 4. Evening adhkar
-        _getResult(QUEST.KARAHAT_ADHKAR_SUNSET),
+        _getResult(QUEST.KARAHAT_ADHKAR_SUNSET, flex: 2000),
       ],
     );
   }
@@ -712,22 +712,22 @@ class SalahRow extends StatelessWidget {
   }
 
   Widget _getResult(QUEST quest, {int flex = 1000}) {
-    Color color;
+    Color color1;
     if (ActiveQuestsAjrController.to.isDone(quest)) {
-      color = Colors.green;
+      color1 = Colors.green;
     } else if (ActiveQuestsAjrController.to.isSkip(quest)) {
-      color = Colors.yellow;
+      color1 = Colors.yellow.shade600;
     } else if (ActiveQuestsAjrController.to.isMiss(quest)) {
-      color = Colors.red;
+      color1 = Colors.red;
     } else {
-      // it's active or not active yet
-      color = Colors.transparent;
+      // it's currently active or time hasn't come yet
+      color1 = Colors.grey;
     }
 
     // Row required flexible for some reason (ended up needing flex anyway):
     return Flexible(
       flex: flex,
-      child: Separator(.25, .75, .5, topColor: color),
+      child: Separator(3.5, 2, .5, topColor: color1, bottomColor: color1),
     );
   }
 }

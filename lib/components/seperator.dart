@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
-
-const topColorDefault = Color.fromRGBO(151, 151, 151, 0.29);
-const bottomColorDefault = Color.fromRGBO(239, 227, 227, 0.29);
+import 'package:flutter/material.dart';
 
 /// A little line used to give visual separation between UI components.
 class Separator extends StatelessWidget {
@@ -10,8 +7,8 @@ class Separator extends StatelessWidget {
     this.marginBottom,
     // Note lineHeight is height of both lines (it's divided in half):
     this.lineHeight, {
-    this.topColor = topColorDefault,
-    this.bottomColor = bottomColorDefault,
+    this.topColor = Colors.grey,
+    this.bottomColor = Colors.grey,
   });
 
   final double marginTop, marginBottom, lineHeight;
