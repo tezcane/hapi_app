@@ -263,41 +263,38 @@ class SalahRow extends StatelessWidget {
 
     return isActive && c.showActiveSalah // salah row is pinned under header
         ? MultiSliver(children: [
-            const _Sliv(Separator(.5, .5, .5), minHeight: 2, maxHeight: 2),
-            _Sliv(_salahHeader()),
-            _Sliv(_salahActions()),
-            const _Sliv(Separator(.5, .5, .5), minHeight: 2, maxHeight: 2),
+            _Sliv(_getSalahHeader()),
+            _Sliv(_getSalahActions()),
+            _Sliv(_getSalahResults(), minHeight: 2, maxHeight: 2),
           ])
         // salah row not pinned, shrink it into the salah header
         : SliverStack(
             children: [
-              // add separator if next salah row won't add too (top sep. above)
-              if (!c.showActiveSalah || // if not pinned, always put Separator
-                  !ZamanController.to.isNextSalahRowActive(z))
-                _Sliv(
-                  // Start salah separator at end to give overlap effect
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: const [Separator(.5, .5, .5)],
-                  ),
-                  minHeight: 2,
-                  maxHeight: (_Sliv.slivH * 2) + 2, // so UI gets overlap effect
-                ),
+              // add separator/quest completion indicator on bottom, folds 1st
               _Sliv(
-                // Start salah actions at end to give overlap effect
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [_salahActions()],
+                // Start salah separator at end to give overlap effect
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: _getSalahResults(),
+                ),
+                minHeight: 2,
+                maxHeight: (_Sliv.slivH * 2) + 2, // so UI gets overlap effect
+              ),
+              // salah actions folds second
+              _Sliv(
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: _getSalahActions(),
                 ),
                 maxHeight: _Sliv.slivH * 2, // so UI gets overlap effect
               ),
-              // do last, header hides all but sun on edges
-              _Sliv(_salahHeader()),
+              // top of stack, header hides all but sun on edges, is static
+              _Sliv(_getSalahHeader()),
             ],
           );
   }
 
-  Widget _salahHeader() {
+  Widget _getSalahHeader() {
     final double w6 = width / 6;
 
     return InkWell(
@@ -368,24 +365,24 @@ class SalahRow extends StatelessWidget {
     );
   }
 
-  Widget _salahActions() {
+  Widget _getSalahActions() {
     switch (z) {
       case (Z.Fajr):
-        return rowFajr();
+        return _actionsFajr();
       case (Z.Duha):
-        return rowDuha();
+        return _actionsDuha();
       case (Z.Dhuhr):
-        return rowDhuhr();
+        return _actionsDhuhr();
       case (Z.Asr_Later):
       case (Z.Asr_Earlier):
-        return rowAsr();
+        return _actionsAsr();
       case (Z.Maghrib):
-        return rowMaghrib();
+        return _actionsMaghrib();
       case (Z.Isha):
-        return rowIsha();
+        return _actionsIsha();
       case (Z.Night__3):
       case (Z.Night__2):
-        return rowLayl();
+        return _actionsLayl();
       default:
         String e = 'SunRow: unexpected zaman given: "$z"';
         l.e(e);
@@ -393,7 +390,7 @@ class SalahRow extends StatelessWidget {
     }
   }
 
-  Widget rowFajr() {
+  Widget _actionsFajr() {
     String muakBef = '2';
     String fardRkt = '2';
 
@@ -405,7 +402,7 @@ class SalahRow extends StatelessWidget {
         _Cell(T(fardRkt, tsFard), isActive, QUEST.FAJR_FARD),
         // 3 of 4. Sunnah after fard column items:
         _Cell(const T('', tsMuak), isActive, QUEST.NONE),
-        _Cell(T('', tsNafl), isActive, QUEST.NONE),
+        _Cell(const T('', tsNafl), isActive, QUEST.NONE),
         // 4 of 4. Thikr and Dua after fard:
         _Cell(_IconThikr(), isActive, QUEST.FAJR_THIKR),
         _Cell(_IconDua(), isActive, QUEST.FAJR_DUA),
@@ -413,7 +410,7 @@ class SalahRow extends StatelessWidget {
     );
   }
 
-  Widget rowDuha() {
+  Widget _actionsDuha() {
     double w6 = (width / 6) - 10; // - 10 because too big on screen
     final bool isCurrQuest = isActive &&
         ActiveQuestsAjrController.to
@@ -453,7 +450,7 @@ class SalahRow extends StatelessWidget {
   }
 
   /// Note: returns GetBuilder since has FlipCard()
-  Widget rowDhuhr() {
+  Widget _actionsDhuhr() {
     String muakBef = '4';
     String fardRkt = '4';
     String muakAft = '2';
@@ -480,7 +477,7 @@ class SalahRow extends StatelessWidget {
     );
   }
 
-  Widget rowAsr() {
+  Widget _actionsAsr() {
     String naflBef = '4';
     String fardRkt = '4';
 
@@ -512,7 +509,7 @@ class SalahRow extends StatelessWidget {
     );
   }
 
-  Widget rowMaghrib() {
+  Widget _actionsMaghrib() {
     String fardRkt = '3';
     String muakAft = '2';
     String naflAft = '2';
@@ -533,7 +530,7 @@ class SalahRow extends StatelessWidget {
     );
   }
 
-  Widget rowIsha() {
+  Widget _actionsIsha() {
     String naflBef = '4';
     String fardRkt = '4';
     String muakAft = '2';
@@ -556,7 +553,7 @@ class SalahRow extends StatelessWidget {
   }
 
   /// Note: returns GetBuilder since has FlipCard()
-  Widget rowLayl() {
+  Widget _actionsLayl() {
     double w6 = width / 6;
 
     return Row(
@@ -572,6 +569,165 @@ class SalahRow extends StatelessWidget {
         _Cell(T('Tahajjud', tsText, w: w6), isActive, QUEST.LAYL_TAHAJJUD),
         _Cell(T('Witr', tsText, w: w6 - 10), isActive, QUEST.LAYL_WITR),
       ],
+    );
+  }
+
+  Widget _getSalahResults() {
+    switch (z) {
+      case (Z.Fajr):
+        return _resultsFajr();
+      case (Z.Duha):
+        return _resultsDuha();
+      case (Z.Dhuhr):
+        return _resultsDhuhr();
+      case (Z.Asr_Later):
+      case (Z.Asr_Earlier):
+        return _resultsAsr();
+      case (Z.Maghrib):
+        return _resultsMaghrib();
+      case (Z.Isha):
+        return _resultsIsha();
+      case (Z.Night__3):
+      case (Z.Night__2):
+        return _resultsLayl();
+      default:
+        String e = 'SunRow: unexpected zaman given: "$z"';
+        l.e(e);
+        throw e;
+    }
+  }
+
+  Widget _resultsFajr() {
+    return Row(
+      children: [
+        // 1 of 4. sunnah before fard column item:
+        _getResult(QUEST.FAJR_MUAKB),
+        // 2 of 4. fard column item:
+        _getResult(QUEST.FAJR_FARD, flex: 3000),
+        // 3 of 4. Sunnah after fard column items:
+        //_getResult(QUEST.NONE),
+        //_getResult(QUEST.NONE),
+        // 4 of 4. Thikr and Dua after fard:
+        _getResult(QUEST.FAJR_THIKR),
+        _getResult(QUEST.FAJR_DUA),
+      ],
+    );
+  }
+
+  Widget _resultsDuha() {
+    return Row(
+      children: [
+        _getResult(QUEST.KARAHAT_ADHKAR_SUNRISE),
+        _getResult(QUEST.DUHA_ISHRAQ),
+        _getResult(QUEST.DUHA_DUHA),
+        _getResult(QUEST.KARAHAT_ADHKAR_ZAWAL),
+      ],
+    );
+  }
+
+  /// Note: returns GetBuilder since has FlipCard()
+  Widget _resultsDhuhr() {
+    return Row(
+      children: [
+        // 1 of 4. sunnah before fard column item:
+        _getResult(QUEST.DHUHR_MUAKB),
+        // 2 of 4. fard column item:
+        _getResult(QUEST.DHUHR_FARD),
+        // 3 of 4. Option 2: sunnah after fard column items:
+        _getResult(QUEST.DHUHR_MUAKA),
+        _getResult(QUEST.DHUHR_NAFLA),
+        // 4 of 4. Thikr and Dua after fard:
+        _getResult(QUEST.DHUHR_THIKR),
+        _getResult(QUEST.DHUHR_DUA),
+      ],
+    );
+  }
+
+  Widget _resultsAsr() {
+    return Row(
+      children: [
+        // 1 of 4. sunnah before fard column item:
+        _getResult(QUEST.ASR_NAFLB),
+        // 2 of 4. fard column item:
+        _getResult(QUEST.ASR_FARD),
+        // 3 of 4. Thikr and Dua after fard:
+        _getResult(QUEST.ASR_THIKR),
+        _getResult(QUEST.ASR_DUA),
+        // 4 of 4. Evening adhkar
+        _getResult(QUEST.KARAHAT_ADHKAR_SUNSET),
+      ],
+    );
+  }
+
+  Widget _resultsMaghrib() {
+    return Row(
+      children: [
+        // 1 of 4. sunnah before fard column item:
+        //_getResult(QUEST.NONE),
+        // 2 of 4. fard column item:
+        _getResult(QUEST.MAGHRIB_FARD, flex: 2000),
+        // 3 of 4. Option 2: sunnah after fard column items:
+        _getResult(QUEST.MAGHRIB_MUAKA),
+        _getResult(QUEST.MAGHRIB_NAFLA),
+        // 4 of 4. Thikr and Dua after fard:
+        _getResult(QUEST.MAGHRIB_THIKR),
+        _getResult(QUEST.MAGHRIB_DUA),
+      ],
+    );
+  }
+
+  Widget _resultsIsha() {
+    return Row(
+      children: [
+        // 1 of 4. sunnah before fard column item:
+        _getResult(QUEST.ISHA_NAFLB),
+        // 2 of 4. fard column item:
+        _getResult(QUEST.ISHA_FARD),
+        // 3 of 4. Option 1: sunnah after fard column items:
+        _getResult(QUEST.ISHA_MUAKA),
+        _getResult(QUEST.ISHA_NAFLA),
+        // 4 of 4. Thikr and Dua after fard:
+        _getResult(QUEST.ISHA_THIKR),
+        _getResult(QUEST.ISHA_DUA),
+      ],
+    );
+  }
+
+  /// Note: returns GetBuilder since has FlipCard()
+  Widget _resultsLayl() {
+    return Row(
+      children: [
+        _getResult(QUEST.LAYL_QIYAM),
+
+        // Thikr and Dua before bed:
+        _getResult(QUEST.LAYL_THIKR),
+        _getResult(QUEST.LAYL_DUA),
+        _getResult(QUEST.LAYL_SLEEP),
+
+        // Tahajjud and Witr after waking up, no -10 on Tahajjud, it's small
+        _getResult(QUEST.LAYL_TAHAJJUD),
+        _getResult(QUEST.LAYL_WITR),
+      ],
+    );
+  }
+
+  Widget _getResult(QUEST quest, {int flex = 1000}) {
+    Color color;
+    if (ActiveQuestsAjrController.to.isDone(quest)) {
+      color = Colors.green;
+    } else if (ActiveQuestsAjrController.to.isSkip(quest)) {
+      color = Colors.yellow;
+    } else if (ActiveQuestsAjrController.to.isMiss(quest)) {
+      color = Colors.red;
+    } else {
+      // it's active or not active yet
+      color = Colors.transparent;
+    }
+
+    // Row required flexible for some reason (ended up needing flex anyway):
+    return Flexible(
+      flex: flex,
+      child: Separator(.25, .75, .5, topColor: color),
     );
   }
 }
@@ -640,31 +796,13 @@ class _Cell extends StatelessWidget {
                     borderRadius: const BorderRadius.all(Radius.circular(10.0)),
                   )
                 : null,
-            child: Stack(
-              children: [
-                Center(
-                  child: isCurrQuest
-                      ? BounceAlert(Hero(tag: quest, child: widget))
-                      : quest == QUEST.NONE // UI has 1+, can't hero tag
-                          ? widget
-                          : Hero(tag: quest, child: widget),
-                ),
-                if (ActiveQuestsAjrController.to.isDone(quest))
-                  const Center(
-                    child: Icon(Icons.check_outlined,
-                        size: 30, color: Colors.green),
-                  ),
-                if (ActiveQuestsAjrController.to.isSkip(quest))
-                  const Center(
-                    child:
-                        Icon(Icons.redo_outlined, size: 20, color: Colors.red),
-                  ),
-                if (ActiveQuestsAjrController.to.isMiss(quest))
-                  const Center(
-                    child:
-                        Icon(Icons.close_outlined, size: 20, color: Colors.red),
-                  ),
-              ],
+            child: Center(
+              // makes text size controllable in T()
+              child: isCurrQuest
+                  ? BounceAlert(Hero(tag: quest, child: widget))
+                  : quest == QUEST.NONE // UI has 1+, can't hero tag
+                      ? widget
+                      : Hero(tag: quest, child: widget),
             ),
           ),
         ),
