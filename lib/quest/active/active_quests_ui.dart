@@ -11,7 +11,8 @@ import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/athan.dart';
 import 'package:hapi/quest/active/athan/z.dart';
-import 'package:hapi/quest/active/sun_mover/sun_mover_ui.dart';
+import 'package:hapi/quest/active/sun_mover/quest_ring.dart';
+import 'package:hapi/quest/active/sun_mover/sun_ring.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 import 'package:sliver_tools/sliver_tools.dart';
@@ -743,7 +744,7 @@ class _SlivSunMover extends StatelessWidget {
 
   @override
   SliverPersistentHeader build(BuildContext context) {
-    const double strokeWidth = 30;
+    const double strokeWidth = 14;
     final double diameter = w(context) / GR;
     final double width = diameter + strokeWidth;
     return SliverPersistentHeader(
@@ -752,7 +753,12 @@ class _SlivSunMover extends StatelessWidget {
       delegate: _SliverAppBarDelegate(
         minHeight: width,
         maxHeight: width,
-        child: CircleDayView(athan, diameter - strokeWidth / 2, strokeWidth),
+        child: Stack(
+          children: [
+            QuestRing(athan, diameter - (strokeWidth / 2), strokeWidth / 6),
+            SunRing(athan, diameter - (strokeWidth / 2) + 4, strokeWidth),
+          ],
+        ),
       ),
     );
   }

@@ -8,6 +8,7 @@ import 'package:hapi/helpers/math_utils.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/athan/athan.dart';
 import 'package:hapi/quest/active/athan/z.dart';
+import 'package:hapi/quest/active/sun_mover/multi_color_ring.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
 
 // class SunMoverUI extends StatelessWidget {
@@ -39,12 +40,11 @@ import 'package:hapi/quest/active/zaman_controller.dart';
 //   Widget build(BuildContext context) {}
 // }
 
-class CircleDayView extends StatelessWidget {
-  const CircleDayView(this.athan, this.diameter, this.strokeWidth);
+class SunRing extends StatelessWidget {
+  const SunRing(this.athan, this.diameter, this.strokeWidth);
 
   final Athan athan;
   final double diameter;
-
   final double strokeWidth;
 
   final int secondsInADay = 86400; //60 * 60 * 24;
@@ -118,22 +118,28 @@ class CircleDayView extends StatelessWidget {
         child: Stack(
           children: [
             // RepaintBoundary needed or it will repaint on every second tick
-            RepaintBoundary(
-              child: CustomPaint(
-                painter: _MultipleColorCirclePainter(
-                  athanSlices,
-                  totalSecs,
-                  diameter,
-                  noonRadianCorrection,
-                  strokeWidth,
+            Positioned(
+              top: 11.125,
+              left: 11.125,
+              child: RepaintBoundary(
+                child: CustomPaint(
+                  painter: MultiColorRing(
+                    athanSlices,
+                    totalSecs,
+                    diameter - 22.25,
+                    noonRadianCorrection,
+                    strokeWidth,
+                  ),
                 ),
               ),
             ),
             if (isSunAboveHorizon)
-              Center(
+              Positioned(
+                top: -2.5,
+                left: -2.5,
                 child: TwoColoredIcon(
                   Icons.circle,
-                  diameter,
+                  diameter + 5,
                   const [Colors.orangeAccent, Colors.red, Colors.transparent],
                   Colors.green,
                   fillPercent: sunriseCorrection,
@@ -157,10 +163,10 @@ class CircleDayView extends StatelessWidget {
 
                 return Center(
                   child: CustomPaint(
-                    painter: AtomPaint(
+                    painter: SunMovePainter(
                       context: context,
                       sunValue: sunValue,
-                      diameter: diameter,
+                      diameter: diameter - 22.25 - strokeWidth,
                       strokeWidth: strokeWidth,
                     ),
                   ),
@@ -168,10 +174,12 @@ class CircleDayView extends StatelessWidget {
               },
             ),
             if (!isSunAboveHorizon)
-              Center(
+              Positioned(
+                top: -2.5,
+                left: -2.5,
                 child: TwoColoredIcon(
                   Icons.circle,
-                  diameter,
+                  diameter + 5,
                   const [Colors.orangeAccent, Colors.red, Colors.transparent],
                   Colors.green,
                   fillPercent: sunriseCorrection,
@@ -286,8 +294,8 @@ class _GumbiAndMeWithFamily extends StatelessWidget {
   }
 }
 
-class AtomPaint extends CustomPainter {
-  AtomPaint({
+class SunMovePainter extends CustomPainter {
+  SunMovePainter({
     required this.context,
     required this.sunValue,
     required this.diameter,
@@ -303,16 +311,16 @@ class AtomPaint extends CustomPainter {
     drawAxis(
       sunValue,
       canvas,
-      (diameter / 2) - (strokeWidth / 2) - 2.5, // -5 to be on GumbiAndMe
-      Paint()..color = Colors.yellow,
-      15,
+      (diameter / 2) - 1,
+      Paint()..color = Colors.yellowAccent,
+      strokeWidth / 2,
     );
     // draw tiny nub on sun's edge to show actual spot of sun easier
     drawAxis(
       sunValue,
       canvas,
-      (diameter / 2) - 2.6,
-      Paint()..color = Colors.yellow,
+      (diameter / 2) + 6,
+      Paint()..color = Colors.yellowAccent,
       1,
     );
   }
@@ -338,49 +346,6 @@ class AtomPaint extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => true; // leave as true
-}
-
-class _MultipleColorCirclePainter extends CustomPainter {
-  const _MultipleColorCirclePainter(
-    this.slices,
-    this.totalSecs,
-    this.diameter,
-    this.noonCorrection,
-    this.strokeWidth,
-  );
-
-  final List<Map<Color, double>> slices;
-  final double totalSecs, diameter, noonCorrection;
-  final double strokeWidth;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    double radius = diameter / 2;
-    Rect myRect =
-        Rect.fromCircle(center: Offset(radius, radius), radius: radius);
-
-    double radianStart = noonCorrection; // used to be 0
-    double radianLength = 0;
-
-    l.d('_MultipleColorCirclePainter: allOccurrences=$totalSecs');
-    for (Map<Color, double> map in slices) {
-      double percent = map.values.first / totalSecs;
-      radianLength = 2 * percent * math.pi;
-      canvas.drawArc(
-          myRect,
-          radianStart,
-          radianLength,
-          false,
-          Paint()
-            ..color = map.keys.first
-            ..strokeWidth = strokeWidth
-            ..style = PaintingStyle.stroke);
-      radianStart += radianLength;
-    }
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
 
 /*

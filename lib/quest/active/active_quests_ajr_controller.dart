@@ -53,7 +53,7 @@ enum QUEST {
   LAYL_TAHAJJUD,
   LAYL_WITR,
 
-  NONE // used as terminator and no operation, but also stores bit length
+  NONE, // used as terminator and no operation, but also stores bit length
 }
 
 extension EnumUtil on QUEST {
