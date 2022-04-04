@@ -265,7 +265,7 @@ class SalahRow extends StatelessWidget {
         ? MultiSliver(children: [
             _Sliv(_getSalahHeader()),
             _Sliv(_getSalahActions()),
-            _Sliv(_getSalahResults(), minHeight: 6, maxHeight: 6),
+            _Sliv(_getSalahResults(), minHeight: 2, maxHeight: 2),
           ])
         // salah row not pinned, shrink it into the salah header
         : SliverStack(
@@ -278,7 +278,7 @@ class SalahRow extends StatelessWidget {
                   child: _getSalahResults(),
                 ),
                 minHeight: 2,
-                maxHeight: (_Sliv.slivH * 2) + 6, // so UI gets overlap effect
+                maxHeight: (_Sliv.slivH * 2) + 2, // so UI gets overlap effect
               ),
               // salah actions folds second
               _Sliv(
@@ -727,7 +727,7 @@ class SalahRow extends StatelessWidget {
     // Row required flexible for some reason (ended up needing flex anyway):
     return Flexible(
       flex: flex,
-      child: Separator(3.5, 2, .5, topColor: color1, bottomColor: color1),
+      child: Separator(.5, .5, .5, topColor: color1, bottomColor: color1),
     );
   }
 }
