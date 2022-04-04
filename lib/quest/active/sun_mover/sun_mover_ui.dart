@@ -59,7 +59,7 @@ class CircleDayView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Map<Color, double> colorOccurrences = {};
+    List<Map<Color, double>> athanSlices = [];
 
     double totalSecs = 0.0;
     int lastIdx = Z.values.length - 2; // don't go to FajrTomorrow
@@ -76,7 +76,7 @@ class CircleDayView extends StatelessWidget {
 
       double elapsedSecs =
           nextZTime.difference(currZTime).inMilliseconds / 1000;
-      colorOccurrences[currZColor] = elapsedSecs;
+      athanSlices.add({currZColor: elapsedSecs});
       totalSecs += elapsedSecs;
       l.d('${fill(currZ.niceName(shortenAsrName: false), 10)} secs=$elapsedSecs (mins=${elapsedSecs / 60}), totalSecs=$totalSecs (mins=${totalSecs / 60})');
     }
@@ -121,7 +121,7 @@ class CircleDayView extends StatelessWidget {
             RepaintBoundary(
               child: CustomPaint(
                 painter: _MultipleColorCirclePainter(
-                  colorOccurrences,
+                  athanSlices,
                   totalSecs,
                   diameter,
                   noonRadianCorrection,
@@ -342,14 +342,14 @@ class AtomPaint extends CustomPainter {
 
 class _MultipleColorCirclePainter extends CustomPainter {
   const _MultipleColorCirclePainter(
-    this.colorOccurrences,
+    this.slices,
     this.totalSecs,
     this.diameter,
     this.noonCorrection,
     this.strokeWidth,
   );
 
-  final Map<Color, double> colorOccurrences;
+  final List<Map<Color, double>> slices;
   final double totalSecs, diameter, noonCorrection;
   final double strokeWidth;
 
@@ -363,8 +363,8 @@ class _MultipleColorCirclePainter extends CustomPainter {
     double radianLength = 0;
 
     l.d('_MultipleColorCirclePainter: allOccurrences=$totalSecs');
-    colorOccurrences.forEach((color, occurrence) {
-      double percent = occurrence / totalSecs;
+    for (Map<Color, double> map in slices) {
+      double percent = map.values.first / totalSecs;
       radianLength = 2 * percent * math.pi;
       canvas.drawArc(
           myRect,
@@ -372,11 +372,11 @@ class _MultipleColorCirclePainter extends CustomPainter {
           radianLength,
           false,
           Paint()
-            ..color = color
+            ..color = map.keys.first
             ..strokeWidth = strokeWidth
             ..style = PaintingStyle.stroke);
       radianStart += radianLength;
-    });
+    }
   }
 
   @override

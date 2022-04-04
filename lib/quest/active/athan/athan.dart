@@ -370,9 +370,9 @@ class Athan {
     } else if (z == Z.Ishraq) {
       return [_ishraqPrayer_03, Colors.green];
     } else if (z == Z.Duha) {
-      return [_duhaPrayer_04, Colors.yellow.shade600];
+      return [_duhaPrayer_04, Colors.yellow.shade700];
     } else if (z == Z.Karahat_Zawal) {
-      return [_karahatAdkharZawal_05, Colors.red.shade700];
+      return [_karahatAdkharZawal_05, Colors.red];
     } else if (z == Z.Dhuhr) {
       return [_dhuhr_06, Colors.yellow.shade700];
     } else if (z == Z.Asr_Earlier) {
@@ -380,11 +380,11 @@ class Athan {
     } else if (z == Z.Asr_Later) {
       return [_asrLater_08, Colors.yellow.shade900];
     } else if (z == Z.Karahat_Evening_Adhkar) {
-      return [_karahatAdkharSunSetting_09, Colors.red.shade800];
+      return [_karahatAdkharSunSetting_09, Colors.red];
     } else if (z == Z.Maghrib) {
-      return [_maghrib_10, Colors.blue.shade800];
+      return [_maghrib_10, Colors.blue.shade700];
     } else if (z == Z.Isha) {
-      return [_isha_11, Colors.purple.shade700];
+      return [_isha_11, Colors.purple.shade900];
     } else if (z == Z.Night__2) {
       return [_middleOfNight_12, Colors.purple.shade800];
     } else if (z == Z.Night__3) {
