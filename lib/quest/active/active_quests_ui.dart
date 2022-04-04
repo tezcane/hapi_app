@@ -161,13 +161,15 @@ class ActiveQuestsUI extends StatelessWidget {
           if (!c.last3rdOfNight) SalahRow(athan, c, Z.Night__2),
 
           /// Use to make scrolling of active salah always pin when scrolling up.
-          const SliverFillRemaining(), // allow SunMover to scroll down
+          const SliverFillRemaining(
+            hasScrollBody: false, // still expand to height but have no scroll
+          ), // allow SunMover to scroll down
 
           /// Now show sun movement
           _SlivSunMover(athan),
 
           /// Use to make scrolling of active salah always pin when scrolling up.
-          const SliverFillRemaining(), // allow SunMover to scroll up
+          const SliverFillRemaining(), // Sun can scroll up and compress times
         ],
       );
     });

@@ -27,7 +27,7 @@ class ActiveQuestActionUI extends StatelessWidget {
     String noActionMsg = '';
 
     // not allowed to skip fard
-    if (quest.isFard()) {
+    if (quest.isFard) {
       skipEnabled = false;
     }
 
@@ -60,7 +60,7 @@ class ActiveQuestActionUI extends StatelessWidget {
       } else {
         Z currZ = ZamanController.to.currZ;
         if ((!isCurrQuest && !isPreviousQuest) ||
-            // For Adhkhar/Duha times we don't allow user to start task until
+            // For Adhkar/Duha times we don't allow user to start task until
             // the quest's time comes in:
             (quest.isQuestCellTimeBound() &&
                 quest.index != currZ.getFirstQuest().index)) {

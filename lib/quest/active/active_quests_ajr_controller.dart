@@ -60,17 +60,18 @@ extension EnumUtil on QUEST {
   /// Returns first part enum (must be uppercase), so: FAJR_FARD -> returns FAJR
   String salahRow() => name.split('_').first;
 
-  bool isFard() => name.endsWith('FARD');
-  bool isMuak() => name.contains('MUAK');
-  bool isNafl() => name.contains('NAFL');
+  bool get isFard => name.endsWith('FARD');
 
-  bool isMuakBef() => name.endsWith('MUAKB');
-  bool isMuakAft() => name.endsWith('MUAKA');
-  bool isNaflBef() => name.endsWith('NAFLB');
-  bool isNaflAft() => name.endsWith('NAFLA');
+  bool get isMuak => isMuakBef || isMuakAft;
+  bool get isMuakBef => name.endsWith('MUAKB');
+  bool get isMuakAft => name.endsWith('MUAKA');
 
-  bool isThikr() => name.endsWith('THIKR');
-  bool isDua() => name.endsWith('DUA');
+  bool get isNafl => isNaflBef || isNaflAft;
+  bool get isNaflBef => name.endsWith('NAFLB');
+  bool get isNaflAft => name.endsWith('NAFLA');
+
+  bool get isThikr => name.endsWith('THIKR');
+  bool get isDua => name.endsWith('DUA');
 
   bool isQuestCellTimeBound() {
     switch (this) {
@@ -264,9 +265,9 @@ class ActiveQuestsAjrController extends GetxHapi {
   }
 
   int getCurrIdx() {
-    int guestsAll = questsAll();
-    if (guestsAll == 0) return 0; // "0" also length 1
-    return guestsAll.toRadixString(2).length;
+    int allQuests = questsAll();
+    if (allQuests == 0) return 0; // "0" also length 1
+    return allQuests.toRadixString(2).length;
   }
 
   QUEST getCurrQuest() => QUEST.values[getCurrIdx()];
