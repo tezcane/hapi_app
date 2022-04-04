@@ -277,7 +277,7 @@ class SalahRow extends StatelessWidget {
                   alignment: Alignment.bottomCenter,
                   child: _getSalahResults(),
                 ),
-                minHeight: 2,
+                minHeight: c.showSalahResults ? (_Sliv.slivH) + 2 : 2,
                 maxHeight: (_Sliv.slivH * 2) + 2, // so UI gets overlap effect
               ),
               // salah actions folds second
@@ -298,7 +298,9 @@ class SalahRow extends StatelessWidget {
     final double w6 = width / 6;
 
     return InkWell(
-      onTap: isActive ? () => c.toggleShowActiveSalah() : null,
+      onTap: isActive
+          ? () => c.toggleShowActiveSalah()
+          : () => c.toggleShowSalahResults(),
       child: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

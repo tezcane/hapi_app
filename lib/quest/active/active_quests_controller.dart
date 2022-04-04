@@ -24,6 +24,8 @@ class ActiveQuestsController extends GetxController {
 
   bool _showActiveSalah = true; // true shows salah actions, false hides them
   bool get showActiveSalah => _showActiveSalah;
+  bool _showSalahResults = true; // true shows salah results, false hides them
+  bool get showSalahResults => _showSalahResults;
 
   bool _swiperAutoPlayEnabled = true;
   bool get swiperAutoPlayEnabled => _swiperAutoPlayEnabled;
@@ -46,6 +48,7 @@ class ActiveQuestsController extends GetxController {
     _show12HourClock = s.rd('show12HourClock') ?? true;
 
     _showActiveSalah = s.rd('showActiveSalah') ?? true;
+    _showSalahResults = s.rd('showSalahResults') ?? false;
 
     _swiperAutoPlayEnabled = s.rd('swiperAutoPlayEnabled') ?? true;
     _swiperImageIdx = s.rd('swiperImageIdx') ?? -1;
@@ -94,6 +97,12 @@ class ActiveQuestsController extends GetxController {
   void toggleShowActiveSalah() {
     _showActiveSalah = !_showActiveSalah;
     s.wr('showActiveSalah', _showActiveSalah);
+    update();
+  }
+
+  void toggleShowSalahResults() {
+    _showSalahResults = !_showSalahResults;
+    s.wr('showSalahResults', _showSalahResults);
     update();
   }
 
