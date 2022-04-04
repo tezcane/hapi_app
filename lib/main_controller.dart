@@ -186,8 +186,8 @@ class TS extends TextStyle {
 }
 
 /// Common utility/helper functions so we don't have to type so much:
-///   w   - width (of screen)
-///   h   - height (of screen)
+///   w  - width (of screen)
+///   h  - height (of screen)
 ///   cb - theme color background
 ///   cs - theme color scaffold
 ///   ct - theme color text
