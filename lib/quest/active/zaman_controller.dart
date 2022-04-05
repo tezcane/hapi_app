@@ -57,11 +57,11 @@ class ZamanController extends GetxHapi {
     if (!ActiveQuestsController.to.salahAsrSafe) madhab = Madhab.Shafi;
 
     int karahatSunRisingSecs = 40 * 60;
-    int karahatSunZawalSecs = 30 * 60;
+    int karahatSunIstiwaSecs = 30 * 60;
     int karahatSunSettingSecs = 40 * 60;
     if (!ActiveQuestsController.to.salahKarahatSafe) {
       karahatSunRisingSecs = 20 * 60;
-      karahatSunZawalSecs = 15 * 60;
+      karahatSunIstiwaSecs = 15 * 60;
       karahatSunSettingSecs = 20 * 60;
     }
 
@@ -71,7 +71,7 @@ class ZamanController extends GetxHapi {
       calcMethod.params,
       madhab,
       karahatSunRisingSecs,
-      karahatSunZawalSecs,
+      karahatSunIstiwaSecs,
       karahatSunSettingSecs,
       HighLatitudeRule.MiddleOfTheNight,
     );
@@ -159,7 +159,7 @@ class ZamanController extends GetxHapi {
         zs = [Z.Fajr, Z.Fajr_Tomorrow];
         break;
       case Z.Duha:
-        zs = [Z.Karahat_Morning_Adhkar, Z.Ishraq, Z.Duha, Z.Karahat_Zawal];
+        zs = [Z.Karahat_Morning_Adhkar, Z.Ishraq, Z.Duha, Z.Karahat_Istiwa];
         break;
       case Z.Dhuhr:
         zs = [Z.Dhuhr];
@@ -174,9 +174,9 @@ class ZamanController extends GetxHapi {
       case Z.Isha:
         zs = [Z.Isha];
         break;
-      case Z.Night__3:
-      case Z.Night__2:
-        zs = [Z.Isha, Z.Night__2, Z.Night__3]; // Isha still valid for layl
+      case Z.Layl__3:
+      case Z.Layl__2:
+        zs = [Z.Isha, Z.Layl__2, Z.Layl__3]; // Isha still valid for layl
         break;
       default:
         var e = 'Invalid Zaman "$z" given when in isSalahRowActive called';
@@ -206,10 +206,10 @@ class ZamanController extends GetxHapi {
       case Z.Maghrib:
         return isSalahRowActive(Z.Isha);
       case Z.Isha:
-        return isSalahRowActive(Z.Night__3);
-      case Z.Night__3:
-      case Z.Night__2:
-        return isSalahRowActive(Z.Night__3);
+        return isSalahRowActive(Z.Layl__3);
+      case Z.Layl__3:
+      case Z.Layl__2:
+        return isSalahRowActive(Z.Layl__3);
       default:
         var e = 'Invalid Zaman "$z" given when in isNextSalahRowActive called';
         l.e(e);

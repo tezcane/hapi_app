@@ -345,13 +345,13 @@ class ActiveQuestsUI2 extends StatelessWidget {
               _Cell(
                 _SunCell(
                   const _IconSunBright(),
-                  'Zawal',
-                  c.tod!.zawal,
+                  'Istiwa',
+                  c.tod!.istiwa,
                   c.tod!.dhuhr,
                 ),
                 pinned,
                 tod,
-                QUEST.KARAHAT_ADHKAR_ZAWAL,
+                QUEST.KARAHAT_ADHKAR_ISTIWA,
                 flex: 2000,
               ),
             ],
@@ -623,7 +623,7 @@ class ActiveQuestsUI2 extends StatelessWidget {
       final bool pinnedFajr = isPinned([TOD.Fajr, TOD.Fajr_Tomorrow]);
       final bool pinnedDuha = c.showSunnahDuha &&
           isPinned(
-              [TOD.Karahat_Sunrise, TOD.Ishraq, TOD.Duha, TOD.Karahat_Zawal]);
+              [TOD.Karahat_Sunrise, TOD.Ishraq, TOD.Duha, TOD.Karahat_Istiwa]);
       final bool pinnedDuhr = isPinned([TOD.Dhuhr]);
       final bool pinnedAsr = isPinned([TOD.Asr, TOD.Karahat_Sun_Setting]);
       final bool pinnedMaghrib = isPinned([TOD.Maghrib]);

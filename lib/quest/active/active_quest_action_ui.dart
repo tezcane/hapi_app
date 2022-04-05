@@ -62,7 +62,7 @@ class ActiveQuestActionUI extends StatelessWidget {
         if ((!isCurrQuest && !isPreviousQuest) ||
             // For Adhkar/Duha times we don't allow user to start task until
             // the quest's time comes in:
-            (quest.isQuestCellTimeBound() &&
+            (quest.isQuestCellTimeBound &&
                 quest.index != currZ.getFirstQuest().index)) {
           skipEnabled = false;
           doneEnabled = false;

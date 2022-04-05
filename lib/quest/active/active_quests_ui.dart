@@ -11,14 +11,26 @@ import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/athan.dart';
 import 'package:hapi/quest/active/athan/z.dart';
+import 'package:hapi/quest/active/sun_mover/multi_color_ring.dart';
 import 'package:hapi/quest/active/sun_mover/quest_ring.dart';
 import 'package:hapi/quest/active/sun_mover/sun_ring.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
-const Color tsTextColor = Color(0xFF7F8B88);
-const TS tsText = TS(tsTextColor); // Duha and Layl color
+/// Zaman Row, used for Salah Row operations.
+enum ZRow {
+  Fajr,
+  Duha,
+  Dhuhr,
+  Asr,
+  Maghrib,
+  Isha,
+  Layl,
+}
+
+/// used in multiple classes, shorten here
+const TS tsText = TS(AppThemes.ldTextColor);
 
 class ActiveQuestsUI extends StatelessWidget {
   static const TS tsAppBar = TS(Colors.white70);
@@ -35,9 +47,9 @@ class ActiveQuestsUI extends StatelessWidget {
     if (ActiveQuestsController.to.show12HourClock) {
       if (startHour >= 12) {
         startHour -= 12;
-        startAmPm = ' PM';
+        startAmPm = 'PM';
       } else {
-        startAmPm = ' AM';
+        startAmPm = 'AM';
       }
       if (startHour == 0) startHour = 12;
     }
@@ -51,9 +63,9 @@ class ActiveQuestsUI extends StatelessWidget {
       if (ActiveQuestsController.to.show12HourClock) {
         if (endHour >= 12) {
           endHour -= 12;
-          endAmPm = ' PM';
+          endAmPm = 'PM';
         } else {
-          endAmPm = ' AM';
+          endAmPm = 'AM';
         }
         if (endHour == 0) endHour = 12;
 
@@ -157,8 +169,8 @@ class ActiveQuestsUI extends StatelessWidget {
           if (!c.salahAsrSafe) SalahRow(athan, c, Z.Asr_Earlier),
           SalahRow(athan, c, Z.Maghrib),
           SalahRow(athan, c, Z.Isha),
-          if (c.last3rdOfNight) SalahRow(athan, c, Z.Night__3),
-          if (!c.last3rdOfNight) SalahRow(athan, c, Z.Night__2),
+          if (c.last3rdOfNight) SalahRow(athan, c, Z.Layl__3),
+          if (!c.last3rdOfNight) SalahRow(athan, c, Z.Layl__2),
 
           /// Use to make scrolling of active salah always pin when scrolling up.
           const SliverFillRemaining(
@@ -185,10 +197,12 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   final double minHeight;
   final double maxHeight;
   final Widget child;
+
   @override
   double get minExtent => minHeight;
   @override
   double get maxExtent => maxHeight;
+
   @override
   Widget build(BuildContext context, double shrinkOffset, bool overlaps) =>
       SizedBox.expand(child: Container(child: child));
@@ -231,7 +245,7 @@ class _Sliv extends StatelessWidget {
 }
 
 /// SunRow is used to display the other times for a salah row, i.e. karahat
-/// sunrise and karahat zawal and for duha and karahat sunsetting for asr.
+/// sunrise and karahat istiwa and for duha and karahat sunsetting for asr.
 class SalahRow extends StatelessWidget {
   SalahRow(this.athan, this.c, this.z);
 
@@ -246,9 +260,9 @@ class SalahRow extends StatelessWidget {
   late bool isActive;
 
   // TODO don't use white for all, Theme.of(context).textTheme.headline6!:
-  static const TS tsFard = TS(Colors.green);
-  static const TS tsMuak = TS(Colors.purple);
-  static const TS tsNafl = TS(Colors.orangeAccent);
+  static const TS tsFard = TS(AppThemes.ajr2Uncommon);
+  static const TS tsMuak = TS(AppThemes.ajr4Epic);
+  static const TS tsNafl = TS(AppThemes.ajr5Legendary);
 
   @override
   Widget build(BuildContext context) {
@@ -260,7 +274,7 @@ class SalahRow extends StatelessWidget {
     isActive = ZamanController.to.isSalahRowActive(z);
     if (z == Z.Isha) {
       isActive &= !ActiveQuestsAjrController.to.isIshaIbadahComplete;
-    } else if (z == Z.Night__3 || z == Z.Night__2) {
+    } else if (z == Z.Layl__3 || z == Z.Layl__2) {
       isActive &= ActiveQuestsAjrController.to.isIshaIbadahComplete;
     }
 
@@ -322,7 +336,7 @@ class SalahRow extends StatelessWidget {
                 child: T(
                   z.niceName(shortenAsrName: true),
                   textStyle.copyWith(
-                    color: isActive ? textStyle.color : tsTextColor,
+                    color: isActive ? textStyle.color : AppThemes.ldTextColor,
                     fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
                   ),
                   alignment: Alignment.centerLeft,
@@ -343,7 +357,7 @@ class SalahRow extends StatelessWidget {
                 child: T(
                   ActiveQuestsUI.getTime(athan.getStartTime(z)),
                   textStyle.copyWith(
-                    color: isActive ? textStyle.color : tsTextColor,
+                    color: isActive ? textStyle.color : AppThemes.ldTextColor,
                     fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
                   ),
                   alignment: ActiveQuestsController.to.show12HourClock
@@ -385,8 +399,8 @@ class SalahRow extends StatelessWidget {
         return _actionsMaghrib();
       case (Z.Isha):
         return _actionsIsha();
-      case (Z.Night__3):
-      case (Z.Night__2):
+      case (Z.Layl__3):
+      case (Z.Layl__2):
         return _actionsLayl();
       default:
         String e = 'SunRow: unexpected zaman given: "$z"';
@@ -441,13 +455,13 @@ class SalahRow extends StatelessWidget {
           _SunCell(
             const Icon(Icons.brightness_7_outlined,
                 color: Colors.yellowAccent, size: 30),
-            Z.Karahat_Zawal.niceName(),
-            athan.zawal,
+            Z.Karahat_Istiwa.niceName(),
+            athan.istiwa,
             athan.dhuhr,
             false, // align right
           ),
           isActive,
-          QUEST.KARAHAT_ADHKAR_ZAWAL,
+          QUEST.KARAHAT_ADHKAR_ISTIWA,
           flex: 2000,
         ),
       ],
@@ -592,8 +606,8 @@ class SalahRow extends StatelessWidget {
         return _resultsMaghrib();
       case (Z.Isha):
         return _resultsIsha();
-      case (Z.Night__3):
-      case (Z.Night__2):
+      case (Z.Layl__3):
+      case (Z.Layl__2):
         return _resultsLayl();
       default:
         String e = 'SunRow: unexpected zaman given: "$z"';
@@ -625,7 +639,7 @@ class SalahRow extends StatelessWidget {
         _getResult(QUEST.KARAHAT_ADHKAR_SUNRISE),
         _getResult(QUEST.DUHA_ISHRAQ),
         _getResult(QUEST.DUHA_DUHA),
-        _getResult(QUEST.KARAHAT_ADHKAR_ZAWAL),
+        _getResult(QUEST.KARAHAT_ADHKAR_ISTIWA),
       ],
     );
   }
@@ -718,21 +732,23 @@ class SalahRow extends StatelessWidget {
 
   Widget _getResult(QUEST quest, {int flex = 1000}) {
     Color color1;
+    Color color2;
     if (ActiveQuestsAjrController.to.isDone(quest)) {
-      color1 = Colors.green;
-    } else if (ActiveQuestsAjrController.to.isSkip(quest)) {
-      color1 = Colors.yellow.shade600;
+      color1 = AppThemes.ajr2Uncommon;
+      color2 = AppThemes.ajr2Uncommon;
+//  } else if (ActiveQuestsAjrController.to.isSkip(quest)) {
     } else if (ActiveQuestsAjrController.to.isMiss(quest)) {
-      color1 = Colors.red;
+      color1 = AppThemes.ajr0Missed;
+      color2 = AppThemes.ajr0Missed;
     } else {
-      // it's currently active or time hasn't come yet
-      color1 = Colors.grey;
+      color1 = Colors.transparent; // it's skipped/not active yet
+      color2 = AppThemes.ajr1Common;
     }
 
     // Row required flexible for some reason (ended up needing flex anyway):
     return Flexible(
       flex: flex,
-      child: Separator(.5, .5, .5, topColor: color1, bottomColor: color1),
+      child: Separator(.5, .5, .5, topColor: color1, bottomColor: color2),
     );
   }
 }
@@ -748,17 +764,22 @@ class _SlivSunMover extends StatelessWidget {
   SliverPersistentHeader build(BuildContext context) {
     const double strokeWidth = 14;
     final double diameter = w(context) / GR;
-    final double width = diameter + strokeWidth;
+    final double uiWidth = diameter + strokeWidth;
+
+    /// due to paint weirdness, we must massage circle values
+    final double baseDiameter = diameter - (strokeWidth / 2);
+
+    Map<Z, ColorSlice> colorSlice = {};
     return SliverPersistentHeader(
       floating: false,
       pinned: true,
       delegate: _SliverAppBarDelegate(
-        minHeight: width,
-        maxHeight: width,
+        minHeight: uiWidth,
+        maxHeight: uiWidth,
         child: Stack(
           children: [
-            QuestRing(athan, diameter - (strokeWidth / 2), strokeWidth / 6),
-            SunRing(athan, diameter - (strokeWidth / 2) + 4, strokeWidth),
+            SunRing(athan, baseDiameter + 4, strokeWidth, colorSlice),
+            QuestRing(baseDiameter, strokeWidth / 6, colorSlice),
           ],
         ),
       ),
@@ -767,12 +788,7 @@ class _SlivSunMover extends StatelessWidget {
 }
 
 class _Cell extends StatelessWidget {
-  const _Cell(
-    this.widget,
-    this.isActive,
-    this.quest, {
-    this.flex = 1000,
-  });
+  const _Cell(this.widget, this.isActive, this.quest, {this.flex = 1000});
 
   final Widget widget;
   final bool isActive;
@@ -899,7 +915,7 @@ class _IconSunUpDn extends StatelessWidget {
             isSunrise
                 ? Icons.arrow_drop_up_outlined // sunrise
                 : Icons.arrow_drop_down_outlined, // sunset
-            color: tsTextColor,
+            color: AppThemes.ldTextColor,
             size: _Sliv.slivH,
           ),
         ),

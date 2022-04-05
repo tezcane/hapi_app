@@ -10,15 +10,15 @@ enum Z {
   Karahat_Morning_Adhkar, // begin sunrise (karahat 1), also Morning Adhkar time
   Ishraq,
   Duha,
-  Karahat_Zawal, // begin sun zenith/peaking (karahat 2)
+  Karahat_Istiwa, // begin sun zenith/peaking (karahat 2)
   Dhuhr,
   Asr_Earlier,
   Asr_Later,
   Karahat_Evening_Adhkar, // begin sunset (karahat 3), also Evening Adhkar time
   Maghrib,
   Isha,
-  Night__2,
-  Night__3,
+  Layl__2, // Middle of night
+  Layl__3, // Last 3rd of Night
   Fajr_Tomorrow,
 }
 
@@ -62,34 +62,34 @@ extension EnumUtil on Z {
   //   return name;
   // }
 
-  String salahRow() {
-    switch (this) {
-      case (Z.Fajr):
-        return 'FAJR';
-      case (Z.Karahat_Morning_Adhkar):
-      case (Z.Ishraq):
-      case (Z.Duha):
-      case (Z.Karahat_Zawal):
-        return 'DUHA';
-      case (Z.Dhuhr):
-        return 'DHUHR';
-      case (Z.Asr_Later):
-      case (Z.Asr_Earlier):
-      case (Z.Karahat_Evening_Adhkar):
-        return 'ASR';
-      case (Z.Maghrib):
-        return 'MAGHRIB';
-      case (Z.Isha):
-        return 'ISHA';
-      case (Z.Night__2):
-      case (Z.Night__3):
-        return 'LAYL';
-      default:
-        String e = 'Z:salahRow: Invalid Z "$this" given';
-        l.e(e);
-        throw e;
-    }
-  }
+  // String salahRow() {
+  //   switch (this) {
+  //     case (Z.Fajr):
+  //       return 'FAJR';
+  //     case (Z.Karahat_Morning_Adhkar):
+  //     case (Z.Ishraq):
+  //     case (Z.Duha):
+  //     case (Z.Karahat_Istiwa):
+  //       return 'DUHA';
+  //     case (Z.Dhuhr):
+  //       return 'DHUHR';
+  //     case (Z.Asr_Later):
+  //     case (Z.Asr_Earlier):
+  //     case (Z.Karahat_Evening_Adhkar):
+  //       return 'ASR';
+  //     case (Z.Maghrib):
+  //       return 'MAGHRIB';
+  //     case (Z.Isha):
+  //       return 'ISHA';
+  //     case (Z.Layl__2):
+  //     case (Z.Layl__3):
+  //       return 'LAYL';
+  //     default:
+  //       String e = 'Z:salahRow: Invalid Z "$this" given';
+  //       l.e(e);
+  //       throw e;
+  //   }
+  // }
 
   QUEST getFirstQuest() {
     switch (this) {
@@ -101,8 +101,8 @@ extension EnumUtil on Z {
         return QUEST.DUHA_ISHRAQ;
       case (Z.Duha):
         return QUEST.DUHA_DUHA;
-      case (Z.Karahat_Zawal):
-        return QUEST.KARAHAT_ADHKAR_ZAWAL;
+      case (Z.Karahat_Istiwa):
+        return QUEST.KARAHAT_ADHKAR_ISTIWA;
       case (Z.Dhuhr):
         return QUEST.DHUHR_MUAKB;
       case (Z.Asr_Earlier):
@@ -114,9 +114,9 @@ extension EnumUtil on Z {
         return QUEST.MAGHRIB_FARD;
       case (Z.Isha):
         return QUEST.ISHA_NAFLB;
-      case (Z.Night__2):
+      case (Z.Layl__2):
         return QUEST.LAYL_QIYAM;
-      case (Z.Night__3):
+      case (Z.Layl__3):
         return QUEST.LAYL_QIYAM;
       default:
         String e = 'Z:getFirstQuest: Invalid Z "$this" given';
@@ -125,46 +125,46 @@ extension EnumUtil on Z {
     }
   }
 
-  QUEST getLastQuest() {
-    switch (this) {
-      case (Z.Fajr):
-        return QUEST.FAJR_DUA;
-      case (Z.Karahat_Morning_Adhkar):
-        return QUEST.KARAHAT_ADHKAR_SUNRISE;
-      case (Z.Ishraq):
-        return QUEST.DUHA_ISHRAQ;
-      case (Z.Duha):
-        return QUEST.DUHA_DUHA;
-      case (Z.Karahat_Zawal):
-        return QUEST.KARAHAT_ADHKAR_ZAWAL;
-      case (Z.Dhuhr):
-        return QUEST.DHUHR_DUA;
-      case (Z.Asr_Earlier):
-      case (Z.Asr_Later):
-        return QUEST.ASR_DUA;
-      case (Z.Karahat_Evening_Adhkar):
-        return QUEST.KARAHAT_ADHKAR_SUNSET;
-      case (Z.Maghrib):
-        return QUEST.MAGHRIB_DUA;
-      case (Z.Isha):
-        return QUEST.ISHA_DUA;
-      case (Z.Night__2):
-        return QUEST.LAYL_WITR;
-      case (Z.Night__3):
-        return QUEST.LAYL_WITR;
-      default:
-        String e = 'Z:getLastQuest: Invalid Z "$this" given';
-        l.e(e);
-        throw e;
-    }
-  }
+  // QUEST getLastQuest() {
+  //   switch (this) {
+  //     case (Z.Fajr):
+  //       return QUEST.FAJR_DUA;
+  //     case (Z.Karahat_Morning_Adhkar):
+  //       return QUEST.KARAHAT_ADHKAR_SUNRISE;
+  //     case (Z.Ishraq):
+  //       return QUEST.DUHA_ISHRAQ;
+  //     case (Z.Duha):
+  //       return QUEST.DUHA_DUHA;
+  //     case (Z.Karahat_Istiwa):
+  //       return QUEST.KARAHAT_ADHKAR_ISTIWA;
+  //     case (Z.Dhuhr):
+  //       return QUEST.DHUHR_DUA;
+  //     case (Z.Asr_Earlier):
+  //     case (Z.Asr_Later):
+  //       return QUEST.ASR_DUA;
+  //     case (Z.Karahat_Evening_Adhkar):
+  //       return QUEST.KARAHAT_ADHKAR_SUNSET;
+  //     case (Z.Maghrib):
+  //       return QUEST.MAGHRIB_DUA;
+  //     case (Z.Isha):
+  //       return QUEST.ISHA_DUA;
+  //     case (Z.Layl__2):
+  //       return QUEST.LAYL_WITR;
+  //     case (Z.Layl__3):
+  //       return QUEST.LAYL_WITR;
+  //     default:
+  //       String e = 'Z:getLastQuest: Invalid Z "$this" given';
+  //       l.e(e);
+  //       throw e;
+  //   }
+  // }
 
   bool isAboveHorizon() {
     switch (this) {
       case (Z.Karahat_Morning_Adhkar):
       case (Z.Ishraq):
       case (Z.Duha):
-      case (Z.Karahat_Zawal):
+      case (Z.Karahat_Istiwa):
       case (Z.Dhuhr):
       case (Z.Asr_Earlier):
       case (Z.Asr_Later):
@@ -172,8 +172,8 @@ extension EnumUtil on Z {
         return true;
       case (Z.Maghrib):
       case (Z.Isha):
-      case (Z.Night__2):
-      case (Z.Night__3):
+      case (Z.Layl__2):
+      case (Z.Layl__3):
       case (Z.Fajr):
       case (Z.Fajr_Tomorrow):
         return false;

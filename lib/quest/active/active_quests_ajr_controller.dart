@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
+import 'package:hapi/quest/active/active_quests_ui.dart';
 import 'package:hapi/quest/active/athan/z.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
 
@@ -17,7 +18,7 @@ enum QUEST {
   DUHA_ISHRAQ,
   DUHA_DUHA,
 
-  KARAHAT_ADHKAR_ZAWAL,
+  KARAHAT_ADHKAR_ISTIWA,
 
   DHUHR_MUAKB,
   DHUHR_FARD,
@@ -73,12 +74,12 @@ extension EnumUtil on QUEST {
   bool get isThikr => name.endsWith('THIKR');
   bool get isDua => name.endsWith('DUA');
 
-  bool isQuestCellTimeBound() {
+  bool get isQuestCellTimeBound {
     switch (this) {
       case (QUEST.KARAHAT_ADHKAR_SUNRISE):
       case (QUEST.DUHA_ISHRAQ):
       case (QUEST.DUHA_DUHA):
-      case (QUEST.KARAHAT_ADHKAR_ZAWAL):
+      case (QUEST.KARAHAT_ADHKAR_ISTIWA):
       case (QUEST.KARAHAT_ADHKAR_SUNSET):
         return true;
       default:
@@ -86,7 +87,7 @@ extension EnumUtil on QUEST {
     }
   }
 
-  Z getStartZaman() {
+  Z get startZaman {
     switch (this) {
       case (QUEST.FAJR_MUAKB):
       case (QUEST.FAJR_FARD):
@@ -99,8 +100,8 @@ extension EnumUtil on QUEST {
         return Z.Ishraq;
       case (QUEST.DUHA_DUHA):
         return Z.Duha;
-      case (QUEST.KARAHAT_ADHKAR_ZAWAL):
-        return Z.Karahat_Zawal;
+      case (QUEST.KARAHAT_ADHKAR_ISTIWA):
+        return Z.Karahat_Istiwa;
       case (QUEST.DHUHR_MUAKB):
       case (QUEST.DHUHR_FARD):
       case (QUEST.DHUHR_MUAKA):
@@ -145,7 +146,7 @@ extension EnumUtil on QUEST {
     }
   }
 
-  Z getEndZaman() {
+  Z get endZaman {
     switch (this) {
       case (QUEST.FAJR_MUAKB):
       case (QUEST.FAJR_FARD):
@@ -157,8 +158,8 @@ extension EnumUtil on QUEST {
       case (QUEST.DUHA_ISHRAQ):
         return Z.Duha;
       case (QUEST.DUHA_DUHA):
-        return Z.Karahat_Zawal;
-      case (QUEST.KARAHAT_ADHKAR_ZAWAL):
+        return Z.Karahat_Istiwa;
+      case (QUEST.KARAHAT_ADHKAR_ISTIWA):
         return Z.Dhuhr;
       case (QUEST.DHUHR_MUAKB):
       case (QUEST.DHUHR_FARD):
@@ -335,6 +336,86 @@ class ActiveQuestsAjrController extends GetxHapi {
       isQuestComplete(QUEST.ISHA_NAFLA) &&
       isQuestComplete(QUEST.ISHA_THIKR) &&
       isQuestComplete(QUEST.ISHA_DUA);
+
+  /// Return map of ZRow to int, where the int value 1-5 holds a color value to
+  /// be converted later into colors, i.e. ajr1Common, ajr2Uncommon, etc.
+  Map<ZRow, int> get questRingColors {
+    Map<ZRow, int> questRingColors = {};
+
+    const int missed0 = 0;
+    const int common1 = 1;
+//  const int uncommon2 = 2;
+//  const int rare2 = 3;
+    const int epic4 = 4;
+    const int legendary5 = 5;
+
+    int ajrCount = common1; // start at 1/common so all 4 done = 5/Legendary
+    if (isDone(QUEST.FAJR_MUAKB)) ajrCount++;
+    if (isDone(QUEST.FAJR_FARD)) ajrCount++;
+    if (isDone(QUEST.FAJR_THIKR)) ajrCount++;
+    if (isDone(QUEST.FAJR_DUA)) ajrCount++;
+    if (ajrCount == common1) ajrCount = missed0; // red ring if 0 quests done
+    questRingColors[ZRow.Fajr] = ajrCount;
+
+    ajrCount = common1;
+    if (isDone(QUEST.KARAHAT_ADHKAR_SUNRISE)) ajrCount++;
+    if (isDone(QUEST.DUHA_ISHRAQ)) ajrCount++;
+    if (isDone(QUEST.DUHA_DUHA)) ajrCount++;
+    if (isDone(QUEST.KARAHAT_ADHKAR_ISTIWA)) ajrCount++;
+    if (ajrCount == common1) ajrCount = missed0;
+    questRingColors[ZRow.Duha] = ajrCount;
+
+    ajrCount = missed0;
+    if (isDone(QUEST.DHUHR_MUAKB)) ajrCount++;
+    if (isDone(QUEST.DHUHR_FARD)) ajrCount++;
+    if (isDone(QUEST.DHUHR_MUAKA)) ajrCount++;
+    if (isDone(QUEST.DHUHR_NAFLA)) ajrCount++;
+    if (isDone(QUEST.DHUHR_THIKR)) ajrCount++;
+    if (isDone(QUEST.DHUHR_DUA)) ajrCount++;
+    if (ajrCount == 5) ajrCount = epic4; // 5 of 6 makes, epic
+    if (ajrCount == 6) ajrCount = legendary5; // all 6 required for legendary
+    questRingColors[ZRow.Dhuhr] = ajrCount;
+
+    ajrCount = missed0;
+    if (isDone(QUEST.ASR_NAFLB)) ajrCount++;
+    if (isDone(QUEST.ASR_FARD)) ajrCount++;
+    if (isDone(QUEST.ASR_THIKR)) ajrCount++;
+    if (isDone(QUEST.ASR_DUA)) ajrCount++;
+    if (isDone(QUEST.KARAHAT_ADHKAR_SUNSET)) ajrCount++;
+    questRingColors[ZRow.Asr] = ajrCount;
+
+    ajrCount = missed0;
+    if (isDone(QUEST.MAGHRIB_FARD)) ajrCount++;
+    if (isDone(QUEST.MAGHRIB_MUAKA)) ajrCount++;
+    if (isDone(QUEST.MAGHRIB_NAFLA)) ajrCount++;
+    if (isDone(QUEST.MAGHRIB_THIKR)) ajrCount++;
+    if (isDone(QUEST.MAGHRIB_DUA)) ajrCount++;
+    questRingColors[ZRow.Maghrib] = ajrCount;
+
+    ajrCount = missed0;
+    if (isDone(QUEST.ISHA_NAFLB)) ajrCount++;
+    if (isDone(QUEST.ISHA_FARD)) ajrCount++;
+    if (isDone(QUEST.ISHA_MUAKA)) ajrCount++;
+    if (isDone(QUEST.ISHA_NAFLA)) ajrCount++;
+    if (isDone(QUEST.ISHA_THIKR)) ajrCount++;
+    if (isDone(QUEST.ISHA_DUA)) ajrCount++;
+    if (ajrCount == 5) ajrCount = epic4;
+    if (ajrCount == 6) ajrCount = legendary5;
+    questRingColors[ZRow.Isha] = ajrCount;
+
+    ajrCount = missed0;
+    if (isDone(QUEST.LAYL_QIYAM)) ajrCount++;
+    if (isDone(QUEST.LAYL_THIKR)) ajrCount++;
+    if (isDone(QUEST.LAYL_DUA)) ajrCount++;
+    if (isDone(QUEST.LAYL_SLEEP)) ajrCount++;
+    if (isDone(QUEST.LAYL_TAHAJJUD)) ajrCount++;
+    if (isDone(QUEST.LAYL_WITR)) ajrCount++;
+    if (ajrCount == 5) ajrCount = epic4;
+    if (ajrCount == 6) ajrCount = legendary5;
+    questRingColors[ZRow.Layl] = ajrCount;
+
+    return questRingColors;
+  }
 }
 
 // enum QUEST_TYPE {

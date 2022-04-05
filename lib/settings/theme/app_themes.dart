@@ -8,6 +8,24 @@ class AppThemes {
   static const Color logoBackground = Color.fromRGBO(0x14, 0x1A, 0x42, 1);
   static const Color logoText = Color.fromRGBO(0xE3, 0x0A, 0x17, 1);
 
+  static const Color ajr0Missed = Colors.red;
+  static const Color ajr1Common = Colors.grey;
+  static const Color ajr2Uncommon = Colors.green;
+  static const Color ajr3Rare = Colors.blue;
+  static const Color ajr4Epic = Colors.purple;
+  static const Color ajr5Legendary = Colors.orangeAccent;
+  static const List ajrColorsByIdx = [
+    ajr0Missed,
+    ajr1Common,
+    ajr2Uncommon,
+    ajr3Rare,
+    ajr4Epic,
+    ajr5Legendary,
+  ];
+
+  /// shared light and dark (ld) text color
+  static const Color ldTextColor = Color(0xFF7F8B88);
+
   static const Color selected = logoText;
   static const Color unselected = Color(0xFF757575); // Grey 700
 

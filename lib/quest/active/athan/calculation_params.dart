@@ -9,7 +9,7 @@ class CalculationParams {
     this.method,
     this.madhab,
     this.karahatSunRisingSecs,
-    this.karahatSunZawalSecs,
+    this.karahatSunIstiwaSecs,
     this.karahatSunSettingSecs,
     this.highLatitudeRule,
   );
@@ -17,8 +17,8 @@ class CalculationParams {
   final CalcMethodParams method;
   final Madhab madhab;
   final int karahatSunRisingSecs;
-  // ensure karahatSunZawalSecs always end in an even number (we divide by 2)
-  final int karahatSunZawalSecs;
+  // ensure karahatSunIstiwaSecs always end in an even number (we divide by 2)
+  final int karahatSunIstiwaSecs;
   final int karahatSunSettingSecs;
   final HighLatitudeRule highLatitudeRule;
 

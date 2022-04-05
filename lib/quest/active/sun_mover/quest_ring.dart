@@ -1,63 +1,113 @@
 import 'package:flutter/material.dart';
-import 'package:hapi/helpers/math_utils.dart';
-import 'package:hapi/quest/active/athan/athan.dart';
+import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
+import 'package:hapi/quest/active/active_quests_controller.dart';
+import 'package:hapi/quest/active/active_quests_ui.dart';
 import 'package:hapi/quest/active/athan/z.dart';
 import 'package:hapi/quest/active/sun_mover/multi_color_ring.dart';
+import 'package:hapi/settings/theme/app_themes.dart';
 
 class QuestRing extends StatelessWidget {
-  const QuestRing(this.athan, this.diameter, this.strokeWidth);
+  const QuestRing(this.diameter, this.strokeWidth, this.colorSlices);
 
-  final Athan athan;
   final double diameter;
   final double strokeWidth;
+  final Map<Z, ColorSlice> colorSlices;
+
+  Map<ZRow, ColorSlice> _buildQuestRingSlices() {
+    Map<ZRow, ColorSlice> questRingSlices = {};
+
+    Map<ZRow, int> questRingColors =
+        ActiveQuestsAjrController.to.questRingColors;
+
+    ZRow zRow;
+    double elapsedSecs = 0;
+    Color color;
+
+    if (ActiveQuestsController.to.last3rdOfNight) {
+      zRow = ZRow.Layl;
+      elapsedSecs = 0;
+      elapsedSecs += colorSlices[Z.Layl__3]!.elapsedSecs;
+      color = AppThemes.ajrColorsByIdx[questRingColors[zRow]!];
+      questRingSlices[zRow] = ColorSlice(elapsedSecs, color);
+
+      zRow = ZRow.Isha;
+      elapsedSecs = 0;
+      elapsedSecs += colorSlices[Z.Layl__2]!.elapsedSecs;
+      elapsedSecs += colorSlices[Z.Isha]!.elapsedSecs;
+      color = AppThemes.ajrColorsByIdx[questRingColors[zRow]!];
+      questRingSlices[zRow] = ColorSlice(elapsedSecs, color);
+    } else {
+      zRow = ZRow.Layl;
+      elapsedSecs = 0;
+      elapsedSecs += colorSlices[Z.Layl__3]!.elapsedSecs;
+      elapsedSecs += colorSlices[Z.Layl__2]!.elapsedSecs;
+      color = AppThemes.ajrColorsByIdx[questRingColors[zRow]!];
+      questRingSlices[zRow] = ColorSlice(elapsedSecs, color);
+
+      zRow = ZRow.Isha;
+      elapsedSecs = 0;
+      elapsedSecs += colorSlices[Z.Isha]!.elapsedSecs;
+      color = AppThemes.ajrColorsByIdx[questRingColors[zRow]!];
+      questRingSlices[zRow] = ColorSlice(elapsedSecs, color);
+    }
+
+    zRow = ZRow.Maghrib;
+    elapsedSecs = 0;
+    elapsedSecs += colorSlices[Z.Maghrib]!.elapsedSecs;
+    color = AppThemes.ajrColorsByIdx[questRingColors[zRow]!];
+    questRingSlices[zRow] = ColorSlice(elapsedSecs, color);
+
+    if (ActiveQuestsController.to.salahAsrSafe) {
+      zRow = ZRow.Asr;
+      elapsedSecs = 0;
+      elapsedSecs += colorSlices[Z.Karahat_Evening_Adhkar]!.elapsedSecs;
+      elapsedSecs += colorSlices[Z.Asr_Later]!.elapsedSecs;
+      color = AppThemes.ajrColorsByIdx[questRingColors[zRow]!];
+      questRingSlices[zRow] = ColorSlice(elapsedSecs, color);
+
+      zRow = ZRow.Dhuhr;
+      elapsedSecs = 0;
+      elapsedSecs += colorSlices[Z.Asr_Earlier]!.elapsedSecs;
+      elapsedSecs += colorSlices[Z.Dhuhr]!.elapsedSecs;
+      color = AppThemes.ajrColorsByIdx[questRingColors[zRow]!];
+      questRingSlices[zRow] = ColorSlice(elapsedSecs, color);
+    } else {
+      zRow = ZRow.Asr;
+      elapsedSecs = 0;
+      elapsedSecs += colorSlices[Z.Karahat_Evening_Adhkar]!.elapsedSecs;
+      elapsedSecs += colorSlices[Z.Asr_Later]!.elapsedSecs;
+      elapsedSecs += colorSlices[Z.Asr_Earlier]!.elapsedSecs;
+      color = AppThemes.ajrColorsByIdx[questRingColors[zRow]!];
+      questRingSlices[zRow] = ColorSlice(elapsedSecs, color);
+
+      zRow = ZRow.Dhuhr;
+      elapsedSecs = 0;
+      elapsedSecs += colorSlices[Z.Dhuhr]!.elapsedSecs;
+      color = AppThemes.ajrColorsByIdx[questRingColors[zRow]!];
+      questRingSlices[zRow] = ColorSlice(elapsedSecs, color);
+    }
+
+    zRow = ZRow.Duha;
+    elapsedSecs = 0;
+    elapsedSecs += colorSlices[Z.Karahat_Istiwa]!.elapsedSecs;
+    elapsedSecs += colorSlices[Z.Duha]!.elapsedSecs;
+    elapsedSecs += colorSlices[Z.Ishraq]!.elapsedSecs;
+    elapsedSecs += colorSlices[Z.Karahat_Morning_Adhkar]!.elapsedSecs;
+    color = AppThemes.ajrColorsByIdx[questRingColors[zRow]!];
+    questRingSlices[zRow] = ColorSlice(elapsedSecs, color);
+
+    zRow = ZRow.Fajr;
+    elapsedSecs = 0;
+    elapsedSecs += colorSlices[Z.Fajr]!.elapsedSecs;
+    color = AppThemes.ajrColorsByIdx[questRingColors[zRow]!];
+    questRingSlices[zRow] = ColorSlice(elapsedSecs, color);
+
+    return questRingSlices;
+  }
 
   @override
   Widget build(BuildContext context) {
-    List<Map<Color, double>> athanSlices = [];
-
-    double totalSecs = 0.0;
-    int lastIdx = Z.values.length - 2; // don't go to FajrTomorrow
-    for (var zIdx = lastIdx; zIdx >= 0; zIdx--) {
-      Z currZ = Z.values[zIdx];
-      Z nextZ = Z.values[zIdx + 1];
-
-      List<Object> currZValues = athan.getZamanTime(currZ);
-      DateTime currZTime = currZValues[0] as DateTime;
-      Color currZColor = currZValues[1] as Color;
-
-      List<Object> nextZValues = athan.getZamanTime(nextZ);
-      DateTime nextZTime = nextZValues[0] as DateTime;
-
-      double elapsedSecs =
-          nextZTime.difference(currZTime).inMilliseconds / 1000;
-      athanSlices.add({currZColor: elapsedSecs});
-      totalSecs += elapsedSecs;
-    }
-
-    // calculate high noon degree offset so we align SunMover circle around it
-    DateTime currZTime = athan.getZamanTime(Z.Fajr)[0] as DateTime;
-    DateTime nextZTime = athan.highNoon;
-    double elapsedSecs = nextZTime.difference(currZTime).inMilliseconds / 1000;
-    // high noon/Sun zenith is constant at very top of circle (25%=quarter turn)
-    double noonDegreeCorrection = 365 * ((elapsedSecs / totalSecs) - .25);
-    double noonRadianCorrection = degreesToRadians(noonDegreeCorrection);
-
-    // get offset where fajr is so we can rotate sun from correct spot
-    double fajrStartPercentCorrection = noonDegreeCorrection / 365;
-    //l.d('noonDegreeCorrection=$noonDegreeCorrection, noonCorrection=$noonCorrection, fajrStartCorrection=$fajrStartCorrection');
-
-    // calculate sunrise on the horizon, so we can set horizon right for gumbi and me
-    currZTime = athan.getZamanTime(Z.Fajr)[0] as DateTime;
-    nextZTime = athan.sunrise;
-    elapsedSecs = nextZTime.difference(currZTime).inMilliseconds / 1000;
-
-    // Sunrise is constant at very right of circle, (no turn)
-    double sunrisePercentCorrection =
-        (((elapsedSecs / totalSecs) / 365) - fajrStartPercentCorrection) / 2;
-    double sunriseCorrection = .5 - sunrisePercentCorrection;
-    //double sunriseCorrection = 2 * degreeCorrection * math.pi;
-
-    //l.d('sunriseDegreeCorrection=$sunriseDegreeCorrection, fajrStartCorrection=$fajrStartCorrection->sunriseCorrection=$sunriseCorrection');
+    final Map<ZRow, ColorSlice> questRingSlices = _buildQuestRingSlices();
 
     // RepaintBoundary prevents the ALWAYS repaint on ANY page update
     return Center(
@@ -69,13 +119,7 @@ class QuestRing extends StatelessWidget {
             // RepaintBoundary needed or it will repaint on every second tick
             RepaintBoundary(
               child: CustomPaint(
-                painter: MultiColorRing(
-                  athanSlices,
-                  totalSecs,
-                  diameter,
-                  noonRadianCorrection,
-                  strokeWidth,
-                ),
+                painter: MultiColorRing(questRingSlices, diameter, strokeWidth),
               ),
             ),
           ],

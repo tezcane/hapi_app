@@ -41,11 +41,17 @@ import 'package:hapi/quest/active/zaman_controller.dart';
 // }
 
 class SunRing extends StatelessWidget {
-  const SunRing(this.athan, this.diameter, this.strokeWidth);
+  const SunRing(
+    this.athan,
+    this.diameter,
+    this.strokeWidth,
+    this.colorSlices,
+  );
 
   final Athan athan;
   final double diameter;
   final double strokeWidth;
+  final Map<Z, ColorSlice> colorSlices;
 
   final int secondsInADay = 86400; //60 * 60 * 24;
 
@@ -57,10 +63,7 @@ class SunRing extends StatelessWidget {
     return s;
   }
 
-  @override
-  Widget build(BuildContext context) {
-    List<Map<Color, double>> athanSlices = [];
-
+  void _buildSunRingSlices() {
     double totalSecs = 0.0;
     int lastIdx = Z.values.length - 2; // don't go to FajrTomorrow
     for (var zIdx = lastIdx; zIdx >= 0; zIdx--) {
@@ -76,33 +79,44 @@ class SunRing extends StatelessWidget {
 
       double elapsedSecs =
           nextZTime.difference(currZTime).inMilliseconds / 1000;
-      athanSlices.add({currZColor: elapsedSecs});
       totalSecs += elapsedSecs;
+      colorSlices[currZ] = ColorSlice(elapsedSecs, currZColor);
       l.d('${fill(currZ.niceName(shortenAsrName: false), 10)} secs=$elapsedSecs (mins=${elapsedSecs / 60}), totalSecs=$totalSecs (mins=${totalSecs / 60})');
     }
-    double secsOff = secondsInADay - totalSecs;
-    l.d('totalSecs=$totalSecs of 86400, $secsOff secs off (mins=${secsOff / 60})');
+    ColorSlice.setTotalSecs(totalSecs);
 
     // calculate high noon degree offset so we align SunMover circle around it
     DateTime currZTime = athan.getZamanTime(Z.Fajr)[0] as DateTime;
     DateTime nextZTime = athan.highNoon;
     double elapsedSecs = nextZTime.difference(currZTime).inMilliseconds / 1000;
     // high noon/Sun zenith is constant at very top of circle (25%=quarter turn)
-    double noonDegreeCorrection = 365 * ((elapsedSecs / totalSecs) - .25);
+    double noonDegreeCorrection =
+        365 * ((elapsedSecs / ColorSlice.totalSecs) - .25);
     double noonRadianCorrection = degreesToRadians(noonDegreeCorrection);
+    ColorSlice.setNoonRadianCorrection(noonRadianCorrection);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    _buildSunRingSlices();
+
+    double secsOff = secondsInADay - ColorSlice.totalSecs;
+    l.d('totalSecs=${ColorSlice.totalSecs} of 86400, $secsOff secs off (mins=${secsOff / 60})');
 
     // get offset where fajr is so we can rotate sun from correct spot
-    double fajrStartPercentCorrection = noonDegreeCorrection / 365;
+    double fajrStartPercentCorrection = ColorSlice.noonRadianCorrection / 365;
     //l.d('noonDegreeCorrection=$noonDegreeCorrection, noonCorrection=$noonCorrection, fajrStartCorrection=$fajrStartCorrection');
 
     // calculate sunrise on the horizon, so we can set horizon right for gumbi and me
-    currZTime = athan.getZamanTime(Z.Fajr)[0] as DateTime;
-    nextZTime = athan.sunrise;
-    elapsedSecs = nextZTime.difference(currZTime).inMilliseconds / 1000;
+    DateTime currZTime = athan.getZamanTime(Z.Fajr)[0] as DateTime;
+    DateTime nextZTime = athan.sunrise;
+    double elapsedSecs = nextZTime.difference(currZTime).inMilliseconds / 1000;
 
     // Sunrise is constant at very right of circle, (no turn)
     double sunrisePercentCorrection =
-        (((elapsedSecs / totalSecs) / 365) - fajrStartPercentCorrection) / 2;
+        (((elapsedSecs / ColorSlice.totalSecs) / 365) -
+                fajrStartPercentCorrection) /
+            2;
     double sunriseCorrection = .5 - sunrisePercentCorrection;
     //double sunriseCorrection = 2 * degreeCorrection * math.pi;
 
@@ -124,12 +138,7 @@ class SunRing extends StatelessWidget {
               child: RepaintBoundary(
                 child: CustomPaint(
                   painter: MultiColorRing(
-                    athanSlices,
-                    totalSecs,
-                    diameter - 22.25,
-                    noonRadianCorrection,
-                    strokeWidth,
-                  ),
+                      colorSlices, diameter - 22.25, strokeWidth),
                 ),
               ),
             ),
@@ -148,9 +157,9 @@ class SunRing extends StatelessWidget {
             if (isSunAboveHorizon) const _GumbiAndMeWithFamily(Colors.white),
             GetBuilder<ZamanController>(
               builder: (c) {
-                double sunValue =
-                    (c.secsSinceFajr / totalSecs) - fajrStartPercentCorrection;
-                l.v('sunValue percent $sunValue = (${(c.secsSinceFajr / totalSecs)}=${c.secsSinceFajr}/$totalSecs) - (fajrStartPercentCorrection=$fajrStartPercentCorrection)');
+                double sunValue = (c.secsSinceFajr / ColorSlice.totalSecs) -
+                    fajrStartPercentCorrection;
+                l.v('sunValue percent $sunValue = (${c.secsSinceFajr}/${ColorSlice.totalSecs}) - (fajrStartPercentCorrection=$fajrStartPercentCorrection)');
                 if (sunValue > 0) {
                   // it's passed fajr time:
                   sunValue = 1 - sunValue; // 1 - to go backward;
