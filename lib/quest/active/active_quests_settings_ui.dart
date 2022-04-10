@@ -133,6 +133,19 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
               },
             ),
             addSetting(
+              title: 'Round Time To',
+              tooltip: 'Round times to the minute or second',
+              labels: ['Minute', 'Second'],
+              initialLabelIndex: c.showSecPrecision ? 1 : 0,
+              onToggle: (index) {
+                if (index == 0) {
+                  c.showSecPrecision = false;
+                } else {
+                  c.showSecPrecision = true;
+                }
+              },
+            ),
+            addSetting(
               title: 'Karahat Minutes',
               tooltip:
                   'Ulema opinions on karahat times are around 40 or 20 for sunset and sunrise karahat times and around 30 or 15 minutes for the noon karahat time',
@@ -171,19 +184,6 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
                   c.show12HourClock = true;
                 } else {
                   c.show12HourClock = false;
-                }
-              },
-            ),
-            addSetting(
-              title: 'Clock Rounding',
-              tooltip: 'Round times to the minute or second',
-              labels: ['Minute', 'Second'],
-              initialLabelIndex: c.showSecPrecision ? 1 : 0,
-              onToggle: (index) {
-                if (index == 0) {
-                  c.showSecPrecision = false;
-                } else {
-                  c.showSecPrecision = true;
                 }
               },
             ),
