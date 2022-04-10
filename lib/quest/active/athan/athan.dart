@@ -204,8 +204,9 @@ class Athan {
       -method.adjustSecs[Salah.dhuhr]! + (params.karahatSunIstiwaSecs ~/ 2),
     );
     _dhuhr_06 = _addSecsRoundUpAndGetTZ(
-      _karahatAdkharIstiwa_05,
-      params.karahatSunIstiwaSecs, // dhuhr starts after karahat time ends
+      _highNoon,
+      // dhuhr starts after karahat time ends
+      method.adjustSecs[Salah.dhuhr]! + (params.karahatSunIstiwaSecs ~/ 2),
     );
 
     _asrEarlier_07 = _addSecsRoundUpAndGetTZ(
@@ -223,8 +224,8 @@ class Athan {
       -method.adjustSecs[Salah.maghrib]! + params.karahatSunSettingSecs,
     );
     _maghrib_10 = _addSecsRoundUpAndGetTZ(
-      _karahatAdkharSunSetting_09,
-      params.karahatSunSettingSecs,
+      maghribTime,
+      method.adjustSecs[Salah.maghrib]!,
     );
 
     _isha_11 = _addSecsRoundUpAndGetTZ(
