@@ -14,6 +14,7 @@ class AppThemes {
   static const Color ajr3Rare = Colors.blue;
   static const Color ajr4Epic = Colors.purple;
   static const Color ajr5Legendary = Colors.orangeAccent;
+  static const Color ajr6NotExpired = Colors.transparent;
   static const List ajrColorsByIdx = [
     ajr0Missed,
     ajr1Common,
@@ -21,6 +22,7 @@ class AppThemes {
     ajr3Rare,
     ajr4Epic,
     ajr5Legendary,
+    ajr6NotExpired,
   ];
 
   /// shared light and dark (ld) text color

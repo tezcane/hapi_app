@@ -343,75 +343,187 @@ class ActiveQuestsAjrController extends GetxHapi {
     Map<ZRow, int> questRingColors = {};
 
     const int missed0 = 0;
-    const int common1 = 1;
+//  const int common1 = 1;
 //  const int uncommon2 = 2;
 //  const int rare2 = 3;
     const int epic4 = 4;
     const int legendary5 = 5;
+    const int notExpired6 = 6; // time not expired yet
 
-    int ajrCount = common1; // start at 1/common so all 4 done = 5/Legendary
+    int ajrCount = 0;
+    int missCount = 0;
     if (isDone(QUEST.FAJR_MUAKB)) ajrCount++;
     if (isDone(QUEST.FAJR_FARD)) ajrCount++;
     if (isDone(QUEST.FAJR_THIKR)) ajrCount++;
     if (isDone(QUEST.FAJR_DUA)) ajrCount++;
-    if (ajrCount == common1) ajrCount = missed0; // red ring if 0 quests done
+    if (ajrCount == 0) {
+      if (isMiss(QUEST.FAJR_MUAKB) || isSkip(QUEST.FAJR_MUAKB)) missCount++;
+      if (isMiss(QUEST.FAJR_FARD) || isSkip(QUEST.FAJR_FARD)) missCount++;
+      if (isMiss(QUEST.FAJR_THIKR) || isSkip(QUEST.FAJR_THIKR)) missCount++;
+      if (isMiss(QUEST.FAJR_DUA) || isSkip(QUEST.FAJR_DUA)) missCount++;
+      if (missCount == 4) {
+        ajrCount = missed0; // red ring if all quests expired
+      } else {
+        ajrCount = notExpired6; // otherwise time not expired yet->transparent
+      }
+    } else if (ajrCount == epic4) {
+      ajrCount = legendary5; // 4 done = 5/Legendary
+    }
     questRingColors[ZRow.Fajr] = ajrCount;
 
-    ajrCount = common1;
+    ajrCount = 0;
+    missCount = 0;
     if (isDone(QUEST.KARAHAT_ADHKAR_SUNRISE)) ajrCount++;
     if (isDone(QUEST.DUHA_ISHRAQ)) ajrCount++;
     if (isDone(QUEST.DUHA_DUHA)) ajrCount++;
     if (isDone(QUEST.KARAHAT_ADHKAR_ISTIWA)) ajrCount++;
-    if (ajrCount == common1) ajrCount = missed0;
+    if (ajrCount == 0) {
+      if (isMiss(QUEST.KARAHAT_ADHKAR_SUNRISE) ||
+          isSkip(QUEST.KARAHAT_ADHKAR_SUNRISE)) missCount++;
+      if (isMiss(QUEST.DUHA_ISHRAQ) || isSkip(QUEST.DUHA_ISHRAQ)) missCount++;
+      if (isMiss(QUEST.DUHA_DUHA) || isSkip(QUEST.DUHA_DUHA)) missCount++;
+      if (isMiss(QUEST.KARAHAT_ADHKAR_ISTIWA) ||
+          isSkip(QUEST.KARAHAT_ADHKAR_ISTIWA)) missCount++;
+      if (missCount == 4) {
+        ajrCount = missed0;
+      } else {
+        ajrCount = notExpired6;
+      }
+    } else if (ajrCount == epic4) {
+      ajrCount = legendary5; // 4 done = 5/Legendary
+    }
     questRingColors[ZRow.Duha] = ajrCount;
 
-    ajrCount = missed0;
+    ajrCount = 0;
+    missCount = 0;
     if (isDone(QUEST.DHUHR_MUAKB)) ajrCount++;
     if (isDone(QUEST.DHUHR_FARD)) ajrCount++;
     if (isDone(QUEST.DHUHR_MUAKA)) ajrCount++;
     if (isDone(QUEST.DHUHR_NAFLA)) ajrCount++;
     if (isDone(QUEST.DHUHR_THIKR)) ajrCount++;
     if (isDone(QUEST.DHUHR_DUA)) ajrCount++;
-    if (ajrCount == 5) ajrCount = epic4; // 5 of 6 makes, epic
-    if (ajrCount == 6) ajrCount = legendary5; // all 6 required for legendary
+    if (ajrCount == 0) {
+      if (isMiss(QUEST.DHUHR_MUAKB) || isSkip(QUEST.DHUHR_MUAKB)) missCount++;
+      if (isMiss(QUEST.DHUHR_FARD) || isSkip(QUEST.DHUHR_FARD)) missCount++;
+      if (isMiss(QUEST.DHUHR_MUAKA) || isSkip(QUEST.DHUHR_MUAKA)) missCount++;
+      if (isMiss(QUEST.DHUHR_NAFLA) || isSkip(QUEST.DHUHR_NAFLA)) missCount++;
+      if (isMiss(QUEST.DHUHR_THIKR) || isSkip(QUEST.DHUHR_THIKR)) missCount++;
+      if (isMiss(QUEST.DHUHR_DUA) || isSkip(QUEST.DHUHR_DUA)) missCount++;
+      if (missCount == 6) {
+        ajrCount = missed0;
+      } else {
+        ajrCount = notExpired6;
+      }
+    } else if (ajrCount == legendary5) {
+      ajrCount = epic4; // 5 of 6 makes, epic
+    } else if (ajrCount == 6) {
+      ajrCount = legendary5; // all 6 required for legendary
+    }
     questRingColors[ZRow.Dhuhr] = ajrCount;
 
-    ajrCount = missed0;
+    ajrCount = 0;
+    missCount = 0;
     if (isDone(QUEST.ASR_NAFLB)) ajrCount++;
     if (isDone(QUEST.ASR_FARD)) ajrCount++;
     if (isDone(QUEST.ASR_THIKR)) ajrCount++;
     if (isDone(QUEST.ASR_DUA)) ajrCount++;
     if (isDone(QUEST.KARAHAT_ADHKAR_SUNSET)) ajrCount++;
+    if (ajrCount == 0) {
+      if (isMiss(QUEST.ASR_NAFLB) || isSkip(QUEST.ASR_NAFLB)) missCount++;
+      if (isMiss(QUEST.ASR_FARD) || isSkip(QUEST.ASR_FARD)) missCount++;
+      if (isMiss(QUEST.ASR_THIKR) || isSkip(QUEST.ASR_THIKR)) missCount++;
+      if (isMiss(QUEST.ASR_DUA) || isSkip(QUEST.ASR_DUA)) missCount++;
+      if (isMiss(QUEST.KARAHAT_ADHKAR_SUNSET) ||
+          isSkip(QUEST.KARAHAT_ADHKAR_SUNSET)) missCount++;
+      if (missCount == 5) {
+        ajrCount = missed0;
+      } else {
+        ajrCount = notExpired6;
+      }
+    }
     questRingColors[ZRow.Asr] = ajrCount;
 
-    ajrCount = missed0;
+    ajrCount = 0;
+    missCount = 0;
     if (isDone(QUEST.MAGHRIB_FARD)) ajrCount++;
     if (isDone(QUEST.MAGHRIB_MUAKA)) ajrCount++;
     if (isDone(QUEST.MAGHRIB_NAFLA)) ajrCount++;
     if (isDone(QUEST.MAGHRIB_THIKR)) ajrCount++;
     if (isDone(QUEST.MAGHRIB_DUA)) ajrCount++;
+    if (ajrCount == 0) {
+      if (isMiss(QUEST.MAGHRIB_FARD) || isSkip(QUEST.MAGHRIB_FARD)) missCount++;
+      if (isMiss(QUEST.MAGHRIB_MUAKA) || isSkip(QUEST.MAGHRIB_MUAKA)) {
+        missCount++;
+      }
+      if (isMiss(QUEST.MAGHRIB_NAFLA) || isSkip(QUEST.MAGHRIB_NAFLA)) {
+        missCount++;
+      }
+      if (isMiss(QUEST.MAGHRIB_THIKR) || isSkip(QUEST.MAGHRIB_THIKR)) {
+        missCount++;
+      }
+      if (isMiss(QUEST.MAGHRIB_DUA) || isSkip(QUEST.MAGHRIB_DUA)) missCount++;
+      if (missCount == 5) {
+        ajrCount = missed0;
+      } else {
+        ajrCount = notExpired6;
+      }
+    }
     questRingColors[ZRow.Maghrib] = ajrCount;
 
-    ajrCount = missed0;
+    ajrCount = 0;
+    missCount = 0;
     if (isDone(QUEST.ISHA_NAFLB)) ajrCount++;
     if (isDone(QUEST.ISHA_FARD)) ajrCount++;
     if (isDone(QUEST.ISHA_MUAKA)) ajrCount++;
     if (isDone(QUEST.ISHA_NAFLA)) ajrCount++;
     if (isDone(QUEST.ISHA_THIKR)) ajrCount++;
     if (isDone(QUEST.ISHA_DUA)) ajrCount++;
-    if (ajrCount == 5) ajrCount = epic4;
-    if (ajrCount == 6) ajrCount = legendary5;
+    if (ajrCount == 0) {
+      if (isMiss(QUEST.ISHA_NAFLB) || isSkip(QUEST.ISHA_NAFLB)) missCount++;
+      if (isMiss(QUEST.ISHA_FARD) || isSkip(QUEST.ISHA_FARD)) missCount++;
+      if (isMiss(QUEST.ISHA_MUAKA) || isSkip(QUEST.ISHA_MUAKA)) missCount++;
+      if (isMiss(QUEST.ISHA_NAFLA) || isSkip(QUEST.ISHA_NAFLA)) missCount++;
+      if (isMiss(QUEST.ISHA_THIKR) || isSkip(QUEST.ISHA_THIKR)) missCount++;
+      if (isMiss(QUEST.ISHA_DUA) || isSkip(QUEST.ISHA_DUA)) missCount++;
+      if (missCount == 6) {
+        ajrCount = missed0;
+      } else {
+        ajrCount = notExpired6;
+      }
+    } else if (ajrCount == 5) {
+      ajrCount = epic4;
+    } else if (ajrCount == 6) {
+      ajrCount = legendary5;
+    }
     questRingColors[ZRow.Isha] = ajrCount;
 
     ajrCount = missed0;
+    missCount = 0;
     if (isDone(QUEST.LAYL_QIYAM)) ajrCount++;
     if (isDone(QUEST.LAYL_THIKR)) ajrCount++;
     if (isDone(QUEST.LAYL_DUA)) ajrCount++;
     if (isDone(QUEST.LAYL_SLEEP)) ajrCount++;
     if (isDone(QUEST.LAYL_TAHAJJUD)) ajrCount++;
     if (isDone(QUEST.LAYL_WITR)) ajrCount++;
-    if (ajrCount == 5) ajrCount = epic4;
-    if (ajrCount == 6) ajrCount = legendary5;
+    if (ajrCount == 0) {
+      if (isMiss(QUEST.LAYL_QIYAM) || isSkip(QUEST.LAYL_QIYAM)) missCount++;
+      if (isMiss(QUEST.LAYL_THIKR) || isSkip(QUEST.LAYL_THIKR)) missCount++;
+      if (isMiss(QUEST.LAYL_DUA) || isSkip(QUEST.LAYL_DUA)) missCount++;
+      if (isMiss(QUEST.LAYL_SLEEP) || isSkip(QUEST.LAYL_SLEEP)) missCount++;
+      if (isMiss(QUEST.LAYL_TAHAJJUD) || isSkip(QUEST.LAYL_TAHAJJUD)) {
+        missCount++;
+      }
+      if (isMiss(QUEST.LAYL_WITR) || isSkip(QUEST.LAYL_WITR)) missCount++;
+      if (missCount == 6) {
+        ajrCount = missed0;
+      } else {
+        ajrCount = notExpired6;
+      }
+    } else if (ajrCount == 5) {
+      ajrCount = epic4;
+    } else if (ajrCount == 6) {
+      ajrCount = legendary5;
+    }
     questRingColors[ZRow.Layl] = ajrCount;
 
     return questRingColors;
