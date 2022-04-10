@@ -104,7 +104,8 @@ class SunRing extends StatelessWidget {
     l.d('totalSecs=${ColorSlice.totalSecs} of 86400, $secsOff secs off (mins=${secsOff / 60})');
 
     // get offset where fajr is so we can rotate sun from correct spot
-    double fajrStartPercentCorrection = ColorSlice.noonRadianCorrection / 365;
+    double fajrStartPercentCorrection =
+        radiansToDegrees(ColorSlice.noonRadianCorrection) / 365;
     //l.d('noonDegreeCorrection=$noonDegreeCorrection, noonCorrection=$noonCorrection, fajrStartCorrection=$fajrStartCorrection');
 
     // calculate sunrise on the horizon, so we can set horizon right for gumbi and me
@@ -116,7 +117,7 @@ class SunRing extends StatelessWidget {
     double sunrisePercentCorrection =
         (((elapsedSecs / ColorSlice.totalSecs) / 365) -
                 fajrStartPercentCorrection) /
-            2;
+            1.25; // TODO hacking
     double sunriseCorrection = .5 - sunrisePercentCorrection;
     //double sunriseCorrection = 2 * degreeCorrection * math.pi;
 
