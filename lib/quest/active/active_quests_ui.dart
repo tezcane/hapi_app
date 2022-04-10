@@ -35,12 +35,9 @@ const TS tsText = TS(AppThemes.ldTextColor);
 class ActiveQuestsUI extends StatelessWidget {
   static const TS tsAppBar = TS(Colors.white70);
 
-  static String getTime(DateTime? time) {
-    return getTimeRange(time, null);
-  }
-
+  static String getTime(DateTime? time) => getTimeRange(time, null);
   static String getTimeRange(DateTime? startTime, DateTime? endTime) {
-    if (startTime == null) return '-';
+    if (startTime == null) return '-'; // still initializing
 
     int startHour = startTime.hour;
     String startAmPm = '';
@@ -60,6 +57,20 @@ class ActiveQuestsUI extends StatelessWidget {
       int endMinute = endTime.minute;
       String endAmPm = '';
 
+      String minutes = endMinute.toString();
+      if (endMinute < 10) minutes = '0$minutes'; // pad so looks good on UI
+
+      String seconds = '';
+      if (ActiveQuestsController.to.showSecPrecision) {
+        int secs = endTime.second;
+        seconds = secs.toString();
+        if (secs < 10) {
+          seconds = ':0$seconds';
+        } else {
+          seconds = ':$seconds';
+        }
+      }
+
       if (ActiveQuestsController.to.show12HourClock) {
         if (endHour >= 12) {
           endHour -= 12;
@@ -69,14 +80,12 @@ class ActiveQuestsUI extends StatelessWidget {
         }
         if (endHour == 0) endHour = 12;
 
-        endTimeString =
-            '-${endHour.toString()}:${endMinute.toString().padLeft(2, '0')}$endAmPm';
+        endTimeString = '-${endHour.toString()}:$minutes$seconds$endAmPm';
 
         // if AM/PM are same, don't show twice
         if (startAmPm == endAmPm) startAmPm = '';
       } else {
-        endTimeString =
-            '-${endHour.toString()}:${endMinute.toString().padLeft(2, '0')}';
+        endTimeString = '-${endHour.toString()}:$minutes$seconds';
       }
     }
 
@@ -88,7 +97,18 @@ class ActiveQuestsUI extends StatelessWidget {
     String minutes = startMinute.toString();
     if (startMinute < 10) minutes = '0$minutes'; // pad so looks good on UI
 
-    return '$hour:$minutes$startAmPm$endTimeString';
+    String seconds = '';
+    if (ActiveQuestsController.to.showSecPrecision) {
+      int secs = startTime.second;
+      seconds = secs.toString();
+      if (secs < 10) {
+        seconds = ':0$seconds';
+      } else {
+        seconds = ':$seconds';
+      }
+    }
+
+    return '$hour:$minutes$seconds$startAmPm$endTimeString';
   }
 
   @override

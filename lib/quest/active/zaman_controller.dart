@@ -76,13 +76,12 @@ class ZamanController extends GetxHapi {
       HighLatitudeRule.MiddleOfTheNight,
     );
 
-    bool precision = true;
     Athan athan = Athan(
       params,
       date,
       LocationController.to.lastKnownCord,
       timezoneLoc,
-      precision,
+      ActiveQuestsController.to.showSecPrecision,
     );
     _athan = athan;
     _currZ = athan.getCurrZaman(date);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hapi/main_controller.dart';
 
 typedef OnToggle = void Function(int index);
 
@@ -165,14 +166,14 @@ class _ToggleSwitchState extends State<ToggleSwitch>
                     alignment: Alignment.center,
                     color: bgColor,
                     child: widget.icons == null
-                        ? Text(
+                        ? T(
                             widget.labels[index ~/ 2],
-                            style: TextStyle(
+                            TextStyle(
                               color: fgColor,
                               fontSize: widget.fontSize,
                               fontWeight: widget.fontWeight,
                             ),
-                            overflow: TextOverflow.ellipsis,
+                            h: 16,
                           )
                         : Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -188,14 +189,14 @@ class _ToggleSwitchState extends State<ToggleSwitch>
                               Flexible(
                                 child: Container(
                                   padding: const EdgeInsets.only(left: 5.0),
-                                  child: Text(
+                                  child: T(
                                     widget.labels[index ~/ 2],
-                                    style: TextStyle(
+                                    TextStyle(
                                       color: fgColor,
                                       fontSize: widget.fontSize,
                                       fontWeight: widget.fontWeight,
                                     ),
-                                    overflow: TextOverflow.ellipsis,
+                                    h: 16,
                                   ),
                                 ),
                               ),

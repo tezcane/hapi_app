@@ -22,6 +22,9 @@ class ActiveQuestsController extends GetxController {
   bool _show12HourClock = true; // false = 24h clock/military time
   bool get show12HourClock => _show12HourClock;
 
+  bool _showSecPrecision = false; // false = round athan times to minutes
+  bool get showSecPrecision => _showSecPrecision;
+
   bool _showActiveSalah = true; // true shows salah actions, false hides them
   bool get showActiveSalah => _showActiveSalah;
   bool _showSalahResults = true; // true shows salah results, false hides them
@@ -46,6 +49,7 @@ class ActiveQuestsController extends GetxController {
 
     _showJummahOnFriday = s.rd('showJummahOnFriday') ?? true;
     _show12HourClock = s.rd('show12HourClock') ?? true;
+    _showSecPrecision = s.rd('showSecPrecision') ?? false;
 
     _showActiveSalah = s.rd('showActiveSalah') ?? true;
     _showSalahResults = s.rd('showSalahResults') ?? false;
@@ -92,6 +96,13 @@ class ActiveQuestsController extends GetxController {
     _show12HourClock = value;
     s.wr('show12HourClock', value);
     update();
+  }
+
+  set showSecPrecision(bool value) {
+    _showSecPrecision = value;
+    s.wr('showSecPrecision', value);
+    ZamanController.to.forceSalahRecalculation = true;
+    //update();
   }
 
   void toggleShowActiveSalah() {
