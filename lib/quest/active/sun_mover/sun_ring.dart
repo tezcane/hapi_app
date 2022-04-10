@@ -322,14 +322,14 @@ class SunMovePainter extends CustomPainter {
       canvas,
       (diameter / 2) - 1,
       Paint()..color = Colors.yellowAccent,
-      strokeWidth / 2,
+      strokeWidth - 1,
     );
     // draw tiny nub on sun's edge to show actual spot of sun easier
     drawAxis(
       sunValue,
       canvas,
-      (diameter / 2) + 6,
-      Paint()..color = Colors.yellowAccent,
+      (diameter / 2) + strokeWidth - 2,
+      Paint()..color = Colors.yellow,
       1,
     );
   }
