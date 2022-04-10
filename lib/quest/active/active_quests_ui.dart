@@ -44,9 +44,9 @@ class ActiveQuestsUI extends StatelessWidget {
     if (ActiveQuestsController.to.show12HourClock) {
       if (startHour >= 12) {
         startHour -= 12;
-        startAmPm = 'PM';
+        startAmPm = 'P';
       } else {
-        startAmPm = 'AM';
+        startAmPm = 'A';
       }
       if (startHour == 0) startHour = 12;
     }
@@ -74,9 +74,9 @@ class ActiveQuestsUI extends StatelessWidget {
       if (ActiveQuestsController.to.show12HourClock) {
         if (endHour >= 12) {
           endHour -= 12;
-          endAmPm = 'PM';
+          endAmPm = 'P';
         } else {
-          endAmPm = 'AM';
+          endAmPm = 'A';
         }
         if (endHour == 0) endHour = 12;
 
