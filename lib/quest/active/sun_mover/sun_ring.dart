@@ -123,7 +123,36 @@ class SunRing extends StatelessWidget {
 
     //l.d('sunriseDegreeCorrection=$sunriseDegreeCorrection, fajrStartCorrection=$fajrStartCorrection->sunriseCorrection=$sunriseCorrection');
 
-    bool isSunAboveHorizon = ZamanController.to.currZ.isAboveHorizon();
+    Z currZ = ZamanController.to.currZ;
+    bool isSunAboveHorizon = currZ.isAboveHorizon();
+
+    Color horizonTopColor = colorSlices[currZ]!.color;
+    if (currZ == Z.Karahat_Morning_Adhkar ||
+        currZ == Z.Karahat_Evening_Adhkar) {
+      horizonTopColor = Colors.orangeAccent;
+    } else if (currZ == Z.Fajr || currZ == Z.Maghrib) {
+      horizonTopColor = Colors.purple.shade900;
+    } else if (currZ == Z.Isha || currZ == Z.Layl__2 || currZ == Z.Layl__3) {
+      horizonTopColor = Colors.black;
+    } else if (currZ == Z.Ishraq) {
+      horizonTopColor == Colors.yellow.shade900;
+    }
+
+    Color horizonBottomColor = colorSlices[currZ]!.color;
+    if (currZ == Z.Ishraq ||
+        currZ == Z.Duha ||
+        currZ == Z.Dhuhr ||
+        currZ == Z.Asr_Earlier ||
+        currZ == Z.Asr_Later) {
+      horizonBottomColor = Colors.blueAccent;
+    }
+
+    Color grassColor = Colors.green;
+    if (currZ == Z.Fajr || currZ == Z.Maghrib) {
+      horizonTopColor = Colors.green.shade700;
+    } else if (currZ == Z.Isha || currZ == Z.Layl__2 || currZ == Z.Layl__3) {
+      horizonTopColor = Colors.green.shade900;
+    }
 
     // RepaintBoundary prevents the ALWAYS repaint on ANY page update
     return Center(
@@ -150,8 +179,8 @@ class SunRing extends StatelessWidget {
                 child: TwoColoredIcon(
                   Icons.circle,
                   diameter + 5,
-                  const [Colors.orangeAccent, Colors.red, Colors.transparent],
-                  Colors.green,
+                  [horizonTopColor, horizonBottomColor, Colors.transparent],
+                  grassColor,
                   fillPercent: sunriseCorrection,
                 ),
               ),
@@ -215,7 +244,7 @@ class _GumbiAndMeWithFamily extends StatelessWidget {
         Positioned.fill(
           // dad, kid and mom in middle
           left: -17,
-          bottom: 0,
+          top: 31,
           child: Align(
             alignment: Alignment.center,
             child: Transform.scale(
@@ -229,7 +258,7 @@ class _GumbiAndMeWithFamily extends StatelessWidget {
         Positioned.fill(
           // mom and kid on right
           left: 25.6,
-          bottom: 0,
+          top: 30,
           child: Align(
             alignment: Alignment.center,
             child: Transform.scale(
@@ -243,21 +272,21 @@ class _GumbiAndMeWithFamily extends StatelessWidget {
         Positioned.fill(
           // dad and kid on left
           left: 53,
-          bottom: 10.60,
+          top: 20.30,
           child: Align(
             alignment: Alignment.center,
             child: Transform(
               alignment: Alignment.bottomLeft,
               transform: Matrix4.rotationY(math.pi),
               child: Icon(Icons.escalator_warning_outlined,
-                  size: 60, color: color),
+                  size: 61, color: color),
             ),
           ),
         ),
         Positioned.fill(
           // baby car
           left: 82,
-          top: 15,
+          top: 45,
           child: Align(
             alignment: Alignment.center,
             child: Icon(Icons.child_friendly_rounded, size: 33, color: color),
@@ -266,7 +295,7 @@ class _GumbiAndMeWithFamily extends StatelessWidget {
         Positioned.fill(
           // Mom's dress
           left: 14,
-          top: 17,
+          top: 47,
           child: Align(
             alignment: Alignment.center,
             child: Icon(Icons.warning_sharp, size: 19, color: color),
@@ -275,7 +304,7 @@ class _GumbiAndMeWithFamily extends StatelessWidget {
         Positioned.fill(
           // Edi's dress
           left: 44.5,
-          top: 17,
+          top: 47,
           child: Align(
             alignment: Alignment.center,
             child: Icon(Icons.warning_sharp, size: 17, color: color),
@@ -284,16 +313,25 @@ class _GumbiAndMeWithFamily extends StatelessWidget {
         Positioned.fill(
           // Cimi's dress
           left: -15,
-          top: 20.5,
+          top: 53.5,
           child: Align(
             alignment: Alignment.center,
             child: Icon(Icons.warning_sharp, size: 14, color: color),
           ),
         ),
         Positioned.fill(
+          // Cimi's feet
+          left: -15,
+          top: 65.8,
+          child: Align(
+            alignment: Alignment.center,
+            child: Icon(Icons.square, size: 8, color: color),
+          ),
+        ),
+        Positioned.fill(
           // Gumbi's head
           left: 75,
-          top: 5,
+          top: 35,
           child: Align(
             alignment: Alignment.center,
             child: Icon(Icons.circle, size: 5.8, color: color),
