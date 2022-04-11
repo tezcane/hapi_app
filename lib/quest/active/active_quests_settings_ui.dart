@@ -149,7 +149,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
               title: 'Karahat Minutes',
               tooltip:
                   'Ulema opinions on karahat times are around 40 or 20 for sunset and sunrise karahat times and around 30 or 15 minutes for the noon karahat time',
-              labels: ['40/30/40', '20/15/20'],
+              labels: ['40, 30, 40', '20, 15, 20'],
               initialLabelIndex: c.salahKarahatSafe ? 0 : 1,
               onToggle: (index) {
                 if (index == 0) {
