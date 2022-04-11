@@ -149,9 +149,9 @@ class SunRing extends StatelessWidget {
 
     Color grassColor = Colors.green;
     if (currZ == Z.Fajr || currZ == Z.Maghrib) {
-      horizonTopColor = Colors.green.shade700;
+      grassColor = Colors.green.shade700;
     } else if (currZ == Z.Isha || currZ == Z.Layl__2 || currZ == Z.Layl__3) {
-      horizonTopColor = Colors.green.shade900;
+      grassColor = Colors.green.shade900;
     }
 
     // RepaintBoundary prevents the ALWAYS repaint on ANY page update
@@ -219,8 +219,8 @@ class SunRing extends StatelessWidget {
                 child: TwoColoredIcon(
                   Icons.circle,
                   diameter + 5,
-                  const [Colors.orangeAccent, Colors.red, Colors.transparent],
-                  Colors.green,
+                  [horizonTopColor, horizonBottomColor, Colors.transparent],
+                  grassColor,
                   fillPercent: sunriseCorrection,
                 ),
               ),
