@@ -6,17 +6,17 @@ part 'user_model.g.dart';
 /// NOTE: Don't modify this as it is closely tied to firestore libraries.
 @JsonSerializable()
 class UserModel {
-  final String uid;
-  final String email;
-  final String name;
-  final String photoUrl;
-
   UserModel({
     required this.uid,
     required this.email,
     required this.name,
     required this.photoUrl,
   });
+
+  final String uid;
+  final String email;
+  final String name;
+  final String photoUrl;
 
   factory UserModel.fromJson(Map<String, dynamic> json) =>
       _$UserModelFromJson(json);

@@ -10,14 +10,6 @@ part 'do_list_model.g.dart';
 @DateTimeConverter()
 @DateTimeConverterN()
 class DoListModel {
-  String id;
-  String content;
-  DateTime dateCreated;
-  DateTime? dateStart;
-  DateTime? dateEnd;
-  DateTime? dateDone;
-  bool done;
-
   DoListModel({
     required this.id,
     required this.content,
@@ -27,6 +19,14 @@ class DoListModel {
     required this.dateDone,
     required this.done,
   });
+
+  String id;
+  String content;
+  DateTime dateCreated;
+  DateTime? dateStart;
+  DateTime? dateEnd;
+  DateTime? dateDone;
+  bool done;
 
   factory DoListModel.fromJson(Map<String, dynamic> json) =>
       _$DoListModelFromJson(json);
