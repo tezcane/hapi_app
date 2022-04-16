@@ -33,7 +33,7 @@ class Database {
   //   }
   // }
 
-  Future<void> addDoList(String content, String uid) async {
+  addDoList(String content, String uid) async {
     try {
       await _db
           .collection('user')
@@ -51,7 +51,7 @@ class Database {
     }
   }
 
-  Future<void> updateDoList(String id, bool newValue) async {
+  updateDoList(String id, bool newValue) async {
     try {
       String uid = AuthController.to.firebaseUser.value!.uid;
 
@@ -70,22 +70,22 @@ class Database {
   }
 
   /// Stream is a bit much? TODO needed?
-  Stream<List<DoListModel>> doListStream(String uid) {
-    return _db
-        .collection('user')
-        .doc(uid)
-        .collection('quest/daily/doList')
-        .orderBy('dateCreated', descending: true)
-        .snapshots()
-        .map((QuerySnapshot query) {
-      List<DoListModel> rv = [];
-      for (var element in query.docs) {
-        var doList = element.data() as Map<String, dynamic>;
-        doList['id'] = element.id; // manually set id since not in schema here
-        rv.add(DoListModel.fromJson(doList));
-      }
-      DailyQuestsController.to.update();
-      return rv;
-    });
-  }
+  Stream<List<DoListModel>> doListStream(String uid) => _db
+          .collection('user')
+          .doc(uid)
+          .collection('quest/daily/doList')
+          .orderBy('dateCreated', descending: true)
+          .snapshots()
+          .map(
+        (QuerySnapshot query) {
+          List<DoListModel> rv = [];
+          for (var element in query.docs) {
+            var doList = element.data() as Map<String, dynamic>;
+            doList['id'] = element.id; // manually set id, it's not in schema
+            rv.add(DoListModel.fromJson(doList));
+          }
+          DailyQuestsController.to.update();
+          return rv;
+        },
+      );
 }
