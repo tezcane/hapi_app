@@ -9,7 +9,7 @@ import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/onboard/auth/auth_controller.dart';
 
-/// sends a password reset email to the user.
+/// Sends a password reset email to the user.
 class ResetPasswordUI extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
   final AuthController authController = AuthController.to;

@@ -12,15 +12,15 @@ import 'package:hapi/settings/settings_option.dart';
 //Flutter App translations google sheet
 //https://docs.google.com/spreadsheets/d/1oS7iJ6ocrZBA53SxRfKF0CG9HAaXeKtzvsTBhgG4Zzk/edit?usp=sharing
 final List<SettingsOption> languageOptions = [
-  SettingsOption(key: 'zh', value: '中文'), //Chinese
-  SettingsOption(key: 'de', value: 'Deutsche'), //German
-  SettingsOption(key: 'en', value: 'English'), //English
-  SettingsOption(key: 'es', value: 'Español'), //Spanish
-  SettingsOption(key: 'fr', value: 'Français'), //French
-  SettingsOption(key: 'hi', value: 'हिन्दी'), //Hindi
-  SettingsOption(key: 'ja', value: '日本語'), //Japanese
-  SettingsOption(key: 'pt', value: 'Português'), //Portuguese
-  SettingsOption(key: 'ru', value: 'русский'), //Russian
+  SettingsOption('zh', '中文'), //Chinese
+  SettingsOption('de', 'Deutsche'), //German
+  SettingsOption('en', 'English'), //English
+  SettingsOption('es', 'Español'), //Spanish
+  SettingsOption('fr', 'Français'), //French
+  SettingsOption('hi', 'हिन्दी'), //Hindi
+  SettingsOption('ja', '日本語'), //Japanese
+  SettingsOption('pt', 'Português'), //Portuguese
+  SettingsOption('ru', 'русский'), //Russian
 ];
 
 /// saves and loads our selected language.

@@ -17,13 +17,13 @@ class ThemeListUI extends StatelessWidget {
             selectedOption: c.currentTheme,
             menuOptions: [
               SettingsOption(
-                key: 'light',
-                value: 'settings.light'.tr,
+                'light',
+                'settings.light'.tr,
                 icon: Icons.brightness_low,
               ),
               SettingsOption(
-                key: 'dark',
-                value: 'settings.dark'.tr,
+                'dark',
+                'settings.dark'.tr,
                 icon: Icons.brightness_3,
               )
             ],
