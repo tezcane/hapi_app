@@ -89,6 +89,7 @@ class ZamanController extends GetxHapi {
       await TimeController.to.updateTime(true);
       ActiveQuestsAjrController.to.clearAllQuests();
       updateZaman(); // on next call no longer: currZ == Z.Fajr_Tomorrow
+      return;
     }
     _currZ = currZCheck; // now safe to do this.
 
@@ -113,7 +114,7 @@ class ZamanController extends GetxHapi {
     _startNextZamanCountdownTimer();
   }
 
-  void _startNextZamanCountdownTimer() async {
+  _startNextZamanCountdownTimer() async {
     while (true) {
       await Future.delayed(const Duration(seconds: 1));
 
