@@ -44,13 +44,14 @@ class ResetPasswordUI extends StatelessWidget {
                   ),
                   const FormVerticalSpace(),
                   PrimaryButton(
-                      labelText: 'auth.resetPasswordButton'.tr,
-                      onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
-                          await authController.sendPasswordResetEmail(
-                              emailController.text.trim());
-                        }
-                      }),
+                    labelText: 'auth.resetPasswordButton'.tr,
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        await authController.sendPasswordResetEmail(
+                            emailController.text.trim());
+                      }
+                    },
+                  ),
                   const FormVerticalSpace(),
                 ],
               ),
