@@ -56,18 +56,20 @@ class TimeController extends GetxHapi {
   void onInit() async {
     super.onInit();
 
-    await updateTime(); // TODO do during splash screen?
+    await updateTime(false); // TODO do during splash screen?
 
     // times should all be updated above, so now start Zaman Controller
     if (!ZamanController.to.isInitialized) ZamanController.to.updateZaman();
   }
 
   /// Call to update time TODO use to detect irregular clock movement
-  Future<void> updateTime() async {
+  /// param updateDayIsOK - we only allow zaman controller to update the day if
+  ///                       when next day zaman is hit.
+  Future<void> updateTime(bool updateDayIsOk) async {
     l.d('updateTime: start: ntpOffset=$_ntpOffset, tzLoc=$tzLoc, currDay=$_currDay, dayOfWeek=$_dayOfWeek');
     await _updateNtpTime();
     await _updateTimezoneLocation();
-    await _updateCurrDay();
+    await _updateCurrDay(updateDayIsOk);
     await _updateDayOfWeek();
     l.d('updateTime: after: ntpOffset=$_ntpOffset, tzLoc=$tzLoc, currDay=$_currDay, dayOfWeek=$_dayOfWeek');
   }
@@ -172,13 +174,24 @@ class TimeController extends GetxHapi {
     _tzLoc = tzLocation ?? await _getTimezoneLocFromTimeDate();
   }
 
-  _updateCurrDay() async {
-    // get date from storage or null
+  _updateCurrDay(bool updateDayIsOk) async {
     DateTime? currDayDate = DateTime.tryParse(s.rd('currDay') ?? '');
-    currDayDate ??= await now(); // if null, we get date for first time in app
-    String currDay = dateToDay(currDayDate);
-    if (_currDay != currDay) _currDay = currDay;
-    if (_currDay != s.rd('currDay')) s.wr('currDay', _currDay);
+    DateTime currTimeDate = await now();
+
+    // if currDay never initialized
+    if (currDayDate == null) {
+      _currDay = dateToDay(currTimeDate);
+      s.wr('currDay', _currDay);
+    } else if (updateDayIsOk) {
+      // Note: always updates time if new day is detected
+      String currDay = dateToDay(currDayDate);
+      String currTime = dateToDay(currTimeDate);
+      if (currDay != currTime) currDay = currTime;
+      if (_currDay != currDay) {
+        _currDay = currDay;
+        s.wr('currDay', _currDay);
+      }
+    }
   }
 
   String dateToDay(DateTime date) => DateFormat('yyyy-MM-dd').format(date);
