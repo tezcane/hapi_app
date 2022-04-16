@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/main_controller.dart';
-import 'package:hapi/settings/settings_option_model.dart';
+import 'package:hapi/settings/settings_option.dart';
 
 // TODO update to match google spreadsheet languages
 //List of languages that are supported.  Used in selector.
@@ -11,16 +11,16 @@ import 'package:hapi/settings/settings_option_model.dart';
 //https://github.com/aloisdeniel/flutter_sheet_localization
 //Flutter App translations google sheet
 //https://docs.google.com/spreadsheets/d/1oS7iJ6ocrZBA53SxRfKF0CG9HAaXeKtzvsTBhgG4Zzk/edit?usp=sharing
-final List<SettingsOptionModel> languageOptions = [
-  SettingsOptionModel(key: 'zh', value: '中文'), //Chinese
-  SettingsOptionModel(key: 'de', value: 'Deutsche'), //German
-  SettingsOptionModel(key: 'en', value: 'English'), //English
-  SettingsOptionModel(key: 'es', value: 'Español'), //Spanish
-  SettingsOptionModel(key: 'fr', value: 'Français'), //French
-  SettingsOptionModel(key: 'hi', value: 'हिन्दी'), //Hindi
-  SettingsOptionModel(key: 'ja', value: '日本語'), //Japanese
-  SettingsOptionModel(key: 'pt', value: 'Português'), //Portuguese
-  SettingsOptionModel(key: 'ru', value: 'русский'), //Russian
+final List<SettingsOption> languageOptions = [
+  SettingsOption(key: 'zh', value: '中文'), //Chinese
+  SettingsOption(key: 'de', value: 'Deutsche'), //German
+  SettingsOption(key: 'en', value: 'English'), //English
+  SettingsOption(key: 'es', value: 'Español'), //Spanish
+  SettingsOption(key: 'fr', value: 'Français'), //French
+  SettingsOption(key: 'hi', value: 'हिन्दी'), //Hindi
+  SettingsOption(key: 'ja', value: '日本語'), //Japanese
+  SettingsOption(key: 'pt', value: 'Português'), //Portuguese
+  SettingsOption(key: 'ru', value: 'русский'), //Russian
 ];
 
 /// saves and loads our selected language.
@@ -76,7 +76,7 @@ class LanguageController extends GetxController {
   }
 
   bool isNotSupportedLanguage(String language) {
-    for (SettingsOptionModel optionModel in languageOptions) {
+    for (SettingsOption optionModel in languageOptions) {
       if (optionModel.key == language) return false; // language is supported
     }
     return true; // not found, language is no supported

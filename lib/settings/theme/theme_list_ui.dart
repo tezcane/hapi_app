@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/components/segmented_selector.dart';
-import 'package:hapi/settings/settings_option_model.dart';
+import 'package:hapi/settings/settings_option.dart';
 import 'package:hapi/settings/theme/theme_controller.dart';
 
 class ThemeListUI extends StatelessWidget {
@@ -16,12 +16,12 @@ class ThemeListUI extends StatelessWidget {
           SegmentedSelector(
             selectedOption: c.currentTheme,
             menuOptions: [
-              SettingsOptionModel(
+              SettingsOption(
                 key: 'light',
                 value: 'settings.light'.tr,
                 icon: Icons.brightness_low,
               ),
-              SettingsOptionModel(
+              SettingsOption(
                 key: 'dark',
                 value: 'settings.dark'.tr,
                 icon: Icons.brightness_3,
