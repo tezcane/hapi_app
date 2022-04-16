@@ -83,6 +83,10 @@ class ZamanController extends GetxHapi {
     DateTime now = await TimeController.to.now();
     Z currZCheck = athan.getCurrZaman(now);
     l.d('currZCheck: $currZCheck');
+
+    // For next prayer/day, set any missed quests and do other quest setup:
+    await ActiveQuestsAjrController.to.initCurrQuest(currZCheck);
+
     if (currZCheck == Z.Fajr_Tomorrow) {
       l.d('ZamanController: _initLocation: New day detected.');
       // Reset day, Fajr Tom. is day after currDay so safe to do next actions:
@@ -97,9 +101,6 @@ class ZamanController extends GetxHapi {
     l.d('_nextZ: $_nextZ');
     _nextZTime = athan.getZamanTime(_nextZ)[0] as DateTime;
     l.d('_nextZTime: $_nextZTime');
-
-    // For next prayer/day, set any missed quests and do other quest setup:
-    ActiveQuestsAjrController.to.initCurrQuest();
 
     // Now all init is done, set athan value (needed for init to prevent NPE)
     _athan = athan;

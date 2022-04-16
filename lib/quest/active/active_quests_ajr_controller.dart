@@ -4,7 +4,6 @@ import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/active_quests_ui.dart';
 import 'package:hapi/quest/active/athan/z.dart';
-import 'package:hapi/quest/active/zaman_controller.dart';
 
 // ONLY NEW VALUES CAN BE ADDED TO PRESERVE ENUM IN DB:
 enum QUEST {
@@ -222,7 +221,7 @@ class ActiveQuestsAjrController extends GetxHapi {
     _questsSkip = s.rd('questsSkip') ?? 0;
     _questsMiss = s.rd('questsMiss') ?? 0;
 
-    initCurrQuest();
+    //initCurrQuest();
 
     //_isIshaIbadahComplete = false;
   }
@@ -239,20 +238,19 @@ class ActiveQuestsAjrController extends GetxHapi {
     printBinary(questsAll());
   }
 
-  void initCurrQuest() async {
-    int sleepBackoffSecs = 1;
-
-    // No internet needed to init, but we put a back off just in case:
-    while (ZamanController.to.athan == null) {
-      l.w('ActiveQuestsAjrController.initCurrQuest: not ready, try again after sleeping $sleepBackoffSecs Secs...');
-      await Future.delayed(Duration(seconds: sleepBackoffSecs));
-      if (sleepBackoffSecs < 4) sleepBackoffSecs++;
-    }
+  initCurrQuest(Z currZ) async {
+    // int sleepBackoffSecs = 1;
+    // // No internet needed to init, but we put a back off just in case:
+    // while (ZamanController.to.athan == null) {
+    //   l.w('ActiveQuestsAjrController.initCurrQuest: not ready, try again after sleeping $sleepBackoffSecs Secs...');
+    //   await Future.delayed(Duration(seconds: sleepBackoffSecs));
+    //   if (sleepBackoffSecs < 4) sleepBackoffSecs++;
+    // }
 
     for (QUEST quest in QUEST.values) {
-      if (quest.index == ZamanController.to.currZ.getFirstQuest().index) {
-        l.i('Stopping init: $quest = $_questsMiss');
-        break;
+      if (quest.index == currZ.getFirstQuest().index) {
+        l.i('Stopping init: $quest, _questsMiss=$_questsMiss');
+        return;
       }
 
       int curBitMask = 0x1 << quest.index;

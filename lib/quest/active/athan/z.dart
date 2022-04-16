@@ -115,8 +115,8 @@ extension EnumUtil on Z {
       case (Z.Isha):
         return QUEST.ISHA_NAFLB;
       case (Z.Layl__2):
-        return QUEST.LAYL_QIYAM;
       case (Z.Layl__3):
+      case (Z.Fajr_Tomorrow): // still needed so we can set misses
         return QUEST.LAYL_QIYAM;
       default:
         String e = 'Z:getFirstQuest: Invalid Z "$this" given';
