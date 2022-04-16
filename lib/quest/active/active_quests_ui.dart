@@ -279,7 +279,6 @@ class SalahRow extends StatelessWidget {
 
   late bool isActive;
 
-  // TODO don't use white for all, Theme.of(context).textTheme.headline6!:
   static const TS tsFard = TS(AppThemes.ajr2Uncommon);
   static const TS tsMuak = TS(AppThemes.ajr4Epic);
   static const TS tsNafl = TS(AppThemes.ajr5Legendary);
@@ -891,13 +890,13 @@ class _SunCell extends StatelessWidget {
               _label,
               tsText,
               w: w3 - 40,
-              h: h2 - 1,
+              h: h2 - 1.05, // .05 because seeing very small decimal overflow
             ),
             T(
               ActiveQuestsUI.getTimeRange(_time1, _time2),
               tsText,
               w: w3 - 40, // 40 = 32 icon + 2 selected + 6 sun shift
-              h: h2 - 1, // - 1 selected for red selection around
+              h: h2 - 1.05, // - 1 selected for red selection around
             ),
           ],
         ),

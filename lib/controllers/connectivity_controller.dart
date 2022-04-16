@@ -13,7 +13,8 @@ class ConnectivityController extends GetxHapi {
   ConnectivityResult _connResult = ConnectivityResult.none;
   ConnectivityResult get connResult => _connResult;
 
-  bool _isInternetOn = false;
+  // default to internet on so we force NTP init attempt at app init
+  bool _isInternetOn = true;
   bool get isInternetOn => _isInternetOn;
   set isInternetOn(bool isInternetOn) {
     if (_isInternetOn != isInternetOn) {

@@ -5,15 +5,16 @@ import 'package:get/get.dart';
 import 'package:hapi/controllers/connectivity_controller.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main_controller.dart';
+import 'package:hapi/quest/active/zaman_controller.dart';
 import 'package:intl/intl.dart';
 import 'package:ntp/ntp.dart';
 import 'package:timezone/timezone.dart'
-    show Location, LocationNotFoundException, getLocation;
+    show Location, TZDateTime, LocationNotFoundException, getLocation;
 
 // Params to init values so we don't have to worry about NPE/null checks
 final DateTime DUMMY_TIME = DateTime.utc(2022, 2, 22, 22, 222, 222); // 2's day
 const int DUMMY_NTP_OFFSET = 222222222222222;
-const String DUMMY_TIMEZONE = 'America/Los_Angeles'; // TODO random Antartica?
+const String DUMMY_TIMEZONE = 'America/Los_Angeles'; // TODO random Antarctica?
 
 enum DAY_OF_WEEK {
   Monday,
@@ -25,38 +26,27 @@ enum DAY_OF_WEEK {
   Sunday
 }
 
-DAY_OF_WEEK getDayOfWeek(DateTime dateTime) {
-  // TODO test in other locales also // TODO test, used to be DateTime now()
-  String day = DateFormat('EEEE').format(dateTime);
-  for (var dayOfWeek in DAY_OF_WEEK.values) {
-    if (day == dayOfWeek.name) {
-      return dayOfWeek;
-    }
-  }
-
-  DAY_OF_WEEK defaultDayOfWeek = DAY_OF_WEEK.Monday;
-  l.e('getDayOfWeek: Invalid day of week, defaulting to; method found: $defaultDayOfWeek');
-  return defaultDayOfWeek;
-}
-
 /// Used to get accurate server UTC/NTP based time in case user's clock is off
 class TimeController extends GetxHapi {
   static TimeController get to => Get.find();
 
-  // TODO don't need Rx here and other controllers?
-  int _ntpOffset = DUMMY_NTP_OFFSET;
-
-  DateTime _lastNtpTime = DUMMY_TIME;
-  DateTime get lastUtcTime => _lastNtpTime;
+  static DAY_OF_WEEK defaultDayOfWeek = DAY_OF_WEEK.Monday;
 
   bool forceSalahRecalculation = false;
+
+  int _ntpOffset = DUMMY_NTP_OFFSET;
 
   /// NOTE: Can run only because tz.initializeTimeZones() completes in main.dart
   /// Used to calculate Zaman times
   Location _tzLoc = getLocation(DUMMY_TIMEZONE);
   Location get tzLoc => _tzLoc;
 
-  DAY_OF_WEEK _dayOfWeek = getDayOfWeek(DUMMY_TIME);
+  /// Holds the current day in 'yyyy-MM-dd' used for point calculations
+  String _currDay = '2022-02-22';
+  String get currDay => _currDay;
+  DateTime get currDayDate => TZDateTime.from(DateTime.parse(_currDay), _tzLoc);
+
+  DAY_OF_WEEK _dayOfWeek = defaultDayOfWeek;
   DAY_OF_WEEK get dayOfWeek => _dayOfWeek;
   _updateDayOfWeek() async =>
       _dayOfWeek = getDayOfWeek(await TimeController.to.now());
@@ -66,16 +56,20 @@ class TimeController extends GetxHapi {
   void onInit() async {
     super.onInit();
 
-    await initTime(); // TODO do during splash screen?
+    await updateTime(); // TODO do during splash screen?
+
+    // times should all be updated above, so now start Zaman Controller
+    if (!ZamanController.to.isInitialized) ZamanController.to.updateZaman();
   }
 
   /// Call to update time TODO use to detect irregular clock movement
-  Future<void> initTime() async {
-    l.d('initTime called tz=$tzLoc, DateTime=${DateTime.now()}, ntpOffset=$_ntpOffset, dayOfWeek=$_dayOfWeek');
+  Future<void> updateTime() async {
+    l.d('updateTime: start: ntpOffset=$_ntpOffset, tzLoc=$tzLoc, currDay=$_currDay, dayOfWeek=$_dayOfWeek');
     await _updateNtpTime();
-    await getTimezoneLocation();
+    await _updateTimezoneLocation();
+    await _updateCurrDay();
     await _updateDayOfWeek();
-    l.d('initTime done tz=$tzLoc, DateTime=${DateTime.now()}, ntpOffset=$_ntpOffset}, dayOfWeek=$_dayOfWeek');
+    l.d('updateTime: after: ntpOffset=$_ntpOffset, tzLoc=$tzLoc, currDay=$_currDay, dayOfWeek=$_dayOfWeek');
   }
 
   /// Gets NTP time from server when called, if internet is on
@@ -89,11 +83,11 @@ class TimeController extends GetxHapi {
     try {
       _ntpOffset = await NTP.getNtpOffset(
           localTime: appTime, timeout: const Duration(seconds: 3)); // TODO
-      _lastNtpTime = appTime.add(Duration(milliseconds: _ntpOffset));
+      DateTime ntpTime = appTime.add(Duration(milliseconds: _ntpOffset));
 
       l.d('cTime:updateNtpTime: NTP DateTime offset align (ntpOffset=$_ntpOffset):');
       l.d('cTime:updateNtpTime: locTime was=${appTime.toLocal()}');
-      l.d('cTime:updateNtpTime: ntpTime now=${_lastNtpTime.toLocal()}');
+      l.d('cTime:updateNtpTime: ntpTime now=${ntpTime.toLocal()}');
     } on Exception catch (e) {
       l.e('cTime:updateNtpTime: Exception: Failed to call NTP.getNtpOffset(): $e');
     }
@@ -110,7 +104,7 @@ class TimeController extends GetxHapi {
       time = time.add(Duration(milliseconds: _ntpOffset));
     }
     // print('cTime:now: (ntpOffset=$_ntpOffset) ${time.toLocal()}');
-    return time.toLocal();
+    return TZDateTime.from(time.toLocal(), _tzLoc);
   }
 
   /// Non-async version to get time now()
@@ -124,7 +118,7 @@ class TimeController extends GetxHapi {
       time = time.add(Duration(milliseconds: _ntpOffset));
     }
     l.d('cTime.now2: (ntpOffset=$_ntpOffset) ${time.toLocal()}');
-    return time.toLocal();
+    return TZDateTime.from(time.toLocal(), _tzLoc);
   }
 
   /// TODO Test other platforms:
@@ -165,7 +159,7 @@ class TimeController extends GetxHapi {
         // whole number of hours, but a few zones are offset by an additional
         // 30 or 45 minutes, such as in India, South Australia and Nepal.
 
-        l.e('$err\ntimezone "$tzName" not found by getLocation, using defualt: $DUMMY_TIMEZONE');
+        l.e('$err\ntimezone "$tzName" not found by getLocation, using default: $DUMMY_TIMEZONE');
         tzLocation = getLocation(DUMMY_TIMEZONE);
       }
     }
@@ -173,9 +167,30 @@ class TimeController extends GetxHapi {
     return Future<Location>.value(tzLocation);
   }
 
-  Future<Location> getTimezoneLocation() async {
+  _updateTimezoneLocation() async {
     Location? tzLocation = await _getTimezoneLocFromSystem();
     _tzLoc = tzLocation ?? await _getTimezoneLocFromTimeDate();
-    return Future<Location>.value(_tzLoc);
+  }
+
+  _updateCurrDay() async {
+    // get date from storage or null
+    DateTime? currDayDate = DateTime.tryParse(s.rd('currDay') ?? '');
+    currDayDate ??= await now(); // if null, we get date for first time in app
+    String currDay = dateToDay(currDayDate);
+    if (_currDay != currDay) _currDay = currDay;
+    if (_currDay != s.rd('currDay')) s.wr('currDay', _currDay);
+  }
+
+  String dateToDay(DateTime date) => DateFormat('yyyy-MM-dd').format(date);
+
+  DAY_OF_WEEK getDayOfWeek(DateTime dateTime) {
+    // TODO test in other locales also // TODO test, used to be DateTime now()
+    String day = DateFormat('EEEE').format(dateTime);
+    for (var dayOfWeek in DAY_OF_WEEK.values) {
+      if (day == dayOfWeek.name) return dayOfWeek;
+    }
+
+    l.e('getDayOfWeek: Invalid day of week, defaulting to; method found: $defaultDayOfWeek');
+    return defaultDayOfWeek;
   }
 }

@@ -39,17 +39,11 @@ class ZamanController extends GetxHapi {
   @override
   void onInit() {
     super.onInit();
-
-    initLocation();
   }
 
-  initLocation() async {
-    await TimeController.to.initTime(); // TODO call before timer runs down?
+  bool get isInitialized => _athan != null;
 
-    // TODO is this even needed, getTime gets local time of user?
-    Location timezoneLoc = await TimeController.to.getTimezoneLocation();
-    DateTime date = TZDateTime.from(await TimeController.to.now(), timezoneLoc);
-
+  CalculationParams _getCalculationParams() {
     var calcMethod =
         CalcMethod.values[ActiveQuestsController.to.salahCalcMethod];
 
@@ -66,8 +60,8 @@ class ZamanController extends GetxHapi {
     }
 
     // TODO give user a way to change:
-    //   HighLatitudeRule, SalahAdjust, and precision
-    var params = CalculationParams(
+    //   HighLatitudeRule, SalahAdjust
+    return CalculationParams(
       calcMethod.params,
       madhab,
       karahatSunRisingSecs,
@@ -75,27 +69,38 @@ class ZamanController extends GetxHapi {
       karahatSunSettingSecs,
       HighLatitudeRule.MiddleOfTheNight,
     );
+  }
 
+  updateZaman() async {
     Athan athan = Athan(
-      params,
-      date,
+      _getCalculationParams(),
+      TimeController.to.currDayDate,
       LocationController.to.lastKnownCord,
-      timezoneLoc,
+      TimeController.to.tzLoc,
       ActiveQuestsController.to.showSecPrecision,
     );
-    _athan = athan;
-    _currZ = athan.getCurrZaman(date);
-    _nextZ = athan.getNextZaman(date);
+
+    DateTime now = await TimeController.to.now();
+    _currZ = athan.getCurrZaman(now);
     l.d('_currZTime: $_currZ');
+    if (currZ == Z.Fajr_Tomorrow) {
+      l.d('ZamanController: _initLocation: New day detected.');
+      // Reset day, Fajr Tom. is day after currDay so safe to do next actions:
+      await TimeController.to.updateTime();
+      ActiveQuestsAjrController.to.clearAllQuests();
+      updateZaman(); // on next call no longer: currZ == Z.Fajr_Tomorrow
+    }
+
+    _nextZ = athan.getNextZaman(now);
+
     l.d('_nextZTime: $_nextZ');
     _nextZTime = athan.getZamanTime(_nextZ)[0] as DateTime;
 
-    // TODO asdf fdsa, this is broken: reset at Maghrib time:
-    // reset day:
-    if (currZ == Z.Fajr_Tomorrow) ActiveQuestsAjrController.to.clearAllQuests();
-
     // For next prayer/day, set any missed quests and do other quest setup:
     ActiveQuestsAjrController.to.initCurrQuest();
+
+    // Now all init is done, set athan value (needed for init to prevent NPE)
+    _athan = athan;
 
     update(); // update UI with above changes (needed at app init)
 
@@ -104,10 +109,10 @@ class ZamanController extends GetxHapi {
     // ActiveQuestsController, it's update() was called before athan updated.
     ActiveQuestsController.to.update();
 
-    startNextZamanCountdownTimer();
+    _startNextZamanCountdownTimer();
   }
 
-  void startNextZamanCountdownTimer() async {
+  void _startNextZamanCountdownTimer() async {
     while (true) {
       await Future.delayed(const Duration(seconds: 1));
 
@@ -125,16 +130,15 @@ class ZamanController extends GetxHapi {
         l.d('This zaman is over, going to next zaman: '
             '${timeToNextZaman.inSeconds} secs left');
         forceSalahRecalculation = false;
-        initLocation(); // does eventually call startNextZamanCountdownTimer();
+        updateZaman(); // does eventually call startNextZamanCountdownTimer();
         return; // quits this while loop, wills tart again in initLocation()
       } else {
         if (timeToNextZaman.inSeconds % 60 == 0) {
           // print once a minute to show thread is alive
           l.i('Next Zaman Timer Minute Tick: ${timeToNextZaman.inSeconds} '
               'secs left (${timeToNextZaman.inSeconds / 60} minutes)');
-        } else if (timeToNextZaman.inSeconds % 3600 == 0) {
-          TimeController.to.initTime(); // TODO check cheater every hour?
         }
+        // this is displayed on UI:
         _timeToNextZaman = _printHourMinuteSeconds(timeToNextZaman);
         update();
       }
