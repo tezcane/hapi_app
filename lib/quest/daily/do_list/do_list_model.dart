@@ -11,7 +11,6 @@ part 'do_list_model.g.dart';
 @DateTimeConverterN()
 class DoListModel {
   String id;
-  //QUEST questType;
   String content;
   DateTime dateCreated;
   DateTime? dateStart;
@@ -21,7 +20,6 @@ class DoListModel {
 
   DoListModel({
     required this.id,
-    //required this.questType,
     required this.content,
     required this.dateCreated,
     required this.dateStart,

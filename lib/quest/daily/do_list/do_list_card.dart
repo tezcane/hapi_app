@@ -31,9 +31,8 @@ class DoListCard extends StatelessWidget {
                 value: doList.done,
                 checkColor: AppThemes.checkComplete,
                 activeColor: Colors.transparent,
-                onChanged: (newValue) {
-                  Database().updateDoList(doList.id, newValue as bool);
-                },
+                onChanged: (newValue) =>
+                    Database().updateDoList(doList.id, newValue as bool),
               ),
             ),
           ],
