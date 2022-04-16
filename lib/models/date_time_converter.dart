@@ -19,11 +19,9 @@ class DateTimeConverterN implements JsonConverter<DateTime?, Timestamp?> {
   const DateTimeConverterN();
 
   @override
-  DateTime? fromJson(Timestamp? timestamp) {
-    return timestamp?.toDate();
-  }
+  DateTime? fromJson(Timestamp? timestamp) => timestamp?.toDate();
 
   @override
   Timestamp? toJson(DateTime? date) =>
-      date != null ? Timestamp.fromDate(date) : null;
+      date == null ? null : Timestamp.fromDate(date);
 }
