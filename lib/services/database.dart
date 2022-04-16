@@ -33,17 +33,21 @@ class Database {
   //   }
   // }
 
-  addDoList(String content, String uid) async {
+  addDoList(String content) async {
     try {
+      String uid = AuthController.to.firebaseUser.value!.uid;
+
       await _db
           .collection('user')
           .doc(uid)
           .collection('quest/daily/doList')
-          .add({
-        'dateCreated': await TimeController.to.now(),
-        'content': content,
-        'done': false,
-      }).then((_) => DailyQuestsController.to.update());
+          .add(
+        {
+          'dateCreated': await TimeController.to.now(),
+          'content': content,
+          'done': false,
+        },
+      ).then((_) => DailyQuestsController.to.update());
     } catch (e) {
       // TODO display error to user
       l.e(e.toString());
