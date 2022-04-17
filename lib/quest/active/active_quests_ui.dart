@@ -890,13 +890,13 @@ class _SunCell extends StatelessWidget {
               _label,
               tsText,
               w: w3 - 40,
-              h: h2 - 1.05, // .05 because seeing very small decimal overflow
+              h: h2 - 2, // a little extra needed for borders
             ),
             T(
               ActiveQuestsUI.getTimeRange(_time1, _time2),
               tsText,
               w: w3 - 40, // 40 = 32 icon + 2 selected + 6 sun shift
-              h: h2 - 1.05, // - 1 selected for red selection around
+              h: h2 - 2,
             ),
           ],
         ),

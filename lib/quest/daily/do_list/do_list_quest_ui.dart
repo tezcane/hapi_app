@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/quest/daily/daily_quests_controller.dart';
 import 'package:hapi/quest/daily/do_list/do_list_card.dart';
-import 'package:hapi/services/database.dart';
+import 'package:hapi/services/db.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 
 class DoListUI extends StatelessWidget {
@@ -69,7 +69,7 @@ class AddDoList extends StatelessWidget {
                 icon: const Icon(Icons.add),
                 onPressed: () {
                   if (textEditingController.text != '') {
-                    Database().addDoList(textEditingController.text);
+                    Db.addDoList(textEditingController.text);
                     textEditingController.clear();
                   }
                 },

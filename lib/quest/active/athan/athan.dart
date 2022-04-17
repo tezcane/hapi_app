@@ -259,7 +259,7 @@ class Athan {
     l.d('sunrise:          $_karahatAdkharSunrise_02');
     l.d('ishrak:           $_ishraqPrayer_03');
     l.d('duha:             $_duhaPrayer_04');
-    l.d('istiwa:            $_karahatAdkharIstiwa_05');
+    l.d('istiwa:           $_karahatAdkharIstiwa_05');
     l.d('dhuhr:            $_dhuhr_06');
     l.d('asr earlier:      $_asrEarlier_07');
     l.d('asr later:        $_asrLater_08');

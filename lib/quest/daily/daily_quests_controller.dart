@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/onboard/auth/auth_controller.dart';
 import 'package:hapi/quest/daily/do_list/do_list_model.dart';
-import 'package:hapi/services/database.dart';
+import 'package:hapi/services/db.dart';
 
 class DailyQuestsController extends GetxController {
   static DailyQuestsController get to => Get.find();
@@ -35,9 +35,6 @@ class DailyQuestsController extends GetxController {
       }
     }
 
-    // TODO asdf fdsa move this to TODO logic controller? this looks unreliable:
-    String uid = AuthController.to.firebaseUser.value!.uid;
-    l.i('DailyQuestsController.initDoList: binding to db with uid=$uid');
-    _doList.bindStream(Database().doListStream(uid)); //stream from firebase
+    _doList.bindStream(Db.doListStream()); //stream from firebase
   }
 }

@@ -1,9 +1,12 @@
 import 'package:get/get.dart';
+import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main_controller.dart';
+import 'package:hapi/quest/active/active_quest_model.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/active_quests_ui.dart';
 import 'package:hapi/quest/active/athan/z.dart';
+import 'package:hapi/services/db.dart';
 
 // ONLY NEW VALUES CAN BE ADDED TO PRESERVE ENUM IN DB:
 enum QUEST {
@@ -208,23 +211,9 @@ class ActiveQuestsAjrController extends GetxHapi {
   // cAjrA = controller ajr active (quests):
   static ActiveQuestsAjrController get to => Get.find();
 
-//int _questsAll = 0;
   int _questsDone = 0;
   int _questsSkip = 0;
   int _questsMiss = 0;
-
-  @override
-  void onInit() {
-    super.onInit();
-
-    _questsDone = s.rd('questsDone') ?? 0;
-    _questsSkip = s.rd('questsSkip') ?? 0;
-    _questsMiss = s.rd('questsMiss') ?? 0;
-
-    //initCurrQuest();
-
-    //_isIshaIbadahComplete = false;
-  }
 
   void printBinary(int input) {
     l.v(input.toRadixString(2));
@@ -238,19 +227,24 @@ class ActiveQuestsAjrController extends GetxHapi {
     printBinary(questsAll());
   }
 
-  initCurrQuest(Z currZ) async {
-    // int sleepBackoffSecs = 1;
-    // // No internet needed to init, but we put a back off just in case:
-    // while (ZamanController.to.athan == null) {
-    //   l.w('ActiveQuestsAjrController.initCurrQuest: not ready, try again after sleeping $sleepBackoffSecs Secs...');
-    //   await Future.delayed(Duration(seconds: sleepBackoffSecs));
-    //   if (sleepBackoffSecs < 4) sleepBackoffSecs++;
-    // }
+  initCurrQuest(Z currZ, bool initUpdate) async {
+    if (initUpdate) {
+      ActiveQuestModel? m = await Db.getActiveQuest(TimeController.to.currDay);
+      if (m != null) {
+        _questsDone = m.done;
+        _questsSkip = m.skip;
+        _questsMiss = m.miss;
+      }
+    }
+
+    int questsDone = _questsDone;
+    int questsSkip = _questsSkip;
+    int questsMiss = _questsMiss;
 
     for (QUEST quest in QUEST.values) {
       if (quest.index == currZ.getFirstQuest().index) {
         l.i('Stopping init: $quest, _questsMiss=$_questsMiss');
-        return;
+        break;
       }
 
       int curBitMask = 0x1 << quest.index;
@@ -261,6 +255,23 @@ class ActiveQuestsAjrController extends GetxHapi {
       // user never inputted this value, we assume it is missed:
       setMiss(quest);
     }
+
+    if (questsDone != _questsDone ||
+        questsSkip != _questsSkip ||
+        questsMiss != _questsMiss) {
+      updateDB();
+    }
+  }
+
+  void updateDB() {
+    Db.setActiveQuest(
+      ActiveQuestModel(
+        day: TimeController.to.currDay,
+        done: _questsDone,
+        skip: _questsSkip,
+        miss: _questsMiss,
+      ),
+    );
   }
 
   int getCurrIdx() {
@@ -284,6 +295,7 @@ class ActiveQuestsAjrController extends GetxHapi {
     l.v('setDone: $quest (index=${quest.index}) = $_questsMiss');
     printBinaryAll();
     _questsDone |= 1 << quest.index;
+    updateDB();
     ActiveQuestsController.to.update(); // refresh UI
     printBinaryAll();
   }
@@ -292,6 +304,7 @@ class ActiveQuestsAjrController extends GetxHapi {
     l.v('setSkip: $quest (index=${quest.index}) = $_questsMiss');
     printBinaryAll();
     _questsSkip |= 1 << quest.index;
+    updateDB();
     ActiveQuestsController.to.update(); // refresh UI
     printBinaryAll();
   }
@@ -300,6 +313,7 @@ class ActiveQuestsAjrController extends GetxHapi {
     l.v('setMiss: $quest (index=${quest.index}) = $_questsMiss');
     printBinaryAll();
     _questsMiss |= 1 << quest.index;
+    // updateDB(); never updated db, only done in initCurrQuest()
     ActiveQuestsController.to.update(); // refresh UI
     printBinaryAll();
   }
@@ -310,6 +324,7 @@ class ActiveQuestsAjrController extends GetxHapi {
     _questsDone &= ~(1 << quest.index);
     _questsSkip &= ~(1 << quest.index);
     _questsMiss &= ~(1 << quest.index);
+    //updateDB(); it is cleared, then written to so no need to write to db.
     ActiveQuestsController.to.update(); // refresh UI
     printBinaryAll();
   }

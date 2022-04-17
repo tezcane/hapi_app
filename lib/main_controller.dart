@@ -89,7 +89,7 @@ class Log {
   static const int llV5 = 5; // Verbose - verbose/spam messages
 
   /// Current log level. Add 1 as a minor optimization (use > instead of >=).
-  static const int ll = 1 + llV5;
+  static const int ll = 1 + llD4;
 
   /// i->info, w->warn, e->error/failures, d->debug, v->verbose:
   i(String msg) => {if (ll > llI1) debugPrint('HAPI_INFO: $msg')};

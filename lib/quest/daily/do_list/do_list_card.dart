@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hapi/quest/daily/do_list/do_list_model.dart';
-import 'package:hapi/services/database.dart';
+import 'package:hapi/services/db.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 
 class DoListCard extends StatelessWidget {
@@ -32,7 +32,7 @@ class DoListCard extends StatelessWidget {
                 checkColor: AppThemes.checkComplete,
                 activeColor: Colors.transparent,
                 onChanged: (newValue) =>
-                    Database().updateDoList(doList.id, newValue as bool),
+                    Db.updateDoList(doList.id, newValue as bool),
               ),
             ),
           ],

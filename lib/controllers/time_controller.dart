@@ -13,6 +13,7 @@ import 'package:timezone/timezone.dart'
 
 // Params to init values so we don't have to worry about NPE/null checks
 final DateTime DUMMY_TIME = DateTime.utc(2022, 2, 22, 22, 222, 222); // 2's day
+const String DUMMY_TIME_STR = '2022-02-22';
 const int DUMMY_NTP_OFFSET = 222222222222222;
 const String DUMMY_TIMEZONE = 'America/Los_Angeles'; // TODO random Antarctica?
 
@@ -42,15 +43,12 @@ class TimeController extends GetxHapi {
   Location get tzLoc => _tzLoc;
 
   /// Holds the current day in 'yyyy-MM-dd' used for point calculations
-  String _currDay = '2022-02-22';
+  String _currDay = DUMMY_TIME_STR;
   String get currDay => _currDay;
   DateTime get currDayDate => TZDateTime.from(DateTime.parse(_currDay), _tzLoc);
 
   DAY_OF_WEEK _dayOfWeek = defaultDayOfWeek;
   DAY_OF_WEEK get dayOfWeek => _dayOfWeek;
-  _updateDayOfWeek() async =>
-      _dayOfWeek = getDayOfWeek(await TimeController.to.now());
-  bool isFriday() => _dayOfWeek == DAY_OF_WEEK.Friday;
 
   @override
   void onInit() async {
@@ -59,7 +57,7 @@ class TimeController extends GetxHapi {
     await updateTime(false); // TODO do during splash screen?
 
     // times should all be updated above, so now start Zaman Controller
-    if (!ZamanController.to.isInitialized) ZamanController.to.updateZaman();
+    if (!ZamanController.to.isInitialized) ZamanController.to.updateZaman(true);
   }
 
   /// Call to update time TODO use to detect irregular clock movement
@@ -182,19 +180,25 @@ class TimeController extends GetxHapi {
     if (currDayDate == null) {
       _currDay = dateToDay(currTimeDate);
       s.wr('currDay', _currDay);
-    } else if (updateDayIsOk) {
-      // Note: always updates time if new day is detected
-      String currDay = dateToDay(currDayDate);
-      String currTime = dateToDay(currTimeDate);
-      if (currDay != currTime) currDay = currTime;
-      if (_currDay != currDay) {
-        _currDay = currDay;
-        s.wr('currDay', _currDay);
+    } else {
+      if (updateDayIsOk) {
+        // Note: always updates time if new day is detected
+        String currDay = dateToDay(currDayDate);
+        String currTime = dateToDay(currTimeDate);
+        if (currDay != currTime) currDay = currTime;
+        if (_currDay != currDay) {
+          _currDay = currDay;
+          s.wr('currDay', _currDay);
+        }
+      } else {
+        _currDay = dateToDay(currTimeDate);
       }
     }
   }
 
   String dateToDay(DateTime date) => DateFormat('yyyy-MM-dd').format(date);
+
+  _updateDayOfWeek() async => _dayOfWeek = getDayOfWeek(await now());
 
   DAY_OF_WEEK getDayOfWeek(DateTime dateTime) {
     // TODO test in other locales also // TODO test, used to be DateTime now()
@@ -206,4 +210,7 @@ class TimeController extends GetxHapi {
     l.e('getDayOfWeek: Invalid day of week, defaulting to; method found: $defaultDayOfWeek');
     return defaultDayOfWeek;
   }
+
+  // TODO friday should switch Thursday at Maghrib
+  bool isFriday() => _dayOfWeek == DAY_OF_WEEK.Friday;
 }

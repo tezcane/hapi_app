@@ -8,7 +8,7 @@ part of 'active_quest_model.dart';
 
 ActiveQuestModel _$ActiveQuestModelFromJson(Map<String, dynamic> json) =>
     ActiveQuestModel(
-      day: const DateTimeConverter().fromJson(json['day'] as Timestamp),
+      day: json['day'] as String,
       done: json['done'] as int,
       skip: json['skip'] as int,
       miss: json['miss'] as int,
@@ -16,7 +16,7 @@ ActiveQuestModel _$ActiveQuestModelFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$ActiveQuestModelToJson(ActiveQuestModel instance) =>
     <String, dynamic>{
-      'day': const DateTimeConverter().toJson(instance.day),
+      'day': instance.day,
       'done': instance.done,
       'skip': instance.skip,
       'miss': instance.miss,

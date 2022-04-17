@@ -5,12 +5,14 @@ import 'package:hapi/controllers/location_controller.dart';
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main_controller.dart';
+import 'package:hapi/quest/active/active_quest_model.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/athan.dart';
 import 'package:hapi/quest/active/athan/calculation_method.dart';
 import 'package:hapi/quest/active/athan/calculation_params.dart';
 import 'package:hapi/quest/active/athan/z.dart';
+import 'package:hapi/services/db.dart';
 import 'package:timezone/timezone.dart' show Location, TZDateTime;
 
 /// Controls Islamic Times Of Day, e.g. Fajr, Duha, Sunset/Maghrib, etc. that
@@ -71,7 +73,7 @@ class ZamanController extends GetxHapi {
     );
   }
 
-  updateZaman() async {
+  updateZaman(bool initUpdate) async {
     Athan athan = Athan(
       _getCalculationParams(),
       TimeController.to.currDayDate,
@@ -85,14 +87,23 @@ class ZamanController extends GetxHapi {
     l.d('currZCheck: $currZCheck');
 
     // For next prayer/day, set any missed quests and do other quest setup:
-    await ActiveQuestsAjrController.to.initCurrQuest(currZCheck);
+    await ActiveQuestsAjrController.to.initCurrQuest(currZCheck, initUpdate);
 
     if (currZCheck == Z.Fajr_Tomorrow) {
       l.d('ZamanController: _initLocation: New day detected.');
       // Reset day, Fajr Tom. is day after currDay so safe to do next actions:
       await TimeController.to.updateTime(true);
       ActiveQuestsAjrController.to.clearAllQuests();
-      updateZaman(); // on next call no longer: currZ == Z.Fajr_Tomorrow
+      await Db.setActiveQuest(
+        ActiveQuestModel(
+          day: TimeController.to.currDay,
+          done: 0,
+          skip: 0,
+          miss: 0,
+        ),
+      );
+
+      updateZaman(false); // on next call no longer: currZ == Z.Fajr_Tomorrow
       return;
     }
     _currZ = currZCheck; // now safe to do this.
@@ -133,7 +144,7 @@ class ZamanController extends GetxHapi {
         l.d('This zaman is over, going to next zaman: '
             '${timeToNextZaman.inSeconds} secs left');
         forceSalahRecalculation = false;
-        updateZaman(); // does eventually call startNextZamanCountdownTimer();
+        updateZaman(false); // eventually calls startNextZamanCountdownTimer()
         return; // quits this while loop, wills tart again in initLocation()
       } else {
         if (timeToNextZaman.inSeconds % 60 == 0) {
