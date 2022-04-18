@@ -82,7 +82,6 @@ class Db {
     String path = 'questActive/$_uid/day/$day';
     try {
       return await _db.doc(path).get().then((doc) {
-        DocumentSnapshot doc1 = doc;
         if (doc.exists) {
           ActiveQuestModel m = ActiveQuestModel.fromJson(doc.data()!);
           l.d('getActiveQuest($path): done=${m.done}, skip=${m.skip}, miss=${m.miss})');
