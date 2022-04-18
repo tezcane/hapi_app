@@ -41,7 +41,7 @@ import 'package:hapi/quest/active/zaman_controller.dart';
 // }
 
 class SunRing extends StatelessWidget {
-  const SunRing(
+  SunRing(
     this.athan,
     this.diameter,
     this.strokeWidth,
@@ -54,6 +54,9 @@ class SunRing extends StatelessWidget {
   final Map<Z, ColorSlice> colorSlices;
 
   final int secondsInADay = 86400; //60 * 60 * 24;
+
+  bool initAnimationDone = false;
+  double initAnimationLocation = 1;
 
   // TODO remove
   String fill(String s, int fillLen) {
@@ -198,6 +201,15 @@ class SunRing extends StatelessWidget {
                   // it's fajr time, so negative number and must take abs of it:
                   sunValue = sunValue.abs();
                   l.v('sunValue.abs = $sunValue');
+                }
+                if (!initAnimationDone) {
+                  initAnimationLocation -= .003;
+                  if (initAnimationLocation < sunValue) {
+                    initAnimationDone = true;
+                  } else {
+                    sunValue = initAnimationLocation;
+                    ZamanController.to.updateOnThread1Ms();
+                  }
                 }
 
                 return Center(
