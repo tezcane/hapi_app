@@ -55,7 +55,9 @@ class SunRing extends StatelessWidget {
 
   final int secondsInADay = 86400; //60 * 60 * 24;
 
+  bool colorSliceInitialized = false;
   bool initAnimationDone = false;
+  bool passed0 = false;
   double initAnimationLocation = 1;
 
   // TODO remove
@@ -101,14 +103,24 @@ class SunRing extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _buildSunRingSlices();
+    double fajrStartPercentCorrection;
+    if (!colorSliceInitialized) {
+      colorSliceInitialized = true;
 
-    double secsOff = secondsInADay - ColorSlice.totalSecs;
-    l.d('totalSecs=${ColorSlice.totalSecs} of 86400, $secsOff secs off (mins=${secsOff / 60})');
+      _buildSunRingSlices();
 
-    // get offset where fajr is so we can rotate sun from correct spot
-    double fajrStartPercentCorrection =
-        radiansToDegrees(ColorSlice.noonRadianCorrection) / 365;
+      double secsOff = secondsInADay - ColorSlice.totalSecs;
+      l.d('totalSecs=${ColorSlice.totalSecs} of 86400, $secsOff secs off (mins=${secsOff / 60})');
+
+      // get offset where fajr is so we can rotate sun from correct spot
+      fajrStartPercentCorrection =
+          radiansToDegrees(ColorSlice.noonRadianCorrection) / 365;
+
+      initAnimationLocation = fajrStartPercentCorrection;
+    } else {
+      fajrStartPercentCorrection =
+          radiansToDegrees(ColorSlice.noonRadianCorrection) / 365;
+    }
     //l.d('noonDegreeCorrection=$noonDegreeCorrection, noonCorrection=$noonCorrection, fajrStartCorrection=$fajrStartCorrection');
 
     // calculate sunrise on the horizon, so we can set horizon right for gumbi and me
@@ -159,85 +171,112 @@ class SunRing extends StatelessWidget {
 
     // RepaintBoundary prevents the ALWAYS repaint on ANY page update
     return Center(
-      child: SizedBox(
-        width: diameter,
-        height: diameter,
-        child: Stack(
-          children: [
-            // RepaintBoundary needed or it will repaint on every second tick
-            Positioned(
-              top: 11.125,
-              left: 11.125,
-              child: RepaintBoundary(
-                child: CustomPaint(
-                  painter: MultiColorRing(
-                      colorSlices, diameter - 22.25, strokeWidth),
-                ),
-              ),
-            ),
-            if (isSunAboveHorizon)
+      child: InkWell(
+        onTap: () {
+          initAnimationLocation = fajrStartPercentCorrection;
+          initAnimationDone = false;
+          passed0 = false;
+          ZamanController.to.updateOnThread1Ms();
+        },
+        child: SizedBox(
+          width: diameter,
+          height: diameter,
+          child: Stack(
+            children: [
+              // RepaintBoundary needed or it will repaint on every second tick
               Positioned(
-                top: -2.5,
-                left: -2.5,
-                child: TwoColoredIcon(
-                  Icons.circle,
-                  diameter + 5,
-                  [horizonTopColor, horizonBottomColor, Colors.transparent],
-                  grassColor,
-                  fillPercent: sunriseCorrection,
-                ),
-              ),
-            if (isSunAboveHorizon) const _GumbiAndMeWithFamily(Colors.white),
-            GetBuilder<ZamanController>(
-              builder: (c) {
-                double sunValue = (c.secsSinceFajr / ColorSlice.totalSecs) -
-                    fajrStartPercentCorrection;
-                l.v('sunValue percent $sunValue = (${c.secsSinceFajr}/${ColorSlice.totalSecs}) - (fajrStartPercentCorrection=$fajrStartPercentCorrection)');
-                if (sunValue > 0) {
-                  // it's passed fajr time:
-                  sunValue = 1 - sunValue; // 1 - to go backward;
-                  l.v('1 - sunValue = $sunValue');
-                } else {
-                  // it's fajr time, so negative number and must take abs of it:
-                  sunValue = sunValue.abs();
-                  l.v('sunValue.abs = $sunValue');
-                }
-                if (!initAnimationDone) {
-                  initAnimationLocation -= .003;
-                  if (initAnimationLocation < sunValue) {
-                    initAnimationDone = true;
-                  } else {
-                    sunValue = initAnimationLocation;
-                    ZamanController.to.updateOnThread1Ms();
-                  }
-                }
-
-                return Center(
+                top: 11.125,
+                left: 11.125,
+                child: RepaintBoundary(
                   child: CustomPaint(
-                    painter: SunMovePainter(
-                      context: context,
-                      sunValue: sunValue,
-                      diameter: diameter - 22.25 - strokeWidth,
-                      strokeWidth: strokeWidth,
-                    ),
+                    painter: MultiColorRing(
+                        colorSlices, diameter - 22.25, strokeWidth),
                   ),
-                );
-              },
-            ),
-            if (!isSunAboveHorizon)
-              Positioned(
-                top: -2.5,
-                left: -2.5,
-                child: TwoColoredIcon(
-                  Icons.circle,
-                  diameter + 5,
-                  [horizonTopColor, horizonBottomColor, Colors.transparent],
-                  grassColor,
-                  fillPercent: sunriseCorrection,
                 ),
               ),
-            if (!isSunAboveHorizon) const _GumbiAndMeWithFamily(Colors.white),
-          ],
+              if (isSunAboveHorizon)
+                Positioned(
+                  top: -2.5,
+                  left: -2.5,
+                  child: TwoColoredIcon(
+                    Icons.circle,
+                    diameter + 5,
+                    [horizonTopColor, horizonBottomColor, Colors.transparent],
+                    grassColor,
+                    fillPercent: sunriseCorrection,
+                  ),
+                ),
+              if (isSunAboveHorizon) const _GumbiAndMeWithFamily(Colors.white),
+              GetBuilder<ZamanController>(
+                builder: (c) {
+                  double sunValue = (c.secsSinceFajr / ColorSlice.totalSecs) -
+                      fajrStartPercentCorrection;
+                  l.v('sunValue percent $sunValue = (${c.secsSinceFajr}/${ColorSlice.totalSecs}) - (fajrStartPercentCorrection=$fajrStartPercentCorrection)');
+                  if (sunValue > 0) {
+                    // it's passed fajr time:
+                    sunValue = 1 - sunValue; // 1 - to go backward;
+                    l.v('1 - sunValue = $sunValue');
+                    if (!initAnimationDone) {
+                      if (!passed0) {
+                        initAnimationLocation -= .003;
+                        if (initAnimationLocation < 0) {
+                          initAnimationLocation = 1;
+                          passed0 = true;
+                        }
+                        sunValue = initAnimationLocation;
+                        ZamanController.to.updateOnThread1Ms();
+                      } else {
+                        initAnimationLocation -= .003;
+                        if (initAnimationLocation < sunValue) {
+                          initAnimationDone = true;
+                        } else {
+                          sunValue = initAnimationLocation;
+                          ZamanController.to.updateOnThread1Ms();
+                        }
+                      }
+                    }
+                  } else {
+                    // it's fajr time, so negative number and must take abs of it:
+                    sunValue = sunValue.abs();
+                    l.v('sunValue.abs = $sunValue');
+                    if (!initAnimationDone) {
+                      initAnimationLocation -= .003;
+                      if (initAnimationLocation < sunValue) {
+                        initAnimationDone = true;
+                      } else {
+                        sunValue = initAnimationLocation;
+                        ZamanController.to.updateOnThread1Ms();
+                      }
+                    }
+                  }
+
+                  return Center(
+                    child: CustomPaint(
+                      painter: SunMovePainter(
+                        context: context,
+                        sunValue: sunValue,
+                        diameter: diameter - 22.25 - strokeWidth,
+                        strokeWidth: strokeWidth,
+                      ),
+                    ),
+                  );
+                },
+              ),
+              if (!isSunAboveHorizon)
+                Positioned(
+                  top: -2.5,
+                  left: -2.5,
+                  child: TwoColoredIcon(
+                    Icons.circle,
+                    diameter + 5,
+                    [horizonTopColor, horizonBottomColor, Colors.transparent],
+                    grassColor,
+                    fillPercent: sunriseCorrection,
+                  ),
+                ),
+              if (!isSunAboveHorizon) const _GumbiAndMeWithFamily(Colors.white),
+            ],
+          ),
         ),
       ),
     );
