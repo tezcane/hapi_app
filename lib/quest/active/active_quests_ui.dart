@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:get/get.dart';
 import 'package:hapi/components/alerts/bounce_alert.dart';
-import 'package:hapi/components/half_filled_icon.dart';
 import 'package:hapi/components/seperator.dart';
+import 'package:hapi/components/two_colored_icon.dart';
+import 'package:hapi/controllers/notification_controller.dart';
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/menu_controller.dart';
@@ -17,17 +19,6 @@ import 'package:hapi/quest/active/sun_mover/sun_ring.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 import 'package:sliver_tools/sliver_tools.dart';
-
-/// Zaman Row, used for Salah Row operations.
-enum ZRow {
-  Fajr,
-  Duha,
-  Dhuhr,
-  Asr,
-  Maghrib,
-  Isha,
-  Layl,
-}
 
 /// used in multiple classes, shorten here
 const TS tsText = TS(AppThemes.ldTextColor);
@@ -182,22 +173,20 @@ class ActiveQuestsUI extends StatelessWidget {
             ),
           ),
 
-          SalahRow(athan, c, Z.Fajr),
-          SalahRow(athan, c, Z.Duha),
-          SalahRow(athan, c, Z.Dhuhr),
-          if (c.salahAsrSafe) SalahRow(athan, c, Z.Asr_Later),
-          if (!c.salahAsrSafe) SalahRow(athan, c, Z.Asr_Earlier),
-          SalahRow(athan, c, Z.Maghrib),
-          SalahRow(athan, c, Z.Isha),
-          if (c.last3rdOfNight) SalahRow(athan, c, Z.Layl__3),
-          if (!c.last3rdOfNight) SalahRow(athan, c, Z.Layl__2),
+          SalahRow(athan, c, ZR.Fajr, Z.Fajr),
+          SalahRow(athan, c, ZR.Duha, Z.Duha),
+          SalahRow(athan, c, ZR.Dhuhr, Z.Dhuhr),
+          if (c.salahAsrSafe) SalahRow(athan, c, ZR.Asr, Z.Asr_Later),
+          if (!c.salahAsrSafe) SalahRow(athan, c, ZR.Asr, Z.Asr_Earlier),
+          SalahRow(athan, c, ZR.Maghrib, Z.Maghrib),
+          SalahRow(athan, c, ZR.Isha, Z.Isha),
+          if (c.last3rdOfNight) SalahRow(athan, c, ZR.Layl, Z.Layl__3),
+          if (!c.last3rdOfNight) SalahRow(athan, c, ZR.Layl, Z.Layl__2),
 
           /// Use to make scrolling of active salah always pin when scrolling up.
-          const SliverFillRemaining(
-            hasScrollBody: false, // still expand to height but have no scroll
-          ), // allow SunMover to scroll down
+          /// Still expands height but have no scroll
+          const SliverFillRemaining(hasScrollBody: false),
 
-          /// Now show sun movement
           _SlivSunMover(athan),
 
           /// Use to make scrolling of active salah always pin when scrolling up.
@@ -267,10 +256,11 @@ class _Sliv extends StatelessWidget {
 /// SunRow is used to display the other times for a salah row, i.e. karahat
 /// sunrise and karahat istiwa and for duha and karahat sunsetting for asr.
 class SalahRow extends StatelessWidget {
-  SalahRow(this.athan, this.c, this.z);
+  SalahRow(this.athan, this.c, this.zR, this.z);
 
   final Athan athan;
   final ActiveQuestsController c;
+  final ZR zR;
   final Z z;
 
   late final double width;
@@ -291,15 +281,15 @@ class SalahRow extends StatelessWidget {
 
     // special logic for isha and layl, to know when to highlight layl or not:
     isActive = ZamanController.to.isSalahRowActive(z);
-    if (z == Z.Isha) {
+    if (zR == ZR.Isha) {
       isActive &= !ActiveQuestsAjrController.to.isIshaIbadahComplete;
-    } else if (z == Z.Layl__3 || z == Z.Layl__2) {
+    } else if (zR == ZR.Layl) {
       isActive &= ActiveQuestsAjrController.to.isIshaIbadahComplete;
     }
 
     return isActive && c.showActiveSalah // salah row is pinned under header
         ? MultiSliver(children: [
-            _Sliv(_getSalahHeader()),
+            _Sliv(_getSlidableHeader()),
             _Sliv(_getSalahActions()),
             _Sliv(_getSalahResults(), minHeight: 2, maxHeight: 2),
           ])
@@ -325,9 +315,71 @@ class SalahRow extends StatelessWidget {
                 maxHeight: _Sliv.slivH * 2, // so UI gets overlap effect
               ),
               // top of stack, header hides all but sun on edges, is static
-              _Sliv(_getSalahHeader()),
+              _Sliv(_getSlidableHeader()),
             ],
           );
+  }
+
+  Widget _getSlidableHeader() {
+    const Color cSound = Colors.greenAccent;
+    const Color cVibrate = Colors.lightBlueAccent;
+
+    return GetBuilder<NotificationController>(builder: (c) {
+      return Slidable(
+        // The end action pane is the one at the right or the bottom side.
+        endActionPane: ActionPane(
+          extentRatio: 1,
+          motion: const BehindMotion(),
+          children: [
+            SlidableAction(
+              flex: 4,
+              onPressed: null,
+              backgroundColor: bg,
+              foregroundColor: AppThemes.ldTextColor,
+              label: '${zR == ZR.Duha ? 'Ishraq' : zR.name} Notifications',
+              autoClose: false,
+            ),
+            SlidableAction(
+              flex: 1,
+              onPressed: (_) => c.togglePlayAthan(zR),
+              backgroundColor: c.playAthan(zR) ? cSound : bg,
+              foregroundColor: AppThemes.ldTextColor,
+              icon: Icons.cell_tower_outlined,
+              autoClose: false,
+            ),
+            SlidableAction(
+              flex: 1,
+              onPressed: (_) => c.togglePlayBeep(zR),
+              backgroundColor: c.playBeep(zR) ? cSound : bg,
+              foregroundColor: AppThemes.ldTextColor,
+              icon: c.playBeep(zR)
+                  ? Icons.notifications_active_outlined
+                  : Icons.notifications_none_outlined,
+              autoClose: false,
+            ),
+            SlidableAction(
+              flex: 1,
+              onPressed: (_) => c.toggleVibrate(zR),
+              backgroundColor: c.vibrate(zR) ? cVibrate : bg,
+              foregroundColor: AppThemes.ldTextColor,
+              icon: c.vibrate(zR)
+                  ? Icons.vibration_rounded
+                  : Icons.smartphone_outlined,
+              autoClose: false,
+            ),
+            const SlidableAction(
+              flex: 1,
+              onPressed: null,
+              backgroundColor: AppThemes.logoText,
+              foregroundColor: Colors.white,
+              icon: Icons.close,
+              autoClose: true,
+            ),
+          ],
+        ),
+        child: _getSalahHeader(),
+      );
+    });
   }
 
   Widget _getSalahHeader() {
@@ -343,7 +395,7 @@ class SalahRow extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Container(
-              color: z == Z.Duha ? Colors.transparent : bg,
+              color: zR == ZR.Duha ? Colors.transparent : bg,
               width: (w6 * 2),
               height: _Sliv.slivH, // fills gaps
             ),
@@ -353,7 +405,7 @@ class SalahRow extends StatelessWidget {
               child: Center(
                 // Center needed to make fit height work
                 child: T(
-                  z.niceName(shortenAsrName: true),
+                  zR.name,
                   textStyle.copyWith(
                     color: isActive ? textStyle.color : AppThemes.ldTextColor,
                     fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
@@ -391,9 +443,7 @@ class SalahRow extends StatelessWidget {
               ),
             ),
             Container(
-              color: z == Z.Duha || z == Z.Asr_Later || z == Z.Asr_Earlier
-                  ? Colors.transparent
-                  : bg,
+              color: zR == ZR.Duha || zR == ZR.Asr ? Colors.transparent : bg,
               width: (w6 * 2),
               height: _Sliv.slivH, // fills gaps
             ),
@@ -404,25 +454,23 @@ class SalahRow extends StatelessWidget {
   }
 
   Widget _getSalahActions() {
-    switch (z) {
-      case (Z.Fajr):
+    switch (zR) {
+      case (ZR.Fajr):
         return _actionsFajr();
-      case (Z.Duha):
+      case (ZR.Duha):
         return _actionsDuha();
-      case (Z.Dhuhr):
+      case (ZR.Dhuhr):
         return _actionsDhuhr();
-      case (Z.Asr_Later):
-      case (Z.Asr_Earlier):
+      case (ZR.Asr):
         return _actionsAsr();
-      case (Z.Maghrib):
+      case (ZR.Maghrib):
         return _actionsMaghrib();
-      case (Z.Isha):
+      case (ZR.Isha):
         return _actionsIsha();
-      case (Z.Layl__3):
-      case (Z.Layl__2):
+      case (ZR.Layl):
         return _actionsLayl();
       default:
-        String e = 'SunRow: unexpected zaman given: "$z"';
+        String e = 'SunRow: unexpected zaman given: "$zR"';
         l.e(e);
         throw e;
     }
@@ -611,25 +659,23 @@ class SalahRow extends StatelessWidget {
   }
 
   Widget _getSalahResults() {
-    switch (z) {
-      case (Z.Fajr):
+    switch (zR) {
+      case (ZR.Fajr):
         return _resultsFajr();
-      case (Z.Duha):
+      case (ZR.Duha):
         return _resultsDuha();
-      case (Z.Dhuhr):
+      case (ZR.Dhuhr):
         return _resultsDhuhr();
-      case (Z.Asr_Later):
-      case (Z.Asr_Earlier):
+      case (ZR.Asr):
         return _resultsAsr();
-      case (Z.Maghrib):
+      case (ZR.Maghrib):
         return _resultsMaghrib();
-      case (Z.Isha):
+      case (ZR.Isha):
         return _resultsIsha();
-      case (Z.Layl__3):
-      case (Z.Layl__2):
+      case (ZR.Layl):
         return _resultsLayl();
       default:
-        String e = 'SunRow: unexpected zaman given: "$z"';
+        String e = '_getSalahResults: unexpected zaman given: "$zR"';
         l.e(e);
         throw e;
     }

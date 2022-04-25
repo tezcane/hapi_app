@@ -13,101 +13,100 @@ class QuestRing extends StatelessWidget {
   final double strokeWidth;
   final Map<Z, ColorSlice> colorSlices;
 
-  Map<ZRow, ColorSlice> _buildQuestRingSlices() {
-    Map<ZRow, ColorSlice> questRingSlices = {};
+  Map<ZR, ColorSlice> _buildQuestRingSlices() {
+    Map<ZR, ColorSlice> questRingSlices = {};
 
-    Map<ZRow, int> questRingColors =
-        ActiveQuestsAjrController.to.questRingColors;
+    Map<ZR, int> questRingColors = ActiveQuestsAjrController.to.questRingColors;
 
-    ZRow zRow;
+    ZR zR;
     double elapsedSecs = 0;
     Color color;
 
     if (ActiveQuestsController.to.last3rdOfNight) {
-      zRow = ZRow.Layl;
+      zR = ZR.Layl;
       elapsedSecs = 0;
       elapsedSecs += colorSlices[Z.Layl__3]!.elapsedSecs;
-      color = AppThemes.ajrColorsByIdx[questRingColors[zRow]!];
-      questRingSlices[zRow] = ColorSlice(elapsedSecs, color);
+      color = AppThemes.ajrColorsByIdx[questRingColors[zR]!];
+      questRingSlices[zR] = ColorSlice(elapsedSecs, color);
 
-      zRow = ZRow.Isha;
+      zR = ZR.Isha;
       elapsedSecs = 0;
       elapsedSecs += colorSlices[Z.Layl__2]!.elapsedSecs;
       elapsedSecs += colorSlices[Z.Isha]!.elapsedSecs;
-      color = AppThemes.ajrColorsByIdx[questRingColors[zRow]!];
-      questRingSlices[zRow] = ColorSlice(elapsedSecs, color);
+      color = AppThemes.ajrColorsByIdx[questRingColors[zR]!];
+      questRingSlices[zR] = ColorSlice(elapsedSecs, color);
     } else {
-      zRow = ZRow.Layl;
+      zR = ZR.Layl;
       elapsedSecs = 0;
       elapsedSecs += colorSlices[Z.Layl__3]!.elapsedSecs;
       elapsedSecs += colorSlices[Z.Layl__2]!.elapsedSecs;
-      color = AppThemes.ajrColorsByIdx[questRingColors[zRow]!];
-      questRingSlices[zRow] = ColorSlice(elapsedSecs, color);
+      color = AppThemes.ajrColorsByIdx[questRingColors[zR]!];
+      questRingSlices[zR] = ColorSlice(elapsedSecs, color);
 
-      zRow = ZRow.Isha;
+      zR = ZR.Isha;
       elapsedSecs = 0;
       elapsedSecs += colorSlices[Z.Isha]!.elapsedSecs;
-      color = AppThemes.ajrColorsByIdx[questRingColors[zRow]!];
-      questRingSlices[zRow] = ColorSlice(elapsedSecs, color);
+      color = AppThemes.ajrColorsByIdx[questRingColors[zR]!];
+      questRingSlices[zR] = ColorSlice(elapsedSecs, color);
     }
 
-    zRow = ZRow.Maghrib;
+    zR = ZR.Maghrib;
     elapsedSecs = 0;
     elapsedSecs += colorSlices[Z.Maghrib]!.elapsedSecs;
-    color = AppThemes.ajrColorsByIdx[questRingColors[zRow]!];
-    questRingSlices[zRow] = ColorSlice(elapsedSecs, color);
+    color = AppThemes.ajrColorsByIdx[questRingColors[zR]!];
+    questRingSlices[zR] = ColorSlice(elapsedSecs, color);
 
     if (ActiveQuestsController.to.salahAsrSafe) {
-      zRow = ZRow.Asr;
+      zR = ZR.Asr;
       elapsedSecs = 0;
       elapsedSecs += colorSlices[Z.Karahat_Evening_Adhkar]!.elapsedSecs;
       elapsedSecs += colorSlices[Z.Asr_Later]!.elapsedSecs;
-      color = AppThemes.ajrColorsByIdx[questRingColors[zRow]!];
-      questRingSlices[zRow] = ColorSlice(elapsedSecs, color);
+      color = AppThemes.ajrColorsByIdx[questRingColors[zR]!];
+      questRingSlices[zR] = ColorSlice(elapsedSecs, color);
 
-      zRow = ZRow.Dhuhr;
+      zR = ZR.Dhuhr;
       elapsedSecs = 0;
       elapsedSecs += colorSlices[Z.Asr_Earlier]!.elapsedSecs;
       elapsedSecs += colorSlices[Z.Dhuhr]!.elapsedSecs;
-      color = AppThemes.ajrColorsByIdx[questRingColors[zRow]!];
-      questRingSlices[zRow] = ColorSlice(elapsedSecs, color);
+      color = AppThemes.ajrColorsByIdx[questRingColors[zR]!];
+      questRingSlices[zR] = ColorSlice(elapsedSecs, color);
     } else {
-      zRow = ZRow.Asr;
+      zR = ZR.Asr;
       elapsedSecs = 0;
       elapsedSecs += colorSlices[Z.Karahat_Evening_Adhkar]!.elapsedSecs;
       elapsedSecs += colorSlices[Z.Asr_Later]!.elapsedSecs;
       elapsedSecs += colorSlices[Z.Asr_Earlier]!.elapsedSecs;
-      color = AppThemes.ajrColorsByIdx[questRingColors[zRow]!];
-      questRingSlices[zRow] = ColorSlice(elapsedSecs, color);
+      color = AppThemes.ajrColorsByIdx[questRingColors[zR]!];
+      questRingSlices[zR] = ColorSlice(elapsedSecs, color);
 
-      zRow = ZRow.Dhuhr;
+      zR = ZR.Dhuhr;
       elapsedSecs = 0;
       elapsedSecs += colorSlices[Z.Dhuhr]!.elapsedSecs;
-      color = AppThemes.ajrColorsByIdx[questRingColors[zRow]!];
-      questRingSlices[zRow] = ColorSlice(elapsedSecs, color);
+      color = AppThemes.ajrColorsByIdx[questRingColors[zR]!];
+      questRingSlices[zR] = ColorSlice(elapsedSecs, color);
     }
 
-    zRow = ZRow.Duha;
+    zR = ZR.Duha;
     elapsedSecs = 0;
     elapsedSecs += colorSlices[Z.Karahat_Istiwa]!.elapsedSecs;
     elapsedSecs += colorSlices[Z.Duha]!.elapsedSecs;
     elapsedSecs += colorSlices[Z.Ishraq]!.elapsedSecs;
     elapsedSecs += colorSlices[Z.Karahat_Morning_Adhkar]!.elapsedSecs;
-    color = AppThemes.ajrColorsByIdx[questRingColors[zRow]!];
-    questRingSlices[zRow] = ColorSlice(elapsedSecs, color);
+    color = AppThemes.ajrColorsByIdx[questRingColors[zR]!];
+    questRingSlices[zR] = ColorSlice(elapsedSecs, color);
 
-    zRow = ZRow.Fajr;
+    zR = ZR.Fajr;
     elapsedSecs = 0;
     elapsedSecs += colorSlices[Z.Fajr]!.elapsedSecs;
-    color = AppThemes.ajrColorsByIdx[questRingColors[zRow]!];
-    questRingSlices[zRow] = ColorSlice(elapsedSecs, color);
+    color = AppThemes.ajrColorsByIdx[questRingColors[zR]!];
+    questRingSlices[zR] = ColorSlice(elapsedSecs, color);
 
     return questRingSlices;
   }
 
   @override
   Widget build(BuildContext context) {
-    final Map<ZRow, ColorSlice> questRingSlices = _buildQuestRingSlices();
+    final Map<ZR, ColorSlice> questRingSlices = _buildQuestRingSlices();
 
     // RepaintBoundary prevents the ALWAYS repaint on ANY page update
     return Center(

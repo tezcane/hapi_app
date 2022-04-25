@@ -8,6 +8,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:hapi/controllers/connectivity_controller.dart';
 import 'package:hapi/controllers/location_controller.dart';
 import 'package:hapi/controllers/nav_page_controller.dart';
+import 'package:hapi/controllers/notification_controller.dart';
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/helpers/loading.dart';
 import 'package:hapi/main_controller.dart';
@@ -68,6 +69,8 @@ void main() async {
   Get.put<MenuController>(MenuController(), // requires NavPageController
       permanent: permOn); //requires TarikhController
   Get.put<DailyQuestsController>(DailyQuestsController(),
+      permanent: permOn); // requires AuthController
+  Get.put<NotificationController>(NotificationController(),
       permanent: permOn); // requires AuthController
   Get.put<ActiveQuestsController>(ActiveQuestsController(),
       permanent: permOn); // requires AuthController

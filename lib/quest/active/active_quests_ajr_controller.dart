@@ -4,7 +4,6 @@ import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/active_quest_model.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
-import 'package:hapi/quest/active/active_quests_ui.dart';
 import 'package:hapi/quest/active/athan/z.dart';
 import 'package:hapi/services/db.dart';
 
@@ -350,10 +349,10 @@ class ActiveQuestsAjrController extends GetxHapi {
       isQuestComplete(QUEST.ISHA_THIKR) &&
       isQuestComplete(QUEST.ISHA_DUA);
 
-  /// Return map of ZRow to int, where the int value 1-5 holds a color value to
+  /// Return map of ZR to int, where the int value 1-5 holds a color value to
   /// be converted later into colors, i.e. ajr1Common, ajr2Uncommon, etc.
-  Map<ZRow, int> get questRingColors {
-    Map<ZRow, int> questRingColors = {};
+  Map<ZR, int> get questRingColors {
+    Map<ZR, int> questRingColors = {};
 
     const int missed0 = 0;
 //  const int common1 = 1;
@@ -382,7 +381,7 @@ class ActiveQuestsAjrController extends GetxHapi {
     } else if (ajrCount == epic4) {
       ajrCount = legendary5; // 4 done = 5/Legendary
     }
-    questRingColors[ZRow.Fajr] = ajrCount;
+    questRingColors[ZR.Fajr] = ajrCount;
 
     ajrCount = 0;
     missCount = 0;
@@ -405,7 +404,7 @@ class ActiveQuestsAjrController extends GetxHapi {
     } else if (ajrCount == epic4) {
       ajrCount = legendary5; // 4 done = 5/Legendary
     }
-    questRingColors[ZRow.Duha] = ajrCount;
+    questRingColors[ZR.Duha] = ajrCount;
 
     ajrCount = 0;
     missCount = 0;
@@ -432,7 +431,7 @@ class ActiveQuestsAjrController extends GetxHapi {
     } else if (ajrCount == 6) {
       ajrCount = legendary5; // all 6 required for legendary
     }
-    questRingColors[ZRow.Dhuhr] = ajrCount;
+    questRingColors[ZR.Dhuhr] = ajrCount;
 
     ajrCount = 0;
     missCount = 0;
@@ -454,7 +453,7 @@ class ActiveQuestsAjrController extends GetxHapi {
         ajrCount = notExpired6;
       }
     }
-    questRingColors[ZRow.Asr] = ajrCount;
+    questRingColors[ZR.Asr] = ajrCount;
 
     ajrCount = 0;
     missCount = 0;
@@ -481,7 +480,7 @@ class ActiveQuestsAjrController extends GetxHapi {
         ajrCount = notExpired6;
       }
     }
-    questRingColors[ZRow.Maghrib] = ajrCount;
+    questRingColors[ZR.Maghrib] = ajrCount;
 
     ajrCount = 0;
     missCount = 0;
@@ -508,7 +507,7 @@ class ActiveQuestsAjrController extends GetxHapi {
     } else if (ajrCount == 6) {
       ajrCount = legendary5;
     }
-    questRingColors[ZRow.Isha] = ajrCount;
+    questRingColors[ZR.Isha] = ajrCount;
 
     ajrCount = missed0;
     missCount = 0;
@@ -537,7 +536,7 @@ class ActiveQuestsAjrController extends GetxHapi {
     } else if (ajrCount == 6) {
       ajrCount = legendary5;
     }
-    questRingColors[ZRow.Layl] = ajrCount;
+    questRingColors[ZR.Layl] = ajrCount;
 
     return questRingColors;
   }

@@ -22,6 +22,17 @@ enum Z {
   Fajr_Tomorrow,
 }
 
+/// Zaman Row, used for Salah Row operations.
+enum ZR {
+  Fajr,
+  Duha,
+  Dhuhr,
+  Asr,
+  Maghrib,
+  Isha,
+  Layl,
+}
+
 extension EnumUtil on Z {
   /// Special logic and rules here to rename enum to a nice name:
   ///     Karahat_ -> '' (blank)

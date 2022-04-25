@@ -58,6 +58,8 @@ dependencies:
   geolocator: ^8.2.0
 
   flutter_gifimage: ^1.0.1 # TODO null-safety it
+  flutter_local_notifications: ^9.4.1
+  flutter_slidable: ^1.2.0
   firebase_core: ^1.12.0
   # firebase_analytics: ^7.1.1 no nullsafe... skip it for now
   firebase_auth: ^3.3.7

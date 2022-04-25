@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 import 'package:hapi/controllers/location_controller.dart';
+import 'package:hapi/controllers/notification_controller.dart';
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main_controller.dart';
@@ -13,7 +14,7 @@ import 'package:hapi/quest/active/athan/calculation_method.dart';
 import 'package:hapi/quest/active/athan/calculation_params.dart';
 import 'package:hapi/quest/active/athan/z.dart';
 import 'package:hapi/services/db.dart';
-import 'package:timezone/timezone.dart' show Location, TZDateTime;
+import 'package:timezone/timezone.dart' show TZDateTime;
 
 /// Controls Islamic Times Of Day, e.g. Fajr, Duha, Sunset/Maghrib, etc. that
 /// many pages rely on for the current time.
@@ -37,11 +38,6 @@ class ZamanController extends GetxHapi {
 
   Athan? _athan;
   Athan? get athan => _athan;
-
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   bool get isInitialized => _athan != null;
 
@@ -73,59 +69,74 @@ class ZamanController extends GetxHapi {
     );
   }
 
-  updateZaman(bool initUpdate) async {
-    Athan athan = Athan(
+  Athan generateNewAthan(DateTime day) {
+    return Athan(
       _getCalculationParams(),
-      TimeController.to.currDayDate,
+      day,
       LocationController.to.lastKnownCord,
       TimeController.to.tzLoc,
       ActiveQuestsController.to.showSecPrecision,
     );
+  }
+
+  /// Does init for app items then calls itself again on more init needed or
+  /// startNextZamanCountdownTimer() to start next countdown timer.
+  updateZaman(bool initUpdate) async {
+    Athan athan;
+
+    if (forceSalahRecalculation) {
+      l.d('ZamanController:updateZaman: forceSalahRecalculation was called.');
+      athan = generateNewAthan(TimeController.to.currDayDate);
+    } else {
+      if (_athan != null) {
+        athan = _athan!; // already exists and don't need to reinit
+      } else {
+        athan = generateNewAthan(TimeController.to.currDayDate); // first init
+      }
+    }
 
     DateTime now = await TimeController.to.now();
     Z currZCheck = athan.getCurrZaman(now);
-    l.d('currZCheck: $currZCheck');
+    l.d('ZamanController:updateZaman: currZCheck=$currZCheck');
 
     // For next prayer/day, set any missed quests and do other quest setup:
     await ActiveQuestsAjrController.to.initCurrQuest(currZCheck, initUpdate);
 
+    // check if we are still on the same day
     if (currZCheck == Z.Fajr_Tomorrow) {
-      l.d('ZamanController: _initLocation: New day detected.');
-      // Reset day, Fajr Tom. is day after currDay so safe to do next actions:
-      await TimeController.to.updateTime(true);
-      ActiveQuestsAjrController.to.clearAllQuests();
-      await Db.setActiveQuest(
-        ActiveQuestModel(
-          day: TimeController.to.currDay,
-          done: 0,
-          skip: 0,
-          miss: 0,
-        ),
-      );
-
-      updateZaman(false); // on next call no longer: currZ == Z.Fajr_Tomorrow
+      await _handleNewDaySetup();
       return;
     }
-    _currZ = currZCheck; // now safe to do this.
 
+    _currZ = currZCheck; // now safe as currZ can't be Z.Fajr_Tomorrow.
     _nextZ = athan.getNextZaman(now);
-    l.d('_nextZ: $_nextZ');
+    l.d('ZamanController:updateZaman: _nextZ: $_nextZ');
     _nextZTime = athan.getZamanTime(_nextZ)[0] as DateTime;
-    l.d('_nextZTime: $_nextZTime');
+    l.d('ZamanController:updateZaman: _nextZTime: $_nextZTime');
 
     // Now all init is done, set athan value (needed for init to prevent NPE)
     _athan = athan;
 
-    update(); // update UI with above changes (needed at app init)
+    if (forceSalahRecalculation) {
+      forceSalahRecalculation = false;
 
-    // We need to update the ActiveQuestsController here after athan is updated
-    // Was a bug where when forceSalahRecalculation = true was set in
-    // ActiveQuestsController, it's update() was called before athan updated.
-    ActiveQuestsController.to.update();
+      // Must update notification after _athan is force changed
+      NotificationController.to.resetNotifications();
+
+      // Must update the ActiveQuestsController here after athan is updated.
+      // Was a bug where when forceSalahRecalculation = true was set in
+      // ActiveQuestsController, it's update() was called before athan updated.
+      ActiveQuestsController.to.update();
+    } else if (initUpdate) {
+      ActiveQuestsController.to.update(); // so UI shows up
+    }
+
+    update(); // update UI with above changes (needed at app init)
 
     _startNextZamanCountdownTimer();
   }
 
+  /// Loop counts down until zaman is over or forceSalahRecalculation called
   _startNextZamanCountdownTimer() async {
     while (true) {
       await Future.delayed(const Duration(seconds: 1));
@@ -139,17 +150,18 @@ class ZamanController extends GetxHapi {
           .difference(TZDateTime.from(_athan!.fajr, TimeController.to.tzLoc))
           .inSeconds;
 
-      // if we hit the end of a timer (or forced), recalculate zaman times:
-      if (forceSalahRecalculation || timeToNextZaman.inSeconds <= 0) {
-        l.d('This zaman is over, going to next zaman: '
-            '${timeToNextZaman.inSeconds} secs left');
-        forceSalahRecalculation = false;
-        updateZaman(false); // eventually calls startNextZamanCountdownTimer()
-        return; // quits this while loop, wills tart again in initLocation()
+      if (forceSalahRecalculation) {
+        l.d('ZamanController:_startNextZamanCountdownTimer: forceSalahRecalculation was called.');
+        updateZaman(false);
+        return; // quits while loop, starts again in updateZaman()
+      } else if (forceSalahRecalculation || timeToNextZaman.inSeconds <= 0) {
+        l.d('ZamanController:_startNextZamanCountdownTimer: This zaman $currZ is over, going to next zaman $nextZ.');
+        updateZaman(false);
+        return; // quits while loop, starts again in updateZaman()
       } else {
         if (timeToNextZaman.inSeconds % 60 == 0) {
-          // print once a minute to show thread is alive
-          l.i('Next Zaman Timer Minute Tick: ${timeToNextZaman.inSeconds} '
+          // heartbeat prints once a minute to show thread is alive
+          l.i('ZamanController:_startNextZamanCountdownTimer: Next Zaman Timer Minute Tick: ${timeToNextZaman.inSeconds} '
               'secs left (${timeToNextZaman.inSeconds / 60} minutes)');
         }
         // this is displayed on UI:
@@ -157,6 +169,26 @@ class ZamanController extends GetxHapi {
         update();
       }
     }
+  }
+
+  _handleNewDaySetup() async {
+    l.d('ZamanController:_handleNewDaySetup: New day is being setup.');
+    // Reset day, Fajr Tom. is always 1 (or more) days after currDay:
+    await TimeController.to.updateTime(true);
+    ActiveQuestsAjrController.to.clearAllQuests();
+    await Db.setActiveQuest(
+      ActiveQuestModel(
+        day: TimeController.to.currDay,
+        done: 0,
+        skip: 0,
+        miss: 0,
+      ),
+    );
+
+    forceSalahRecalculation = true; // time to update _athan
+
+    // now, currZ won't equal Z.Fajr_Tomorrow as currDay updated
+    updateZaman(false);
   }
 
   // TODO can optimize this

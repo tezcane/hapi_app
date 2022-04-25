@@ -362,6 +362,30 @@ class Athan {
     return returnedDayOfYear;
   }
 
+  /// Gets salah row times that are used for notifications.
+  DateTime getZamanRowTime(ZR zR) {
+    switch (zR) {
+      case (ZR.Fajr):
+        return _fajr_01;
+      case (ZR.Duha):
+        return _ishraqPrayer_03; // return ishraq for notification time
+      case (ZR.Dhuhr):
+        return _dhuhr_06;
+      case (ZR.Asr):
+        return asr;
+      case (ZR.Maghrib):
+        return _maghrib_10;
+      case (ZR.Isha):
+        return _isha_11;
+      case (ZR.Layl):
+        return layl;
+      default:
+        String e = 'TimeOfDay:getZamanRowTime: unexpected ZR given: "$zR"';
+        l.e(e);
+        throw e;
+    }
+  }
+
   /// Returns Object[] - idx 0 = Z's DateTime, index 1 = sun mover circle color.
   List<Object> getZamanTime(Z z) {
     if (z == Z.Fajr) {

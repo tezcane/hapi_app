@@ -64,7 +64,7 @@ class TimeController extends GetxHapi {
   /// param updateDayIsOK - we only allow zaman controller to update the day if
   ///                       when next day zaman is hit.
   Future<void> updateTime(bool updateDayIsOk) async {
-    l.d('updateTime: start: ntpOffset=$_ntpOffset, tzLoc=$tzLoc, currDay=$_currDay, dayOfWeek=$_dayOfWeek');
+    l.d('TimeController:updateTime: start: ntpOffset=$_ntpOffset, tzLoc=$tzLoc, currDay=$_currDay, dayOfWeek=$_dayOfWeek');
     await _updateNtpTime();
     await _updateTimezoneLocation();
     await _updateCurrDay(updateDayIsOk);
@@ -75,49 +75,49 @@ class TimeController extends GetxHapi {
   /// Gets NTP time from server when called, if internet is on
   Future<void> _updateNtpTime() async {
     if (!ConnectivityController.to.isInternetOn) {
-      l.w('cTime:updateNtpTime: aborting NTP update, no internet connection');
+      l.w('TimeController:updateNtpTime: aborting NTP update, no internet connection');
       return;
     }
-    l.d('cTime:updateNtpTime: Called');
+    l.d('TimeController:updateNtpTime: Called');
     DateTime appTime = DateTime.now().toLocal();
     try {
       _ntpOffset = await NTP.getNtpOffset(
           localTime: appTime, timeout: const Duration(seconds: 3)); // TODO
       DateTime ntpTime = appTime.add(Duration(milliseconds: _ntpOffset));
 
-      l.d('cTime:updateNtpTime: NTP DateTime offset align (ntpOffset=$_ntpOffset):');
-      l.d('cTime:updateNtpTime: locTime was=${appTime.toLocal()}');
-      l.d('cTime:updateNtpTime: ntpTime now=${ntpTime.toLocal()}');
+      l.d('TimeController:updateNtpTime: NTP DateTime offset align (ntpOffset=$_ntpOffset):');
+      l.d('TimeController:updateNtpTime: locTime was=${appTime.toLocal()}');
+      l.d('TimeController:updateNtpTime: ntpTime now=${ntpTime.toLocal()}');
     } on Exception catch (e) {
-      l.e('cTime:updateNtpTime: Exception: Failed to call NTP.getNtpOffset(): $e');
+      l.e('TimeController:updateNtpTime: Exception: Failed to call NTP.getNtpOffset(): $e');
     }
   }
 
   /// Get's local time, uses ntp offset to calculate more accurate time
   Future<DateTime> now() async {
     if (_ntpOffset == DUMMY_NTP_OFFSET) {
-      l.w('cTime:now: called but there is no ntp offset');
+      l.w('TimeController:now: called but there is no ntp offset');
       await _updateNtpTime();
     }
     DateTime time = DateTime.now().toLocal();
     if (_ntpOffset != DUMMY_NTP_OFFSET) {
       time = time.add(Duration(milliseconds: _ntpOffset));
     }
-    // print('cTime:now: (ntpOffset=$_ntpOffset) ${time.toLocal()}');
+    // print('TimeController:now: (ntpOffset=$_ntpOffset) ${time.toLocal()}');
     return TZDateTime.from(time.toLocal(), _tzLoc);
   }
 
   /// Non-async version to get time now()
   DateTime now2() {
     if (_ntpOffset == DUMMY_NTP_OFFSET) {
-      l.w('cTime:now2: called but there is no ntp offset');
+      l.w('TimeController:now2: called but there is no ntp offset');
       _updateNtpTime();
     }
     DateTime time = DateTime.now().toLocal();
     if (_ntpOffset != DUMMY_NTP_OFFSET) {
       time = time.add(Duration(milliseconds: _ntpOffset));
     }
-    l.d('cTime.now2: (ntpOffset=$_ntpOffset) ${time.toLocal()}');
+    l.d('TimeController.now2: (ntpOffset=$_ntpOffset) ${time.toLocal()}');
     return TZDateTime.from(time.toLocal(), _tzLoc);
   }
 

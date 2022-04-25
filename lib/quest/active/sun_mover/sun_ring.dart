@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/components/half_filled_icon.dart';
+import 'package:hapi/components/two_colored_icon.dart';
 import 'package:hapi/helpers/math_utils.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/athan/athan.dart';
