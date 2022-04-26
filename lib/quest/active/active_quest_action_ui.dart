@@ -62,7 +62,7 @@ class ActiveQuestActionUI extends StatelessWidget {
                   isActive && ActiveQuestsAjrController.to.isQuestActive(quest);
               if (isCurrQuestOriginal != isCurrQuest) {
                 // TODO hapi quest to break UI?
-                l.w('Quest has expired, user left dialog open during zaman transition');
+                l.w('Quest has started or expired, user left dialog open during zaman transition');
               }
 
               bool skipEnabled = true;
