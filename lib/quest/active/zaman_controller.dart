@@ -234,35 +234,46 @@ class ZamanController extends GetxHapi {
     }
 
     for (Z z in zs) {
-      if (z == _currZ) return true; // time of day is active
+      if (z == _currZ) {
+        bool isActive = true;
+
+        // Special case for isha/layl as they share same time frame
+        if (z == Z.Isha) {
+          isActive &= !ActiveQuestsAjrController.to.isIshaIbadahComplete;
+        } else if (z == Z.Layl__2 || z == Z.Layl__3) {
+          isActive &= ActiveQuestsAjrController.to.isIshaIbadahComplete;
+        }
+
+        return isActive; // time of day is active if true
+      }
     }
 
-    return false; // gets here from isNextSalahRowActive search
+    return false;
   }
 
-  /// See if next salah row of given Z, will be the next active/curr Z time.
-  bool isNextSalahRowActive(Z z) {
-    switch (z) {
-      case Z.Fajr:
-        return isSalahRowActive(Z.Duha);
-      case Z.Duha:
-        return isSalahRowActive(Z.Dhuhr);
-      case Z.Dhuhr:
-        return isSalahRowActive(Z.Asr_Later);
-      case Z.Asr_Later:
-      case Z.Asr_Earlier:
-        return isSalahRowActive(Z.Maghrib);
-      case Z.Maghrib:
-        return isSalahRowActive(Z.Isha);
-      case Z.Isha:
-        return isSalahRowActive(Z.Layl__3);
-      case Z.Layl__3:
-      case Z.Layl__2:
-        return isSalahRowActive(Z.Layl__3);
-      default:
-        var e = 'Invalid Zaman "$z" given when in isNextSalahRowActive called';
-        l.e(e);
-        throw e;
-    }
-  }
+  // /// See if next salah row of given Z, will be the next active/curr Z time.
+  // bool isNextSalahRowActive(Z z) {
+  //   switch (z) {
+  //     case Z.Fajr:
+  //       return isSalahRowActive(Z.Duha);
+  //     case Z.Duha:
+  //       return isSalahRowActive(Z.Dhuhr);
+  //     case Z.Dhuhr:
+  //       return isSalahRowActive(Z.Asr_Later);
+  //     case Z.Asr_Later:
+  //     case Z.Asr_Earlier:
+  //       return isSalahRowActive(Z.Maghrib);
+  //     case Z.Maghrib:
+  //       return isSalahRowActive(Z.Isha);
+  //     case Z.Isha:
+  //       return isSalahRowActive(Z.Layl__3);
+  //     case Z.Layl__3:
+  //     case Z.Layl__2:
+  //       return isSalahRowActive(Z.Layl__3);
+  //     default:
+  //       var e = 'Invalid Zaman "$z" given when in isNextSalahRowActive called';
+  //       l.e(e);
+  //       throw e;
+  //   }
+  // }
 }

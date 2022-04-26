@@ -266,8 +266,7 @@ class SalahRow extends StatelessWidget {
   late final double width;
   late final Color bg;
   late final TextStyle textStyle;
-
-  late bool isActive;
+  late final bool isActive;
 
   static const TS tsFard = TS(AppThemes.ajr2Uncommon);
   static const TS tsMuak = TS(AppThemes.ajr4Epic);
@@ -279,14 +278,7 @@ class SalahRow extends StatelessWidget {
     bg = cb(context);
     textStyle = Theme.of(context).textTheme.headline6!;
 
-    // special logic for isha and layl, to know when to highlight layl or not:
     isActive = ZamanController.to.isSalahRowActive(z);
-    if (zR == ZR.Isha) {
-      isActive &= !ActiveQuestsAjrController.to.isIshaIbadahComplete;
-    } else if (zR == ZR.Layl) {
-      isActive &= ActiveQuestsAjrController.to.isIshaIbadahComplete;
-    }
-
     return isActive && c.showActiveSalah // salah row is pinned under header
         ? MultiSliver(children: [
             _Sliv(_getSlidableHeader()),
@@ -483,15 +475,15 @@ class SalahRow extends StatelessWidget {
     return Row(
       children: [
         // 1 of 4. sunnah before fard column item:
-        _Cell(T(muakBef, tsMuak), isActive, QUEST.FAJR_MUAKB),
+        _Cell(T(muakBef, tsMuak), isActive, z, QUEST.FAJR_MUAKB),
         // 2 of 4. fard column item:
-        _Cell(T(fardRkt, tsFard), isActive, QUEST.FAJR_FARD),
+        _Cell(T(fardRkt, tsFard), isActive, z, QUEST.FAJR_FARD),
         // 3 of 4. Sunnah after fard column items:
-        _Cell(const T('', tsMuak), isActive, QUEST.NONE),
-        _Cell(const T('', tsNafl), isActive, QUEST.NONE),
+        _Cell(const T('', tsMuak), isActive, z, QUEST.NONE),
+        _Cell(const T('', tsNafl), isActive, z, QUEST.NONE),
         // 4 of 4. Thikr and Dua after fard:
-        _Cell(_IconThikr(), isActive, QUEST.FAJR_THIKR),
-        _Cell(_IconDua(), isActive, QUEST.FAJR_DUA),
+        _Cell(_IconThikr(), isActive, z, QUEST.FAJR_THIKR),
+        _Cell(_IconDua(), isActive, z, QUEST.FAJR_DUA),
       ],
     );
   }
@@ -513,11 +505,12 @@ class SalahRow extends StatelessWidget {
             true, // align left
           ),
           isActive,
+          z,
           QUEST.KARAHAT_ADHKAR_SUNRISE,
           flex: 2000,
         ),
-        _Cell(T('Ishraq', tsText, w: w6), isActive, QUEST.DUHA_ISHRAQ),
-        _Cell(T('Duha', tsText, w: w6), isActive, QUEST.DUHA_DUHA),
+        _Cell(T('Ishraq', tsText, w: w6), isActive, z, QUEST.DUHA_ISHRAQ),
+        _Cell(T('Duha', tsText, w: w6), isActive, z, QUEST.DUHA_DUHA),
         _Cell(
           _SunCell(
             const Icon(Icons.brightness_7_outlined,
@@ -528,6 +521,7 @@ class SalahRow extends StatelessWidget {
             false, // align right
           ),
           isActive,
+          z,
           QUEST.KARAHAT_ADHKAR_ISTIWA,
           flex: 2000,
         ),
@@ -550,15 +544,15 @@ class SalahRow extends StatelessWidget {
     return Row(
       children: [
         // 1 of 4. sunnah before fard column item:
-        _Cell(T(muakBef, tsMuak), isActive, QUEST.DHUHR_MUAKB),
+        _Cell(T(muakBef, tsMuak), isActive, z, QUEST.DHUHR_MUAKB),
         // 2 of 4. fard column item:
-        _Cell(T(fardRkt, tsFard), isActive, QUEST.DHUHR_FARD),
+        _Cell(T(fardRkt, tsFard), isActive, z, QUEST.DHUHR_FARD),
         // 3 of 4. Option 2: sunnah after fard column items:
-        _Cell(T(muakAft, tsMuak), isActive, QUEST.DHUHR_MUAKA),
-        _Cell(T(naflAft, tsNafl), isActive, QUEST.DHUHR_NAFLA),
+        _Cell(T(muakAft, tsMuak), isActive, z, QUEST.DHUHR_MUAKA),
+        _Cell(T(naflAft, tsNafl), isActive, z, QUEST.DHUHR_NAFLA),
         // 4 of 4. Thikr and Dua after fard:
-        _Cell(_IconThikr(), isActive, QUEST.DHUHR_THIKR),
-        _Cell(_IconDua(), isActive, QUEST.DHUHR_DUA),
+        _Cell(_IconThikr(), isActive, z, QUEST.DHUHR_THIKR),
+        _Cell(_IconDua(), isActive, z, QUEST.DHUHR_DUA),
       ],
     );
   }
@@ -572,12 +566,12 @@ class SalahRow extends StatelessWidget {
     return Row(
       children: [
         // 1 of 4. sunnah before fard column item:
-        _Cell(T(naflBef, tsNafl), isActive, QUEST.ASR_NAFLB),
+        _Cell(T(naflBef, tsNafl), isActive, z, QUEST.ASR_NAFLB),
         // 2 of 4. fard column item:
-        _Cell(T(fardRkt, tsFard), isActive, QUEST.ASR_FARD),
+        _Cell(T(fardRkt, tsFard), isActive, z, QUEST.ASR_FARD),
         // 3 of 4. Thikr and Dua after fard:
-        _Cell(_IconThikr(), isActive, QUEST.ASR_THIKR),
-        _Cell(_IconDua(), isActive, QUEST.ASR_DUA),
+        _Cell(_IconThikr(), isActive, z, QUEST.ASR_THIKR),
+        _Cell(_IconDua(), isActive, z, QUEST.ASR_DUA),
         // 4 of 4. Evening adhkar
         _Cell(
           _SunCell(
@@ -588,6 +582,7 @@ class SalahRow extends StatelessWidget {
             false, // align right
           ),
           isActive,
+          z,
           QUEST.KARAHAT_ADHKAR_SUNSET,
           flex: 2000,
         ),
@@ -603,15 +598,15 @@ class SalahRow extends StatelessWidget {
     return Row(
       children: [
         // 1 of 4. sunnah before fard column item:
-        _Cell(const T('', TS(Colors.transparent)), isActive, QUEST.NONE),
+        _Cell(const T('', TS(Colors.transparent)), isActive, z, QUEST.NONE),
         // 2 of 4. fard column item:
-        _Cell(T(fardRkt, tsFard), isActive, QUEST.MAGHRIB_FARD),
+        _Cell(T(fardRkt, tsFard), isActive, z, QUEST.MAGHRIB_FARD),
         // 3 of 4. Option 2: sunnah after fard column items:
-        _Cell(T(muakAft, tsMuak), isActive, QUEST.MAGHRIB_MUAKA),
-        _Cell(T(naflAft, tsNafl), isActive, QUEST.MAGHRIB_NAFLA),
+        _Cell(T(muakAft, tsMuak), isActive, z, QUEST.MAGHRIB_MUAKA),
+        _Cell(T(naflAft, tsNafl), isActive, z, QUEST.MAGHRIB_NAFLA),
         // 4 of 4. Thikr and Dua after fard:
-        _Cell(_IconThikr(), isActive, QUEST.MAGHRIB_THIKR),
-        _Cell(_IconDua(), isActive, QUEST.MAGHRIB_DUA),
+        _Cell(_IconThikr(), isActive, z, QUEST.MAGHRIB_THIKR),
+        _Cell(_IconDua(), isActive, z, QUEST.MAGHRIB_DUA),
       ],
     );
   }
@@ -625,15 +620,15 @@ class SalahRow extends StatelessWidget {
     return Row(
       children: [
         // 1 of 4. sunnah before fard column item:
-        _Cell(T(naflBef, tsNafl), isActive, QUEST.ISHA_NAFLB),
+        _Cell(T(naflBef, tsNafl), isActive, z, QUEST.ISHA_NAFLB),
         // 2 of 4. fard column item:
-        _Cell(T(fardRkt, tsFard), isActive, QUEST.ISHA_FARD),
+        _Cell(T(fardRkt, tsFard), isActive, z, QUEST.ISHA_FARD),
         // 3 of 4. Option 1: sunnah after fard column items:
-        _Cell(T(muakAft, tsMuak), isActive, QUEST.ISHA_MUAKA),
-        _Cell(T(naflAft, tsNafl), isActive, QUEST.ISHA_NAFLA),
+        _Cell(T(muakAft, tsMuak), isActive, z, QUEST.ISHA_MUAKA),
+        _Cell(T(naflAft, tsNafl), isActive, z, QUEST.ISHA_NAFLA),
         // 4 of 4. Thikr and Dua after fard:
-        _Cell(_IconThikr(), isActive, QUEST.ISHA_THIKR),
-        _Cell(_IconDua(), isActive, QUEST.ISHA_DUA),
+        _Cell(_IconThikr(), isActive, z, QUEST.ISHA_THIKR),
+        _Cell(_IconDua(), isActive, z, QUEST.ISHA_DUA),
       ],
     );
   }
@@ -644,16 +639,16 @@ class SalahRow extends StatelessWidget {
 
     return Row(
       children: [
-        _Cell(T('Qiyam', tsText, w: w6 - 10), isActive, QUEST.LAYL_QIYAM),
+        _Cell(T('Qiyam', tsText, w: w6 - 10), isActive, z, QUEST.LAYL_QIYAM),
 
         // Thikr and Dua before bed:
-        _Cell(_IconThikr(), isActive, QUEST.LAYL_THIKR),
-        _Cell(_IconDua(), isActive, QUEST.LAYL_DUA),
-        _Cell(T('Sleep', tsText, w: w6 - 10), isActive, QUEST.LAYL_SLEEP),
+        _Cell(_IconThikr(), isActive, z, QUEST.LAYL_THIKR),
+        _Cell(_IconDua(), isActive, z, QUEST.LAYL_DUA),
+        _Cell(T('Sleep', tsText, w: w6 - 10), isActive, z, QUEST.LAYL_SLEEP),
 
         // Tahajjud and Witr after waking up, no -10 on Tahajjud, it's small
-        _Cell(T('Tahajjud', tsText, w: w6), isActive, QUEST.LAYL_TAHAJJUD),
-        _Cell(T('Witr', tsText, w: w6 - 10), isActive, QUEST.LAYL_WITR),
+        _Cell(T('Tahajjud', tsText, w: w6), isActive, z, QUEST.LAYL_TAHAJJUD),
+        _Cell(T('Witr', tsText, w: w6 - 10), isActive, z, QUEST.LAYL_WITR),
       ],
     );
   }
@@ -853,10 +848,17 @@ class _SlivSunMover extends StatelessWidget {
 }
 
 class _Cell extends StatelessWidget {
-  const _Cell(this.widget, this.isActive, this.quest, {this.flex = 1000});
+  const _Cell(
+    this.widget,
+    this.isActive,
+    this.z,
+    this.quest, {
+    this.flex = 1000,
+  });
 
   final Widget widget;
   final bool isActive;
+  final Z z;
   final QUEST quest;
   final int flex;
 
@@ -870,6 +872,7 @@ class _Cell extends StatelessWidget {
       child: InkWell(
         onTap: () => MenuController.to
             .pushSubPage(SubPage.Active_Quest_Action, arguments: {
+          'z': z,
           'quest': quest,
           'widget': widget,
           'isCurrQuest': isCurrQuest,
