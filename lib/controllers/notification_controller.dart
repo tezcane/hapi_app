@@ -122,13 +122,14 @@ class NotificationController extends GetxHapi {
     int zRLen = ZR.values.length;
     Athan athan = ZamanController.to.athan!; // start from current athan
     for (int day = 0; day < 7; day++) {
+      if (day > 0) {
+        athan = ZamanController.to.generateNewAthan(
+            TimeController.to.currDayDate.add(Duration(days: day)));
+      }
       for (ZR zR in ZR.values) {
         int id = zR.index + (zRLen * day);
         await _scheduleSalahNotification(athan, zR, id);
       }
-      // generate next day athan values
-      athan = ZamanController.to.generateNewAthan(
-          TimeController.to.currDayDate.add(Duration(days: day + 1)));
     }
   }
 
