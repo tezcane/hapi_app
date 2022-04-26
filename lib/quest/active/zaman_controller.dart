@@ -119,20 +119,17 @@ class ZamanController extends GetxHapi {
 
     if (forceSalahRecalculation) {
       forceSalahRecalculation = false;
-
-      // Must update notification after _athan is force changed
-      NotificationController.to.resetNotifications();
-
-      // Must update the ActiveQuestsController here after athan is updated.
-      // Was a bug where when forceSalahRecalculation = true was set in
-      // ActiveQuestsController, it's update() was called before athan updated.
-      ActiveQuestsController.to.update();
-    } else if (initUpdate) {
-      ActiveQuestsController.to.update(); // so UI shows up
+      NotificationController.to.resetNotifications(); // _athan updated so reset
     }
 
-    update(); // update UI with above changes (needed at app init)
+    // Always refresh ActiveQuestsController as _currZ is updated and multiple
+    // UI's watch for this (e.g. ActiveQuestsUI and ActiveQuestActionsUI.
+    // Must update the ActiveQuestsController here after athan is updated.
+    // Fixes bug where forceSalahRecalculation = true set in
+    // ActiveQuestsController, it's update() was called before athan updated.
+    ActiveQuestsController.to.update(); // even needed at app init
 
+    //update(); probably not needed done, 1 sec from now
     _startNextZamanCountdownTimer();
   }
 
