@@ -462,9 +462,7 @@ class SalahRow extends StatelessWidget {
       case (ZR.Layl):
         return _actionsLayl();
       default:
-        String e = 'SunRow: unexpected zaman given: "$zR"';
-        l.e(e);
-        throw e;
+        return l.e('SunRow: unexpected zaman given: "$zR"');
     }
   }
 
@@ -670,9 +668,7 @@ class SalahRow extends StatelessWidget {
       case (ZR.Layl):
         return _resultsLayl();
       default:
-        String e = '_getSalahResults: unexpected zaman given: "$zR"';
-        l.e(e);
-        throw e;
+        return l.E('_getSalahResults: unexpected zaman given: "$zR"');
     }
   }
 

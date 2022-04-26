@@ -60,7 +60,7 @@ class FabNavPage extends StatelessWidget {
                               MenuController.to.confettiController(),
                           blastDirectionality: BlastDirectionality.explosive,
                           shouldLoop: false,
-                          numberOfParticles: 25,
+                          numberOfParticles: 5,
                           maximumSize: const Size(50, 50),
                           minimumSize: const Size(20, 20),
                           colors: const [
@@ -83,7 +83,7 @@ class FabNavPage extends StatelessWidget {
                               MenuController.to.confettiController(),
                           blastDirectionality: BlastDirectionality.explosive,
                           shouldLoop: false,
-                          numberOfParticles: 25,
+                          numberOfParticles: 5,
                           maximumSize: const Size(10, 10),
                           minimumSize: const Size(3, 3),
                           colors: const [

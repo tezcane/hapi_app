@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:hapi/controllers/connectivity_controller.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main_controller.dart';
+import 'package:hapi/quest/active/athan/athan.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
 import 'package:intl/intl.dart';
 import 'package:ntp/ntp.dart';
@@ -42,34 +43,41 @@ class TimeController extends GetxHapi {
   Location _tzLoc = getLocation(DUMMY_TIMEZONE);
   Location get tzLoc => _tzLoc;
 
-  /// Holds the current day in 'yyyy-MM-dd' used for point calculations
+  /// Holds the current day in 'yyyy-MM-dd' used for current day's calculations.
   String _currDay = DUMMY_TIME_STR;
   String get currDay => _currDay;
   DateTime get currDayDate => TZDateTime.from(DateTime.parse(_currDay), _tzLoc);
 
-  DAY_OF_WEEK _dayOfWeek = defaultDayOfWeek;
-  DAY_OF_WEEK get dayOfWeek => _dayOfWeek;
+  DAY_OF_WEEK _dayOfWeekHijri = defaultDayOfWeek;
+  DAY_OF_WEEK _dayOfWeekGrego = defaultDayOfWeek;
+  DAY_OF_WEEK get dayOfWeekHijri => _dayOfWeekHijri;
+  DAY_OF_WEEK get dayOfWeekGrego => _dayOfWeekGrego;
 
   @override
   void onInit() async {
+    await updateTime(); // TODO do during splash screen?
+
+    // Initialize currDay as yesterday in case app is started after midnight.
+    // This is because Athan's isha/layl are valid through currDay to fajr of
+    // the next day (past 11:59PM of currDay). So we must give user ability to
+    // start/install app at night and not wait for next day fajr to start
+    // performing quests.
+    _currDay = dateToDay((await now()).subtract(const Duration(days: 1)));
+
+    // times should be initialized, so start Zaman Controller
+    if (!ZamanController.to.isInitialized) ZamanController.to.updateZaman();
+
     super.onInit();
-
-    await updateTime(false); // TODO do during splash screen?
-
-    // times should all be updated above, so now start Zaman Controller
-    if (!ZamanController.to.isInitialized) ZamanController.to.updateZaman(true);
   }
 
   /// Call to update time TODO use to detect irregular clock movement
   /// param updateDayIsOK - we only allow zaman controller to update the day if
   ///                       when next day zaman is hit.
-  Future<void> updateTime(bool updateDayIsOk) async {
-    l.d('TimeController:updateTime: start: ntpOffset=$_ntpOffset, tzLoc=$tzLoc, currDay=$_currDay, dayOfWeek=$_dayOfWeek');
+  Future<void> updateTime() async {
+    l.d('TimeController:updateTime: start: ntpOffset=$_ntpOffset, tzLoc=$tzLoc');
     await _updateNtpTime();
     await _updateTimezoneLocation();
-    await _updateCurrDay(updateDayIsOk);
-    await _updateDayOfWeek();
-    l.d('updateTime: after: ntpOffset=$_ntpOffset, tzLoc=$tzLoc, currDay=$_currDay, dayOfWeek=$_dayOfWeek');
+    l.d('updateTime: after: ntpOffset=$_ntpOffset, tzLoc=$tzLoc');
   }
 
   /// Gets NTP time from server when called, if internet is on
@@ -172,45 +180,63 @@ class TimeController extends GetxHapi {
     _tzLoc = tzLocation ?? await _getTimezoneLocFromTimeDate();
   }
 
-  _updateCurrDay(bool updateDayIsOk) async {
-    DateTime? currDayDate = DateTime.tryParse(s.rd('currDay') ?? '');
-    DateTime currTimeDate = await now();
-
-    // if currDay never initialized
-    if (currDayDate == null) {
-      _currDay = dateToDay(currTimeDate);
-      s.wr('currDay', _currDay);
-    } else {
-      if (updateDayIsOk) {
-        // Note: always updates time if new day is detected
-        String currDay = dateToDay(currDayDate);
-        String currTime = dateToDay(currTimeDate);
-        if (currDay != currTime) currDay = currTime;
-        if (_currDay != currDay) {
-          _currDay = currDay;
-          s.wr('currDay', _currDay);
-        }
-      } else {
-        _currDay = dateToDay(currTimeDate);
-      }
-    }
+  updateCurrDay() async {
+    String prevDay = dateToDay(currDayDate);
+    _currDay = dateToDay(await now());
+    l.i('TimeController:updateCurrDay: New day set ($_currDay), prev day was ($prevDay)');
   }
 
   String dateToDay(DateTime date) => DateFormat('yyyy-MM-dd').format(date);
 
-  _updateDayOfWeek() async => _dayOfWeek = getDayOfWeek(await now());
-
-  DAY_OF_WEEK getDayOfWeek(DateTime dateTime) {
-    // TODO test in other locales also // TODO test, used to be DateTime now()
-    String day = DateFormat('EEEE').format(dateTime);
-    for (var dayOfWeek in DAY_OF_WEEK.values) {
-      if (day == dayOfWeek.name) return dayOfWeek;
-    }
-
-    l.e('getDayOfWeek: Invalid day of week, defaulting to; method found: $defaultDayOfWeek');
-    return defaultDayOfWeek;
+  /// Call to update day of week for hijri and gregorian Calendars.
+  updateDaysOfWeek(Athan athan) async {
+    await _updateDayOfWeekHijri(athan);
+    await _updateDayOfWeekGrego();
   }
 
-  // TODO friday should switch Thursday at Maghrib
-  bool isFriday() => _dayOfWeek == DAY_OF_WEEK.Friday;
+  _updateDayOfWeekHijri(Athan athan) async =>
+      _dayOfWeekHijri = _getDayOfWeekHijri(await now(), athan);
+  _updateDayOfWeekGrego() async =>
+      _dayOfWeekGrego = _getDayOfWeekGrego(await now());
+
+  /// Hijri calendar day starts at maghrib
+  DAY_OF_WEEK _getDayOfWeekHijri(DateTime now, Athan athan) {
+    if (athan.date.year != now.year ||
+        athan.date.month != now.month ||
+        athan.date.day != now.day) {
+      l.e('TimeController:_getDayOfWeekHijri: Year/Month/Day mismatch: athan.date(${athan.date}) != now($now), continuing anyway');
+    }
+
+    DAY_OF_WEEK day = _getDayOfWeekGrego(now);
+    if (now.isAfter(athan.maghrib)) {
+      int dayIndex = day.index + 1;
+      if (dayIndex == 7) dayIndex = 0; // wrap around: if past Sunday -> Monday
+      return DAY_OF_WEEK.values[dayIndex];
+    }
+    l.d('TimeController:_getDayOfWeekHijri: ${day.name}');
+    return day;
+  }
+
+  /// Gregorian calendar day starts at Midnight (12:00AM)
+  DAY_OF_WEEK _getDayOfWeekGrego(DateTime now) {
+    String dayFromDate = DateFormat('EEEE').format(now); // TODO all locales ok?
+
+    DAY_OF_WEEK day = defaultDayOfWeek;
+    for (var dayOfWeek in DAY_OF_WEEK.values) {
+      if (dayFromDate == dayOfWeek.name) {
+        day = dayOfWeek;
+        break;
+      }
+    }
+    l.d('TimeController:_getDayOfWeekGrego: ${day.name}');
+    return day;
+  }
+
+  bool isMonday() => _dayOfWeekHijri == DAY_OF_WEEK.Monday;
+  bool isTuesday() => _dayOfWeekHijri == DAY_OF_WEEK.Tuesday;
+  bool isWednesday() => _dayOfWeekHijri == DAY_OF_WEEK.Wednesday;
+  bool isThursday() => _dayOfWeekHijri == DAY_OF_WEEK.Thursday;
+  bool isFriday() => _dayOfWeekHijri == DAY_OF_WEEK.Friday;
+  bool isSaturday() => _dayOfWeekHijri == DAY_OF_WEEK.Saturday;
+  bool isSunday() => _dayOfWeekHijri == DAY_OF_WEEK.Sunday;
 }

@@ -80,23 +80,29 @@ Log l = Log();
 
 /// Log is used to globally write logs. TODO write logs to cloud
 class Log {
+  /// Current log level (ll).
+  static const int ll = llD4;
+
   /// ll->LOG LEVELS, higher the level the more logs you will see.
   static const int llO0 = 0; // Off     - turn off logging
-  static const int llI1 = 1; // Info    - informative messages
+  static const int llE1 = 1; // Error   - error messages
   static const int llW2 = 2; // Warn    - warning messages
-  static const int llE3 = 3; // Error   - error messages
+  static const int llI3 = 3; // Info    - informative messages
   static const int llD4 = 4; // Debug   - debug level messages
   static const int llV5 = 5; // Verbose - verbose/spam messages
 
-  /// Current log level. Add 1 as a minor optimization (use > instead of >=).
-  static const int ll = 1 + llD4;
+  /// Prints error (if log level permits) and throws exception.
+  E(String msg) {
+    if (ll > llO0) debugPrint('H_ERR: $msg');
+    throw 'H_ERR: $msg';
+  }
 
-  /// i->info, w->warn, e->error/failures, d->debug, v->verbose:
-  i(String msg) => {if (ll > llI1) debugPrint('HAPI_INFO: $msg')};
-  w(String msg) => {if (ll > llW2) debugPrint('HAPI_WARN: $msg')};
-  e(String msg) => {if (ll > llE3) debugPrint('HAPI_ERRR: $msg')};
-  d(String msg) => {if (ll > llD4) debugPrint('HAPI_DBUG: $msg')};
-  v(String msg) => {if (ll > llV5) debugPrint('HAPI_VRBS: $msg')};
+  /// e->error/failures, w->warn, i->info, d->debug, v->verbose:
+  e(String msg) => {if (ll > llO0) debugPrint('H_ERR: $msg')};
+  w(String msg) => {if (ll > llE1) debugPrint('H_WRN: $msg')};
+  i(String msg) => {if (ll > llW2) debugPrint('H_INF: $msg')};
+  d(String msg) => {if (ll > llI3) debugPrint('H_DBG: $msg')};
+  v(String msg) => {if (ll > llD4) debugPrint('H_VRB: $msg')};
 }
 
 /// "s" short for Storage, use for all Storage access in app.

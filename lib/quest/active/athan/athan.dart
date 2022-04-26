@@ -380,9 +380,7 @@ class Athan {
       case (ZR.Layl):
         return layl;
       default:
-        String e = 'TimeOfDay:getZamanRowTime: unexpected ZR given: "$zR"';
-        l.e(e);
-        throw e;
+        return l.E('TimeOfDay:getZamanRowTime: unexpected ZR given: "$zR"');
     }
   }
 
@@ -444,9 +442,7 @@ class Athan {
       case (Z.Layl__3):
         return _last3rdOfNight_13;
       default:
-        String e = 'TimeOfDay:getStartTime: unexpected zaman given: "$z"';
-        l.e(e);
-        throw e;
+        return l.E('TimeOfDay:getStartTime: unexpected zaman given: "$z"');
     }
   }
 
@@ -482,11 +478,11 @@ class Athan {
     } else if (date.isAfter(_fajr_01)) {
       return Z.Fajr;
     } else {
-      l.e('getCurrZaman $date is not after fajr');
-      return Z.Fajr;
+      return l.E('getCurrZaman $date is not after fajr ($_fajr_01)');
     }
   }
 
+  /// TODO we can just get this of enum and currZ?!
   Z getNextZaman(DateTime date) {
     final ActiveQuestsController c = ActiveQuestsController.to;
 
@@ -521,8 +517,7 @@ class Athan {
     } else if (date.isAfter(_fajr_01)) {
       return Z.Karahat_Morning_Adhkar;
     } else {
-      l.e('getNextZaman $date is not after fajr');
-      return Z.Karahat_Morning_Adhkar;
+      return l.E('getNextZaman $date is not after fajr');
     }
   }
 }

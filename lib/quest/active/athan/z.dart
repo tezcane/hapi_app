@@ -130,9 +130,7 @@ extension EnumUtil on Z {
       case (Z.Fajr_Tomorrow): // still needed so we can set misses
         return QUEST.LAYL_QIYAM;
       default:
-        String e = 'Z:getFirstQuest: Invalid Z "$this" given';
-        l.e(e);
-        throw e;
+        return l.E('Z:getFirstQuest: Invalid Z "$this" given');
     }
   }
 
@@ -189,9 +187,7 @@ extension EnumUtil on Z {
       case (Z.Fajr_Tomorrow):
         return false;
       default:
-        String e = 'Z:isSunAboveHorizon: Invalid Z "$this" given';
-        l.e(e);
-        throw e;
+        return l.E('Z:isSunAboveHorizon: Invalid Z "$this" given');
     }
   }
 }

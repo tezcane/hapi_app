@@ -6,14 +6,12 @@ import 'package:hapi/controllers/notification_controller.dart';
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main_controller.dart';
-import 'package:hapi/quest/active/active_quest_model.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/athan.dart';
 import 'package:hapi/quest/active/athan/calculation_method.dart';
 import 'package:hapi/quest/active/athan/calculation_params.dart';
 import 'package:hapi/quest/active/athan/z.dart';
-import 'package:hapi/services/db.dart';
 import 'package:timezone/timezone.dart' show TZDateTime;
 
 /// Controls Islamic Times Of Day, e.g. Fajr, Duha, Sunset/Maghrib, etc. that
@@ -81,34 +79,38 @@ class ZamanController extends GetxHapi {
 
   /// Does init for app items then calls itself again on more init needed or
   /// startNextZamanCountdownTimer() to start next countdown timer.
-  updateZaman(bool initUpdate) async {
+  updateZaman() async {
     Athan athan;
 
     if (forceSalahRecalculation) {
       l.d('ZamanController:updateZaman: forceSalahRecalculation was called.');
       athan = generateNewAthan(TimeController.to.currDayDate);
     } else {
-      if (_athan != null) {
-        athan = _athan!; // already exists and don't need to reinit
+      if (isInitialized) {
+        athan = _athan!; // don't calculate athan each time
       } else {
         athan = generateNewAthan(TimeController.to.currDayDate); // first init
       }
     }
 
     DateTime now = await TimeController.to.now();
-    Z currZCheck = athan.getCurrZaman(now);
-    l.d('ZamanController:updateZaman: currZCheck=$currZCheck');
-
-    // For next prayer/day, set any missed quests and do other quest setup:
-    await ActiveQuestsAjrController.to.initCurrQuest(currZCheck, initUpdate);
+    Z currZ = athan.getCurrZaman(now);
+    l.d('ZamanController:updateZaman: currZ=$currZ');
 
     // check if we are still on the same day
-    if (currZCheck == Z.Fajr_Tomorrow) {
+    if (currZ == Z.Fajr_Tomorrow) {
       await _handleNewDaySetup();
       return;
+    } else if (currZ == Z.Maghrib ||
+        forceSalahRecalculation ||
+        !isInitialized) {
+      await TimeController.to.updateDaysOfWeek(athan); // sunset = new hijri day
     }
 
-    _currZ = currZCheck; // now safe as currZ can't be Z.Fajr_Tomorrow.
+    // Safe to now set/flush missed quests and do other quest setup:
+    await ActiveQuestsAjrController.to.initCurrQuest(currZ, !isInitialized);
+
+    _currZ = currZ; // now safe as currZ can't be Z.Fajr_Tomorrow.
     _nextZ = athan.getNextZaman(now);
     l.d('ZamanController:updateZaman: _nextZ: $_nextZ');
     _nextZTime = athan.getZamanTime(_nextZ)[0] as DateTime;
@@ -127,9 +129,8 @@ class ZamanController extends GetxHapi {
     // Must update the ActiveQuestsController here after athan is updated.
     // Fixes bug where forceSalahRecalculation = true set in
     // ActiveQuestsController, it's update() was called before athan updated.
-    ActiveQuestsController.to.update(); // even needed at app init
+    ActiveQuestsController.to.update(); // even needed at app init to show UI
 
-    //update(); probably not needed done, 1 sec from now
     _startNextZamanCountdownTimer();
   }
 
@@ -149,11 +150,11 @@ class ZamanController extends GetxHapi {
 
       if (forceSalahRecalculation) {
         l.d('ZamanController:_startNextZamanCountdownTimer: forceSalahRecalculation was called.');
-        updateZaman(false);
+        updateZaman();
         return; // quits while loop, starts again in updateZaman()
-      } else if (forceSalahRecalculation || timeToNextZaman.inSeconds <= 0) {
+      } else if (timeToNextZaman.inSeconds <= 0) {
         l.d('ZamanController:_startNextZamanCountdownTimer: This zaman $currZ is over, going to next zaman $nextZ.');
-        updateZaman(false);
+        updateZaman();
         return; // quits while loop, starts again in updateZaman()
       } else {
         if (timeToNextZaman.inSeconds % 60 == 0) {
@@ -163,29 +164,28 @@ class ZamanController extends GetxHapi {
         }
         // this is displayed on UI:
         _timeToNextZaman = _printHourMinuteSeconds(timeToNextZaman);
-        update();
+        update(); // only time ZamanController is updated
       }
     }
   }
 
   _handleNewDaySetup() async {
     l.d('ZamanController:_handleNewDaySetup: New day is being setup.');
-    // Reset day, Fajr Tom. is always 1 (or more) days after currDay:
-    await TimeController.to.updateTime(true);
-    ActiveQuestsAjrController.to.clearAllQuests();
-    await Db.setActiveQuest(
-      ActiveQuestModel(
-        day: TimeController.to.currDay,
-        done: 0,
-        skip: 0,
-        miss: 0,
-      ),
-    );
+    if (isInitialized) {
+      // flush any missed quests
+      await ActiveQuestsAjrController.to.initCurrQuest(Z.Fajr_Tomorrow, true);
+    }
+
+    await TimeController.to.updateTime();
+    await TimeController.to.updateCurrDay();
+
+    // Load or init this next day quests
+    await ActiveQuestsAjrController.to.initCurrQuest(Z.Fajr, true);
 
     forceSalahRecalculation = true; // time to update _athan
 
     // now, currZ won't equal Z.Fajr_Tomorrow as currDay updated
-    updateZaman(false);
+    updateZaman();
   }
 
   // TODO can optimize this
@@ -218,20 +218,16 @@ class ZamanController extends GetxHapi {
         zs = [Z.Maghrib];
         break;
       case Z.Isha:
-        zs = [Z.Isha];
-        break;
       case Z.Layl__3:
       case Z.Layl__2:
-        zs = [Z.Isha, Z.Layl__2, Z.Layl__3]; // Isha still valid for layl
+        zs = [Z.Isha, Z.Layl__2, Z.Layl__3]; // Isha/Layl are anytime at night
         break;
       default:
-        var e = 'Invalid Zaman "$z" given when in isSalahRowActive called';
-        l.e(e);
-        throw e;
+        return l.E('Invalid Zaman "$z" given when in isSalahRowActive called');
     }
 
-    for (Z z in zs) {
-      if (z == _currZ) {
+    for (Z z1 in zs) {
+      if (z1 == _currZ) {
         bool isActive = true;
 
         // Special case for isha/layl as they share same time frame
