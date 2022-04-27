@@ -153,7 +153,7 @@ class Storage {
 /// "T"/"t" short for Text, use to translate or fit text in UI.
 class T extends StatelessWidget {
   const T(
-    this.t,
+    this.text,
     this.style, {
     this.alignment = Alignment.center,
     this.w = 80,
@@ -161,7 +161,7 @@ class T extends StatelessWidget {
     this.boxFit = BoxFit.contain, // BoxFit.fitHeight, BoxFit.fitWidth
   });
 
-  final String t;
+  final String text;
   final TextStyle style;
   final Alignment alignment;
   final double w;
@@ -177,7 +177,7 @@ class T extends StatelessWidget {
       child: FittedBox(
         fit: boxFit,
         alignment: alignment, // use to align text,
-        child: Text(t.tr, style: style), // NOTE: Translation done here
+        child: Text(text.tr, style: style), // NOTE: Translation done here
       ),
     );
   }

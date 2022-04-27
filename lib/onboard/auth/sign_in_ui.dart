@@ -57,7 +57,7 @@ class SignInUI extends StatelessWidget {
                   ),
                   const FormVerticalSpace(),
                   PrimaryButton(
-                      labelText: 'auth.signInButton'.tr,
+                      labelText: 'auth.signInButton',
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           authController.signInWithEmailAndPassword(context);

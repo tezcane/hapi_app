@@ -12,15 +12,42 @@ import 'package:hapi/settings/settings_option.dart';
 //Flutter App translations google sheet
 //https://docs.google.com/spreadsheets/d/1oS7iJ6ocrZBA53SxRfKF0CG9HAaXeKtzvsTBhgG4Zzk/edit?usp=sharing
 final List<SettingsOption> languageOptions = [
-  SettingsOption('zh', '中文'), //Chinese
-  SettingsOption('de', 'Deutsche'), //German
-  SettingsOption('en', 'English'), //English
-  SettingsOption('es', 'Español'), //Spanish
-  SettingsOption('fr', 'Français'), //French
-  SettingsOption('hi', 'हिन्दी'), //Hindi
-  SettingsOption('ja', '日本語'), //Japanese
-  SettingsOption('pt', 'Português'), //Portuguese
-  SettingsOption('ru', 'русский'), //Russian
+  SettingsOption('sq', 'Albanian - Shqip'), // Albanian
+  SettingsOption('ar', 'Arabic - عربي'), // Arabic
+  SettingsOption('az', 'Azerbaijani - Azərbaycanlı'), // Azerbaijani
+  SettingsOption('bn', 'Bengali - বাংলা'), // Bengali
+  SettingsOption('bg', 'Bulgarian - български'), // Bulgarian
+  SettingsOption('zh', 'Chinese - 中国人'), // Chinese
+  SettingsOption('da', 'Danish - dansk'), // Danish
+  SettingsOption('nl', 'Dutch - Nederlands'), // Dutch
+  SettingsOption('en', 'English'), // English
+  SettingsOption('fr', 'French - Français'), // French
+  SettingsOption('de', 'German - Deutsch'), // German
+  SettingsOption('gu', 'Gujarati - ગુજરાત'), // Gujarati
+  SettingsOption('hi', 'Hindi - हिन्दी'), // Hindi
+  SettingsOption('in', 'Indonesian - bahasa Indonesia'), // Indonesian
+  SettingsOption('it', 'Italian - Italiano'), // Italian
+  SettingsOption('ja', 'Japanese - 日本語'), //Japanese
+  SettingsOption('kk', 'Kazakh - Қазақ'), // Kazakh
+  SettingsOption('ky', 'Kirghiz - Киргизский'), // Kirghiz
+  SettingsOption('ku', 'Kurdish - Kurdî'), // Kurdish
+  SettingsOption('ms', 'Malay - Melayu'), // Malay
+  SettingsOption('ps', 'Pashto - پښتو'), // Pashto
+  SettingsOption('fa', 'Persian - فارسی'), // Persian
+  SettingsOption('pt', 'Portuguese - Português'), //Portuguese
+  SettingsOption('pa', 'Punjabi - ਪੰਜਾਬੀ'), // Punjabi
+  SettingsOption('ro', 'Romanian - Română'), // Romanian
+  SettingsOption('ru', 'Russian - Русский'), // Russian
+  SettingsOption('so', 'Somali - Soomaali'), // Somali
+  SettingsOption('es', 'Spanish - español'), // Spanish
+  SettingsOption('su', 'Sudanese - Sudan'), // Sudanese
+  SettingsOption('tg', 'Tajik - Тоҷик'), // Tajik
+  SettingsOption('tt', 'Tatar - Татар'), // Tatar
+  SettingsOption('th', 'Thai - ไทย'), // Thai
+  SettingsOption('tr', 'Turkish - Türkçe'), // Turkish
+  SettingsOption('tk', 'Turkmen - Türkmenler'), // Turkmen
+  SettingsOption('ur', 'Urdu - اردو'), // Urdu
+  SettingsOption('uz', 'Uzbek - O\'zbek tili'), // Uzbek
 ];
 
 /// saves and loads our selected language.

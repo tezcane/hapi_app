@@ -65,7 +65,7 @@ class SignUpUI extends StatelessWidget {
                   ),
                   const FormVerticalSpace(),
                   PrimaryButton(
-                      labelText: 'auth.signUpButton'.tr,
+                      labelText: 'auth.signUpButton',
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           SystemChannels.textInput.invokeMethod(

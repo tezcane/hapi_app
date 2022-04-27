@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hapi/main_controller.dart';
 
 /// another button in the ui.
 ///
@@ -22,9 +23,10 @@ class PrimaryButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: buttonStyle,
-      child: Text(
-        labelText.toUpperCase(),
-        style: const TextStyle(fontWeight: FontWeight.bold),
+      child: T(
+        labelText,
+        const TextStyle(fontWeight: FontWeight.bold),
+        w: w(context) - 40,
       ),
     );
   }

@@ -35,25 +35,27 @@ class Validator {
     }
   }
 
-  String? number(String? value) {
-    String pattern = r'^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$';
-    RegExp regex = RegExp(pattern);
-    if (!regex.hasMatch(value!)) {
-      return 'validator.number'.tr;
-    } else {
-      return null;
-    }
-  }
+  // String? number(String? value) {
+  //   String pattern = r'^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$';
+  //   RegExp regex = RegExp(pattern);
+  //   if (!regex.hasMatch(value!)) {
+  //     return 'validator.number'.tr;
+  //   } else {
+  //     return null;
+  //   }
+  // }
 
-  String? amount(String? value) {
-    String pattern = r'^\d+$';
-    RegExp regex = RegExp(pattern);
-    if (!regex.hasMatch(value!)) {
-      return 'validator.amount'.tr;
-    } else {
-      return null;
-    }
-  }
+  // validator.amount =
+  //   Please enter a number, i.e. "250" - no dollar symbol and no cents
+  // String? amount(String? value) {
+  //   String pattern = r'^\d+$';
+  //   RegExp regex = RegExp(pattern);
+  //   if (!regex.hasMatch(value!)) {
+  //     return 'validator.amount'.tr;
+  //   } else {
+  //     return null;
+  //   }
+  // }
 
   String? notEmpty(String? value) {
     String pattern = r'^\S+$';

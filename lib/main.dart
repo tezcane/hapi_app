@@ -108,39 +108,42 @@ class MyApp extends StatelessWidget {
                 // floatingActionButtonLocation:
                 //     FloatingActionButtonLocation.endFloat,
                 resizeToAvoidBottomInset: false, // fixes keyboard pushing UI up
-                floatingActionButton: GetBuilder<MenuController>(builder: (cm) {
-                  return FloatingActionButton(
-                    tooltip: cm.getToolTip(),
-                    backgroundColor:
-                        AppThemes.floatingActionButtonTheme.backgroundColor,
-                    foregroundColor:
-                        AppThemes.floatingActionButtonTheme.foregroundColor,
-                    onPressed: () => {},
-                    child: Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          IconButton(
-                            iconSize: 30.0,
-                            icon: AnimatedIcon(
-                              icon: cm.fabAnimatedIcon,
-                              progress: cm.acFabIcon,
+                floatingActionButton: GetBuilder<MenuController>(
+                  builder: (mc) {
+                    return FloatingActionButton(
+                      tooltip: mc.getToolTip(),
+                      backgroundColor:
+                          AppThemes.floatingActionButtonTheme.backgroundColor,
+                      foregroundColor:
+                          AppThemes.floatingActionButtonTheme.foregroundColor,
+                      onPressed: () => {},
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: <Widget>[
+                            IconButton(
+                              iconSize: 30.0,
+                              icon: AnimatedIcon(
+                                icon: mc.fabAnimatedIcon,
+                                progress: mc.acFabIcon,
+                              ),
+                              onPressed: () => mc.handlePressedFAB(),
                             ),
-                            onPressed: () => cm.handlePressedFAB(),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                }),
+                    );
+                  },
+                ),
                 body: GetMaterialApp(
                   translations: Localization(),
                   locale: c.getLocale, // <- Current locale
-                  // navigatorObservers: [
+                  fallbackLocale: const Locale('en', 'US'),
+                  // navigatorObservers: [ // TODO
                   //   // FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
                   // ],
                   debugShowCheckedModeBanner: false,
-                  // These are controlled in MenuController but we do here too for sign out/in pages
+                  // Also set in MenuC, but we do here for sign in/out pages:
                   defaultTransition: Transition.fade,
                   transitionDuration: const Duration(milliseconds: 1000),
                   theme: AppThemes.lightTheme,
@@ -162,12 +165,10 @@ class MyApp extends StatelessWidget {
 class AppRoutes {
   AppRoutes._(); //this is to prevent anyone from instantiating this object
   static final routes = [
-    //TODO we can customize transition to each page, just pass this to GetPages:
-    //transition: Transition.leftToRightWithFade),
     GetPage(name: '/', page: () => SplashUI()),
     GetPage(name: '/onboard', page: () => OnboardingUI()),
-    GetPage(name: '/signin', page: () => SignInUI()),
-    GetPage(name: '/signup', page: () => SignUpUI()),
+    GetPage(name: '/sign-in', page: () => SignInUI()),
+    GetPage(name: '/sign-up', page: () => SignUpUI()),
     GetPage(name: '/quest', page: () => QuestsUI()),
     GetPage(name: '/tarikh', page: () => TarikhMenuUI()),
     GetPage(name: '/tarikh/favorite', page: () => TarikhFavoritesUI()),

@@ -9,6 +9,17 @@ import 'package:hapi/quest/daily/do_list/do_list_model.dart';
 /// Does database transactions.
 class Db {
   static final FirebaseFirestore _db = FirebaseFirestore.instance;
+  // TODO bug here right after sign out sign in:
+  // I/flutter (30513): H_INF: TimeController:updateCurrDay: New day set (2022-04-26), prev day was (2022-04-25)
+  // E/flutter (30513): [ERROR:flutter/lib/ui/ui_dart_state.cc(209)] Unhandled Exception: Null check operator used on a null value
+  // E/flutter (30513): #0      Db._uid (package:hapi/services/db.dart:12:66)
+  // E/flutter (30513): #1      Db._uid (package:hapi/services/db.dart)
+  // E/flutter (30513): #2      Db.getActiveQuest (package:hapi/services/db.dart:82:33)
+  // E/flutter (30513): #3      ActiveQuestsAjrController.initCurrQuest (package:hapi/quest/active/active_quests_ajr_controller.dart:227:38)
+  // E/flutter (30513): #4      ZamanController._handleNewDaySetup (package:hapi/quest/active/zaman_controller.dart:185:40)
+  // E/flutter (30513): <asynchronous suspension>
+  // E/flutter (30513): #5      ZamanController.updateZaman (package:hapi/quest/active/zaman_controller.dart:102:7)
+  // E/flutter (30513): <asynchronous suspension>
   static final String _uid = AuthController.to.firebaseUser.value!.uid;
 
   // Future<bool> createNewUser(UserModel user) async {

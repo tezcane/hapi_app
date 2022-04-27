@@ -83,7 +83,7 @@ class UpdateProfileUI extends StatelessWidget {
                           Hero(
                             tag: 'UPDATE PROFILE',
                             child: PrimaryButton(
-                              labelText: 'auth.updateUser'.tr,
+                              labelText: 'auth.updateUser',
                               onPressed: tu.isTextSame
                                   ? () {} // disable button
                                   : () async {
