@@ -95,7 +95,7 @@ class ZamanController extends GetxHapi {
 
     DateTime now = await TimeController.to.now();
     Z currZ = athan.getCurrZaman(now);
-    l.d('ZamanController:updateZaman: currZ=$currZ');
+    l.d('ZamanController:updateZaman: starting, currZ=$currZ, now=$now');
 
     // check if we are still on the same day
     if (currZ == Z.Fajr_Tomorrow) {
@@ -154,6 +154,8 @@ class ZamanController extends GetxHapi {
         return; // quits while loop, starts again in updateZaman()
       } else if (timeToNextZaman.inSeconds <= 0) {
         l.d('ZamanController:_startNextZamanCountdownTimer: This zaman $currZ is over, going to next zaman $nextZ.');
+        // just in case, give a little time for nextZ to come in.
+        await Future.delayed(const Duration(milliseconds: 16));
         updateZaman();
         return; // quits while loop, starts again in updateZaman()
       } else {
