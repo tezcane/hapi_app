@@ -101,10 +101,6 @@ class ZamanController extends GetxHapi {
     if (currZ == Z.Fajr_Tomorrow) {
       await _handleNewDaySetup();
       return;
-    } else if (currZ == Z.Maghrib ||
-        forceSalahRecalculation ||
-        !isInitialized) {
-      await TimeController.to.updateDaysOfWeek(athan); // sunset = new hijri day
     }
 
     // Safe to now set/flush missed quests and do other quest setup:
@@ -118,6 +114,10 @@ class ZamanController extends GetxHapi {
 
     // Now all init is done, set athan value (needed for init to prevent NPE)
     _athan = athan;
+
+    if (_currZ == Z.Maghrib || forceSalahRecalculation || !isInitialized) {
+      await TimeController.to.updateDaysOfWeek(); // sunset = new hijri day
+    }
 
     if (forceSalahRecalculation) {
       forceSalahRecalculation = false;

@@ -7,6 +7,7 @@ import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/athan/athan.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
+import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:ntp/ntp.dart';
 import 'package:timezone/timezone.dart'
@@ -62,13 +63,16 @@ class TimeController extends GetxHapi {
     // the next day (past 11:59PM of currDay). So we must give user ability to
     // start/install app at night and not wait for next day fajr to start
     // performing quests.
-    _currDay = dateToDay((await now()).subtract(const Duration(days: 1)));
+    _currDay = dateToDay(dateToYesterday(await now()));
 
     // times should be initialized, so start Zaman Controller
     if (!ZamanController.to.isInitialized) ZamanController.to.updateZaman();
 
     super.onInit();
   }
+
+  DateTime dateToYesterday(DateTime dT) => dT.subtract(const Duration(days: 1));
+  DateTime dateToTomorrow(DateTime dT) => dT.add(const Duration(days: 1));
 
   /// Call to update time TODO use to detect irregular clock movement
   /// param updateDayIsOK - we only allow zaman controller to update the day if
@@ -78,6 +82,7 @@ class TimeController extends GetxHapi {
     await _updateNtpTime();
     await _updateTimezoneLocation();
     l.d('updateTime: after: ntpOffset=$_ntpOffset, tzLoc=$tzLoc');
+    update();
   }
 
   /// Gets NTP time from server when called, if internet is on
@@ -184,31 +189,30 @@ class TimeController extends GetxHapi {
     String prevDay = dateToDay(currDayDate);
     _currDay = dateToDay(await now());
     l.i('TimeController:updateCurrDay: New day set ($_currDay), prev day was ($prevDay)');
+    update();
   }
 
   String dateToDay(DateTime date) => DateFormat('yyyy-MM-dd').format(date);
 
   /// Call to update day of week for hijri and gregorian Calendars.
-  updateDaysOfWeek(Athan athan) async {
-    await _updateDayOfWeekHijri(athan);
+  updateDaysOfWeek() async {
+    await _updateDayOfWeekHijri();
     await _updateDayOfWeekGrego();
+    update();
   }
 
-  _updateDayOfWeekHijri(Athan athan) async =>
-      _dayOfWeekHijri = _getDayOfWeekHijri(await now(), athan);
-  _updateDayOfWeekGrego() async =>
-      _dayOfWeekGrego = _getDayOfWeekGrego(await now());
+  _updateDayOfWeekHijri() async {
+    _dayOfWeekHijri = _getDayOfWeekHijri(await now());
+  }
+
+  _updateDayOfWeekGrego() async {
+    _dayOfWeekGrego = _getDayOfWeekGrego(await now());
+  }
 
   /// Hijri calendar day starts at maghrib
-  DAY_OF_WEEK _getDayOfWeekHijri(DateTime now, Athan athan) {
-    if (athan.date.year != now.year ||
-        athan.date.month != now.month ||
-        athan.date.day != now.day) {
-      l.e('TimeController:_getDayOfWeekHijri: Year/Month/Day mismatch: athan.date(${athan.date}) != now($now), continuing anyway');
-    }
-
-    DAY_OF_WEEK day = _getDayOfWeekGrego(now);
-    if (now.isAfter(athan.maghrib)) {
+  DAY_OF_WEEK _getDayOfWeekHijri(DateTime time) {
+    DAY_OF_WEEK day = _getDayOfWeekGrego(time);
+    if (iterateHijriDateByOne(time)) {
       int dayIndex = day.index + 1;
       if (dayIndex == 7) dayIndex = 0; // wrap around: if past Sunday -> Monday
       return DAY_OF_WEEK.values[dayIndex];
@@ -217,9 +221,25 @@ class TimeController extends GetxHapi {
     return day;
   }
 
+  bool iterateHijriDateByOne(DateTime dT) {
+    Athan athan = ZamanController.to.athan!;
+
+    if (athan.date.year != dT.year ||
+        athan.date.month != dT.month ||
+        athan.date.day != dT.day) {
+      l.e('TimeController:_getDayOfWeekHijri: Year/Month/Day mismatch: athan.date(${athan.date}) != now($dT), continuing anyway');
+    }
+
+    // TODO what happens at midnight?
+    if (dT.isAfter(athan.maghrib)) {
+      return true;
+    }
+    return false;
+  }
+
   /// Gregorian calendar day starts at Midnight (12:00AM)
-  DAY_OF_WEEK _getDayOfWeekGrego(DateTime now) {
-    String dayFromDate = DateFormat('EEEE').format(now); // TODO all locales ok?
+  DAY_OF_WEEK _getDayOfWeekGrego(DateTime dT) {
+    String dayFromDate = DateFormat('EEEE').format(dT); // TODO all locales ok?
 
     DAY_OF_WEEK day = defaultDayOfWeek;
     for (var dayOfWeek in DAY_OF_WEEK.values) {
@@ -239,4 +259,18 @@ class TimeController extends GetxHapi {
   bool isFriday() => _dayOfWeekHijri == DAY_OF_WEEK.Friday;
   bool isSaturday() => _dayOfWeekHijri == DAY_OF_WEEK.Saturday;
   bool isSunday() => _dayOfWeekHijri == DAY_OF_WEEK.Sunday;
+
+  String getDateHijri(bool includeDayOfWeek) {
+    DateTime dT = now2();
+    if (iterateHijriDateByOne(dT)) dT = dateToTomorrow(dT);
+    String dayOfWeek = '';
+    if (includeDayOfWeek) dayOfWeek = '${_dayOfWeekHijri.name} ';
+    return '$dayOfWeek${HijriCalendar.fromDate(dT).toFormat('MMMM dd, yyyy')}';
+  }
+
+  String getDateGrego(bool includeDayOfWeek) {
+    String dayOfWeek = '';
+    if (includeDayOfWeek) dayOfWeek = '${_dayOfWeekGrego.name} ';
+    return '$dayOfWeek${DateFormat('MMMM d, yyyy').format(now2())}';
+  }
 }

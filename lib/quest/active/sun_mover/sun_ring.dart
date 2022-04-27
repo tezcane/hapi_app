@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/components/two_colored_icon.dart';
+import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/helpers/math_utils.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/athan/athan.dart';
@@ -275,11 +276,38 @@ class SunRing extends StatelessWidget {
                   ),
                 ),
               if (!isSunAboveHorizon) const _GumbiAndMeWithFamily(Colors.white),
+              const Center(child: _HijriAndGregoDate()),
             ],
           ),
         ),
       ),
     );
+  }
+}
+
+class _HijriAndGregoDate extends StatelessWidget {
+  const _HijriAndGregoDate();
+
+  static const TS ts = TS(Colors.white70);
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<TimeController>(builder: (c) {
+      DAY_OF_WEEK hijriDOW = c.dayOfWeekHijri;
+      DAY_OF_WEEK gregoDOW = c.dayOfWeekGrego;
+
+      bool includeDayOfWeek = hijriDOW != gregoDOW;
+
+      return Column(
+        children: [
+          const SizedBox(height: 42),
+          if (includeDayOfWeek) const T('', ts, w: 160, h: 19),
+          if (!includeDayOfWeek) T(hijriDOW.name, ts, w: 160, h: 19),
+          T(c.getDateHijri(includeDayOfWeek), ts, w: 160, h: 19),
+          T(c.getDateGrego(includeDayOfWeek), ts, w: 160, h: 19),
+        ],
+      );
+    });
   }
 }
 

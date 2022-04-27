@@ -73,6 +73,7 @@ dependencies:
   
   crypto: ^3.0.1
   http: ^0.13.4
+  hijri: ^3.0.0
   csv: ^5.0.1
 
   alquran_cloud: ^0.0.1
