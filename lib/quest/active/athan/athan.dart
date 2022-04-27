@@ -461,9 +461,9 @@ class Athan {
       return Z.Maghrib;
     } else if (date.isAfter(_karahatAdkharSunSetting_09)) {
       return Z.Karahat_Evening_Adhkar;
-    } else if (c.salahAsrSafe && date.isAfter(_asrLater_08)) {
+    } else if (!c.salahAsrEarlier && date.isAfter(_asrLater_08)) {
       return Z.Asr_Later;
-    } else if (!c.salahAsrSafe && date.isAfter(_asrEarlier_07)) {
+    } else if (c.salahAsrEarlier && date.isAfter(_asrEarlier_07)) {
       return Z.Asr_Earlier;
     } else if (date.isAfter(_dhuhr_06)) {
       return Z.Dhuhr;
@@ -498,13 +498,13 @@ class Athan {
       return Z.Isha;
     } else if (date.isAfter(_karahatAdkharSunSetting_09)) {
       return Z.Maghrib;
-    } else if (c.salahAsrSafe && date.isAfter(_asrLater_08)) {
+    } else if (!c.salahAsrEarlier && date.isAfter(_asrLater_08)) {
       return Z.Karahat_Evening_Adhkar;
-    } else if (!c.salahAsrSafe && date.isAfter(_asrEarlier_07)) {
+    } else if (c.salahAsrEarlier && date.isAfter(_asrEarlier_07)) {
       return Z.Karahat_Evening_Adhkar;
-    } else if (c.salahAsrSafe && date.isAfter(_dhuhr_06)) {
+    } else if (!c.salahAsrEarlier && date.isAfter(_dhuhr_06)) {
       return Z.Asr_Later;
-    } else if (!c.salahAsrSafe && date.isAfter(_dhuhr_06)) {
+    } else if (c.salahAsrEarlier && date.isAfter(_dhuhr_06)) {
       return Z.Asr_Earlier;
     } else if (date.isAfter(_karahatAdkharIstiwa_05)) {
       return Z.Dhuhr;

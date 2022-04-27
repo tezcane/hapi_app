@@ -44,7 +44,9 @@ class ZamanController extends GetxHapi {
         CalcMethod.values[ActiveQuestsController.to.salahCalcMethod];
 
     var madhab = Madhab.Hanafi;
-    if (!ActiveQuestsController.to.salahAsrSafe) madhab = Madhab.Shafi;
+    if (!ActiveQuestsController.to.salahAsrEarlier) {
+      madhab = Madhab.Hanafi; // Note: not all hanafi use this opinion
+    }
 
     int karahatSunRisingSecs = 25 * 60;
     int karahatSunIstiwaSecs = 15 * 60;

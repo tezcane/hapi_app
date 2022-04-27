@@ -107,14 +107,14 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
             addSetting(
               title: 'Asr Time',
               tooltip:
-                  'Ulema opinions on Asr start time are when an object\'s shadow is either 2 times its lengths (later) or 1 times its length (earlier)',
-              labels: ['Later', 'Earlier'],
-              initialLabelIndex: c.salahAsrSafe ? 0 : 1,
+                  'Most scholars believe Asr starts when a shadow is the same length of an object (earlier), others say double the shadow length (later).',
+              labels: ['Earlier', 'Later'],
+              initialLabelIndex: c.salahAsrEarlier ? 0 : 1,
               onToggle: (index) {
                 if (index == 0) {
-                  c.salahAsrSafe = true;
+                  c.salahAsrEarlier = true;
                 } else {
-                  c.salahAsrSafe = false;
+                  c.salahAsrEarlier = false;
                 }
               },
             ),

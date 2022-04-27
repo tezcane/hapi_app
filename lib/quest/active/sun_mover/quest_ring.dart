@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
-import 'package:hapi/quest/active/active_quests_ui.dart';
 import 'package:hapi/quest/active/athan/z.dart';
 import 'package:hapi/quest/active/sun_mover/multi_color_ring.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
@@ -56,7 +55,7 @@ class QuestRing extends StatelessWidget {
     color = AppThemes.ajrColorsByIdx[questRingColors[zR]!];
     questRingSlices[zR] = ColorSlice(elapsedSecs, color);
 
-    if (ActiveQuestsController.to.salahAsrSafe) {
+    if (!ActiveQuestsController.to.salahAsrEarlier) {
       zR = ZR.Asr;
       elapsedSecs = 0;
       elapsedSecs += colorSlices[Z.Karahat_Evening_Adhkar]!.elapsedSecs;

@@ -9,13 +9,13 @@ class ActiveQuestsController extends GetxController {
   // Needed for Salah Calculations:
   int _salahCalcMethod = CalcMethod.America____ISNA___.index;
   int get salahCalcMethod => _salahCalcMethod;
-  bool _salahAsrSafe = true; // true hanafi, false other
-  bool get salahAsrSafe => _salahAsrSafe;
+  bool _salahAsrEarlier = true; // earlier=true, 1 shadow, later=false, 2 shadow
+  bool get salahAsrEarlier => _salahAsrEarlier;
   bool _last3rdOfNight = true; // true=last 1/3, false=middle night
   bool get last3rdOfNight => _last3rdOfNight;
   bool _showSecPrecision = false; // false = round athan times to minutes
   bool get showSecPrecision => _showSecPrecision;
-  bool _salahKarahatSafe = true; // true hanafi, false other
+  bool _salahKarahatSafe = true; // true slightly safer/longer karahat times
   bool get salahKarahatSafe => _salahKarahatSafe;
 
   bool _showJummahOnFriday = true; // if friday=true, shows jummah
@@ -42,7 +42,7 @@ class ActiveQuestsController extends GetxController {
 
     _salahCalcMethod =
         s.rd('salahCalcMethod') ?? CalcMethod.America____ISNA___.index;
-    _salahAsrSafe = s.rd('salahAsrSafe') ?? true;
+    _salahAsrEarlier = s.rd('salahAsrEarlier') ?? true;
     _last3rdOfNight = s.rd('last3rdOfNight') ?? true;
     _showSecPrecision = s.rd('showSecPrecision') ?? false;
     _salahKarahatSafe = s.rd('salahKarahatSafe') ?? true;
@@ -64,9 +64,9 @@ class ActiveQuestsController extends GetxController {
     //update(); update needs to be done later after athan recalculated
   }
 
-  set salahAsrSafe(bool value) {
-    _salahAsrSafe = value;
-    s.wr('salahAsrSafe', value);
+  set salahAsrEarlier(bool value) {
+    _salahAsrEarlier = value;
+    s.wr('salahAsrEarlier', value);
     ZamanController.to.forceSalahRecalculation = true;
     //update(); update needs to be done later after athan recalculated
   }

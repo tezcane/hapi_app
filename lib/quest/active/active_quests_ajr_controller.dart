@@ -114,9 +114,9 @@ extension EnumUtil on QUEST {
       case (QUEST.ASR_FARD):
       case (QUEST.ASR_THIKR):
       case (QUEST.ASR_DUA):
-        return ActiveQuestsController.to.salahAsrSafe
-            ? Z.Asr_Later
-            : Z.Asr_Earlier;
+        return ActiveQuestsController.to.salahAsrEarlier
+            ? Z.Asr_Earlier
+            : Z.Asr_Later;
       case (QUEST.KARAHAT_ADHKAR_SUNSET):
         return Z.Karahat_Evening_Adhkar;
       case (QUEST.MAGHRIB_FARD):
@@ -166,9 +166,9 @@ extension EnumUtil on QUEST {
   //     case (QUEST.DHUHR_NAFLA):
   //     case (QUEST.DHUHR_THIKR):
   //     case (QUEST.DHUHR_DUA):
-  //       return ActiveQuestsController.to.salahAsrSafe
-  //           ? Z.Asr_Later
-  //           : Z.Asr_Earlier;
+  //       return ActiveQuestsController.to.salahAsrEarlier
+  //           ? Z.Asr_Earlier
+  //           : Z.Asr_Later;
   //     case (QUEST.ASR_NAFLB):
   //     case (QUEST.ASR_FARD):
   //     case (QUEST.ASR_THIKR):
