@@ -46,12 +46,12 @@ class ZamanController extends GetxHapi {
     var madhab = Madhab.Hanafi;
     if (!ActiveQuestsController.to.salahAsrSafe) madhab = Madhab.Shafi;
 
-    int karahatSunRisingSecs = 40 * 60;
-    int karahatSunIstiwaSecs = 30 * 60;
-    int karahatSunSettingSecs = 40 * 60;
+    int karahatSunRisingSecs = 25 * 60;
+    int karahatSunIstiwaSecs = 15 * 60;
+    int karahatSunSettingSecs = 25 * 60;
     if (!ActiveQuestsController.to.salahKarahatSafe) {
       karahatSunRisingSecs = 20 * 60;
-      karahatSunIstiwaSecs = 15 * 60;
+      karahatSunIstiwaSecs = 10 * 60;
       karahatSunSettingSecs = 20 * 60;
     }
 
