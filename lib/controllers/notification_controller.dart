@@ -89,9 +89,13 @@ class NotificationController extends GetxHapi {
   togglePlayAthan(ZR zR) async {
     _playAthan[zR] = !_playAthan[zR]!;
     s.wr('playAthan${zR.name}', _playAthan[zR]);
+
     if (_playAthan[zR]!) {
+      showSnackBar('sb.notificationTitle', 'sb.notificationAthanOn');
       _playBeep[zR] = false; // both can't be true
       s.wr('playBeep${zR.name}', _playBeep[zR]);
+    } else {
+      showSnackBar('sb.notificationTitle', 'sb.notificationAthanOff');
     }
     resetNotifications();
     updateOnThread1Ms();
@@ -101,8 +105,11 @@ class NotificationController extends GetxHapi {
     _playBeep[zR] = !_playBeep[zR]!;
     s.wr('playBeep${zR.name}', _playBeep[zR]);
     if (_playBeep[zR]!) {
+      showSnackBar('sb.notificationTitle', 'sb.notificationBeepOn');
       _playAthan[zR] = false; // both can't be true
       s.wr('playAthan${zR.name}', _playAthan[zR]);
+    } else {
+      showSnackBar('sb.notificationTitle', 'sb.notificationBeepOff');
     }
     resetNotifications();
     updateOnThread1Ms();
@@ -111,6 +118,11 @@ class NotificationController extends GetxHapi {
   toggleVibrate(ZR zR) async {
     _vibrate[zR] = !_vibrate[zR]!;
     s.wr('vibrate${zR.name}', _vibrate[zR]);
+    if (_vibrate[zR]!) {
+      showSnackBar('sb.notificationTitle', 'sb.notificationVibrateOn');
+    } else {
+      showSnackBar('sb.notificationTitle', 'sb.notificationVibrateOff');
+    }
     resetNotifications();
     updateOnThread1Ms();
   }

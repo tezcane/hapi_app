@@ -7,6 +7,7 @@ import 'package:hapi/components/label_button.dart';
 import 'package:hapi/components/logo_graphic_header.dart';
 import 'package:hapi/components/primary_button.dart';
 import 'package:hapi/helpers/validator.dart';
+import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/onboard/auth/auth_controller.dart';
@@ -46,7 +47,7 @@ class UpdateProfileUI extends StatelessWidget {
                           FormInputFieldWithIcon(
                             controller: c.nameController,
                             iconPrefix: Icons.person,
-                            labelText: 'auth.nameFormField'.tr,
+                            trKey: 'auth.nameFormField',
                             validator: Validator().name,
                             onChanged: (value) => tu.handleTextUpdate(
                               [
@@ -64,7 +65,7 @@ class UpdateProfileUI extends StatelessWidget {
                           FormInputFieldWithIcon(
                             controller: c.emailController,
                             iconPrefix: Icons.email,
-                            labelText: 'auth.emailFormField'.tr,
+                            trKey: 'auth.emailFormField',
                             validator: Validator().email,
                             keyboardType: TextInputType.emailAddress,
                             onChanged: (value) => tu.handleTextUpdate(
@@ -83,7 +84,7 @@ class UpdateProfileUI extends StatelessWidget {
                           Hero(
                             tag: 'UPDATE PROFILE',
                             child: PrimaryButton(
-                              labelText: 'auth.updateUser',
+                              trKey: 'auth.updateUser',
                               onPressed: tu.isTextSame
                                   ? () {} // disable button
                                   : () async {
@@ -120,14 +121,15 @@ class UpdateProfileUI extends StatelessWidget {
                           ),
                           const FormVerticalSpace(),
                           LabelButton(
-                              labelText: 'auth.resetPasswordLabelButton'.tr,
+                              trKey: 'auth.resetPasswordLabelButton',
                               onPressed: () => MenuController.to
                                   .pushSubPage(SubPage.Reset_Password)),
-                          const SizedBox(height: 400), // hide signout down page
+                          const SizedBox(height: 400), //hide sign out down page
                           Center(
                             child: ElevatedButton(
                               onPressed: () => AuthController.to.signOut(),
-                              child: Text('settings.signOut'.tr),
+                              child:
+                                  T('settings.signOut', null, w: wm(context)),
                             ),
                           ),
                           const SizedBox(height: 48),
@@ -156,15 +158,13 @@ class UpdateProfileUI extends StatelessWidget {
       AlertDialog(
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(8.0))),
-        title: Text(
-          'auth.enterPassword'.tr,
-        ),
+        title: T('auth.enterPassword', null, w: wm(context)),
         content: Form(
           key: _formKey2,
           child: FormInputFieldWithIcon(
             controller: _password,
             iconPrefix: Icons.lock,
-            labelText: 'auth.passwordFormField'.tr,
+            trKey: 'auth.passwordFormField',
             validator: Validator().password,
             obscureText: true,
             onChanged: (value) {},
@@ -174,13 +174,13 @@ class UpdateProfileUI extends StatelessWidget {
         ),
         actions: <Widget>[
           TextButton(
-            child: Text('auth.cancel'.tr.toUpperCase()),
+            child: T('auth.cancel', null, w: wm(context)),
             onPressed: () {
               Get.back();
             },
           ),
           TextButton(
-            child: Text('auth.submit'.tr.toUpperCase()),
+            child: const T('auth.submit', null),
             onPressed: () async {
               if (_formKey2.currentState!.validate()) {
                 Get.back();

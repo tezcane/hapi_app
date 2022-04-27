@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:hapi/components/form_input_field_with_icon.dart';
 import 'package:hapi/components/form_vertical_spacing.dart';
 import 'package:hapi/components/logo_graphic_header.dart';
@@ -36,7 +35,7 @@ class ResetPasswordUI extends StatelessWidget {
                   FormInputFieldWithIcon(
                     controller: emailController,
                     iconPrefix: Icons.email,
-                    labelText: 'auth.emailFormField'.tr,
+                    trKey: 'auth.emailFormField',
                     validator: Validator().email,
                     keyboardType: TextInputType.emailAddress,
                     onChanged: (value) {},
@@ -44,7 +43,7 @@ class ResetPasswordUI extends StatelessWidget {
                   ),
                   const FormVerticalSpace(),
                   PrimaryButton(
-                    labelText: 'auth.resetPasswordButton',
+                    trKey: 'auth.resetPasswordButton',
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         await authController.sendPasswordResetEmail(

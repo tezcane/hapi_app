@@ -168,11 +168,12 @@ class AuthController extends GetxHapi {
       hideLoadingIndicator();
     } catch (error) {
       hideLoadingIndicator();
-      Get.snackbar('auth.signInErrorTitle'.tr, 'auth.signInError'.tr,
-          snackPosition: SnackPosition.BOTTOM,
-          duration: const Duration(seconds: 7),
-          backgroundColor: Theme.of(context).snackBarTheme.backgroundColor,
-          colorText: Theme.of(context).snackBarTheme.actionTextColor);
+      showSnackBar(
+        'auth.signInErrorTitle',
+        'auth.signInError',
+        durationSec: 7,
+        isError: true,
+      );
     }
   }
 
@@ -212,11 +213,12 @@ class AuthController extends GetxHapi {
       });
     } on FirebaseAuthException catch (error) {
       hideLoadingIndicator();
-      Get.snackbar('auth.signUpErrorTitle'.tr, error.message!,
-          snackPosition: SnackPosition.BOTTOM,
-          duration: const Duration(seconds: 10),
-          backgroundColor: Theme.of(context).snackBarTheme.backgroundColor,
-          colorText: Theme.of(context).snackBarTheme.actionTextColor);
+      showSnackBar(
+        'auth.signUpErrorTitle',
+        error.message!,
+        durationSec: 10,
+        isError: true,
+      );
     }
   }
 
@@ -241,12 +243,10 @@ class AuthController extends GetxHapi {
       storeLastSignedInName();
       storeLastSignedInEmail();
 
-      Get.snackbar('auth.updateUserSuccessNoticeTitle'.tr,
-          'auth.updateUserSuccessNotice'.tr,
-          snackPosition: SnackPosition.BOTTOM,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Theme.of(context).snackBarTheme.backgroundColor,
-          colorText: Theme.of(context).snackBarTheme.actionTextColor);
+      showSnackBar(
+        'auth.updateUserSuccessNoticeTitle',
+        'auth.updateUserSuccessNotice',
+      );
       return Future.value(false);
     } catch (error) {
       // "} on  PlatformException catch (error) {" doesn't catch all error types
@@ -259,47 +259,46 @@ class AuthController extends GetxHapi {
       // getLastSignedInName();
       // getLastSignedInEmail();
 
-      Get.snackbar('auth.updateUserFailNotice'.tr,
-          translateFirestoreAuthFailure(error.toString()),
-          snackPosition: SnackPosition.BOTTOM,
-          duration: const Duration(seconds: 10),
-          backgroundColor: Theme.of(context).snackBarTheme.backgroundColor,
-          colorText:
-              Colors.red); //Theme.of(context).snackBarTheme.actionTextColor);
+      showSnackBar(
+        'auth.updateUserFailNotice',
+        getTrKeyForFirestoreAuthFailure(error.toString()),
+        durationSec: 10,
+        isError: true,
+      );
     }
     return Future.value(true);
   }
 
   /// Convert auth error to translated nice user output.
-  String translateFirestoreAuthFailure(String authError) {
+  String getTrKeyForFirestoreAuthFailure(String authError) {
     // Note: leaves brackets around unknown errors. i.e. "[unknown-err] err msg"
     authError = authError.replaceFirst('firebase_auth/', '');
 
     String error = authError.toLowerCase(); // to match below
     if (error.contains('invalid-email')) {
-      return 'validator.email'.tr;
+      return 'validator.email';
     } else if (error.contains('email-already-in-use')) {
-      return 'auth.updateUserEmailInUse'.tr;
+      return 'auth.updateUserEmailInUse';
     } else if (error.contains('wrong-password')) {
-      return 'auth.wrongPasswordNotice'.tr;
+      return 'auth.wrongPasswordNotice';
     } else if (error.contains('weak-password')) {
-      return 'validator.password'.tr;
+      return 'validator.password';
     } else if (error.contains('user-disabled')) {
-      return 'auth.userIsAdminDisabled'.tr;
+      return 'auth.userIsAdminDisabled';
     }
 
     // I don't expect to see these
     l.e('Strange/unexpected error: $authError');
     if (error.contains('user-not-found')) {
-      return 'auth.signInError'.tr;
+      return 'auth.signInError';
     } else if (error.contains('too-many-requests')) {
-      return 'auth.tooManyRequests'.tr;
+      return 'auth.tooManyRequests';
     } else if (error.contains('operation-not-allowed')) {
-      return 'auth.operationNotAllowed'.tr;
+      return 'auth.operationNotAllowed';
     } else if (error.contains('requires-recent-login')) {
-      return 'auth.requiresRecentLogin'.tr;
+      return 'auth.requiresRecentLogin';
     } else {
-      return 'auth.unknownError'.tr + ': ' + authError;
+      return 'auth.unknownError'.tr + ': ' + authError; // tr ok, not a trKey
     }
   }
 
@@ -322,19 +321,19 @@ class AuthController extends GetxHapi {
     try {
       await _auth.sendPasswordResetEmail(email: newEmail);
       hideLoadingIndicator();
-      Get.snackbar(
-          'auth.resetPasswordNoticeTitle'.tr, 'auth.resetPasswordNotice'.tr,
-          snackPosition: SnackPosition.BOTTOM,
-          duration: const Duration(seconds: 5),
-          backgroundColor: Get.theme.snackBarTheme.backgroundColor,
-          colorText: Get.theme.snackBarTheme.actionTextColor);
+      showSnackBar(
+        'auth.resetPasswordNoticeTitle',
+        'auth.resetPasswordNotice',
+        durationSec: 10,
+      );
     } on FirebaseAuthException catch (error) {
       hideLoadingIndicator();
-      Get.snackbar('auth.resetPasswordFailed'.tr, error.message!,
-          snackPosition: SnackPosition.BOTTOM,
-          duration: const Duration(seconds: 10),
-          backgroundColor: Get.theme.snackBarTheme.backgroundColor,
-          colorText: Colors.red); //Get.theme.snackBarTheme.actionTextColor);
+      showSnackBar(
+        'auth.resetPasswordFailed',
+        error.message!,
+        durationSec: 10,
+        isError: true,
+      );
     }
   }
 

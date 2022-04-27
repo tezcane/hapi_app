@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/components/dropdown_picker.dart';
+import 'package:hapi/main_controller.dart';
 import 'package:hapi/settings/language/language_controller.dart';
 
 class LanguageListUI extends StatelessWidget {
@@ -11,12 +12,17 @@ class LanguageListUI extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text('settings.language'.tr),
+          T(
+            'settings.language',
+            null,
+            w: wm(context) / 4,
+            alignment: Alignment.center,
+          ),
           DropdownPicker(
-            menuOptions: languageOptions,
+            trMenuOptions: languageOptions,
             selectedOption: c.currentLanguage,
-            onChanged: (value) async {
-              await c.updateLanguage(value!);
+            onChanged: (langKey) async {
+              await c.updateLanguage(langKey!);
               Get.forceAppUpdate();
             },
           ),

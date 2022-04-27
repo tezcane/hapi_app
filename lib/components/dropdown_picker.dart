@@ -9,23 +9,22 @@ import 'package:flutter/material.dart';
 /// ),
 class DropdownPicker extends StatelessWidget {
   const DropdownPicker({
-    required this.menuOptions,
+    required this.trMenuOptions,
     required this.selectedOption,
     required this.onChanged,
   });
 
-  final List<dynamic> menuOptions;
+  /// Must use already translated text in here (e.g. uses GetX's .tr)
+  final List<dynamic> trMenuOptions;
   final String selectedOption;
   final void Function(String?) onChanged;
 
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
-        items: menuOptions
+        items: trMenuOptions
             .map((data) => DropdownMenuItem<String>(
-                  child: Text(
-                    data.value,
-                  ),
+                  child: Text(data.trValue), // tr ok
                   value: data.key,
                 ))
             .toList(),

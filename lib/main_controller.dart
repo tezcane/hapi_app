@@ -153,7 +153,7 @@ class Storage {
 /// "T"/"t" short for Text, use to translate or fit text in UI.
 class T extends StatelessWidget {
   const T(
-    this.text,
+    this.trKey,
     this.style, {
     this.alignment = Alignment.center,
     this.w = 80,
@@ -161,8 +161,8 @@ class T extends StatelessWidget {
     this.boxFit = BoxFit.contain, // BoxFit.fitHeight, BoxFit.fitWidth
   });
 
-  final String text;
-  final TextStyle style;
+  final String trKey;
+  final TextStyle? style;
   final Alignment alignment;
   final double w;
   final double h;
@@ -177,7 +177,7 @@ class T extends StatelessWidget {
       child: FittedBox(
         fit: boxFit,
         alignment: alignment, // use to align text,
-        child: Text(text.tr, style: style), // NOTE: Translation done here
+        child: Text(trKey.tr, style: style), // NOTE: Translation done here
       ),
     );
   }
@@ -191,12 +191,32 @@ class TS extends TextStyle {
   }) : super(color: color, fontWeight: fontWeight);
 }
 
+showSnackBar(
+  String trKeyTitle,
+  String trKeyMsg, {
+  int durationSec = 3,
+  bool isError = false,
+}) {
+  Color? colorText = Get.theme.snackBarTheme.actionTextColor;
+  if (isError) colorText = Colors.red;
+  Get.snackbar(
+    trKeyTitle.tr,
+    trKeyMsg.tr,
+    snackPosition: SnackPosition.TOP,
+    duration: Duration(seconds: durationSec),
+    backgroundColor: Get.theme.snackBarTheme.backgroundColor,
+    colorText: colorText,
+  );
+}
+
 /// Common utility/helper functions so we don't have to type so much:
+///   wm - width (of screen) minus some margin when we want long text
 ///   w  - width (of screen)
 ///   h  - height (of screen)
 ///   cb - theme color background
 ///   cs - theme color scaffold
 ///   ct - theme color text
+double wm(BuildContext context) => MediaQuery.of(context).size.width - 40;
 double w(BuildContext context) => MediaQuery.of(context).size.width;
 double h(BuildContext context) => MediaQuery.of(context).size.height;
 Color cb(BuildContext context) => Theme.of(context).backgroundColor;

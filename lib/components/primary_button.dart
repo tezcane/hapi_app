@@ -9,12 +9,12 @@ import 'package:hapi/main_controller.dart';
 ///               ),
 class PrimaryButton extends StatelessWidget {
   const PrimaryButton({
-    required this.labelText,
+    required this.trKey,
     required this.onPressed,
     this.buttonStyle,
   });
 
-  final String labelText;
+  final String trKey;
   final void Function() onPressed;
   final ButtonStyle? buttonStyle;
 
@@ -24,9 +24,9 @@ class PrimaryButton extends StatelessWidget {
       onPressed: onPressed,
       style: buttonStyle,
       child: T(
-        labelText,
+        trKey,
         const TextStyle(fontWeight: FontWeight.bold),
-        w: w(context) - 40,
+        w: wm(context),
       ),
     );
   }

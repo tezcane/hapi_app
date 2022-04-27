@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hapi/main_controller.dart';
 
 /// one type of button in ui.
 ///
@@ -7,16 +8,14 @@ import 'package:flutter/material.dart';
 ///                 onPressed: () => print('implement me'),
 ///               ),
 class LabelButton extends StatelessWidget {
-  const LabelButton({required this.labelText, required this.onPressed});
-  final String labelText;
+  const LabelButton({required this.trKey, required this.onPressed});
+  final String trKey;
   final void Function() onPressed;
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      child: Text(
-        labelText,
-      ),
+      child: T(trKey, null, w: wm(context)),
       onPressed: onPressed,
     );
   }

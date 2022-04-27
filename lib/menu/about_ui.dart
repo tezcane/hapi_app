@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/settings/language/language_list_ui.dart';
@@ -93,7 +94,7 @@ class AboutUI extends StatelessWidget {
                       onPressed: () =>
                           MenuController.to.pushSubPage(SubPage.Update_Profile),
                       icon: const Icon(Icons.perm_identity_outlined),
-                      label: Text('settings.updateProfile'.tr),
+                      label: T('settings.updateProfile', null, w: wm(context)),
                     ),
                   ),
                 ),

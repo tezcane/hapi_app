@@ -9,7 +9,7 @@ class Validator {
     String pattern = r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+$';
     RegExp regex = RegExp(pattern);
     if (!regex.hasMatch(value!)) {
-      return 'validator.email'.tr;
+      return 'validator.email'.tr; // tr ok
     } else {
       return null;
     }
@@ -19,7 +19,7 @@ class Validator {
     String pattern = r'^.{6,}$';
     RegExp regex = RegExp(pattern);
     if (!regex.hasMatch(value!)) {
-      return 'validator.password'.tr;
+      return 'validator.password'.tr; // tr ok
     } else {
       return null;
     }
@@ -29,7 +29,7 @@ class Validator {
     String pattern = r"^[a-zA-Z]+(([',. -][a-zA-Z ])?[a-zA-Z]*)*$";
     RegExp regex = RegExp(pattern);
     if (!regex.hasMatch(value!)) {
-      return 'validator.name'.tr;
+      return 'validator.name'.tr; // tr ok
     } else {
       return null;
     }
@@ -39,7 +39,7 @@ class Validator {
   //   String pattern = r'^\D?(\d{3})\D?\D?(\d{3})\D?(\d{4})$';
   //   RegExp regex = RegExp(pattern);
   //   if (!regex.hasMatch(value!)) {
-  //     return 'validator.number'.tr;
+  //     return 'validator.number'.tr; // tr ok
   //   } else {
   //     return null;
   //   }
@@ -51,7 +51,7 @@ class Validator {
   //   String pattern = r'^\d+$';
   //   RegExp regex = RegExp(pattern);
   //   if (!regex.hasMatch(value!)) {
-  //     return 'validator.amount'.tr;
+  //     return 'validator.amount'.tr; // tr ok
   //   } else {
   //     return null;
   //   }
@@ -61,7 +61,7 @@ class Validator {
     String pattern = r'^\S+$';
     RegExp regex = RegExp(pattern);
     if (!regex.hasMatch(value!)) {
-      return 'validator.notEmpty'.tr;
+      return 'validator.notEmpty'.tr; // tr ok
     } else {
       return null;
     }

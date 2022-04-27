@@ -103,8 +103,8 @@ class LanguageController extends GetxController {
   }
 
   bool isNotSupportedLanguage(String language) {
-    for (SettingsOption optionModel in languageOptions) {
-      if (optionModel.key == language) return false; // language is supported
+    for (SettingsOption languageOption in languageOptions) {
+      if (languageOption.key == language) return false; // language is supported
     }
     return true; // not found, language is no supported
   }

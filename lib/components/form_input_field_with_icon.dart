@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 /// handles our form field elements but has an icon too.
 /// FormInputFieldWithIcon(
@@ -15,7 +16,7 @@ class FormInputFieldWithIcon extends StatelessWidget {
   const FormInputFieldWithIcon(
       {required this.controller,
       required this.iconPrefix,
-      required this.labelText,
+      required this.trKey,
       required this.validator,
       this.keyboardType = TextInputType.text,
       this.obscureText = false,
@@ -26,7 +27,7 @@ class FormInputFieldWithIcon extends StatelessWidget {
 
   final TextEditingController controller;
   final IconData iconPrefix;
-  final String labelText;
+  final String trKey;
   final String? Function(String?)? validator;
   final TextInputType keyboardType;
   final bool obscureText;
@@ -41,7 +42,7 @@ class FormInputFieldWithIcon extends StatelessWidget {
       decoration: InputDecoration(
         filled: true,
         prefixIcon: Icon(iconPrefix),
-        labelText: labelText,
+        labelText: trKey.tr,
       ),
       controller: controller,
       onSaved: onSaved,
