@@ -26,82 +26,6 @@ const TS tsText = TS(AppThemes.ldTextColor);
 class ActiveQuestsUI extends StatelessWidget {
   static const TS tsAppBar = TS(Colors.white70);
 
-  static String getTime(DateTime? time) => getTimeRange(time, null);
-  static String getTimeRange(DateTime? startTime, DateTime? endTime) {
-    if (startTime == null) return '-'; // still initializing
-
-    int startHour = startTime.hour;
-    String startAmPm = '';
-    if (ActiveQuestsController.to.show12HourClock) {
-      if (startHour >= 12) {
-        startHour -= 12;
-        startAmPm = 'P';
-      } else {
-        startAmPm = 'A';
-      }
-      if (startHour == 0) startHour = 12;
-    }
-
-    String endTimeString = '';
-    if (endTime != null) {
-      int endHour = endTime.hour;
-      int endMinute = endTime.minute;
-      String endAmPm = '';
-
-      String minutes = endMinute.toString();
-      if (endMinute < 10) minutes = '0$minutes'; // pad so looks good on UI
-
-      String seconds = '';
-      if (ActiveQuestsController.to.showSecPrecision) {
-        int secs = endTime.second;
-        seconds = secs.toString();
-        if (secs < 10) {
-          seconds = ':0$seconds';
-        } else {
-          seconds = ':$seconds';
-        }
-      }
-
-      if (ActiveQuestsController.to.show12HourClock) {
-        if (endHour >= 12) {
-          endHour -= 12;
-          endAmPm = 'P';
-        } else {
-          endAmPm = 'A';
-        }
-        if (endHour == 0) endHour = 12;
-
-        endTimeString = '-${endHour.toString()}:$minutes$seconds$endAmPm';
-
-        // if AM/PM are same, don't show twice
-        if (startAmPm == endAmPm) startAmPm = '';
-      } else {
-        endTimeString = '-${endHour.toString()}:$minutes$seconds';
-      }
-    }
-
-    // pad hour and minutes so looks good on UI
-    String hour = startHour.toString();
-    if (startHour < 10) hour = '  $hour'; // NOTE: double space to align
-
-    int startMinute = startTime.minute;
-    String minutes = startMinute.toString();
-    if (startMinute < 10) minutes = '0$minutes'; // pad so looks good on UI
-
-    String seconds = '';
-    if (ActiveQuestsController.to.showSecPrecision) {
-      int secs = startTime.second;
-      seconds = secs.toString();
-      if (secs < 10) {
-        seconds = ':0$seconds';
-      } else {
-        seconds = ':$seconds';
-      }
-    }
-
-    return '$hour:$minutes$seconds$startAmPm$endTimeString';
-  }
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ActiveQuestsController>(builder: (c) {
@@ -418,7 +342,11 @@ class SalahRow extends StatelessWidget {
               child: Center(
                 // Center needed to make fit height work
                 child: T(
-                  ActiveQuestsUI.getTime(athan.getStartTime(z)),
+                  TimeController.getTimeStr(
+                    athan.getStartTime(z),
+                    ActiveQuestsController.to.show12HourClock,
+                    ActiveQuestsController.to.showSecPrecision,
+                  ),
                   textStyle.copyWith(
                     color: isActive ? textStyle.color : AppThemes.ldTextColor,
                     fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
@@ -938,7 +866,12 @@ class _SunCell extends StatelessWidget {
               h: h2 - 2, // a little extra needed for borders
             ),
             T(
-              ActiveQuestsUI.getTimeRange(_time1, _time2),
+              TimeController.getTimeRangeStr(
+                _time1,
+                _time2,
+                ActiveQuestsController.to.show12HourClock,
+                ActiveQuestsController.to.showSecPrecision,
+              ),
               tsText,
               w: w3 - 40, // 40 = 32 icon + 2 selected + 6 sun shift
               h: h2 - 2,

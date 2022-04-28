@@ -20,11 +20,8 @@ class LanguageListUI extends StatelessWidget {
           ),
           DropdownPicker(
             trMenuOptions: languageOptions,
-            selectedOption: c.currentLanguage,
-            onChanged: (langKey) async {
-              await c.updateLanguage(langKey!);
-              Get.forceAppUpdate();
-            },
+            selectedOption: c.currLang,
+            onChanged: (langKey) => c.updateLanguage(langKey!),
           ),
         ],
       ),

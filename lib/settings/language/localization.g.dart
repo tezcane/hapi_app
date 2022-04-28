@@ -52,6 +52,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'Phone\'s default sound off',
 'sb.notificationVibrateOn': 'Phone\'s vibration is on',
 'sb.notificationVibrateOff': 'Phone\'s vibration is off',
+'lbl.timeAM': 'AM',
+'lbl.timePM': 'PM',
 },
 'tr': {
 'auth.signInButton': 'Mevcut bir hesaba oturum açın',
@@ -102,6 +104,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'Telefonun varsayılan sesi kapalı',
 'sb.notificationVibrateOn': 'Telefonun titreşimi açık',
 'sb.notificationVibrateOff': 'Telefonun titreşimi kapalı',
+'lbl.timeAM': 'Ben',
+'lbl.timePM': 'ÖĞLEDEN SONRA',
 },
 'ar': {
 'auth.signInButton': 'تسجيل الدخول إلى حساب موجود',
@@ -152,6 +156,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'صوت الهاتف الافتراضي',
 'sb.notificationVibrateOn': 'اهتزاز الهاتف قيد التشغيل',
 'sb.notificationVibrateOff': 'اهتزاز الهاتف متوقف',
+'lbl.timeAM': 'صباحا',
+'lbl.timePM': 'مساءً',
 },
 'sq': {
 'auth.signInButton': 'Hyni në një llogari ekzistuese',
@@ -202,6 +208,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'Tingulli i paracaktuar i telefonit Off Off',
 'sb.notificationVibrateOn': 'Dridhja e telefonit është e ndezur',
 'sb.notificationVibrateOff': 'Dridhja e telefonit është e fikur',
+'lbl.timeAM': 'JAM',
+'lbl.timePM': 'Kryeministër',
 },
 'az': {
 'auth.signInButton': 'Mövcud hesaba daxil olun',
@@ -252,6 +260,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'Telefonun standart səssizdir',
 'sb.notificationVibrateOn': 'Telefonun vibrasiyası davam edir',
 'sb.notificationVibrateOff': 'Telefonun vibrasiyası söndürülür',
+'lbl.timeAM': 'Allah',
+'lbl.timePM': 'Axşam',
 },
 'bn': {
 'auth.signInButton': 'একটি বিদ্যমান অ্যাকাউন্টে সাইন ইন করুন',
@@ -302,6 +312,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'ফোনের ডিফল্ট শব্দ বন্ধ',
 'sb.notificationVibrateOn': 'ফোনের কম্পন চালু আছে',
 'sb.notificationVibrateOff': 'ফোনের কম্পন বন্ধ',
+'lbl.timeAM': 'আমি',
+'lbl.timePM': 'প্রধানমন্ত্রী',
 },
 'bg': {
 'auth.signInButton': 'Влезте в съществуващ акаунт',
@@ -352,6 +364,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'Звукът по подразбиране на телефона е изключен',
 'sb.notificationVibrateOn': 'Вибрацията на телефона е включена',
 'sb.notificationVibrateOff': 'Вибрацията на телефона е изключена',
+'lbl.timeAM': 'Съм',
+'lbl.timePM': 'PM',
 },
 'zh': {
 'auth.signInButton': '登录现有帐户',
@@ -402,6 +416,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': '电话的默认声音关闭',
 'sb.notificationVibrateOn': '电话的振动已经启动',
 'sb.notificationVibrateOff': '电话的振动已经关闭',
+'lbl.timeAM': '是',
+'lbl.timePM': '下午',
 },
 'da': {
 'auth.signInButton': 'Log ind på en eksisterende konto',
@@ -452,6 +468,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'Telefonens standardlyd fra',
 'sb.notificationVibrateOn': 'Telefonens vibration er på',
 'sb.notificationVibrateOff': 'Telefonens vibration er slukket',
+'lbl.timeAM': 'ER',
+'lbl.timePM': 'OM EFTERMIDDAGEN',
 },
 'nl': {
 'auth.signInButton': 'Log in bij een bestaand account',
@@ -502,6 +520,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'Het standaardgeluid van telefoons',
 'sb.notificationVibrateOn': 'De vibratie van de telefoon is ingeschakeld',
 'sb.notificationVibrateOff': 'De vibratie van de telefoon is uitgeschakeld',
+'lbl.timeAM': 'BEN',
+'lbl.timePM': 'P.M',
 },
 'fr': {
 'auth.signInButton': 'Connectez-vous à un compte existant',
@@ -552,6 +572,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': '',
 'sb.notificationVibrateOn': '',
 'sb.notificationVibrateOff': '',
+'lbl.timeAM': '',
+'lbl.timePM': '',
 },
 'de': {
 'auth.signInButton': 'Melden Sie sich bei einem vorhandenen Konto an',
@@ -602,6 +624,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'Das Standardsound des Telefons aus dem Telefon',
 'sb.notificationVibrateOn': 'Die Schwingung des Telefons ist eingeschaltet',
 'sb.notificationVibrateOff': 'Die Vibration des Telefons ist ausgeschaltet',
+'lbl.timeAM': 'BIN',
+'lbl.timePM': 'PM',
 },
 'gu': {
 'auth.signInButton': 'હાલના ખાતામાં સાઇન ઇન કરો',
@@ -652,6 +676,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'ફોનનો ડિફ default લ્ટ અવાજ બંધ',
 'sb.notificationVibrateOn': 'ફોનની કંપન ચાલુ છે',
 'sb.notificationVibrateOff': 'ફોનની કંપન બંધ છે',
+'lbl.timeAM': 'છું',
+'lbl.timePM': 'બપોરે',
 },
 'hi': {
 'auth.signInButton': 'किसी मौजूदा खाते में साइन इन करें',
@@ -702,6 +728,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'फोन की डिफ़ॉल्ट ध्वनि बंद',
 'sb.notificationVibrateOn': 'फोन का कंपन चालू है',
 'sb.notificationVibrateOff': 'फोन का कंपन बंद है',
+'lbl.timeAM': 'हूँ',
+'lbl.timePM': 'बजे',
 },
 'in': {
 'auth.signInButton': 'Masuk ke akun yang ada',
@@ -752,6 +780,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'Telepon Default Sound Off',
 'sb.notificationVibrateOn': 'Getaran telepon menyala',
 'sb.notificationVibrateOff': 'Getaran telepon mati',
+'lbl.timeAM': 'SAYA',
+'lbl.timePM': 'PM',
 },
 'it': {
 'auth.signInButton': 'Accedi a un account esistente',
@@ -802,6 +832,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'Sound predefinito del telefono OFF',
 'sb.notificationVibrateOn': 'La vibrazione del telefono è accesa',
 'sb.notificationVibrateOff': 'La vibrazione del telefono è spenta',
+'lbl.timeAM': 'SONO',
+'lbl.timePM': 'Pm',
 },
 'ja': {
 'auth.signInButton': '既存のアカウントにサインインします',
@@ -852,6 +884,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': '電話のデフォルトのサウンドはオフになります',
 'sb.notificationVibrateOn': '電話の振動が点灯しています',
 'sb.notificationVibrateOff': '電話の振動はオフです',
+'lbl.timeAM': '午前',
+'lbl.timePM': 'PM',
 },
 'kk': {
 'auth.signInButton': 'Бар тіркелгіге кіріңіз',
@@ -902,6 +936,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'Телефонның әдепкі дыбысы өшірулі',
 'sb.notificationVibrateOn': 'Телефонның дірілдемесі қосулы',
 'sb.notificationVibrateOff': 'Телефонның дірілі өшірулі',
+'lbl.timeAM': 'Боламын',
+'lbl.timePM': 'Кешкі',
 },
 'ky': {
 'auth.signInButton': 'Учурдагы каттоо эсебине кириңиз',
@@ -952,6 +988,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'Телефондун демейки Үнү өчүрүү',
 'sb.notificationVibrateOn': 'Телефондун титирөөсү күйүп турат',
 'sb.notificationVibrateOff': 'Телефондун титирөөсү өчүп калды',
+'lbl.timeAM': 'Am',
+'lbl.timePM': 'PM',
 },
 'ku': {
 'auth.signInButton': 'Têkeve nav hesabek heyî',
@@ -1002,6 +1040,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'Dengê xwerû ya têlefonê',
 'sb.notificationVibrateOn': 'Vibrasyona têlefonê li ser e',
 'sb.notificationVibrateOff': 'Vibrasyona têlefonê girtî ye',
+'lbl.timeAM': 'IM',
+'lbl.timePM': 'Serok',
 },
 'ms': {
 'auth.signInButton': 'Log masuk ke akaun yang ada',
@@ -1052,6 +1092,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'Off Off Offfer Telefon',
 'sb.notificationVibrateOn': 'Getaran telefon dihidupkan',
 'sb.notificationVibrateOff': 'Getaran telefon dimatikan',
+'lbl.timeAM': 'Am',
+'lbl.timePM': 'Pm',
 },
 'ps': {
 'auth.signInButton': 'موجود حساب ته ننوتل',
@@ -1102,6 +1144,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'د تلیفون ډیفالټ غږ',
 'sb.notificationVibrateOn': 'د تلیفون خوځښت په',
 'sb.notificationVibrateOff': 'د تلیفون خوځښت بند دی',
+'lbl.timeAM': 'زه یم',
+'lbl.timePM': 'ماښام',
 },
 'fa': {
 'auth.signInButton': 'وارد یک حساب موجود شوید',
@@ -1152,6 +1196,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'صدای پیش فرض تلفن خاموش است',
 'sb.notificationVibrateOn': 'لرزش تلفن روشن است',
 'sb.notificationVibrateOff': 'لرزش تلفن خاموش است',
+'lbl.timeAM': 'صبح',
+'lbl.timePM': 'نخست وزیر',
 },
 'pt': {
 'auth.signInButton': 'Faça login em uma conta existente',
@@ -1202,6 +1248,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'Som padrão do telefone',
 'sb.notificationVibrateOn': 'A vibração do telefone está ligada',
 'sb.notificationVibrateOff': 'A vibração do telefone está desligada',
+'lbl.timeAM': 'SOU',
+'lbl.timePM': 'PM',
 },
 'pa': {
 'auth.signInButton': 'ਇੱਕ ਮੌਜੂਦਾ ਖਾਤੇ ਵਿੱਚ ਸਾਈਨ ਇਨ ਕਰੋ',
@@ -1252,6 +1300,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'ਫੋਨ ਦੀ ਡਿਫਾਲਟ ਆਵਾਜ਼ ਬੰਦ',
 'sb.notificationVibrateOn': 'ਫੋਨ ਦੀ ਕੰਬਣੀ ਚਾਲੂ ਹੈ',
 'sb.notificationVibrateOff': 'ਫੋਨ ਦੀ ਕੰਬਣੀ ਬੰਦ ਹੈ',
+'lbl.timeAM': 'ਸਵੇਰੇ',
+'lbl.timePM': 'ਪ੍ਰਧਾਨ ਮੰਤਰੀ',
 },
 'ro': {
 'auth.signInButton': 'Conectați -vă la un cont existent',
@@ -1302,6 +1352,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'Sunetul implicit al telefonului',
 'sb.notificationVibrateOn': 'Vibrația telefonului este pornită',
 'sb.notificationVibrateOff': 'Vibrația telefonului este oprită',
+'lbl.timeAM': 'A.M',
+'lbl.timePM': 'P.M',
 },
 'ru': {
 'auth.signInButton': 'Войдите в существующий счет',
@@ -1352,6 +1404,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'Телефон по умолчанию',
 'sb.notificationVibrateOn': 'Вибрация телефона включена',
 'sb.notificationVibrateOff': 'Вибрация телефона выключена',
+'lbl.timeAM': 'ЯВЛЯЮСЬ',
+'lbl.timePM': 'ВЕЧЕРА',
 },
 'so': {
 'auth.signInButton': 'Soo gal koontada jira',
@@ -1402,6 +1456,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'Telefoonka taleefanka tooska ah',
 'sb.notificationVibrateOn': 'Taleefanka taleefanka ayaa saaran',
 'sb.notificationVibrateOff': 'Taleefanku wuu dhammaadaa',
+'lbl.timeAM': 'Ahay',
+'lbl.timePM': 'Jama',
 },
 'es': {
 'auth.signInButton': 'Iniciar sesión en una cuenta existente',
@@ -1452,6 +1508,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'El sonido predeterminado del teléfono apagado',
 'sb.notificationVibrateOn': 'La vibración del teléfono está encendida',
 'sb.notificationVibrateOff': 'La vibración del teléfono está desactivada',
+'lbl.timeAM': 'SOY',
+'lbl.timePM': 'PM',
 },
 'su': {
 'auth.signInButton': 'Asup ka akun anu tos aya',
@@ -1502,6 +1560,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'Sora standar sora',
 'sb.notificationVibrateOn': 'Geter telepon aya',
 'sb.notificationVibrateOff': 'Geter telepon pareum',
+'lbl.timeAM': 'Am',
+'lbl.timePM': 'Pm',
 },
 'tg': {
 'auth.signInButton': 'Ба ҳисоби мавҷуда ворид шавед',
@@ -1552,6 +1612,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'Садои пешфарз',
 'sb.notificationVibrateOn': 'Вибрияи телефон фаъол аст',
 'sb.notificationVibrateOff': 'Вибрати телефон хомӯш аст',
+'lbl.timeAM': 'Будан',
+'lbl.timePM': 'Соати PM',
 },
 'tt': {
 'auth.signInButton': 'Булган счетка керегез',
@@ -1602,6 +1664,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'Телефонның килешү тавышы',
 'sb.notificationVibrateOn': 'Телефонның тибрәнүе',
 'sb.notificationVibrateOff': 'Телефонның тибрәнүе сүнгән',
+'lbl.timeAM': 'Мин',
+'lbl.timePM': 'Премьер',
 },
 'th': {
 'auth.signInButton': 'ลงชื่อเข้าใช้บัญชีที่มีอยู่',
@@ -1652,6 +1716,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'ปิดเสียงเริ่มต้นของโทรศัพท์',
 'sb.notificationVibrateOn': 'การสั่นสะเทือนของโทรศัพท์เปิดอยู่',
 'sb.notificationVibrateOff': 'การสั่นสะเทือนของโทรศัพท์ปิดอยู่',
+'lbl.timeAM': 'เช้า',
+'lbl.timePM': 'น.',
 },
 'tk': {
 'auth.signInButton': 'Bar bolan hasabyňyza giriň',
@@ -1702,6 +1768,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'Telefonyň başlangyç eşegi',
 'sb.notificationVibrateOn': 'Telefonyň yrgyldy',
 'sb.notificationVibrateOff': 'Telefonyň titremesi öçýär',
+'lbl.timeAM': 'Am',
+'lbl.timePM': 'Premýer-ministr',
 },
 'ur': {
 'auth.signInButton': 'کسی موجودہ اکاؤنٹ میں سائن ان کریں',
@@ -1752,6 +1820,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'فون کی پہلے سے طے شدہ آواز بند ہے',
 'sb.notificationVibrateOn': 'فون کی کمپن جاری ہے',
 'sb.notificationVibrateOff': 'فون کی کمپن آف ہے',
+'lbl.timeAM': 'ہوں',
+'lbl.timePM': 'وزیر اعظم',
 },
 'uz': {
 'auth.signInButton': 'Mavjud hisob qaydnomasiga kiring',
@@ -1802,6 +1872,8 @@ class Localization extends Translations {
 'sb.notificationBeepOff': 'Telefonning standart ovozi o\'chirilgan',
 'sb.notificationVibrateOn': 'Telefonning tebranishi yoqilmoqda',
 'sb.notificationVibrateOff': 'Telefonning tebranishi o\'chirilgan',
+'lbl.timeAM': 'Men',
+'lbl.timePM': 'Bosh vazir',
 },
         };
       }

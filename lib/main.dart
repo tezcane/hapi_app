@@ -137,8 +137,8 @@ class MyApp extends StatelessWidget {
                 ),
                 body: GetMaterialApp(
                   translations: Localization(),
-                  locale: c.getLocale, // <- Current locale
-                  fallbackLocale: const Locale('en', 'US'),
+                  //locale: c.getLocale, // we set in LanguageController
+                  fallbackLocale: const Locale('en', 'US'), // uses if .tr fails
                   // navigatorObservers: [ // TODO
                   //   // FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
                   // ],

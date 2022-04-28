@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/settings/language/language_controller.dart';
 
 class MainController extends GetxHapi {
   static MainController get to => Get.find();
@@ -222,3 +223,30 @@ double h(BuildContext context) => MediaQuery.of(context).size.height;
 Color cb(BuildContext context) => Theme.of(context).backgroundColor;
 Color cs(BuildContext context) => Theme.of(context).scaffoldBackgroundColor;
 Color ct(BuildContext context) => Theme.of(context).textTheme.headline6!.color!;
+
+/// cni = Convert Number Integer, int to other numeral system string, if needed.
+String cni(int input) {
+  // no need to convert just return
+  if (!LanguageController.to.usesNonEnNumerals) return input.toString();
+
+  // single digit, easy conversion
+  if (input < 10) return LanguageController.to.curNumerals[input];
+
+  // if got here, then there is more than one digit entered so call cns()
+  return cns(input.toString());
+}
+
+/// cns = Convert Number String, Replaces all digits to another number system,
+/// like Arabic and Farsi.  Only done, if current language needs it.
+String cns(String input) {
+  // no need to convert just return
+  if (!LanguageController.to.usesNonEnNumerals) return input;
+
+  // replace all found digits in the input string
+  List<String> nonEnNumerals = LanguageController.to.curNumerals;
+  for (int idx = 0; idx < 10; idx++) {
+    input = input.replaceAll(idx.toString(), nonEnNumerals[idx]);
+  }
+
+  return input;
+}

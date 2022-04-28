@@ -3,19 +3,18 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/main_controller.dart';
+import 'package:hapi/quest/active/zaman_controller.dart';
 import 'package:hapi/settings/settings_option.dart';
 
-// TODO update to match google spreadsheet languages
-//List of languages that are supported.  Used in selector.
-//Follow this plugin for translating a google sheet to languages
-//https://github.com/aloisdeniel/flutter_sheet_localization
-//Flutter App translations google sheet
-//https://docs.google.com/spreadsheets/d/1oS7iJ6ocrZBA53SxRfKF0CG9HAaXeKtzvsTBhgG4Zzk/edit?usp=sharing
+/// List of languages that are supported. Used in selector and google tr sheet.
+/// TODO load from file: https://stackoverflow.com/questions/70394427/flutter-getx-put-internalition-translations-in-different-files-for-each-language
+/// TODO Arabic text too small, use textScaleFactor?: https://stackoverflow.com/questions/50535185/right-to-left-rtl-in-flutter
 final List<SettingsOption> languageOptions = [
   SettingsOption('sq', 'Albanian - Shqip'), // Albanian
   SettingsOption('ar', 'Arabic - عربي'), // Arabic
   SettingsOption('az', 'Azerbaijani - Azərbaycanlı'), // Azerbaijani
   SettingsOption('bn', 'Bengali - বাংলা'), // Bengali
+//SettingsOption('  ', 'Bosnian - '), // Bosnian TODO
   SettingsOption('bg', 'Bulgarian - български'), // Bulgarian
   SettingsOption('zh', 'Chinese - 中国人'), // Chinese
   SettingsOption('da', 'Danish - dansk'), // Danish
@@ -24,6 +23,7 @@ final List<SettingsOption> languageOptions = [
   SettingsOption('fr', 'French - Français'), // French
   SettingsOption('de', 'German - Deutsch'), // German
   SettingsOption('gu', 'Gujarati - ગુજરાત'), // Gujarati
+//SettingsOption('he', 'Hebrew - '), // Hebrew TODO
   SettingsOption('hi', 'Hindi - हिन्दी'), // Hindi
   SettingsOption('in', 'Indonesian - bahasa Indonesia'), // Indonesian
   SettingsOption('it', 'Italian - Italiano'), // Italian
@@ -56,74 +56,139 @@ class LanguageController extends GetxController {
 
   final String defaultLanguage = 'en';
 
-  String _currentLanguage = '';
-  String get currentLanguage => _currentLanguage;
+  String _currLang = '';
+  String get currLang => _currLang;
 
-  LanguageController() {
-    setInitialLocalLanguage();
+  // TODO more right to left languages: Azeri, Dhivehi/Maldivian, Hebrew, Kurdish (Sorani)
+  final Map<String, bool> _nonLeftToRightLangs = {
+    'ar': true, // Arabic
+    'ps': true, // Pashto
+    'fa': true, // Persian Numerals
+    'ur': true, // Urdu
+    'he': true, // Hebrew
+  };
+  bool _rightToLeftLanguage = false;
+  bool get rightToLeftLanguage => _rightToLeftLanguage;
+
+  static const _enNumerals = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+  final Map<String, List<String>> _nonEnNumeralLangs = {
+//  'en': ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+    'ar': ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'], // Arabic  (w. ar)
+    'ps': ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'], // Pashto  (e. ar)
+    'fa': ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'], // Persian (e. ar)
+    'ur': ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'], // Urdu    (e. ar)
+    'he': ['-', 'א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט'], // Hebrew
+    'gu': ['૦', '૧', '૨', '૩', '૪', '૫', '૬', '૭', '૮', '૯'], // Gujarati
+//  '  ': ['', '', '', '', '', '', '', '', '', ''], // X
+
+    //TODO add more dialect numerals
+  };
+  List<String> _curNumerals = _enNumerals; // defaults to English
+  List<String> get curNumerals => _curNumerals;
+  bool _usesNonEnNumerals = false;
+  bool get usesNonEnNumerals => _usesNonEnNumerals;
+
+  String _am = ' AM';
+  String get am => _am;
+  String _pm = ' PM';
+  String get pm => _pm;
+
+  @override
+  void onInit() {
+    super.onInit();
+    updateLanguage(_findLanguage());
   }
-
-  // @override
-  // void onInit() {
-  //   super.onInit();
-  //   setInitialLocalLanguage();
-  // }
-
-  /// Gets current language stored, or return blank
-  String get _currentLanguageStore => s.rd('language') ?? '';
 
   /// Retrieves and Sets language based on device settings
-  setInitialLocalLanguage() {
-    String currentLanguage = _currentLanguageStore;
-    if (currentLanguage == '') {
-      String deviceLanguage = ui.window.locale.toString();
-      l.d('setInitialLocalLanguage: ui.window.locale="$deviceLanguage"');
+  String _findLanguage() {
+    String? currentLanguage = s.rd('language');
 
-      //only get 1st 2 characters
-      if (deviceLanguage.length > 2) {
-        l.w('Device language "$deviceLanguage" is longer than 2 characters, shortening it.');
-        deviceLanguage = deviceLanguage.substring(0, 2);
-      }
-      updateLanguage(deviceLanguage);
-    } else {
-      updateLanguage(currentLanguage);
-    }
-  }
-
-  /// gets the language locale app is set to
-  Locale? get getLocale {
-    String currentLanguage = _currentLanguageStore;
-    if (currentLanguage != '') {
-      //set the stored string country code to the locale
-      return Locale(currentLanguage);
+    // search for code if none is known yet (TODO research more ways)
+    currentLanguage ??= _findLangCode(1, ui.window.locale.toString());
+    Locale? deviceLocal = Get.deviceLocale;
+    if (deviceLocal != null) {
+      currentLanguage ??= _findLangCode(2, deviceLocal.toLanguageTag());
+      currentLanguage ??= _findLangCode(3, deviceLocal.languageCode);
+      currentLanguage ??= _findLangCode(3, deviceLocal.scriptCode);
+      currentLanguage ??= _findLangCode(3, deviceLocal.countryCode);
+      currentLanguage ??= _findLangCode(3, deviceLocal.toString());
     }
 
-    // gets the default language key for the system.
-    return Get.deviceLocale;
+    if (currentLanguage == null) {
+      l.e('LanguageController:_setInitialLocalLanguage: Could not find device language, using default "$defaultLanguage"');
+      currentLanguage = defaultLanguage;
+    }
+
+    return currentLanguage;
   }
 
-  bool isNotSupportedLanguage(String language) {
+  /// Based on code input, we search for the first match of a language key.
+  String? _findLangCode(int trackIdx, String? code) {
+    if (code == null) {
+      l.d('LanguageController:_findLangCode($trackIdx, "$code") was null');
+      return null;
+    }
+    code = code.toLowerCase(); // our language key tags are all lowercase
+    if (code.length < 2) {
+      l.d('LanguageController:_findLangCode($trackIdx, "$code") code length < 2 characters.');
+      return null;
+    }
+    if (code.length > 2) {
+      l.d('LanguageController:_findLangCode($trackIdx, "$code") code length > 2 characters, shortening it.');
+      code = code.substring(0, 2); //only get 1st 2 characters
+    }
+    if (_isNotSupportedLanguage(code)) {
+      l.d('LanguageController:_findLangCode($trackIdx, "$code"): not supported');
+      return null;
+    }
+    l.i('LanguageController:_findLangCode($trackIdx, "$code"): found a supported code');
+    return code;
+  }
+
+  bool _isNotSupportedLanguage(String language) {
     for (SettingsOption languageOption in languageOptions) {
       if (languageOption.key == language) return false; // language is supported
     }
     return true; // not found, language is no supported
   }
 
-  /// updates the language stored
-  Future<void> updateLanguage(String newLanguage) async {
-    if (isNotSupportedLanguage(newLanguage)) {
-      l.e('The language "$newLanguage", is not supported, using default $defaultLanguage');
+  /// Updates the language used in the app, instantly changes all text.
+  updateLanguage(String newLanguage) async {
+    if (_isNotSupportedLanguage(newLanguage)) {
+      l.e('LanguageController:updateLanguage: The language "$newLanguage" is not supported, will call _findLanguage() next');
+      newLanguage = _findLanguage();
+    }
+
+    try {
+      await Get.updateLocale(Locale(newLanguage)); // calls Get.forceAppUpdate()
+    } catch (error) {
+      l.e('updateLanguage: updateLocale call failed, the language "$newLanguage" is not supported, using default "$defaultLanguage"');
       newLanguage = defaultLanguage;
+      await Get.updateLocale(Locale(newLanguage)); // calls Get.forceAppUpdate()
     }
 
-    await s.wr('language', newLanguage);
-    _currentLanguage = newLanguage;
+    _initLocaleValues(newLanguage);
 
-    // TODO what does this do, needed/wanted?
-    if (getLocale != null) {
-      Get.updateLocale(getLocale!);
+    _currLang = newLanguage;
+    s.wr('language', _currLang);
+    l.i('updateLanguage: Setting currLang=$_currLang, usesNonEnNumerals=$_usesNonEnNumerals, rightToLeftLanguage=$_rightToLeftLanguage');
+
+    update(); // notify watchers
+  }
+
+  /// Setup special language variables now
+  _initLocaleValues(String newLanguage) {
+    _rightToLeftLanguage = _nonLeftToRightLangs[newLanguage] ?? false;
+    _usesNonEnNumerals = _nonEnNumeralLangs[newLanguage] != null;
+    if (_usesNonEnNumerals) {
+      _curNumerals = _nonEnNumeralLangs[newLanguage]!;
+    } else {
+      _curNumerals = _enNumerals;
     }
+    _am = ' ' + 'lbl.timeAM'.tr; // tr ok
+    _pm = ' ' + 'lbl.timePM'.tr; // tr ok
 
-    update();
+    // update athan time and refresh active quests UI with new language text
+    ZamanController.to.forceSalahRecalculation();
   }
 }

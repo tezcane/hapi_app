@@ -32,7 +32,10 @@ class ZamanController extends GetxHapi {
   int _secsSinceFajr = 0;
   int get secsSinceFajr => _secsSinceFajr;
 
-  bool forceSalahRecalculation = false;
+  bool _forceSalahRecalculation = false;
+
+  /// Allows athan recalculation, plus active quests and other UI updates.
+  void forceSalahRecalculation() => _forceSalahRecalculation = true;
 
   Athan? _athan;
   Athan? get athan => _athan;
@@ -84,7 +87,7 @@ class ZamanController extends GetxHapi {
   updateZaman() async {
     Athan athan;
 
-    if (forceSalahRecalculation) {
+    if (_forceSalahRecalculation) {
       l.d('ZamanController:updateZaman: forceSalahRecalculation was called.');
       athan = generateNewAthan(TimeController.to.currDayDate);
     } else {
@@ -117,12 +120,12 @@ class ZamanController extends GetxHapi {
     // Now all init is done, set athan value (needed for init to prevent NPE)
     _athan = athan;
 
-    if (_currZ == Z.Maghrib || forceSalahRecalculation || !isInitialized) {
+    if (_currZ == Z.Maghrib || _forceSalahRecalculation || !isInitialized) {
       await TimeController.to.updateDaysOfWeek(); // sunset = new hijri day
     }
 
-    if (forceSalahRecalculation) {
-      forceSalahRecalculation = false;
+    if (_forceSalahRecalculation) {
+      _forceSalahRecalculation = false;
       NotificationController.to.resetNotifications(); // _athan updated so reset
     }
 
@@ -150,7 +153,7 @@ class ZamanController extends GetxHapi {
           .difference(TZDateTime.from(_athan!.fajr, TimeController.to.tzLoc))
           .inSeconds;
 
-      if (forceSalahRecalculation) {
+      if (_forceSalahRecalculation) {
         l.d('ZamanController:_startNextZamanCountdownTimer: forceSalahRecalculation was called.');
         updateZaman();
         return; // quits while loop, starts again in updateZaman()
@@ -167,7 +170,7 @@ class ZamanController extends GetxHapi {
               'secs left (${timeToNextZaman.inSeconds / 60} minutes)');
         }
         // this is displayed on UI:
-        _timeToNextZaman = _printHourMinuteSeconds(timeToNextZaman);
+        _timeToNextZaman = TimeController.durationToTimeStr(timeToNextZaman);
         update(); // only time ZamanController is updated
       }
     }
@@ -186,18 +189,10 @@ class ZamanController extends GetxHapi {
     // Load or init this next day quests
     await ActiveQuestsAjrController.to.initCurrQuest(Z.Fajr, true);
 
-    forceSalahRecalculation = true; // time to update _athan
+    forceSalahRecalculation(); // time to update _athan
 
     // now, currZ won't equal Z.Fajr_Tomorrow as currDay updated
     updateZaman();
-  }
-
-  // TODO can optimize this
-  String _printHourMinuteSeconds(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, '0');
-    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
-    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
-    return '${duration.inHours}:$twoDigitMinutes:$twoDigitSeconds';
   }
 
   /// See if given salah row is currently active/current Z time.

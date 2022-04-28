@@ -60,35 +60,35 @@ class ActiveQuestsController extends GetxController {
   set salahCalcMethod(int value) {
     _salahCalcMethod = value;
     s.wr('salahCalcMethod', value);
-    ZamanController.to.forceSalahRecalculation = true;
+    ZamanController.to.forceSalahRecalculation();
     //update(); update needs to be done later after athan recalculated
   }
 
   set salahAsrEarlier(bool value) {
     _salahAsrEarlier = value;
     s.wr('salahAsrEarlier', value);
-    ZamanController.to.forceSalahRecalculation = true;
+    ZamanController.to.forceSalahRecalculation();
     //update(); update needs to be done later after athan recalculated
   }
 
   set last3rdOfNight(bool value) {
     _last3rdOfNight = value;
     s.wr('last3rdOfNight', value);
-    ZamanController.to.forceSalahRecalculation = true; // update countdown timer
+    ZamanController.to.forceSalahRecalculation(); // update countdown timer
     //update(); update needs to be done later after athan recalculated
   }
 
   set showSecPrecision(bool value) {
     _showSecPrecision = value;
     s.wr('showSecPrecision', value);
-    ZamanController.to.forceSalahRecalculation = true;
+    ZamanController.to.forceSalahRecalculation();
     //update();
   }
 
   set salahKarahatSafe(bool value) {
     _salahKarahatSafe = value;
     s.wr('salahKarahatSafe', value);
-    ZamanController.to.forceSalahRecalculation = true;
+    ZamanController.to.forceSalahRecalculation();
     //update(); update needs to be done later after athan recalculated
   }
 

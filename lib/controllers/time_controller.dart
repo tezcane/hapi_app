@@ -7,6 +7,7 @@ import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/athan/athan.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
+import 'package:hapi/settings/language/language_controller.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/intl.dart';
 import 'package:ntp/ntp.dart';
@@ -272,5 +273,114 @@ class TimeController extends GetxHapi {
     String dayOfWeek = '';
     if (includeDayOfWeek) dayOfWeek = '${_dayOfWeekGrego.name} ';
     return '$dayOfWeek${DateFormat('MMMM d, yyyy').format(now2())}';
+  }
+
+  static String durationToTimeStr(Duration duration) {
+    int hours = duration.inHours;
+    int minutes = duration.inMinutes;
+    int seconds = duration.inSeconds;
+
+    String hrStr = '';
+    String minStr = '';
+    String secondStr = '';
+
+    if (duration.inHours > 0) {
+      hrStr = '$hours:';
+      minStr = '${minutes.remainder(60).toString().padLeft(2, '0')}:';
+      secondStr = seconds.remainder(60).toString().padLeft(2, '0');
+    } else {
+      if (minutes > 0) {
+        minStr = '$minutes:';
+        secondStr = seconds.remainder(60).toString().padLeft(2, '0');
+      } else {
+        secondStr = '$seconds';
+      }
+    }
+
+    return cns('$hrStr$minStr$secondStr');
+  }
+
+  static String getTimeStr(
+          DateTime? time, bool show12HourClock, bool showSecPrecision) =>
+      getTimeRangeStr(time, null, show12HourClock, showSecPrecision);
+
+  static String getTimeRangeStr(
+    DateTime? startTime,
+    DateTime? endTime,
+    bool show12HourClock,
+    bool showSecPrecision,
+  ) {
+    if (startTime == null) return '-'; // still initializing
+
+    int startHour = startTime.hour;
+    String startAmPm = '';
+    if (show12HourClock) {
+      if (startHour >= 12) {
+        startHour -= 12;
+        startAmPm = LanguageController.to.pm;
+      } else {
+        startAmPm = LanguageController.to.am;
+      }
+      if (startHour == 0) startHour = 12;
+    }
+
+    String endTimeString = '';
+    if (endTime != null) {
+      int endHour = endTime.hour;
+      int endMinute = endTime.minute;
+      String endAmPm = '';
+
+      String minutes = endMinute.toString();
+      if (endMinute < 10) minutes = '0$minutes'; // pad so looks good on UI
+
+      String seconds = '';
+      if (showSecPrecision) {
+        int secs = endTime.second;
+        seconds = secs.toString();
+        if (secs < 10) {
+          seconds = ':0$seconds';
+        } else {
+          seconds = ':$seconds';
+        }
+      }
+
+      if (show12HourClock) {
+        if (endHour >= 12) {
+          endHour -= 12;
+          endAmPm = LanguageController.to.pm;
+        } else {
+          endAmPm = LanguageController.to.am;
+        }
+        if (endHour == 0) endHour = 12;
+
+        endTimeString = '-${endHour.toString()}:$minutes$seconds$endAmPm';
+
+        // if AM/PM are same, don't show twice
+        if (startAmPm == endAmPm) startAmPm = '';
+      } else {
+        endTimeString = '-${endHour.toString()}:$minutes$seconds';
+      }
+    }
+
+    // pad hour and minutes so looks good on UI
+    String hour = startHour.toString();
+    if (startHour < 10) hour = '  $hour'; // NOTE: double space to align
+
+    int startMinute = startTime.minute;
+    String minutes = startMinute.toString();
+    if (startMinute < 10) minutes = '0$minutes'; // pad so looks good on UI
+
+    String seconds = '';
+    if (showSecPrecision) {
+      int secs = startTime.second;
+      seconds = secs.toString();
+      if (secs < 10) {
+        seconds = ':0$seconds';
+      } else {
+        seconds = ':$seconds';
+      }
+    }
+
+    return cns('$hour:$minutes$seconds$startAmPm$endTimeString');
   }
 }
