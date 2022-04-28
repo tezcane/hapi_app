@@ -395,8 +395,8 @@ class SalahRow extends StatelessWidget {
   }
 
   Widget _actionsFajr() {
-    String muakBef = '2';
-    String fardRkt = '2';
+    String muakBef = cni(2);
+    String fardRkt = cni(2);
 
     return Row(
       children: [
@@ -457,14 +457,14 @@ class SalahRow extends StatelessWidget {
 
   /// Note: returns GetBuilder since has FlipCard()
   Widget _actionsDhuhr() {
-    String muakBef = '4';
-    String fardRkt = '4';
-    String muakAft = '2';
-    String naflAft = '2';
+    String muakBef = cni(4);
+    String fardRkt = cni(4);
+    String muakAft = cni(2);
+    String naflAft = cni(2);
 
     if (TimeController.to.isFriday() && c.showJummahOnFriday) {
-      fardRkt = '2';
-      muakAft = '6';
+      fardRkt = cni(2);
+      muakAft = cni(6);
     }
 
     return Row(
@@ -484,8 +484,8 @@ class SalahRow extends StatelessWidget {
   }
 
   Widget _actionsAsr() {
-    String naflBef = '4';
-    String fardRkt = '4';
+    String naflBef = cni(4);
+    String fardRkt = cni(4);
 
     final bool isCurrQuest = isActive &&
         ActiveQuestsAjrController.to.isQuestActive(QUEST.KARAHAT_ADHKAR_SUNSET);
@@ -517,9 +517,9 @@ class SalahRow extends StatelessWidget {
   }
 
   Widget _actionsMaghrib() {
-    String fardRkt = '3';
-    String muakAft = '2';
-    String naflAft = '2';
+    String fardRkt = cni(3);
+    String muakAft = cni(2);
+    String naflAft = cni(2);
 
     return Row(
       children: [
@@ -538,10 +538,10 @@ class SalahRow extends StatelessWidget {
   }
 
   Widget _actionsIsha() {
-    String naflBef = '4';
-    String fardRkt = '4';
-    String muakAft = '2';
-    String naflAft = '2';
+    String naflBef = cni(4);
+    String fardRkt = cni(4);
+    String muakAft = cni(2);
+    String naflAft = cni(2);
 
     return Row(
       children: [
