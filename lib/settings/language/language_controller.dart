@@ -24,8 +24,8 @@ final List<SettingsOption> languageOptions = [
   SettingsOption('de', 'German - Deutsch'), // German
   SettingsOption('gu', 'Gujarati - ગુજરાત'), // Gujarati
 //SettingsOption('he', 'Hebrew - '), // Hebrew TODO
-  SettingsOption('hi', 'Hindi - हिन्दी'), // Hindi
-  SettingsOption('in', 'Indonesian - bahasa Indonesia'), // Indonesian
+  SettingsOption('hi', 'Hindi - हिन्दी'), // Hindi-Devanagari
+  SettingsOption('in', 'Indonesian - Bahasa Indonesia'), // Indonesian
   SettingsOption('it', 'Italian - Italiano'), // Italian
   SettingsOption('ja', 'Japanese - 日本語'), //Japanese
   SettingsOption('kk', 'Kazakh - Қазақ'), // Kazakh
@@ -44,6 +44,7 @@ final List<SettingsOption> languageOptions = [
   SettingsOption('tg', 'Tajik - Тоҷик'), // Tajik
   SettingsOption('tt', 'Tatar - Татар'), // Tatar
   SettingsOption('th', 'Thai - ไทย'), // Thai
+//SettingsOption('bo', 'Tibetan - '), // Tibetan TODO
   SettingsOption('tr', 'Turkish - Türkçe'), // Turkish
   SettingsOption('tk', 'Turkmen - Türkmenler'), // Turkmen
   SettingsOption('ur', 'Urdu - اردو'), // Urdu
@@ -67,26 +68,30 @@ class LanguageController extends GetxController {
     'ur': true, // Urdu
     'he': true, // Hebrew
   };
-  bool _rightToLeftLanguage = false;
-  bool get rightToLeftLanguage => _rightToLeftLanguage;
+  bool _isRightToLeftLanguage = false;
+  bool get isRightToLeftLanguage => _isRightToLeftLanguage;
 
+  /// Use these prefect hash arrays to convert numeral systems (en->ar/ps/etc.).
+  /// Note: labeled "en" but are Arabic Numerals (a.k.a. Hindi-Arabic Numerals).
   static const _enNumerals = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
   final Map<String, List<String>> _nonEnNumeralLangs = {
-//  'en': ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+//        ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']; // en/hindi-arabic
     'ar': ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'], // Arabic  (w. ar)
     'ps': ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'], // Pashto  (e. ar)
     'fa': ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'], // Persian (e. ar)
     'ur': ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'], // Urdu    (e. ar)
-    'he': ['-', 'א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט'], // Hebrew
+    'bn': ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'], // Bengali
     'gu': ['૦', '૧', '૨', '૩', '૪', '૫', '૬', '૭', '૮', '૯'], // Gujarati
-//  '  ': ['', '', '', '', '', '', '', '', '', ''], // X
-
-    //TODO add more dialect numerals
+    'hi': ['०', '१', '२', '३', '४', '५', '६', '७', '८', '९'], //Hindi-Devanagari
+    'th': ['๐', '๑', '๒', '๓', '๔', '๕', '๖', '๗', '๘', '๙'], // Thai
+    'bo': ['༠', '༡', '༢', '༣', '༤', '༥', '༦', '༧', '༨', '༩'], // Tibetan
+//  Not used for day to day use:
+//  'he': ['-', 'א', 'ב', 'ג', 'ד', 'ה', 'ו', 'ז', 'ח', 'ט'], // Hebrew
   };
   List<String> _curNumerals = _enNumerals; // defaults to English
   List<String> get curNumerals => _curNumerals;
-  bool _usesNonEnNumerals = false;
-  bool get usesNonEnNumerals => _usesNonEnNumerals;
+  bool _isEnNumerals = true;
+  bool get isEnNumerals => _isEnNumerals;
 
   String _am = ' AM';
   String get am => _am;
@@ -171,19 +176,19 @@ class LanguageController extends GetxController {
 
     _currLang = newLanguage;
     s.wr('language', _currLang);
-    l.i('updateLanguage: Setting currLang=$_currLang, usesNonEnNumerals=$_usesNonEnNumerals, rightToLeftLanguage=$_rightToLeftLanguage');
+    l.i('updateLanguage: Setting currLang=$_currLang, usesNonEnNumerals=$_isNonEnNumerals, rightToLeftLanguage=$_isRightToLeftLanguage');
 
     update(); // notify watchers
   }
 
   /// Setup special language variables now
   _initLocaleValues(String newLanguage) {
-    _rightToLeftLanguage = _nonLeftToRightLangs[newLanguage] ?? false;
-    _usesNonEnNumerals = _nonEnNumeralLangs[newLanguage] != null;
-    if (_usesNonEnNumerals) {
-      _curNumerals = _nonEnNumeralLangs[newLanguage]!;
-    } else {
+    _isRightToLeftLanguage = _nonLeftToRightLangs[newLanguage] ?? false;
+    _isEnNumerals = _nonEnNumeralLangs[newLanguage] == null;
+    if (_isEnNumerals) {
       _curNumerals = _enNumerals;
+    } else {
+      _curNumerals = _nonEnNumeralLangs[newLanguage]!;
     }
     _am = ' ' + 'lbl.timeAM'.tr; // tr ok
     _pm = ' ' + 'lbl.timePM'.tr; // tr ok

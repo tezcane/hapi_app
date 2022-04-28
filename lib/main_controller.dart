@@ -226,11 +226,10 @@ Color ct(BuildContext context) => Theme.of(context).textTheme.headline6!.color!;
 
 /// cni = Convert Number Integer, int to other numeral system string, if needed.
 String cni(int input) {
-  // no need to convert just return
-  if (!LanguageController.to.usesNonEnNumerals) return input.toString();
+  if (LanguageController.to.isEnNumerals) return input.toString(); // no need
 
   // single digit, easy conversion
-  if (input < 10) return LanguageController.to.curNumerals[input];
+  if (input < 10 && input > -1) return LanguageController.to.curNumerals[input];
 
   // if got here, then there is more than one digit entered so call cns()
   return cns(input.toString());
@@ -239,8 +238,7 @@ String cni(int input) {
 /// cns = Convert Number String, Replaces all digits to another number system,
 /// like Arabic and Farsi.  Only done, if current language needs it.
 String cns(String input) {
-  // no need to convert just return
-  if (!LanguageController.to.usesNonEnNumerals) return input;
+  if (LanguageController.to.isEnNumerals) return input; // no need to convert
 
   // replace all found digits in the input string
   List<String> nonEnNumerals = LanguageController.to.curNumerals;
