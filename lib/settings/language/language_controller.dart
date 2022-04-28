@@ -176,7 +176,7 @@ class LanguageController extends GetxController {
 
     _currLang = newLanguage;
     s.wr('language', _currLang);
-    l.i('updateLanguage: Setting currLang=$_currLang, usesNonEnNumerals=$_isNonEnNumerals, rightToLeftLanguage=$_isRightToLeftLanguage');
+    l.i('updateLanguage: Setting currLang=$_currLang, isEnNumerals=$_isEnNumerals, isRightToLeftLanguage=$_isRightToLeftLanguage');
 
     update(); // notify watchers
   }
