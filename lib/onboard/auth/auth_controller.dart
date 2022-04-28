@@ -298,7 +298,7 @@ class AuthController extends GetxHapi {
     } else if (error.contains('requires-recent-login')) {
       return 'auth.requiresRecentLogin';
     } else {
-      return 'auth.unknownError'.tr + ': ' + authError; // tr ok, not a trKey
+      return 'auth.unknownErrorTitle'.tr + ': ' + authError; // tr ok, not trKey
     }
   }
 

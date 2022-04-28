@@ -84,7 +84,7 @@ class UpdateProfileUI extends StatelessWidget {
                           Hero(
                             tag: 'UPDATE PROFILE',
                             child: PrimaryButton(
-                              trKey: 'auth.updateUser',
+                              trKey: 'settings.updateProfile',
                               onPressed: tu.isTextSame
                                   ? () {} // disable button
                                   : () async {
@@ -158,7 +158,7 @@ class UpdateProfileUI extends StatelessWidget {
       AlertDialog(
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(8.0))),
-        title: T('auth.enterPassword', null, w: wm(context)),
+        title: T('auth.enterPasswordTitle', null, w: wm(context)),
         content: Form(
           key: _formKey2,
           child: FormInputFieldWithIcon(
