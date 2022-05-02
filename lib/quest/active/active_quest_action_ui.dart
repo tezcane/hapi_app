@@ -57,9 +57,7 @@ class ActiveQuestActionUI extends StatelessWidget {
             /// benefit of waking enabling action buttons if quest wasn't
             /// active yet.
             GetBuilder<ActiveQuestsController>(builder: (c) {
-              bool isActive = ZamanController.to.isSalahRowActive(z);
-              bool isCurrQuest =
-                  isActive && ActiveQuestsAjrController.to.isQuestActive(quest);
+              bool isCurrQuest = ZamanController.to.isCurrQuest(z, quest);
               if (isCurrQuestOriginal != isCurrQuest) {
                 // TODO hapi quest to break UI?
                 l.w('Quest has started or expired, user left dialog open during zaman transition');
@@ -101,12 +99,11 @@ class ActiveQuestActionUI extends StatelessWidget {
                   noActionMsg = 'Quest expired, try again tomorrow';
                   // if all row quests done, don't allow next row to be started yet
                 } else {
-                  Z currZ = ZamanController.to.currZ;
                   if ((!isCurrQuest && !isPreviousQuest) ||
-                      // For Adhkar/Duha times we don't allow user to start task until
-                      // the quest's time comes in:
+                      // For Ishraq, Duha and Maghrib fard, we don't allow user
+                      // to start task until the quest's time comes in:
                       (quest.isQuestCellTimeBound &&
-                          quest.index != currZ.getFirstQuest().index)) {
+                          quest != ZamanController.to.currZ.getFirstQuest())) {
                     skipEnabled = false;
                     doneEnabled = false;
                     noActionMsg = 'Quest not active yet';
@@ -139,9 +136,9 @@ class ActiveQuestActionUI extends StatelessWidget {
                         onPressed: () {
                           if (cAjrA.isDone(quest) || cAjrA.isMiss(quest)) {
                             if (cAjrA.isDone(quest)) {
-                              //TODO remove points
+                              //TODO remove points (once that system is built)
                             }
-                            cAjrA.clearQuest(quest);
+                            cAjrA.setClearQuest(quest);
                           }
                           cAjrA.setSkip(quest);
                           // Handle's the sub page back button functionality
@@ -162,9 +159,9 @@ class ActiveQuestActionUI extends StatelessWidget {
                         icon: const Icon(Icons.check_outlined),
                         onPressed: () {
                           if (cAjrA.isSkip(quest) || cAjrA.isMiss(quest)) {
-                            cAjrA.clearQuest(quest);
+                            cAjrA.setClearQuest(quest); // doesn't write to DB
                           }
-                          cAjrA.setDone(quest); //TODO add points
+                          cAjrA.setDone(quest); // writes to DB
                           // Handle's the sub page back button functionality
                           MenuController.to.handlePressedFAB();
                           MenuController.to.playConfetti();

@@ -7,7 +7,6 @@ import 'package:hapi/quest/active/athan/calculation_method.dart';
 class CalculationParams {
   CalculationParams(
     this.method,
-    this.madhab,
     this.karahatSunRisingSecs,
     this.karahatSunIstiwaSecs,
     this.karahatSunSettingSecs,
@@ -15,7 +14,6 @@ class CalculationParams {
   );
 
   final CalcMethodParams method;
-  final Madhab madhab;
   final int karahatSunRisingSecs;
   // ensure karahatSunIstiwaSecs always end in an even number (we divide by 2)
   final int karahatSunIstiwaSecs;
@@ -47,18 +45,6 @@ class CalculationParams {
         };
     }
   }
-}
-
-enum Madhab {
-  Hanafi,
-  Hanbali,
-  Jafari,
-  Maliki,
-  Shafi,
-}
-
-extension EnumUtil on Madhab {
-  int get asrShadowLength => this == Madhab.Hanafi ? 2 : 1;
 }
 
 /// Used as key in salah adjust secs, night fraction calculations, etc.

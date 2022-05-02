@@ -1,7 +1,8 @@
 ## CODE GLOSSARY  
 
+a/at - Arabic Translation/Transliteration/Template keys, e.g. "a.Fajr", "at.{} on", see MainC's a()  
 AC   - AnimationController  
-Aft  - After  
+Aft  - After
 Bef  - Before  
 bg   - background (like bg color)  
 btn  - Button  
@@ -11,10 +12,12 @@ cs   - theme color scaffold
 ct   - theme color text  
 Cord - Coordinates
 curr - Current  
+db   - Database   
 dis  - Disabled  
 dn   - down (use with up: up/dn)  
 e    - exception/error  
 h    - height (use with width/w)  
+i    - internationalization (for lazy/convenient way making of translation keys)  
 idx  - Index  
 L    - Left (use with Left/Right->L/R)  
 lat  - latitude  
@@ -34,11 +37,13 @@ Rkt  - Rakat
 rv   - return value  
 s    - storage/Get Storage  
 sliv - sliver  
-t    - timeline
+t    - timeline  
+tt   - tooltip (used in translation keys)  
 ts   - text style  
 thjd - Tahajjud  
 tz   - time zone  
 trkh - Tarikh  
+val  - Value (like trVal)  
 w    - width (use with height/h)  
 z    - Zaman (an Islamic point of a day, e.g. fajr, sunrise, karahat times, etc.)  
 

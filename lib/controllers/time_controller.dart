@@ -15,7 +15,8 @@ import 'package:timezone/timezone.dart'
     show Location, TZDateTime, LocationNotFoundException, getLocation;
 
 // Params to init values so we don't have to worry about NPE/null checks
-final DateTime DUMMY_TIME = DateTime.utc(2022, 2, 22, 22, 222, 222); // 2's day
+final DateTime DUMMY_TIME1 = DateTime.utc(2022, 2, 22); // 2's day
+final DateTime DUMMY_TIME2 = DateTime.utc(2022, 2, 23); // 2's day + 1 day
 const String DUMMY_TIME_STR = '2022-02-22';
 const int DUMMY_NTP_OFFSET = 222222222222222;
 const String DUMMY_TIMEZONE = 'America/Los_Angeles'; // TODO random Antarctica?
@@ -27,7 +28,37 @@ enum DAY_OF_WEEK {
   Thursday,
   Friday,
   Saturday,
-  Sunday
+  Sunday,
+}
+
+extension EnumUtil on DAY_OF_WEEK {
+  String get trKey {
+    String transliteration = name;
+    switch (this) {
+      case (DAY_OF_WEEK.Monday):
+        transliteration = 'Aliathnayn';
+        break;
+      case (DAY_OF_WEEK.Tuesday):
+        transliteration = "Althulatha'";
+        break;
+      case (DAY_OF_WEEK.Wednesday):
+        transliteration = "Al'arbiea'";
+        break;
+      case (DAY_OF_WEEK.Thursday):
+        transliteration = 'Alkhamis';
+        break;
+      case (DAY_OF_WEEK.Friday):
+        transliteration = 'Jumah';
+        break;
+      case (DAY_OF_WEEK.Saturday):
+        transliteration = 'Alsabt';
+        break;
+      case (DAY_OF_WEEK.Sunday):
+        transliteration = "Al'ahad";
+        break;
+    }
+    return 'a.$transliteration';
+  }
 }
 
 /// Used to get accurate server UTC/NTP based time in case user's clock is off
@@ -36,24 +67,35 @@ class TimeController extends GetxHapi {
 
   static DAY_OF_WEEK defaultDayOfWeek = DAY_OF_WEEK.Monday;
 
-  bool forceSalahRecalculation = false;
-
   int _ntpOffset = DUMMY_NTP_OFFSET;
 
   /// NOTE: Can run only because tz.initializeTimeZones() completes in main.dart
   /// Used to calculate Zaman times
-  Location _tzLoc = getLocation(DUMMY_TIMEZONE);
-  Location get tzLoc => _tzLoc;
+  Location tzLoc = getLocation(DUMMY_TIMEZONE);
 
   /// Holds the current day in 'yyyy-MM-dd' used for current day's calculations.
-  String _currDay = DUMMY_TIME_STR;
-  String get currDay => _currDay;
-  DateTime get currDayDate => TZDateTime.from(DateTime.parse(_currDay), _tzLoc);
+  String currDay = DUMMY_TIME_STR;
+  DateTime currDayDate = DUMMY_TIME1;
+  DateTime nextDayDate = DUMMY_TIME2;
 
   DAY_OF_WEEK _dayOfWeekHijri = defaultDayOfWeek;
   DAY_OF_WEEK _dayOfWeekGrego = defaultDayOfWeek;
   DAY_OF_WEEK get dayOfWeekHijri => _dayOfWeekHijri;
   DAY_OF_WEEK get dayOfWeekGrego => _dayOfWeekGrego;
+
+  int _hijriMonth = 1;
+  bool get isMonthMuharram => _hijriMonth == 1;
+  bool get isMonthSafar => _hijriMonth == 2;
+  bool get isMonthRabiAlAwwal => _hijriMonth == 3;
+  bool get isMonthRabiAlThani => _hijriMonth == 4;
+  bool get isMonthJumadaAlAwwal => _hijriMonth == 5;
+  bool get isMonthJumadaAlThani => _hijriMonth == 6;
+  bool get isMonthRajab => _hijriMonth == 7;
+  bool get isMonthShaaban => _hijriMonth == 8;
+  bool get isMonthRamadan => _hijriMonth == 9;
+  bool get isMonthShawwal => _hijriMonth == 10;
+  bool get isMonthDhuAlQidah => _hijriMonth == 11;
+  bool get isMonthDhuAlHijjah => _hijriMonth == 12;
 
   @override
   void onInit() async {
@@ -64,7 +106,9 @@ class TimeController extends GetxHapi {
     // the next day (past 11:59PM of currDay). So we must give user ability to
     // start/install app at night and not wait for next day fajr to start
     // performing quests.
-    _currDay = dateToDay(dateToYesterday(await now()));
+    currDay = dateToDay(dateToYesterday(await now()));
+    currDayDate = TZDateTime.from(DateTime.parse(currDay), tzLoc);
+    nextDayDate = dateToTomorrow(currDayDate);
 
     // times should be initialized, so start Zaman Controller
     if (!ZamanController.to.isInitialized) ZamanController.to.updateZaman();
@@ -117,8 +161,8 @@ class TimeController extends GetxHapi {
     if (_ntpOffset != DUMMY_NTP_OFFSET) {
       time = time.add(Duration(milliseconds: _ntpOffset));
     }
-    // print('TimeController:now: (ntpOffset=$_ntpOffset) ${time.toLocal()}');
-    return TZDateTime.from(time.toLocal(), _tzLoc);
+    l.v('TimeController.now: (ntpOffset=$_ntpOffset) ${time.toLocal()}');
+    return TZDateTime.from(time.toLocal(), tzLoc);
   }
 
   /// Non-async version to get time now()
@@ -131,8 +175,8 @@ class TimeController extends GetxHapi {
     if (_ntpOffset != DUMMY_NTP_OFFSET) {
       time = time.add(Duration(milliseconds: _ntpOffset));
     }
-    l.d('TimeController.now2: (ntpOffset=$_ntpOffset) ${time.toLocal()}');
-    return TZDateTime.from(time.toLocal(), _tzLoc);
+    l.v('TimeController.now2: (ntpOffset=$_ntpOffset) ${time.toLocal()}');
+    return TZDateTime.from(time.toLocal(), tzLoc);
   }
 
   /// TODO Test other platforms:
@@ -164,7 +208,7 @@ class TimeController extends GetxHapi {
       tzLocation = getLocation(tzName);
     } on LocationNotFoundException catch (err) {
       if (tzLoc.name == DUMMY_TIMEZONE) {
-        l.e('$err\ntimezone "$tzName" not found by getLocation, using existing: $_tzLoc');
+        l.e('$err\ntimezone "$tzName" not found by getLocation, using existing: $tzLoc');
         tzLocation = tzLoc;
       } else {
         // TODO give prompt to user to enter their timezone:
@@ -183,13 +227,15 @@ class TimeController extends GetxHapi {
 
   _updateTimezoneLocation() async {
     Location? tzLocation = await _getTimezoneLocFromSystem();
-    _tzLoc = tzLocation ?? await _getTimezoneLocFromTimeDate();
+    tzLoc = tzLocation ?? await _getTimezoneLocFromTimeDate();
   }
 
   updateCurrDay() async {
-    String prevDay = dateToDay(currDayDate);
-    _currDay = dateToDay(await now());
-    l.i('TimeController:updateCurrDay: New day set ($_currDay), prev day was ($prevDay)');
+    String prevDay = currDay;
+    currDay = dateToDay(await now());
+    currDayDate = TZDateTime.from(DateTime.parse(currDay), tzLoc);
+    nextDayDate = dateToTomorrow(currDayDate);
+    l.i('TimeController:updateCurrDay: New day set ($currDay), prev day was ($prevDay)');
     update();
   }
 
@@ -224,23 +270,13 @@ class TimeController extends GetxHapi {
 
   bool iterateHijriDateByOne(DateTime dT) {
     Athan athan = ZamanController.to.athan!;
-
-    if (athan.date.year != dT.year ||
-        athan.date.month != dT.month ||
-        athan.date.day != dT.day) {
-      l.e('TimeController:_getDayOfWeekHijri: Year/Month/Day mismatch: athan.date(${athan.date}) != now($dT), continuing anyway');
-    }
-
-    // TODO what happens at midnight?
-    if (dT.isAfter(athan.maghrib)) {
-      return true;
-    }
-    return false;
+    return dT.isAfter(athan.maghrib) && dT.isBefore(nextDayDate);
   }
 
   /// Gregorian calendar day starts at Midnight (12:00AM)
   DAY_OF_WEEK _getDayOfWeekGrego(DateTime dT) {
-    String dayFromDate = DateFormat('EEEE').format(dT); // TODO all locales ok?
+    // TODO Force English Locale: works?
+    String dayFromDate = DateFormat('EEEE').format(dT);
 
     DAY_OF_WEEK day = defaultDayOfWeek;
     for (var dayOfWeek in DAY_OF_WEEK.values) {
@@ -253,6 +289,7 @@ class TimeController extends GetxHapi {
     return day;
   }
 
+  // TODO bugs here, needs to update at maghrib hijri and midnight grego:
   bool isMonday() => _dayOfWeekHijri == DAY_OF_WEEK.Monday;
   bool isTuesday() => _dayOfWeekHijri == DAY_OF_WEEK.Tuesday;
   bool isWednesday() => _dayOfWeekHijri == DAY_OF_WEEK.Wednesday;
@@ -261,21 +298,25 @@ class TimeController extends GetxHapi {
   bool isSaturday() => _dayOfWeekHijri == DAY_OF_WEEK.Saturday;
   bool isSunday() => _dayOfWeekHijri == DAY_OF_WEEK.Sunday;
 
-  String getDateHijri(bool includeDayOfWeek) {
-    DateTime dT = now2();
+  String getDateHijri(bool addDayOfWeek) {
+    DateTime dT = now2(); // TODO use now()?
     if (iterateHijriDateByOne(dT)) dT = dateToTomorrow(dT);
     String dayOfWeek = '';
-    if (includeDayOfWeek) dayOfWeek = '${_dayOfWeekHijri.name} ';
-    return '$dayOfWeek${HijriCalendar.fromDate(dT).toFormat('MMMM dd, yyyy')}';
+    if (addDayOfWeek) dayOfWeek = '${_dayOfWeekHijri.name} ';
+
+    HijriCalendar hijriCalendar = HijriCalendar.fromDate(dT);
+    _hijriMonth = hijriCalendar.hMonth;
+    return '$dayOfWeek${hijriCalendar.toFormat('MMMM dd, yyyy')}';
   }
 
-  String getDateGrego(bool includeDayOfWeek) {
+  String getDateGrego(bool addDayOfWeek) {
     String dayOfWeek = '';
-    if (includeDayOfWeek) dayOfWeek = '${_dayOfWeekGrego.name} ';
+    if (addDayOfWeek) dayOfWeek = '${_dayOfWeekGrego.name} ';
     return '$dayOfWeek${DateFormat('MMMM d, yyyy').format(now2())}';
   }
 
-  static String durationToTimeStr(Duration duration) {
+  /// Translate Duration() to a nice format in any language's numeral set.
+  static String trValDurationToTime(Duration duration) {
     int hours = duration.inHours;
     int minutes = duration.inMinutes;
     int seconds = duration.inSeconds;
@@ -300,11 +341,13 @@ class TimeController extends GetxHapi {
     return cns('$hrStr$minStr$secondStr');
   }
 
-  static String getTimeStr(
+  /// Translate DateTime to a nice format in any language's numeral set.
+  static String trValTime(
           DateTime? time, bool show12HourClock, bool showSecPrecision) =>
-      getTimeRangeStr(time, null, show12HourClock, showSecPrecision);
+      trValTimeRange(time, null, show12HourClock, showSecPrecision);
 
-  static String getTimeRangeStr(
+  /// Translate DateTime (or DateTime Range) to a nice format in any lang.
+  static String trValTimeRange(
     DateTime? startTime,
     DateTime? endTime,
     bool show12HourClock,

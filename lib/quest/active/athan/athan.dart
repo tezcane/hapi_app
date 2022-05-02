@@ -30,7 +30,7 @@ class Athan {
   late final DateTime _karahatAdkharIstiwa_05; // sun zenith/peak - karahat 2
   late final DateTime _highNoon; // used for radian correction
   late final DateTime _dhuhr_06;
-  late final DateTime _asrEarlier_07;
+  late final DateTime _asrEarly_07; // Earlier! Named early for vert. alignments
   late final DateTime _asrLater_08;
   late final DateTime _karahatAdkharSunSetting_09; // sun setting - karahat 3
   late final DateTime _maghrib_10; // actual sunset
@@ -38,6 +38,7 @@ class Athan {
   late final DateTime _middleOfNight_12;
   late final DateTime _last3rdOfNight_13;
   late final DateTime _fajrTomorrow_14;
+
   DateTime get fajr => _fajr_01;
   DateTime get sunrise => _karahatAdkharSunrise_02;
   DateTime get ishraq => _ishraqPrayer_03;
@@ -46,15 +47,12 @@ class Athan {
   DateTime get highNoon => _highNoon;
   DateTime get dhuhr => _dhuhr_06;
   DateTime get asr =>
-      params.madhab == Madhab.Hanafi ? _asrLater_08 : _asrEarlier_07;
-  DateTime get asrEarlier => _asrEarlier_07;
+      ActiveQuestsController.to.salahAsrEarlier ? _asrEarly_07 : _asrLater_08;
+  DateTime get asrEarlier => _asrEarly_07;
   DateTime get asrLater => _asrLater_08;
   DateTime get sunSetting => _karahatAdkharSunSetting_09;
   DateTime get maghrib => _maghrib_10;
   DateTime get isha => _isha_11;
-  DateTime get layl => ActiveQuestsController.to.last3rdOfNight
-      ? _last3rdOfNight_13
-      : _middleOfNight_12;
   DateTime get middleOfNight => _middleOfNight_12;
   DateTime get last3rdOfNight => _last3rdOfNight_13;
   DateTime get fajrTomorrow => _fajrTomorrow_14;
@@ -91,12 +89,10 @@ class Athan {
     // DateTime sunsetTimeYesterday = TimeComponents(solarTimeYesterday.sunset)
     //     .utcDate(dateYesterday.year, dateYesterday.month, dateYesterday.day);
 
-    asrTimeEarlier =
-        _TimeComponent(solarTime.afternoon(Madhab.Shafi.asrShadowLength))
-            .utcDate(date.year, date.month, date.day);
-    asrTimeLater =
-        _TimeComponent(solarTime.afternoon(Madhab.Hanafi.asrShadowLength))
-            .utcDate(date.year, date.month, date.day);
+    asrTimeEarlier = _TimeComponent(solarTime.afternoon(1))
+        .utcDate(date.year, date.month, date.day);
+    asrTimeLater = _TimeComponent(solarTime.afternoon(2))
+        .utcDate(date.year, date.month, date.day);
 
     fajrTime = _TimeComponent(solarTime.hourAngle(-1 * method.fajrAngle, false))
         .utcDate(date.year, date.month, date.day);
@@ -209,7 +205,7 @@ class Athan {
       method.adjustSecs[Salah.dhuhr]! + (params.karahatSunIstiwaSecs ~/ 2),
     );
 
-    _asrEarlier_07 = _addSecsRoundUpAndGetTZ(
+    _asrEarly_07 = _addSecsRoundUpAndGetTZ(
       asrTimeEarlier,
       method.adjustSecs[Salah.asr]!,
     );
@@ -261,7 +257,7 @@ class Athan {
     l.d('duha:             $_duhaPrayer_04');
     l.d('istiwa:           $_karahatAdkharIstiwa_05');
     l.d('dhuhr:            $_dhuhr_06');
-    l.d('asr earlier:      $_asrEarlier_07');
+    l.d('asr earlier:      $_asrEarly_07');
     l.d('asr later:        $_asrLater_08');
     l.d('sunsetting:       $_karahatAdkharSunSetting_09');
     l.d('maghrib:          $_maghrib_10');
@@ -363,86 +359,65 @@ class Athan {
   }
 
   /// Gets salah row times that are used for notifications.
-  DateTime getZamanRowTime(ZR zR) {
-    switch (zR) {
-      case (ZR.Fajr):
-        return _fajr_01;
-      case (ZR.Duha):
-        return _ishraqPrayer_03; // return ishraq for notification time
-      case (ZR.Dhuhr):
-        return _dhuhr_06;
-      case (ZR.Asr):
-        return asr;
-      case (ZR.Maghrib):
-        return _maghrib_10;
-      case (ZR.Isha):
-        return _isha_11;
-      case (ZR.Layl):
-        return layl;
-      default:
-        return l.E('TimeOfDay:getZamanRowTime: unexpected ZR given: "$zR"');
-    }
-  }
-
-  /// Returns Object[] - idx 0 = Z's DateTime, index 1 = sun mover circle color.
-  List<Object> getZamanTime(Z z) {
-    if (z == Z.Fajr) {
-      return [_fajr_01, Colors.blue.shade700];
-    } else if (z == Z.Karahat_Morning_Adhkar) {
-      return [_karahatAdkharSunrise_02, Colors.red];
-    } else if (z == Z.Ishraq) {
-      return [_ishraqPrayer_03, Colors.green];
-    } else if (z == Z.Duha) {
-      return [_duhaPrayer_04, Colors.yellow.shade700];
-    } else if (z == Z.Karahat_Istiwa) {
-      return [_karahatAdkharIstiwa_05, Colors.red];
-    } else if (z == Z.Dhuhr) {
-      return [_dhuhr_06, Colors.yellow.shade700];
-    } else if (z == Z.Asr_Earlier) {
-      return [_asrEarlier_07, Colors.yellow.shade800];
-    } else if (z == Z.Asr_Later) {
-      return [_asrLater_08, Colors.yellow.shade900];
-    } else if (z == Z.Karahat_Evening_Adhkar) {
-      return [_karahatAdkharSunSetting_09, Colors.red];
-    } else if (z == Z.Maghrib) {
-      return [_maghrib_10, Colors.blue.shade700];
-    } else if (z == Z.Isha) {
-      return [_isha_11, Colors.purple.shade900];
-    } else if (z == Z.Layl__2) {
-      return [_middleOfNight_12, Colors.purple.shade800];
-    } else if (z == Z.Layl__3) {
-      return [_last3rdOfNight_13, Colors.purple.shade900];
-    } else if (z == Z.Fajr_Tomorrow) {
-      return [_fajrTomorrow_14, Colors.pink]; // should never show
-    } else {
-      l.e('TimeOfDay:getZamanTime: unknown zaman: "$z"');
-      return [_dhuhr_06, Colors.yellow.shade800];
-    }
-  }
-
-  /// Each salah header on active quests has a start time, return it here.
-  DateTime getStartTime(Z z) {
+  /// Each salah row header on active quests has a start time, return it here.
+  DateTime getZamanRowTime(Z z) {
     switch (z) {
       case (Z.Fajr):
         return _fajr_01;
       case (Z.Duha):
-        return _karahatAdkharSunrise_02;
+        // NOTE1: It's not _karahatAdkharSunrise_02;
+        // NOTE2: return ishraq for notification time, but technically I believe
+        //        Duha begins at Sunrise (which is on the Duha Salah Row anyway)
+        return _ishraqPrayer_03;
       case (Z.Dhuhr):
         return _dhuhr_06;
-      case (Z.Asr_Earlier):
-        return _asrEarlier_07;
-      case (Z.Asr_Later):
-        return _asrLater_08;
+      case (Z.Asr):
+        return asr; // based on setting gets asr early/later time
       case (Z.Maghrib):
         return _maghrib_10;
       case (Z.Isha):
         return _isha_11;
-      case (Z.Layl__2):
+      case (Z.Middle_of_Night):
         return _middleOfNight_12;
-      case (Z.Layl__3):
+      case (Z.Last_3rd_of_Night):
         return _last3rdOfNight_13;
       default:
-        return l.E('TimeOfDay:getStartTime: unexpected zaman given: "$z"');
+        return l.E('athan:getZamanRowTime: unexpected Z given: $z');
+    }
+  }
+
+  /// Returns Object[] - idx 0 = Z's DateTime, index 1 = sun rings circle color.
+  List<Object> getZamanTime(Z z) {
+    if (z == Z.Fajr) {
+      return [_fajr_01, Colors.blue.shade700];
+    } else if (z == Z.Shuruq) {
+      return [_karahatAdkharSunrise_02, Colors.red]; // karahat sunrise
+    } else if (z == Z.Ishraq) {
+      return [_ishraqPrayer_03, Colors.green];
+    } else if (z == Z.Duha) {
+      return [_duhaPrayer_04, Colors.yellow.shade800];
+    } else if (z == Z.Istiwa) {
+      return [_karahatAdkharIstiwa_05, Colors.red]; // karahat zawal/zenith
+    } else if (z == Z.Dhuhr) {
+      return [_dhuhr_06, Colors.yellow.shade700];
+    } else if (z == Z.Asr) {
+      return ActiveQuestsController.to.salahAsrEarlier
+          ? [_asrEarly_07, Colors.yellow.shade900]
+          : [_asrLater_08, Colors.yellow.shade900];
+    } else if (z == Z.Ghurub) {
+      return [_karahatAdkharSunSetting_09, Colors.red]; // karahat sunsetting
+    } else if (z == Z.Maghrib) {
+      return [_maghrib_10, Colors.blue.shade700];
+    } else if (z == Z.Isha) {
+      return [_isha_11, Colors.purple.shade900];
+    } else if (z == Z.Middle_of_Night) {
+      return [_middleOfNight_12, Colors.purple.shade800];
+    } else if (z == Z.Last_3rd_of_Night) {
+      return [_last3rdOfNight_13, Colors.purple.shade900];
+    } else if (z == Z.Fajr_Tomorrow) {
+      return [_fajrTomorrow_14, Colors.pink]; // should never show
+    } else {
+      return l.E('TimeOfDay:getZamanTime: unknown zaman: "$z"');
     }
   }
 
@@ -451,73 +426,34 @@ class Athan {
 
     if (date.isAfter(_fajrTomorrow_14)) {
       return Z.Fajr_Tomorrow;
-    } else if (c.last3rdOfNight && date.isAfter(_last3rdOfNight_13)) {
-      return Z.Layl__3;
-    } else if (!c.last3rdOfNight && date.isAfter(_middleOfNight_12)) {
-      return Z.Layl__2;
+    } else if (date.isAfter(_last3rdOfNight_13)) {
+      return Z.Last_3rd_of_Night;
+    } else if (date.isAfter(_middleOfNight_12)) {
+      return Z.Middle_of_Night;
     } else if (date.isAfter(_isha_11)) {
       return Z.Isha;
     } else if (date.isAfter(_maghrib_10)) {
       return Z.Maghrib;
     } else if (date.isAfter(_karahatAdkharSunSetting_09)) {
-      return Z.Karahat_Evening_Adhkar;
+      return Z.Ghurub;
     } else if (!c.salahAsrEarlier && date.isAfter(_asrLater_08)) {
-      return Z.Asr_Later;
-    } else if (c.salahAsrEarlier && date.isAfter(_asrEarlier_07)) {
-      return Z.Asr_Earlier;
+      return Z.Asr;
+    } else if (c.salahAsrEarlier && date.isAfter(_asrEarly_07)) {
+      return Z.Asr;
     } else if (date.isAfter(_dhuhr_06)) {
       return Z.Dhuhr;
     } else if (date.isAfter(_karahatAdkharIstiwa_05)) {
-      return Z.Karahat_Istiwa;
+      return Z.Istiwa;
     } else if (date.isAfter(_duhaPrayer_04)) {
       return Z.Duha;
     } else if (date.isAfter(_ishraqPrayer_03)) {
       return Z.Ishraq;
     } else if (date.isAfter(_karahatAdkharSunrise_02)) {
-      return Z.Karahat_Morning_Adhkar;
+      return Z.Shuruq;
     } else if (date.isAfter(_fajr_01)) {
       return Z.Fajr;
     } else {
       return l.E('getCurrZaman $date is not after fajr ($_fajr_01)');
-    }
-  }
-
-  /// TODO we can just get this of enum and currZ?!
-  Z getNextZaman(DateTime date) {
-    final ActiveQuestsController c = ActiveQuestsController.to;
-
-    if (c.last3rdOfNight && date.isAfter(_last3rdOfNight_13)) {
-      return Z.Fajr_Tomorrow;
-    } else if (!c.last3rdOfNight && date.isAfter(_middleOfNight_12)) {
-      return Z.Fajr_Tomorrow;
-    } else if (c.last3rdOfNight && date.isAfter(_isha_11)) {
-      return Z.Layl__3; // 1/3 of night mode
-    } else if (!c.last3rdOfNight && date.isAfter(_isha_11)) {
-      return Z.Layl__2; // middle of night mode
-    } else if (date.isAfter(_maghrib_10)) {
-      return Z.Isha;
-    } else if (date.isAfter(_karahatAdkharSunSetting_09)) {
-      return Z.Maghrib;
-    } else if (!c.salahAsrEarlier && date.isAfter(_asrLater_08)) {
-      return Z.Karahat_Evening_Adhkar;
-    } else if (c.salahAsrEarlier && date.isAfter(_asrEarlier_07)) {
-      return Z.Karahat_Evening_Adhkar;
-    } else if (!c.salahAsrEarlier && date.isAfter(_dhuhr_06)) {
-      return Z.Asr_Later;
-    } else if (c.salahAsrEarlier && date.isAfter(_dhuhr_06)) {
-      return Z.Asr_Earlier;
-    } else if (date.isAfter(_karahatAdkharIstiwa_05)) {
-      return Z.Dhuhr;
-    } else if (date.isAfter(_duhaPrayer_04)) {
-      return Z.Karahat_Istiwa;
-    } else if (date.isAfter(_ishraqPrayer_03)) {
-      return Z.Duha;
-    } else if (date.isAfter(_karahatAdkharSunrise_02)) {
-      return Z.Ishraq;
-    } else if (date.isAfter(_fajr_01)) {
-      return Z.Karahat_Morning_Adhkar;
-    } else {
-      return l.E('getNextZaman $date is not after fajr');
     }
   }
 }

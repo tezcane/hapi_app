@@ -27,23 +27,25 @@ class NotificationClass {
 class NotificationController extends GetxHapi {
   static NotificationController get to => Get.find(); // A.K.A. cQstA
 
-  final Map<ZR, bool> _playAthan = {};
-  bool playAthan(ZR zR) => _playAthan[zR]!;
-  bool playBeep(ZR zR) => _playBeep[zR]!;
-  bool vibrate(ZR zR) => _vibrate[zR]!;
-  final Map<ZR, bool> _playBeep = {};
-  final Map<ZR, bool> _vibrate = {};
+  final Map<Z, bool> _playAthan = {};
+  final Map<Z, bool> _playBeep = {};
+  final Map<Z, bool> _vibrate = {};
+  bool playAthan(Z z) => _playAthan[z]!;
+  bool playBeep(Z z) => _playBeep[z]!;
+  bool vibrate(Z z) => _vibrate[z]!;
 
   @override
   void onInit() {
     _initNotificationsLibrary();
 
-    for (ZR zR in ZR.values) {
-      bool dVal = true; // default value
-      if (zR == ZR.Duha || zR == ZR.Layl) dVal = false;
-      _playAthan[zR] = s.rd('playAthan${zR.name}') ?? dVal;
-      _playBeep[zR] = s.rd('playBeep${zR.name}') ?? !dVal;
-      _vibrate[zR] = s.rd('vibrate${zR.name}') ?? true;
+    for (Z z in zRows) {
+      bool defaultVal = true;
+      if (z == Z.Duha || z == Z.Middle_of_Night || z == Z.Last_3rd_of_Night) {
+        defaultVal = false;
+      }
+      _playAthan[z] = s.rd('playAthan${z.name}') ?? defaultVal;
+      _playBeep[z] = s.rd('playBeep${z.name}') ?? defaultVal;
+      _vibrate[z] = s.rd('vibrate${z.name}') ?? defaultVal;
     }
 
     super.onInit();
@@ -79,109 +81,125 @@ class NotificationController extends GetxHapi {
       }
     });
 
-    // TODO test
+    // TODO test, needed, works?
+    /// When user clicks on a notification we want to start app (if not started)
+    /// and navigate to where the notification originates from.
     notificationSubject.stream.listen((String? payload) async {
-      ZR zR = ZR.values[int.parse(payload!)];
-      l.d('initNotificationStreamReader: got zR=' + zR.name);
+      try {
+        Z z = zRows[int.parse(payload!) % zRows.length - 1];
+        l.d('NotificationController:_initNotificationsLibrary: got Z=${z.name}');
+      } catch (e) {
+        l.e('NotificationController:_initNotificationsLibrary: got expected a ZRow index offset but got "$payload", error="$e"');
+      }
     });
   }
 
-  togglePlayAthan(ZR zR) async {
-    _playAthan[zR] = !_playAthan[zR]!;
-    s.wr('playAthan${zR.name}', _playAthan[zR]);
+  String get trValNotificationTitle => at('at.{0} Updated', ['a.Isharet']);
 
-    if (_playAthan[zR]!) {
-      showSnackBar('sb.notificationTitle', 'sb.notificationAthanOn');
-      _playBeep[zR] = false; // both can't be true
-      s.wr('playBeep${zR.name}', _playBeep[zR]);
+  togglePlayAthan(Z z) async {
+    _playAthan[z] = !_playAthan[z]!;
+    s.wr('playAthan${z.name}', _playAthan[z]);
+
+    if (_playAthan[z]!) {
+      showSnackBar(trValNotificationTitle, at('at.{0} on', ['a.Athan']));
+      _playBeep[z] = false; // both can't be true
+      s.wr('playBeep${z.name}', _playBeep[z]);
     } else {
-      showSnackBar('sb.notificationTitle', 'sb.notificationAthanOff');
+      showSnackBar(trValNotificationTitle, at('at.{0} off', ['a.Athan']));
     }
     resetNotifications();
     updateOnThread1Ms();
   }
 
-  togglePlayBeep(ZR zR) async {
-    _playBeep[zR] = !_playBeep[zR]!;
-    s.wr('playBeep${zR.name}', _playBeep[zR]);
-    if (_playBeep[zR]!) {
-      showSnackBar('sb.notificationTitle', 'sb.notificationBeepOn');
-      _playAthan[zR] = false; // both can't be true
-      s.wr('playAthan${zR.name}', _playAthan[zR]);
+  togglePlayBeep(Z z) async {
+    _playBeep[z] = !_playBeep[z]!;
+    s.wr('playBeep${z.name}', _playBeep[z]);
+    if (_playBeep[z]!) {
+      showSnackBar(trValNotificationTitle, 'i.Default sound on');
+      _playAthan[z] = false; // both can't be true
+      s.wr('playAthan${z.name}', _playAthan[z]);
     } else {
-      showSnackBar('sb.notificationTitle', 'sb.notificationBeepOff');
+      showSnackBar(trValNotificationTitle, 'i.Default sound off');
     }
     resetNotifications();
     updateOnThread1Ms();
   }
 
-  toggleVibrate(ZR zR) async {
-    _vibrate[zR] = !_vibrate[zR]!;
-    s.wr('vibrate${zR.name}', _vibrate[zR]);
-    if (_vibrate[zR]!) {
-      showSnackBar('sb.notificationTitle', 'sb.notificationVibrateOn');
+  toggleVibrate(Z z) async {
+    _vibrate[z] = !_vibrate[z]!;
+    s.wr('vibrate${z.name}', _vibrate[z]);
+    if (_vibrate[z]!) {
+      showSnackBar(trValNotificationTitle, 'i.Vibration on');
     } else {
-      showSnackBar('sb.notificationTitle', 'sb.notificationVibrateOff');
+      showSnackBar(trValNotificationTitle, 'i.Vibration off');
     }
     resetNotifications();
     updateOnThread1Ms();
   }
 
-  /// Clears all previous notifications and sets next 7 days of notifications
+  /// Clears all previous notifications and sets next 3 days of notifications
   resetNotifications() async {
     await FlutterLocalNotificationsPlugin().cancelAll(); //cancel all
 
-    int zRLen = ZR.values.length;
     Athan athan = ZamanController.to.athan!; // start from current athan
-    for (int day = 0; day < 7; day++) {
+    Z currZ = ZamanController.to.currZ;
+
+    for (int day = 0; day < 3; day++) {
       if (day > 0) {
         athan = ZamanController.to.generateNewAthan(
-            TimeController.to.currDayDate.add(Duration(days: day)));
+          TimeController.to.currDayDate.add(Duration(days: day)),
+        );
       }
-      for (ZR zR in ZR.values) {
-        int id = zR.index + (zRLen * day);
-        await _scheduleSalahNotification(athan, zR, id);
+
+      int zRowIdx = 0;
+      for (Z z in zRows) {
+        int id = zRowIdx++ + (zRows.length * day); // zRowIdx++, so id=0 first
+
+        await _scheduleSalahNotification(athan, z, id);
+
+        /// stop exactly 3 days from now
+        if (day == 2 && currZ == z) return;
       }
     }
   }
 
-  _scheduleSalahNotification(Athan athan, ZR zR, int id) async {
-    if (!_playAthan[zR]! && !_playBeep[zR]! && !_vibrate[zR]!) {
+  _scheduleSalahNotification(Athan athan, Z z, int id) async {
+    if (!_playAthan[z]! && !_playBeep[z]! && !_vibrate[z]!) {
       await FlutterLocalNotificationsPlugin().cancel(id);
-      l.w('NotificationController:scheduleSalahNotification: zR ${zR.name} (id=$id) has no notifications');
+      l.w('NotificationController:scheduleSalahNotification: z ${z.name} (id=$id) has no notifications');
       return;
     }
 
-    DateTime salahTime = athan.getZamanRowTime(zR);
+    DateTime salahTime = athan.getZamanRowTime(z);
     // TZDateTime scheduledTime = (await TimeController.to.now())
     //     .add(const Duration(seconds: 1)) as TZDateTime;
     TZDateTime scheduledTime =
         TZDateTime.from(salahTime, TimeController.to.tzLoc);
 
+    String uniqueId =
+        'id=$id, time=$salahTime, z=${z.name}, athan=${_playAthan[z]!}, beep=${_playBeep[z]!}, vibrate=${_vibrate[z]!}';
     if (salahTime.isBefore(await TimeController.to.now())) {
-      l.w('NotificationController:scheduleSalahNotification: zR ${zR.name} (id=$id) time ($salahTime) has expired, not setting notification');
+      l.w('NotificationController:scheduleSalahNotification: Time expired, skip: "$uniqueId"');
       return;
-    } else {
-      l.d('NotificationController:scheduleSalahNotification: zR ${zR.name} (id=$id) time ($salahTime) being scheduled');
     }
 
     String body = 'Salah Time';
 
     var androidSpecifics = AndroidNotificationDetails(
       // ID must be unique for all combinations to work, thus t/f added below:
-      '${zR.name} (id=$id) Athan=${_playAthan[zR]!}, Beep=${_playBeep[zR]!}, vibrate=${_vibrate[zR]!}', // Notification ID
-      '${zR.name} Salah Notification', // notification channel
+      uniqueId,
+      '${z.name} Salah Notification', // notification channel
       channelDescription: 'hapi Salah Notification',
       priority: Priority.max,
       importance: Importance.high,
       styleInformation: BigTextStyleInformation(body),
       when: scheduledTime.millisecondsSinceEpoch,
-      playSound: _playAthan[zR]! || _playBeep[zR]!,
-      sound: _playAthan[zR]!
+      playSound: _playAthan[z]! || _playBeep[z]!,
+      sound: _playAthan[z]!
           ? RawResourceAndroidNotificationSound(
-              zR == ZR.Fajr ? 'athan_fajr' : 'athan')
+              z == Z.Fajr ? 'athan_fajr' : 'athan')
           : null,
-      enableVibration: _vibrate[zR]!,
+      enableVibration: _vibrate[z]!,
       enableLights: true,
       //color: // TODO
     );
@@ -194,14 +212,16 @@ class NotificationController extends GetxHapi {
     // This finally schedules the notification
     await FlutterLocalNotificationsPlugin().zonedSchedule(
       id, // int id
-      zR.name, // title
+      z.name, // title
       body,
       scheduledTime,
       platformChannelSpecifics,
       androidAllowWhileIdle: true,
-      payload: zR.index.toString(), // so we can get notification type back
+      payload: z.index.toString(), // so we can get notification type back
       uiLocalNotificationDateInterpretation:
           UILocalNotificationDateInterpretation.absoluteTime,
     );
+
+    l.d('NotificationController:scheduleSalahNotification: Scheduled: "$uniqueId"');
   }
 }

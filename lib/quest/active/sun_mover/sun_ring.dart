@@ -41,6 +41,7 @@ import 'package:hapi/quest/active/zaman_controller.dart';
 //   Widget build(BuildContext context) {}
 // }
 
+// ignore: must_be_immutable
 class SunRing extends StatelessWidget {
   SunRing(
     this.athan,
@@ -61,14 +62,6 @@ class SunRing extends StatelessWidget {
   bool passed0 = false;
   double initAnimationLocation = 1;
 
-  // TODO remove
-  String fill(String s, int fillLen) {
-    while (s.length < fillLen) {
-      s += ' ';
-    }
-    return s;
-  }
-
   void _buildSunRingSlices() {
     double totalSecs = 0.0;
     int lastIdx = Z.values.length - 2; // don't go to FajrTomorrow
@@ -87,7 +80,7 @@ class SunRing extends StatelessWidget {
           nextZTime.difference(currZTime).inMilliseconds / 1000;
       totalSecs += elapsedSecs;
       colorSlices[currZ] = ColorSlice(elapsedSecs, currZColor);
-      l.d('${fill(currZ.niceName(shortenAsrName: false), 10)} secs=$elapsedSecs (mins=${elapsedSecs / 60}), totalSecs=$totalSecs (mins=${totalSecs / 60})');
+      l.d('${currZ.name} secs=$elapsedSecs (mins=${elapsedSecs / 60}), totalSecs=$totalSecs (mins=${totalSecs / 60})');
     }
     ColorSlice.setTotalSecs(totalSecs);
 
@@ -142,13 +135,15 @@ class SunRing extends StatelessWidget {
     Z currZ = ZamanController.to.currZ;
     bool isSunAboveHorizon = currZ.isAboveHorizon();
 
+    // TODO clean this up
     Color horizonTopColor = colorSlices[currZ]!.color;
-    if (currZ == Z.Karahat_Morning_Adhkar ||
-        currZ == Z.Karahat_Evening_Adhkar) {
+    if (currZ == Z.Shuruq || currZ == Z.Ghurub) {
       horizonTopColor = Colors.orangeAccent;
     } else if (currZ == Z.Fajr || currZ == Z.Maghrib) {
       horizonTopColor = Colors.purple.shade900;
-    } else if (currZ == Z.Isha || currZ == Z.Layl__2 || currZ == Z.Layl__3) {
+    } else if (currZ == Z.Isha ||
+        currZ == Z.Middle_of_Night ||
+        currZ == Z.Last_3rd_of_Night) {
       horizonTopColor = Colors.black;
     } else if (currZ == Z.Ishraq) {
       horizonTopColor == Colors.yellow.shade900;
@@ -158,15 +153,16 @@ class SunRing extends StatelessWidget {
     if (currZ == Z.Ishraq ||
         currZ == Z.Duha ||
         currZ == Z.Dhuhr ||
-        currZ == Z.Asr_Earlier ||
-        currZ == Z.Asr_Later) {
+        currZ == Z.Asr) {
       horizonBottomColor = Colors.blueAccent;
     }
 
     Color grassColor = Colors.green;
     if (currZ == Z.Fajr || currZ == Z.Maghrib) {
       grassColor = Colors.green.shade700;
-    } else if (currZ == Z.Isha || currZ == Z.Layl__2 || currZ == Z.Layl__3) {
+    } else if (currZ == Z.Isha ||
+        currZ == Z.Middle_of_Night ||
+        currZ == Z.Last_3rd_of_Night) {
       grassColor = Colors.green.shade900;
     }
 
@@ -293,18 +289,21 @@ class _HijriAndGregoDate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<TimeController>(builder: (c) {
-      DAY_OF_WEEK hijriDOW = c.dayOfWeekHijri;
-      DAY_OF_WEEK gregoDOW = c.dayOfWeekGrego;
+      DAY_OF_WEEK hijriDay = c.dayOfWeekHijri;
+      DAY_OF_WEEK gregoDay = c.dayOfWeekGrego;
 
-      bool includeDayOfWeek = hijriDOW != gregoDOW;
+      bool addDayOfWeekWithDate = hijriDay != gregoDay;
 
       return Column(
         children: [
           const SizedBox(height: 42),
-          if (includeDayOfWeek) const T('', ts, w: 160, h: 19),
-          if (!includeDayOfWeek) T(hijriDOW.name, ts, w: 160, h: 19),
-          T(c.getDateHijri(includeDayOfWeek), ts, w: 160, h: 19),
-          T(c.getDateGrego(includeDayOfWeek), ts, w: 160, h: 19),
+          // placeholder
+          if (addDayOfWeekWithDate) T(' ', ts, w: 160, h: 19, trVal: true),
+          if (!addDayOfWeekWithDate) T(hijriDay.trKey, ts, w: 160, h: 19),
+          T(c.getDateHijri(addDayOfWeekWithDate), ts, w: 160, h: 19),
+
+          /// TODO shows "April" in "ar" language
+          T(cns(c.getDateGrego(addDayOfWeekWithDate)), ts, w: 160, h: 19),
         ],
       );
     });

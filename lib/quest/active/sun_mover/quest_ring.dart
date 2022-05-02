@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
-import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/z.dart';
 import 'package:hapi/quest/active/sun_mover/multi_color_ring.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
@@ -12,100 +11,74 @@ class QuestRing extends StatelessWidget {
   final double strokeWidth;
   final Map<Z, ColorSlice> colorSlices;
 
-  Map<ZR, ColorSlice> _buildQuestRingSlices() {
-    Map<ZR, ColorSlice> questRingSlices = {};
+  // TODO clean this up
+  Map<Z, ColorSlice> _buildQuestRingSlices() {
+    Map<Z, ColorSlice> questRingSlices = {};
 
-    Map<ZR, int> questRingColors = ActiveQuestsAjrController.to.questRingColors;
+    Map<Z, int> questRingColors = ActiveQuestsAjrController.to.questRingColors;
 
-    ZR zR;
-    double elapsedSecs = 0;
+    Z z;
+    double elapsedSecs;
     Color color;
 
-    if (ActiveQuestsController.to.last3rdOfNight) {
-      zR = ZR.Layl;
-      elapsedSecs = 0;
-      elapsedSecs += colorSlices[Z.Layl__3]!.elapsedSecs;
-      color = AppThemes.ajrColorsByIdx[questRingColors[zR]!];
-      questRingSlices[zR] = ColorSlice(elapsedSecs, color);
+    z = Z.Last_3rd_of_Night;
+    elapsedSecs = 0;
+    elapsedSecs += colorSlices[Z.Last_3rd_of_Night]!.elapsedSecs;
+    color = AppThemes.ajrColorsByIdx[questRingColors[z]!];
+    questRingSlices[z] = ColorSlice(elapsedSecs, color);
 
-      zR = ZR.Isha;
-      elapsedSecs = 0;
-      elapsedSecs += colorSlices[Z.Layl__2]!.elapsedSecs;
-      elapsedSecs += colorSlices[Z.Isha]!.elapsedSecs;
-      color = AppThemes.ajrColorsByIdx[questRingColors[zR]!];
-      questRingSlices[zR] = ColorSlice(elapsedSecs, color);
-    } else {
-      zR = ZR.Layl;
-      elapsedSecs = 0;
-      elapsedSecs += colorSlices[Z.Layl__3]!.elapsedSecs;
-      elapsedSecs += colorSlices[Z.Layl__2]!.elapsedSecs;
-      color = AppThemes.ajrColorsByIdx[questRingColors[zR]!];
-      questRingSlices[zR] = ColorSlice(elapsedSecs, color);
+    z = Z.Middle_of_Night;
+    elapsedSecs = 0;
+    elapsedSecs += colorSlices[Z.Middle_of_Night]!.elapsedSecs;
+    color = AppThemes.ajrColorsByIdx[questRingColors[z]!];
+    questRingSlices[z] = ColorSlice(elapsedSecs, color);
 
-      zR = ZR.Isha;
-      elapsedSecs = 0;
-      elapsedSecs += colorSlices[Z.Isha]!.elapsedSecs;
-      color = AppThemes.ajrColorsByIdx[questRingColors[zR]!];
-      questRingSlices[zR] = ColorSlice(elapsedSecs, color);
-    }
+    z = Z.Isha;
+    elapsedSecs = 0;
+    elapsedSecs += colorSlices[Z.Isha]!.elapsedSecs;
+    color = AppThemes.ajrColorsByIdx[questRingColors[z]!];
+    questRingSlices[z] = ColorSlice(elapsedSecs, color);
 
-    zR = ZR.Maghrib;
+    z = Z.Maghrib;
     elapsedSecs = 0;
     elapsedSecs += colorSlices[Z.Maghrib]!.elapsedSecs;
-    color = AppThemes.ajrColorsByIdx[questRingColors[zR]!];
-    questRingSlices[zR] = ColorSlice(elapsedSecs, color);
+    elapsedSecs += colorSlices[Z.Ghurub]!.elapsedSecs;
+    color = AppThemes.ajrColorsByIdx[questRingColors[z]!];
+    questRingSlices[z] = ColorSlice(elapsedSecs, color);
 
-    if (!ActiveQuestsController.to.salahAsrEarlier) {
-      zR = ZR.Asr;
-      elapsedSecs = 0;
-      elapsedSecs += colorSlices[Z.Karahat_Evening_Adhkar]!.elapsedSecs;
-      elapsedSecs += colorSlices[Z.Asr_Later]!.elapsedSecs;
-      color = AppThemes.ajrColorsByIdx[questRingColors[zR]!];
-      questRingSlices[zR] = ColorSlice(elapsedSecs, color);
-
-      zR = ZR.Dhuhr;
-      elapsedSecs = 0;
-      elapsedSecs += colorSlices[Z.Asr_Earlier]!.elapsedSecs;
-      elapsedSecs += colorSlices[Z.Dhuhr]!.elapsedSecs;
-      color = AppThemes.ajrColorsByIdx[questRingColors[zR]!];
-      questRingSlices[zR] = ColorSlice(elapsedSecs, color);
-    } else {
-      zR = ZR.Asr;
-      elapsedSecs = 0;
-      elapsedSecs += colorSlices[Z.Karahat_Evening_Adhkar]!.elapsedSecs;
-      elapsedSecs += colorSlices[Z.Asr_Later]!.elapsedSecs;
-      elapsedSecs += colorSlices[Z.Asr_Earlier]!.elapsedSecs;
-      color = AppThemes.ajrColorsByIdx[questRingColors[zR]!];
-      questRingSlices[zR] = ColorSlice(elapsedSecs, color);
-
-      zR = ZR.Dhuhr;
-      elapsedSecs = 0;
-      elapsedSecs += colorSlices[Z.Dhuhr]!.elapsedSecs;
-      color = AppThemes.ajrColorsByIdx[questRingColors[zR]!];
-      questRingSlices[zR] = ColorSlice(elapsedSecs, color);
-    }
-
-    zR = ZR.Duha;
+    z = Z.Asr;
     elapsedSecs = 0;
-    elapsedSecs += colorSlices[Z.Karahat_Istiwa]!.elapsedSecs;
+    elapsedSecs += colorSlices[Z.Asr]!.elapsedSecs;
+    color = AppThemes.ajrColorsByIdx[questRingColors[z]!];
+    questRingSlices[z] = ColorSlice(elapsedSecs, color);
+
+    z = Z.Dhuhr;
+    elapsedSecs = 0;
+    elapsedSecs += colorSlices[Z.Dhuhr]!.elapsedSecs;
+    color = AppThemes.ajrColorsByIdx[questRingColors[z]!];
+    questRingSlices[z] = ColorSlice(elapsedSecs, color);
+
+    z = Z.Duha;
+    elapsedSecs = 0;
+    elapsedSecs += colorSlices[Z.Istiwa]!.elapsedSecs;
     elapsedSecs += colorSlices[Z.Duha]!.elapsedSecs;
     elapsedSecs += colorSlices[Z.Ishraq]!.elapsedSecs;
-    elapsedSecs += colorSlices[Z.Karahat_Morning_Adhkar]!.elapsedSecs;
-    color = AppThemes.ajrColorsByIdx[questRingColors[zR]!];
-    questRingSlices[zR] = ColorSlice(elapsedSecs, color);
+    elapsedSecs += colorSlices[Z.Shuruq]!.elapsedSecs;
+    color = AppThemes.ajrColorsByIdx[questRingColors[z]!];
+    questRingSlices[z] = ColorSlice(elapsedSecs, color);
 
-    zR = ZR.Fajr;
+    z = Z.Fajr;
     elapsedSecs = 0;
     elapsedSecs += colorSlices[Z.Fajr]!.elapsedSecs;
-    color = AppThemes.ajrColorsByIdx[questRingColors[zR]!];
-    questRingSlices[zR] = ColorSlice(elapsedSecs, color);
+    color = AppThemes.ajrColorsByIdx[questRingColors[z]!];
+    questRingSlices[z] = ColorSlice(elapsedSecs, color);
 
     return questRingSlices;
   }
 
   @override
   Widget build(BuildContext context) {
-    final Map<ZR, ColorSlice> questRingSlices = _buildQuestRingSlices();
+    final Map<Z, ColorSlice> questRingSlices = _buildQuestRingSlices();
 
     // RepaintBoundary prevents the ALWAYS repaint on ANY page update
     return Center(

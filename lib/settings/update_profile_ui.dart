@@ -180,7 +180,7 @@ class UpdateProfileUI extends StatelessWidget {
             },
           ),
           TextButton(
-            child: const T('auth.submit', null),
+            child: T('auth.submit', null),
             onPressed: () async {
               if (_formKey2.currentState!.validate()) {
                 Get.back();

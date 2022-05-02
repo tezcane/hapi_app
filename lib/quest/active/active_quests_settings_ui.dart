@@ -4,6 +4,7 @@ import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/toggle_switch.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/calculation_method.dart';
+import 'package:hapi/quest/active/athan/z.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 
 typedef OnToggle = void Function(int index);
@@ -14,20 +15,29 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
   final TextStyle textStyleBtn = const TextStyle(
       color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14);
 
+  static const double cornerRadius = 5.0;
+
   Widget addSetting({
-    required String title,
-    required String tooltip,
-    required List<String> labels,
+    required String trValTitle,
+    required String trValTooltip,
+    required List<String> trValLabels,
     required int initialLabelIndex,
     required OnToggle onToggle,
   }) {
     return Tooltip(
-      message: tooltip,
+      message: trValTooltip,
       child: Column(
         children: [
           const SizedBox(height: 10),
           Center(
-            child: T(title, tsTitle, w: 150, h: 16, boxFit: BoxFit.contain),
+            child: T(
+              trValTitle,
+              tsTitle,
+              w: 150,
+              h: 16,
+              boxFit: BoxFit.contain,
+              trVal: true,
+            ),
           ),
           const SizedBox(height: 3),
           ToggleSwitch(
@@ -35,8 +45,8 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
             minHeight: 45.0,
             fontSize: 14,
             initialLabelIndex: initialLabelIndex,
-            labels: labels,
-            //cornerRadius: 20.0,
+            trValLabels: trValLabels,
+            cornerRadius: cornerRadius,
             activeBgColor: AppThemes.selected,
             activeFgColor: Colors.white,
             inactiveBgColor: Colors.grey, //const Color(0xFF1D1E33),
@@ -55,12 +65,17 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
         return Column(
           children: [
             Tooltip(
-              message: 'Select the salah time calculation method',
+              message: 'tt.calculationMethod'.tr,
               child: Column(
                 children: [
                   Center(
-                    child: T('Calculation Method', tsTitle,
-                        w: 150, h: 16, boxFit: BoxFit.contain),
+                    child: T(
+                      'i.Calculation Method',
+                      tsTitle,
+                      w: 150, // TODO get from slide out menu width
+                      h: 16,
+                      boxFit: BoxFit.contain,
+                    ),
                   ),
                   const SizedBox(height: 2),
                   DropdownButton<int>(
@@ -74,12 +89,9 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
                     dropdownColor: Colors.grey,
                     //itemHeight: 55.0,
                     menuMaxHeight: 700.0,
-                    underline: Container(
-                      height: 0,
-                    ),
-                    onChanged: (int? newValue) {
-                      c.salahCalcMethod = newValue!;
-                    },
+                    borderRadius: BorderRadius.circular(cornerRadius),
+                    underline: Container(height: 0),
+                    onChanged: (int? newValue) => c.salahCalcMethod = newValue!,
                     items: List<int>.generate(
                             CalcMethod.values.length - 1, (i) => i)
                         .map<DropdownMenuItem<int>>(
@@ -105,10 +117,9 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
               ),
             ),
             addSetting(
-              title: 'Asr Time',
-              tooltip:
-                  'Most scholars believe Asr starts when a shadow is the same length of an object (earlier), others say double the shadow length (later).',
-              labels: ['Earlier', 'Later'],
+              trValTitle: a(Z.Asr.trKey) + ' ' + a('a.Zaman'), // TODO hard tr
+              trValTooltip: at('at.asrStartTime', ['a.Sabqan', 'a.Lahiqan']),
+              trValLabels: [a('a.Sabqan'), a('a.Lahiqan')], // Earlier/Later
               initialLabelIndex: c.salahAsrEarlier ? 0 : 1,
               onToggle: (index) {
                 if (index == 0) {
@@ -119,23 +130,9 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
               },
             ),
             addSetting(
-              title: 'Layl Time',
-              tooltip:
-                  'For layl time, show last 1/3 of the night or last half of the night',
-              labels: ['Last 1/3', 'Last 1/2'],
-              initialLabelIndex: c.last3rdOfNight ? 0 : 1,
-              onToggle: (index) {
-                if (index == 0) {
-                  c.last3rdOfNight = true;
-                } else {
-                  c.last3rdOfNight = false;
-                }
-              },
-            ),
-            addSetting(
-              title: 'Round Time To',
-              tooltip: 'Round times to the minute or second',
-              labels: ['Minute', 'Second'],
+              trValTitle: 'i.Round Time To'.tr,
+              trValTooltip: 'tt.roundTimeTo'.tr,
+              trValLabels: [a('a.Daqayiq'), a('a.Thawani')], // Minutes/Seconds
               initialLabelIndex: c.showSecPrecision ? 1 : 0,
               onToggle: (index) {
                 if (index == 0) {
@@ -146,24 +143,15 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
               },
             ),
             addSetting(
-              title: 'Karahat Minutes',
-              tooltip:
-                  'Ulema opinions on karahat times are around 20-25 for sunset and sunrise karahat times and around 10-15 minutes for the noon karahat time',
-              labels: ['25, 15, 25', '20, 10, 20'],
-              initialLabelIndex: c.salahKarahatSafe ? 0 : 1,
-              onToggle: (index) {
-                if (index == 0) {
-                  c.salahKarahatSafe = true;
-                } else {
-                  c.salahKarahatSafe = false;
-                }
-              },
-            ),
-            addSetting(
-              title: 'Friday Default',
-              tooltip:
-                  'Choice between showing Jummah Salah on Friday (if you go to Jummah) or set to Dhuhr which acts like non-Jummah days',
-              labels: ['Jummah', 'Dhuhr'],
+              trValTitle: at('at.{0} Default', [a('a.Jumah')]),
+              trValTooltip: at('at.showJumah', [
+                a('a.Jumah'),
+                a('a.${Z.Dhuhr.name}'),
+              ]),
+              trValLabels: [
+                a('a.Jumah'),
+                a('a.${Z.Dhuhr.name}'),
+              ],
               initialLabelIndex: c.showJummahOnFriday ? 0 : 1,
               onToggle: (index) {
                 if (index == 0) {
@@ -174,10 +162,12 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
               },
             ),
             addSetting(
-              title: 'Clock Type',
-              tooltip:
-                  'Gives choice between 12 hour clock (AM/PM) or 24 hour clock (military time)',
-              labels: ['12 Hour', '24 Hour'],
+              trValTitle: a('a.Saat Hayit'), // Clock
+              trValTooltip: 'tt.clockType'.tr,
+              trValLabels: [
+                cns('12') + ' ' + a('a.Saat'), // 12 Hour, TODO hard tr
+                cns('24') + ' ' + a('a.Saat'), // 24 Hour
+              ],
               initialLabelIndex: c.show12HourClock ? 0 : 1,
               onToggle: (index) {
                 if (index == 0) {

@@ -5,6 +5,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/settings/language/language_controller.dart';
+import 'package:hapi/settings/theme/app_themes.dart';
 
 class MainController extends GetxHapi {
   static MainController get to => Get.find();
@@ -92,6 +93,10 @@ class Log {
   static const int llD4 = 4; // Debug   - debug level messages
   static const int llV5 = 5; // Verbose - verbose/spam messages
 
+  /// Use these to not build heavy verbose Strings that won't event print anyway.
+  get isVerboseMode => ll > llD4;
+  get isNotVerboseMode => ll < llV5;
+
   /// Prints error (if log level permits) and throws exception.
   E(String msg) {
     if (ll > llO0) debugPrint('H_ERR: $msg');
@@ -99,11 +104,11 @@ class Log {
   }
 
   /// e->error/failures, w->warn, i->info, d->debug, v->verbose:
-  e(String msg) => {if (ll > llO0) debugPrint('H_ERR: $msg')};
-  w(String msg) => {if (ll > llE1) debugPrint('H_WRN: $msg')};
-  i(String msg) => {if (ll > llW2) debugPrint('H_INF: $msg')};
-  d(String msg) => {if (ll > llI3) debugPrint('H_DBG: $msg')};
-  v(String msg) => {if (ll > llD4) debugPrint('H_VRB: $msg')};
+  e(String msg) => {if (ll > llO0) debugPrint('H_ERROR!!!: $msg')};
+  w(String msg) => {if (ll > llE1) debugPrint('H_WARNING!!!: $msg')};
+  i(String msg) => {if (ll > llW2) debugPrint('H_INF0: $msg')};
+  d(String msg) => {if (ll > llI3) debugPrint('H_DBUG: $msg')};
+  v(String msg) => {if (ll > llD4) debugPrint('H_VRBS: $msg')};
 }
 
 /// "s" short for Storage, use for all Storage access in app.
@@ -151,37 +156,96 @@ class Storage {
   }
 }
 
+// TODO change to TK - Translate trKey, and TV - Translate trValue
 /// "T"/"t" short for Text, use to translate or fit text in UI.
+// ignore: must_be_immutable
 class T extends StatelessWidget {
-  const T(
+  T(
     this.trKey,
     this.style, {
     this.alignment = Alignment.center,
-    this.w = 80,
+    this.w,
     this.h = 21, // Slightly smaller than salah header, and fits Tahajjud nicely
     this.boxFit = BoxFit.contain, // BoxFit.fitHeight, BoxFit.fitWidth
+    this.trVal = false,
   });
 
   final String trKey;
   final TextStyle? style;
   final Alignment alignment;
-  final double w;
+  double? w;
   final double h;
   final BoxFit boxFit;
 
+  /// trKey sometimes comes in already translated (trVal) so don't translate again.
+  final bool trVal;
+
   @override
   Widget build(BuildContext context) {
-    // NOTE: wrap with center to prevent expand into container broke SWIPER UI
+    w ??= wm(context); // if not specified take up most of the screen width
+    // NOTE: when wrapped in Center this broke Swiper UI
     return SizedBox(
       width: w,
       height: h,
       child: FittedBox(
         fit: boxFit,
         alignment: alignment, // use to align text,
-        child: Text(trKey.tr, style: style), // NOTE: Translation done here
+        child: Text(
+          trVal ? trKey : a(trKey), // translate only if we need to
+          style: style,
+        ), // tr ok!!!
       ),
     );
   }
+}
+
+/// Holds "a" user data in a map where:
+///   - The key is transliteration of "a.<transliteration>" which value is:
+///      1. null   - User has learned word and wants transliteration
+///      2. String - User has learned word and wants Arabic alphabet
+Map<String, String?> aMap = {
+  'Saat': null,
+  'Daqayiq': 'الدقائق',
+  'Thawani': null,
+};
+
+/// a = Arabic Translation/Transliteration: Uses "a.<Arabic Transliteration>"
+/// convention keys to translate, transliterate or show Arabic text for the
+/// given key. This depends on if the user has learned the key and also turned
+/// the transliterate or show arabic script feature on.
+///
+/// Ideally we want to see the user learn Arabic through these steps:
+///    Native Lang Word -> Transliterated Arabic -> Arabic Alphabet
+///
+/// So eventually their app will look of a mix of their native language and
+/// Arabic script.
+String a(String trKey) {
+  if (!trKey.startsWith('a.')) return trKey.tr; // no "a" key, tr and return
+
+  String transliteration = trKey.split('.')[1]; // transliteration is aMap's key
+  bool containsKey = aMap.containsKey(transliteration);
+  if (containsKey) {
+    String? rv = aMap[transliteration];
+    if (rv == null) return transliteration; // user wants transliteration only
+    return rv; // user wants Arabic alphabet
+  }
+  return trKey.tr; // not found, just translate it now
+}
+
+/// at = Arabic Translate/Template. Use "at." template trKey to insert other
+///   trKeys (Can also be tagged "a." if need to a() translate those too), e.g.:
+///     From this trKey template, replace {x}'s:
+///       'Time until "{0}" ends and "{1}" begins'
+///     With trKeysToInsert list's values [zc.currZ.trKey, zc.nextZ.trKey], so:
+///       'Time until "Dhuhr" ends and "Asr" begins'
+String at(String trKeyTemplate, List<String> trKeysToInsert) {
+  String rv = a(trKeyTemplate);
+
+  for (int idx = 0; idx < trKeysToInsert.length; idx++) {
+    rv = rv.replaceFirst('{$idx}', a(trKeysToInsert[idx]));
+  }
+
+  return rv;
 }
 
 /// TS = TextStyle - helper class to make init code shorter
@@ -192,6 +256,13 @@ class TS extends TextStyle {
   }) : super(color: color, fontWeight: fontWeight);
 }
 
+/// Commonly used TextStyles, tsN (normal), tsB (bold):
+const TS tsN = TS(AppThemes.ldTextColor);
+TS tsB = TS(
+  Get.theme.textTheme.headline6!.color!,
+  fontWeight: FontWeight.bold,
+);
+
 showSnackBar(
   String trKeyTitle,
   String trKeyMsg, {
@@ -200,6 +271,10 @@ showSnackBar(
 }) {
   Color? colorText = Get.theme.snackBarTheme.actionTextColor;
   if (isError) colorText = Colors.red;
+
+  // only allow one snackbar to show at a time
+  if (Get.isSnackbarOpen) Get.closeCurrentSnackbar();
+
   Get.snackbar(
     trKeyTitle.tr,
     trKeyMsg.tr,
@@ -207,11 +282,12 @@ showSnackBar(
     duration: Duration(seconds: durationSec),
     backgroundColor: Get.theme.snackBarTheme.backgroundColor,
     colorText: colorText,
+    isDismissible: !isError, // can't swipe away away error messages
   );
 }
 
 /// Common utility/helper functions so we don't have to type so much:
-///   wm - width (of screen) minus some margin when we want long text
+///   wm - width most (of screen) - screen width minus some fixed margin
 ///   w  - width (of screen)
 ///   h  - height (of screen)
 ///   cb - theme color background

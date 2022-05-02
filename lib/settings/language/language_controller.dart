@@ -3,8 +3,9 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/main_controller.dart';
-import 'package:hapi/quest/active/zaman_controller.dart';
+import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/settings/settings_option.dart';
+import 'package:hijri/hijri_calendar.dart';
 
 /// List of languages that are supported. Used in selector and google tr sheet.
 /// TODO load from file: https://stackoverflow.com/questions/70394427/flutter-getx-put-internalition-translations-in-different-files-for-each-language
@@ -55,10 +56,11 @@ final List<SettingsOption> languageOptions = [
 class LanguageController extends GetxController {
   static LanguageController get to => Get.find();
 
-  final String defaultLanguage = 'en';
+  final String defaultLangKey = 'en';
 
-  String _currLang = '';
-  String get currLang => _currLang;
+  /// Always a 2 character language key, e.g. "ar", "en", etc.
+  String _currLangKey = '';
+  String get currLangKey => _currLangKey;
 
   // TODO more right to left languages: Azeri, Dhivehi/Maldivian, Hebrew, Kurdish (Sorani)
   final Map<String, bool> _nonLeftToRightLangs = {
@@ -68,8 +70,8 @@ class LanguageController extends GetxController {
     'ur': true, // Urdu
     'he': true, // Hebrew
   };
-  bool _isRightToLeftLanguage = false;
-  bool get isRightToLeftLanguage => _isRightToLeftLanguage;
+  bool _isRightToLeftLang = false;
+  bool get isRightToLeftLang => _isRightToLeftLang;
 
   /// Use these prefect hash arrays to convert numeral systems (en->ar/ps/etc.).
   /// Note: labeled "en" but are Arabic Numerals (a.k.a. Hindi-Arabic Numerals).
@@ -120,8 +122,8 @@ class LanguageController extends GetxController {
     }
 
     if (currentLanguage == null) {
-      l.e('LanguageController:_setInitialLocalLanguage: Could not find device language, using default "$defaultLanguage"');
-      currentLanguage = defaultLanguage;
+      l.e('LanguageController:_setInitialLocalLanguage: Could not find device language, using default "$defaultLangKey"');
+      currentLanguage = defaultLangKey;
     }
 
     return currentLanguage;
@@ -154,46 +156,50 @@ class LanguageController extends GetxController {
     for (SettingsOption languageOption in languageOptions) {
       if (languageOption.key == language) return false; // language is supported
     }
-    return true; // not found, language is no supported
+    return true; // language NOT supported
   }
 
   /// Updates the language used in the app, instantly changes all text.
-  updateLanguage(String newLanguage) async {
-    if (_isNotSupportedLanguage(newLanguage)) {
-      l.e('LanguageController:updateLanguage: The language "$newLanguage" is not supported, will call _findLanguage() next');
-      newLanguage = _findLanguage();
+  updateLanguage(String newLangKey) async {
+    if (_isNotSupportedLanguage(newLangKey)) {
+      l.e('LanguageController:updateLanguage: The language key "$newLangKey" is not supported, will call _findLanguage() next');
+      newLangKey = _findLanguage();
     }
 
     try {
-      await Get.updateLocale(Locale(newLanguage)); // calls Get.forceAppUpdate()
+      await Get.updateLocale(Locale(newLangKey)); // calls Get.forceAppUpdate()
     } catch (error) {
-      l.e('updateLanguage: updateLocale call failed, the language "$newLanguage" is not supported, using default "$defaultLanguage"');
-      newLanguage = defaultLanguage;
-      await Get.updateLocale(Locale(newLanguage)); // calls Get.forceAppUpdate()
+      l.e('updateLanguage: updateLocale call failed, the language "$newLangKey" is not supported, using default "$defaultLangKey"');
+      newLangKey = defaultLangKey;
+      await Get.updateLocale(Locale(newLangKey)); // calls Get.forceAppUpdate()
     }
 
-    _initLocaleValues(newLanguage);
+    _initLocaleValues(newLangKey);
 
-    _currLang = newLanguage;
-    s.wr('language', _currLang);
-    l.i('updateLanguage: Setting currLang=$_currLang, isEnNumerals=$_isEnNumerals, isRightToLeftLanguage=$_isRightToLeftLanguage');
+    _currLangKey = newLangKey;
+    s.wr('language', _currLangKey);
+    l.i('updateLanguage: Setting currLangKey=$_currLangKey, isEnNumerals=$_isEnNumerals, isRightToLeftLang=$_isRightToLeftLang');
+
+    // update athan time translations by refreshing active quests UI
+    ActiveQuestsController.to.update();
 
     update(); // notify watchers
   }
 
   /// Setup special language variables now
-  _initLocaleValues(String newLanguage) {
-    _isRightToLeftLanguage = _nonLeftToRightLangs[newLanguage] ?? false;
-    _isEnNumerals = _nonEnNumeralLangs[newLanguage] == null;
+  _initLocaleValues(String newLangKey) {
+    if (newLangKey == 'ar' || newLangKey == 'en') {
+      HijriCalendar.setLocal(newLangKey); // supports ar and en only
+    }
+
+    _isRightToLeftLang = _nonLeftToRightLangs[newLangKey] ?? false;
+    _isEnNumerals = _nonEnNumeralLangs[newLangKey] == null;
     if (_isEnNumerals) {
       _curNumerals = _enNumerals;
     } else {
-      _curNumerals = _nonEnNumeralLangs[newLanguage]!;
+      _curNumerals = _nonEnNumeralLangs[newLangKey]!;
     }
-    _am = ' ' + 'lbl.timeAM'.tr; // tr ok
-    _pm = ' ' + 'lbl.timePM'.tr; // tr ok
-
-    // update athan time and refresh active quests UI with new language text
-    ZamanController.to.forceSalahRecalculation();
+    _am = ' ' + 'i.AM'.tr; // tr ok
+    _pm = ' ' + 'i.PM'.tr; // tr ok
   }
 }

@@ -37,8 +37,8 @@ class _BounceAlertState extends State<BounceAlert>
 
     _controller.addListener(() => setState(() {}));
 
-    // grow from scale 1 to 1.5x:
-    _animation = Tween(begin: 1.0, end: 1.5).animate(
+    // grow from scale 1 to 1.3x:
+    _animation = Tween(begin: 1.0, end: 1.3).animate(
       CurvedAnimation(parent: _controller, curve: Curves.bounceIn),
     );
 

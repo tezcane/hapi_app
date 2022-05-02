@@ -31,7 +31,7 @@ class SegmentedSelector extends StatelessWidget {
               children: [
                 Icon(option.icon),
                 const SizedBox(width: 6),
-                Text(option.trValue), // tr ok
+                Text(option.trVal), // tr ok
               ],
             )
         },

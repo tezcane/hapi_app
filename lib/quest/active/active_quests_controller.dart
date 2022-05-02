@@ -11,12 +11,8 @@ class ActiveQuestsController extends GetxController {
   int get salahCalcMethod => _salahCalcMethod;
   bool _salahAsrEarlier = true; // earlier=true, 1 shadow, later=false, 2 shadow
   bool get salahAsrEarlier => _salahAsrEarlier;
-  bool _last3rdOfNight = true; // true=last 1/3, false=middle night
-  bool get last3rdOfNight => _last3rdOfNight;
   bool _showSecPrecision = false; // false = round athan times to minutes
   bool get showSecPrecision => _showSecPrecision;
-  bool _salahKarahatSafe = true; // true slightly safer/longer karahat times
-  bool get salahKarahatSafe => _salahKarahatSafe;
 
   bool _showJummahOnFriday = true; // if friday=true, shows jummah
   bool get showJummahOnFriday => _showJummahOnFriday;
@@ -24,8 +20,8 @@ class ActiveQuestsController extends GetxController {
   bool _show12HourClock = true; // false = 24h clock/military time
   bool get show12HourClock => _show12HourClock;
 
-  bool _showActiveSalah = true; // true shows salah actions, false hides them
-  bool get showActiveSalah => _showActiveSalah;
+  bool _showSalahActions = true; // true shows salah actions, false hides them
+  bool get showSalahActions => _showSalahActions;
   bool _showSalahResults = true; // true shows salah results, false hides them
   bool get showSalahResults => _showSalahResults;
 
@@ -43,14 +39,12 @@ class ActiveQuestsController extends GetxController {
     _salahCalcMethod =
         s.rd('salahCalcMethod') ?? CalcMethod.America____ISNA___.index;
     _salahAsrEarlier = s.rd('salahAsrEarlier') ?? true;
-    _last3rdOfNight = s.rd('last3rdOfNight') ?? true;
     _showSecPrecision = s.rd('showSecPrecision') ?? false;
-    _salahKarahatSafe = s.rd('salahKarahatSafe') ?? true;
 
     _showJummahOnFriday = s.rd('showJummahOnFriday') ?? true;
     _show12HourClock = s.rd('show12HourClock') ?? true;
 
-    _showActiveSalah = s.rd('showActiveSalah') ?? true;
+    _showSalahActions = s.rd('showSalahActions') ?? true;
     _showSalahResults = s.rd('showSalahResults') ?? false;
 
     _swiperAutoPlayEnabled = s.rd('swiperAutoPlayEnabled') ?? true;
@@ -71,25 +65,11 @@ class ActiveQuestsController extends GetxController {
     //update(); update needs to be done later after athan recalculated
   }
 
-  set last3rdOfNight(bool value) {
-    _last3rdOfNight = value;
-    s.wr('last3rdOfNight', value);
-    ZamanController.to.forceSalahRecalculation(); // update countdown timer
-    //update(); update needs to be done later after athan recalculated
-  }
-
   set showSecPrecision(bool value) {
     _showSecPrecision = value;
     s.wr('showSecPrecision', value);
     ZamanController.to.forceSalahRecalculation();
     //update();
-  }
-
-  set salahKarahatSafe(bool value) {
-    _salahKarahatSafe = value;
-    s.wr('salahKarahatSafe', value);
-    ZamanController.to.forceSalahRecalculation();
-    //update(); update needs to be done later after athan recalculated
   }
 
   set showJummahOnFriday(bool value) {
@@ -104,14 +84,14 @@ class ActiveQuestsController extends GetxController {
     update();
   }
 
-  void toggleShowActiveSalah() {
-    _showActiveSalah = !_showActiveSalah;
-    s.wr('showActiveSalah', _showActiveSalah);
+  set showSalahActions(bool value) {
+    _showSalahActions = value;
+    s.wr('showSalahActions', _showSalahActions);
     update();
   }
 
-  void toggleShowSalahResults() {
-    _showSalahResults = !_showSalahResults;
+  set showSalahResults(bool value) {
+    _showSalahResults = value;
     s.wr('showSalahResults', _showSalahResults);
     update();
   }

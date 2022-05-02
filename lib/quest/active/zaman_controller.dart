@@ -20,14 +20,17 @@ class ZamanController extends GetxHapi {
   static ZamanController get to => Get.find();
 
   Z _currZ = Z.Dhuhr;
-  Z _nextZ = Z.Asr_Later;
+  Z _nextZ = Z.Asr;
   Z get currZ => _currZ;
   Z get nextZ => _nextZ;
 
-  /// Next zaman Timestamp used to countdown to and update the UI accordingly.
-  DateTime _nextZTime = DUMMY_TIME;
-  String _timeToNextZaman = '-';
-  String get timeToNextZaman => _timeToNextZaman;
+  /// nextZ or nextZTooltip Timestamp used to calculate countdown timer on UI.
+  DateTime _nextZTime = DUMMY_TIME1;
+  String trValTimeToNextZaman = '-';
+  String trValTimeToNextZamanTooltip = '-';
+  Z? currZTooltip = Z.Dhuhr; // may be null if in edge case
+  Z nextZTooltip = Z.Asr;
+  DateTime nextZTooltipTime = DUMMY_TIME1;
 
   int _secsSinceFajr = 0;
   int get secsSinceFajr => _secsSinceFajr;
@@ -42,29 +45,19 @@ class ZamanController extends GetxHapi {
 
   bool get isInitialized => _athan != null;
 
+  /// used to detect hijri day changes at maghrib time
+  int _curDayOfWeek = -1;
+
   CalculationParams _getCalculationParams() {
     var calcMethod =
         CalcMethod.values[ActiveQuestsController.to.salahCalcMethod];
 
-    var madhab = Madhab.Hanafi;
-    if (!ActiveQuestsController.to.salahAsrEarlier) {
-      madhab = Madhab.Hanafi; // Note: not all hanafi use this opinion
-    }
-
-    int karahatSunRisingSecs = 25 * 60;
-    int karahatSunIstiwaSecs = 15 * 60;
-    int karahatSunSettingSecs = 25 * 60;
-    if (!ActiveQuestsController.to.salahKarahatSafe) {
-      karahatSunRisingSecs = 20 * 60;
-      karahatSunIstiwaSecs = 10 * 60;
-      karahatSunSettingSecs = 20 * 60;
-    }
-
-    // TODO give user a way to change:
-    //   HighLatitudeRule, SalahAdjust
+    // TODO give user way to change HighLatitudeRule, SalahAdjust, karahat times, etc.
+    int karahatSunRisingSecs = 20 * 60;
+    int karahatSunIstiwaSecs = 10 * 60;
+    int karahatSunSettingSecs = 20 * 60;
     return CalculationParams(
       calcMethod.params,
-      madhab,
       karahatSunRisingSecs,
       karahatSunIstiwaSecs,
       karahatSunSettingSecs,
@@ -83,7 +76,7 @@ class ZamanController extends GetxHapi {
   }
 
   /// Does init for app items then calls itself again on more init needed or
-  /// startNextZamanCountdownTimer() to start next countdown timer.
+  /// _zamanCountdownTimer() to start next countdown timer.
   updateZaman() async {
     Athan athan;
 
@@ -100,7 +93,7 @@ class ZamanController extends GetxHapi {
 
     DateTime now = await TimeController.to.now();
     Z currZ = athan.getCurrZaman(now);
-    l.d('ZamanController:updateZaman: starting, currZ=$currZ, now=$now');
+    l.d('ZamanController:updateZaman: starting - currZ=$currZ, now=$now');
 
     // check if we are still on the same day
     if (currZ == Z.Fajr_Tomorrow) {
@@ -112,21 +105,28 @@ class ZamanController extends GetxHapi {
     await ActiveQuestsAjrController.to.initCurrQuest(currZ, !isInitialized);
 
     _currZ = currZ; // now safe as currZ can't be Z.Fajr_Tomorrow.
-    _nextZ = athan.getNextZaman(now);
-    l.d('ZamanController:updateZaman: _nextZ: $_nextZ');
+    _nextZ = Z.values[currZ.index + 1];
     _nextZTime = athan.getZamanTime(_nextZ)[0] as DateTime;
-    l.d('ZamanController:updateZaman: _nextZTime: $_nextZTime');
+    l.d('ZamanController:updateZaman: _nextZ=$_nextZ, _nextZTime=$_nextZTime');
 
     // Now all init is done, set athan value (needed for init to prevent NPE)
     _athan = athan;
+    _curDayOfWeek = now.day;
 
     if (_currZ == Z.Maghrib || _forceSalahRecalculation || !isInitialized) {
       await TimeController.to.updateDaysOfWeek(); // sunset = new hijri day
     }
 
     if (_forceSalahRecalculation) {
-      _forceSalahRecalculation = false;
+      _forceSalahRecalculation = false; // here finally clear this flag
       NotificationController.to.resetNotifications(); // _athan updated so reset
+    }
+
+    // Tooltip updates are needed once Middle_of_Night starts
+    if (_currZ.index < Z.Middle_of_Night.index) {
+      _updateTooltip(_currZ, _nextZ);
+    } else {
+      handleTooltipUpdate(now);
     }
 
     // Always refresh ActiveQuestsController as _currZ is updated and multiple
@@ -136,11 +136,11 @@ class ZamanController extends GetxHapi {
     // ActiveQuestsController, it's update() was called before athan updated.
     ActiveQuestsController.to.update(); // even needed at app init to show UI
 
-    _startNextZamanCountdownTimer();
+    _zamanCountdownTimer();
   }
 
   /// Loop counts down until zaman is over or forceSalahRecalculation called
-  _startNextZamanCountdownTimer() async {
+  _zamanCountdownTimer() async {
     while (true) {
       await Future.delayed(const Duration(seconds: 1));
 
@@ -153,12 +153,19 @@ class ZamanController extends GetxHapi {
           .difference(TZDateTime.from(_athan!.fajr, TimeController.to.tzLoc))
           .inSeconds;
 
+      // we must track gregorian day switches to update DAY_OF_WEEK values
+      if (_curDayOfWeek != now.day) {
+        l.d('ZamanController:_zamanCountdownTimer: _curDayOfWeek($_curDayOfWeek) != now.day($now.day)');
+        _curDayOfWeek = now.day;
+        TimeController.to.update();
+      }
+
       if (_forceSalahRecalculation) {
-        l.d('ZamanController:_startNextZamanCountdownTimer: forceSalahRecalculation was called.');
+        l.d('ZamanController:_zamanCountdownTimer: forceSalahRecalculation was called.');
         updateZaman();
         return; // quits while loop, starts again in updateZaman()
       } else if (timeToNextZaman.inSeconds <= 0) {
-        l.d('ZamanController:_startNextZamanCountdownTimer: This zaman $currZ is over, going to next zaman $nextZ.');
+        l.d('ZamanController:_zamanCountdownTimer: This zaman $currZ is over, going to next zaman $nextZ.');
         // just in case, give a little time for nextZ to come in.
         await Future.delayed(const Duration(milliseconds: 16));
         updateZaman();
@@ -166,11 +173,20 @@ class ZamanController extends GetxHapi {
       } else {
         if (timeToNextZaman.inSeconds % 60 == 0) {
           // heartbeat prints once a minute to show thread is alive
-          l.i('ZamanController:_startNextZamanCountdownTimer: Next Zaman Timer Minute Tick: ${timeToNextZaman.inSeconds} '
+          l.i('ZamanController:_zamanCountdownTimer: Next Zaman Timer Minute Tick: ${timeToNextZaman.inSeconds} '
               'secs left (${timeToNextZaman.inSeconds / 60} minutes)');
         }
-        // this is displayed on UI:
-        _timeToNextZaman = TimeController.durationToTimeStr(timeToNextZaman);
+
+        if (nextZ != nextZTooltip) {
+          timeToNextZaman = nextZTooltipTime.difference(
+            TZDateTime.from(now, TimeController.to.tzLoc),
+          );
+        }
+
+        // Displayed in Active Quest UI within ZamanController builder:
+        trValTimeToNextZaman =
+            TimeController.trValDurationToTime(timeToNextZaman);
+
         update(); // only time ZamanController is updated
       }
     }
@@ -181,12 +197,13 @@ class ZamanController extends GetxHapi {
     if (isInitialized) {
       // flush any missed quests
       await ActiveQuestsAjrController.to.initCurrQuest(Z.Fajr_Tomorrow, true);
+      await TimeController.to.updateTime(); // otherwise we just did it at init
     }
 
-    await TimeController.to.updateTime();
     await TimeController.to.updateCurrDay();
 
-    // Load or init this next day quests
+    // Load or init this next day quests, Z.Fajr so just reads from DB since
+    // we don't know real Z time yet.
     await ActiveQuestsAjrController.to.initCurrQuest(Z.Fajr, true);
 
     forceSalahRecalculation(); // time to update _athan
@@ -195,77 +212,139 @@ class ZamanController extends GetxHapi {
     updateZaman();
   }
 
-  /// See if given salah row is currently active/current Z time.
-  bool isSalahRowActive(Z z) {
-    List<Z> zs;
+  _updateTooltip(Z? cTooltip, Z nTooltip) {
+    currZTooltip = cTooltip;
+    nextZTooltip = nTooltip;
+    nextZTooltipTime = _athan!.getZamanTime(nextZTooltip)[0] as DateTime;
+    l.d('ZamanController:_updateTooltip: updating tooltip - currZTooltip=$currZTooltip, nextZTooltip=$nextZTooltip, nextZTooltipTime=$nextZTooltipTime');
 
-    switch (z) {
-      case Z.Fajr:
-        zs = [Z.Fajr, Z.Fajr_Tomorrow];
-        break;
-      case Z.Duha:
-        zs = [Z.Karahat_Morning_Adhkar, Z.Ishraq, Z.Duha, Z.Karahat_Istiwa];
-        break;
-      case Z.Dhuhr:
-        zs = [Z.Dhuhr];
-        break;
-      case Z.Asr_Later:
-      case Z.Asr_Earlier:
-        zs = [Z.Asr_Earlier, Z.Asr_Later, Z.Karahat_Evening_Adhkar];
-        break;
-      case Z.Maghrib:
-        zs = [Z.Maghrib];
-        break;
-      case Z.Isha:
-      case Z.Layl__3:
-      case Z.Layl__2:
-        zs = [Z.Isha, Z.Layl__2, Z.Layl__3]; // Isha/Layl are anytime at night
-        break;
-      default:
-        return l.E('Invalid Zaman "$z" given when in isSalahRowActive called');
+    if (cTooltip != null) {
+      if (nextZ.index != currZ.index + 1) {
+        l.w('ZamanController:_updateTooltip: potential logic issue: (nextZ($nextZ)!=currZ($currZ)+1 when updating tooltip - currZTooltip=$currZTooltip, nextZTooltip=$nextZTooltip, nextZTooltipTime=$nextZTooltipTime');
+      }
+      trValTimeToNextZamanTooltip = at(
+        // Time ({0}:{1}:{2}) until "{3}" ends and "{4}" begins
+        'at.aqCountdownTimer',
+        ['a.Saat', 'a.Daqayiq', 'a.Thawani', cTooltip.trKey, nTooltip.trKey],
+      );
+    } else {
+      if (nextZ.index == currZ.index + 1) {
+        l.w('ZamanController:_updateTooltip: potential logic issue: (nextZ($nextZ)==currZ($currZ)+1 when updating tooltip - currZTooltip=$currZTooltip, nextZTooltip=$nextZTooltip, nextZTooltipTime=$nextZTooltipTime');
+      }
+      trValTimeToNextZamanTooltip = at(
+        // Time ({0}:{1}:{2}) until "{3}" begins
+        'at.aqCountdownTimerLayl',
+        ['a.Saat', 'a.Daqayiq', 'a.Thawani', nTooltip.trKey],
+      );
     }
+  }
 
-    for (Z z1 in zs) {
-      if (z1 == _currZ) {
-        bool isActive = true;
-
-        // Special case for isha/layl as they share same time frame
-        if (z == Z.Isha) {
-          isActive &= !ActiveQuestsAjrController.to.isIshaIbadahComplete;
-        } else if (z == Z.Layl__2 || z == Z.Layl__3) {
-          isActive &= ActiveQuestsAjrController.to.isIshaIbadahComplete;
-        }
-
-        return isActive; // time of day is active if true
+  /// Isha, Middle of Night and Last 3rd of night can all share the same time
+  /// period span, so we need special logic to allow this. With this, the UI
+  /// maintains the proper and relevant information on the
+  /// _zamanCountdownTimer(). It does this because the user is going through
+  /// the quests.
+  handleTooltipUpdate(DateTime? now) {
+    Z? cTooltip = currZTooltip; // c = current
+    Z nTooltip = nextZTooltip; // n = next
+    if (isLaylSalahRowPinned(Z.Middle_of_Night)) {
+      now ??= TimeController.to.now2();
+      if (now.isBefore(_athan!.middleOfNight)) {
+        // still isha time, so count down to Last_3rd_of_Night
+        cTooltip = null;
+        nTooltip = Z.Last_3rd_of_Night;
+      } else if (now.isBefore(_athan!.last3rdOfNight)) {
+        // still middle of night, so count down to Last_3rd_of_Night
+        cTooltip = Z.Middle_of_Night; // we can show MON!
+        nTooltip = Z.Last_3rd_of_Night;
+      } else if (now.isAfter(_athan!.last3rdOfNight)) {
+        // last 3rd of night time, so count down to Fajr_Tomorrow
+        cTooltip = null;
+        nTooltip = Z.Fajr_Tomorrow;
+      }
+    } else if (isLaylSalahRowPinned(Z.Last_3rd_of_Night)) {
+      now ??= TimeController.to.now2();
+      nTooltip = Z.Fajr_Tomorrow;
+      if (now.isBefore(_athan!.last3rdOfNight)) {
+        // still isha or middle of night, so count down to Fajr_Tomorrow
+        cTooltip = null;
+      } else {
+        // last 3rd of night time, so count down to Fajr_Tomorrow
+        cTooltip = Z.Last_3rd_of_Night;
       }
     }
 
-    return false;
+    // nothing to do
+    if (cTooltip == currZTooltip && nTooltip == nextZTooltip) return;
+
+    _updateTooltip(cTooltip, nTooltip);
   }
 
-  // /// See if next salah row of given Z, will be the next active/curr Z time.
-  // bool isNextSalahRowActive(Z z) {
-  //   switch (z) {
-  //     case Z.Fajr:
-  //       return isSalahRowActive(Z.Duha);
-  //     case Z.Duha:
-  //       return isSalahRowActive(Z.Dhuhr);
-  //     case Z.Dhuhr:
-  //       return isSalahRowActive(Z.Asr_Later);
-  //     case Z.Asr_Later:
-  //     case Z.Asr_Earlier:
-  //       return isSalahRowActive(Z.Maghrib);
-  //     case Z.Maghrib:
-  //       return isSalahRowActive(Z.Isha);
-  //     case Z.Isha:
-  //       return isSalahRowActive(Z.Layl__3);
-  //     case Z.Layl__3:
-  //     case Z.Layl__2:
-  //       return isSalahRowActive(Z.Layl__3);
-  //     default:
-  //       var e = 'Invalid Zaman "$z" given when in isNextSalahRowActive called';
-  //       l.e(e);
-  //       throw e;
-  //   }
-  // }
+  bool isCurrQuest(Z z, QUEST quest) =>
+      isSalahRowPinned(z) && ActiveQuestsAjrController.to.isQuestActive(quest);
+
+  /// Check if given Z is currently pinned to UI. Pinned does not mean all
+  /// quests for that row are active. It also does not meant that it should be
+  /// highlighted on UI as there are special cases on Duha and Maghrib to
+  /// bold/highlight karahat cells instead of the header.
+  bool isSalahRowPinned(Z z) {
+    List<Z> zs = [z];
+
+    switch (z) {
+      case Z.Fajr:
+        break;
+      case Z.Duha:
+        zs = [Z.Shuruq, Z.Ishraq, Z.Duha, Z.Istiwa];
+        break;
+      case Z.Dhuhr:
+        break;
+      case Z.Asr:
+        // if asr ibadah not done, asr active- we have until sunset to complete
+        if (!ActiveQuestsAjrController.to.isAsrComplete) zs.add(Z.Ghurub);
+        break;
+      case Z.Maghrib:
+        // if asr ibadah done, pin maghrib row which has Karahat time there
+        if (ActiveQuestsAjrController.to.isAsrComplete) zs.add(Z.Ghurub);
+        break;
+      case Z.Isha:
+        // if isha ibadah done, then we move to Layl times right away, we don't
+        // wait for currZ to equal Z.Middle/Last 3rd of Night.
+        if (ActiveQuestsAjrController.to.isIshaComplete) zs.clear();
+        break;
+      case Z.Middle_of_Night:
+      case Z.Last_3rd_of_Night:
+        return isLaylSalahRowPinned(z);
+      default:
+        l.E('Invalid Zaman "$z" given when in isSalahRowPinned()');
+        return false;
+    }
+
+    for (Z z in zs) {
+      if (z == _currZ) return true; // zaman is active
+    }
+
+    return false; // zaman inactive
+  }
+
+  /// Break this out from isSalahRowPinned() to optimize since called so much.
+  bool isLaylSalahRowPinned(Z z) {
+    if (!ActiveQuestsAjrController.to.isIshaComplete) return false;
+
+    switch (z) {
+      case Z.Middle_of_Night:
+        if (ActiveQuestsAjrController.to.isMiddleOfNightComplete) return false;
+        break;
+      case Z.Last_3rd_of_Night:
+        if (!ActiveQuestsAjrController.to.isMiddleOfNightComplete) return false;
+        break;
+      default:
+        l.E('Invalid Zaman "$z" given when in isLaylSalahRowPinned()');
+        return false;
+    }
+
+    // return true if currZ is Isha, Middle_of_Night or Last_3rd_of_Night
+    return currZ == Z.Isha ||
+        currZ == Z.Middle_of_Night ||
+        currZ == Z.Last_3rd_of_Night;
+  }
 }
