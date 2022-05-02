@@ -223,7 +223,7 @@ class ZamanController extends GetxHapi {
         l.w('ZamanController:_updateTooltip: potential logic issue: (nextZ($nextZ)!=currZ($currZ)+1 when updating tooltip - currZTooltip=$currZTooltip, nextZTooltip=$nextZTooltip, nextZTooltipTime=$nextZTooltipTime');
       }
       trValTimeToNextZamanTooltip = at(
-        // Time ({0}:{1}:{2}) until "{3}" ends and "{4}" begins
+        // {0}:{1}:{2} until "{3}" ends and "{4}" begins
         'at.aqCountdownTimer',
         ['a.Saat', 'a.Daqayiq', 'a.Thawani', cTooltip.trKey, nTooltip.trKey],
       );
@@ -232,7 +232,7 @@ class ZamanController extends GetxHapi {
         l.w('ZamanController:_updateTooltip: potential logic issue: (nextZ($nextZ)==currZ($currZ)+1 when updating tooltip - currZTooltip=$currZTooltip, nextZTooltip=$nextZTooltip, nextZTooltipTime=$nextZTooltipTime');
       }
       trValTimeToNextZamanTooltip = at(
-        // Time ({0}:{1}:{2}) until "{3}" begins
+        // {0}:{1}:{2} until "{3}" begins
         'at.aqCountdownTimerLayl',
         ['a.Saat', 'a.Daqayiq', 'a.Thawani', nTooltip.trKey],
       );
