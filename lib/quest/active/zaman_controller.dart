@@ -122,8 +122,8 @@ class ZamanController extends GetxHapi {
       NotificationController.to.resetNotifications(); // _athan updated so reset
     }
 
-    // Tooltip updates are needed once Middle_of_Night starts
-    if (_currZ.index < Z.Middle_of_Night.index) {
+    // Needed first when isha quests done but middle of night not begun yet
+    if (_currZ.index < Z.Isha.index) {
       _updateTooltip(_currZ, _nextZ);
     } else {
       handleTooltipUpdate(now);
@@ -216,7 +216,7 @@ class ZamanController extends GetxHapi {
     currZTooltip = cTooltip;
     nextZTooltip = nTooltip;
     nextZTooltipTime = _athan!.getZamanTime(nextZTooltip)[0] as DateTime;
-    l.d('ZamanController:_updateTooltip: updating tooltip - currZTooltip=$currZTooltip, nextZTooltip=$nextZTooltip, nextZTooltipTime=$nextZTooltipTime');
+    l.d('ZamanController:_updateTooltip: updating to currZT=$currZTooltip, nextZT=$nextZTooltip, nextZTTime=$nextZTooltipTime');
 
     if (cTooltip != null) {
       if (nextZ.index != currZ.index + 1) {
