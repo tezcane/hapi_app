@@ -20,6 +20,8 @@ import 'package:hapi/settings/theme/app_themes.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 class ActiveQuestsUI extends StatelessWidget {
+  const ActiveQuestsUI();
+
   @override
   Widget build(BuildContext context) {
     // if not initialized yet, wait for UI before building
@@ -157,7 +159,6 @@ class _Sliv extends StatelessWidget {
     this.maxHeight = _Sliv.slivH,
     this.pinned = true,
   });
-
   final Widget widget;
   final double minHeight;
   final double maxHeight;
@@ -183,7 +184,6 @@ class _Sliv extends StatelessWidget {
 /// sunrise and karahat istiwa and for duha and karahat sunsetting for asr.
 class SalahRow extends StatelessWidget {
   const SalahRow(this.z);
-
   final Z z;
 
   static const TS tsFard = TS(AppThemes.ajr2Uncommon);
@@ -312,28 +312,20 @@ class SalahRow extends StatelessWidget {
   ) {
     final double w6 = width / 6;
 
-    bool isPinned = ZamanController.to.isSalahRowPinned(z);
+    // highlight if row is pinned (all actions in row are within same time).
+    bool isBold = ZamanController.to.isSalahRowPinned(z);
 
-    bool boldText = false;
-    if (z == Z.Duha || z == Z.Maghrib) {
-      // if Duha and Maghrib we set the header text bold only if that time
-      // has come in.  This is because they have other times in their action
-      // list (all 3 Karahat times) that will be bold before them.
-      if (isPinned) {
-        if (ZamanController.to.currZ == Z.Duha) {
-          boldText = true;
-        } else if (ZamanController.to.currZ == Z.Maghrib) {
-          boldText = true;
-        }
-      } // else we don't bold text
-    } else {
-      // all other salah rows will highlight if the row is pinned as all
-      // actions in them are contained within their times.
-      boldText = isPinned;
+    // But if Duha and Maghrib, their times are split over multiple rows:
+    if (isBold) {
+      if (z == Z.Duha && ZamanController.to.currZ == Z.Duha) {
+        isBold = true;
+      } else if (z == Z.Maghrib && ZamanController.to.currZ == Z.Maghrib) {
+        isBold = true;
+      }
     }
 
     return InkWell(
-      onTap: isPinned
+      onTap: isBold
           ? () {
               // cycles through Show pinned actions -> hide both -> show results
               if (aqC.showSalahActions) {
@@ -369,8 +361,8 @@ class SalahRow extends StatelessWidget {
                 child: T(
                   z.trKey,
                   textStyle.copyWith(
-                    color: boldText ? textStyle.color : AppThemes.ldTextColor,
-                    fontWeight: boldText ? FontWeight.bold : FontWeight.normal,
+                    color: isBold ? textStyle.color : AppThemes.ldTextColor,
+                    fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
                   ),
                   alignment: Alignment.centerLeft,
                   w: w6 - // Note below uses + for below
@@ -394,8 +386,8 @@ class SalahRow extends StatelessWidget {
                     ActiveQuestsController.to.showSecPrecision,
                   ),
                   textStyle.copyWith(
-                    color: boldText ? textStyle.color : AppThemes.ldTextColor,
-                    fontWeight: boldText ? FontWeight.bold : FontWeight.normal,
+                    color: isBold ? textStyle.color : AppThemes.ldTextColor,
+                    fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
                   ),
                   alignment: ActiveQuestsController.to.show12HourClock
                       ? Alignment.centerRight
@@ -450,8 +442,8 @@ class SalahRow extends StatelessWidget {
         _Cell(T(cni(2), tsMuak, trVal: true), z, QUEST.FAJR_MUAKB),
         _Cell(T(cni(2), tsFard, trVal: true), z, QUEST.FAJR_FARD),
         _Cell(T('a.Adhkar As-Sabah', tsN), z, QUEST.MORNING_ADHKAR, flex: 2),
-        _Cell(_IconThikr(), z, QUEST.FAJR_THIKR),
-        _Cell(_IconDua(), z, QUEST.FAJR_DUA),
+        _Cell(const _IconThikr(), z, QUEST.FAJR_THIKR),
+        _Cell(const _IconDua(), z, QUEST.FAJR_DUA),
       ],
     );
   }
@@ -459,15 +451,15 @@ class SalahRow extends StatelessWidget {
   Widget _actionsDuha(double width) {
     double w6 = (width / 6) - 10; // - 10 because too big on screen
 
-    bool isCurrQuestSunrise =
-        ZamanController.to.isCurrQuest(z, QUEST.KARAHAT_SUNRISE);
-
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
         _Cell(
           _KarahatSunCell(
-            _IconSunUpDn(isCurrQuestSunrise, true),
+            _IconSunUpDn(
+              ZamanController.to.isCurrQuest(z, QUEST.KARAHAT_SUNRISE),
+              true,
+            ),
             QUEST.KARAHAT_SUNRISE,
             Z.Shuruq, // Sunrise
             ZamanController.to.athan!.sunrise,
@@ -513,8 +505,8 @@ class SalahRow extends StatelessWidget {
         _Cell(T(fardRk, tsFard, trVal: true), z, QUEST.DHUHR_FARD),
         _Cell(T(muakAf, tsMuak, trVal: true), z, QUEST.DHUHR_MUAKA),
         _Cell(T(cni(2), tsNafl, trVal: true), z, QUEST.DHUHR_NAFLA),
-        _Cell(_IconThikr(), z, QUEST.DHUHR_THIKR),
-        _Cell(_IconDua(), z, QUEST.DHUHR_DUA),
+        _Cell(const _IconThikr(), z, QUEST.DHUHR_THIKR),
+        _Cell(const _IconDua(), z, QUEST.DHUHR_DUA),
       ],
     );
   }
@@ -524,27 +516,22 @@ class SalahRow extends StatelessWidget {
       children: [
         _Cell(T(cni(4), tsNafl, trVal: true), z, QUEST.ASR_NAFLB),
         _Cell(T(cni(4), tsFard, trVal: true), z, QUEST.ASR_FARD),
-        _Cell(
-          T('a.Adhkar Al-Masaa', tsN),
-          z,
-          QUEST.EVENING_ADHKAR,
-          flex: 2,
-        ),
-        _Cell(_IconThikr(), z, QUEST.ASR_THIKR),
-        _Cell(_IconDua(), z, QUEST.ASR_DUA),
+        _Cell(T('a.Adhkar Al-Masaa', tsN), z, QUEST.EVENING_ADHKAR, flex: 2),
+        _Cell(const _IconThikr(), z, QUEST.ASR_THIKR),
+        _Cell(const _IconDua(), z, QUEST.ASR_DUA),
       ],
     );
   }
 
   Widget _actionsMaghrib() {
-    bool isCurrQuestSunset =
-        ZamanController.to.isCurrQuest(z, QUEST.KARAHAT_SUNSET);
-
     return Row(
       children: [
         _Cell(
           _KarahatSunCell(
-            _IconSunUpDn(isCurrQuestSunset, false),
+            _IconSunUpDn(
+              ZamanController.to.isCurrQuest(z, QUEST.KARAHAT_SUNSET),
+              false,
+            ),
             QUEST.KARAHAT_SUNSET,
             Z.Ghurub, // sunset
             ZamanController.to.athan!.sunSetting,
@@ -557,8 +544,8 @@ class SalahRow extends StatelessWidget {
         _Cell(T(cni(3), tsFard, trVal: true), z, QUEST.MAGHRIB_FARD),
         _Cell(T(cni(2), tsMuak, trVal: true), z, QUEST.MAGHRIB_MUAKA),
         _Cell(T(cni(2), tsNafl, trVal: true), z, QUEST.MAGHRIB_NAFLA),
-        _Cell(_IconThikr(), z, QUEST.MAGHRIB_THIKR),
-        _Cell(_IconDua(), z, QUEST.MAGHRIB_DUA),
+        _Cell(const _IconThikr(), z, QUEST.MAGHRIB_THIKR),
+        _Cell(const _IconDua(), z, QUEST.MAGHRIB_DUA),
       ],
     );
   }
@@ -570,8 +557,8 @@ class SalahRow extends StatelessWidget {
         _Cell(T(cni(4), tsFard, trVal: true), z, QUEST.ISHA_FARD),
         _Cell(T(cni(2), tsMuak, trVal: true), z, QUEST.ISHA_MUAKA),
         _Cell(T(cni(2), tsNafl, trVal: true), z, QUEST.ISHA_NAFLA),
-        _Cell(_IconThikr(), z, QUEST.ISHA_THIKR),
-        _Cell(_IconDua(), z, QUEST.ISHA_DUA),
+        _Cell(const _IconThikr(), z, QUEST.ISHA_THIKR),
+        _Cell(const _IconDua(), z, QUEST.ISHA_DUA),
       ],
     );
   }
@@ -579,15 +566,14 @@ class SalahRow extends StatelessWidget {
   Widget _actionsMiddleOfNight(double width) {
     double w5 = (width / 7) * 5;
 
-    // TODO move to time_controller
-    String trKeyQiyam =
+    String trKeyQiyam = // TODO move to time_controller
         TimeController.to.isMonthRamadan ? 'a.Taraweeh' : 'a.Qiyam';
 
     return Row(
       children: [
         _Cell(T(trKeyQiyam, tsN, w: w5), z, QUEST.LAYL_QIYAM, flex: 5),
-        _Cell(_IconThikr(), z, QUEST.LAYL_THIKR),
-        _Cell(_IconDua(), z, QUEST.LAYL_DUA),
+        _Cell(const _IconThikr(), z, QUEST.LAYL_THIKR),
+        _Cell(const _IconDua(), z, QUEST.LAYL_DUA),
       ],
     );
   }
@@ -632,7 +618,7 @@ class SalahRow extends StatelessWidget {
       children: [
         _getResult(QUEST.FAJR_MUAKB),
         _getResult(QUEST.FAJR_FARD),
-        _getResult(QUEST.MORNING_ADHKAR, flex: 2000),
+        _getResult(QUEST.MORNING_ADHKAR, flex: 2),
         _getResult(QUEST.FAJR_THIKR),
         _getResult(QUEST.FAJR_DUA),
       ],
@@ -721,7 +707,7 @@ class SalahRow extends StatelessWidget {
     );
   }
 
-  Widget _getResult(QUEST quest, {int flex = 1000}) {
+  Widget _getResult(QUEST quest, {int flex = 1}) {
     Color color1;
     Color color2;
     if (ActiveQuestsAjrController.to.isDone(quest)) {
@@ -778,7 +764,6 @@ class _SlivSunRings extends StatelessWidget {
 
 class _Cell extends StatelessWidget {
   const _Cell(this.widget, this.z, this.quest, {this.flex = 1});
-
   final Widget widget;
   final Z z;
   final QUEST quest;
@@ -832,7 +817,6 @@ class _KarahatSunCell extends StatelessWidget {
     this.time,
     this.alignLeft,
   );
-
   final Widget sunIcon;
   final QUEST quest;
   final Z z;
@@ -883,7 +867,6 @@ class _KarahatSunCell extends StatelessWidget {
 
 class _IconSunUpDn extends StatelessWidget {
   const _IconSunUpDn(this.isCurrQuest, this.isSunrise);
-
   final bool isCurrQuest;
   final bool isSunrise;
 
@@ -920,6 +903,8 @@ class _IconSunUpDn extends StatelessWidget {
 }
 
 class _IconThikr extends StatelessWidget {
+  const _IconThikr();
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -928,12 +913,18 @@ class _IconThikr extends StatelessWidget {
       child: Stack(
         children: const [
           Center(
-            child: Icon(Icons.favorite_outlined,
-                color: Colors.pinkAccent, size: 33),
+            child: Icon(
+              Icons.favorite_outlined,
+              color: Colors.pinkAccent,
+              size: 33,
+            ),
           ),
           Center(
-            child: Icon(Icons.psychology_outlined,
-                color: Colors.white70, size: 21),
+            child: Icon(
+              Icons.psychology_outlined,
+              color: Colors.white70,
+              size: 21,
+            ),
           ),
         ],
       ),
@@ -942,14 +933,16 @@ class _IconThikr extends StatelessWidget {
 }
 
 class _IconDua extends StatelessWidget {
+  const _IconDua();
+
   @override
-  Widget build(BuildContext context) =>
-      //const Icon(Icons.volunteer_activism, color: Colors.blueAccent, size: 25);
-      const TwoColoredIcon(
-        Icons.volunteer_activism,
-        25,
-        [Colors.pinkAccent, Colors.blueAccent, Colors.blueAccent],
-        Colors.blueAccent,
-        fillPercent: .75,
-      );
+  Widget build(BuildContext context) {
+    return const TwoColoredIcon(
+      Icons.volunteer_activism,
+      25,
+      [Colors.pinkAccent, Colors.blueAccent, Colors.blueAccent],
+      Colors.blueAccent,
+      fillPercent: .75,
+    );
+  }
 }

@@ -49,7 +49,7 @@ class QuestsUI extends StatelessWidget {
     ),
     BBItem(
       navPage,
-      ActiveQuestsUI(),
+      const ActiveQuestsUI(),
       ActiveQuestsSettingsUI(),
       Colors.blue,
       Icons.how_to_reg_outlined,
