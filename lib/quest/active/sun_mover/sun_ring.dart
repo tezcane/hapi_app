@@ -44,13 +44,11 @@ import 'package:hapi/quest/active/zaman_controller.dart';
 // ignore: must_be_immutable
 class SunRing extends StatelessWidget {
   SunRing(
-    this.athan,
     this.diameter,
     this.strokeWidth,
     this.colorSlices,
   );
 
-  final Athan athan;
   final double diameter;
   final double strokeWidth;
   final Map<Z, ColorSlice> colorSlices;
@@ -63,6 +61,8 @@ class SunRing extends StatelessWidget {
   double initAnimationLocation = 1;
 
   void _buildSunRingSlices() {
+    final Athan athan = ZamanController.to.athan!;
+
     double totalSecs = 0.0;
     int lastIdx = Z.values.length - 2; // don't go to FajrTomorrow
     for (var zIdx = lastIdx; zIdx >= 0; zIdx--) {
@@ -97,6 +97,8 @@ class SunRing extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final Athan athan = ZamanController.to.athan!;
+
     double fajrStartPercentCorrection;
     if (!colorSliceInitialized) {
       colorSliceInitialized = true;

@@ -72,13 +72,13 @@ extension EnumUtil on QUEST {
 
   bool get isFard => name.endsWith('FARD');
 
-  bool get isMuak => isMuakBef || isMuakAft;
-  bool get isMuakBef => name.endsWith('MUAKB');
-  bool get isMuakAft => name.endsWith('MUAKA');
+  bool get isMuak => isMuakB || isMuakA;
+  bool get isMuakB => name.endsWith('MUAKB');
+  bool get isMuakA => name.endsWith('MUAKA');
 
-  bool get isNafl => isNaflBef || isNaflAft;
-  bool get isNaflBef => name.endsWith('NAFLB');
-  bool get isNaflAft => name.endsWith('NAFLA');
+  bool get isNafl => isNaflB || isNaflA;
+  bool get isNaflB => name.endsWith('NAFLB');
+  bool get isNaflA => name.endsWith('NAFLA');
 
   bool get isThikr => name.endsWith('THIKR');
   bool get isDua => name.endsWith('DUA');
