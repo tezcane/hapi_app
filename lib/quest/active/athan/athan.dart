@@ -22,7 +22,7 @@ class Athan {
   final Location tzLoc; // timezone
   final bool precision;
 
-  // _calculateTimes() must initialize all this:
+  // _calculateTimes() must initialize all late fields:
   late final DateTime _fajr_01;
   late final DateTime _karahatAdkharSunrise_02; // sunrise - karahat 1
   late final DateTime _ishraqPrayer_03;

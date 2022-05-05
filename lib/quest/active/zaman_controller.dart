@@ -12,6 +12,7 @@ import 'package:hapi/quest/active/athan/athan.dart';
 import 'package:hapi/quest/active/athan/calculation_method.dart';
 import 'package:hapi/quest/active/athan/calculation_params.dart';
 import 'package:hapi/quest/active/athan/z.dart';
+import 'package:hapi/quest/active/sun_mover/sun_ring.dart';
 import 'package:timezone/timezone.dart' show TZDateTime;
 
 /// Controls Islamic Times Of Day, e.g. Fajr, Duha, Sunset/Maghrib, etc. that
@@ -83,6 +84,7 @@ class ZamanController extends GetxHapi {
     if (_forceSalahRecalculation) {
       l.d('ZamanController:updateZaman: forceSalahRecalculation was called.');
       athan = generateNewAthan(TimeController.to.currDayDate);
+      SunRing.colorSliceInitialized = false; // force sun ring to redraw
     } else {
       if (isInitialized) {
         athan = _athan!; // don't calculate athan each time
