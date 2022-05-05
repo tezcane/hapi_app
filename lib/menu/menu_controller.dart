@@ -194,21 +194,21 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
       l.e('appInit last index was $navIdx, no longer used, error: $e');
     }
 
-    int heroLogoTransistionMs = 3001;
-    int showMenuDuringHeroTransistionMs = heroLogoTransistionMs - 1500;
+    int heroLogoTransitionMs = 3001;
+    int showMenuDuringHeroTransitionMs = heroLogoTransitionMs - 1500;
     int hideMenuAfterFullInitMs = 2000;
 
     if (!isFastStartupMode()) {
       _disableScreenTouch();
     } else {
-      heroLogoTransistionMs = 0;
+      heroLogoTransitionMs = 0;
       MainController.to.setAppInitDone();
     }
 
-    _navigateToNavPage(lastNavPage, transistionMs: heroLogoTransistionMs);
+    _navigateToNavPage(lastNavPage, transitionMs: heroLogoTransitionMs);
 
     if (!isFastStartupMode()) {
-      Timer(Duration(milliseconds: showMenuDuringHeroTransistionMs), () {
+      Timer(Duration(milliseconds: showMenuDuringHeroTransitionMs), () {
         showMenu(); // open menu to let logo slide into place
         Timer(Duration(milliseconds: hideMenuAfterFullInitMs), () {
           hideMenu(); // logo should be in menu by now
@@ -256,7 +256,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
   void _navigateToNavPage(
     NavPage navPage, {
     //dynamic arguments,
-    int transistionMs = 1000,
+    int transitionMs = 1000,
     Transition transition = Transition.fade,
   }) {
     TarikhController.to.isActiveTimeline = false; // turn off timeline rendering
@@ -266,7 +266,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
         Get.offAll(
           () => TarikhMenuUI(),
           transition: transition,
-          duration: Duration(milliseconds: transistionMs),
+          duration: Duration(milliseconds: transitionMs),
         );
         break;
       case (NavPage.Stats):
@@ -280,7 +280,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
         Get.offAll(
           () => QuestsUI(),
           transition: transition,
-          duration: Duration(milliseconds: transistionMs),
+          duration: Duration(milliseconds: transitionMs),
         );
         break;
     }

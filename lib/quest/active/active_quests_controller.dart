@@ -1,9 +1,10 @@
 import 'package:get/get.dart';
+import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/athan/calculation_method.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
 
-class ActiveQuestsController extends GetxController {
+class ActiveQuestsController extends GetxHapi {
   static ActiveQuestsController get to => Get.find(); // A.K.A. cQstA
 
   // Needed for Salah Calculations:

@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/settings/settings_option.dart';
@@ -53,7 +54,7 @@ final List<SettingsOption> languageOptions = [
 ];
 
 /// saves and loads our selected language.
-class LanguageController extends GetxController {
+class LanguageController extends GetxHapi {
   static LanguageController get to => Get.find();
 
   final String defaultLangKey = 'en';

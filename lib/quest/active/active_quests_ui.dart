@@ -24,104 +24,109 @@ class ActiveQuestsUI extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // if not initialized yet, wait for UI before building
-    if (ZamanController.to.athan == null) return Container();
+    // Use builder here, since we need to make sure athan is set for all widgets
+    return GetBuilder<ActiveQuestsController>(builder: (c) {
+      // if not initialized yet, wait for UI before building
+      if (ZamanController.to.athan == null) return Container();
 
-    return const CustomScrollView(
-      slivers: <Widget>[
-        _SlidingAppBar(),
+      // can make const, but we need to refresh all UIs on updates here
+      return CustomScrollView(
+        slivers: <Widget>[
+          _SlidingAppBar(c),
 
-        SalahRow(Z.Fajr),
-        SalahRow(Z.Duha),
-        SalahRow(Z.Dhuhr),
-        SalahRow(Z.Asr),
-        SalahRow(Z.Maghrib),
-        SalahRow(Z.Isha),
-        SalahRow(Z.Middle_of_Night),
-        SalahRow(Z.Last_3rd_of_Night),
+          SalahRow(c, Z.Fajr),
+          SalahRow(c, Z.Duha),
+          SalahRow(c, Z.Dhuhr),
+          SalahRow(c, Z.Asr),
+          SalahRow(c, Z.Maghrib),
+          SalahRow(c, Z.Isha),
+          SalahRow(c, Z.Middle_of_Night),
+          SalahRow(c, Z.Last_3rd_of_Night),
 
-        _SlivSunRings(),
+          // ignore: prefer_const_constructors
+          _SlivSunRings(),
 
-        /// Use to make scrolling of active salah always pin when scrolling up.
-        SliverFillRemaining(), // Sun can scroll up and compress times
-      ],
-    );
+          /// Use to make scrolling of active salah always pin when scrolling up.
+          const SliverFillRemaining(), // Sun can scroll up and compress times
+        ],
+      );
+    });
   }
 }
 
 class _SlidingAppBar extends StatelessWidget {
-  const _SlidingAppBar();
+  const _SlidingAppBar(this.aqC);
+  final ActiveQuestsController aqC;
 
   @override
   Widget build(BuildContext context) {
     final Color countdownBackgroundColor = cs(context);
 
-    return GetBuilder<ActiveQuestsController>(builder: (c) {
-      return SliverAppBar(
-        backgroundColor: countdownBackgroundColor,
-        expandedHeight: 175.0,
-        collapsedHeight: 56.0, // any smaller is exception
-        snap: true,
-        floating: true, // allows picture to dragged out after fully compact
-        pinned: true,
-        flexibleSpace: FlexibleSpaceBar(
-          centerTitle: true,
-          titlePadding: const EdgeInsets.all(12.0),
-          title: ClipRRect(
-            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-            child: Container(
-              color: countdownBackgroundColor.withOpacity(.20),
-              child: Tooltip(
-                // This is handled in ZamanController, but when a quest is
-                // updated, it triggers ActiveQuestsController.update() so
-                // this is safe and better to keep here (ZamanController
-                // refreshes every second so don't do extra work if we
-                // don't have to:
-                message: ZamanController.to.trValTimeToNextZamanTooltip,
-                // Here is the ActiveQuest countdown timer
-                child: GetBuilder<ZamanController>(builder: (zc) {
-                  return T(
-                    zc.trValTimeToNextZaman,
-                    const TS(Colors.white70),
-                    w: 90,
-                    h: 30,
-                    trVal: true,
-                  );
-                }),
-              ),
+    return SliverAppBar(
+      backgroundColor: countdownBackgroundColor,
+      expandedHeight: 175.0,
+      collapsedHeight: 56.0, // any smaller is exception
+      snap: true,
+      floating: true, // allows picture to dragged out after fully compact
+      pinned: true,
+      flexibleSpace: FlexibleSpaceBar(
+        centerTitle: true,
+        titlePadding: const EdgeInsets.all(12.0),
+        title: ClipRRect(
+          borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+          child: Container(
+            color: countdownBackgroundColor.withOpacity(.20),
+            child: Tooltip(
+              // This is handled in ZamanController, but when a quest is
+              // updated, it triggers ActiveQuestsController.update() so
+              // this is safe and better to keep here (ZamanController
+              // refreshes every second so don't do extra work if we
+              // don't have to:
+              message: ZamanController.to.trValTimeToNextZamanTooltip,
+              // Here is the ActiveQuest countdown timer
+              child: GetBuilder<ZamanController>(builder: (zc) {
+                return T(
+                  zc.trValTimeToNextZaman,
+                  const TS(Colors.white70),
+                  w: 90,
+                  h: 30,
+                  trVal: true,
+                );
+              }),
             ),
           ),
-          background: Swiper(
-            itemCount: 3, // TODO add more images
-            itemBuilder: (BuildContext context, int index) {
-              return Stack(
-                children: [
-                  Positioned.fill(
-                    child: Image.asset(
-                      'assets/images/quests/active$index.jpg',
-                      fit: BoxFit.cover, // .fill will stretch image
-                    ),
-                  ),
-                  if (index == c.swiperImageIdx) // if pinned show icon
-                    const Align(
-                      alignment: Alignment.bottomRight,
-                      child: Padding(
-                        padding: EdgeInsets.all(8.0),
-                        child: Icon(Icons.play_arrow),
-                      ),
-                    )
-                ],
-              );
-            },
-            index: c.swiperImageIdx != -1 ? c.swiperImageIdx : c.swiperLastIdx,
-            autoplay: c.swiperAutoPlayEnabled,
-            onTap: (swipePicIdx) => c.toggleSwiperAutoPlayEnabled(swipePicIdx),
-            autoplayDelay: 10000, // ms to show picture
-            duration: 1250, // ms to transition/animate to new picture
-          ),
         ),
-      );
-    });
+        background: Swiper(
+          itemCount: 3, // TODO add more images
+          itemBuilder: (BuildContext context, int index) {
+            return Stack(
+              children: [
+                Positioned.fill(
+                  child: Image.asset(
+                    'assets/images/quests/active$index.jpg',
+                    fit: BoxFit.cover, // .fill will stretch image
+                  ),
+                ),
+                if (index == aqC.swiperImageIdx) // if pinned show icon
+                  const Align(
+                    alignment: Alignment.bottomRight,
+                    child: Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(Icons.play_arrow),
+                    ),
+                  )
+              ],
+            );
+          },
+          index:
+              aqC.swiperImageIdx != -1 ? aqC.swiperImageIdx : aqC.swiperLastIdx,
+          autoplay: aqC.swiperAutoPlayEnabled,
+          onTap: (swipePicIdx) => aqC.toggleSwiperAutoPlayEnabled(swipePicIdx),
+          autoplayDelay: 10000, // ms to show picture
+          duration: 1250, // ms to transition/animate to new picture
+        ),
+      ),
+    );
   }
 }
 
@@ -183,7 +188,8 @@ class _Sliv extends StatelessWidget {
 /// SunRow is used to display the other times for a salah row, i.e. karahat
 /// sunrise and karahat istiwa and for duha and karahat sunsetting for asr.
 class SalahRow extends StatelessWidget {
-  const SalahRow(this.z);
+  const SalahRow(this.aqC, this.z);
+  final ActiveQuestsController aqC;
   final Z z;
 
   static const TS tsFard = TS(AppThemes.ajr2Uncommon);
@@ -192,48 +198,44 @@ class SalahRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ActiveQuestsController>(builder: (aqC) {
-      l.d('ActiveQuestsUI.build()');
+    final double width = w(context);
+    final Color bg = cb(context);
+    final TextStyle textStyle = Theme.of(context).textTheme.headline6!;
 
-      final double width = w(context);
-      final Color bg = cb(context);
-      final TextStyle textStyle = Theme.of(context).textTheme.headline6!;
-
-      return ZamanController.to.isSalahRowPinned(z) && aqC.showSalahActions
-          ? MultiSliver(
-              // salah row is pinned under headers
-              children: [
-                _Sliv(_getSalahRowHeaders(aqC, textStyle, width, bg)),
-                _Sliv(_getSalahRowActions(aqC, width)),
-                _Sliv(_getSalahRowResults(), minHeight: 2, maxHeight: 2),
-              ],
-            )
-          : SliverStack(
-              // salah row not pinned, shrink it into the salah header
-              children: [
-                // add separator/quest completion indicator on bottom, folds 1st
-                _Sliv(
-                  // Start salah separator at end to give overlap effect
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: _getSalahRowResults(),
-                  ),
-                  minHeight: aqC.showSalahResults ? (_Sliv.slivH) + 2 : 2,
-                  maxHeight: (_Sliv.slivH * 2) + 2, // so UI gets overlap effect
+    return ZamanController.to.isSalahRowPinned(z) && aqC.showSalahActions
+        ? MultiSliver(
+            // salah row is pinned under headers
+            children: [
+              _Sliv(_getSalahRowHeaders(aqC, textStyle, width, bg)),
+              _Sliv(_getSalahRowActions(aqC, width)),
+              _Sliv(_getSalahRowResults(), minHeight: 2, maxHeight: 2),
+            ],
+          )
+        : SliverStack(
+            // salah row not pinned, shrink it into the salah header
+            children: [
+              // add separator/quest completion indicator on bottom, folds 1st
+              _Sliv(
+                // Start salah separator at end to give overlap effect
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: _getSalahRowResults(),
                 ),
-                // salah actions folds second
-                _Sliv(
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: _getSalahRowActions(aqC, width),
-                  ),
-                  maxHeight: _Sliv.slivH * 2, // so UI gets overlap effect
+                minHeight: aqC.showSalahResults ? (_Sliv.slivH) + 2 : 2,
+                maxHeight: (_Sliv.slivH * 2) + 2, // so UI gets overlap effect
+              ),
+              // salah actions folds second
+              _Sliv(
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: _getSalahRowActions(aqC, width),
                 ),
-                // top of stack, header hides all but sun on edges, is static
-                _Sliv(_getSalahRowHeaders(aqC, textStyle, width, bg)),
-              ],
-            );
-    });
+                maxHeight: _Sliv.slivH * 2, // so UI gets overlap effect
+              ),
+              // top of stack, header hides all but sun on edges, is static
+              _Sliv(_getSalahRowHeaders(aqC, textStyle, width, bg)),
+            ],
+          );
   }
 
   Widget _getSalahRowHeaders(
