@@ -241,7 +241,8 @@ class TimeController extends GetxHapi {
 
   String dateToDay(DateTime date) => DateFormat('yyyy-MM-dd').format(date);
 
-  /// Call to update day of week for hijri and gregorian Calendars.
+  /// Call to update day of week for hijri and gregorian Calendars. Must be
+  /// called after changing locale.
   updateDaysOfWeek() async {
     await _updateDayOfWeekHijri();
     await _updateDayOfWeekGrego();
@@ -269,7 +270,8 @@ class TimeController extends GetxHapi {
   }
 
   bool iterateHijriDateByOne(DateTime dT) {
-    Athan athan = ZamanController.to.athan!;
+    Athan? athan = ZamanController.to.athan;
+    if (athan == null) return false; // TODO, wish we can avoid it at lang init
     return dT.isAfter(athan.maghrib) && dT.isBefore(nextDayDate);
   }
 

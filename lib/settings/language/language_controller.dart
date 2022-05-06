@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
@@ -216,5 +217,7 @@ class LanguageController extends GetxHapi {
     }
     _am = ' ' + 'i.AM'.tr; // tr ok
     _pm = ' ' + 'i.PM'.tr; // tr ok
+
+    TimeController.to.updateDaysOfWeek(); // needed to convert SunRing dates
   }
 }
