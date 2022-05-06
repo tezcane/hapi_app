@@ -322,10 +322,10 @@ class _HijriAndGregoDate extends StatelessWidget {
           // placeholder
           if (addDayOfWeekWithDate) T(' ', ts, w: 160, h: 19, trVal: true),
           if (!addDayOfWeekWithDate) T(hijriDay.trKey, ts, w: 160, h: 19),
-          T(c.getDateHijri(addDayOfWeekWithDate), ts, w: 160, h: 19),
-
-          /// TODO shows "April" in "ar" language
-          T(cns(c.getDateGrego(addDayOfWeekWithDate)), ts, w: 160, h: 19),
+          T(c.trValDateHijri(addDayOfWeekWithDate), ts,
+              w: 160, h: 19, trVal: true),
+          T(cns(c.trValDateGrego(addDayOfWeekWithDate)), ts,
+              w: 160, h: 19, trVal: true),
         ],
       );
     });

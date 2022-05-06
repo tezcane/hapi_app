@@ -61,6 +61,66 @@ extension EnumUtil on DAY_OF_WEEK {
   }
 }
 
+enum MONTH {
+  January,
+  February,
+  March,
+  April,
+  May,
+  June,
+  July,
+  August,
+  September,
+  October,
+  November,
+  December,
+}
+
+extension EnumUtil2 on MONTH {
+  String get trKey {
+    String transliteration = name;
+    switch (this) {
+      case (MONTH.January):
+        transliteration = 'Kānūn aṯ-Ṯānī';
+        break;
+      case (MONTH.February):
+        transliteration = 'Šubāṭ';
+        break;
+      case (MONTH.March):
+        transliteration = "'Āḏār";
+        break;
+      case (MONTH.April):
+        transliteration = 'Naysān';
+        break;
+      case (MONTH.May):
+        transliteration = "'Ayyār";
+        break;
+      case (MONTH.June):
+        transliteration = 'Ḥazīrān';
+        break;
+      case (MONTH.July):
+        transliteration = 'Tammūz';
+        break;
+      case (MONTH.August):
+        transliteration = "'Āb";
+        break;
+      case (MONTH.September):
+        transliteration = "'Aylūl";
+        break;
+      case (MONTH.October):
+        transliteration = "Tišrīn al-'Awwal";
+        break;
+      case (MONTH.November):
+        transliteration = 'Tišrīn aṯ-Ṯānī';
+        break;
+      case (MONTH.December):
+        transliteration = "Kānūn al-'Awwal";
+        break;
+    }
+    return 'a.$transliteration';
+  }
+}
+
 /// Used to get accurate server UTC/NTP based time in case user's clock is off
 class TimeController extends GetxHapi {
   static TimeController get to => Get.find();
@@ -300,7 +360,7 @@ class TimeController extends GetxHapi {
   bool isSaturday() => _dayOfWeekHijri == DAY_OF_WEEK.Saturday;
   bool isSunday() => _dayOfWeekHijri == DAY_OF_WEEK.Sunday;
 
-  String getDateHijri(bool addDayOfWeek) {
+  String trValDateHijri(bool addDayOfWeek) {
     DateTime dT = now2(); // TODO use now()?
     if (iterateHijriDateByOne(dT)) dT = dateToTomorrow(dT);
     String dayOfWeek = '';
@@ -311,10 +371,24 @@ class TimeController extends GetxHapi {
     return '$dayOfWeek${hijriCalendar.toFormat('MMMM dd, yyyy')}';
   }
 
-  String getDateGrego(bool addDayOfWeek) {
+  String trValDateGrego(bool addDayOfWeek) {
+    String date = DateFormat('MMMM d, yyyy').format(now2());
+    bool foundMonth = false;
+    for (MONTH month in MONTH.values) {
+      if (date.contains(month.name)) {
+        date = date.replaceFirst(month.name, a(month.trKey));
+        foundMonth = true;
+        break;
+      }
+    }
+    if (!foundMonth) {
+      l.e('TimeController:getDateGrego: Did not find month in "$date"');
+    }
+
     String dayOfWeek = '';
     if (addDayOfWeek) dayOfWeek = '${_dayOfWeekGrego.name} ';
-    return '$dayOfWeek${DateFormat('MMMM d, yyyy').format(now2())}';
+
+    return '$dayOfWeek$date';
   }
 
   /// Translate Duration() to a nice format in any language's numeral set.
