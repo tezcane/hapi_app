@@ -29,15 +29,15 @@ extension EnumUtil on Z {
       transliteration = 'Jumah';
     } else if (this == Z.Middle_of_Night) {
       if (ActiveQuestsController.to.showLayl2) {
-        transliteration = 'Muntasaf Allayl';
-      } else {
         return a('a.Layl{}') + '/' + cni(2); // UGLY but works, returns a trVal
+      } else {
+        transliteration = 'Muntasaf Allayl';
       }
     } else if (this == Z.Last_3rd_of_Night) {
       if (ActiveQuestsController.to.showLayl3) {
-        transliteration = 'Althuluth Al\'Akhir Min Allayl';
-      } else {
         return a('a.Layl{}') + '/' + cni(3); // UGLY but works, returns a trVal
+      } else {
+        transliteration = 'Althuluth Al\'Akhir Min Allayl';
       }
     } else if (this == Z.Fajr_Tomorrow) {
       return 'a.{0} Tomorrow'; // NOTE: caller must insert Fajr for this! Sorry.
