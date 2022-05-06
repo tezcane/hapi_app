@@ -332,6 +332,22 @@ class SalahRow extends StatelessWidget {
     }
   }
 
+  void handleUnpinnedHeaderTapped(ActiveQuestsController aqC, Z z) {
+    if (z == Z.Middle_of_Night) {
+      if (aqC.showLayl2) {
+        aqC.showLayl2 = false;
+      } else {
+        aqC.showLayl2 = true;
+      }
+    } else if (z == Z.Last_3rd_of_Night) {
+      if (aqC.showLayl3) {
+        aqC.showLayl3 = false;
+      } else {
+        aqC.showLayl3 = true;
+      }
+    }
+  }
+
   Widget _getSalahRowHeader(
     ActiveQuestsController aqC,
     TextStyle textStyle,
@@ -360,7 +376,7 @@ class SalahRow extends StatelessWidget {
     return InkWell(
       onTap: isBold
           ? () => handlePinnedHeaderTapped()
-          : null, // reserved, we can do something when non active rows tapped
+          : () => handleUnpinnedHeaderTapped(aqC, z),
       child: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

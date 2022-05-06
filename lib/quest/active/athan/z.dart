@@ -1,6 +1,7 @@
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
+import 'package:hapi/quest/active/active_quests_controller.dart';
 
 /// Z = Zaman/Time Of Day, enum that goes with each important islamic day point.
 /// Used with Athan class to match up those calculated times to this enum.
@@ -27,9 +28,17 @@ extension EnumUtil on Z {
     if (this == Z.Dhuhr && TimeController.to.isFriday()) {
       transliteration = 'Jumah';
     } else if (this == Z.Middle_of_Night) {
-      transliteration = 'Muntasaf Allayl';
+      if (ActiveQuestsController.to.showLayl2) {
+        transliteration = 'Muntasaf Allayl';
+      } else {
+        return a('a.Layl{}') + '/' + cni(2); // UGLY but works, returns a trVal
+      }
     } else if (this == Z.Last_3rd_of_Night) {
-      transliteration = 'Althuluth Al\'Akhir Min Allayl';
+      if (ActiveQuestsController.to.showLayl3) {
+        transliteration = 'Althuluth Al\'Akhir Min Allayl';
+      } else {
+        return a('a.Layl{}') + '/' + cni(3); // UGLY but works, returns a trVal
+      }
     } else if (this == Z.Fajr_Tomorrow) {
       return 'a.{0} Tomorrow'; // NOTE: caller must insert Fajr for this! Sorry.
     }

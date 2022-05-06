@@ -8,49 +8,36 @@ class ActiveQuestsController extends GetxHapi {
   static ActiveQuestsController get to => Get.find(); // A.K.A. cQstA
 
   // Needed for Salah Calculations:
-  int _salahCalcMethod = CalcMethod.America____ISNA___.index;
+  int _salahCalcMethod =
+      s.rd('salahCalcMethod') ?? CalcMethod.America____ISNA___.index;
   int get salahCalcMethod => _salahCalcMethod;
-  bool _salahAsrEarlier = true; // earlier=true, 1 shadow, later=false, 2 shadow
+  bool _salahAsrEarlier = s.rd('salahAsrEarlier') ?? true;
   bool get salahAsrEarlier => _salahAsrEarlier;
-  bool _showSecPrecision = false; // false = round athan times to minutes
+  bool _showSecPrecision = s.rd('showSecPrecision') ?? false;
   bool get showSecPrecision => _showSecPrecision;
 
-  bool _showJummahOnFriday = true; // if friday=true, shows jummah
+  bool _showJummahOnFriday = s.rd('showJummahOnFriday') ?? true;
   bool get showJummahOnFriday => _showJummahOnFriday;
 
-  bool _show12HourClock = true; // false = 24h clock/military time
+  bool _show12HourClock = s.rd('show12HourClock') ?? true;
   bool get show12HourClock => _show12HourClock;
 
-  bool _showSalahActions = true; // true shows salah actions, false hides them
+  bool _showSalahActions = s.rd('showSalahActions') ?? true;
   bool get showSalahActions => _showSalahActions;
-  bool _showSalahResults = true; // true shows salah results, false hides them
+  bool _showSalahResults = s.rd('showSalahResults') ?? false;
   bool get showSalahResults => _showSalahResults;
 
-  bool _swiperAutoPlayEnabled = true;
+  bool _showLayl2 = s.rd('showLayl2') ?? true;
+  bool get showLayl2 => _showLayl2;
+  bool _showLayl3 = s.rd('showLayl3') ?? true;
+  bool get showLayl3 => _showLayl3;
+
+  bool _swiperAutoPlayEnabled = s.rd('swiperAutoPlayEnabled') ?? true;
   bool get swiperAutoPlayEnabled => _swiperAutoPlayEnabled;
-  int _swiperImageIdx = -1;
+  int _swiperImageIdx = s.rd('swiperImageIdx') ?? -1;
   int get swiperImageIdx => _swiperImageIdx;
   int _swiperLastIdx = 0;
   int get swiperLastIdx => _swiperLastIdx;
-
-  @override
-  void onInit() {
-    super.onInit();
-
-    _salahCalcMethod =
-        s.rd('salahCalcMethod') ?? CalcMethod.America____ISNA___.index;
-    _salahAsrEarlier = s.rd('salahAsrEarlier') ?? true;
-    _showSecPrecision = s.rd('showSecPrecision') ?? false;
-
-    _showJummahOnFriday = s.rd('showJummahOnFriday') ?? true;
-    _show12HourClock = s.rd('show12HourClock') ?? true;
-
-    _showSalahActions = s.rd('showSalahActions') ?? true;
-    _showSalahResults = s.rd('showSalahResults') ?? false;
-
-    _swiperAutoPlayEnabled = s.rd('swiperAutoPlayEnabled') ?? true;
-    _swiperImageIdx = s.rd('swiperImageIdx') ?? -1;
-  }
 
   set salahCalcMethod(int value) {
     _salahCalcMethod = value;
@@ -94,6 +81,18 @@ class ActiveQuestsController extends GetxHapi {
   set showSalahResults(bool value) {
     _showSalahResults = value;
     s.wr('showSalahResults', _showSalahResults);
+    update();
+  }
+
+  set showLayl2(bool value) {
+    _showLayl2 = value;
+    s.wr('showLayl2', _showLayl2);
+    update();
+  }
+
+  set showLayl3(bool value) {
+    _showLayl3 = value;
+    s.wr('showLayl3', _showLayl3);
     update();
   }
 
