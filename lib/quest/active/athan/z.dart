@@ -25,19 +25,22 @@ extension EnumUtil on Z {
   /// Returns a trKey which can then be translated by calling Get's ".tr" on it.
   String get trKey {
     String transliteration = name;
-    if (this == Z.Dhuhr && TimeController.to.isFriday()) {
-      transliteration = 'Jumah';
+    if (this == Z.Dhuhr) {
+      if (TimeController.to.isFriday() &&
+          ActiveQuestsController.to.showJumahOnFriday) {
+        return 'a.Jumah';
+      } // else returns a.Dhuhr
     } else if (this == Z.Middle_of_Night) {
       if (ActiveQuestsController.to.showLayl2) {
         return a('a.Layl{}') + '/' + cni(2); // UGLY but works, returns a trVal
       } else {
-        transliteration = 'Muntasaf Allayl';
+        return 'a.Muntasaf Allayl';
       }
     } else if (this == Z.Last_3rd_of_Night) {
       if (ActiveQuestsController.to.showLayl3) {
         return a('a.Layl{}') + '/' + cni(3); // UGLY but works, returns a trVal
       } else {
-        transliteration = 'Althuluth Al\'Akhir Min Allayl';
+        return 'a.Althuluth Al\'Akhir Min Allayl';
       }
     } else if (this == Z.Fajr_Tomorrow) {
       return 'a.{0} Tomorrow'; // NOTE: caller must insert Fajr for this! Sorry.

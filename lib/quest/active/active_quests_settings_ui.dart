@@ -142,25 +142,25 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
                 }
               },
             ),
-            addSetting(
-              trValTitle: at('at.{0} Default', [a('a.Jumah')]),
-              trValTooltip: at('at.showJumah', [
-                a('a.Jumah'),
-                a('a.${Z.Dhuhr.name}'),
-              ]),
-              trValLabels: [
-                a('a.Jumah'),
-                a('a.${Z.Dhuhr.name}'),
-              ],
-              initialLabelIndex: c.showJumahOnFriday ? 0 : 1,
-              onToggle: (index) {
-                if (index == 0) {
-                  c.showJumahOnFriday = true;
-                } else {
-                  c.showJumahOnFriday = false;
-                }
-              },
-            ),
+//          addSetting(
+//            trValTitle: at('at.{0} Default', [a('a.Jumah')]),
+//            trValTooltip: at('at.showJumah', [
+//              a('a.Jumah'),
+//              a('a.${Z.Dhuhr.name}'),
+//            ]),
+//            trValLabels: [
+//              a('a.Jumah'),
+//              a('a.${Z.Dhuhr.name}'),
+//            ],
+//            initialLabelIndex: c.showJumahOnFriday ? 0 : 1,
+//            onToggle: (index) {
+//              if (index == 0) {
+//                c.showJumahOnFriday = true;
+//              } else {
+//                c.showJumahOnFriday = false;
+//              }
+//            },
+//          ),
             addSetting(
               trValTitle: a('a.Saat Hayit'), // Clock
               trValTooltip: 'tt.clockType'.tr,

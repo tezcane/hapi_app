@@ -316,7 +316,7 @@ class SalahRow extends StatelessWidget {
     });
   }
 
-  void handlePinnedHeaderTapped() {
+  void handlePinnedHeaderTapped(ActiveQuestsController aqC, Z z) {
     // cycles through Show pinned actions -> hide both -> show results
     if (aqC.showSalahActions) {
       // if actions showing, hide both
@@ -329,6 +329,12 @@ class SalahRow extends StatelessWidget {
       // if results showing, hide and show actions again
       aqC.showSalahResults = false;
       aqC.showSalahActions = true;
+
+      // at start of new, toggle Z's header title (if supported):
+      // Night/2 <-> Middle of Night
+      // Night/3 <-> Last 3rd of Night
+      // Dhuhr <-> Jumah (switches on Friday only)
+      handleUnpinnedHeaderTapped(aqC, z);
     }
   }
 
@@ -344,6 +350,14 @@ class SalahRow extends StatelessWidget {
         aqC.showLayl3 = false;
       } else {
         aqC.showLayl3 = true;
+      }
+    } else if (z == Z.Dhuhr) {
+      if (TimeController.to.isFriday()) {
+        if (aqC.showJumahOnFriday) {
+          aqC.showJumahOnFriday = false;
+        } else {
+          aqC.showJumahOnFriday = true;
+        }
       }
     }
   }
@@ -375,7 +389,7 @@ class SalahRow extends StatelessWidget {
 
     return InkWell(
       onTap: isBold
-          ? () => handlePinnedHeaderTapped()
+          ? () => handlePinnedHeaderTapped(aqC, z)
           : () => handleUnpinnedHeaderTapped(aqC, z),
       child: Center(
         child: Row(
