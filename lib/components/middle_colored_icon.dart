@@ -33,7 +33,7 @@
 //           colors,
 //           bottomColor,
 //           fillPercent: fillPercent,
-//           alignmentBegin: Alignment.centerLeft,
+//           alignmentBegin: LanguageController.to.centerLeft,
 //           alignmentEnd: Alignment.center,
 //         ),
 //         Icon(icon, size: iconSize, color: colors[0]),

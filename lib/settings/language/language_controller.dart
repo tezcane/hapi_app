@@ -74,6 +74,20 @@ class LanguageController extends GetxHapi {
   bool _isRightToLeftLang = false;
   bool get isRightToLeftLang => _isRightToLeftLang;
 
+  /// Arabic and other RTL language Alignment values are opposite to LTR
+  /// languages so we make it easier by using these utility functions. So just
+  /// use the naming conventions for left/right of LTR langs her and by doing so
+  /// your RTL langs will also get the right Alignment() values.
+  Alignment get centerLeft =>
+      _isRightToLeftLang ? Alignment.centerRight : Alignment.centerLeft;
+  Alignment get centerRight =>
+      _isRightToLeftLang ? Alignment.centerLeft : Alignment.centerRight;
+  // NOT NEEDED AS START/END works properly between RTL and LTR languages:
+  // MainAxisAlignment get axisStart =>
+  //     _isRightToLeftLang ? MainAxisAlignment.end : MainAxisAlignment.start;
+  // MainAxisAlignment get axisRight =>
+  //     _isRightToLeftLang ? MainAxisAlignment.start : MainAxisAlignment.end;
+
   /// Use these prefect hash arrays to convert numeral systems (en->ar/ps/etc.).
   /// Note: labeled "en" but are Arabic Numerals (a.k.a. Hindi-Arabic Numerals).
   static const _enNumerals = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];

@@ -31,7 +31,7 @@ extension EnumUtil on Z {
     } else if (this == Z.Last_3rd_of_Night) {
       transliteration = 'Althuluth Al\'Akhir Min Allayl';
     } else if (this == Z.Fajr_Tomorrow) {
-      return 'i.Fajr tomorrow';
+      return 'a.{0} Tomorrow'; // NOTE: caller must insert Fajr for this! Sorry.
     }
 
     return 'a.$transliteration';
