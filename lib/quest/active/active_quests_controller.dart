@@ -16,8 +16,8 @@ class ActiveQuestsController extends GetxHapi {
   bool _showSecPrecision = s.rd('showSecPrecision') ?? false;
   bool get showSecPrecision => _showSecPrecision;
 
-  bool _showJummahOnFriday = s.rd('showJummahOnFriday') ?? true;
-  bool get showJummahOnFriday => _showJummahOnFriday;
+  bool _showJumahOnFriday = s.rd('showJumahOnFriday') ?? true;
+  bool get showJumahOnFriday => _showJumahOnFriday;
 
   bool _show12HourClock = s.rd('show12HourClock') ?? true;
   bool get show12HourClock => _show12HourClock;
@@ -60,9 +60,9 @@ class ActiveQuestsController extends GetxHapi {
     //update();
   }
 
-  set showJummahOnFriday(bool value) {
-    _showJummahOnFriday = value;
-    s.wr('showJummahOnFriday', value);
+  set showJumahOnFriday(bool value) {
+    _showJumahOnFriday = value;
+    s.wr('showJumahOnFriday', value);
     update();
   }
 

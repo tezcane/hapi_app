@@ -449,7 +449,7 @@ class SalahRow extends StatelessWidget {
       case (Z.Duha):
         return _actionsDuha(w1);
       case (Z.Dhuhr):
-        return _actionsDhuhr(aqC.showJummahOnFriday);
+        return _actionsDhuhr(aqC.showJumahOnFriday);
       case (Z.Asr):
         return _actionsAsr();
       case (Z.Maghrib):
@@ -519,10 +519,10 @@ class SalahRow extends StatelessWidget {
     );
   }
 
-  Widget _actionsDhuhr(bool showJummahOnFriday) {
+  Widget _actionsDhuhr(bool showJumahOnFriday) {
     String fardRk = cni(4); // fard rakat
     String muakAf = cni(2); // muakaddah after
-    if (TimeController.to.isFriday() && showJummahOnFriday) {
+    if (TimeController.to.isFriday() && showJumahOnFriday) {
       fardRk = cni(2);
       muakAf = cni(6);
     }

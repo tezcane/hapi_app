@@ -152,12 +152,12 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
                 a('a.Jumah'),
                 a('a.${Z.Dhuhr.name}'),
               ],
-              initialLabelIndex: c.showJummahOnFriday ? 0 : 1,
+              initialLabelIndex: c.showJumahOnFriday ? 0 : 1,
               onToggle: (index) {
                 if (index == 0) {
-                  c.showJummahOnFriday = true;
+                  c.showJumahOnFriday = true;
                 } else {
-                  c.showJummahOnFriday = false;
+                  c.showJumahOnFriday = false;
                 }
               },
             ),
