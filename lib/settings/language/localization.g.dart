@@ -124,6 +124,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'October',
 'a.Tišrīn aṯ-Ṯānī': 'November',
 'a.Kānūn al-\'Awwal': 'December',
+'a.Layl{}': 'Night',
 'dummy.toDragDontDelete': 'ğüşıiöçĞÜŞIİÖÇ',
 },
 'tr': {
@@ -247,6 +248,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'Ekim',
 'a.Tišrīn aṯ-Ṯānī': 'Kasım',
 'a.Kānūn al-\'Awwal': 'Aralık',
+'a.Layl{}': 'Gece',
 'dummy.toDragDontDelete': 'wühıiöğiziyiöriöç',
 },
 'ar': {
@@ -370,6 +372,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'تِشْرِين ٱلْأَوَّل',
 'a.Tišrīn aṯ-Ṯānī': 'تِشْرِين ٱلثَّانِي',
 'a.Kānūn al-\'Awwal': 'كَانُون ٱلْأَوَّل',
+'a.Layl{}': 'ليل',
 'dummy.toDragDontDelete': 'ğüşıöçğüşiçö',
 },
 'sq': {
@@ -493,6 +496,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'Tetor',
 'a.Tišrīn aṯ-Ṯānī': 'Nëntor',
 'a.Kānūn al-\'Awwal': 'Dhjetor',
+'a.Layl{}': 'Natë',
 'dummy.toDragDontDelete': 'ğşıiöçğüşiiök',
 },
 'az': {
@@ -616,6 +620,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'oktyabr',
 'a.Tišrīn aṯ-Ṯānī': 'Noyabr',
 'a.Kānūn al-\'Awwal': 'Dekabr',
+'a.Layl{}': 'Gecə',
 'dummy.toDragDontDelete': 'ğusılıöçəniüc',
 },
 'bn': {
@@ -739,6 +744,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'অক্টোবর',
 'a.Tišrīn aṯ-Ṯānī': 'নভেম্বর',
 'a.Kānūn al-\'Awwal': 'ডিসেম্বর',
+'a.Layl{}': 'রাত',
 'dummy.toDragDontDelete': 'ğüşıiöçĞÜŞIİÖÇ',
 },
 'bg': {
@@ -862,6 +868,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'Октомври',
 'a.Tišrīn aṯ-Ṯānī': 'Ноември',
 'a.Kānūn al-\'Awwal': 'Декември',
+'a.Layl{}': 'Нощ',
 'dummy.toDragDontDelete': 'ğüşıiöçğüşii̇öç',
 },
 'zh': {
@@ -985,6 +992,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': '十月',
 'a.Tišrīn aṯ-Ṯānī': '十一月',
 'a.Kānūn al-\'Awwal': '十二月',
+'a.Layl{}': '夜晚',
 'dummy.toDragDontDelete': 'ğüşıiöçĞÜŞIİÖÇ',
 },
 'da': {
@@ -1108,6 +1116,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'oktober',
 'a.Tišrīn aṯ-Ṯānī': 'november',
 'a.Kānūn al-\'Awwal': 'december',
+'a.Layl{}': 'Nat',
 'dummy.toDragDontDelete': 'ğüşıiöçğüşivid',
 },
 'nl': {
@@ -1231,6 +1240,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'oktober',
 'a.Tišrīn aṯ-Ṯānī': 'November',
 'a.Kānūn al-\'Awwal': 'December',
+'a.Layl{}': 'Nacht',
 'dummy.toDragDontDelete': 'ğüşıiöçğüşiİöç',
 },
 'fr': {
@@ -1354,6 +1364,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'Octobre',
 'a.Tišrīn aṯ-Ṯānī': 'Novembre',
 'a.Kānūn al-\'Awwal': 'Décembre',
+'a.Layl{}': 'Nuit',
 'dummy.toDragDontDelete': 'ğüşıiöçğüşiiöç',
 },
 'de': {
@@ -1477,6 +1488,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'Oktober',
 'a.Tišrīn aṯ-Ṯānī': 'November',
 'a.Kānūn al-\'Awwal': 'Dezember',
+'a.Layl{}': 'Nacht',
 'dummy.toDragDontDelete': 'olzüşıiöçğüşi̇öç',
 },
 'gu': {
@@ -1600,6 +1612,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'ઓક્ટોબર',
 'a.Tišrīn aṯ-Ṯānī': 'નવેમ્બર',
 'a.Kānūn al-\'Awwal': 'ડિસેમ્બર',
+'a.Layl{}': 'રાત',
 'dummy.toDragDontDelete': '“',
 },
 'hi': {
@@ -1723,6 +1736,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'अक्टूबर',
 'a.Tišrīn aṯ-Ṯānī': 'नवंबर',
 'a.Kānūn al-\'Awwal': 'दिसंबर',
+'a.Layl{}': 'रात',
 'dummy.toDragDontDelete': 'एक',
 },
 'in': {
@@ -1846,6 +1860,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'Oktober',
 'a.Tišrīn aṯ-Ṯānī': 'November',
 'a.Kānūn al-\'Awwal': 'Desember',
+'a.Layl{}': 'Malam',
 'dummy.toDragDontDelete': 'ğüşıiöçğüşiİöç',
 },
 'it': {
@@ -1969,6 +1984,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'ottobre',
 'a.Tišrīn aṯ-Ṯānī': 'novembre',
 'a.Kānūn al-\'Awwal': 'Dicembre',
+'a.Layl{}': 'Notte',
 'dummy.toDragDontDelete': 'ğüşıiöçüiiiç',
 },
 'ja': {
@@ -2092,6 +2108,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': '10月',
 'a.Tišrīn aṯ-Ṯānī': '11月',
 'a.Kānūn al-\'Awwal': '12月',
+'a.Layl{}': '夜',
 'dummy.toDragDontDelete': '¿',
 },
 'kk': {
@@ -2215,6 +2232,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'Қазан',
 'a.Tišrīn aṯ-Ṯānī': 'Қараша',
 'a.Kānūn al-\'Awwal': 'Желтоқсан',
+'a.Layl{}': 'Түн',
 'dummy.toDragDontDelete': 'ğüşıiçğüşiöçğç',
 },
 'ky': {
@@ -2338,6 +2356,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'Октябрь',
 'a.Tišrīn aṯ-Ṯānī': 'Ноябрь',
 'a.Kānūn al-\'Awwal': 'Декабрь',
+'a.Layl{}': 'Түн',
 'dummy.toDragDontDelete': 'Гүлүчутищич',
 },
 'ku': {
@@ -2461,6 +2480,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'Cotmeh',
 'a.Tišrīn aṯ-Ṯānī': 'Mijdar',
 'a.Kānūn al-\'Awwal': 'Berfanbar',
+'a.Layl{}': 'Şev',
 'dummy.toDragDontDelete': 'ğüşıiöçğüşiİöç',
 },
 'ms': {
@@ -2584,6 +2604,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'Oktober',
 'a.Tišrīn aṯ-Ṯānī': 'November',
 'a.Kānūn al-\'Awwal': 'Disember',
+'a.Layl{}': 'Malam',
 'dummy.toDragDontDelete': 'ğüşıiöçğüşi pembel',
 },
 'ps': {
@@ -2707,6 +2728,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'اکتوبر',
 'a.Tišrīn aṯ-Ṯānī': 'نومبر',
 'a.Kānūn al-\'Awwal': 'دسمبر',
+'a.Layl{}': 'شپه',
 'dummy.toDragDontDelete': 'فلش البرüی',
 },
 'fa': {
@@ -2830,6 +2852,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'اکتبر',
 'a.Tišrīn aṯ-Ṯānī': 'ماه نوامبر',
 'a.Kānūn al-\'Awwal': 'دسامبر',
+'a.Layl{}': 'شب',
 'dummy.toDragDontDelete': 'a',
 },
 'pt': {
@@ -2953,6 +2976,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'Outubro',
 'a.Tišrīn aṯ-Ṯānī': 'novembro',
 'a.Kānūn al-\'Awwal': 'dezembro',
+'a.Layl{}': 'Noite',
 'dummy.toDragDontDelete': 'sustşüşıiöçğüşiİöç',
 },
 'pa': {
@@ -3076,6 +3100,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'ਅਕਤੂਬਰ',
 'a.Tišrīn aṯ-Ṯānī': 'ਨਵੰਬਰ',
 'a.Kānūn al-\'Awwal': 'ਦਸੰਬਰ',
+'a.Layl{}': 'ਰਾਤ',
 'dummy.toDragDontDelete': 'ğğiöçğğiiiiiiiiiiiiii',
 },
 'ro': {
@@ -3199,6 +3224,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'octombrie',
 'a.Tišrīn aṯ-Ṯānī': 'noiembrie',
 'a.Kānūn al-\'Awwal': 'decembrie',
+'a.Layl{}': 'Noapte',
 'dummy.toDragDontDelete': 'ğüșıiöçğüșii ̇öç',
 },
 'ru': {
@@ -3322,6 +3348,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'Октябрь',
 'a.Tišrīn aṯ-Ṯānī': 'Ноябрь',
 'a.Kānūn al-\'Awwal': 'Декабрь',
+'a.Layl{}': 'Ночь',
 'dummy.toDragDontDelete': '«',
 },
 'so': {
@@ -3445,6 +3472,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'Oktoobar',
 'a.Tišrīn aṯ-Ṯānī': 'Noofeembar',
 'a.Kānūn al-\'Awwal': 'Desembar',
+'a.Layl{}': 'Habeen',
 'dummy.toDragDontDelete': 'üüüşşıiiösğğğiii̇̇k',
 },
 'es': {
@@ -3568,6 +3596,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'Octubre',
 'a.Tišrīn aṯ-Ṯānī': 'Noviembre',
 'a.Kānūn al-\'Awwal': 'Diciembre',
+'a.Layl{}': 'Noche',
 'dummy.toDragDontDelete': 'ğüşıiöçğüşiíöç',
 },
 'su': {
@@ -3691,6 +3720,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'Oktober',
 'a.Tišrīn aṯ-Ṯānī': 'Nopémber',
 'a.Kānūn al-\'Awwal': 'Désémber',
+'a.Layl{}': 'Peuting',
 'dummy.toDragDontDelete': 'ğÜşıiit\'it\'şii\'IBIR',
 },
 'tg': {
@@ -3814,6 +3844,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'Октябр',
 'a.Tišrīn aṯ-Ṯānī': 'Ноябр',
 'a.Kānūn al-\'Awwal': 'Декабр',
+'a.Layl{}': 'Шаб',
 'dummy.toDragDontDelete': 'ğ Aieiiiiiiögnç',
 },
 'tt': {
@@ -3937,6 +3968,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'Октябрь',
 'a.Tišrīn aṯ-Ṯānī': 'Ноябрь',
 'a.Kānūn al-\'Awwal': 'Декабрь',
+'a.Layl{}': 'Төн',
 'dummy.toDragDontDelete': 'ğüşıiiiiğüşiiii̇öç',
 },
 'th': {
@@ -4060,6 +4092,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'ตุลาคม',
 'a.Tišrīn aṯ-Ṯānī': 'พฤศจิกายน',
 'a.Kānūn al-\'Awwal': 'ธันวาคม',
+'a.Layl{}': 'กลางคืน',
 'dummy.toDragDontDelete': 'ğüşıiöçğüşii̇öç',
 },
 'tk': {
@@ -4183,6 +4216,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'Oktýabr',
 'a.Tišrīn aṯ-Ṯānī': 'Noýabr',
 'a.Kānūn al-\'Awwal': 'Dekabr',
+'a.Layl{}': 'Gije',
 'dummy.toDragDontDelete': 'Itişıdaş -warçauüzchuiliener',
 },
 'ur': {
@@ -4306,6 +4340,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'اکتوبر',
 'a.Tišrīn aṯ-Ṯānī': 'نومبر',
 'a.Kānūn al-\'Awwal': 'دسمبر',
+'a.Layl{}': 'رات',
 'dummy.toDragDontDelete': 'ğüşıiöıiiiiö',
 },
 'uz': {
@@ -4429,6 +4464,7 @@ class Localization extends Translations {
 'a.Tišrīn al-\'Awwal': 'Oktyabr',
 'a.Tišrīn aṯ-Ṯānī': 'Noyabr',
 'a.Kānūn al-\'Awwal': 'Dekabr',
+'a.Layl{}': 'Kechasi',
 'dummy.toDragDontDelete': 'O\'shikiiiçurievlik',
 },
         };
