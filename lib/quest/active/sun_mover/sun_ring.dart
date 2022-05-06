@@ -54,12 +54,13 @@ class SunRing extends StatelessWidget {
 
   final int secondsInADay = 86400; //60 * 60 * 24;
 
-  /// Will be set to false when new athan times are set so they can update
   static bool colorSliceInitialized = false;
   static bool isSunAnimationAllowed = true;
-
   double sunAnimationLocation = 1;
-  double sunAnimationStep = .001; // used to accelerate sun animation
+  double sunAnimationStep = .0005; // used to accelerate sun animation
+  double sunAnimationHalfWayPoint = 0;
+  bool passed0 = false;
+  bool passedHalfway = false;
 
   void _buildSunRingSlices() {
     final Athan athan = ZamanController.to.athan!;
@@ -102,7 +103,9 @@ class SunRing extends StatelessWidget {
 
     if (!colorSliceInitialized || colorSlices.isEmpty) {
       colorSliceInitialized = true;
+
       _buildSunRingSlices();
+
       double secsOff = secondsInADay - ColorSlice.totalSecs;
       l.d('totalSecs=${ColorSlice.totalSecs} of 86400, $secsOff secs off (mins=${secsOff / 60})');
     }
@@ -122,6 +125,9 @@ class SunRing extends StatelessWidget {
                 fajrStartPercentCorrection) /
             1.25; // TODO hacking
     double sunriseCorrection = .5 - sunrisePercentCorrection;
+    sunAnimationHalfWayPoint = // somewhat accurate
+        (1 - ((ZamanController.to.secsSinceFajr / ColorSlice.totalSecs) / 2)) -
+            sunrisePercentCorrection;
     //double sunriseCorrection = 2 * degreeCorrection * math.pi;
 
     //l.d('sunriseDegreeCorrection=$sunriseDegreeCorrection, fajrStartCorrection=$fajrStartCorrection->sunriseCorrection=$sunriseCorrection');
@@ -166,8 +172,14 @@ class SunRing extends StatelessWidget {
         onTap: () {
           isSunAnimationAllowed = true;
           sunAnimationLocation = fajrStartPercentCorrection;
-          sunAnimationStep = .001;
-          ZamanController.to.updateOnThread1Ms(); // force UI to refresh
+          sunAnimationStep = .0005;
+          sunAnimationHalfWayPoint = (1 -
+                  ((ZamanController.to.secsSinceFajr / ColorSlice.totalSecs) /
+                      2)) -
+              sunrisePercentCorrection;
+          passed0 = false;
+          passedHalfway = false;
+          ZamanController.to.updateOnThread1Ms(); // kick off animation
         },
         child: SizedBox(
           width: diameter,
@@ -202,29 +214,51 @@ class SunRing extends StatelessWidget {
                 builder: (c) {
                   double sunVal = (c.secsSinceFajr / ColorSlice.totalSecs) -
                       fajrStartPercentCorrection;
-                  l.v('sunValue percent $sunVal = (${c.secsSinceFajr}/${ColorSlice.totalSecs}) - (fajrStartPercentCorrection=$fajrStartPercentCorrection)');
+                  l.v('sunVal percent $sunVal = (${c.secsSinceFajr}/${ColorSlice.totalSecs}) - (fajrStartPercentCorrection=$fajrStartPercentCorrection)');
                   if (sunVal > 0) {
                     // it's passed fajr time:
-                    sunVal = 1 - sunVal; // for counter-clockwise animation
-                    l.v('1 - sunValue = $sunVal');
+                    sunVal = 1 - sunVal; // 1 - to go backward;
+                    l.v('1 - sunVal = $sunVal');
+
+                    if (isSunAnimationAllowed) {
+                      if (!passed0) {
+                        sunAnimationStep += .0005;
+                        if (sunAnimationLocation < 0) {
+                          sunAnimationLocation = 1;
+                          passed0 = true;
+                        }
+                      } else {
+                        if (!passedHalfway) {
+                          sunAnimationStep += .00055;
+                          if (sunAnimationLocation < sunAnimationHalfWayPoint) {
+                            passedHalfway = true;
+                          }
+                        } else {
+                          sunAnimationStep -= .00065;
+                          sunAnimationStep = math.max(.001, sunAnimationStep);
+                        }
+
+                        if (sunAnimationLocation < sunVal) {
+                          isSunAnimationAllowed = false; // done, found sun loc
+                        }
+                      }
+                      sunAnimationLocation -= sunAnimationStep;
+                      sunVal = sunAnimationLocation;
+                      ZamanController.to.updateOnThread1Ms();
+                    }
                   } else {
                     // it's fajr time, so negative number and must take abs of it:
                     sunVal = sunVal.abs();
-                    l.v('sunValue.abs = $sunVal');
-                  }
+                    l.v('sunVal.abs = $sunVal');
 
-                  if (isSunAnimationAllowed) {
-                    sunAnimationStep *= 1.05; // makes sun rotation accelerate
-                    sunAnimationLocation -= math.min(.009, sunAnimationStep);
-
-                    // if went < 0, we must wrap back to 1 (animates 1-0)
-                    if (sunAnimationLocation < 0) sunAnimationLocation = 1;
-
-                    if (sunAnimationLocation > sunVal) {
-                      isSunAnimationAllowed = false; // done, at time location
-                    } else {
-                      sunVal = sunAnimationLocation;
-                      ZamanController.to.updateOnThread1Ms();
+                    if (isSunAnimationAllowed) {
+                      sunAnimationLocation -= .001;
+                      if (sunAnimationLocation < sunVal) {
+                        isSunAnimationAllowed = true;
+                      } else {
+                        sunVal = sunAnimationLocation;
+                        ZamanController.to.updateOnThread1Ms();
+                      }
                     }
                   }
 
@@ -232,7 +266,7 @@ class SunRing extends StatelessWidget {
                     child: CustomPaint(
                       painter: SunMovePainter(
                         context: context,
-                        sunValue: sunVal,
+                        sunVal: sunVal,
                         diameter: diameter - 22.25 - strokeWidth,
                         strokeWidth: strokeWidth,
                       ),
@@ -404,19 +438,19 @@ class _GumbiAndMeWithFamily extends StatelessWidget {
 class SunMovePainter extends CustomPainter {
   SunMovePainter({
     required this.context,
-    required this.sunValue,
+    required this.sunVal,
     required this.diameter,
     required this.strokeWidth,
   });
 
   final BuildContext context;
-  final double sunValue, diameter, strokeWidth;
+  final double sunVal, diameter, strokeWidth;
 
   @override
   void paint(Canvas canvas, Size size) {
     // draw big sun
     drawAxis(
-      sunValue,
+      sunVal,
       canvas,
       (diameter / 2) - 1,
       Paint()..color = Colors.yellowAccent,
@@ -424,7 +458,7 @@ class SunMovePainter extends CustomPainter {
     );
     // draw tiny nub on sun's edge to show actual spot of sun easier
     drawAxis(
-      sunValue,
+      sunVal,
       canvas,
       (diameter / 2) + strokeWidth - 2,
       Paint()..color = Colors.yellow,
