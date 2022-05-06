@@ -6,7 +6,6 @@ import 'package:hapi/settings/theme/app_themes.dart';
 
 class QuestRing extends StatelessWidget {
   const QuestRing(this.diameter, this.strokeWidth, this.colorSlices);
-
   final double diameter;
   final double strokeWidth;
   final Map<Z, ColorSlice> colorSlices;
@@ -80,20 +79,23 @@ class QuestRing extends StatelessWidget {
   Widget build(BuildContext context) {
     final Map<Z, ColorSlice> questRingSlices = _buildQuestRingSlices();
 
-    // RepaintBoundary prevents the ALWAYS repaint on ANY page update
     return Center(
-      child: SizedBox(
-        width: diameter,
-        height: diameter,
-        child: Stack(
-          children: [
-            // RepaintBoundary needed or it will repaint on every second tick
-            RepaintBoundary(
-              child: CustomPaint(
-                painter: MultiColorRing(questRingSlices, diameter, strokeWidth),
+      child: Directionality(
+        textDirection: TextDirection.ltr, // needed, or ring is off center
+        child: SizedBox(
+          width: diameter,
+          height: diameter,
+          child: Stack(
+            children: [
+              // RepaintBoundary prevents ALWAYS repainting on ANY page update
+              RepaintBoundary(
+                child: CustomPaint(
+                  painter:
+                      MultiColorRing(questRingSlices, diameter, strokeWidth),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
