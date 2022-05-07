@@ -195,8 +195,7 @@ class _Sliv extends StatelessWidget {
   }
 }
 
-/// SunRow is used to display the other times for a salah row, i.e. karahat
-/// sunrise and karahat istiwa and for duha and karahat sunsetting for asr.
+/// SalahRow displays actions for it's time of day, e.g. Fajr, Duha, etc.
 class SalahRow extends StatelessWidget {
   const SalahRow(this.aqC, this.z);
   final ActiveQuestsController aqC;
@@ -270,7 +269,7 @@ class SalahRow extends StatelessWidget {
               onPressed: null,
               backgroundColor: bg,
               foregroundColor: AppThemes.ldTextColor,
-              label: // rare "a." does an "at" translation TODO
+              label: // rare, does both "a." and "at" work TODO convention this
                   at('a.{0} Isharet', [z == Z.Duha ? Z.Ishraq.trKey : z.trKey]),
               autoClose: false,
             ),
