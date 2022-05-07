@@ -215,7 +215,7 @@ class SalahRow extends StatelessWidget {
 
     return ZamanController.to.isSalahRowPinned(z) && aqC.showPinnedSalahRow
         ? MultiSliver(
-            // salah row is pinned under headers
+            // salah actions and results are pinned under headers
             children: [
               _Sliv(_getSalahRowHeaders(aqC, textStyle, w1, bg)),
               _Sliv(_getSalahRowActions(aqC, w1, bg, fg)),
@@ -223,9 +223,9 @@ class SalahRow extends StatelessWidget {
             ],
           )
         : SliverStack(
-            // salah row not pinned, shrink it into the salah header
+            // If not pinned, actions and result slivers shrink into header:
             children: [
-              // add separator/quest completion indicator on bottom, folds 1st
+              // 1. separator/quest results indicator on bottom, folds 1st
               _Sliv(
                 // Start salah separator at end to give overlap effect
                 Align(
@@ -235,7 +235,7 @@ class SalahRow extends StatelessWidget {
                 minHeight: 2, //aqC.showSalahResults ? (_Sliv.slivH) + 2 : 2,
                 maxHeight: (_Sliv.slivH * 2) + 2, // so UI gets overlap effect
               ),
-              // salah actions folds second
+              // 2. salah actions, folds second:
               _Sliv(
                 Align(
                   alignment: Alignment.bottomCenter,
@@ -243,7 +243,7 @@ class SalahRow extends StatelessWidget {
                 ),
                 maxHeight: _Sliv.slivH * 2, // so UI gets overlap effect
               ),
-              // top of stack, header hides all but sun on edges, is static
+              // 3. Headers are on top of stack, so header's always show:
               _Sliv(_getSalahRowHeaders(aqC, textStyle, w1, bg)),
             ],
           );
