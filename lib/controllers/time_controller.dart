@@ -136,6 +136,7 @@ class TimeController extends GetxHapi {
   /// Holds the current day in 'yyyy-MM-dd' used for current day's calculations.
   String currDay = DUMMY_TIME_STR;
   DateTime currDayDate = DUMMY_TIME1;
+  DAY_OF_WEEK currDayOfWeek = defaultDayOfWeek;
   DateTime nextDayDate = DUMMY_TIME2;
 
   DAY_OF_WEEK _dayOfWeekHijri = defaultDayOfWeek;
@@ -180,8 +181,6 @@ class TimeController extends GetxHapi {
   DateTime dateToTomorrow(DateTime dT) => dT.add(const Duration(days: 1));
 
   /// Call to update time TODO use to detect irregular clock movement
-  /// param updateDayIsOK - we only allow zaman controller to update the day if
-  ///                       when next day zaman is hit.
   Future<void> updateTime() async {
     l.d('TimeController:updateTime: start: ntpOffset=$_ntpOffset, tzLoc=$tzLoc');
     await _updateNtpTime();
@@ -294,6 +293,7 @@ class TimeController extends GetxHapi {
     String prevDay = currDay;
     currDay = dateToDay(await now());
     currDayDate = TZDateTime.from(DateTime.parse(currDay), tzLoc);
+    currDayOfWeek = _getDayOfWeekGrego(currDayDate);
     nextDayDate = dateToTomorrow(currDayDate);
     l.i('TimeController:updateCurrDay: New day set ($currDay), prev day was ($prevDay)');
     update();
@@ -351,14 +351,13 @@ class TimeController extends GetxHapi {
     return day;
   }
 
-  // TODO bugs here, needs to update at maghrib hijri and midnight grego:
-  bool isMonday() => _dayOfWeekHijri == DAY_OF_WEEK.Monday;
-  bool isTuesday() => _dayOfWeekHijri == DAY_OF_WEEK.Tuesday;
-  bool isWednesday() => _dayOfWeekHijri == DAY_OF_WEEK.Wednesday;
-  bool isThursday() => _dayOfWeekHijri == DAY_OF_WEEK.Thursday;
-  bool isFriday() => _dayOfWeekHijri == DAY_OF_WEEK.Friday;
-  bool isSaturday() => _dayOfWeekHijri == DAY_OF_WEEK.Saturday;
-  bool isSunday() => _dayOfWeekHijri == DAY_OF_WEEK.Sunday;
+  /// NOTE: Use this isFriday for salah row header since currDay should match
+  /// the header name.  If you use is _dayOfWeekHijri the header text will change
+  /// after maghrib the day before and day of Jumah. Likewise using
+  /// _dayOfWeekGreco, it changes at midnight but the salah row headers are
+  /// still using the day before until Fajr Tomorrow. So these realtime values
+  /// are not always desired to show the day of the week.
+  bool isFriday() => currDayOfWeek == DAY_OF_WEEK.Friday;
 
   String trValDateHijri(bool addDayOfWeek) {
     DateTime dT = now2(); // TODO use now()?
