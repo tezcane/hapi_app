@@ -291,13 +291,13 @@ showSnackBar(
 ///   w  - width (of screen)
 ///   h  - height (of screen)
 ///   cb - theme color background
-///   cs - theme color scaffold
+///   cf - theme color foreground
 ///   ct - theme color text
 double wm(BuildContext context) => MediaQuery.of(context).size.width - 40;
 double w(BuildContext context) => MediaQuery.of(context).size.width;
 double h(BuildContext context) => MediaQuery.of(context).size.height;
 Color cb(BuildContext context) => Theme.of(context).backgroundColor;
-Color cs(BuildContext context) => Theme.of(context).scaffoldBackgroundColor;
+Color cf(BuildContext context) => Theme.of(context).scaffoldBackgroundColor;
 Color ct(BuildContext context) => Theme.of(context).textTheme.headline6!.color!;
 
 /// cni = Convert Number Integer, int to other numeral system string, if needed.
