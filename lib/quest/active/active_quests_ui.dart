@@ -213,7 +213,7 @@ class SalahRow extends StatelessWidget {
     final Color fg = cf(context); // color foreground
     final TextStyle textStyle = Theme.of(context).textTheme.headline6!;
 
-    return ZamanController.to.isSalahRowPinned(z) && aqC.showSalahActions
+    return ZamanController.to.isSalahRowPinned(z) && aqC.showPinnedSalahRow
         ? MultiSliver(
             // salah row is pinned under headers
             children: [
@@ -232,7 +232,7 @@ class SalahRow extends StatelessWidget {
                   alignment: Alignment.bottomCenter,
                   child: _getSalahRowResults(),
                 ),
-                minHeight: aqC.showSalahResults ? (_Sliv.slivH) + 2 : 2,
+                minHeight: 2, //aqC.showSalahResults ? (_Sliv.slivH) + 2 : 2,
                 maxHeight: (_Sliv.slivH * 2) + 2, // so UI gets overlap effect
               ),
               // salah actions folds second
@@ -317,28 +317,21 @@ class SalahRow extends StatelessWidget {
     });
   }
 
+  /// Toggle's force showing pinned salah row actions
   void handlePinnedHeaderTapped(ActiveQuestsController aqC, Z z) {
-    // cycles through Show pinned actions -> hide both -> show results
-    if (aqC.showSalahActions) {
-      // if actions showing, hide both
-      aqC.showSalahActions = false;
-      aqC.showSalahResults = false;
-    } else if (!aqC.showSalahActions && !aqC.showSalahResults) {
-      // if both hidden, show results
-      aqC.showSalahResults = true;
-    } else if (aqC.showSalahResults) {
-      // if results showing, hide and show actions again
-      aqC.showSalahResults = false;
-      aqC.showSalahActions = true;
+    if (aqC.showPinnedSalahRow) {
+      aqC.showPinnedSalahRow = false;
+    } else {
+      aqC.showPinnedSalahRow = true;
 
-      // at start of new, toggle Z's header title (if supported):
-      // Night/2 <-> Middle of Night
-      // Night/3 <-> Last 3rd of Night
-      // Dhuhr <-> Jumah (switches on Friday only)
       handleUnpinnedHeaderTapped(aqC, z);
     }
   }
 
+  /// If header supports it, toggle Z's header title:
+  ///   Night/2 <-> Middle of Night
+  ///   Night/3 <-> Last 3rd of Night
+  ///   Dhuhr <-> Jumah (switches on Friday only)
   void handleUnpinnedHeaderTapped(ActiveQuestsController aqC, Z z) {
     if (z == Z.Middle_of_Night) {
       if (aqC.showLayl2) {

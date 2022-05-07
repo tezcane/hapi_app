@@ -22,10 +22,8 @@ class ActiveQuestsController extends GetxHapi {
   bool _show12HourClock = s.rd('show12HourClock') ?? true;
   bool get show12HourClock => _show12HourClock;
 
-  bool _showSalahActions = s.rd('showSalahActions') ?? true;
-  bool get showSalahActions => _showSalahActions;
-  bool _showSalahResults = s.rd('showSalahResults') ?? false;
-  bool get showSalahResults => _showSalahResults;
+  bool _showPinnedSalahRow = s.rd('showPinnedSalahRow') ?? true;
+  bool get showPinnedSalahRow => _showPinnedSalahRow;
 
   bool _showLayl2 = s.rd('showLayl2') ?? true;
   bool get showLayl2 => _showLayl2;
@@ -72,15 +70,9 @@ class ActiveQuestsController extends GetxHapi {
     update();
   }
 
-  set showSalahActions(bool value) {
-    _showSalahActions = value;
-    s.wr('showSalahActions', _showSalahActions);
-    update();
-  }
-
-  set showSalahResults(bool value) {
-    _showSalahResults = value;
-    s.wr('showSalahResults', _showSalahResults);
+  set showPinnedSalahRow(bool value) {
+    _showPinnedSalahRow = value;
+    s.wr('showPinnedSalahRow', _showPinnedSalahRow);
     update();
   }
 
