@@ -931,7 +931,11 @@ class _IconSunrise extends StatelessWidget {
     return Column(
       children: [
         // takes up missing space and also indicate sunrise with up arrow:
-        const Icon(Icons.arrow_drop_up_outlined, size: _Sliv.slivH / 2),
+        const Icon(
+          Icons.arrow_drop_up_outlined,
+          size: _Sliv.slivH / 2,
+          color: AppThemes.ldTextColor,
+        ),
         Stack(
           children: [
             SizedBox(width: w1, height: _Sliv.slivH / 2 - 2),
