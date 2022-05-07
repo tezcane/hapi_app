@@ -918,7 +918,7 @@ class _IconSunrise extends StatelessWidget {
 
     return Stack(
       children: [
-        SizedBox(width: w1, height: _Sliv.slivH / 2),
+        SizedBox(width: w1, height: _Sliv.slivH / 2 - 2), // -2 = active border
         Positioned.fill(
           left: 4,
           child: Row(
@@ -955,7 +955,7 @@ class _IconSunsetting extends StatelessWidget {
 
     return Stack(
       children: [
-        SizedBox(width: w1, height: _Sliv.slivH / 2),
+        SizedBox(width: w1, height: _Sliv.slivH / 2 - 2), // -2 = active border
         Positioned.fill(
           top: 4,
           left: -18,
