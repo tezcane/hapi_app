@@ -158,42 +158,41 @@ class Storage {
 
 // TODO change to TK - Translate trKey, and TV - Translate trValue
 /// "T"/"t" short for Text, use to translate or fit text in UI.
-// ignore: must_be_immutable
+///
+/// NOTE 1: When wrapped in Center this broke Swiper UI
+/// NOTE 2: Looks like height is not taken into account unless you wrap caller
+///         in a Center() too. So if you want to constraint on height do that.
 class T extends StatelessWidget {
-  T(
-    this.trKey,
+  const T(
+    this.trKeyOrVal,
     this.style, {
     this.alignment = Alignment.center,
     this.w,
-    this.h = 21, // Slightly smaller than salah header, and fits Tahajjud nicely
+    this.h = 25,
     this.boxFit = BoxFit.contain, // BoxFit.fitHeight, BoxFit.fitWidth
     this.trVal = false,
   });
-
-  final String trKey;
+  final String trKeyOrVal;
   final TextStyle? style;
   final Alignment alignment;
-  double? w;
+  final double? w;
   final double h;
   final BoxFit boxFit;
-
-  /// trKey sometimes comes in already translated (trVal) so don't translate again.
-  final bool trVal;
+  final bool trVal; // set to true if trKeyOrVal comes in already translated
 
   @override
   Widget build(BuildContext context) {
-    w ??= wm(context); // if not specified take up most of the screen width
-    // NOTE: when wrapped in Center this broke Swiper UI
+    double? width = w;
+    width ??= wm(context); // if not specified take up most of the screen width
+    //width -= 10; // text always designed to take up full width, add 10% padding
+
     return SizedBox(
-      width: w,
+      width: width,
       height: h,
       child: FittedBox(
         fit: boxFit,
-        alignment: alignment, // use to align text,
-        child: Text(
-          trVal ? trKey : a(trKey), // translate only if we need to
-          style: style,
-        ), // tr ok!!!
+        alignment: alignment,
+        child: Text(trVal ? trKeyOrVal : a(trKeyOrVal), style: style),
       ),
     );
   }
@@ -256,12 +255,10 @@ class TS extends TextStyle {
   }) : super(color: color, fontWeight: fontWeight);
 }
 
-/// Commonly used TextStyles, tsN (normal), tsB (bold):
+/// Commonly used TextStyles: tsB (Bold), tsN (Normal), tsR (Red):
+TS tsB = TS(Get.theme.textTheme.headline6!.color!, fontWeight: FontWeight.bold);
 const TS tsN = TS(AppThemes.ldTextColor);
-TS tsB = TS(
-  Get.theme.textTheme.headline6!.color!,
-  fontWeight: FontWeight.bold,
-);
+const TS tsR = TS(Colors.red);
 
 showSnackBar(
   String trKeyTitle,

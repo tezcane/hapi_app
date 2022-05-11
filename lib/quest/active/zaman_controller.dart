@@ -220,6 +220,12 @@ class ZamanController extends GetxHapi {
     nextZTooltipTime = _athan!.getZamanTime(nextZTooltip)[0] as DateTime;
     l.d('ZamanController:_updateTooltip: updating to currZT=$currZTooltip, nextZT=$nextZTooltip, nextZTTime=$nextZTooltipTime');
 
+    // special case to support "at" of Fajr tomorrow ('a.{0} Tomorrow').
+    String trKeyOrVal = nTooltip.trKey;
+    if (nextZTooltip == Z.Fajr_Tomorrow) {
+      trKeyOrVal = at(trKeyOrVal, [Z.Fajr.trKey]);
+    }
+
     if (cTooltip != null) {
       if (nextZ.index != currZ.index + 1) {
         l.w('ZamanController:_updateTooltip: potential logic issue: (nextZ($nextZ)!=currZ($currZ)+1 when updating tooltip - currZTooltip=$currZTooltip, nextZTooltip=$nextZTooltip, nextZTooltipTime=$nextZTooltipTime');
@@ -227,7 +233,7 @@ class ZamanController extends GetxHapi {
       trValTimeToNextZamanTooltip = at(
         // {0}:{1}:{2} until "{3}" ends and "{4}" begins
         'at.aqCountdownTimer',
-        ['a.Saat', 'a.Daqayiq', 'a.Thawani', cTooltip.trKey, nTooltip.trKey],
+        ['a.Saat', 'a.Daqayiq', 'a.Thawani', cTooltip.trKey, trKeyOrVal],
       );
     } else {
       if (nextZ.index == currZ.index + 1) {
@@ -236,7 +242,7 @@ class ZamanController extends GetxHapi {
       trValTimeToNextZamanTooltip = at(
         // {0}:{1}:{2} until "{3}" begins
         'at.aqCountdownTimerLayl',
-        ['a.Saat', 'a.Daqayiq', 'a.Thawani', nTooltip.trKey],
+        ['a.Saat', 'a.Daqayiq', 'a.Thawani', trKeyOrVal],
       );
     }
   }
@@ -282,15 +288,15 @@ class ZamanController extends GetxHapi {
     _updateTooltip(cTooltip, nTooltip);
   }
 
-  bool isCurrQuest(Z z, QUEST quest) =>
-      isSalahRowPinned(z) && ActiveQuestsAjrController.to.isQuestActive(quest);
+  // bool isCurrQuest(Z z, QUEST quest) =>
+  //     isSalahRowPinned(z) && ActiveQuestsAjrController.to.isQuestActive(quest);
 
   /// Check if given Z is currently pinned to UI. Pinned does not mean all
   /// quests for that row are active. It also does not meant that it should be
   /// highlighted on UI as there are special cases on Duha and Maghrib to
   /// bold/highlight karahat cells instead of the header.
   bool isSalahRowPinned(Z z) {
-    List<Z> zs = [z];
+    List<Z> zs = [z]; // add Z here so don't have to insert everywhere below
 
     switch (z) {
       case Z.Fajr:
@@ -301,7 +307,8 @@ class ZamanController extends GetxHapi {
       case Z.Dhuhr:
         break;
       case Z.Asr:
-        // if asr ibadah not done, asr active- we have until sunset to complete
+        // if Asr ibadah not done, give until sunset (maghrib) to complete
+        // Asr's EVENING ADHKAR, DHIKR and DUA only. Fard ends at Karahat time.
         if (!ActiveQuestsAjrController.to.isAsrComplete) zs.add(Z.Ghurub);
         break;
       case Z.Maghrib:
@@ -309,16 +316,15 @@ class ZamanController extends GetxHapi {
         if (ActiveQuestsAjrController.to.isAsrComplete) zs.add(Z.Ghurub);
         break;
       case Z.Isha:
-        // if isha ibadah done, then we move to Layl times right away, we don't
-        // wait for currZ to equal Z.Middle/Last 3rd of Night.
+        // if isha ibadah done, then we move to Layl times right away (we don't
+        // wait for currZ to equal Z.Middle/Last 3rd of Night).
         if (ActiveQuestsAjrController.to.isIshaComplete) zs.clear();
         break;
       case Z.Middle_of_Night:
       case Z.Last_3rd_of_Night:
-        return isLaylSalahRowPinned(z);
+        return isLaylSalahRowPinned(z); // special logic used elsewhere too
       default:
-        l.E('Invalid Zaman "$z" given when in isSalahRowPinned()');
-        return false;
+        return l.E('isSalahRowPinned: Invalid Zaman "$z" given');
     }
 
     for (Z z in zs) {
@@ -340,8 +346,7 @@ class ZamanController extends GetxHapi {
         if (!ActiveQuestsAjrController.to.isMiddleOfNightComplete) return false;
         break;
       default:
-        l.E('Invalid Zaman "$z" given when in isLaylSalahRowPinned()');
-        return false;
+        return l.E('isLaylSalahRowPinned: Invalid Zaman "$z" given');
     }
 
     // return true if currZ is Isha, Middle_of_Night or Last_3rd_of_Night

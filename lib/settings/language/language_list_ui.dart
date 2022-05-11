@@ -13,10 +13,10 @@ class LanguageListUI extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           T(
-            'settings.language',
+            'i.Language',
             null,
             w: wm(context) / 4,
-            alignment: Alignment.center,
+            alignment: LanguageController.to.centerLeft,
           ),
           DropdownPicker(
             trMenuOptions: languageOptions,

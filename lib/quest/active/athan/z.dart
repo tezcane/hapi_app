@@ -49,36 +49,31 @@ extension EnumUtil on Z {
     return 'a.$transliteration';
   }
 
-  QUEST getFirstQuest() {
+  /// Used to set misses at new Z time init
+  QUEST firstQuestToNotSetMiss() {
     switch (this) {
       case (Z.Fajr):
-        return QUEST.FAJR_MUAKB;
+      case (Z.Dhuhr):
+      case (Z.Asr):
+      case (Z.Maghrib):
+      case (Z.Isha):
+      case (Z.Middle_of_Night):
+        return getZRowQuests().first;
       case (Z.Shuruq):
-        return QUEST.KARAHAT_SUNRISE;
       case (Z.Ishraq):
-        return QUEST.DUHA_ISHRAQ;
+        return QUEST.KARAHAT_SUNRISE;
       case (Z.Duha):
         return QUEST.DUHA_DUHA;
       case (Z.Istiwa):
         return QUEST.KARAHAT_ISTIWA;
-      case (Z.Dhuhr):
-        return QUEST.DHUHR_MUAKB;
-      case (Z.Asr):
-        return QUEST.ASR_NAFLB;
       case (Z.Ghurub):
-        return QUEST.KARAHAT_SUNSET;
-      case (Z.Maghrib):
-        return QUEST.MAGHRIB_FARD;
-      case (Z.Isha):
-        return QUEST.ISHA_NAFLB;
-      case (Z.Middle_of_Night):
-        return QUEST.LAYL_QIYAM;
+        return QUEST.ASR_FARD; // only disallow ASR salah's, adhkar/thikr/dua ok
       case (Z.Last_3rd_of_Night):
-        return QUEST.LAYL_SLEEP; // other logic protects this at init
-      case (Z.Fajr_Tomorrow): // still needed so we can set full misses
-        return QUEST.LAYL_SLEEP; // TODO works?
+        return QUEST.LAYL_QIYAM; // isha must be prayed before Middle of Night
+      case (Z.Fajr_Tomorrow): // needed to set full misses at end of day detect
+        return QUEST.NONE; // sets Witr miss last, if needed
       default:
-        return l.E('Z:getFirstQuest: Invalid Z "$this" given');
+        return l.E('Z:firstQuestToNotSetMiss: Invalid Z "$this" given');
     }
   }
 
@@ -101,6 +96,75 @@ extension EnumUtil on Z {
         return false;
       default:
         return l.E('Z:isSunAboveHorizon: Invalid Z "$this" given');
+    }
+  }
+
+  List<QUEST> getZRowQuests() {
+    switch (this) {
+      case (Z.Fajr):
+        return [
+          QUEST.FAJR_MUAKB,
+          QUEST.FAJR_FARD,
+          QUEST.MORNING_ADHKAR,
+          QUEST.FAJR_THIKR,
+          QUEST.FAJR_DUA,
+        ];
+      case (Z.Duha):
+        return [
+          QUEST.KARAHAT_SUNRISE,
+          QUEST.DUHA_ISHRAQ,
+          QUEST.DUHA_DUHA,
+          QUEST.KARAHAT_ISTIWA,
+        ];
+      case (Z.Dhuhr):
+        return [
+          QUEST.DHUHR_MUAKB,
+          QUEST.DHUHR_FARD,
+          QUEST.DHUHR_MUAKA,
+          QUEST.DHUHR_NAFLA,
+          QUEST.DHUHR_THIKR,
+          QUEST.DHUHR_DUA,
+        ];
+      case (Z.Asr):
+        return [
+          QUEST.ASR_NAFLB,
+          QUEST.ASR_FARD,
+          QUEST.EVENING_ADHKAR,
+          QUEST.ASR_THIKR,
+          QUEST.ASR_DUA,
+        ];
+      case (Z.Maghrib):
+        return [
+          QUEST.KARAHAT_SUNSET,
+          QUEST.MAGHRIB_FARD,
+          QUEST.MAGHRIB_MUAKA,
+          QUEST.MAGHRIB_NAFLA,
+          QUEST.MAGHRIB_THIKR,
+          QUEST.MAGHRIB_DUA,
+        ];
+      case (Z.Isha):
+        return [
+          QUEST.ISHA_NAFLB,
+          QUEST.ISHA_FARD,
+          QUEST.ISHA_MUAKA,
+          QUEST.ISHA_NAFLA,
+          QUEST.ISHA_THIKR,
+          QUEST.ISHA_DUA,
+        ];
+      case (Z.Middle_of_Night):
+        return [
+          QUEST.LAYL_QIYAM,
+          QUEST.LAYL_THIKR,
+          QUEST.LAYL_DUA,
+        ];
+      case (Z.Last_3rd_of_Night):
+        return [
+          QUEST.LAYL_SLEEP,
+          QUEST.LAYL_TAHAJJUD,
+          QUEST.LAYL_WITR,
+        ];
+      default:
+        return l.E('Z:getZRowQuests: Invalid Z "$this" given');
     }
   }
 }

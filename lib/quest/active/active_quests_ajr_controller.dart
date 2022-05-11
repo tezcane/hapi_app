@@ -16,7 +16,7 @@ const int ajr4Epic = 4;
 const int ajr5Legendary = 5;
 const int ajr6TimeNotInYet = 6; // so can show blank around ring
 
-// ONLY NEW VALUES CAN BE ADDED TO PRESERVE ENUM IN DB:
+/// ONLY NEW VALUES CAN BE ADDED TO PRESERVE ENUM IN DB:
 enum QUEST {
   FAJR_MUAKB, // Muakaddah Before
   FAJR_FARD,
@@ -66,35 +66,6 @@ enum QUEST {
   NONE, // used as terminator and no operation, but also stores bit length
 }
 
-extension EnumUtil on QUEST {
-  /// Returns first part enum (must be uppercase), so: FAJR_FARD -> returns FAJR
-  String salahRow() => name.split('_').first;
-
-  bool get isFard => name.endsWith('FARD');
-
-  bool get isMuak => isMuakB || isMuakA;
-  bool get isMuakB => name.endsWith('MUAKB');
-  bool get isMuakA => name.endsWith('MUAKA');
-
-  bool get isNafl => isNaflB || isNaflA;
-  bool get isNaflB => name.endsWith('NAFLB');
-  bool get isNaflA => name.endsWith('NAFLA');
-
-  bool get isThikr => name.endsWith('THIKR');
-  bool get isDua => name.endsWith('DUA');
-
-  bool get isQuestCellTimeBound {
-    switch (this) {
-      case (QUEST.DUHA_ISHRAQ):
-      case (QUEST.DUHA_DUHA):
-      case (QUEST.MAGHRIB_FARD): // TODO test
-        return true;
-      default:
-        return false;
-    }
-  }
-}
-
 /// Bit Completion Type
 enum BitType {
   DONE,
@@ -102,11 +73,194 @@ enum BitType {
   MISS,
 }
 
+enum QUEST_STATE {
+  DONE,
+  SKIP,
+  MISS,
+  NOT_ACTIVE_YET,
+  ACTIVE_CURR_QUEST,
+  ACTIVE,
+}
+
+extension EnumUtil on QUEST {
+  bool get isFard => name.endsWith('FARD');
+  bool get isMuak => isMuakB || isMuakA;
+  bool get isMuakB => name.endsWith('MUAKB');
+  bool get isMuakA => name.endsWith('MUAKA');
+  bool get isNafl => isNaflB || isNaflA;
+  bool get isNaflB => name.endsWith('NAFLB');
+  bool get isNaflA => name.endsWith('NAFLA');
+
+  bool get isAdhkar => name.endsWith('ADHKAR');
+  bool get isFardThikr => name.endsWith('THIKR') && !name.startsWith('LAYL');
+  bool get isFardDua => name.endsWith('DUA') && !name.startsWith('LAYL');
+
+  bool get isLayl => name.startsWith('LAYL');
+
+  Z getQuestZRow() {
+    switch (this) {
+      case (QUEST.FAJR_MUAKB):
+      case (QUEST.FAJR_FARD):
+      case (QUEST.MORNING_ADHKAR):
+      case (QUEST.FAJR_THIKR):
+      case (QUEST.FAJR_DUA):
+        return Z.Fajr;
+      case (QUEST.KARAHAT_SUNRISE):
+      case (QUEST.DUHA_ISHRAQ):
+      case (QUEST.DUHA_DUHA):
+      case (QUEST.KARAHAT_ISTIWA):
+        return Z.Duha;
+      case (QUEST.DHUHR_MUAKB):
+      case (QUEST.DHUHR_FARD):
+      case (QUEST.DHUHR_MUAKA):
+      case (QUEST.DHUHR_NAFLA):
+      case (QUEST.DHUHR_THIKR):
+      case (QUEST.DHUHR_DUA):
+        return Z.Dhuhr;
+      case (QUEST.ASR_NAFLB):
+      case (QUEST.ASR_FARD):
+      case (QUEST.EVENING_ADHKAR):
+      case (QUEST.ASR_THIKR):
+      case (QUEST.ASR_DUA):
+        return Z.Asr;
+      case (QUEST.KARAHAT_SUNSET):
+      case (QUEST.MAGHRIB_FARD):
+      case (QUEST.MAGHRIB_MUAKA):
+      case (QUEST.MAGHRIB_NAFLA):
+      case (QUEST.MAGHRIB_THIKR):
+      case (QUEST.MAGHRIB_DUA):
+        return Z.Maghrib;
+      case (QUEST.ISHA_NAFLB):
+      case (QUEST.ISHA_FARD):
+      case (QUEST.ISHA_MUAKA):
+      case (QUEST.ISHA_NAFLA):
+      case (QUEST.ISHA_THIKR):
+      case (QUEST.ISHA_DUA):
+        return Z.Isha;
+      case (QUEST.LAYL_QIYAM):
+      case (QUEST.LAYL_THIKR):
+      case (QUEST.LAYL_DUA):
+        return Z.Middle_of_Night;
+      case (QUEST.LAYL_SLEEP):
+      case (QUEST.LAYL_TAHAJJUD):
+      case (QUEST.LAYL_WITR):
+        return Z.Last_3rd_of_Night;
+      default:
+        return l.E('Z:getZRow: Invalid QUEST "$this" given');
+    }
+  }
+
+  QUEST_STATE getActionState() {
+    ActiveQuestsAjrController ajrC = ActiveQuestsAjrController.to;
+
+    // if task is complete, DONE, SKIP or MISS
+    if (ajrC.isDone(this)) return QUEST_STATE.DONE;
+    if (ajrC.isSkip(this)) return QUEST_STATE.SKIP;
+    if (ajrC.isMiss(this)) return QUEST_STATE.MISS;
+
+    // get the ZRow of this quest
+    Z zRow = getQuestZRow();
+
+    // if salah row is not pinned, NOT_ACTIVE_YET
+    bool isNotInPinnedSalahRow = !ZamanController.to.isSalahRowPinned(zRow);
+    if (isNotInPinnedSalahRow) return QUEST_STATE.NOT_ACTIVE_YET;
+
+    // if it is the current quest (next in line) and pinned, ACTIVE_CURR_QUEST
+    bool isQuestAtCurrIdx = ajrC.isQuestAtCurrIdx(this);
+    if (isQuestAtCurrIdx) return QUEST_STATE.ACTIVE_CURR_QUEST;
+
+    // find out if the salah's      for this pinned row are complete or not
+    // find out if adhkar and dhikr for this pinned row are complete or not
+    bool salahQuestsAreComplete = true;
+    bool adhkarAndThikrAreComplete = true;
+    List<QUEST> zRowQuests = zRow.getZRowQuests();
+    for (QUEST q in zRowQuests) {
+      if (q.isFard || q.isMuak || q.isNafl || q.isLayl) {
+        if (ajrC.isNotComplete(q)) {
+          salahQuestsAreComplete = false;
+          adhkarAndThikrAreComplete = false; // can't be true either
+          break;
+        }
+      } else if (q.isAdhkar || q.isFardThikr) {
+        if (ajrC.isNotComplete(q)) adhkarAndThikrAreComplete = false;
+      }
+    }
+
+    Z currZ = ZamanController.to.currZ;
+
+    // if we got here: Quest's zRow is Pinned but it's not the current quest
+    switch (this) {
+      // FARD, MUAK, NAFL, and LAYL quests must be done sequentially
+      case (QUEST.FAJR_MUAKB):
+      case (QUEST.FAJR_FARD):
+      case (QUEST.DHUHR_MUAKB):
+      case (QUEST.DHUHR_FARD):
+      case (QUEST.DHUHR_MUAKA):
+      case (QUEST.DHUHR_NAFLA):
+      case (QUEST.ASR_NAFLB):
+      case (QUEST.ASR_FARD):
+      case (QUEST.MAGHRIB_FARD):
+      case (QUEST.MAGHRIB_MUAKA):
+      case (QUEST.MAGHRIB_NAFLA):
+      case (QUEST.ISHA_NAFLB):
+      case (QUEST.ISHA_FARD):
+      case (QUEST.ISHA_MUAKA):
+      case (QUEST.ISHA_NAFLA):
+      case (QUEST.LAYL_QIYAM):
+      case (QUEST.LAYL_THIKR):
+      case (QUEST.LAYL_DUA):
+      case (QUEST.LAYL_SLEEP):
+      case (QUEST.LAYL_TAHAJJUD):
+      case (QUEST.LAYL_WITR):
+        return QUEST_STATE.NOT_ACTIVE_YET;
+
+      // karahat can complete anytime isSalahRowPinned:
+      case (QUEST.KARAHAT_SUNRISE):
+      case (QUEST.KARAHAT_ISTIWA):
+      case (QUEST.KARAHAT_SUNSET):
+        return QUEST_STATE.ACTIVE;
+
+      // adhkar and thikr must wait until salahQuestsAreComplete
+      case (QUEST.MORNING_ADHKAR):
+      case (QUEST.EVENING_ADHKAR):
+      case (QUEST.FAJR_THIKR):
+      case (QUEST.DHUHR_THIKR):
+      case (QUEST.ASR_THIKR):
+      case (QUEST.MAGHRIB_THIKR):
+      case (QUEST.ISHA_THIKR):
+        if (salahQuestsAreComplete) return QUEST_STATE.ACTIVE;
+        return QUEST_STATE.NOT_ACTIVE_YET;
+
+      // Salah duas wait until salah, adhkar, and thikr quests are complete
+      case (QUEST.FAJR_DUA):
+      case (QUEST.DHUHR_DUA):
+      case (QUEST.ASR_DUA):
+      case (QUEST.MAGHRIB_DUA):
+      case (QUEST.ISHA_DUA):
+        if (adhkarAndThikrAreComplete) return QUEST_STATE.ACTIVE;
+        return QUEST_STATE.NOT_ACTIVE_YET;
+
+      // ishraq only active during ishraq time
+      case (QUEST.DUHA_ISHRAQ):
+        // Karahat sunrise not complete
+        if (currZ == Z.Ishraq) return QUEST_STATE.ACTIVE;
+        return QUEST_STATE.NOT_ACTIVE_YET;
+      // Duha active anytime during ishraq and duha only
+      case (QUEST.DUHA_DUHA):
+        // Karahat sunrise not complete
+        if (currZ == Z.Ishraq || currZ == Z.Duha) return QUEST_STATE.ACTIVE;
+        return QUEST_STATE.NOT_ACTIVE_YET;
+
+      default:
+        return l.E('Z:getActionState: Invalid QUEST "$this" given');
+    }
+  }
+}
+
 /// Controls Active Quests Ajr/Points via storing QUEST results in 3 ints to
 /// know if the QUEST is done (completed by user), skipped (by user), or missed
-/// (the user didn't complete the quest and time ran out on them). The ints
-/// store a QUEST's result by using the Enum index and using it as a bit/binary
-/// offset.
+/// (the user didn't complete the quest so it expired on them). The ints store a
+/// QUEST's result by using the Enum index and using it as a bit/binary offset.
 class ActiveQuestsAjrController extends GetxHapi {
   static ActiveQuestsAjrController get to => Get.find();
 
@@ -140,36 +294,43 @@ class ActiveQuestsAjrController extends GetxHapi {
     int questsMissCopy = _questsMiss;
 
     QUEST lastQuest = QUEST.values[0];
-    for (QUEST quest in QUEST.values) {
-      lastQuest = quest;
-      if (quest == currZ.getFirstQuest()) {
-        l.i('Stopping init: $quest, _questsMiss=$_questsMiss');
+    for (QUEST q in QUEST.values) {
+      lastQuest = q;
+      if (q == currZ.firstQuestToNotSetMiss()) {
+        l.i('Stopping init: $q, _questsMiss=$_questsMiss');
         break;
       }
-      if (isComplete(quest)) continue; // task was completed already
+      if (isComplete(q)) continue; // task was completed already
 
-      if (currZ == Z.Ghurub) {
+      // As long as Duha and Maghrib rows are pinned allow their Karahat Quests
+      if (currZ.index <= Z.Istiwa.index) {
+        // As long as Duha row is pinned allow karahat Quests (Istiwa too)
+        if (q == QUEST.KARAHAT_SUNRISE) continue;
+      } else if (currZ.index <= Z.Maghrib.index) {
+        // As long as Maghrib row is pinned allow karahat sunset Quest
+        if (q == QUEST.KARAHAT_SUNSET) continue;
+      } else if (currZ == Z.Ghurub) {
         // We are in Ghurub/Sunsetting time but we need to allow user to still
         // do their adhkar until sunset.  Therefore, we don't force miss the
         // below quests when Ghurub time comes in:
-        if (quest == QUEST.EVENING_ADHKAR ||
-            quest == QUEST.ASR_THIKR ||
-            quest == QUEST.ASR_DUA) {
+        if (q == QUEST.EVENING_ADHKAR ||
+            q == QUEST.ASR_THIKR ||
+            q == QUEST.ASR_DUA) {
           continue;
         }
       } else if (currZ == Z.Last_3rd_of_Night) {
         // We are in Last 3rd of Night time but we need to allow user to still
         // do their Middle of Night ibadah. Therefore, we don't force miss the
         // below quests when Last_3rd_of_Night of night time comes in:
-        if (quest == QUEST.LAYL_QIYAM ||
-            quest == QUEST.LAYL_THIKR ||
-            quest == QUEST.LAYL_DUA) {
+        if (q == QUEST.LAYL_QIYAM ||
+            q == QUEST.LAYL_THIKR ||
+            q == QUEST.LAYL_DUA) {
           continue;
         }
       }
 
-      // user never inputted this value, we set it as missed
-      _setMiss(quest); // Does don't write to DB
+      // user never inputted this value, and its time expired, set it as missed
+      _setMiss(q); // Does don't write to DB
     }
 
     // only update db if new misses were found
@@ -179,8 +340,9 @@ class ActiveQuestsAjrController extends GetxHapi {
     }
   }
 
-  bool isQuestActive(QUEST q) => getCurrIdx == q.index;
+  bool isQuestAtCurrIdx(QUEST q) => getCurrIdx == q.index;
 
+  /// Returns the first incomplete bit index
   get getCurrIdx {
     int allQuests = _questsDone | _questsSkip | _questsMiss;
     if (allQuests == 0) return 0; // avoid "0"/"1" binary case from below:
@@ -203,9 +365,9 @@ class ActiveQuestsAjrController extends GetxHapi {
   bool get isAsrComplete =>
       isComplete(QUEST.ASR_NAFLB) &&
       isComplete(QUEST.ASR_FARD) &&
+      isComplete(QUEST.EVENING_ADHKAR) &&
       isComplete(QUEST.ASR_THIKR) &&
-      isComplete(QUEST.ASR_DUA) &&
-      isComplete(QUEST.EVENING_ADHKAR);
+      isComplete(QUEST.ASR_DUA);
 
   bool get isIshaComplete =>
       isComplete(QUEST.ISHA_NAFLB) &&
@@ -220,19 +382,19 @@ class ActiveQuestsAjrController extends GetxHapi {
       isComplete(QUEST.LAYL_THIKR) &&
       isComplete(QUEST.LAYL_DUA);
 
-  setDone(QUEST quest) => _setBit(quest, BitType.DONE, true);
-  setSkip(QUEST quest) => _setBit(quest, BitType.SKIP, true);
-  _setMiss(QUEST quest) => _setBit(quest, BitType.MISS, false);
-  _setBit(QUEST quest, BitType bitType, bool updateDb) {
+  setDone(QUEST q) => _setBit(q, BitType.DONE, true);
+  setSkip(QUEST q) => _setBit(q, BitType.SKIP, true);
+  _setMiss(QUEST q) => _setBit(q, BitType.MISS, false);
+  _setBit(QUEST q, BitType bitType, bool updateDb) {
     switch (bitType) {
       case (BitType.DONE):
-        _questsDone |= 1 << quest.index;
+        _questsDone |= 1 << q.index;
         break;
       case (BitType.SKIP):
-        _questsSkip |= 1 << quest.index;
+        _questsSkip |= 1 << q.index;
         break;
       case (BitType.MISS):
-        _questsMiss |= 1 << quest.index;
+        _questsMiss |= 1 << q.index;
         break;
     }
 
@@ -253,34 +415,34 @@ class ActiveQuestsAjrController extends GetxHapi {
       }
 
       // only needed on data changes, see handleTooltipUpdate()
-      if (quest.index > QUEST.ISHA_DUA.index) {
+      if (q.index > QUEST.ISHA_DUA.index) {
         ZamanController.to.handleTooltipUpdate(null);
       }
 
       ActiveQuestsController.to.update(); // refresh UI (don't wait for below)
 
-      updateDB(quest, bitType); // TODO catch e to undo/not flush bit?
+      updateDB(q, bitType); // TODO catch e to undo/not flush bit?
     }
   }
 
-  void setClearQuest(QUEST quest) {
-    l.v('clearQuest: $quest (index=${quest.index}) = $_questsMiss');
-    _questsDone &= ~(1 << quest.index);
-    _questsSkip &= ~(1 << quest.index);
-    _questsMiss &= ~(1 << quest.index);
+//   void setClearQuest(QUEST q) {
+//     l.v('clearQuest: $quest (index=${q.index}) = $_questsMiss');
+//     _questsDone &= ~(1 << q.index);
+//     _questsSkip &= ~(1 << q.index);
+//     _questsMiss &= ~(1 << q.index);
+//
+//     // Prob not needed here, but ok:
+//     if (q.index > QUEST.ISHA_DUA.index) {
+//       ZamanController.to.handleTooltipUpdate(null);
+//     }
+//
+//     // NOTE: Caller sets new bits after clearing, so don't need below:
+// //  updateDB();
+// //  ActiveQuestsController.to.update();
+//   }
 
-    // Prob not needed here, but ok:
-    if (quest.index > QUEST.ISHA_DUA.index) {
-      ZamanController.to.handleTooltipUpdate(null);
-    }
-
-    // NOTE: Caller sets new bits after clearing, so don't need below:
-//  updateDB();
-//  ActiveQuestsController.to.update();
-  }
-
-  updateDB(QUEST quest, BitType bitType) async {
-    l.d('ActiveQuestAjrController:updateDB(${quest.name}): ${bitType.name} bit(s) changed, writing DONE=$_questsDone, SKIP=$_questsSkip, MISS=$_questsMiss');
+  updateDB(QUEST q, BitType bitType) async {
+    l.d('ActiveQuestAjrController:updateDB(${q.name}): ${bitType.name} bit(s) changed, writing DONE=$_questsDone, SKIP=$_questsSkip, MISS=$_questsMiss');
 
     await Db.setActiveQuest(
       ActiveQuestModel(
@@ -297,74 +459,25 @@ class ActiveQuestsAjrController extends GetxHapi {
   Map<Z, int> get questRingColors {
     Map<Z, int> questRingColors = {};
 
-    getZamanRingColor(questRingColors, Z.Fajr, [
-      QUEST.FAJR_MUAKB,
-      QUEST.FAJR_FARD,
-      QUEST.MORNING_ADHKAR,
-      QUEST.FAJR_THIKR,
-      QUEST.FAJR_DUA,
-    ]);
-    getZamanRingColor(questRingColors, Z.Duha, [
-      QUEST.KARAHAT_SUNRISE,
-      QUEST.DUHA_ISHRAQ,
-      QUEST.DUHA_DUHA,
-      QUEST.KARAHAT_ISTIWA,
-    ]);
-    getZamanRingColor(questRingColors, Z.Dhuhr, [
-      QUEST.DHUHR_MUAKB,
-      QUEST.DHUHR_FARD,
-      QUEST.DHUHR_MUAKA,
-      QUEST.DHUHR_NAFLA,
-      QUEST.DHUHR_THIKR,
-      QUEST.DHUHR_DUA,
-    ]);
-    getZamanRingColor(questRingColors, Z.Asr, [
-      QUEST.ASR_NAFLB,
-      QUEST.ASR_FARD,
-      QUEST.EVENING_ADHKAR,
-      QUEST.ASR_THIKR,
-      QUEST.ASR_DUA,
-    ]);
-    getZamanRingColor(questRingColors, Z.Maghrib, [
-      QUEST.KARAHAT_SUNSET,
-      QUEST.MAGHRIB_FARD,
-      QUEST.MAGHRIB_MUAKA,
-      QUEST.MAGHRIB_NAFLA,
-      QUEST.MAGHRIB_THIKR,
-      QUEST.MAGHRIB_DUA,
-    ]);
-    getZamanRingColor(questRingColors, Z.Isha, [
-      QUEST.ISHA_NAFLB,
-      QUEST.ISHA_FARD,
-      QUEST.ISHA_MUAKA,
-      QUEST.ISHA_NAFLA,
-      QUEST.ISHA_THIKR,
-      QUEST.ISHA_DUA,
-    ]);
-    getZamanRingColor(questRingColors, Z.Middle_of_Night, [
-      QUEST.LAYL_QIYAM,
-      QUEST.LAYL_THIKR,
-      QUEST.LAYL_DUA,
-    ]);
-    getZamanRingColor(questRingColors, Z.Last_3rd_of_Night, [
-      QUEST.LAYL_SLEEP,
-      QUEST.LAYL_TAHAJJUD,
-      QUEST.LAYL_WITR,
-    ]);
+    for (Z z in zRows) {
+      getZamanRingColor(questRingColors, z);
+    }
 
     return questRingColors;
   }
 
-  void getZamanRingColor(Map<Z, int> questRingColors, Z z, List<QUEST> quests) {
+  void getZamanRingColor(Map<Z, int> questRingColors, Z z) {
+    List<QUEST> quests = z.getZRowQuests();
+
     int ajrCount = 0;
-    for (QUEST quest in quests) {
-      if (isDone(quest)) ajrCount++;
+    for (QUEST q in quests) {
+      if (isDone(q)) ajrCount++;
     }
 
     if (ajrCount == 0) {
       int missCount = 0;
-      for (QUEST quest in quests) {
-        if (isMiss(quest)) missCount++;
+      for (QUEST q in quests) {
+        if (isMiss(q)) missCount++;
       }
       ajrCount = missCount == quests.length ? ajr0Missed : ajr6TimeNotInYet;
     } else {
