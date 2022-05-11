@@ -121,11 +121,11 @@ class SunRing extends StatelessWidget {
     double elapsedSecs = nextZTime.difference(currZTime).inMilliseconds / 1000;
 
     // Sunrise is constant at very right of circle, (no turn)
-    double sunrisePercentCorrection =
-        (((elapsedSecs / ColorSlice.totalSecs) / 365) -
-                fajrStartPercentCorrection) /
-            1.25; // TODO hacking
-    double sunriseCorrection = .5 - sunrisePercentCorrection;
+    // double sunrisePercentCorrection =
+    //     (((elapsedSecs / ColorSlice.totalSecs) / 365) -
+    //             fajrStartPercentCorrection) /
+    //         1.25; // TODO hacking
+    double sunriseCorrection = .5; // - sunrisePercentCorrection;
     //double sunriseCorrection = 2 * degreeCorrection * math.pi;
 
     //l.d('sunriseDegreeCorrection=$sunriseDegreeCorrection, fajrStartCorrection=$fajrStartCorrection->sunriseCorrection=$sunriseCorrection');
