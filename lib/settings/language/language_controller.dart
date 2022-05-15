@@ -83,9 +83,8 @@ class LanguageController extends GetxHapi {
       _isRightToLeftLang ? Alignment.centerRight : Alignment.centerLeft;
   Alignment get centerRight =>
       _isRightToLeftLang ? Alignment.centerLeft : Alignment.centerRight;
-  // NOT NEEDED AS START/END works properly between RTL and LTR languages:
-  // MainAxisAlignment get axisStart =>
-  //     _isRightToLeftLang ? MainAxisAlignment.end : MainAxisAlignment.start;
+  MainAxisAlignment get axisStart =>
+      _isRightToLeftLang ? MainAxisAlignment.end : MainAxisAlignment.start;
   // MainAxisAlignment get axisRight =>
   //     _isRightToLeftLang ? MainAxisAlignment.start : MainAxisAlignment.end;
 

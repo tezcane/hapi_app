@@ -252,7 +252,8 @@ class TS extends TextStyle {
   const TS(
     Color color, {
     FontWeight fontWeight = FontWeight.normal,
-  }) : super(color: color, fontWeight: fontWeight);
+    String fontFamily = 'Roboto',
+  }) : super(color: color, fontWeight: fontWeight, fontFamily: fontFamily);
 }
 
 /// Commonly used TextStyles: tsB (Bold), tsN (Normal), tsR (Red):
