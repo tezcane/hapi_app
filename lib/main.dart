@@ -108,9 +108,10 @@ class MyApp extends StatelessWidget {
                 // floatingActionButtonLocation:
                 //     FloatingActionButtonLocation.endFloat,
                 resizeToAvoidBottomInset: false, // fixes keyboard pushing UI up
-                floatingActionButton: GetBuilder<MenuController>(
-                  builder: (mc) {
-                    return FloatingActionButton(
+                floatingActionButton: GetBuilder<MenuController>(builder: (mc) {
+                  return Visibility(
+                    visible: MainController.to.isAppInitDone,
+                    child: FloatingActionButton(
                       tooltip: mc.trValMenuTooltip(),
                       backgroundColor:
                           AppThemes.floatingActionButtonTheme.backgroundColor,
@@ -132,9 +133,9 @@ class MyApp extends StatelessWidget {
                           ],
                         ),
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                }),
                 body: GetMaterialApp(
                   translations: Localization(),
                   //locale: c.getLocale, // we set in LanguageController

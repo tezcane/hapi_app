@@ -127,7 +127,7 @@ class AuthController extends GetxHapi {
 
       Timer(Duration(milliseconds: msLeftToShowSplash), () {
         setSplashScreenToDone(); // turns off Splash spinner so not in hero fade
-        MenuController.to.initAppsFirstPage();
+        MainController.to.signIn();
       });
     }
   }
@@ -166,6 +166,7 @@ class AuthController extends GetxHapi {
       //emailController.clear();
       passwordController.clear();
       hideLoadingIndicator();
+      MainController.to.signIn();
     } catch (error) {
       hideLoadingIndicator();
       showSnackBar(
@@ -210,6 +211,7 @@ class AuthController extends GetxHapi {
         //emailController.clear();
         passwordController.clear();
         hideLoadingIndicator();
+        MainController.to.signIn();
       });
     } on FirebaseAuthException catch (error) {
       hideLoadingIndicator();

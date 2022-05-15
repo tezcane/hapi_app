@@ -141,6 +141,9 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
     _acNavMenu.forward(from: 1.0); // needed to hide at init
   }
 
+  /// Needed when signing out of app, so FAB button works on sign back in.
+  clearSubPageStack() => _subPageStack = [];
+
   /// Here we handle when the FAB button is hit for show/hide menu or back btn.
   void handlePressedFAB() {
     if (fabButtonIsTransitioning) {
@@ -227,7 +230,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
   }
 
   /// set foreground to last opened page
-  void initAppsFirstPage() {
+  initAppsFirstPage() {
     int navIdx = _getLastNavIdx(); //Quests
 
     NavPage lastNavPage = NavPage.Quests;
@@ -245,7 +248,6 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
       _disableScreenTouch();
     } else {
       heroLogoTransitionMs = 0;
-      MainController.to.setAppInitDone();
     }
 
     _navigateToNavPage(lastNavPage, transitionMs: heroLogoTransitionMs);
@@ -257,7 +259,6 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
           hideMenu(); // logo should be in menu by now
           Timer(animationDuration, () {
             _enableScreenTouch(); // give time for menu to close
-            MainController.to.setAppInitDone();
           });
         });
       });

@@ -127,7 +127,7 @@ class UpdateProfileUI extends StatelessWidget {
                           const SizedBox(height: 400), //hide sign out down page
                           Center(
                             child: ElevatedButton(
-                              onPressed: () => AuthController.to.signOut(),
+                              onPressed: () => MainController.to.signOut(),
                               child:
                                   T('settings.signOut', null, w: wm(context)),
                             ),

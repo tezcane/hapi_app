@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/onboard/auth/auth_controller.dart';
 import 'package:hapi/settings/language/language_controller.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 
@@ -21,7 +22,7 @@ class MainController extends GetxHapi {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
   }
 
-  void setAppInitDone() {
+  setAppInitDone() {
     // Splash animations done, now allow screen rotations for the rest of time:
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
@@ -34,25 +35,27 @@ class MainController extends GetxHapi {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
 
     isAppInitDone = true;
+    MenuController.to.update(); // Make FAB button visible
   }
 
-  void setOrientation(bool isPortrait) {
+  signIn() {
+    setAppInitDone();
+    MenuController.to.initAppsFirstPage();
+  }
+
+  signOut() {
+    MenuController.to.hideMenu(); // reset FAB (for sign back in)
+    MenuController.to.clearSubPageStack(); // reset FAB (for sign back in)
+    isAppInitDone = false; // Make FAB button invisible
+    MenuController.to.update(); // Make FAB button invisible
+    AuthController.to.signOut(); // Sign out of Auth
+  }
+
+  setOrientation(bool isPortrait) {
     // don't proceed with any auto-orientation yet
-    if (!isAppInitDone) {
-      l.w('ORIENTATION: App is not initialized yet.');
-      return;
-    }
-
-    if (this.isPortrait && isPortrait) {
-      l.d('ORIENTATION: Still in portrait');
-      return;
-    }
-
-    // if still in landscape mode return
-    if (!this.isPortrait && !isPortrait) {
-      l.d('ORIENTATION: Still in landscape');
-      return;
-    }
+    if (!isAppInitDone) return l.w('ORIENTATION: App is not initialized yet.');
+    if (this.isPortrait && isPortrait) return l.d('Still in portrait');
+    if (!this.isPortrait && !isPortrait) return l.d('Still in landscape');
 
     if (isPortrait) {
       l.i('ORIENTATION: Switched to portrait');
@@ -66,9 +69,7 @@ class MainController extends GetxHapi {
       update(); // notify watchers
     } else {
       // TODO only do this to fix slide menu for now
-      if (MenuController.to.isMenuShowing) {
-        MenuController.to.hideMenu();
-      }
+      if (MenuController.to.isMenuShowing) MenuController.to.hideMenu();
       MenuController.to.navigateToNavPage(MenuController.to.getLastNavPage());
     }
   }
