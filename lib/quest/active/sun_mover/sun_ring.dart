@@ -283,20 +283,24 @@ class SunRing extends StatelessWidget {
   void setupSunAnimationToRun(double fajrStartPercentCorrection) {
     sunAnimationLoc = fajrStartPercentCorrection;
     sunAnimationStep = 0;
-    sunAnimationPassed0 = false;
     sunAnimationPassedHalfway = false;
 
-    double halfOfTravelPercent =
-        (ZamanController.to.secsSinceFajr / ColorSlice.totalSecs) / 2;
-    if (halfOfTravelPercent < fajrStartPercentCorrection) {
+    double sunValuePercent =
+        ZamanController.to.secsSinceFajr / ColorSlice.totalSecs;
+
+    sunAnimationPassed0 = false;
+    if (sunValuePercent < fajrStartPercentCorrection) {
       sunAnimationPassed0 = true; // won't pass 0, so must set here
+    }
+
+    double halfOfTravelPercent = sunValuePercent / 2;
+    if (halfOfTravelPercent < fajrStartPercentCorrection) {
       sunAnimationHalfWayLoc = halfOfTravelPercent;
     } else {
       double sunVal = halfOfTravelPercent - fajrStartPercentCorrection;
       if (sunVal > 0) {
         sunAnimationHalfWayLoc = 1 - sunVal; // 1 - to go backward;
       } else {
-        sunAnimationPassed0 = true; // won't pass 0, so must set here
         sunAnimationHalfWayLoc = sunVal.abs();
       }
     }
