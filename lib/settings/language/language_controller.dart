@@ -85,8 +85,8 @@ class LanguageController extends GetxHapi {
       _isRightToLeftLang ? Alignment.centerLeft : Alignment.centerRight;
   MainAxisAlignment get axisStart =>
       _isRightToLeftLang ? MainAxisAlignment.end : MainAxisAlignment.start;
-  // MainAxisAlignment get axisRight =>
-  //     _isRightToLeftLang ? MainAxisAlignment.start : MainAxisAlignment.end;
+  MainAxisAlignment get axisEnd =>
+      _isRightToLeftLang ? MainAxisAlignment.start : MainAxisAlignment.end;
 
   /// Use these prefect hash arrays to convert numeral systems (en->ar/ps/etc.).
   /// Note: labeled "en" but are Arabic Numerals (a.k.a. Hindi-Arabic Numerals).

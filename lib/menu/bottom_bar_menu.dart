@@ -41,7 +41,6 @@ class _BottomBarMenuState extends State<BottomBarMenu> {
         selectedIndex: _currentPage,
         items: widget.bottomBarItems,
         height: 40,
-        showActiveBackgroundColor: true,
         onTap: (newIdx) {
           // already on this index, don't do anything
           if (newIdx == _currentPage) return;
@@ -57,6 +56,8 @@ class _BottomBarMenuState extends State<BottomBarMenu> {
           //NavPageController.to.setLastIdx(widget.navPage, newIdx);
           //setState(() => _currentPage = newIdx);
         },
+        //showActiveBackgroundColor: false,
+        //backgroundColor: null,
       ),
     );
   }

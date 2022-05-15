@@ -13,7 +13,7 @@ class BottomBar extends StatelessWidget {
     required this.height,
     required this.onTap,
     this.backgroundColor,
-    this.showActiveBackgroundColor = true,
+    this.showActiveBackgroundColor = false,
     this.curve = Curves.easeOutQuint,
     this.duration = const Duration(milliseconds: 750),
   });
@@ -32,7 +32,7 @@ class BottomBar extends StatelessWidget {
 
     return Container(
       height: height,
-      decoration: BoxDecoration(color: backgroundColor),
+      color: backgroundColor,
       child: Row(
         mainAxisAlignment: LanguageController.to.axisStart,
         children: List<Widget>.generate(
@@ -103,9 +103,7 @@ class _BottomBarItemWidget extends StatelessWidget {
         : tsB;
 
     const double iconSize = 30;
-
     double w = width - iconSize;
-    if (!isSelected) w -= 9; // give room for 27 padding below
 
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0, end: isSelected ? 1 : 0),
@@ -123,32 +121,31 @@ class _BottomBarItemWidget extends StatelessWidget {
           shape: const RoundedRectangleBorder(),
           child: Tooltip(
             message: tooltip,
-            child: Padding(
-              padding: LanguageController.to.isRightToLeftLang
-                  ? EdgeInsets.only(left: isSelected ? 27.0 : 0.0)
-                  : EdgeInsets.only(right: isSelected ? 27.0 : 0.0),
-              child: InkWell(
-                onTap: onTap,
-                customBorder: const StadiumBorder(),
-                focusColor: selectedColorWithOpacity,
-                highlightColor: selectedColorWithOpacity,
-                splashColor: selectedColorWithOpacity,
-                hoverColor: selectedColorWithOpacity,
-                child: Row(
-                  children: [
-                    IconTheme(
-                      data: IconThemeData(
-                        color: Color.lerp(_inactiveColor, selectedColor, value),
-                        size: iconSize,
-                      ),
-                      child: iconData ==
-                              Icons.brightness_3_outlined // hapi crescent logo
-                          ? Transform.rotate(
-                              angle: 2.8, // Rotates crescent
-                              child: Icon(iconData, size: iconSize),
-                            )
-                          : Icon(iconData, size: iconSize),
+            child: InkWell(
+              onTap: onTap,
+              customBorder: const StadiumBorder(),
+              highlightColor: selectedColorWithOpacity,
+              focusColor: selectedColorWithOpacity,
+              splashColor: selectedColorWithOpacity,
+              hoverColor: selectedColorWithOpacity,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  if (!isSelected) SizedBox(width: w / 2),
+                  IconTheme(
+                    data: IconThemeData(
+                      color: Color.lerp(_inactiveColor, selectedColor, value),
+                      size: iconSize,
                     ),
+                    child: iconData == Icons.brightness_3_outlined // crescent
+                        ? Transform.rotate(
+                            angle: 2.8, // Rotates crescent
+                            child: Icon(iconData, size: iconSize),
+                          )
+                        : Icon(iconData, size: iconSize),
+                  ),
+                  if (!isSelected) SizedBox(width: w / 2),
+                  if (isSelected)
                     DefaultTextStyle(
                       style: textStyle.copyWith(
                         color: Color.lerp(
@@ -159,8 +156,7 @@ class _BottomBarItemWidget extends StatelessWidget {
                       ),
                       child: T(title, textStyle, w: w),
                     ),
-                  ],
-                ),
+                ],
               ),
             ),
           ),
