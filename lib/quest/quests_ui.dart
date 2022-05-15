@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/bottom_bar.dart';
 import 'package:hapi/menu/bottom_bar_menu.dart';
 import 'package:hapi/menu/fab_nav_page.dart';
@@ -21,46 +22,44 @@ enum Quests {
 class QuestsUI extends StatelessWidget {
   static const navPage = NavPage.Quests;
 
-  static final List<BottomBarItem> bbItems = [
-    BottomBarItem(
-      Container(),
-      null,
-      Quests.hapi.name,
-      Icons.brightness_3_outlined,
-      '${Quests.hapi.name} Quests has app and long-term goals',
-      AppThemes.logoText,
-    ),
-    BottomBarItem(
-      Container(),
-      null,
-      Quests.Time.name,
-      Icons.timer_outlined,
-      '${Quests.Time.name} Quests to prioritize and manage your time',
-      Colors.greenAccent.shade700, //.orange,
-    ),
-    BottomBarItem(
-      const DoListUI(),
-      null,
-      Quests.Daily.name,
-      Icons.brightness_high_outlined,
-      '${Quests.Daily.name} Quests to build good habits',
-      const Color(0xFFF1AC44),
-    ),
-    BottomBarItem(
-      const ActiveQuestsUI(),
-      ActiveQuestsSettingsUI(),
-      Quests.Active.name,
-      Icons.how_to_reg_outlined,
-      '            ' // Get around FAB
-      '${Quests.Active.name} Quests to enhance prayers'
-      '            ', // Get around FAB
-      Colors.blue,
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<LanguageController>(builder: (c) {
+      final List<BottomBarItem> bbItems = [
+        BottomBarItem(
+          Container(),
+          null,
+          'i.hapi'.tr,
+          'i.Set long-term goals'.tr,
+          Icons.brightness_3_outlined,
+          AppThemes.logoText,
+        ),
+        BottomBarItem(
+          Container(),
+          null,
+          a('a.Zaman'),
+          'i.Manage and prioritize your time'.tr,
+          Icons.timer_outlined,
+          Colors.greenAccent.shade700, //.orange,
+        ),
+        BottomBarItem(
+          const DoListUI(),
+          null,
+          'i.Daily'.tr,
+          'i.Build religious and healthy habits'.tr,
+          Icons.brightness_high_outlined,
+          const Color(0xFFF1AC44),
+        ),
+        BottomBarItem(
+          const ActiveQuestsUI(),
+          ActiveQuestsSettingsUI(),
+          'i.Active'.tr,
+          '                 ${'i.Pray like the Prophet (AS)'.tr}                 ', // FAB
+          Icons.how_to_reg_outlined,
+          Colors.blue,
+        ),
+      ];
+
       List<BottomBarItem> bottomBarItems = bbItems;
       if (c.isRightToLeftLang) {
         // TODO swap langs PageController index is off

@@ -28,7 +28,7 @@ class BottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double width = w(context) / (items.length + 1);
+    double width = w(context) / (items.length + 1); // + 1 for FAB space
 
     return Container(
       height: height,
@@ -39,15 +39,10 @@ class BottomBar extends StatelessWidget {
           items.length,
           (int index) {
             return _BottomBarItemWidget(
-              index: index,
-              title: items.elementAt(index).title,
-              iconData: items.elementAt(index).iconData,
-              tooltip: items.elementAt(index).tooltip,
+              bottomBarItem: items.elementAt(index),
               width: width,
+              index: index,
               isSelected: index == selectedIndex,
-              selectedColor: items[index].selectedColor,
-              selectedColorWithOpacity:
-                  items[index].selectedColor.withOpacity(0.1),
               onTap: () => onTap(index),
               showActiveBackgroundColor: showActiveBackgroundColor,
               curve: curve,
@@ -56,36 +51,26 @@ class BottomBar extends StatelessWidget {
           },
         ),
       ),
-      //),
     );
   }
 }
 
 class _BottomBarItemWidget extends StatelessWidget {
-  /// Creates a Widget that displays the contents of a `BottomBarItem`
   const _BottomBarItemWidget({
-    required this.index,
-    required this.title,
-    required this.iconData,
-    required this.tooltip,
+    required this.bottomBarItem,
     required this.width,
+    required this.index,
     required this.isSelected,
-    required this.selectedColor,
-    required this.selectedColorWithOpacity,
     required this.onTap,
     required this.showActiveBackgroundColor,
     required this.curve,
     required this.duration,
     this.useHapiLogoFont = true,
   });
-  final int index;
-  final String title;
-  final IconData iconData;
-  final String tooltip;
+  final BottomBarItem bottomBarItem;
   final double width;
+  final int index;
   final bool isSelected;
-  final Color selectedColor;
-  final Color selectedColorWithOpacity;
   final Function() onTap; // callback to update `selectedIndex`
   final bool showActiveBackgroundColor;
   final Curve curve;
@@ -105,6 +90,9 @@ class _BottomBarItemWidget extends StatelessWidget {
     const double iconSize = 30;
     double w = width - iconSize;
 
+    Color selectedColor = bottomBarItem.selectedColor;
+    Color selectedColorWithOpacity = selectedColor.withOpacity(0.1);
+
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0, end: isSelected ? 1 : 0),
       curve: curve,
@@ -120,7 +108,7 @@ class _BottomBarItemWidget extends StatelessWidget {
               : Colors.transparent,
           shape: const RoundedRectangleBorder(),
           child: Tooltip(
-            message: tooltip,
+            message: bottomBarItem.trValTooltip,
             child: InkWell(
               onTap: onTap,
               customBorder: const StadiumBorder(),
@@ -129,7 +117,7 @@ class _BottomBarItemWidget extends StatelessWidget {
               splashColor: selectedColorWithOpacity,
               hoverColor: selectedColorWithOpacity,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   if (!isSelected) SizedBox(width: w / 2),
                   IconTheme(
@@ -137,12 +125,12 @@ class _BottomBarItemWidget extends StatelessWidget {
                       color: Color.lerp(_inactiveColor, selectedColor, value),
                       size: iconSize,
                     ),
-                    child: iconData == Icons.brightness_3_outlined // crescent
+                    child: bottomBarItem.iconData == Icons.brightness_3_outlined
                         ? Transform.rotate(
                             angle: 2.8, // Rotates crescent
-                            child: Icon(iconData, size: iconSize),
+                            child: Icon(bottomBarItem.iconData, size: iconSize),
                           )
-                        : Icon(iconData, size: iconSize),
+                        : Icon(bottomBarItem.iconData, size: iconSize),
                   ),
                   if (!isSelected) SizedBox(width: w / 2),
                   if (isSelected)
@@ -154,7 +142,12 @@ class _BottomBarItemWidget extends StatelessWidget {
                           value,
                         ),
                       ),
-                      child: T(title, textStyle, w: w),
+                      child: T(
+                        bottomBarItem.trValTitle,
+                        textStyle,
+                        w: w,
+                        trVal: true,
+                      ),
                     ),
                 ],
               ),
@@ -170,16 +163,16 @@ class BottomBarItem {
   BottomBarItem(
     this.mainWidget,
     this.settingsWidget,
-    this.title,
+    this.trValTitle,
+    this.trValTooltip,
     this.iconData,
-    this.tooltip,
     this.selectedColor,
   );
   final Widget mainWidget; // used by bottom_bar_menu
   final Widget? settingsWidget; // used by bottom_bar_menu
-  final String title;
+  final String trValTitle;
+  final String trValTooltip;
   final IconData iconData;
-  final String tooltip;
   final Color selectedColor;
 
   /// Keeps widget alive on UI, so when swiped doesn't lose settings
