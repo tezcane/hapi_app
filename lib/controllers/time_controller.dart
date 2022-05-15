@@ -301,8 +301,9 @@ class TimeController extends GetxHapi {
 
   String dateToDay(DateTime date) => DateFormat('yyyy-MM-dd').format(date);
 
-  /// Call to update day of week for hijri and gregorian Calendars. Must be
-  /// called after changing locale.
+  /// Updates day of week for hijri and gregorian Calendars. Must called after
+  /// changing locale, maghrib time (new hijri time) and midnight 00:00 (hijri
+  /// and gregorian date match again).
   updateDaysOfWeek() async {
     await _updateDayOfWeekHijri();
     await _updateDayOfWeekGrego();

@@ -160,7 +160,7 @@ class ZamanController extends GetxHapi {
       if (_curDayOfWeek != now.day) {
         l.d('ZamanController:_zamanCountdownTimer: _curDayOfWeek($_curDayOfWeek) != now.day($now.day)');
         _curDayOfWeek = now.day;
-        TimeController.to.update();
+        TimeController.to.updateDaysOfWeek();
       }
 
       if (_forceSalahRecalculation) {
