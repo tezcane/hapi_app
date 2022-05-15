@@ -124,10 +124,11 @@ class ZamanController extends GetxHapi {
       NotificationController.to.resetNotifications(); // _athan updated so reset
     }
 
-    // Needed first when isha quests done but middle of night not begun yet
-    if (_currZ.index < Z.Isha.index) {
+    if (_currZ.index < Z.Isha.index ||
+        !ActiveQuestsAjrController.to.isIshaComplete) {
       _updateTooltip(_currZ, _nextZ);
     } else {
+      // Needed first when isha quests done but middle of night not begun yet
       handleTooltipUpdate(now);
     }
 
@@ -258,12 +259,18 @@ class ZamanController extends GetxHapi {
     if (isLaylSalahRowPinned(Z.Middle_of_Night)) {
       now ??= TimeController.to.now2();
       if (now.isBefore(_athan!.middleOfNight)) {
-        // still isha time, so count down to Last_3rd_of_Night
-        cTooltip = null;
-        nTooltip = Z.Last_3rd_of_Night;
+        if (ActiveQuestsAjrController.to.isMiddleOfNightNotStartedYet) {
+          // if no middle of night quest started, keep showing countdown to it
+          cTooltip = Z.Isha;
+          nTooltip = Z.Middle_of_Night;
+        } else {
+          // still isha time, so count down to Last_3rd_of_Night
+          cTooltip = null;
+          nTooltip = Z.Last_3rd_of_Night;
+        }
       } else if (now.isBefore(_athan!.last3rdOfNight)) {
         // still middle of night, so count down to Last_3rd_of_Night
-        cTooltip = Z.Middle_of_Night; // we can show MON!
+        cTooltip = Z.Middle_of_Night; // we can show middle of night!
         nTooltip = Z.Last_3rd_of_Night;
       } else if (now.isAfter(_athan!.last3rdOfNight)) {
         // last 3rd of night time, so count down to Fajr_Tomorrow
@@ -272,13 +279,20 @@ class ZamanController extends GetxHapi {
       }
     } else if (isLaylSalahRowPinned(Z.Last_3rd_of_Night)) {
       now ??= TimeController.to.now2();
-      nTooltip = Z.Fajr_Tomorrow;
       if (now.isBefore(_athan!.last3rdOfNight)) {
-        // still isha or middle of night, so count down to Fajr_Tomorrow
-        cTooltip = null;
+        if (ActiveQuestsAjrController.to.isLastThirdOfNightNotStartedYet) {
+          // if no last 3rd of night quest started, keep showing countdown to it
+          cTooltip = null;
+          nTooltip = Z.Last_3rd_of_Night;
+        } else {
+          // still isha or middle of night, so count down to Fajr_Tomorrow
+          cTooltip = null;
+          nTooltip = Z.Fajr_Tomorrow;
+        }
       } else {
         // last 3rd of night time, so count down to Fajr_Tomorrow
         cTooltip = Z.Last_3rd_of_Night;
+        nTooltip = Z.Fajr_Tomorrow;
       }
     }
 

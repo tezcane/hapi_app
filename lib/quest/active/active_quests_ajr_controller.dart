@@ -382,6 +382,16 @@ class ActiveQuestsAjrController extends GetxHapi {
       isComplete(QUEST.LAYL_THIKR) &&
       isComplete(QUEST.LAYL_DUA);
 
+  bool get isMiddleOfNightNotStartedYet =>
+      isNotComplete(QUEST.LAYL_QIYAM) &&
+      isNotComplete(QUEST.LAYL_THIKR) &&
+      isNotComplete(QUEST.LAYL_DUA);
+
+  bool get isLastThirdOfNightNotStartedYet =>
+      isNotComplete(QUEST.LAYL_SLEEP) &&
+      isNotComplete(QUEST.LAYL_TAHAJJUD) &&
+      isNotComplete(QUEST.LAYL_WITR);
+
   setDone(QUEST q) => _setBit(q, BitType.DONE, true);
   setSkip(QUEST q) => _setBit(q, BitType.SKIP, true);
   _setMiss(QUEST q) => _setBit(q, BitType.MISS, false);
@@ -418,6 +428,12 @@ class ActiveQuestsAjrController extends GetxHapi {
       if (q.index > QUEST.ISHA_DUA.index) {
         ZamanController.to.handleTooltipUpdate(null);
       }
+      // We don't have to do this because if middle of night just starting and
+      // still in isha time, we still countdown to middle of night:
+      // } else if (q == QUEST.ISHA_DUA && ZamanController.to.currZ == Z.Isha) {
+      //   // if final isha task done in isha time, update tooltip now
+      //   ZamanController.to.forceSalahRecalculation();
+      // }
 
       ActiveQuestsController.to.update(); // refresh UI (don't wait for below)
 
