@@ -110,10 +110,6 @@ enum SubPage {
   Active_Quest_Action,
 }
 
-extension EnumUtil2 on SubPage {
-  get niceName => name.replaceAll('_', ' ');
-}
-
 class MenuController extends GetxHapi with GetTickerProviderStateMixin {
   static MenuController get to => Get.find();
 
@@ -190,17 +186,17 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
 
   /// Handle the fab button hint, required update() to be called on page
   /// insertion and deletion.
-  String getToolTip() {
+  String trValMenuTooltip() {
     if (_subPageStack.isNotEmpty) {
       if (_subPageStack.length > 1) {
-        return 'Go back to ${_subPageStack[_subPageStack.length - 2].niceName} Page';
+        return 'i.Go back to previous page'.tr;
       } else {
-        return 'Go back to ${getLastNavPage().name} Home';
+        return at('at.Go back to {0} home page', [getLastNavPage().trKey]);
       }
     } else if (_isMenuShowing) {
-      return 'Hide menu';
+      return 'i.Hide menu'.tr;
     } else {
-      return 'Show menu';
+      return 'i.Show menu'.tr;
     }
   }
 

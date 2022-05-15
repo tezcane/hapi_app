@@ -111,7 +111,7 @@ class MyApp extends StatelessWidget {
                 floatingActionButton: GetBuilder<MenuController>(
                   builder: (mc) {
                     return FloatingActionButton(
-                      tooltip: mc.getToolTip(),
+                      tooltip: mc.trValMenuTooltip(),
                       backgroundColor:
                           AppThemes.floatingActionButtonTheme.backgroundColor,
                       foregroundColor:
