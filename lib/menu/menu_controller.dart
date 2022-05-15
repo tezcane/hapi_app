@@ -29,7 +29,7 @@ class NavPageValue {
 
 /// must keep in sync with NavPage
 final navPageValues = [
-  NavPageValue(0, NavPage.Stats, Icons.leaderboard_rounded),
+  NavPageValue(0, NavPage.Ajr, Icons.leaderboard_rounded),
   NavPageValue(0, NavPage.Tools, Icons.explore_outlined),
   NavPageValue(0, NavPage.Dua, Icons.volunteer_activism),
   NavPageValue(0, NavPage.Hadith, Icons.menu_book_outlined),
@@ -42,7 +42,7 @@ final navPageValues = [
 
 /// must keep in sync with navPageValues
 enum NavPage {
-  Stats,
+  Ajr,
   Tools,
   Dua,
   Hadith,
@@ -50,6 +50,53 @@ enum NavPage {
   Tarikh,
   Relics,
   Quests,
+}
+
+extension EnumUtil on NavPage {
+  String get trKey {
+    String transliteration = name;
+    switch (this) {
+      case (NavPage.Ajr):
+      case (NavPage.Dua):
+      case (NavPage.Hadith):
+      case (NavPage.Quran):
+      case (NavPage.Tarikh):
+        break;
+      case (NavPage.Tools):
+        transliteration = "'Adawat";
+        break;
+      case (NavPage.Relics):
+        transliteration = 'Alathar';
+        break;
+      case (NavPage.Quests):
+        transliteration = "'Asyila";
+        break;
+    }
+    return 'a.$transliteration';
+  }
+
+  String get trValTooltip {
+    switch (this) {
+      case (NavPage.Ajr):
+        return 'i.View your rewards'.tr;
+      case (NavPage.Dua):
+        return 'i.Find prayers'.tr;
+      case (NavPage.Hadith):
+        return 'i.Read from Books of Hadith'.tr;
+      case (NavPage.Quran):
+        return 'i.Read the Quran'.tr;
+      case (NavPage.Tarikh):
+        return 'i.View the history of Islam and our Universe'.tr;
+      case (NavPage.Tools):
+        return 'i.Use tools like the Qiblah Finder and Islamic Dictionary'.tr;
+      case (NavPage.Relics):
+        return 'i.Collect, upgrade and learn from Relics'.tr;
+      case (NavPage.Quests):
+        return 'i.Earn rewards for this life and the next'.tr;
+      default:
+        return l.E('Quests.trValTooltip: Unknown Quest "$this"');
+    }
+  }
 }
 
 enum SubPage {
@@ -63,7 +110,7 @@ enum SubPage {
   Active_Quest_Action,
 }
 
-extension EnumUtil on SubPage {
+extension EnumUtil2 on SubPage {
   get niceName => name.replaceAll('_', ' ');
 }
 
@@ -269,7 +316,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
           duration: Duration(milliseconds: transitionMs),
         );
         break;
-      case (NavPage.Stats):
+      case (NavPage.Ajr):
       case (NavPage.Tools):
       case (NavPage.Dua):
       case (NavPage.Hadith):

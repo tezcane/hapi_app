@@ -14,7 +14,7 @@ const bool _enableEdgeDragGesture = true;
 const _kEdgeDragWidth = 20.0;
 
 /// Menu width for the Side Menu.
-const double _kSideMenuWidth = 132.0;
+const double kSideMenuWidth = 132.0;
 
 /// [Curve] used for the animation
 const Curve _kCurveAnimation = Curves.linear;
@@ -127,7 +127,7 @@ class _MenuNavState extends State<MenuNav> {
                             return MenuItem(
                               index: navPage.index,
                               length: NavPage.values.length,
-                              width: _kSideMenuWidth,
+                              width: kSideMenuWidth,
                               height: itemSize,
                               acNavMenu: MenuController.to.acNavMenu,
                               curve: _kCurveAnimation,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hapi/controllers/nav_page_controller.dart';
+import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/menu/menu_nav.dart';
 import 'package:hapi/menu/menu_slide.dart';
@@ -110,71 +111,75 @@ class FabNavPage extends StatelessWidget {
                 .map(
                   // resize menu icons/text if keyboard shows
                   (nav) => SingleChildScrollView(
-                    child: Stack(
-                      children: [
-                        Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              Stack(
-                                children: [
-                                  Transform.rotate(
-                                    angle:
-                                        nav.navPage == NavPage.Relics ? 2.8 : 0,
-                                    child: Icon(
-                                      nav.icon,
-                                      color: Colors.white,
-                                      size: 40,
-                                    ),
-                                  ),
-                                  if (c.getShowBadge(navPage))
-                                    Positioned(
-                                      top: nav.navPage == NavPage.Relics
-                                          ? 8.6
-                                          : -2.0,
-                                      right: -2.0,
-                                      child: Transform.rotate(
-                                        angle: nav.navPage == NavPage.Relics
-                                            ? .59
-                                            : 0,
-                                        child: const Icon(
-                                          Icons.star,
-                                          color: Colors.orange,
-                                          size: 18,
-                                        ),
+                    child: Tooltip(
+                      message: nav.navPage.trValTooltip,
+                      child: Stack(
+                        children: [
+                          Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Stack(
+                                  children: [
+                                    Transform.rotate(
+                                      angle: nav.navPage == NavPage.Relics
+                                          ? 2.8
+                                          : 0,
+                                      child: Icon(
+                                        nav.icon,
+                                        color: Colors.white,
+                                        size: 40,
                                       ),
                                     ),
-                                ],
-                              ),
-                              Text(
-                                nav.navPage.name,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.normal,
+                                    if (c.getShowBadge(navPage))
+                                      Positioned(
+                                        top: nav.navPage == NavPage.Relics
+                                            ? 8.6
+                                            : -2.0,
+                                        right: -2.0,
+                                        child: Transform.rotate(
+                                          angle: nav.navPage == NavPage.Relics
+                                              ? .59
+                                              : 0,
+                                          child: const Icon(
+                                            Icons.star,
+                                            color: Colors.orange,
+                                            size: 18,
+                                          ),
+                                        ),
+                                      ),
+                                  ],
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        GetBuilder<NavPageController>(builder: (c) {
-                          Color showSettingsColor = Colors.transparent;
-                          if (nav.navPage == navPage &&
-                              settingsWidgets[c.getLastIdx(nav.navPage)] !=
-                                  null) {
-                            showSettingsColor = Colors.orange;
-                          }
-                          return Align(
-                            alignment: Alignment.topRight,
-                            child: Icon(
-                              Icons.settings_applications_outlined,
-                              color: showSettingsColor,
-                              size: 27,
+                                T(
+                                  nav.navPage.trKey,
+                                  const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                  w: kSideMenuWidth,
+                                ),
+                              ],
                             ),
-                          );
-                        }),
-                      ],
+                          ),
+                          GetBuilder<NavPageController>(builder: (c) {
+                            Color showSettingsColor = Colors.transparent;
+                            if (nav.navPage == navPage &&
+                                settingsWidgets[c.getLastIdx(nav.navPage)] !=
+                                    null) {
+                              showSettingsColor = Colors.orange;
+                            }
+                            return Align(
+                              alignment: Alignment.topRight,
+                              child: Icon(
+                                Icons.settings_applications_outlined,
+                                color: showSettingsColor,
+                                size: 27,
+                              ),
+                            );
+                          }),
+                        ],
+                      ),
                     ),
                   ),
                 )
