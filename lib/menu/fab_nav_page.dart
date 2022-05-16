@@ -43,68 +43,66 @@ class FabNavPage extends StatelessWidget {
             initNavPage: navPage,
             settingsWidgets: settingsWidgets,
             builder: () {
-              return Scaffold(
-                body: MenuSlide(
-                  navPage: navPage,
-                  foregroundPage: Stack(
-                    children: [
-                      IgnorePointer(
-                        // disable UI when menu showing:
-                        ignoring: c.isMenuShowing,
-                        child: foregroundPage, // Main page
+              return MenuSlide(
+                navPage: navPage,
+                foregroundPage: Stack(
+                  children: [
+                    IgnorePointer(
+                      // disable UI when menu showing:
+                      ignoring: c.isMenuShowing,
+                      child: foregroundPage, // Main page
+                    ),
+                    Align(
+                      // TODO asdf move the confetti away from here
+                      alignment: Alignment.topCenter,
+                      child: ConfettiWidget(
+                        confettiController:
+                            MenuController.to.confettiController(),
+                        blastDirectionality: BlastDirectionality.explosive,
+                        shouldLoop: false,
+                        numberOfParticles: 5,
+                        maximumSize: const Size(50, 50),
+                        minimumSize: const Size(20, 20),
+                        colors: const [
+                          Colors.red,
+                          Colors.pink,
+                          Colors.orange,
+                          Colors.yellow,
+                          Colors.green,
+                          Colors.blue,
+                          Colors.indigo,
+                          Colors.purple,
+                        ], // manually specify the colors to be used
+                        createParticlePath: MenuController.to.drawStar,
                       ),
-                      Align(
-                        // TODO asdf move the confetti away from here
-                        alignment: Alignment.topCenter,
-                        child: ConfettiWidget(
-                          confettiController:
-                              MenuController.to.confettiController(),
-                          blastDirectionality: BlastDirectionality.explosive,
-                          shouldLoop: false,
-                          numberOfParticles: 5,
-                          maximumSize: const Size(50, 50),
-                          minimumSize: const Size(20, 20),
-                          colors: const [
-                            Colors.red,
-                            Colors.pink,
-                            Colors.orange,
-                            Colors.yellow,
-                            Colors.green,
-                            Colors.blue,
-                            Colors.indigo,
-                            Colors.purple,
-                          ], // manually specify the colors to be used
-                          createParticlePath: MenuController.to.drawStar,
-                        ),
+                    ),
+                    Align(
+                      alignment: Alignment.topCenter,
+                      child: ConfettiWidget(
+                        confettiController:
+                            MenuController.to.confettiController(),
+                        blastDirectionality: BlastDirectionality.explosive,
+                        shouldLoop: false,
+                        numberOfParticles: 5,
+                        maximumSize: const Size(10, 10),
+                        minimumSize: const Size(3, 3),
+                        colors: const [
+                          Colors.red,
+                          Colors.pink,
+                          Colors.orange,
+                          Colors.yellow,
+                          Colors.green,
+                          Colors.blue,
+                          Colors.indigo,
+                          Colors.purple,
+                        ], // manually specify the colors to be used
+                        //createParticlePath: MenuController.to.drawStar,
                       ),
-                      Align(
-                        alignment: Alignment.topCenter,
-                        child: ConfettiWidget(
-                          confettiController:
-                              MenuController.to.confettiController(),
-                          blastDirectionality: BlastDirectionality.explosive,
-                          shouldLoop: false,
-                          numberOfParticles: 5,
-                          maximumSize: const Size(10, 10),
-                          minimumSize: const Size(3, 3),
-                          colors: const [
-                            Colors.red,
-                            Colors.pink,
-                            Colors.orange,
-                            Colors.yellow,
-                            Colors.green,
-                            Colors.blue,
-                            Colors.indigo,
-                            Colors.purple,
-                          ], // manually specify the colors to be used
-                          //createParticlePath: MenuController.to.drawStar,
-                        ),
-                      ),
-                    ],
-                  ),
-                  bottomWidget: bottomWidget, // preferably Row
-                  settingsWidgets: settingsWidgets, // preferably Column
+                    ),
+                  ],
                 ),
+                bottomWidget: bottomWidget, // preferably Row
+                settingsWidgets: settingsWidgets, // preferably Column
               );
             },
             items: navPageValues

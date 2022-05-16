@@ -5,23 +5,34 @@ import 'package:hapi/main_controller.dart';
 import 'package:hapi/settings/language/language_controller.dart';
 
 class LanguageListUI extends StatelessWidget {
+  const LanguageListUI(this.width);
+  final double width;
+
   @override
   Widget build(BuildContext context) {
+    double iconSize = 32;
+    double separatorSize = 20;
+    double w = width - iconSize - separatorSize;
     return GetBuilder<LanguageController>(
       builder: (c) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          T(
-            'i.Language',
-            null,
-            w: wm(context) / 4,
-            alignment: LanguageController.to.centerLeft,
+          Row(
+            children: [
+              Icon(Icons.language_rounded, size: iconSize),
+              T(
+                'i.Language',
+                tsN,
+                w: w / 4,
+                alignment: LanguageController.to.centerLeft,
+              ),
+            ],
           ),
           DropdownPicker(
-            trMenuOptions: languageOptions,
+            trValMenuOptions: languageOptions,
             selectedOption: c.currLangKey,
             onChanged: (langKey) => c.updateLanguage(langKey!),
+            width: (w / 4) * 3 - 24,
           ),
         ],
       ),

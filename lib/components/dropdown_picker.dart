@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:hapi/main_controller.dart';
+import 'package:hapi/settings/language/language_controller.dart';
+import 'package:hapi/settings/settings_option.dart';
 
 /// shows a dropdown list.
 ///
@@ -9,26 +12,37 @@ import 'package:flutter/material.dart';
 /// ),
 class DropdownPicker extends StatelessWidget {
   const DropdownPicker({
-    required this.trMenuOptions,
+    required this.trValMenuOptions,
     required this.selectedOption,
     required this.onChanged,
+    required this.width,
   });
 
   /// Must use already translated text in here (e.g. uses GetX's .tr)
-  final List<dynamic> trMenuOptions;
+  final List<SettingsOption> trValMenuOptions;
   final String selectedOption;
   final void Function(String?) onChanged;
+  final double width;
 
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
-        items: trMenuOptions
-            .map((data) => DropdownMenuItem<String>(
-                  child: Text(data.trVal), // tr ok
-                  value: data.key,
-                ))
-            .toList(),
-        value: selectedOption,
-        onChanged: onChanged);
+      items: trValMenuOptions
+          .map(
+            (data) => DropdownMenuItem<String>(
+              child: T(
+                data.trVal,
+                tsN,
+                w: width,
+                alignment: LanguageController.to.centerRight,
+                trVal: true,
+              ),
+              value: data.key,
+            ),
+          )
+          .toList(),
+      value: selectedOption,
+      onChanged: onChanged,
+    );
   }
 }

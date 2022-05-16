@@ -40,72 +40,70 @@ class _MenuSlideState extends State<MenuSlide>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: GetBuilder<MenuController>(
-        builder: (c) {
-          final double width = MediaQuery.of(context).size.width;
-          final double height = MediaQuery.of(context).size.height;
-          const double fabPosition = 16;
-          const double fabSize = 56;
+    return GetBuilder<MenuController>(
+      builder: (c) {
+        final double width = MediaQuery.of(context).size.width;
+        final double height = MediaQuery.of(context).size.height;
+        const double fabPosition = 16;
+        const double fabSize = 56;
 
-          final double xScale =
-              (widget.scaleWidth + fabPosition * 2) * 100 / width;
-          final double yScale =
-              (widget.scaleHeight + fabPosition * 2) * 100 / height;
+        final double xScale =
+            (widget.scaleWidth + fabPosition * 2) * 100 / width;
+        final double yScale =
+            (widget.scaleHeight + fabPosition * 2) * 100 / height;
 
-          return Stack(
-            children: <Widget>[
-              Container(
-                color: AppThemes.logoBackground,
-                child: Stack(
-                  children: <Widget>[
-                    Positioned(
-                      bottom: fabSize + fabPosition * 4,
-                      right: fabPosition,
-                      // width is used as max width to prevent overlap
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          minWidth: widget.scaleWidth,
-                          maxWidth: widget.scaleWidth,
-                        ),
-                        child: GetBuilder<NavPageController>(builder: (c) {
-                          return Visibility(
-                            visible: cMenu.isMenuShowingSettings,
-                            child: widget.settingsWidgets[
-                                    c.getLastIdx(widget.navPage)] ??
-                                Column(),
-                          );
-                        }),
+        return Stack(
+          children: <Widget>[
+            Container(
+              color: AppThemes.logoBackground,
+              child: Stack(
+                children: <Widget>[
+                  Positioned(
+                    bottom: fabSize + fabPosition * 4,
+                    right: fabPosition,
+                    // width is used as max width to prevent overlap
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minWidth: widget.scaleWidth,
+                        maxWidth: widget.scaleWidth,
                       ),
+                      child: GetBuilder<NavPageController>(builder: (c) {
+                        return Visibility(
+                          visible: cMenu.isMenuShowingSettings,
+                          child: widget.settingsWidgets[
+                                  c.getLastIdx(widget.navPage)] ??
+                              Column(),
+                        );
+                      }),
                     ),
-                    Positioned(
-                      //right: widget.scaleWidth + _fabPosition * 2,
-                      //bottom: _fabPosition * 1.5,
-                      bottom: 0, //_fabPosition * 1.5,
-                      // height is used as max height to prevent overlap
-                      child: ConstrainedBox(
-                        constraints: BoxConstraints(
-                          //maxHeight: widget.scaleHeight - _fabPosition,
-                          minHeight: widget.scaleHeight + 35,
-                          maxHeight: widget.scaleHeight + 35, // TODO tune
-                        ),
-                        child: widget.bottomWidget,
+                  ),
+                  Positioned(
+                    //right: widget.scaleWidth + _fabPosition * 2,
+                    //bottom: _fabPosition * 1.5,
+                    bottom: 0, //_fabPosition * 1.5,
+                    // height is used as max height to prevent overlap
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        //maxHeight: widget.scaleHeight - _fabPosition,
+                        minHeight: widget.scaleHeight + 35,
+                        maxHeight: widget.scaleHeight + 35, // TODO tune
                       ),
+                      child: widget.bottomWidget,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              SlideAnimation(
-                opened: c.isMenuShowing,
-                xScale: xScale,
-                yScale: yScale,
-                duration: widget.slideAnimationDuration,
-                child: widget.foregroundPage,
-              ),
-            ],
-          );
-        },
-      ),
+            ),
+            SlideAnimation(
+              opened: c.isMenuShowing,
+              xScale: xScale,
+              yScale: yScale,
+              duration: widget.slideAnimationDuration,
+              child: widget.foregroundPage,
+            ),
+          ],
+        );
+      },
     );
   }
 }

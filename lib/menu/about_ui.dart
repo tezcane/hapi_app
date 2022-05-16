@@ -19,6 +19,8 @@ import 'package:url_launcher/url_launcher.dart';
 class AboutUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    double padding = 20; // p for padding
+    double width = w(context) - padding * 2;
     return FabSubPage(
       subPage: SubPage.About,
       child: Scaffold(
@@ -84,8 +86,8 @@ class AboutUI extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 20.0),
-                SizedBox(height: 55, child: LanguageListUI()),
-                SizedBox(height: 55, child: ThemeListUI()),
+                SizedBox(height: 55, child: LanguageListUI(width)),
+                SizedBox(height: 55, child: ThemeListUI(width)),
                 const SizedBox(height: 20.0),
                 Center(
                   child: Hero(

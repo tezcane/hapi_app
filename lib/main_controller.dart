@@ -157,6 +157,25 @@ class Storage {
   }
 }
 
+/// TS = TextStyle - helper class to make init code shorter
+class TS extends TextStyle {
+  const TS(
+    Color color, {
+    FontWeight fontWeight = FontWeight.normal,
+    String fontFamily = 'Roboto',
+  }) : super(
+          color: color,
+          fontWeight: fontWeight,
+          fontFamily: fontFamily,
+          decoration: TextDecoration.none, // makes yellow underlines go away
+        );
+}
+
+/// Commonly used TextStyles: tsB (Bold), tsN (Normal), tsR (Red):
+TS tsB = TS(Get.theme.textTheme.headline6!.color!, fontWeight: FontWeight.bold);
+const TS tsN = TS(AppThemes.ldTextColor);
+const TS tsR = TS(Colors.red);
+
 // TODO change to TK - Translate trKey, and TV - Translate trValue
 /// "T"/"t" short for Text, use to translate or fit text in UI.
 ///
@@ -247,20 +266,6 @@ String at(String trKeyTemplate, List<String> trKeysToInsert) {
 
   return rv;
 }
-
-/// TS = TextStyle - helper class to make init code shorter
-class TS extends TextStyle {
-  const TS(
-    Color color, {
-    FontWeight fontWeight = FontWeight.normal,
-    String fontFamily = 'Roboto',
-  }) : super(color: color, fontWeight: fontWeight, fontFamily: fontFamily);
-}
-
-/// Commonly used TextStyles: tsB (Bold), tsN (Normal), tsR (Red):
-TS tsB = TS(Get.theme.textTheme.headline6!.color!, fontWeight: FontWeight.bold);
-const TS tsN = TS(AppThemes.ldTextColor);
-const TS tsR = TS(Colors.red);
 
 showSnackBar(
   String trKeyTitle,
