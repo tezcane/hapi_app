@@ -166,14 +166,16 @@ class BottomBarItem {
     this.trValTitle,
     this.trValTooltip,
     this.iconData,
-    this.selectedColor,
-  );
+    this.selectedColor, {
+    this.onPressed,
+  });
   final Widget mainWidget; // used by bottom_bar_menu
   final Widget? settingsWidget; // used by bottom_bar_menu
   final String trValTitle;
   final String trValTooltip;
   final IconData iconData;
   final Color selectedColor;
+  final VoidCallback? onPressed;
 
   /// Keeps widget alive on UI, so when swiped doesn't lose settings
   Widget get aliveMainWidget => KeepAlivePage(child: mainWidget);

@@ -80,7 +80,7 @@ class TarikhController extends GetxHapi {
   set isActiveTarikhMenu(bool nv) {
     if (nv != _isActiveTarikhMenu) {
       _isActiveTarikhMenu = nv;
-      update();
+      updateOnThread1Ms(); // needed for bottom bar init
     } else {
       l.w('_isActiveTarikhMenu already set to $_isActiveTarikhMenu');
     }

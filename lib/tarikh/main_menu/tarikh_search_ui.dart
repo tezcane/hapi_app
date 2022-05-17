@@ -1,17 +1,18 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hapi/main_controller.dart';
-import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/main_menu/search_widget.dart';
 import 'package:hapi/tarikh/main_menu/thumbnail_detail_widget.dart';
 import 'package:hapi/tarikh/search_manager.dart';
+import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
 class TarikhSearchUI extends StatefulWidget {
-  const TarikhSearchUI({Key? key}) : super(key: key);
+  const TarikhSearchUI();
 
   @override
   _TarikhSearchUIState createState() => _TarikhSearchUIState();
@@ -31,6 +32,7 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
   final ScrollController _scrollController = ScrollController();
 
   bool scrollToEnd = false;
+  bool initialized = false;
 
   @override
   initState() {
@@ -131,25 +133,27 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
 
   @override
   Widget build(BuildContext context) {
-    double heightPadding = 0;
+    return GetBuilder<TarikhController>(builder: (c) {
+      if (c.isTimelineInitDone && !initialized) {
+        initialized = true;
+        _updateSearch(); // needed for init
+      }
 
-    // TODO TUNE THIS, BUT IT WORKS WELL:
-    if (_searchResults.length < 10) {
-      heightPadding = MediaQuery.of(context).size.height - 150;
-      scrollToEnd = true;
-    } else {
-      scrollToEnd = false;
-    }
+      double heightPadding = 0;
 
-    // TODO Can delete this old hack:
-    //Timer(Duration(milliseconds: 200), () => _scrollToEnd());
-    if (WidgetsBinding.instance != null) {
-      WidgetsBinding.instance!.addPostFrameCallback(_onLayoutDone);
-    }
+      // TODO TUNE THIS, BUT IT WORKS WELL:
+      if (_searchResults.length < 10) {
+        heightPadding = MediaQuery.of(context).size.height - 150;
+        scrollToEnd = true;
+      } else {
+        scrollToEnd = false;
+      }
 
-    return FabSubPage(
-      subPage: SubPage.Tarikh_Search,
-      child: Scaffold(
+      if (WidgetsBinding.instance != null) {
+        WidgetsBinding.instance!.addPostFrameCallback(_onLayoutDone);
+      }
+
+      return Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
         bottomNavigationBar: Container(
           padding: const EdgeInsets.only(
@@ -181,7 +185,7 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
             ),
           ],
         ),
-      ),
-    );
+      );
+    });
   }
 }

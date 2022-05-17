@@ -11,7 +11,7 @@ import 'package:hapi/quest/daily/do_list/do_list_quest_ui.dart';
 import 'package:hapi/settings/language/language_controller.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 
-enum Quests {
+enum QUEST_TAB {
   hapi,
   Time,
   Daily,
@@ -20,6 +20,7 @@ enum Quests {
 
 /// Init active/daily/timed/hapi quests with slick bottom bar navigation
 class QuestsUI extends StatelessWidget {
+  const QuestsUI();
   static const navPage = NavPage.Quests;
 
   @override

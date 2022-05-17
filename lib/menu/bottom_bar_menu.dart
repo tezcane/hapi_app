@@ -23,6 +23,7 @@ class _BottomBarMenuState extends State<BottomBarMenu> {
     if (initNeeded) {
       _currentPage = NavPageController.to.getLastIdx(widget.navPage);
       _pageController = PageController(initialPage: _currentPage);
+      handleOnPressed(_currentPage);
       initNeeded = false;
     }
     return Scaffold(
@@ -32,6 +33,7 @@ class _BottomBarMenuState extends State<BottomBarMenu> {
         children: widget.aliveMainWidgets,
         onPageChanged: (newIdx) {
           NavPageController.to.setLastIdx(widget.navPage, newIdx);
+          handleOnPressed(newIdx);
           setState(() => _currentPage = newIdx);
         },
       ),
@@ -60,5 +62,11 @@ class _BottomBarMenuState extends State<BottomBarMenu> {
         //backgroundColor: null,
       ),
     );
+  }
+
+  handleOnPressed(int idx) {
+    if (widget.bottomBarItems[idx].onPressed != null) {
+      widget.bottomBarItems[idx].onPressed!.call();
+    }
   }
 }

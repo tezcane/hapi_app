@@ -13,10 +13,8 @@ import 'package:hapi/quest/quests_ui.dart';
 import 'package:hapi/settings/reset_password_ui.dart';
 import 'package:hapi/settings/update_profile_ui.dart';
 import 'package:hapi/tarikh/article/tarikh_article_ui.dart';
-import 'package:hapi/tarikh/main_menu/tarikh_favorites_ui.dart';
-import 'package:hapi/tarikh/main_menu/tarikh_menu_ui.dart';
-import 'package:hapi/tarikh/main_menu/tarikh_search_ui.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
+import 'package:hapi/tarikh/tarikh_ui.dart';
 import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
 
 /// Class to hold values needed to initialize NavPage and its defaults.
@@ -34,9 +32,10 @@ final navPageValues = [
   NavPageValue(0, NavPage.Dua, Icons.volunteer_activism),
   NavPageValue(0, NavPage.Hadith, Icons.menu_book_outlined),
   NavPageValue(0, NavPage.Quran, Icons.auto_stories),
-  NavPageValue(0, NavPage.Tarikh, Icons.history_edu_outlined),
+  NavPageValue(
+      TARIKH_TAB.Menu.index, NavPage.Tarikh, Icons.history_edu_outlined),
   NavPageValue(0, NavPage.Relics, Icons.brightness_3_outlined),
-  NavPageValue(Quests.Active.index, NavPage.Quests,
+  NavPageValue(QUEST_TAB.Active.index, NavPage.Quests,
       Icons.how_to_reg_outlined), // 3=Active Quests
 ];
 
@@ -103,8 +102,6 @@ enum SubPage {
   About,
   Update_Profile,
   Reset_Password,
-  Tarikh_Favorite,
-  Tarikh_Search,
   Tarikh_Timeline,
   Tarikh_Article,
   Active_Quest_Action,
@@ -297,7 +294,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
     _navigateToNavPage(navPage);
   }
 
-  void _navigateToNavPage(
+  _navigateToNavPage(
     NavPage navPage, {
     //dynamic arguments,
     int transitionMs = 1000,
@@ -308,7 +305,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
     switch (navPage) {
       case (NavPage.Tarikh):
         Get.offAll(
-          () => TarikhMenuUI(),
+          () => const TarikhUI(),
           transition: transition,
           duration: Duration(milliseconds: transitionMs),
         );
@@ -346,20 +343,6 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
     //   }
     // }
 
-    // if we are in Tarikh page and switch to a page that needs timeline fully
-    // initialized, we must wait for it to initialize:
-    if (getLastNavPage() == NavPage.Tarikh) {
-      switch (subPage) {
-        case (SubPage.Tarikh_Favorite):
-        case (SubPage.Tarikh_Search):
-        case (SubPage.Tarikh_Timeline):
-          await handleTimelineNotInitializedYet();
-          break;
-        default:
-          break;
-      }
-    }
-
     _subPageStack.add(subPage);
 
     /// HERE WE HANDLE THE FAB BUTTON ANIMATIONS ON INSERTING NEW SUB PAGES
@@ -379,23 +362,8 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
     }
 
     switch (subPage) {
-      case (SubPage.Tarikh_Favorite):
-        Get.to(
-          () => TarikhFavoritesUI(),
-          arguments: arguments,
-          transition: transition,
-          duration: Duration(milliseconds: transistionMs),
-        );
-        break;
-      case (SubPage.Tarikh_Search):
-        Get.to(
-          () => const TarikhSearchUI(),
-          arguments: arguments,
-          transition: transition,
-          duration: Duration(milliseconds: transistionMs),
-        );
-        break;
       case (SubPage.Tarikh_Timeline):
+        await _handleTimelineNotInitializedYet();
         Get.to(
           () => TarikhTimelineUI(),
           arguments: arguments,
@@ -537,10 +505,10 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
   ConfettiController confettiController() => _confettiController;
   void playConfetti() => _confettiController.play();
 
-  handleTimelineNotInitializedYet() async {
-    if (TarikhController.to.isTimelineInitDone) {
-      return; // already initialized, no need to show loading and wait
-    }
+  /// If we are in Tarikh page and switch to a page that needs timeline fully
+  /// initialized, we must wait for it to initialize:
+  _handleTimelineNotInitializedYet() async {
+    if (TarikhController.to.isTimelineInitDone) return; // already initialized
 
     showLoadingIndicator();
     while (true) {

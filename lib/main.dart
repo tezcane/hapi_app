@@ -33,8 +33,8 @@ import 'package:hapi/settings/theme/theme_controller.dart';
 import 'package:hapi/settings/update_profile_ui.dart';
 import 'package:hapi/tarikh/article/tarikh_article_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_favorites_ui.dart';
-import 'package:hapi/tarikh/main_menu/tarikh_menu_ui.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
+import 'package:hapi/tarikh/tarikh_ui.dart';
 import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
 //import 'package:timezone/data/latest.dart' as tz;
 //import 'package:timezone/data/latest_10y.dart' as tz;
@@ -170,8 +170,8 @@ class AppRoutes {
     GetPage(name: '/onboard', page: () => OnboardingUI()),
     GetPage(name: '/sign-in', page: () => SignInUI()),
     GetPage(name: '/sign-up', page: () => SignUpUI()),
-    GetPage(name: '/quest', page: () => QuestsUI()),
-    GetPage(name: '/tarikh', page: () => TarikhMenuUI()),
+    GetPage(name: '/quest', page: () => const QuestsUI()),
+    GetPage(name: '/tarikh', page: () => const TarikhUI()),
     GetPage(name: '/tarikh/favorite', page: () => TarikhFavoritesUI()),
     GetPage(name: '/tarikh/article', page: () => TarikhArticleUI()),
     GetPage(name: '/tarikh/timeline', page: () => TarikhTimelineUI()),

@@ -18,6 +18,7 @@ typedef SelectItemCallback = Function(TimelineEntry item);
 /// This is the Stateful Widget associated with the Timeline object.
 /// It is built from a [focusItem], that is the event the [Timeline] should
 /// focus on when it's created.
+// ignore: must_be_immutable
 class TarikhTimelineUI extends StatefulWidget {
   TarikhTimelineUI() {
     focusItem = Get.arguments['focusItem'];
@@ -446,7 +447,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                           children: [
                             FloatingActionButton(
                               tooltip: 'Show/hide favorite or all events',
-                              heroTag: SubPage.Tarikh_Favorite,
+                              heroTag: 'Tarikh_Favorite',
                               onPressed: () {
                                 if (c.isGutterModeOff()) {
                                   c.gutterMode = GutterMode.FAV;
