@@ -1,6 +1,5 @@
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hapi/controllers/nav_page_controller.dart';
 import 'package:hapi/main_controller.dart';
@@ -31,14 +30,14 @@ class FabNavPage extends StatelessWidget {
         child: Scaffold(
           backgroundColor: Theme.of(context).backgroundColor,
 
-          // used only for the hero movements and hide keyboard on text search bars
-          floatingActionButton: FloatingActionButton(
-            tooltip: 'Hide keyboard',
-            onPressed: () =>
-                SystemChannels.textInput.invokeMethod('TextInput.hide'),
-            heroTag: navPage, // needed so tag is not null causing hero conflict
-            child: const Icon(Icons.arrow_back_outlined, size: 30),
-          ),
+          // // used only for the hero movements and hide keyboard on text search bars
+          // floatingActionButton: FloatingActionButton(
+          //   tooltip: 'Hide keyboard',
+          //   onPressed: () =>
+          //       SystemChannels.textInput.invokeMethod('TextInput.hide'),
+          //   heroTag: navPage, // needed so tag is not null causing hero conflict
+          //   child: const Icon(Icons.arrow_back_outlined, size: 30),
+          // ),
           body: MenuNav(
             initNavPage: navPage,
             settingsWidgets: settingsWidgets,

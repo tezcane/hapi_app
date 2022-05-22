@@ -58,16 +58,17 @@ void main() async {
   Get.put<MainController>(MainController(),
       permanent: permOn); // should do first
   Get.put<OnboardingController>(OnboardingController());
-  Get.put<AuthController>(AuthController()); // requires OnboardingController
+  Get.put<NavPageController>(NavPageController(), permanent: permOn);
+  Get.put<MenuController>(MenuController(), // requires NavPageController
+      permanent: permOn); //requires TarikhController
+  Get.put<AuthController>(
+      AuthController()); // requires OnboardingController, MenuController
   Get.put<ConnectivityController>(ConnectivityController(), permanent: permOn);
   Get.put<TimeController>(TimeController(),
       permanent: permOn); // requires ConnectivityController
   Get.put<LocationController>(LocationController(),
       permanent: permOn); // requires TimeController
   Get.put<TarikhController>(TarikhController());
-  Get.put<NavPageController>(NavPageController(), permanent: permOn);
-  Get.put<MenuController>(MenuController(), // requires NavPageController
-      permanent: permOn); //requires TarikhController
   Get.put<DailyQuestsController>(DailyQuestsController(),
       permanent: permOn); // requires AuthController
   Get.put<NotificationController>(NotificationController(),
@@ -105,8 +106,6 @@ class MyApp extends StatelessWidget {
           builder: (c) => Loading(
             child: MaterialApp(
               home: Scaffold(
-                // floatingActionButtonLocation:
-                //     FloatingActionButtonLocation.endFloat,
                 resizeToAvoidBottomInset: false, // fixes keyboard pushing UI up
                 floatingActionButton: GetBuilder<MenuController>(builder: (mc) {
                   return Visibility(

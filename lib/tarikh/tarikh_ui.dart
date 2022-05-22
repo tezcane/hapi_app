@@ -12,9 +12,9 @@ import 'package:hapi/tarikh/main_menu/tarikh_search_ui.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
 
 enum TARIKH_TAB {
-  Menu,
-  Search,
   Favorites,
+  Search,
+  Menu,
 }
 
 /// Init active/daily/timed/hapi quests with slick bottom bar navigation
@@ -59,7 +59,7 @@ class TarikhUI extends StatelessWidget {
         ];
 
         List<BottomBarItem> bottomBarItems = bbItems;
-        if (c.isRightToLeftLang) {
+        if (c.isRTL) {
           bottomBarItems = List<BottomBarItem>.from(bbItems.reversed);
         }
 

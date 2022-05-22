@@ -62,7 +62,7 @@ class QuestsUI extends StatelessWidget {
       ];
 
       List<BottomBarItem> bottomBarItems = bbItems;
-      if (c.isRightToLeftLang) {
+      if (c.isRTL) {
         // TODO swap langs PageController index is off
         bottomBarItems = List<BottomBarItem>.from(bbItems.reversed);
       }

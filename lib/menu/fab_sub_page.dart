@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:hapi/menu/menu_controller.dart';
 
 class FabSubPage extends StatelessWidget {
@@ -14,14 +13,14 @@ class FabSubPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
 
-      // used only for the hero movements and hide keyboard on text search bars
-      floatingActionButton: FloatingActionButton(
-        tooltip: 'Hide keyboard',
-        onPressed: () =>
-            SystemChannels.textInput.invokeMethod('TextInput.hide'),
-        heroTag: subPage,
-        child: const Icon(Icons.arrow_back_outlined, size: 30),
-      ),
+      // // used only for the hero movements and hide keyboard on text search bars
+      // floatingActionButton: FloatingActionButton(
+      //   tooltip: 'Hide keyboard',
+      //   onPressed: () =>
+      //       SystemChannels.textInput.invokeMethod('TextInput.hide'),
+      //   heroTag: subPage,
+      //   child: const Icon(Icons.arrow_back_outlined, size: 30),
+      // ),
       body: child, // <- SubPages go here
     );
   }

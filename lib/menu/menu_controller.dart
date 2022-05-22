@@ -10,6 +10,7 @@ import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/about_ui.dart';
 import 'package:hapi/quest/active/active_quest_action_ui.dart';
 import 'package:hapi/quest/quests_ui.dart';
+import 'package:hapi/settings/language/language_controller.dart';
 import 'package:hapi/settings/reset_password_ui.dart';
 import 'package:hapi/settings/update_profile_ui.dart';
 import 'package:hapi/tarikh/article/tarikh_article_ui.dart';
@@ -17,26 +18,24 @@ import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/tarikh_ui.dart';
 import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
 
-/// Class to hold values needed to initialize NavPage and its defaults.
-class NavPageValue {
-  const NavPageValue(this.defaultIdx, this.navPage, this.icon);
-  final int defaultIdx;
+/// NPV= Nav Page Value holds values used to init a NavPage.
+class NPV {
+  const NPV(this.navPage, this.initTabName, this.icon);
   final NavPage navPage;
+  final String initTabName;
   final IconData icon;
 }
 
-/// must keep in sync with NavPage
+/// Must keep in sync with NavPage/menu list
 final navPageValues = [
-  NavPageValue(0, NavPage.Ajr, Icons.leaderboard_rounded),
-  NavPageValue(0, NavPage.Tools, Icons.explore_outlined),
-  NavPageValue(0, NavPage.Dua, Icons.volunteer_activism),
-  NavPageValue(0, NavPage.Hadith, Icons.menu_book_outlined),
-  NavPageValue(0, NavPage.Quran, Icons.auto_stories),
-  NavPageValue(
-      TARIKH_TAB.Menu.index, NavPage.Tarikh, Icons.history_edu_outlined),
-  NavPageValue(0, NavPage.Relics, Icons.brightness_3_outlined),
-  NavPageValue(QUEST_TAB.Active.index, NavPage.Quests,
-      Icons.how_to_reg_outlined), // 3=Active Quests
+  NPV(NavPage.Ajr, '', Icons.leaderboard_rounded),
+  NPV(NavPage.Tools, '', Icons.explore_outlined),
+  NPV(NavPage.Dua, '', Icons.volunteer_activism),
+  NPV(NavPage.Hadith, '', Icons.menu_book_outlined),
+  NPV(NavPage.Quran, '', Icons.auto_stories),
+  NPV(NavPage.Tarikh, TARIKH_TAB.Menu.name, Icons.history_edu_outlined),
+  NPV(NavPage.Relics, '', Icons.brightness_3_outlined),
+  NPV(NavPage.Quests, QUEST_TAB.Active.name, Icons.how_to_reg_outlined),
 ];
 
 /// must keep in sync with navPageValues
@@ -96,6 +95,28 @@ extension EnumUtil on NavPage {
         return l.E('Quests.trValTooltip: Unknown Quest "$this"');
     }
   }
+
+  List<dynamic> get ltrTabList {
+    switch (this) {
+      // case (NavPage.Ajr):
+      // case (NavPage.Dua):
+      // case (NavPage.Hadith):
+      // case (NavPage.Quran):
+      case (NavPage.Tarikh):
+        return TARIKH_TAB.values;
+      // case (NavPage.Tools):
+      // case (NavPage.Relics):
+      case (NavPage.Quests):
+        return QUEST_TAB.values;
+      default:
+        return l.E('Quests.tabEnum: Unknown Quest "$this"');
+    }
+  }
+
+  List<dynamic> get rtlTabList => List<dynamic>.from(ltrTabList.reversed);
+
+  List<dynamic> get tabEnumList =>
+      LanguageController.to.isRTL ? rtlTabList : ltrTabList;
 }
 
 enum SubPage {

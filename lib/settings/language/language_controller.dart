@@ -64,6 +64,13 @@ class LanguageController extends GetxHapi {
   String _currLangKey = '';
   String get currLangKey => _currLangKey;
 
+  final Map<String, bool> _arabicScriptLangs = {
+    'ar': true, // Arabic
+    'ps': true, // Pashto
+    'fa': true, // Persian Numerals
+    'ur': true, // Urdu
+  };
+
   // TODO more right to left languages: Azeri, Dhivehi/Maldivian, Hebrew, Kurdish (Sorani)
   final Map<String, bool> _nonLeftToRightLangs = {
     'ar': true, // Arabic
@@ -73,7 +80,7 @@ class LanguageController extends GetxHapi {
     'he': true, // Hebrew
   };
   bool _isRightToLeftLang = false;
-  bool get isRightToLeftLang => _isRightToLeftLang;
+  bool get isRTL => _isRightToLeftLang;
 
   /// Arabic and other RTL language Alignment values are opposite to LTR
   /// languages so we make it easier by using these utility functions. So just
@@ -203,9 +210,9 @@ class LanguageController extends GetxHapi {
 
   /// Setup special language variables now
   _initLocaleValues(String newLangKey) {
-    if (newLangKey == 'ar' || newLangKey == 'en') {
-      HijriCalendar.setLocal(newLangKey); // supports ar and en only
-    }
+    _arabicScriptLangs[newLangKey] ?? false
+        ? HijriCalendar.setLocal('ar') // supports ar or en only
+        : HijriCalendar.setLocal('en'); // switch out Arabic script, if was set
 
     _isRightToLeftLang = _nonLeftToRightLangs[newLangKey] ?? false;
     _isEnNumerals = _nonEnNumeralLangs[newLangKey] == null;

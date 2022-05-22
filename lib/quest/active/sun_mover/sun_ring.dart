@@ -271,7 +271,7 @@ class SunRing extends StatelessWidget {
                     fillPercent: sunriseCorrection,
                   ),
                 ),
-              if (!isSunAboveHorizon) const _GumbiAndMeWithFamily(Colors.white),
+              if (!isSunAboveHorizon) const _GumbiAndMeWithFamily(Colors.grey),
               const Center(child: _HijriAndGregoDate()),
             ],
           ),
