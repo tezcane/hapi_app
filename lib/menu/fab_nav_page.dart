@@ -29,15 +29,6 @@ class FabNavPage extends StatelessWidget {
         ignoring: c.isScreenDisabled,
         child: Scaffold(
           backgroundColor: Theme.of(context).backgroundColor,
-
-          // // used only for the hero movements and hide keyboard on text search bars
-          // floatingActionButton: FloatingActionButton(
-          //   tooltip: 'Hide keyboard',
-          //   onPressed: () =>
-          //       SystemChannels.textInput.invokeMethod('TextInput.hide'),
-          //   heroTag: navPage, // needed so tag is not null causing hero conflict
-          //   child: const Icon(Icons.arrow_back_outlined, size: 30),
-          // ),
           body: MenuNav(
             initNavPage: navPage,
             settingsWidgets: settingsWidgets,
@@ -191,85 +182,70 @@ class FabNavPage extends StatelessWidget {
 class HapiShareUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        const SizedBox(width: 10.0),
-        Tooltip(
-          message: 'Learn about hapi, contribute or update profile',
-          child: GestureDetector(
-            onTap: () {
-              MenuController.to.pushSubPage(SubPage.About);
-              MenuController.to.hideMenu();
-            },
-            child: Row(
-              children: <Widget>[
-                TextButton(
-                  onPressed: null,
-                  child: Text(
-                    'About',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      color: Colors.white.withOpacity(0.65),
-                    ),
-                  ),
-                ),
-                Hero(
+    const double iconSize = 40;
+    double width = w(context);
+
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: SizedBox(
+        width: width,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Tooltip(
+              message: at('at.About {0}', ['a.hapi']),
+              child: InkWell(
+                onTap: () {
+                  MenuController.to.pushSubPage(SubPage.About);
+                  MenuController.to.hideMenu();
+                },
+                child: Hero(
                   tag: 'hapiLogo',
                   child: Image.asset(
                     'assets/images/logo/logo.png',
                     fit: BoxFit.contain,
                   ),
                 ),
-                // IconButton(
-                //   onPressed: null,
-                //   padding: const EdgeInsets.all(0.0), // to center
-                //   icon: const Icon(
-                //     Icons.info_outline,
-                //     color: Colors.white,
-                //     size: 36,
-                //   ),
-                // ),
-              ],
+              ),
             ),
-          ),
-        ),
-        const SizedBox(width: 20.0),
-        Tooltip(
-          message:
-              'Share hapi with Muslims and earn mountains of good deeds from their actions too!',
-          child: InkWell(
-            onTap: () => Share.share('As-salamu Alaykum, '
-                'hapi is a really fun and rewarding app for Muslims, join me!\n\n'
-                'More Info: https://hapi.net/TODO\n'
-                'Download Android: https://bit.ly/TODO\n'
-                'Download iOS:  https://bit.ly/TODO'),
-            child: Row(
-              children: <Widget>[
-                TextButton(
-                  onPressed: null,
-                  child: Text(
-                    'Share',
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      //fontFamily: 'RobotoMedium',
-                      color: Colors.white.withOpacity(0.65),
-                    ),
-                  ),
-                ),
-                const IconButton(
-                  onPressed: null,
-                  padding: EdgeInsets.all(0.0), // to center
-                  icon: Icon(
-                    Icons.share_outlined,
-                    color: Colors.white,
-                    size: 25,
-                  ),
-                ),
-              ],
+            Tooltip(
+              message: at('at.About {0}', ['a.hapi']),
+              child: InkWell(
+                onTap: () {
+                  MenuController.to.pushSubPage(SubPage.About);
+                  MenuController.to.hideMenu();
+                },
+                child: const Icon(Icons.info_outline_rounded, size: iconSize),
+              ),
             ),
-          ),
+            Tooltip(
+              message: 'i.Settings'.tr,
+              child: InkWell(
+                onTap: () {
+                  MenuController.to.pushSubPage(SubPage.Settings);
+                  MenuController.to.hideMenu();
+                },
+                child: const Icon(Icons.settings_rounded, size: iconSize),
+              ),
+            ),
+            Tooltip(
+              message: at('at.Share {0} then share in mountains of rewards!',
+                  ['a.hapi']),
+              child: InkWell(
+                onTap: () => Share.share(
+                  a('a.Assalamu Alaykum') +
+                      'i.,'.tr + // translate the comma
+                      '\n' +
+                      'i.Check out this really useful and fun Muslim app!'.tr +
+                      ' https://hapi.net',
+                ),
+                child: const Icon(Icons.share_outlined, size: iconSize),
+              ),
+            ),
+            SizedBox(width: width / 5),
+          ],
         ),
-      ],
+      ),
     );
   }
 }

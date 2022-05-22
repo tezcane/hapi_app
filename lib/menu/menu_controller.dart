@@ -8,6 +8,7 @@ import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/helpers/loading.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/about_ui.dart';
+import 'package:hapi/menu/settings_ui.dart';
 import 'package:hapi/quest/active/active_quest_action_ui.dart';
 import 'package:hapi/quest/quests_ui.dart';
 import 'package:hapi/settings/language/language_controller.dart';
@@ -121,6 +122,7 @@ extension EnumUtil on NavPage {
 
 enum SubPage {
   About,
+  Settings,
   Update_Profile,
   Reset_Password,
   Tarikh_Timeline,
@@ -353,10 +355,10 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
   void pushSubPage(
     SubPage subPage, {
     dynamic arguments,
-    int transistionMs = 1000,
+    int transitionMs = 1000,
     Transition transition = Transition.fade,
   }) async {
-    // // TODO option for disallow duplicates so might not need this
+    // There is a GetX option to disallow duplicates, so don't need:
     // if (_subPageStack.length != 0) {
     //   if (_subPageStack[_subPageStack.length - 1] == subPage) {
     //     //print('$pageName already on stack, returning!');
@@ -389,7 +391,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
           () => TarikhTimelineUI(),
           arguments: arguments,
           transition: transition,
-          duration: Duration(milliseconds: transistionMs),
+          duration: Duration(milliseconds: transitionMs),
         );
         break;
       case (SubPage.Tarikh_Article):
@@ -397,7 +399,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
           () => TarikhArticleUI(),
           arguments: arguments,
           transition: transition,
-          duration: Duration(milliseconds: transistionMs),
+          duration: Duration(milliseconds: transitionMs),
         );
         break;
       case (SubPage.Active_Quest_Action):
@@ -405,7 +407,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
           () => ActiveQuestActionUI(),
           arguments: arguments,
           transition: transition,
-          duration: Duration(milliseconds: transistionMs),
+          duration: Duration(milliseconds: transitionMs),
         );
         break;
       case (SubPage.Update_Profile):
@@ -413,7 +415,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
           () => UpdateProfileUI(),
           arguments: arguments,
           transition: transition,
-          duration: Duration(milliseconds: transistionMs),
+          duration: Duration(milliseconds: transitionMs),
         );
         break;
       case (SubPage.Reset_Password):
@@ -421,7 +423,15 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
           () => ResetPasswordUI(),
           arguments: arguments,
           transition: transition,
-          duration: Duration(milliseconds: transistionMs),
+          duration: Duration(milliseconds: transitionMs),
+        );
+        break;
+      case (SubPage.Settings):
+        Get.to(
+          () => SettingsUI(),
+          arguments: arguments,
+          transition: transition,
+          duration: Duration(milliseconds: transitionMs),
         );
         break;
       case (SubPage.About):
@@ -430,7 +440,7 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
           () => AboutUI(),
           arguments: arguments,
           transition: transition,
-          duration: Duration(milliseconds: transistionMs),
+          duration: Duration(milliseconds: transitionMs),
         );
         break;
     }

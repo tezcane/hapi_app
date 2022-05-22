@@ -84,7 +84,7 @@ class UpdateProfileUI extends StatelessWidget {
                           Hero(
                             tag: 'UPDATE PROFILE',
                             child: PrimaryButton(
-                              trKey: 'settings.updateProfile',
+                              trKey: 'i.Update Profile',
                               onPressed: tu.isTextSame
                                   ? () {} // disable button
                                   : () async {
@@ -176,7 +176,7 @@ class UpdateProfileUI extends StatelessWidget {
           TextButton(
             child: T('auth.cancel', null, w: wm(context)),
             onPressed: () {
-              Get.back();
+              Get.back(); // TODO asdf fdsa bug here, doesn't dispose and does back() to main pages
             },
           ),
           TextButton(
