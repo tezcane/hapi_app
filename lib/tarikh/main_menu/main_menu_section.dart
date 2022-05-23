@@ -190,14 +190,10 @@ class _SectionState extends State<MenuSection>
                                     ),
                                   ),
                                 ),
-                                Container(
-                                  alignment: Alignment.center,
-                                  child: Image.asset(
-                                    'assets/tarikh/right_arrow.png',
-                                    color: widget.accentColor,
-                                    height: 22.0,
-                                    width: 22.0,
-                                  ),
+                                Icon(
+                                  Icons.arrow_forward_ios_rounded,
+                                  color: widget.accentColor,
+                                  size: 20,
                                 ),
                               ],
                             ),
