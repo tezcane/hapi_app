@@ -215,7 +215,11 @@ class HapiShareUI extends StatelessWidget {
                   MenuController.to.pushSubPage(SubPage.About);
                   MenuController.to.hideMenu();
                 },
-                child: const Icon(Icons.info_outline_rounded, size: iconSize),
+                child: const Icon(
+                  Icons.info_outline_rounded,
+                  size: iconSize,
+                  color: Colors.white,
+                ),
               ),
             ),
             Tooltip(
@@ -225,7 +229,11 @@ class HapiShareUI extends StatelessWidget {
                   MenuController.to.pushSubPage(SubPage.Settings);
                   MenuController.to.hideMenu();
                 },
-                child: const Icon(Icons.settings_rounded, size: iconSize),
+                child: const Icon(
+                  Icons.settings_rounded,
+                  size: iconSize,
+                  color: Colors.white,
+                ),
               ),
             ),
             Tooltip(
@@ -239,7 +247,11 @@ class HapiShareUI extends StatelessWidget {
                       'i.Check out this really useful and fun Muslim app!'.tr +
                       ' https://hapi.net',
                 ),
-                child: const Icon(Icons.share_outlined, size: iconSize),
+                child: const Icon(
+                  Icons.share_outlined,
+                  size: iconSize,
+                  color: Colors.white,
+                ),
               ),
             ),
             SizedBox(width: width / 5),
