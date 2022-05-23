@@ -118,12 +118,31 @@ class _SlidingAppBar extends StatelessWidget {
                   ),
                 ),
                 if (index == aqC.swiperImageIdx) // if pinned show icon
-                  const Align(
-                    alignment: Alignment.bottomRight,
-                    child: Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Icon(Icons.play_arrow),
-                    ),
+                  Stack(
+                    children: const [
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Padding(
+                          padding: EdgeInsets.all(3.0),
+                          child: Icon(
+                            Icons.play_arrow,
+                            color: Colors.black,
+                            size: 35,
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(
+                            Icons.play_arrow,
+                            color: Colors.white70,
+                            size: 25,
+                          ),
+                        ),
+                      ),
+                    ],
                   )
               ],
             );
