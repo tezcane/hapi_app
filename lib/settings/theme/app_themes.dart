@@ -13,7 +13,7 @@ class AppThemes {
   static const Color ajr2Uncommon = Colors.green;
   static const Color ajr3Rare = Colors.blue;
   static const Color ajr4Epic = Colors.purple;
-  static const Color ajr5Legendary = Colors.orangeAccent;
+  static const Color ajr5Legendary = Color(0xFFF1AC44);
   static const Color ajr6TimeNotInYet = Colors.transparent;
   static const List ajrColorsByIdx = [
     ajr0Missed,
@@ -40,7 +40,7 @@ class AppThemes {
   static const Color checkComplete = Colors.green;
 
   static const Color _lBackground1 = Color.fromRGBO(225, 228, 229, 1);
-  static const Color _lBackground2 = Color.fromRGBO(224, 181, 181, 1.0);
+  static const Color _lBackground2 = Color.fromRGBO(255, 242, 239, 1.0);
 
   static const Color _dBackground1 = Color.fromRGBO(0x0A, 0x0E, 0x21, 1);
   static const Color _dBackground2 = logoBackground;

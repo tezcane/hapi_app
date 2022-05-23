@@ -41,7 +41,7 @@ class QuestsUI extends StatelessWidget {
           a('a.Zaman'),
           'i.Manage and prioritize your time'.tr,
           Icons.timer_outlined,
-          Colors.greenAccent.shade700, //.orange,
+          Colors.greenAccent.shade700,
         ),
         BottomBarItem(
           const DoListUI(),
@@ -49,7 +49,7 @@ class QuestsUI extends StatelessWidget {
           'i.Daily'.tr,
           'i.Build religious and healthy habits'.tr,
           Icons.brightness_high_outlined,
-          const Color(0xFFF1AC44),
+          AppThemes.ajr5Legendary,
         ),
         BottomBarItem(
           const ActiveQuestsUI(),
