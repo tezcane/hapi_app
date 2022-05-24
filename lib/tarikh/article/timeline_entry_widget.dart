@@ -64,7 +64,7 @@ class TimelineEntryWidget extends LeafRenderObjectWidget {
 /// Flare/Nima [FlutterActor] where the widget is being placed.
 class VignetteRenderObject extends RenderBox {
   static const Alignment alignment = Alignment.center;
-  static const BoxFit fit = BoxFit.contain;
+  // static const BoxFit fit = BoxFit.contain;
 
   bool _isActive = false;
   bool _firstUpdate = true;
@@ -232,38 +232,38 @@ class VignetteRenderObject extends RenderBox {
       /// This widget is always set up to use [BoxFit.contain].
       /// But this behavior can be customized according to anyone's needs.
       /// The following switch/case contains all the various alternatives native to Flutter.
-      switch (fit) {
-        case BoxFit.fill:
-          scaleX = renderSize.width / contentWidth;
-          scaleY = renderSize.height / contentHeight;
-          break;
-        case BoxFit.contain:
-          double minScale = min(renderSize.width / contentWidth,
-              renderSize.height / contentHeight);
-          scaleX = scaleY = minScale;
-          break;
-        case BoxFit.cover:
-          double maxScale = max(renderSize.width / contentWidth,
-              renderSize.height / contentHeight);
-          scaleX = scaleY = maxScale;
-          break;
-        case BoxFit.fitHeight:
-          double minScale = renderSize.height / contentHeight;
-          scaleX = scaleY = minScale;
-          break;
-        case BoxFit.fitWidth:
-          double minScale = renderSize.width / contentWidth;
-          scaleX = scaleY = minScale;
-          break;
-        case BoxFit.none:
-          scaleX = scaleY = 1.0;
-          break;
-        case BoxFit.scaleDown:
-          double minScale = min(renderSize.width / contentWidth,
-              renderSize.height / contentHeight);
-          scaleX = scaleY = minScale < 1.0 ? minScale : 1.0;
-          break;
-      }
+      // switch (fit) {
+      //   case BoxFit.fill:
+      //     scaleX = renderSize.width / contentWidth;
+      //     scaleY = renderSize.height / contentHeight;
+      //     break;
+      //   case BoxFit.contain:
+      double minScale = min(
+          renderSize.width / contentWidth, renderSize.height / contentHeight);
+      scaleX = scaleY = minScale;
+      //     break;
+      //   case BoxFit.cover:
+      //     double maxScale = max(renderSize.width / contentWidth,
+      //         renderSize.height / contentHeight);
+      //     scaleX = scaleY = maxScale;
+      //     break;
+      //   case BoxFit.fitHeight:
+      //     double minScale = renderSize.height / contentHeight;
+      //     scaleX = scaleY = minScale;
+      //     break;
+      //   case BoxFit.fitWidth:
+      //     double minScale = renderSize.width / contentWidth;
+      //     scaleX = scaleY = minScale;
+      //     break;
+      //   case BoxFit.none:
+      //     scaleX = scaleY = 1.0;
+      //     break;
+      //   case BoxFit.scaleDown:
+      //     double minScale = min(renderSize.width / contentWidth,
+      //         renderSize.height / contentHeight);
+      //     scaleX = scaleY = minScale < 1.0 ? minScale : 1.0;
+      //     break;
+      // }
 
       /// 2. Move the [canvas] to the right position so that the widget's position
       /// is center-aligned based on its offset, size and alignment position.
@@ -311,38 +311,38 @@ class VignetteRenderObject extends RenderBox {
       /// This widget is always set up to use [BoxFit.contain].
       /// But this behavior can be customized according to anyone's needs.
       /// The following switch/case contains all the various alternatives native to Flutter.
-      switch (fit) {
-        case BoxFit.fill:
-          scaleX = renderSize.width / contentWidth;
-          scaleY = renderSize.height / contentHeight;
-          break;
-        case BoxFit.contain:
-          double minScale = min(renderSize.width / contentWidth,
-              renderSize.height / contentHeight);
-          scaleX = scaleY = minScale;
-          break;
-        case BoxFit.cover:
-          double maxScale = max(renderSize.width / contentWidth,
-              renderSize.height / contentHeight);
-          scaleX = scaleY = maxScale;
-          break;
-        case BoxFit.fitHeight:
-          double minScale = renderSize.height / contentHeight;
-          scaleX = scaleY = minScale;
-          break;
-        case BoxFit.fitWidth:
-          double minScale = renderSize.width / contentWidth;
-          scaleX = scaleY = minScale;
-          break;
-        case BoxFit.none:
-          scaleX = scaleY = 1.0;
-          break;
-        case BoxFit.scaleDown:
-          double minScale = min(renderSize.width / contentWidth,
-              renderSize.height / contentHeight);
-          scaleX = scaleY = minScale < 1.0 ? minScale : 1.0;
-          break;
-      }
+      // switch (fit) {
+      //   case BoxFit.fill:
+      //     scaleX = renderSize.width / contentWidth;
+      //     scaleY = renderSize.height / contentHeight;
+      //     break;
+      //   case BoxFit.contain:
+      double minScale = min(
+          renderSize.width / contentWidth, renderSize.height / contentHeight);
+      scaleX = scaleY = minScale;
+      //     break;
+      //   case BoxFit.cover:
+      //     double maxScale = max(renderSize.width / contentWidth,
+      //         renderSize.height / contentHeight);
+      //     scaleX = scaleY = maxScale;
+      //     break;
+      //   case BoxFit.fitHeight:
+      //     double minScale = renderSize.height / contentHeight;
+      //     scaleX = scaleY = minScale;
+      //     break;
+      //   case BoxFit.fitWidth:
+      //     double minScale = renderSize.width / contentWidth;
+      //     scaleX = scaleY = minScale;
+      //     break;
+      //   case BoxFit.none:
+      //     scaleX = scaleY = 1.0;
+      //     break;
+      //   case BoxFit.scaleDown:
+      //     double minScale = min(renderSize.width / contentWidth,
+      //         renderSize.height / contentHeight);
+      //     scaleX = scaleY = minScale < 1.0 ? minScale : 1.0;
+      //     break;
+      // }
 
       /// 2. Move the [canvas] to the right position so that the widget's position
       /// is center-aligned based on its offset, size and alignment position.
@@ -413,38 +413,38 @@ class VignetteRenderObject extends RenderBox {
 
             double scaleX = 1.0, scaleY = 1.0;
 
-            switch (fit) {
-              case BoxFit.fill:
-                scaleX = size.width / contentWidth;
-                scaleY = size.height / contentHeight;
-                break;
-              case BoxFit.contain:
-                double minScale =
-                    min(size.width / contentWidth, size.height / contentHeight);
-                scaleX = scaleY = minScale;
-                break;
-              case BoxFit.cover:
-                double maxScale =
-                    max(size.width / contentWidth, size.height / contentHeight);
-                scaleX = scaleY = maxScale;
-                break;
-              case BoxFit.fitHeight:
-                double minScale = size.height / contentHeight;
-                scaleX = scaleY = minScale;
-                break;
-              case BoxFit.fitWidth:
-                double minScale = size.width / contentWidth;
-                scaleX = scaleY = minScale;
-                break;
-              case BoxFit.none:
-                scaleX = scaleY = 1.0;
-                break;
-              case BoxFit.scaleDown:
-                double minScale =
-                    min(size.width / contentWidth, size.height / contentHeight);
-                scaleX = scaleY = minScale < 1.0 ? minScale : 1.0;
-                break;
-            }
+            // switch (fit) {
+            //   case BoxFit.fill:
+            //     scaleX = size.width / contentWidth;
+            //     scaleY = size.height / contentHeight;
+            //     break;
+            //   case BoxFit.contain:
+            double minScale =
+                min(size.width / contentWidth, size.height / contentHeight);
+            scaleX = scaleY = minScale;
+            //     break;
+            //   case BoxFit.cover:
+            //     double maxScale =
+            //         max(size.width / contentWidth, size.height / contentHeight);
+            //     scaleX = scaleY = maxScale;
+            //     break;
+            //   case BoxFit.fitHeight:
+            //     double minScale = size.height / contentHeight;
+            //     scaleX = scaleY = minScale;
+            //     break;
+            //   case BoxFit.fitWidth:
+            //     double minScale = size.width / contentWidth;
+            //     scaleX = scaleY = minScale;
+            //     break;
+            //   case BoxFit.none:
+            //     scaleX = scaleY = 1.0;
+            //     break;
+            //   case BoxFit.scaleDown:
+            //     double minScale =
+            //         min(size.width / contentWidth, size.height / contentHeight);
+            //     scaleX = scaleY = minScale < 1.0 ? minScale : 1.0;
+            //     break;
+            // }
             double dx = interactOffset!.dx -
                 (_renderOffset!.dx +
                     size.width / 2.0 +
@@ -514,38 +514,38 @@ class VignetteRenderObject extends RenderBox {
 
             double scaleX = 1.0, scaleY = 1.0;
 
-            switch (fit) {
-              case BoxFit.fill:
-                scaleX = size.width / contentWidth;
-                scaleY = size.height / contentHeight;
-                break;
-              case BoxFit.contain:
-                double minScale =
-                    min(size.width / contentWidth, size.height / contentHeight);
-                scaleX = scaleY = minScale;
-                break;
-              case BoxFit.cover:
-                double maxScale =
-                    max(size.width / contentWidth, size.height / contentHeight);
-                scaleX = scaleY = maxScale;
-                break;
-              case BoxFit.fitHeight:
-                double minScale = size.height / contentHeight;
-                scaleX = scaleY = minScale;
-                break;
-              case BoxFit.fitWidth:
-                double minScale = size.width / contentWidth;
-                scaleX = scaleY = minScale;
-                break;
-              case BoxFit.none:
-                scaleX = scaleY = 1.0;
-                break;
-              case BoxFit.scaleDown:
-                double minScale =
-                    min(size.width / contentWidth, size.height / contentHeight);
-                scaleX = scaleY = minScale < 1.0 ? minScale : 1.0;
-                break;
-            }
+            // switch (fit) {
+            //   case BoxFit.fill:
+            //     scaleX = size.width / contentWidth;
+            //     scaleY = size.height / contentHeight;
+            //     break;
+            //   case BoxFit.contain:
+            double minScale =
+                min(size.width / contentWidth, size.height / contentHeight);
+            scaleX = scaleY = minScale;
+            //     break;
+            //   case BoxFit.cover:
+            //     double maxScale =
+            //         max(size.width / contentWidth, size.height / contentHeight);
+            //     scaleX = scaleY = maxScale;
+            //     break;
+            //   case BoxFit.fitHeight:
+            //     double minScale = size.height / contentHeight;
+            //     scaleX = scaleY = minScale;
+            //     break;
+            //   case BoxFit.fitWidth:
+            //     double minScale = size.width / contentWidth;
+            //     scaleX = scaleY = minScale;
+            //     break;
+            //   case BoxFit.none:
+            //     scaleX = scaleY = 1.0;
+            //     break;
+            //   case BoxFit.scaleDown:
+            //     double minScale =
+            //         min(size.width / contentWidth, size.height / contentHeight);
+            //     scaleX = scaleY = minScale < 1.0 ? minScale : 1.0;
+            //     break;
+            // }
             double dx = interactOffset!.dx -
                 (_renderOffset!.dx +
                     size.width / 2.0 +
