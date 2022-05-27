@@ -698,11 +698,9 @@ class TimelineRenderObject extends RenderBox {
     ///
     /// Here the gutter is drawn and elements are added as *tappable* targets.
     List<TimelineEntry> events = cTrkh.eventFavorites;
-    if (cTrkh.isGutterModeAll()) {
-      events = cTrkh.events;
-    }
+    if (cTrkh.isGutterModeAll) events = cTrkh.events;
 
-    if (!cTrkh.isGutterModeOff() && events.isNotEmpty) {
+    if (!cTrkh.isGutterModeOff && events.isNotEmpty) {
       Paint accentPaint = Paint()
         ..color = AppThemes.eventsGutterAccent
         ..style = PaintingStyle.stroke

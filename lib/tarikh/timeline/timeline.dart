@@ -406,7 +406,7 @@ class Timeline {
     /// Check if the left-hand side gutter has been toggled.
     /// If visible, make room for it.
     double targetGutterWidth =
-        TarikhController.to.isGutterModeOff() ? GutterLeft : GutterLeftExpanded;
+        TarikhController.to.isGutterModeOff ? GutterLeft : GutterLeftExpanded;
     double dgw = targetGutterWidth - _gutterWidth;
     if (!animate || dgw.abs() < 1) {
       _gutterWidth = targetGutterWidth;

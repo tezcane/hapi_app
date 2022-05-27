@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
-import 'package:hapi/settings/theme/app_themes.dart';
 import 'package:hapi/tarikh/article/tarikh_article_ui.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
@@ -281,7 +280,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
 
     const double fabWidth = 56 + 15;
     const double middleButtonsGap = 5;
-    double width = (w(context) - (fabWidth * 2) - middleButtonsGap) / 2;
+    double w2 = (w(context) - (fabWidth * 2) - middleButtonsGap) / 2;
+    double titleWidth = w(context) - fabWidth;
     double height = 160;
 
     // Color? color = _headerTextColor != null
@@ -333,56 +333,72 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             FloatingActionButton(
-                              tooltip: 'Show/hide favorite or all events',
+                              tooltip: c.isGutterModeOff
+                                  ? 'i.Show favorite events'.tr
+                                  : c.isGutterModeFav
+                                      ? 'i.Show all events'.tr
+                                      : 'i.Hide events'.tr,
                               heroTag: 'Tarikh_Favorite',
                               onPressed: () {
-                                if (c.isGutterModeOff()) {
+                                if (c.isGutterModeOff) {
                                   c.gutterMode = GutterMode.FAV;
-                                } else if (c.isGutterModeFav()) {
+                                  showSnackBar(
+                                    'i.Show favorite events',
+                                    '',
+                                    isRed: true, // so shows on white background
+                                  );
+                                } else if (c.isGutterModeFav) {
                                   c.gutterMode = GutterMode.ALL;
+                                  showSnackBar(
+                                    'i.Show all events',
+                                    '',
+                                    isRed: true,
+                                  );
                                 } else /* if (c.isGutterModeAll) */ {
                                   c.gutterMode = GutterMode.OFF;
+                                  if (Get.isSnackbarOpen) {
+                                    Get.closeCurrentSnackbar();
+                                  }
                                 }
                               },
                               materialTapTargetSize:
                                   MaterialTapTargetSize.padded,
-                              child: c.isGutterModeOff()
-                                  ? const Icon(Icons.favorite_border_outlined,
+                              child: c.isGutterModeOff
+                                  ? const Icon(Icons.history_edu_outlined,
                                       size: 36.0)
-                                  : c.isGutterModeFav()
-                                      ? const Icon(Icons.favorite_outlined,
+                                  : c.isGutterModeFav
+                                      ? const Icon(
+                                          Icons.favorite_border_outlined,
                                           size: 36.0)
-                                      : const Icon(Icons.history_edu_outlined,
-                                          size: 36.0),
+                                      : const Icon(Icons.close, size: 36.0),
                             ),
-                            const Text(''),
-                            const SizedBox(height: 1.8),
+                            T('', tsR, w: w2, h: 17),
+                            const SizedBox(height: 1),
                           ],
                         ),
                       ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(
-                        left:
-                            !c.isGutterModeOff() && MainController.to.isPortrait
-                                ? 25
-                                : 0,
+                        left: !c.isGutterModeOff && MainController.to.isPortrait
+                            ? 25
+                            : 0,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           SizedBox(
-                            width: width,
+                            width: w2,
                             child: btnUp.entry == null
                                 ? Container()
                                 : Column(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      T(btnUpTitle1, tsR, w: width, h: 18),
-                                      T(btnUpTitle2, tsR, w: width, h: 18),
-                                      T(btnUp.timeUntil, tsR, w: width, h: 17),
+                                      T(btnUpTitle1, tsR, w: w2, h: 18),
+                                      T(btnUpTitle2, tsR, w: w2, h: 18),
+                                      T(btnUp.timeUntil, tsR, w: w2, h: 17),
                                       FloatingActionButton(
-                                        tooltip: 'Navigate to past',
+                                        tooltip: 'i.Navigate to past'.tr,
                                         heroTag: null, // needed
                                         onPressed: () => _navigateToTimeline(
                                             btnUp.entry!, devicePadding.top),
@@ -393,14 +409,14 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                           size: 30.0,
                                         ),
                                       ),
-                                      T(btnUp.pageScrolls, tsR, h: 17),
+                                      T(btnUp.pageScrolls, tsR, w: w2, h: 17),
                                       const SizedBox(height: 1),
                                     ],
                                   ),
                           ),
                           const SizedBox(width: middleButtonsGap),
                           SizedBox(
-                            width: width,
+                            width: w2,
                             child: btnDn.entry == null
                                 ? Container()
                                 : Column(
@@ -408,11 +424,11 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      T(btnDnTitle1, tsR, w: width, h: 18),
-                                      T(btnDnTitle2, tsR, w: width, h: 18),
-                                      T(btnDn.timeUntil, tsR, w: width, h: 17),
+                                      T(btnDnTitle1, tsR, w: w2, h: 18),
+                                      T(btnDnTitle2, tsR, w: w2, h: 18),
+                                      T(btnDn.timeUntil, tsR, w: w2, h: 17),
                                       FloatingActionButton(
-                                        tooltip: 'Navigate to future',
+                                        tooltip: 'i.Navigate to future'.tr,
                                         heroTag: null, // needed
                                         onPressed: () => _navigateToTimeline(
                                             btnDn.entry!, devicePadding.top),
@@ -423,7 +439,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                           size: 30.0,
                                         ),
                                       ),
-                                      T(btnDn.pageScrolls, tsR, h: 17),
+                                      T(btnDn.pageScrolls, tsR, w: w2, h: 17),
                                       const SizedBox(height: 1),
                                     ],
                                   ),
@@ -454,24 +470,12 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                   touchBubble: onTouchBubble,
                   touchEntry: onTouchEntry,
                 ),
-                Align(
-                  alignment: Alignment.topCenter,
-                  // FYI used to have container and background:
-                  // color: _headerBackgroundColor != null
-                  //     ? _headerBackgroundColor
-                  //     : Color.fromRGBO(238, 240, 242, 0.81),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 20, left: 40),
-                    child: Text(
-                      _eraName,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontFamily: 'RobotoMedium',
-                        fontSize: 20.0,
-                        color: _headerTextColor ?? AppThemes.colorDarkText,
-                      ),
-                    ),
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: 20,
+                    left: MainController.to.isPortrait ? 60 : 20,
                   ),
+                  child: T(_eraName, tsR, w: titleWidth, h: 25),
                 ),
               ],
             ),

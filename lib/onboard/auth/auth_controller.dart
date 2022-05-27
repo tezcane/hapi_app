@@ -173,7 +173,7 @@ class AuthController extends GetxHapi {
         'auth.signInErrorTitle',
         'auth.signInError',
         durationSec: 7,
-        isError: true,
+        isRed: true,
       );
     }
   }
@@ -219,7 +219,7 @@ class AuthController extends GetxHapi {
         'auth.signUpErrorTitle',
         error.message!,
         durationSec: 10,
-        isError: true,
+        isRed: true,
       );
     }
   }
@@ -265,7 +265,7 @@ class AuthController extends GetxHapi {
         'auth.updateUserFailNotice',
         getTrKeyForFirestoreAuthFailure(error.toString()),
         durationSec: 10,
-        isError: true,
+        isRed: true,
       );
     }
     return Future.value(true);
@@ -334,7 +334,7 @@ class AuthController extends GetxHapi {
         'auth.resetPasswordFailed',
         error.message!,
         durationSec: 10,
-        isError: true,
+        isRed: true,
       );
     }
   }

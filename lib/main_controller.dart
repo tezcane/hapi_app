@@ -271,10 +271,10 @@ showSnackBar(
   String trKeyTitle,
   String trKeyMsg, {
   int durationSec = 3,
-  bool isError = false,
+  bool isRed = false,
 }) {
   Color? colorText = Get.theme.snackBarTheme.actionTextColor;
-  if (isError) colorText = Colors.red;
+  if (isRed) colorText = Colors.red;
 
   // only allow one snackbar to show at a time
   if (Get.isSnackbarOpen) Get.closeCurrentSnackbar();
@@ -286,7 +286,7 @@ showSnackBar(
     duration: Duration(seconds: durationSec),
     backgroundColor: Get.theme.snackBarTheme.backgroundColor,
     colorText: colorText,
-    isDismissible: !isError, // can't swipe away away error messages
+    isDismissible: !isRed, // can't swipe away away error/red messages
   );
 }
 

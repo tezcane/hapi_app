@@ -216,9 +216,9 @@ class TarikhController extends GetxHapi {
     }
   }
 
-  bool isGutterModeOff() => _gutterMode == GutterMode.OFF;
-  bool isGutterModeFav() => _gutterMode == GutterMode.FAV;
-  bool isGutterModeAll() => _gutterMode == GutterMode.ALL;
+  bool get isGutterModeOff => _gutterMode == GutterMode.OFF;
+  bool get isGutterModeFav => _gutterMode == GutterMode.FAV;
+  bool get isGutterModeAll => _gutterMode == GutterMode.ALL;
 
   /// Updates text around time button, no entry is set
   void updateTimeBtn(
