@@ -279,171 +279,58 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
     t.devicePadding = devicePadding;
 
+    const double fabWidth = 56 + 15;
+    const double middleButtonsGap = 5;
+    double width = (w(context) - (fabWidth * 2) - middleButtonsGap) / 2;
+    double height = 160;
+
     // Color? color = _headerTextColor != null
     //     ? _headerTextColor
     //     : darkText.withOpacity(darkText.opacity * 0.75);
 
     return FabSubPage(
       subPage: SubPage.Tarikh_Timeline,
-      child: Scaffold(
-        floatingActionButtonLocation:
-            FloatingActionButtonLocation.miniCenterDocked,
-        floatingActionButton: GetBuilder<TarikhController>(
-          builder: (c) {
+      child: Directionality(
+        textDirection: TextDirection.ltr,
+        child: Scaffold(
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.miniCenterDocked,
+          floatingActionButton: GetBuilder<TarikhController>(builder: (c) {
             TimeBtn btnUp = c.timeBtnUp;
             TimeBtn btnDn = c.timeBtnDn;
 
-            return Stack(
-              children: [
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Row(
-                    //mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      // Column dummy to easily vertical align up/down fabs:
-                      // Padding(
-                      //   padding: const EdgeInsets.only(left: 14.5),
-                      //   child: Column(
-                      //     mainAxisSize: MainAxisSize.min,
-                      //     //mainAxisAlignment: MainAxisAlignment.start,
-                      //     children: [
-                      //       Container(
-                      //         constraints: BoxConstraints(
-                      //           minWidth: 56,
-                      //           maxWidth: 56,
-                      //           minHeight: 56,
-                      //           maxHeight: 56,
-                      //         ),
-                      //         child: SizedBox(width: 56, height: 56),
-                      //       ),
-                      //       Text(''),
-                      //       SizedBox(height: 1.8),
-                      //     ],
-                      //   ),
-                      // ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: c.isGutterModeOff() ? 10 : 55,
-                          right: 9, // gap between text
-                        ),
+            String btnUpTitle1 = '';
+            String btnUpTitle2 = btnUp.title;
+            List<String> btnUpList = btnUpTitle2.split('\n');
+            if (btnUpList.length == 2) {
+              btnUpTitle1 = btnUpList[0];
+              btnUpTitle2 = btnUpList[1];
+            }
+
+            String btnDnTitle1 = '';
+            String btnDnTitle2 = btnDn.title;
+            List<String> btnDnList = btnDnTitle2.split('\n');
+            if (btnDnList.length == 2) {
+              btnDnTitle1 = btnDnList[0];
+              btnDnTitle2 = btnDnList[1];
+            }
+
+            return Align(
+              alignment: Alignment.bottomLeft,
+              child: SizedBox(
+                height: height,
+                child: Row(
+                  // mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    // Column dummy to easily vertical align up/down fabs:
+                    SizedBox(
+                      width: fabWidth,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 15),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
-                          //mainAxisAlignment: MainAxisAlignment.center,
-                          //crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            FittedBox(
-                              fit: BoxFit.contain,
-                              child: Text(
-                                btnUp.title,
-                                textAlign: TextAlign.center,
-                                style:
-                                    const TextStyle(color: AppThemes.logoText),
-                              ),
-                            ),
-                            FittedBox(
-                              fit: BoxFit.contain,
-                              child: Text(
-                                btnUp.timeUntil,
-                                textAlign: TextAlign.center,
-                                style:
-                                    const TextStyle(color: AppThemes.logoText),
-                              ),
-                            ),
-                            Container(
-                              constraints: const BoxConstraints(
-                                minWidth: 88,
-                                maxWidth: 88,
-                                minHeight: 56,
-                                maxHeight: 56,
-                              ),
-                              child: const SizedBox(width: 56, height: 56),
-                            ),
-                            FittedBox(
-                              fit: BoxFit.contain,
-                              child: Text(
-                                btnUp.pageScrolls,
-                                textAlign: TextAlign.center,
-                                style:
-                                    const TextStyle(color: AppThemes.logoText),
-                              ),
-                            ),
-                            const SizedBox(height: 1.8),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            FittedBox(
-                              fit: BoxFit.contain,
-                              child: Text(
-                                btnDn.title,
-                                textAlign: TextAlign.center,
-                                style:
-                                    const TextStyle(color: AppThemes.logoText),
-                              ),
-                            ),
-                            FittedBox(
-                              fit: BoxFit.contain,
-                              child: Text(
-                                btnDn.timeUntil,
-                                textAlign: TextAlign.center,
-                                style:
-                                    const TextStyle(color: AppThemes.logoText),
-                              ),
-                            ),
-                            Container(
-                              constraints: const BoxConstraints(
-                                minWidth: 88,
-                                maxWidth: 88,
-                                minHeight: 56,
-                                maxHeight: 56,
-                              ),
-                              child: const SizedBox(width: 56, height: 56),
-                            ),
-                            FittedBox(
-                              fit: BoxFit.contain,
-                              child: Text(
-                                btnDn.pageScrolls,
-                                textAlign: TextAlign.center,
-                                style:
-                                    const TextStyle(color: AppThemes.logoText),
-                              ),
-                            ),
-                            const SizedBox(height: 1.8),
-                          ],
-                        ),
-                      ),
-                      // Container(
-                      //   constraints: BoxConstraints(
-                      //     minWidth: 61,
-                      //     maxWidth: 61,
-                      //     minHeight: 63,
-                      //     maxHeight: 63,
-                      //   ),
-                      //   child: SizedBox(width: 56),
-                      // ),
-                    ],
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Row(
-                    //mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      // Column dummy to easily vertical align up/down fabs:
-                      Padding(
-                        padding: const EdgeInsets.only(left: 14.5),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          //mainAxisAlignment: MainAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             FloatingActionButton(
                               tooltip: 'Show/hide favorite or all events',
@@ -473,117 +360,121 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                           ],
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: c.isGutterModeOff() ? 0 : 45,
-                          right: 9,
-                        ),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          //mainAxisAlignment: MainAxisAlignment.center,
-                          //crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            const Text(''),
-                            const Text(''),
-                            if (btnUp.entry != null)
-                              FloatingActionButton(
-                                tooltip: 'Navigate to past',
-                                heroTag: null, // needed
-                                onPressed: () {
-                                  l.d('Navigate to past: ' +
-                                      btnUp.entry!.label);
-                                  _navigateToTimeline(
-                                      btnUp.entry!, devicePadding.top);
-                                },
-                                materialTapTargetSize:
-                                    MaterialTapTargetSize.padded,
-                                child: const Icon(Icons.arrow_upward_outlined,
-                                    size: 30.0),
-                              ),
-                            const Text(''),
-                            const SizedBox(height: 1.8),
-                          ],
-                        ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                        left:
+                            !c.isGutterModeOff() && MainController.to.isPortrait
+                                ? 25
+                                : 0,
                       ),
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        //mainAxisAlignment: MainAxisAlignment.end,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          const Text(''),
-                          const Text(''),
-                          if (btnDn.entry != null)
-                            FloatingActionButton(
-                              tooltip: 'Navigate to future',
-                              heroTag: null, // needed
-                              onPressed: () {
-                                l.d('Navigate to future: ' +
-                                    btnDn.entry!.label);
-                                _navigateToTimeline(
-                                    btnDn.entry!, devicePadding.top);
-                              },
-                              materialTapTargetSize:
-                                  MaterialTapTargetSize.padded,
-                              child: const Icon(Icons.arrow_downward_outlined,
-                                  size: 30.0),
-                            ),
-                          const Text(''),
-                          const SizedBox(height: 1.8),
+                          SizedBox(
+                            width: width,
+                            child: btnUp.entry == null
+                                ? Container()
+                                : Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
+                                      T(btnUpTitle1, tsR, w: width, h: 18),
+                                      T(btnUpTitle2, tsR, w: width, h: 18),
+                                      T(btnUp.timeUntil, tsR, w: width, h: 17),
+                                      FloatingActionButton(
+                                        tooltip: 'Navigate to past',
+                                        heroTag: null, // needed
+                                        onPressed: () => _navigateToTimeline(
+                                            btnUp.entry!, devicePadding.top),
+                                        materialTapTargetSize:
+                                            MaterialTapTargetSize.padded,
+                                        child: const Icon(
+                                          Icons.arrow_upward_outlined,
+                                          size: 30.0,
+                                        ),
+                                      ),
+                                      T(btnUp.pageScrolls, tsR, h: 17),
+                                      const SizedBox(height: 1),
+                                    ],
+                                  ),
+                          ),
+                          const SizedBox(width: middleButtonsGap),
+                          SizedBox(
+                            width: width,
+                            child: btnDn.entry == null
+                                ? Container()
+                                : Column(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      T(btnDnTitle1, tsR, w: width, h: 18),
+                                      T(btnDnTitle2, tsR, w: width, h: 18),
+                                      T(btnDn.timeUntil, tsR, w: width, h: 17),
+                                      FloatingActionButton(
+                                        tooltip: 'Navigate to future',
+                                        heroTag: null, // needed
+                                        onPressed: () => _navigateToTimeline(
+                                            btnDn.entry!, devicePadding.top),
+                                        materialTapTargetSize:
+                                            MaterialTapTargetSize.padded,
+                                        child: const Icon(
+                                          Icons.arrow_downward_outlined,
+                                          size: 30.0,
+                                        ),
+                                      ),
+                                      T(btnDn.pageScrolls, tsR, h: 17),
+                                      const SizedBox(height: 1),
+                                    ],
+                                  ),
+                          ),
                         ],
                       ),
-                      Container(
-                        constraints: const BoxConstraints(
-                          minWidth: 61,
-                          maxWidth: 61,
-                          minHeight: 63,
-                          maxHeight: 63,
-                        ),
-                        child: const SizedBox(width: 56),
-                      ),
-                    ],
-                  ),
+                    ),
+                    // const SizedBox(width: rightFabWidth), // menu fab
+                  ],
                 ),
-              ],
-            );
-          },
-        ),
-        backgroundColor: Colors.white,
-        body: GestureDetector(
-          onLongPress: _longPress,
-          onTapDown: _tapDown,
-          onScaleStart: _scaleStart,
-          onScaleUpdate: _scaleUpdate,
-          onScaleEnd: _scaleEnd,
-          onTapUp: _tapUp,
-          child: Stack(
-            children: <Widget>[
-              TimelineRenderWidget(
-                needsRepaint: true,
-                topOverlap: TopOverlap + devicePadding.top,
-                focusItem: widget.focusItem,
-                touchBubble: onTouchBubble,
-                touchEntry: onTouchEntry,
               ),
-              Align(
-                alignment: Alignment.topCenter,
-                // FYI used to have container and background:
-                // color: _headerBackgroundColor != null
-                //     ? _headerBackgroundColor
-                //     : Color.fromRGBO(238, 240, 242, 0.81),
-                child: Padding(
-                  padding: const EdgeInsets.only(top: 20, left: 40),
-                  child: Text(
-                    _eraName,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      fontFamily: 'RobotoMedium',
-                      fontSize: 20.0,
-                      color: _headerTextColor ?? AppThemes.colorDarkText,
+            );
+          }),
+          backgroundColor: Colors.white,
+          body: GestureDetector(
+            onLongPress: _longPress,
+            onTapDown: _tapDown,
+            onScaleStart: _scaleStart,
+            onScaleUpdate: _scaleUpdate,
+            onScaleEnd: _scaleEnd,
+            onTapUp: _tapUp,
+            child: Stack(
+              children: <Widget>[
+                TimelineRenderWidget(
+                  needsRepaint: true,
+                  topOverlap: TopOverlap + devicePadding.top,
+                  focusItem: widget.focusItem,
+                  touchBubble: onTouchBubble,
+                  touchEntry: onTouchEntry,
+                ),
+                Align(
+                  alignment: Alignment.topCenter,
+                  // FYI used to have container and background:
+                  // color: _headerBackgroundColor != null
+                  //     ? _headerBackgroundColor
+                  //     : Color.fromRGBO(238, 240, 242, 0.81),
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 20, left: 40),
+                    child: Text(
+                      _eraName,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'RobotoMedium',
+                        fontSize: 20.0,
+                        color: _headerTextColor ?? AppThemes.colorDarkText,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
