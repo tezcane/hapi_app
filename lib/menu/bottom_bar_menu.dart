@@ -33,8 +33,6 @@ class BottomBarMenu extends StatelessWidget {
           onPageChanged: (newIdx) => _onPageChanged(newIdx),
         ),
         bottomNavigationBar: BottomBar(
-          // Disable to turn off bottom bar view, so menu blends to page:
-          //backgroundColor: Theme.of(context).scaffoldBackgroundColor,
           selectedIndex: curBottomBarHighlightIdx,
           items: bottomBarItems,
           height: 40,
