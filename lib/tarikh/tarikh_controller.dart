@@ -177,9 +177,7 @@ class TarikhController extends GetxHapi {
 
     if (favs != null) {
       for (String fav in favs) {
-        if (eventMap.containsKey(fav)) {
-          _eventFavorites.add(eventMap[fav]!);
-        }
+        if (eventMap.containsKey(fav)) _eventFavorites.add(eventMap[fav]!);
       }
     }
 
@@ -369,15 +367,11 @@ class TimelineInitHandler {
 
       /// OPTIONAL FIELD 1 of 2: An accent color is also specified at times.
       Color? accent;
-      if (map.containsKey('accent')) {
-        accent = colorFromList(map['accent']);
-      }
+      if (map.containsKey('accent')) accent = colorFromList(map['accent']);
 
       /// OPTIONAL FIELD 2 of 2: Some entries will also have an id
       String? id;
-      if (map.containsKey('id')) {
-        id = map['id'];
-      }
+      if (map.containsKey('id')) id = map['id'];
 
       /// Get flare/nima/image asset object
       TimelineAsset asset = await getTimelineAsset(map['asset']);
@@ -398,9 +392,7 @@ class TimelineInitHandler {
       asset.entry = timelineEntry; // can only do this once
 
       /// Add TimelineEntry reference 2 of 2:
-      if (map.containsKey('id')) {
-        _entriesById[id!] = timelineEntry;
-      }
+      if (map.containsKey('id')) _entriesById[id!] = timelineEntry;
 
       /// Add this entry to the list.
       TarikhController.to.eventMap
@@ -429,15 +421,10 @@ class TimelineInitHandler {
     /// placed into the Eras they belong to).
     TimelineEntry? previous;
     for (TimelineEntry entry in TarikhController.to.events) {
-      if (entry.startMs < _timeMin) {
-        _timeMin = entry.startMs;
-      }
-      if (entry.endMs > _timeMax) {
-        _timeMax = entry.endMs;
-      }
-      if (previous != null) {
-        previous.next = entry;
-      }
+      if (entry.startMs < _timeMin) _timeMin = entry.startMs;
+      if (entry.endMs > _timeMax) _timeMax = entry.endMs;
+
+      if (previous != null) previous.next = entry;
       entry.previous = previous;
       previous = entry;
 
@@ -466,15 +453,11 @@ class TimelineInitHandler {
   }
 
   Color colorFromList(colorList, {String key = ''}) {
-    if (key != '') {
-      colorList = colorList[key];
-    }
+    if (key != '') colorList = colorList[key];
     List<int> bg = colorList.cast<int>();
 
     int bg3 = 0xFF; // 255 (no opacity)
-    if (bg.length == 4) {
-      bg3 = bg[3];
-    }
+    if (bg.length == 4) bg3 = bg[3];
 
     return Color.fromARGB(bg3, bg[0], bg[1], bg[2]);
   }
@@ -585,9 +568,7 @@ class TimelineInitHandler {
     List<flare.ActorAnimation>? idleAnimations;
     dynamic name = assetMap['idle'];
     if (name is String) {
-      if ((idle = actor.getAnimation(name)) != null) {
-        animation = idle;
-      }
+      if ((idle = actor.getAnimation(name)) != null) animation = idle;
     } else if (name is List) {
       for (String animationName in name) {
         flare.ActorAnimation? animation1 = actor.getAnimation(animationName);
@@ -602,9 +583,7 @@ class TimelineInitHandler {
     flare.ActorAnimation? intro;
     name = assetMap['intro'];
     if (name is String) {
-      if ((intro = actor.getAnimation(name)) != null) {
-        animation = intro;
-      }
+      if ((intro = actor.getAnimation(name)) != null) animation = intro;
     }
 
     /// Make sure that all the initial values are set for the actor and for the
@@ -712,9 +691,7 @@ class TimelineInitHandler {
 
   TickColors? findTickColors(double screen) {
     for (TickColors color in _tickColorsReversed) {
-      if (screen >= color.screenY) {
-        return color;
-      }
+      if (screen >= color.screenY) return color;
     }
 
     return screen < _tickColors.first.screenY
