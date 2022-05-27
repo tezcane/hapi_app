@@ -26,7 +26,8 @@ class QuestsUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<LanguageController>(builder: (c) {
-      final List<BottomBarItem> bbItems = [
+      // do here to save memory:
+      final List<BottomBarItem> bottomBarItems = [
         BottomBarItem(
           Container(),
           null,
@@ -61,31 +62,22 @@ class QuestsUI extends StatelessWidget {
         ),
       ];
 
-      List<BottomBarItem> bottomBarItems = bbItems;
-      if (c.isRTL) {
-        // TODO swap langs PageController index is off
-        bottomBarItems = List<BottomBarItem>.from(bbItems.reversed);
+      final List<BottomBarItem> bbItems = c.isLTR
+          ? bottomBarItems
+          : List<BottomBarItem>.from(bottomBarItems.reversed);
+
+      List<Widget> mainWidgets = [];
+      List<Widget?> settingsWidgets = [];
+      for (int idx = 0; idx < bottomBarItems.length; idx++) {
+        mainWidgets.add(bbItems[idx].aliveMainWidget);
+        settingsWidgets.add(bbItems[idx].settingsWidget);
       }
-
-      final List<Widget> mainWidgets = [
-        bottomBarItems[0].aliveMainWidget,
-        bottomBarItems[1].aliveMainWidget,
-        bottomBarItems[2].aliveMainWidget,
-        bottomBarItems[3].aliveMainWidget,
-      ];
-
-      final List<Widget?> settingsWidgets = [
-        bottomBarItems[0].settingsWidget,
-        bottomBarItems[1].settingsWidget,
-        bottomBarItems[2].settingsWidget,
-        bottomBarItems[3].settingsWidget,
-      ];
 
       return FabNavPage(
         navPage: navPage,
         settingsWidgets: settingsWidgets,
         bottomWidget: HapiShareUI(),
-        foregroundPage: BottomBarMenu(navPage, bottomBarItems, mainWidgets),
+        foregroundPage: BottomBarMenu(navPage, bbItems, mainWidgets),
       );
     });
   }

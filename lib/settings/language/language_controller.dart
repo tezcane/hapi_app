@@ -81,6 +81,7 @@ class LanguageController extends GetxHapi {
   };
   bool _isRightToLeftLang = false;
   bool get isRTL => _isRightToLeftLang;
+  bool get isLTR => !_isRightToLeftLang;
 
   /// Arabic and other RTL language Alignment values are opposite to LTR
   /// languages so we make it easier by using these utility functions. So just

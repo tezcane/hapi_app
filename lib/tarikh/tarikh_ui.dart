@@ -25,8 +25,10 @@ class TarikhUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<LanguageController>(builder: (c) {
+      // need for when timeline finally loads at init, add timeline data to UI:
       return GetBuilder<TarikhController>(builder: (tc) {
-        List<BottomBarItem> bbItems = [
+        // do here to save memory:
+        final List<BottomBarItem> bottomBarItems = [
           BottomBarItem(
             const TarikhFavoritesUI(),
             null,
@@ -58,28 +60,22 @@ class TarikhUI extends StatelessWidget {
           ),
         ];
 
-        List<BottomBarItem> bottomBarItems = bbItems;
-        if (c.isRTL) {
-          bottomBarItems = List<BottomBarItem>.from(bbItems.reversed);
+        final List<BottomBarItem> bbItems = c.isLTR
+            ? bottomBarItems
+            : List<BottomBarItem>.from(bottomBarItems.reversed);
+
+        List<Widget> mainWidgets = [];
+        List<Widget?> settingsWidgets = [];
+        for (int idx = 0; idx < bottomBarItems.length; idx++) {
+          mainWidgets.add(bbItems[idx].aliveMainWidget);
+          settingsWidgets.add(bbItems[idx].settingsWidget);
         }
-
-        final List<Widget> mainWidgets = [
-          bottomBarItems[0].aliveMainWidget,
-          bottomBarItems[1].aliveMainWidget,
-          bottomBarItems[2].aliveMainWidget,
-        ];
-
-        final List<Widget?> settingsWidgets = [
-          bottomBarItems[0].settingsWidget,
-          bottomBarItems[1].settingsWidget,
-          bottomBarItems[2].settingsWidget,
-        ];
 
         return FabNavPage(
           navPage: navPage,
           settingsWidgets: settingsWidgets,
           bottomWidget: HapiShareUI(),
-          foregroundPage: BottomBarMenu(navPage, bottomBarItems, mainWidgets),
+          foregroundPage: BottomBarMenu(navPage, bbItems, mainWidgets),
         );
       });
     });
