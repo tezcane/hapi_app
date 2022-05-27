@@ -171,7 +171,7 @@ class AppRoutes {
     GetPage(name: '/sign-up', page: () => SignUpUI()),
     GetPage(name: '/quest', page: () => const QuestsUI()),
     GetPage(name: '/tarikh', page: () => const TarikhUI()),
-    GetPage(name: '/tarikh/favorite', page: () => TarikhFavoritesUI()),
+    GetPage(name: '/tarikh/favorite', page: () => const TarikhFavoritesUI()),
     GetPage(name: '/tarikh/article', page: () => TarikhArticleUI()),
     GetPage(name: '/tarikh/timeline', page: () => TarikhTimelineUI()),
     GetPage(name: '/about', page: () => AboutUI()),
