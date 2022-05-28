@@ -59,7 +59,7 @@ class _SplashUIState extends State<SplashUI> with TickerProviderStateMixin {
   }
 
   void setupAnimationPlayAndWaitTimer(double gifFrames) {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       // controller1repeat(min: 0, max: 30, period: Duration(milliseconds: 2000)); // how to repeat
       cGif.animateTo(gifFrames,
           duration: const Duration(milliseconds: kGifAnimationMs));

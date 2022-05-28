@@ -113,7 +113,7 @@ class LocationController extends GetxHapi {
     try {
       Position position = await _determinePosition();
       _updatePosition(position);
-    } on Exception catch (e) {
+    } on Exception {
       // TODO
     }
 

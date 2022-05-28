@@ -79,7 +79,7 @@ class BottomBarMenu extends StatelessWidget {
   /// Called at init and when bottom bar tab is pressed, must do in
   /// PostFrameCallback so all needed objects are initialized.
   _handlePostFrameAnimation(int newIdx) {
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       _pageController.animateToPage(
         newIdx,
         curve: Curves.easeInOut,

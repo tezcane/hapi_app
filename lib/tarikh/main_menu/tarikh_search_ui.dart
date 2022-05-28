@@ -149,9 +149,7 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
         scrollToEnd = false;
       }
 
-      if (WidgetsBinding.instance != null) {
-        WidgetsBinding.instance!.addPostFrameCallback(_onLayoutDone);
-      }
+      WidgetsBinding.instance.addPostFrameCallback(_onLayoutDone);
 
       return Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,

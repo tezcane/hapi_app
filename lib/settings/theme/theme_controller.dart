@@ -39,7 +39,7 @@ class ThemeController extends GetxHapi {
 
   // checks whether dark mode is set via system or previously by user
   bool get isDarkModeOn {
-    if (WidgetsBinding.instance!.window.platformBrightness == Brightness.dark) {
+    if (WidgetsBinding.instance.window.platformBrightness == Brightness.dark) {
       return true;
     }
 

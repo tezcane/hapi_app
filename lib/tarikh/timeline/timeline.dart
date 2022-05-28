@@ -202,7 +202,7 @@ class Timeline {
     if (!_isFrameScheduled) {
       _isFrameScheduled = true;
       _lastFrameTime = 0.0;
-      SchedulerBinding.instance!.scheduleFrameCallback(beginFrame);
+      SchedulerBinding.instance.scheduleFrameCallback(beginFrame);
     }
   }
 
@@ -250,7 +250,7 @@ class Timeline {
     if (!_isFrameScheduled) {
       _isFrameScheduled = true;
       _lastFrameTime = 0.0;
-      SchedulerBinding.instance!.scheduleFrameCallback(beginFrame);
+      SchedulerBinding.instance.scheduleFrameCallback(beginFrame);
     }
   }
 
@@ -337,7 +337,7 @@ class Timeline {
     } else if (!_isFrameScheduled) {
       _isFrameScheduled = true;
       _lastFrameTime = 0.0;
-      SchedulerBinding.instance!.scheduleFrameCallback(beginFrame);
+      SchedulerBinding.instance.scheduleFrameCallback(beginFrame);
     }
   }
 
@@ -350,7 +350,7 @@ class Timeline {
     if (_lastFrameTime == 0.0) {
       _lastFrameTime = time;
       _isFrameScheduled = true;
-      SchedulerBinding.instance!.scheduleFrameCallback(beginFrame);
+      SchedulerBinding.instance.scheduleFrameCallback(beginFrame);
       return;
     }
 
@@ -359,7 +359,7 @@ class Timeline {
 
     if (!advance(elapsed, true) && !_isFrameScheduled) {
       _isFrameScheduled = true;
-      SchedulerBinding.instance!.scheduleFrameCallback(beginFrame);
+      SchedulerBinding.instance.scheduleFrameCallback(beginFrame);
     }
 
     // Tez: fixes exception when hitting back button from timeline back to root page

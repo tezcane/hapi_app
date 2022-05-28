@@ -139,7 +139,7 @@ class MenuVignetteRenderObject extends RenderBox {
       markNeedsPaint();
       if (!_isFrameScheduled) {
         _isFrameScheduled = true;
-        SchedulerBinding.instance!.scheduleFrameCallback(beginFrame);
+        SchedulerBinding.instance.scheduleFrameCallback(beginFrame);
       }
     }
     markNeedsLayout();
@@ -385,7 +385,7 @@ class MenuVignetteRenderObject extends RenderBox {
     if (_lastFrameTime == 0) {
       _isFrameScheduled = true;
       _lastFrameTime = t;
-      SchedulerBinding.instance!.scheduleFrameCallback(beginFrame);
+      SchedulerBinding.instance.scheduleFrameCallback(beginFrame);
       return;
     }
 
@@ -453,7 +453,7 @@ class MenuVignetteRenderObject extends RenderBox {
     /// Schedule a new frame to update again - but only if needed.
     if (isActive && !_isFrameScheduled) {
       _isFrameScheduled = true;
-      SchedulerBinding.instance!.scheduleFrameCallback(beginFrame);
+      SchedulerBinding.instance.scheduleFrameCallback(beginFrame);
     }
   }
 }
