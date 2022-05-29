@@ -19,7 +19,7 @@
 		},
 		"asset": 
 		{
-			"source": "Big_Bang/Big_Bang.flr",
+			"source": "flare/Big_Bang.flr",
 			"width": 3628,
 			"height": 3620,
 			"offset": 1500,
@@ -35,7 +35,7 @@
 		"article": "milky_way.txt",
 		"asset": 
 		{
-			"source": "Milky Way/Milky Way.flr",
+			"source": "flare/Milky Way.flr",
 			"width": 1293,
 			"height": 1210,
 			"scale": 0.5,
@@ -49,7 +49,7 @@
 		"accent": [255, 166, 20],
 		"asset": 
 		{
-			"source": "Sun.flr",
+			"source": "flare/Sun.flr",
 			"width": 800,
 			"height": 800,
 			"offset": -100,
@@ -64,7 +64,7 @@
 		"article":"earth.txt",
 		"asset": 
 		{
-			"source": "HeavyBombardment.flr",
+			"source": "flare/HeavyBombardment.flr",
 			"width": 1210,
 			"height": 1210,
 			"scale": 0.25,
@@ -79,7 +79,7 @@
 		"accent": [255, 63, 0],
 		"asset": 
 		{
-			"source": "HeavyBombardment.flr",
+			"source": "flare/HeavyBombardment.flr",
 			"width": 1210,
 			"height": 1210,
 			"scale": 0.25,
@@ -106,7 +106,7 @@
 		},
 		"asset": 
 		{
-			"source": "HeavyBombardment.flr",
+			"source": "flare/HeavyBombardment.flr",
 			"width": 1210,
 			"height": 1210,
 			"intro":"Transformation",
@@ -122,7 +122,7 @@
 		"article":"single_celled_organisms.txt",
 		"asset": 
 		{
-			"source": "Cells/Cells.nma",
+			"source": "nima/Cells.nma",
 			"width": 800,
 			"height": 400
 		}
@@ -133,7 +133,7 @@
 		"article":"animals.txt",
 		"asset": 
 		{
-			"source": "Animals.flr",
+			"source": "flare/Animals.flr",
 			"width": 814,
 			"height": 564,
 			"offset": -100,
@@ -162,7 +162,7 @@
 		"accent": [55, 134, 222],
 		"asset": 
 		{
-			"source": "Fish_and_Stuff/Fish_and_Stuff.nma",
+			"source": "nima/Fish_and_Stuff.nma",
 			"width": 1290,
 			"height": 650,
 			"scale": 0.65,
@@ -176,7 +176,7 @@
 		"accent": [55, 134, 222],
 		"asset": 
 		{
-			"source": "Insects/Insects.nma",
+			"source": "nima/Insects.nma",
 			"width": 800,
 			"height": 528
 		}
@@ -188,7 +188,7 @@
 		"accent": [55, 134, 222],
 		"asset": 
 		{
-			"source": "Reptiles/Reptiles.nma",
+			"source": "nima/Reptiles.nma",
 			"width": 400,
 			"height": 600
 		}
@@ -201,7 +201,7 @@
 		"id":"dinosaur",
 		"asset": 
 		{
-			"source": "Dinosaurs.flr",
+			"source": "flare/Dinosaurs.flr",
 			"width": 800,
 			"height": 570,
 			"offset":0,
@@ -215,7 +215,7 @@
 		"id":"mammal",
 		"asset":
 		{
-			"source": "Mammals/Mammals.nma",
+			"source": "nima/Mammals.nma",
 			"offset":-200,
 			"width": 400,
 			"height": 400
@@ -228,7 +228,7 @@
 		"accent": [235, 155, 75],
 		"asset": 
 		{
-			"source": "Dinosaurs/Dinosaurs.nma",
+			"source": "nima/Dinosaurs.nma",
 			"width": 800,
 			"height": 570,
 			"offset":-200,
@@ -242,7 +242,7 @@
 		"accent": [235, 155, 75],
 		"asset": 
 		{
-			"source": "Trex.flr",
+			"source": "flare/Trex.flr",
 			"width": 800,
 			"height": 570,
 			"offset":-200
@@ -255,7 +255,7 @@
 		"accent": [235, 155, 75],
 		"asset": 
 		{
-			"source": "Dinosaur_Demise/Dinosaur_Demise.nma",
+			"source": "nima/Dinosaur_Demise.nma",
 			"width": 700,
 			"height": 500,
 			"offset":-100
@@ -281,7 +281,7 @@
 		},
 		"asset":
 		{
-			"source": "humans.flr",
+			"source": "flare/humans.flr",
 			"width": 1068,
 			"height": 670,
 			"offset": 0,
@@ -295,7 +295,7 @@
 		"article":"last_common_ancestor_apes.txt",
 		"asset": 
 		{
-			"source": "Apes/Apes.nma",
+			"source": "nima/Apes.nma",
 			"width": 528,
 			"height": 528,
 			"offset": -40
@@ -307,7 +307,7 @@
 		"article":"tools.txt",
 		"asset": 
 		{
-			"source": "Constructive_Tools/Constructive_Tools.nma",
+			"source": "nima/Constructive_Tools.nma",
 			"width": 528,
 			"height": 528,
 			"offset": -40
@@ -319,7 +319,7 @@
 		"article":"fire.txt",
 		"asset": 
 		{
-			"source": "Fire/Fire.nma",
+			"source": "nima/Fire.nma",
 			"width": 528,
 			"height": 528,
 			"offset": -50
@@ -331,7 +331,7 @@
 		"article":"sapiens.txt",
 		"asset": 
 		{
-			"source": "Homo_Sapiens_Sapiens/Homo_Sapiens_Sapiens.nma",
+			"source": "nima/Homo_Sapiens_Sapiens.nma",
 			"width": 528,
 			"height": 528,
 			"offset": -40
@@ -343,7 +343,7 @@
 		"article":"first_temple.txt",
 		"asset": 
 		{
-			"source": "First_Temple/First_Temple.nma",
+			"source": "nima/First_Temple.nma",
 			"width": 340,
 			"height": 340,
 			"offset": -200
@@ -355,7 +355,7 @@
 		"article":"agricultural_revolution.txt",
 		"asset": 
 		{
-			"source": "Agricultural_evolution/Agricultural_evolution.nma",
+			"source": "nima/Agricultural_evolution.nma",
 			"width": 528,
 			"height": 528,
 			"offset": -40,
@@ -368,7 +368,7 @@
 		"article":"writing.txt",
 		"asset": 
 		{
-			"source": "Writing/Writing.nma",
+			"source": "nima/Writing.nma",
 			"width": 900,
 			"height": 1200,
 			"scale": 0.5,
@@ -382,7 +382,7 @@
 		"article":"history.txt",
 		"asset":
 		{
-			"source": "Recorded_history/Recorded_history.nma",
+			"source": "nima/Recorded_history.nma",
 			"width": 400,
 			"height": 400,
 			"offset": -200
@@ -394,7 +394,7 @@
 		"article":"pyramids.txt",
 		"asset": 
 		{
-			"source": "Pyramid/Pyramid.nma",
+			"source": "nima/Pyramid.nma",
 			"width": 400,
 			"height": 430,
 			"offset": -350
@@ -406,7 +406,7 @@
 		"article":"roman_empire.txt",
 		"asset": 
 		{
-			"source": "Roma/Roma.nma",
+			"source": "nima/Roma.nma",
 			"width": 2100,
 			"height": 1375,
 			"scale": 0.5,
@@ -422,7 +422,7 @@
 		"accent": [227, 21, 55],
 		"asset": 
 		{
-			"source": "Crusades/Crusades.nma",
+			"source": "nima/Crusades.nma",
 			"width": 528,
 			"height": 528,
 			"offset": -60
@@ -435,7 +435,7 @@
 		"article":"black_plague.txt",
 		"asset":
 		{
-			"source": "BlackPlague/BlackPlague.nma",
+			"source": "nima/BlackPlague.nma",
 			"width": 800,
 			"height": 400
 		}
@@ -446,7 +446,7 @@
 		"article":"constantinople.txt",
 		"asset": 
 		{
-			"source": "Constantinople/Constantinople.nma",
+			"source": "nima/Constantinople.nma",
 			"width": 500,
 			"height": 500
 		}
@@ -457,7 +457,7 @@
 		"article":"newton.txt",
 		"asset":
 		{
-			"source": "Newton/Newton_v2.nma",
+			"source": "nima/Newton_v2.nma",
 			"width": 500,
 			"height": 500,
 			"idle":"apple_falls"
@@ -469,7 +469,7 @@
 		"article":"industrialization.txt",
 		"asset":
 		{
-			"source": "Industrialization/Industrialization.nma",
+			"source": "nima/Industrialization.nma",
 			"width": 500,
 			"height": 500,
 			"offset": -100
@@ -481,7 +481,7 @@
 		"article":"darwin.txt",
 		"asset":
 		{
-			"source": "Darwin 2/Darwin 2.nma",
+			"source": "nima/Darwin 2.nma",
 			"width": 1850,
 			"height": 2100,
 			"scale": 0.22,
@@ -495,7 +495,7 @@
 		"article":"marie_curie.txt",
 		"asset":
 		{
-			"source": "Marie_Curie/Marie_Curie.nma",
+			"source": "nima/Marie_Curie.nma",
 			"width": 528,
 			"height": 528,
 			"offset": -140
@@ -507,7 +507,7 @@
 		"article":"suffragette.txt",
 		"asset":
 		{
-			"source": "Sufraggette_movement/Sufraggette_movement.nma",
+			"source": "nima/Sufraggette_movement.nma",
 			"width": 528,
 			"height": 528,
 			"offset": -40
@@ -521,7 +521,7 @@
 		"accent": [227, 21, 55],
 		"asset": 
 		{
-			"source": "World_War_I/World_War_I.nma",
+			"source": "nima/World_War_I.nma",
 			"width": 528,
 			"height": 528
 		}
@@ -533,7 +533,7 @@
 		"article":"amelia_earhart.txt",
 		"asset":
 		{
-			"source": "Amelia_Earhart/Amelia_Earhart.flr",
+			"source": "flare/Amelia_Earhart.flr",
 			"width": 528,
 			"height": 528,
 			"offset": -140
@@ -545,7 +545,7 @@
 		"article":"alan_turing.txt",
 		"asset":
 		{
-			"source": "Alan_Turing/Alan_Turing.nma",
+			"source": "nima/Alan_Turing.nma",
 			"width": 528,
 			"height": 528,
 			"offset": -140
@@ -559,7 +559,7 @@
 		"accent": [227, 21, 55],
 		"asset":
 		{
-			"source": "World_War_II/World_War_II.nma",
+			"source": "nima/World_War_II.nma",
 			"width": 528,
 			"height": 528,
 			"offset": -140
@@ -573,7 +573,7 @@
 		"article":"cold_war.txt",
 		"asset": 
 		{
-			"source": "Cold_war/Cold_war.nma",
+			"source": "nima/Cold_war.nma",
 			"width": 528,
 			"height": 528,
 			"offset": -80
@@ -585,7 +585,7 @@
 		"article":"nelson_mandela.txt",
 		"asset":
 		{
-			"source": "Nelson Mandela_v2/Nelson Mandela_v2.nma",
+			"source": "nima/Nelson Mandela_v2.nma",
 			"width": 528,
 			"height": 528,
 			"offset": -40
@@ -598,7 +598,7 @@
 		"id":"mlk",
 		"asset":
 		{
-			"source": "Martin Luther king/Martin Luther king.nma",
+			"source": "nima/Martin Luther king.nma",
 			"width": 528,
 			"height": 528,
 			"offset": -140
@@ -611,7 +611,7 @@
 		"accent": [115, 132, 205],
 		"asset": 
 		{
-			"source": "Moon/Moon.nma",
+			"source": "nima/Moon.nma",
 			"width": 528,
 			"height": 528,
 			"offset": -100
@@ -624,7 +624,7 @@
 		"article":"internet.txt",
 		"asset": 
 		{
-			"source": "Internet/Internet.nma",
+			"source": "nima/Internet.nma",
 			"width": 528,
 			"height": 528,
 			"offset": -140

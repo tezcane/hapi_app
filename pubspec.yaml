@@ -1,5 +1,5 @@
 name: hapi
-description: An Islamic lifestyle game meant to improve and reward Muslims, in this life and the next.
+description: hapi is a useful and fun Islamic lifestyle app to help elevate Muslims, in this life and the next.
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
@@ -120,43 +120,8 @@ flutter:
     - assets/images/logo/gif/
     - assets/images/quests/
     - assets/tarikh/
-    - assets/tarikh/Articles/ # TODO need all these subdirs?
-    - assets/tarikh/Big_Bang/
-    - assets/tarikh/Milky Way/
-    - assets/tarikh/Mammals/
-    - assets/tarikh/Dinosaurs/
-    - assets/tarikh/Insects/
-    - assets/tarikh/Fish_and_Stuff/
-    - assets/tarikh/Cells/
-    - assets/tarikh/Dinosaur_Demise/
-    - assets/tarikh/Reptiles/
-    - assets/tarikh/World_War_I/
-    - assets/tarikh/Moon/
-    - assets/tarikh/Newton/
-    - assets/tarikh/Cold_war/
-    - assets/tarikh/Crusades/
-    - assets/tarikh/Homo_Sapiens_Sapiens/
-    - assets/tarikh/Nelson Mandela_v2/
-    - assets/tarikh/Martin Luther king/
-    - assets/tarikh/Sufraggette_movement/
-    - assets/tarikh/Marie_Curie/
-    - assets/tarikh/Amelia_Earhart/
-    - assets/tarikh/Alan_Turing/
-    - assets/tarikh/World_War_II/
-    - assets/tarikh/Darwin 2/
-    - assets/tarikh/Internet/
-    - assets/tarikh/Agricultural_evolution/
-    - assets/tarikh/Writing/
-    - assets/tarikh/Recorded_history/
-    - assets/tarikh/Pyramid/
-    - assets/tarikh/Roma/
-    - assets/tarikh/Industrialization/
-    - assets/tarikh/Constantinople/
-    - assets/tarikh/BlackPlague/
-    - assets/tarikh/First_Temple/
-    - assets/tarikh/Apes/
-    - assets/tarikh/Constructive_Tools/
-    - assets/tarikh/Fire/
+    - assets/tarikh/flare/
+    - assets/tarikh/nima/
 
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a

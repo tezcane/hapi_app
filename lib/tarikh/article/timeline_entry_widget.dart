@@ -95,7 +95,7 @@ class VignetteRenderObject extends RenderBox {
         _nimaActor = asset.actor.makeInstance() as nima.FlutterActor;
         asset.animation.apply(asset.animation.duration, _nimaActor, 1.0);
         _nimaActor!.advance(0.0);
-        if (asset.filename == 'assets/tarikh/Newton/Newton_v2.nma') {
+        if (asset.filename == 'assets/tarikh/nima/Newton_v2.nma') {
           /// Newton uses a custom controller! =)
           _nimaController = NewtonController();
           _nimaController!.initialize(_nimaActor!);
@@ -108,7 +108,7 @@ class VignetteRenderObject extends RenderBox {
         asset.animation.apply(asset.animation.duration, _flareActor, 1.0);
         _flareActor!.advance(0.0);
         if (asset.filename ==
-            'assets/tarikh/Amelia_Earhart/Amelia_Earhart.flr') {
+            'assets/tarikh/flare/Amelia_Earhart.flr') {
           /// Amelia Earhart uses a custom controller too..!
           _flareController = AmeliaController();
           _flareController!.initialize(_flareActor!);

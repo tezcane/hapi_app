@@ -146,7 +146,7 @@ class _SectionState extends State<MenuSection>
                           /// Another [FlareActor] widget that
                           /// you can experiment with here: https://www.2dimensions.com/a/pollux/files/flare/expandcollapse/preview
                           child: flare.FlareActor(
-                            'assets/tarikh/ExpandCollapse.flr',
+                            'assets/tarikh/flare/ExpandCollapse.flr',
                             color: widget.accentColor,
                             animation: _isExpanded ? 'Collapse' : 'Expand',
                           ),

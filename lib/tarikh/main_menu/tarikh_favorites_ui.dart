@@ -40,7 +40,7 @@ class TarikhFavoritesUI extends StatelessWidget {
                           height: 114.0,
                           margin: const EdgeInsets.only(bottom: 30),
                           child: const FlareActor(
-                              'assets/tarikh/Broken Heart.flr',
+                              'assets/tarikh/flare/Broken Heart.flr',
                               animation: 'Heart Break',
                               shouldClip: false),
                         ),
