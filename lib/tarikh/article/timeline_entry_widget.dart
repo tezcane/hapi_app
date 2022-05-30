@@ -6,7 +6,6 @@ import 'package:flare_dart/math/vec2d.dart' as flare;
 import 'package:flare_flutter/flare.dart' as flare;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:hapi/tarikh/article/controllers/amelia_controller.dart';
 import 'package:hapi/tarikh/article/controllers/flare_interaction_controller.dart';
 import 'package:hapi/tarikh/article/controllers/newton_controller.dart';
 import 'package:hapi/tarikh/article/controllers/nima_interaction_controller.dart';
@@ -107,12 +106,6 @@ class VignetteRenderObject extends RenderBox {
         _flareActor!.initializeGraphics();
         asset.animation.apply(asset.animation.duration, _flareActor, 1.0);
         _flareActor!.advance(0.0);
-        if (asset.filename ==
-            'assets/tarikh/flare/Amelia_Earhart.flr') {
-          /// Amelia Earhart uses a custom controller too..!
-          _flareController = AmeliaController();
-          _flareController!.initialize(_flareActor!);
-        }
       }
     }
   }

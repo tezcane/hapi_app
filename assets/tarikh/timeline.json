@@ -263,8 +263,8 @@
 	},
 	{
 		"start": -6000000,
-		"label": "Humans",
-		"article":"humans.txt",
+		"label": "Primate Bipedalism",
+		"article":"Primate Bipedalism.txt",
 		"accent": [202, 79, 63],
 		"timelineColors": {
 			"background": [255, 255, 255],
@@ -280,20 +280,6 @@
 			}
 		},
 		"asset":
-		{
-			"source": "flare/humans.flr",
-			"width": 1068,
-			"height": 670,
-			"offset": 0,
-			"bounds":[-534,-670,1602,670],
-			"idle":["human_1", "human_2", "human_3", "human_4", "human_5"]
-		}
-	},
-	{
-		"date": -4000000,
-		"label": "Last Common\nAncestor with Apes",
-		"article":"last_common_ancestor_apes.txt",
-		"asset": 
 		{
 			"source": "nima/Apes.nma",
 			"width": 528,
@@ -327,11 +313,11 @@
 	},
 	{
 		"start": -300000,
-		"label": "Homo Sapiens Sapiens",
-		"article":"sapiens.txt",
+		"label": "Adam",
+		"article":"Adam.txt",
 		"asset": 
 		{
-			"source": "nima/Homo_Sapiens_Sapiens.nma",
+			"source": "png/Adam.png",
 			"width": 528,
 			"height": 528,
 			"offset": -40
@@ -490,30 +476,6 @@
 		}
 	},
 	{
-		"date": 1867,
-		"label": "Marie Curie",
-		"article":"marie_curie.txt",
-		"asset":
-		{
-			"source": "nima/Marie_Curie.nma",
-			"width": 528,
-			"height": 528,
-			"offset": -140
-		}
-	},
-	{
-		"date": 1903,
-		"label": "Suffragettes",
-		"article":"suffragette.txt",
-		"asset":
-		{
-			"source": "nima/Sufraggette_movement.nma",
-			"width": 528,
-			"height": 528,
-			"offset": -40
-		}
-	},
-	{
 		"start": 1914,
 		"end": 1918,
 		"label": "World War 1",
@@ -524,31 +486,6 @@
 			"source": "nima/World_War_I.nma",
 			"width": 528,
 			"height": 528
-		}
-	},
-	{
-		"date": 1932,
-		"label": "Amelia Earhart",
-		"id":"amelia",
-		"article":"amelia_earhart.txt",
-		"asset":
-		{
-			"source": "flare/Amelia_Earhart.flr",
-			"width": 528,
-			"height": 528,
-			"offset": -140
-		}
-	},
-	{
-		"date": 1938,
-		"label": "Alan Turing",
-		"article":"alan_turing.txt",
-		"asset":
-		{
-			"source": "nima/Alan_Turing.nma",
-			"width": 528,
-			"height": 528,
-			"offset": -140
 		}
 	},
 	{
@@ -577,31 +514,6 @@
 			"width": 528,
 			"height": 528,
 			"offset": -80
-		}
-	},
-	{
-		"date": 1952,
-		"label": "Nelson Mandela",
-		"article":"nelson_mandela.txt",
-		"asset":
-		{
-			"source": "nima/Nelson Mandela_v2.nma",
-			"width": 528,
-			"height": 528,
-			"offset": -40
-		}
-	},
-	{
-		"date": 1963,
-		"label": "Martin Luther King, Jr.",
-		"article":"martin_luther_king.txt",
-		"id":"mlk",
-		"asset":
-		{
-			"source": "nima/Martin Luther king.nma",
-			"width": 528,
-			"height": 528,
-			"offset": -140
 		}
 	},
 	{

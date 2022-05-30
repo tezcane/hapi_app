@@ -41,7 +41,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
   /// Triggers a Flare animation upon change.
   bool _isFavorite = false;
 
-  /// This parameter helps control the Amelia Earhart and the Newton animations.
+  /// This parameter helps control the Newton animations.
   /// Test it out yourself! =)
   Offset? _interactOffset;
 
@@ -101,7 +101,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
   /// It uses the [BlocProvider] to find out if this element is part of the favorites, to have the icon properly set up.
   /// A [SingleChildScrollView] contains a [Column] that lays out the [TimelineEntryWidget] on top, and the [MarkdownBody]
   /// right below it.
-  /// A [GestureDetector] is used to control the [TimelineEntryWidget], if it allows it (...try Amelia Earhart or Newton!)
+  /// A [GestureDetector] is used to control the [TimelineEntryWidget], if it allows it (...try Newton!)
   @override
   Widget build(BuildContext context) {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
@@ -182,7 +182,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                                   /// Check out the widget at:
                                   /// https://www.2dimensions.com/a/pollux/files/flare/heart-simple/preview
                                   child: FlareActor(
-                                    'assets/tarikh/Favorite.flr',
+                                    'assets/tarikh/flare/Favorite.flr',
                                     animation:
                                         isFav ? 'Favorite' : 'Unfavorite',
                                     shouldClip: false,

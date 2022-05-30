@@ -80,14 +80,9 @@
                 "label": "Newton and Gravity"
             },
             {
-                "start": 1852,
-                "end": 1876,
-                "label": "Marie Curie"
-            },
-            {
                 "start": 1914,
                 "end": 1952,
-                "label": "Amelia Earhart"
+                "label": "First Flight"
             },
             {
                 "start": 1910,
@@ -98,11 +93,6 @@
                 "start": 1930,
                 "end": 1955,
                 "label": "World War 2"
-            },
-            {
-                "start": 1956,
-                "end": 1972,
-                "label": "Martin Luther King, Jr."
             },
             {
                 "start": 1955,
