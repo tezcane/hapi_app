@@ -8,6 +8,7 @@ import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/settings/settings_option.dart';
 import 'package:hijri/hijri_calendar.dart';
+import 'package:intl/intl.dart';
 
 /// List of languages that are supported. Used in selector and google tr sheet.
 /// TODO load from file: https://stackoverflow.com/questions/70394427/flutter-getx-put-internalition-translations-in-different-files-for-each-language
@@ -58,11 +59,12 @@ final List<SettingsOption> languageOptions = [
 class LanguageController extends GetxHapi {
   static LanguageController get to => Get.find();
 
+  static NumberFormat numCompactFormatter = NumberFormat.compact(locale: 'en');
+
   final String defaultLangKey = 'en';
 
   /// Always a 2 character language key, e.g. "ar", "en", etc.
-  String _currLangKey = '';
-  String get currLangKey => _currLangKey;
+  String currLangKey = '';
 
   final Map<String, bool> _arabicScriptLangs = {
     'ar': true, // Arabic
@@ -199,9 +201,9 @@ class LanguageController extends GetxHapi {
 
     _initLocaleValues(newLangKey);
 
-    _currLangKey = newLangKey;
-    s.wr('language', _currLangKey);
-    l.i('updateLanguage: Setting currLangKey=$_currLangKey, isEnNumerals=$_isEnNumerals, isRightToLeftLang=$_isRightToLeftLang');
+    currLangKey = newLangKey;
+    s.wr('language', currLangKey);
+    l.i('updateLanguage: Setting currLangKey=$currLangKey, isEnNumerals=$_isEnNumerals, isRightToLeftLang=$_isRightToLeftLang');
 
     // update athan time translations by refreshing active quests UI
     ActiveQuestsController.to.update();
@@ -214,7 +216,7 @@ class LanguageController extends GetxHapi {
     _arabicScriptLangs[newLangKey] ?? false
         ? HijriCalendar.setLocal('ar') // supports ar or en only
         : HijriCalendar.setLocal('en'); // switch out Arabic script, if was set
-
+    numCompactFormatter = NumberFormat.compact(locale: newLangKey);
     _isRightToLeftLang = _nonLeftToRightLangs[newLangKey] ?? false;
     _isEnNumerals = _nonEnNumeralLangs[newLangKey] == null;
     if (_isEnNumerals) {

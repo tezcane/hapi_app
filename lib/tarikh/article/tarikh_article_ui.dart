@@ -1,6 +1,6 @@
 import 'package:flare_flutter/flare_actor.dart' show FlareActor;
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
+//import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
 import 'package:hapi/menu/fab_sub_page.dart';
@@ -29,9 +29,10 @@ class TarikhArticleUI extends StatefulWidget {
 /// on this page (i.e. the top [TimelineEntryWidget] the favorite button) rely on life-cycle parameters.
 class _TarikhArticleUIState extends State<TarikhArticleUI> {
   /// The information for the current page.
-  String _articleMarkdown = '';
-  String _title = '';
-  String _subTitle = '';
+  String _labelLowerCase = '';
+  String _trValTitle = '';
+  String _trValSubTitle = '';
+  String _trValArticleMarkdown = '';
 
   /// This page uses the `flutter_markdown` package, and thus needs its styles to be defined
   /// with a custom objects. This is created in [initState()].
@@ -49,6 +50,8 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
   @override
   initState() {
     super.initState();
+
+    _labelLowerCase = widget.article.label.toLowerCase();
 
     TextStyle h1 = Get.theme.textTheme.headline4!
         .copyWith(fontSize: 32.0, height: 1.625, fontWeight: FontWeight.bold);
@@ -79,23 +82,22 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
       blockquotePadding: const EdgeInsets.all(20.0),
     );
     setState(() {
-      _title = widget.article.label;
-      _subTitle = widget.article.formatYearsAgo();
-      _articleMarkdown = '';
-      loadMarkdown(widget.article.articleFilename);
+      _trValTitle = widget.article.trValTitle;
+      _trValSubTitle = widget.article.trValYearsAgo();
+      _trValArticleMarkdown = widget.article.trValArticle;
     });
   }
 
-  /// Load the markdown file from the assets and set the contents of the page to its value.
-  void loadMarkdown(String filename) async {
-    rootBundle
-        .loadString('assets/tarikh/Articles/' + filename)
-        .then((String data) {
-      setState(() {
-        _articleMarkdown = data;
-      });
-    });
-  }
+  // /// Load the markdown file from the assets and set the contents of the page to its value.
+  // void loadMarkdown(String filename) async {
+  //   rootBundle
+  //       .loadString('assets/tarikh/Articles/' + filename)
+  //       .then((String data) {
+  //     setState(() {
+  //       _articleMarkdown = data;
+  //     });
+  //   });
+  // }
 
   /// This widget is wrapped in a [Scaffold] to have the classic Material Design visual layout structure.
   /// It uses the [BlocProvider] to find out if this element is part of the favorites, to have the icon properly set up.
@@ -106,8 +108,8 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
   Widget build(BuildContext context) {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
     List<TimelineEntry> favs = TarikhController.to.eventFavorites;
-    bool isFav = favs.any(
-        (TimelineEntry te) => te.label.toLowerCase() == _title.toLowerCase());
+    bool isFav =
+        favs.any((TimelineEntry e) => e.label.toLowerCase() == _labelLowerCase);
     return FabSubPage(
       subPage: SubPage.Tarikh_Article,
       child: Stack(
@@ -153,7 +155,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    _title,
+                                    _trValTitle,
                                     textAlign: TextAlign.left,
                                     style: const TextStyle(
                                       fontSize: 25.0,
@@ -161,7 +163,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                                     ),
                                   ),
                                   Text(
-                                    _subTitle,
+                                    _trValSubTitle,
                                     textAlign: TextAlign.left,
                                     style: const TextStyle(
                                       fontSize: 17.0,
@@ -218,7 +220,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                         color: Theme.of(context).dividerColor,
                       ),
                       MarkdownBody(
-                          data: _articleMarkdown,
+                          data: _trValArticleMarkdown,
                           styleSheet: _markdownStyleSheet),
                       const SizedBox(height: 100),
                     ],

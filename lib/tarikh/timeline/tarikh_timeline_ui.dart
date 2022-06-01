@@ -31,8 +31,8 @@ class TarikhTimelineUI extends StatefulWidget {
   /// if null, we must lookup entry and then set up/dn btns manually
   TimelineEntry? entry;
 
-  final Timeline timeline =
-      TarikhController.t; // TODO needed for widget update detect?
+  // TODO needed for widget update detect?:
+  final Timeline timeline = TarikhController.t;
 
   @override
   _TarikhTimelineUIState createState() => _TarikhTimelineUIState();
@@ -42,7 +42,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   static final Timeline t = TarikhController.t; // used a lot so shorten it.
 
   // TODO fix shows anytime no era on timeline, should be blank or something like "Unnamed Era"
-  static const String DefaultEraName = 'Birth of the Universe';
+  static const String trKeyDefaultEraName = ''; //i.Birth of the Universe';
   static const double TopOverlap = 0.0; //56.0;
 
   /// These variables are used to calculate the correct viewport for the timeline
@@ -57,8 +57,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   TimelineEntry? _touchedEntry;
 
   /// Which era the Timeline is currently focused on.
-  /// Defaults to [DefaultEraName].
-  String _eraName = '';
+  /// Defaults to [trKeyDefaultEraName].
+  String _trValEraName = '';
 
   Color? _headerTextColor;
   //Color? _headerBackgroundColor; // CAN DO: cleanup/reuse for other coloring
@@ -83,7 +83,11 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     }
 
     TarikhController.to.isActiveTimeline = true;
-    _eraName = t.currentEra != null ? t.currentEra!.label : DefaultEraName;
+    _trValEraName = 'i.Era'.tr +
+        ': ' +
+        (t.currentEra != null
+            ? t.currentEra!.trValTitle
+            : trKeyDefaultEraName.tr);
     t.onHeaderColorsChanged = (/*Color background,*/ Color text) {
       setState(() {
         _headerTextColor = text;
@@ -94,7 +98,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     /// Update the label for the [Timeline] object.
     t.onEraChanged = (TimelineEntry? entry) {
       setState(() {
-        _eraName = 'Era: ' + (entry != null ? entry.label : DefaultEraName);
+        _trValEraName =
+            'i.Era'.tr + ': ' + (entry != null ? entry.trValTitle : '');
       });
     };
 
@@ -138,10 +143,11 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     double focalDiff =
         (_scaleStartYearStart + _lastFocalPoint!.dy * scale) - focus;
     t.setViewport(
-        start: focus + (_scaleStartYearStart - focus) / changeScale + focalDiff,
-        end: focus + (_scaleStartYearEnd - focus) / changeScale + focalDiff,
-        height: context.size!.height,
-        animate: true);
+      start: focus + (_scaleStartYearStart - focus) / changeScale + focalDiff,
+      end: focus + (_scaleStartYearEnd - focus) / changeScale + focalDiff,
+      height: context.size!.height,
+      animate: true,
+    );
   }
 
   void _scaleEnd(ScaleEndDetails details) {
@@ -244,13 +250,15 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
       };
       t.onEraChanged = (TimelineEntry? entry) {
         setState(() {
-          _eraName = entry != null ? entry.label : DefaultEraName;
+          _trValEraName =
+              entry != null ? entry.trValTitle : trKeyDefaultEraName.tr;
         });
       };
       setState(() {
-        _eraName =
-            t.currentEra != null ? t.currentEra as String : DefaultEraName;
-        //t.isActive = true; //TODO old showFavirts called _startRendering(), but i think was for heart flare animation
+        _trValEraName = t.currentEra != null
+            ? t.currentEra!.trValTitle
+            : trKeyDefaultEraName.tr;
+        //t.isActive = true;
       });
     } else {
       l.w('Timeline: didUpdateWidget false');
@@ -299,20 +307,20 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
             TimeBtn btnUp = c.timeBtnUp;
             TimeBtn btnDn = c.timeBtnDn;
 
-            String btnUpTitle1 = '';
-            String btnUpTitle2 = btnUp.title;
-            List<String> btnUpList = btnUpTitle2.split('\n');
+            String trValUpTitle1 = '';
+            String trValUpTitle2 = btnUp.trValTitle;
+            List<String> btnUpList = trValUpTitle2.split('\n');
             if (btnUpList.length == 2) {
-              btnUpTitle1 = btnUpList[0];
-              btnUpTitle2 = btnUpList[1];
+              trValUpTitle1 = btnUpList[0];
+              trValUpTitle2 = btnUpList[1];
             }
 
-            String btnDnTitle1 = '';
-            String btnDnTitle2 = btnDn.title;
-            List<String> btnDnList = btnDnTitle2.split('\n');
+            String trValDnTitle1 = '';
+            String trValDnTitle2 = btnDn.trValTitle;
+            List<String> btnDnList = trValDnTitle2.split('\n');
             if (btnDnList.length == 2) {
-              btnDnTitle1 = btnDnList[0];
-              btnDnTitle2 = btnDnList[1];
+              trValDnTitle1 = btnDnList[0];
+              trValDnTitle2 = btnDnList[1];
             }
 
             return Align(
@@ -394,9 +402,27 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                 : Column(
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
-                                      T(btnUpTitle1, tsR, w: w2, h: 18),
-                                      T(btnUpTitle2, tsR, w: w2, h: 18),
-                                      T(btnUp.timeUntil, tsR, w: w2, h: 17),
+                                      T(
+                                        trValUpTitle1,
+                                        tsR,
+                                        w: w2,
+                                        h: 18,
+                                        trVal: true,
+                                      ),
+                                      T(
+                                        trValUpTitle2,
+                                        tsR,
+                                        w: w2,
+                                        h: 18,
+                                        trVal: true,
+                                      ),
+                                      T(
+                                        btnUp.trValTimeUntil,
+                                        tsR,
+                                        w: w2,
+                                        h: 17,
+                                        trVal: true,
+                                      ),
                                       FloatingActionButton(
                                         tooltip: 'i.Navigate to past'.tr,
                                         heroTag: null, // needed
@@ -409,7 +435,13 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                           size: 30.0,
                                         ),
                                       ),
-                                      T(btnUp.pageScrolls, tsR, w: w2, h: 17),
+                                      T(
+                                        btnUp.trValPageScrolls,
+                                        tsR,
+                                        w: w2,
+                                        h: 17,
+                                        trVal: true,
+                                      ),
                                       const SizedBox(height: 1),
                                     ],
                                   ),
@@ -424,9 +456,27 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.center,
                                     children: [
-                                      T(btnDnTitle1, tsR, w: w2, h: 18),
-                                      T(btnDnTitle2, tsR, w: w2, h: 18),
-                                      T(btnDn.timeUntil, tsR, w: w2, h: 17),
+                                      T(
+                                        trValDnTitle1,
+                                        tsR,
+                                        w: w2,
+                                        h: 18,
+                                        trVal: true,
+                                      ),
+                                      T(
+                                        trValDnTitle2,
+                                        tsR,
+                                        w: w2,
+                                        h: 18,
+                                        trVal: true,
+                                      ),
+                                      T(
+                                        btnDn.trValTimeUntil,
+                                        tsR,
+                                        w: w2,
+                                        h: 17,
+                                        trVal: true,
+                                      ),
                                       FloatingActionButton(
                                         tooltip: 'i.Navigate to future'.tr,
                                         heroTag: null, // needed
@@ -439,7 +489,13 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                           size: 30.0,
                                         ),
                                       ),
-                                      T(btnDn.pageScrolls, tsR, w: w2, h: 17),
+                                      T(
+                                        btnDn.trValPageScrolls,
+                                        tsR,
+                                        w: w2,
+                                        h: 17,
+                                        trVal: true,
+                                      ),
                                       const SizedBox(height: 1),
                                     ],
                                   ),
@@ -475,7 +531,13 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                     top: 20,
                     left: MainController.to.isPortrait ? 60 : 20,
                   ),
-                  child: T(_eraName, tsR, w: titleWidth, h: 25),
+                  child: T(
+                    _trValEraName,
+                    tsR,
+                    w: titleWidth,
+                    h: 25,
+                    trVal: true,
+                  ),
                 ),
               ],
             ),

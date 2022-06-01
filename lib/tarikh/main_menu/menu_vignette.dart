@@ -1,5 +1,4 @@
 import 'dart:math';
-//import 'dart:ui'; TODO needed?
 import 'dart:ui' as ui;
 
 import 'package:flare_dart/math/aabb.dart' as flare;
@@ -28,13 +27,13 @@ class MenuVignette extends LeafRenderObjectWidget {
   // Replaced old way of using timeline null checks
   final bool needsRepaint;
 
-  const MenuVignette(
-      {Key? key,
-      required this.needsRepaint,
-      required this.gradientColor,
-      required this.isActive,
-      required this.assetId})
-      : super(key: key);
+  const MenuVignette({
+    Key? key,
+    required this.needsRepaint,
+    required this.gradientColor,
+    required this.isActive,
+    required this.assetId,
+  }) : super(key: key);
 
   @override
   RenderObject createRenderObject(BuildContext context) {
@@ -66,9 +65,8 @@ class MenuVignette extends LeafRenderObjectWidget {
   }
 
   @override
-  didUnmountRenderObject(covariant MenuVignetteRenderObject renderObject) {
-    renderObject.isActive = false;
-  }
+  didUnmountRenderObject(covariant MenuVignetteRenderObject renderObject) =>
+      renderObject.isActive = false;
 }
 
 /// When extending a [RenderBox] we provide a custom set of instructions for the widget being rendered.
@@ -118,9 +116,7 @@ class MenuVignetteRenderObject extends RenderBox {
     updateRendering();
   }
 
-  TimelineEntry? get _timelineEntry {
-    return TarikhController.tih.getById(_assetId!);
-  }
+  TimelineEntry? get _timelineEntry => TarikhController.tih.getById(_assetId!);
 
   @override
   bool get sizedByParent => true;
@@ -129,9 +125,7 @@ class MenuVignetteRenderObject extends RenderBox {
   bool hitTestSelf(Offset position) => true;
 
   @override
-  void performResize() {
-    size = constraints.biggest;
-  }
+  void performResize() => size = constraints.biggest;
 
   /// Uses the [SchedulerBinding] to trigger a new paint for this widget.
   void updateRendering() {
@@ -167,16 +161,17 @@ class MenuVignetteRenderObject extends RenderBox {
     /// If the asset is just a static image, draw the image directly to [canvas].
     if (asset is TimelineImage) {
       canvas.drawImageRect(
-          asset.image,
-          Rect.fromLTWH(0.0, 0.0, asset.width, asset.height),
-          Rect.fromLTWH(offset.dx + size.width - w, asset.y, w, h),
-          Paint()
-            ..isAntiAlias = true
-            ..filterQuality = ui.FilterQuality.low
-            ..color = Colors.white.withOpacity(asset.opacity));
+        asset.image,
+        Rect.fromLTWH(0.0, 0.0, asset.width, asset.height),
+        Rect.fromLTWH(offset.dx + size.width - w, asset.y, w, h),
+        Paint()
+          ..isAntiAlias = true
+          ..filterQuality = ui.FilterQuality.low
+          ..color = Colors.white.withOpacity(asset.opacity),
+      );
     } else if (asset is TimelineNima) {
       Alignment alignment = Alignment.topRight;
-      BoxFit fit = BoxFit.cover;
+      // BoxFit fit = BoxFit.cover;
 
       /// If we have a [TimelineNima] actor set it up properly and paint it.
 
@@ -203,48 +198,49 @@ class MenuVignetteRenderObject extends RenderBox {
       /// This widget is always set up to use [BoxFit.cover].
       /// But this behavior can be customized according to anyone's needs.
       /// The following switch/case contains all the various alternatives native to Flutter.
-      switch (fit) {
-        case BoxFit.fill:
-          scaleX = renderSize.width / contentWidth;
-          scaleY = renderSize.height / contentHeight;
-          break;
-        case BoxFit.contain:
-          double minScale = min(renderSize.width / contentWidth,
-              renderSize.height / contentHeight);
-          scaleX = scaleY = minScale;
-          break;
-        case BoxFit.cover:
-          double maxScale = max(renderSize.width / contentWidth,
-              renderSize.height / contentHeight);
-          scaleX = scaleY = maxScale;
-          break;
-        case BoxFit.fitHeight:
-          double minScale = renderSize.height / contentHeight;
-          scaleX = scaleY = minScale;
-          break;
-        case BoxFit.fitWidth:
-          double minScale = renderSize.width / contentWidth;
-          scaleX = scaleY = minScale;
-          break;
-        case BoxFit.none:
-          scaleX = scaleY = 1.0;
-          break;
-        case BoxFit.scaleDown:
-          double minScale = min(renderSize.width / contentWidth,
-              renderSize.height / contentHeight);
-          scaleX = scaleY = minScale < 1.0 ? minScale : 1.0;
-          break;
-      }
+      // switch (fit) {
+      //   case BoxFit.fill:
+      //     scaleX = renderSize.width / contentWidth;
+      //     scaleY = renderSize.height / contentHeight;
+      //     break;
+      //   case BoxFit.contain:
+      //     double minScale = min(renderSize.width / contentWidth,
+      //         renderSize.height / contentHeight);
+      //     scaleX = scaleY = minScale;
+      //     break;
+      //   case BoxFit.cover:
+      double maxScale = max(
+          renderSize.width / contentWidth, renderSize.height / contentHeight);
+      scaleX = scaleY = maxScale;
+      //     break;
+      //   case BoxFit.fitHeight:
+      //     double minScale = renderSize.height / contentHeight;
+      //     scaleX = scaleY = minScale;
+      //     break;
+      //   case BoxFit.fitWidth:
+      //     double minScale = renderSize.width / contentWidth;
+      //     scaleX = scaleY = minScale;
+      //     break;
+      //   case BoxFit.none:
+      //     scaleX = scaleY = 1.0;
+      //     break;
+      //   case BoxFit.scaleDown:
+      //     double minScale = min(renderSize.width / contentWidth,
+      //         renderSize.height / contentHeight);
+      //     scaleX = scaleY = minScale < 1.0 ? minScale : 1.0;
+      //     break;
+      // }
 
       /// 2. Move the [canvas] to the right position so that the widget's position
       /// is center-aligned based on its offset, size and alignment position.
       canvas.translate(
-          renderOffset.dx +
-              renderSize.width / 2.0 +
-              (alignment.x * renderSize.width / 2.0),
-          renderOffset.dy +
-              renderSize.height / 2.0 +
-              (alignment.y * renderSize.height / 2.0));
+        renderOffset.dx +
+            renderSize.width / 2.0 +
+            (alignment.x * renderSize.width / 2.0),
+        renderOffset.dy +
+            renderSize.height / 2.0 +
+            (alignment.y * renderSize.height / 2.0),
+      );
 
       /// 3. Scale depending on the [fit].
       canvas.scale(scaleX, -scaleY);
@@ -268,13 +264,17 @@ class MenuVignetteRenderObject extends RenderBox {
       List<double> stops = <double>[0.0, 1.0];
 
       ui.Paint paint = ui.Paint()
-        ..shader = ui.Gradient.linear(ui.Offset(0.0, offset.dy),
-            ui.Offset(0.0, offset.dy + 150.0), colors, stops)
+        ..shader = ui.Gradient.linear(
+          ui.Offset(0.0, offset.dy),
+          ui.Offset(0.0, offset.dy + 150.0),
+          colors,
+          stops,
+        )
         ..style = ui.PaintingStyle.fill;
       canvas.drawRect(offset & size, paint);
     } else if (asset is TimelineFlare) {
       Alignment alignment = Alignment.center;
-      BoxFit fit = BoxFit.cover;
+      // BoxFit fit = BoxFit.cover;
 
       /// If we have a [TimelineFlare]  actor set it up properly and paint it.
       ///
@@ -301,38 +301,40 @@ class MenuVignetteRenderObject extends RenderBox {
       /// This widget is always set up to use [BoxFit.cover].
       /// But this behavior can be customized according to anyone's needs.
       /// The following switch/case contains all the various alternatives native to Flutter.
-      switch (fit) {
-        case BoxFit.fill:
-          scaleX = renderSize.width / contentWidth;
-          scaleY = renderSize.height / contentHeight;
-          break;
-        case BoxFit.contain:
-          double minScale = min(renderSize.width / contentWidth,
-              renderSize.height / contentHeight);
-          scaleX = scaleY = minScale;
-          break;
-        case BoxFit.cover:
-          double maxScale = max(renderSize.width / contentWidth,
-              renderSize.height / contentHeight);
-          scaleX = scaleY = maxScale;
-          break;
-        case BoxFit.fitHeight:
-          double minScale = renderSize.height / contentHeight;
-          scaleX = scaleY = minScale;
-          break;
-        case BoxFit.fitWidth:
-          double minScale = renderSize.width / contentWidth;
-          scaleX = scaleY = minScale;
-          break;
-        case BoxFit.none:
-          scaleX = scaleY = 1.0;
-          break;
-        case BoxFit.scaleDown:
-          double minScale = min(renderSize.width / contentWidth,
-              renderSize.height / contentHeight);
-          scaleX = scaleY = minScale < 1.0 ? minScale : 1.0;
-          break;
-      }
+      // switch (fit) {
+      //   case BoxFit.fill:
+      //     scaleX = renderSize.width / contentWidth;
+      //     scaleY = renderSize.height / contentHeight;
+      //     break;
+      //   case BoxFit.contain:
+      //     double minScale = min(renderSize.width / contentWidth,
+      //         renderSize.height / contentHeight);
+      //     scaleX = scaleY = minScale;
+      //     break;
+      //   case BoxFit.cover:
+      double maxScale = max(
+        renderSize.width / contentWidth,
+        renderSize.height / contentHeight,
+      );
+      scaleX = scaleY = maxScale;
+      //     break;
+      //   case BoxFit.fitHeight:
+      //     double minScale = renderSize.height / contentHeight;
+      //     scaleX = scaleY = minScale;
+      //     break;
+      //   case BoxFit.fitWidth:
+      //     double minScale = renderSize.width / contentWidth;
+      //     scaleX = scaleY = minScale;
+      //     break;
+      //   case BoxFit.none:
+      //     scaleX = scaleY = 1.0;
+      //     break;
+      //   case BoxFit.scaleDown:
+      //     double minScale = min(renderSize.width / contentWidth,
+      //         renderSize.height / contentHeight);
+      //     scaleX = scaleY = minScale < 1.0 ? minScale : 1.0;
+      //     break;
+      // }
 
       /// 2. Move the [canvas] to the right position so that the widget's position
       /// is center-aligned based on its offset, size and alignment position.
@@ -366,8 +368,12 @@ class MenuVignetteRenderObject extends RenderBox {
       List<double> stops = <double>[0.0, 1.0];
 
       ui.Paint paint = ui.Paint()
-        ..shader = ui.Gradient.linear(ui.Offset(0.0, offset.dy),
-            ui.Offset(0.0, offset.dy + 150.0), colors, stops)
+        ..shader = ui.Gradient.linear(
+          ui.Offset(0.0, offset.dy),
+          ui.Offset(0.0, offset.dy + 150.0),
+          colors,
+          stops,
+        )
         ..style = ui.PaintingStyle.fill;
       canvas.drawRect(offset & size, paint);
     }
@@ -397,13 +403,9 @@ class MenuVignetteRenderObject extends RenderBox {
       TimelineAsset asset = entry.asset;
       if (asset is TimelineNima) {
         /// Modulate the opacity value used by [gradientFade].
-        if (opacity < 1.0) {
-          opacity = min(opacity + elapsed, 1.0);
-        }
+        if (opacity < 1.0) opacity = min(opacity + elapsed, 1.0);
         asset.animationTime += elapsed;
-        if (asset.loop) {
-          asset.animationTime %= asset.animation.duration;
-        }
+        if (asset.loop) asset.animationTime %= asset.animation.duration;
 
         /// Apply the current time to the [asset] animation.
         asset.animation.apply(asset.animationTime, asset.actor, 1.0);

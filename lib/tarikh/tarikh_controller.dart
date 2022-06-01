@@ -29,10 +29,15 @@ enum GutterMode {
 
 /// Used for Timeline Up/Down Button data
 class TimeBtn {
-  TimeBtn(this.title, this.timeUntil, this.pageScrolls, this.entry);
-  String title;
-  String timeUntil;
-  String pageScrolls;
+  TimeBtn(
+    this.trValTitle,
+    this.trValTimeUntil,
+    this.trValPageScrolls,
+    this.entry,
+  );
+  String trValTitle;
+  String trValTimeUntil;
+  String trValPageScrolls;
   TimelineEntry? entry; // will be null on first/last entries
 }
 
@@ -46,6 +51,7 @@ class TarikhController extends GetxHapi {
   late final TimeBtn timeBtnUp;
   late final TimeBtn timeBtnDn;
 
+  /// This formatter is ok, used to track pages and cni/cns used to convert
   static final NumberFormat formatter = NumberFormat.compact();
 
   /// We can't show Tarikh Sub Pages until JSON file input data is parsed.
@@ -222,38 +228,42 @@ class TarikhController extends GetxHapi {
 
   /// Updates text around time button, no entry is set
   void updateTimeBtn(
-      TimeBtn timeBtn, String title, String timeUntil, String pageScrolls) {
-    timeBtn.title = title;
-    timeBtn.timeUntil = timeUntil;
-    timeBtn.pageScrolls = pageScrolls;
+    TimeBtn timeBtn,
+    String trValTitle,
+    String trValTimeUntil,
+    String trValPageScrolls,
+  ) {
+    timeBtn.trValTitle = trValTitle;
+    timeBtn.trValTimeUntil = trValTimeUntil;
+    timeBtn.trValPageScrolls = trValPageScrolls;
     updateOnThread();
   }
 
   void updateTimeBtnEntry(TimeBtn timeBtn, TimelineEntry? entry) {
-    String title = ' '; // these can't be blank/'' because of FittedBox
-    String timeUntil = ' ';
-    String pageScrolls = ' ';
+    String trValTitle = ' '; // these can't be blank/'' because of FittedBox
+    String trValTimeUntil = ' ';
+    String trValPageScrolls = ' ';
 
     if (entry != null) {
-      title = entry.label;
+      trValTitle = entry.trValTitle;
 
       //was t.renderEnd, had 'page away 0' at bottom page edge, now in middle:
       double pageReference = (t.renderStart + t.renderEnd) / 2.0;
       double timeUntilDouble = entry.startMs - pageReference;
-      timeUntil = TimelineEntry.formatYears(timeUntilDouble).toLowerCase();
+      trValTimeUntil = entry.trValYears(timeUntilDouble).toLowerCase();
 
       double pageSize = t.renderEnd - t.renderStart;
       double pages = timeUntilDouble / pageSize;
       String pagesAwayNum = formatter.format(pages.abs());
       if (pagesAwayNum == '1') {
-        pageScrolls = '1 page away';
+        trValPageScrolls = cni(1) + ' ' + 'i.page away'.tr;
       } else {
-        pageScrolls = '$pagesAwayNum pages away';
+        trValPageScrolls = cns(pagesAwayNum) + ' ' + 'i.pages away'.tr;
       }
     }
 
     timeBtn.entry = entry;
-    updateTimeBtn(timeBtn, title, timeUntil, pageScrolls);
+    updateTimeBtn(timeBtn, trValTitle, trValTimeUntil, trValPageScrolls);
   }
 }
 
@@ -291,7 +301,8 @@ class TimelineInitHandler {
     /// The JSON decode doesn't provide strong typing, so we'll iterate
     /// on the dynamic entries in the [jsonEntries] list.
     for (Map map in jsonEntries) {
-      /// The label is a brief description for the current entry.
+      /// The label is a brief description for the current entry. It is used to
+      /// create the i.<tag>/a.<tag> trKeyLabel and t.<tag> trKeyArticle.
       String label = map['label'];
 
       /// Create the current entry and fill in the current date if it's
@@ -326,8 +337,6 @@ class TimelineInitHandler {
       } else {
         endMs = startMs;
       }
-
-      String articleFilename = map['article'];
 
       /// Get Timeline Color Setup:
       if (map.containsKey('timelineColors')) {
@@ -382,7 +391,6 @@ class TimelineInitHandler {
         type,
         startMs,
         endMs,
-        articleFilename,
         asset,
         accent,
         id,

@@ -475,14 +475,14 @@ class TimelineRenderObject extends RenderBox {
       cTrkh.updateTimeBtnEntry(cTrkh.timeBtnDn, t.nextEntry);
     } else {
       TimeBtn timeBtn = cTrkh.timeBtnDn;
-      String timeUntil = timeBtn.timeUntil;
-      String pageScrolls = timeBtn.pageScrolls;
-      String title = timeBtn.title;
+      String timeUntil = timeBtn.trValTimeUntil;
+      String pageScrolls = timeBtn.trValPageScrolls;
+      String title = timeBtn.trValTitle;
 
       // don't update unless we have a new value
-      if (timeBtn.timeUntil != timeUntil ||
-          timeBtn.pageScrolls != pageScrolls ||
-          timeBtn.title != title) {
+      if (timeBtn.trValTimeUntil != timeUntil ||
+          timeBtn.trValPageScrolls != pageScrolls ||
+          timeBtn.trValTitle != title) {
         cTrkh.updateTimeBtn(timeBtn, title, timeUntil, pageScrolls);
       }
     }
@@ -492,14 +492,14 @@ class TimelineRenderObject extends RenderBox {
       cTrkh.updateTimeBtnEntry(cTrkh.timeBtnUp, t.prevEntry);
     } else {
       TimeBtn timeBtn = cTrkh.timeBtnUp;
-      String timeUntil = timeBtn.timeUntil;
-      String pageScrolls = timeBtn.pageScrolls;
-      String title = timeBtn.title;
+      String timeUntil = timeBtn.trValTimeUntil;
+      String pageScrolls = timeBtn.trValPageScrolls;
+      String title = timeBtn.trValTitle;
 
       // don't update unless we have a new value
-      if (timeBtn.timeUntil != timeUntil ||
-          timeBtn.pageScrolls != pageScrolls ||
-          timeBtn.title != title) {
+      if (timeBtn.trValTimeUntil != timeUntil ||
+          timeBtn.trValPageScrolls != pageScrolls ||
+          timeBtn.trValTitle != title) {
         cTrkh.updateTimeBtn(timeBtn, title, timeUntil, pageScrolls);
       }
     }
@@ -926,9 +926,8 @@ class TimelineRenderObject extends RenderBox {
       /// Uses same [ui.ParagraphBuilder] logic as seen above.
       TimelineEntry? previous;
       for (TimelineEntry event in events) {
-        if (event.isGutterEventOccluded) {
-          continue;
-        }
+        if (event.isGutterEventOccluded) continue;
+
         if (previous != null) {
           double distance = (event.gutterEventY - previous.gutterEventY);
           if (distance > eventRadius * 2.0) {
@@ -939,11 +938,11 @@ class TimelineRenderObject extends RenderBox {
             double labelHeight = 8.5 * 2.0;
             if (distance - eventRadius * 2.0 > labelHeight) {
               ui.ParagraphBuilder builder = ui.ParagraphBuilder(
-                  ui.ParagraphStyle(
-                      textAlign: TextAlign.center,
-                      fontFamily: 'RobotoMedium',
-                      fontSize: 10.0))
-                ..pushStyle(ui.TextStyle(color: Colors.white));
+                ui.ParagraphStyle(
+                    textAlign: TextAlign.center,
+                    fontFamily: 'RobotoMedium',
+                    fontSize: 10.0),
+              )..pushStyle(ui.TextStyle(color: Colors.white));
 
               int value = (event.startMs - previous.startMs).round().abs();
               String label;
@@ -956,19 +955,24 @@ class TimelineRenderObject extends RenderBox {
 
               builder.addText(label);
               ui.Paragraph distanceParagraph = builder.build();
-              distanceParagraph
-                  .layout(ui.ParagraphConstraints(width: labelWidth));
+              distanceParagraph.layout(
+                ui.ParagraphConstraints(width: labelWidth),
+              );
 
               canvas.drawRRect(
                   RRect.fromRectAndRadius(
-                      Rect.fromLTWH(x - labelWidth / 2.0,
-                          labelY - labelHeight / 2.0, labelWidth, labelHeight),
-                      Radius.circular(labelHeight)),
+                    Rect.fromLTWH(x - labelWidth / 2.0,
+                        labelY - labelHeight / 2.0, labelWidth, labelHeight),
+                    Radius.circular(labelHeight),
+                  ),
                   accentFill);
               canvas.drawParagraph(
-                  distanceParagraph,
-                  Offset(x - labelWidth / 2.0,
-                      labelY - distanceParagraph.height / 2.0));
+                distanceParagraph,
+                Offset(
+                  x - labelWidth / 2.0,
+                  labelY - distanceParagraph.height / 2.0,
+                ),
+              );
             }
           }
         }
@@ -1015,12 +1019,14 @@ class TimelineRenderObject extends RenderBox {
 
         /// Draw the line connecting the start&point of this item on the timeline.
         canvas.drawRect(
-            Offset(x, item.y) & Size(Timeline.LineWidth, item.length),
-            legPaint);
+          Offset(x, item.y) & Size(Timeline.LineWidth, item.length),
+          legPaint,
+        );
         canvas.drawCircle(
-            Offset(x + Timeline.LineWidth / 2.0, item.y + item.length),
-            Timeline.EdgeRadius,
-            legPaint);
+          Offset(x + Timeline.LineWidth / 2.0, item.y + item.length),
+          Timeline.EdgeRadius,
+          legPaint,
+        );
       }
 
       const double MaxLabelWidth = 1200.0;
@@ -1035,7 +1041,7 @@ class TimelineRenderObject extends RenderBox {
         ..pushStyle(
             ui.TextStyle(color: const Color.fromRGBO(255, 255, 255, 1.0)));
 
-      builder.addText(item.label);
+      builder.addText(item.trValTitle);
       ui.Paragraph labelParagraph = builder.build();
       labelParagraph
           .layout(const ui.ParagraphConstraints(width: MaxLabelWidth));
@@ -1066,19 +1072,29 @@ class TimelineRenderObject extends RenderBox {
         TapTarget(
           item,
           Rect.fromLTWH(
-              bubbleX, bubbleY, textWidth + BubblePadding * 2.0, bubbleHeight),
+            bubbleX,
+            bubbleY,
+            textWidth + BubblePadding * 2.0,
+            bubbleHeight,
+          ),
         ),
       );
 
       canvas.drawParagraph(
-          labelParagraph,
-          Offset(
-              BubblePadding, bubbleHeight / 2.0 - labelParagraph.height / 2.0));
+        labelParagraph,
+        Offset(BubblePadding, bubbleHeight / 2.0 - labelParagraph.height / 2.0),
+      );
       canvas.restore();
       if (item.children != null) {
         /// Draw the other elements in the hierarchy.
-        drawItems(context, offset, item.children!, x + Timeline.DepthOffset,
-            scale, depth + 1);
+        drawItems(
+          context,
+          offset,
+          item.children!,
+          x + Timeline.DepthOffset,
+          scale,
+          depth + 1,
+        );
       }
     }
   }
@@ -1090,25 +1106,38 @@ class TimelineRenderObject extends RenderBox {
     const double CornerRadius = 10.0;
 
     const double circularConstant = 0.55;
-    const double icircularConstant = 1.0 - circularConstant;
+    const double iCircularConstant = 1.0 - circularConstant;
 
     Path path = Path();
 
     path.moveTo(CornerRadius, 0.0);
     path.lineTo(width - CornerRadius, 0.0);
-    path.cubicTo(width - CornerRadius + CornerRadius * circularConstant, 0.0,
-        width, CornerRadius * icircularConstant, width, CornerRadius);
+    path.cubicTo(
+      width - CornerRadius + CornerRadius * circularConstant,
+      0.0,
+      width,
+      CornerRadius * iCircularConstant,
+      width,
+      CornerRadius,
+    );
     path.lineTo(width, height - CornerRadius);
     path.cubicTo(
-        width,
-        height - CornerRadius + CornerRadius * circularConstant,
-        width - CornerRadius * icircularConstant,
-        height,
-        width - CornerRadius,
-        height);
+      width,
+      height - CornerRadius + CornerRadius * circularConstant,
+      width - CornerRadius * iCircularConstant,
+      height,
+      width - CornerRadius,
+      height,
+    );
     path.lineTo(CornerRadius, height);
-    path.cubicTo(CornerRadius * icircularConstant, height, 0.0,
-        height - CornerRadius * icircularConstant, 0.0, height - CornerRadius);
+    path.cubicTo(
+      CornerRadius * iCircularConstant,
+      height,
+      0.0,
+      height - CornerRadius * iCircularConstant,
+      0.0,
+      height - CornerRadius,
+    );
 
     path.lineTo(0.0, height / 2.0 + ArrowSize / 2.0);
     path.lineTo(-ArrowSize / 2.0, height / 2.0);
@@ -1116,8 +1145,14 @@ class TimelineRenderObject extends RenderBox {
 
     path.lineTo(0.0, CornerRadius);
 
-    path.cubicTo(0.0, CornerRadius * icircularConstant,
-        CornerRadius * icircularConstant, 0.0, CornerRadius, 0.0);
+    path.cubicTo(
+      0.0,
+      CornerRadius * iCircularConstant,
+      CornerRadius * iCircularConstant,
+      0.0,
+      CornerRadius,
+      0.0,
+    );
 
     path.close();
 

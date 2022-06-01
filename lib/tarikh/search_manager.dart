@@ -33,7 +33,7 @@ class SearchManager {
     /// Fill the map with all the possible searchable substrings.
     /// This operation is O(n^2), thus very slow, and performed only once upon initialization.
     for (TimelineEntry entry in entries) {
-      String label = entry.label;
+      String label = entry.trValTitle;
       int len = label.length;
       for (int i = 0; i < len; i++) {
         for (int j = i + 1; j <= len; j++) {

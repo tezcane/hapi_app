@@ -2,6 +2,8 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:hapi/main_controller.dart';
+import 'package:hapi/settings/language/language_controller.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
 import 'package:hapi/tarikh/timeline/timeline_utils.dart';
@@ -135,8 +137,12 @@ class Ticks {
         /// Every `textTickDistance`, draw a wider tick with the a label laid on top.
         if (colors != null) {
           canvas.drawRect(
-              Rect.fromLTWH(offset.dx + gutterWidth - TickSize,
-                  offset.dy + height - o, TickSize, 1.0),
+              Rect.fromLTWH(
+                offset.dx + gutterWidth - TickSize,
+                offset.dy + height - o,
+                TickSize,
+                1.0,
+              ),
               Paint()..color = colors.long);
         }
 
@@ -144,8 +150,8 @@ class Ticks {
         ui.ParagraphBuilder? builder;
         if (colors != null) {
           builder = ui.ParagraphBuilder(
-              ui.ParagraphStyle(textAlign: TextAlign.end, fontSize: 10.0))
-            ..pushStyle(ui.TextStyle(color: colors.text));
+            ui.ParagraphStyle(textAlign: TextAlign.end, fontSize: 10.0),
+          )..pushStyle(ui.TextStyle(color: colors.text));
         }
 
         int value = tt.round().abs();
@@ -155,7 +161,7 @@ class Ticks {
         if (value < 9000) {
           label = value.toStringAsFixed(0);
         } else {
-          NumberFormat formatter = NumberFormat.compact();
+          NumberFormat formatter = LanguageController.numCompactFormatter;
           label = formatter.format(value);
           int digits = formatter.significantDigits!;
           while (usedValues.contains(label) && digits < 10) {
@@ -165,22 +171,32 @@ class Ticks {
         }
         usedValues.add(label);
         if (builder != null) {
-          builder.addText(label);
+          builder.addText(cns(label));
           ui.Paragraph tickParagraph = builder.build();
 
-          tickParagraph.layout(ui.ParagraphConstraints(
-              width: gutterWidth - LabelPadLeft - LabelPadRight));
+          tickParagraph.layout(
+            ui.ParagraphConstraints(
+              width: gutterWidth - LabelPadLeft - LabelPadRight,
+            ),
+          );
           canvas.drawParagraph(
-              tickParagraph,
-              Offset(offset.dx + LabelPadLeft - LabelPadRight,
-                  offset.dy + height - o - tickParagraph.height - 5));
+            tickParagraph,
+            Offset(
+              offset.dx + LabelPadLeft - LabelPadRight,
+              offset.dy + height - o - tickParagraph.height - 5,
+            ),
+          );
         }
       } else {
         /// If we're within two text-ticks, just draw a smaller line.
         if (colors != null) {
           canvas.drawRect(
-              Rect.fromLTWH(offset.dx + gutterWidth - SmallTickSize,
-                  offset.dy + height - o, SmallTickSize, 1.0),
+              Rect.fromLTWH(
+                offset.dx + gutterWidth - SmallTickSize,
+                offset.dy + height - o,
+                SmallTickSize,
+                1.0,
+              ),
               Paint()..color = colors.short);
         }
       }

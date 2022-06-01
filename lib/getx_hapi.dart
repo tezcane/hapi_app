@@ -41,7 +41,6 @@ abstract class GetxHapi extends GetxController {
     super.onClose();
   }
 
-  // TODO still needed?
   /// Sometimes we need to run update() in another thread or there is a
   /// render/build/dirty error:
   void updateOnThread() => Timer(const Duration(seconds: 1), () => update());

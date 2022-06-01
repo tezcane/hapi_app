@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:hapi/main_controller.dart';
+import 'package:hapi/menu/menu_controller.dart';
 
 /// Draws the search bar on top of the menu.
 class SearchWidget extends StatelessWidget {
@@ -30,7 +33,7 @@ class SearchWidget extends StatelessWidget {
         focusNode: _searchFocusNode,
         textAlign: TextAlign.center, // align UI & better for arabic support
         decoration: InputDecoration(
-            hintText: 'Search history',
+            hintText: at('at.{0} Search'.tr, [NavPage.Tarikh.trKey]),
             prefixIcon: const Icon(Icons.search, size: 30),
             suffixIcon: _searchFocusNode.hasFocus
                 ? Visibility(

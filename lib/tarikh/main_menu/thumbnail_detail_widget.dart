@@ -65,12 +65,12 @@ class ThumbnailDetailWidget extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              timelineEntry.label,
+                              timelineEntry.trValTitle,
                               style: Theme.of(context).textTheme.titleLarge,
                             ),
                             const SizedBox(height: 5),
                             Text(
-                              timelineEntry.formatYearsAgo(),
+                              timelineEntry.trValYearsAgo(),
                               style: Theme.of(context).textTheme.subtitle2,
                             )
                           ]),

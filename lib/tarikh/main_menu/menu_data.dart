@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:get/get.dart';
+import 'package:hapi/main_controller.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
@@ -26,7 +28,6 @@ class MenuSectionData {
 /// Data container for all the sub-elements of the [MenuSection].
 class MenuItemData {
   MenuItemData(this.label, this.startMs, this.endMs);
-
   final String label;
   final double startMs;
   final double endMs;
@@ -34,6 +35,11 @@ class MenuItemData {
   bool pad = false;
   double padTop = 0.0;
 //double padBottom = 0.0; // not used, always 0
+
+  String get trValTitle {
+    String title = 'i.$label'.tr;
+    return title.startsWith('i.') ? a('a.$label') : title;
+  }
 
   /// When initializing this object from a [TimelineEntry], fill in the
   /// fields according to the [entry] provided. The entry in fact specifies
@@ -47,17 +53,13 @@ class MenuItemData {
       c.updateTimeBtnEntry(c.timeBtnDn, entry.next);
     });
 
-    String label = entry.label;
-
     /// Pad the edges of the screen.
     bool pad = true;
     TimelineAsset asset = entry.asset;
 
     /// Extra padding for the top base don the asset size.
     double padTop = asset.height * Timeline.AssetScreenScale;
-    if (asset is TimelineAnimatedAsset) {
-      padTop += asset.gap;
-    }
+    if (asset is TimelineAnimatedAsset) padTop += asset.gap;
 
     double start = 0;
     double end = 0;
@@ -90,7 +92,7 @@ class MenuItemData {
       end = entry.endMs + range;
     }
 
-    var menuItemData = MenuItemData(label, start, end);
+    var menuItemData = MenuItemData(entry.label, start, end);
     menuItemData.pad = pad;
     menuItemData.padTop = padTop;
 

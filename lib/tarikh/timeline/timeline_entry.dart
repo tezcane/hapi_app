@@ -3,7 +3,9 @@ import 'dart:ui';
 
 import 'package:flare_dart/math/aabb.dart' as flare;
 import 'package:flare_flutter/flare.dart' as flare;
+import 'package:get/get.dart';
 import 'package:hapi/controllers/time_controller.dart';
+import 'package:hapi/main_controller.dart';
 import 'package:nima/nima.dart' as nima;
 import 'package:nima/nima/animation/actor_animation.dart' as nima;
 import 'package:nima/nima/math/aabb.dart' as nima;
@@ -13,13 +15,7 @@ import 'package:nima/nima/math/aabb.dart' as nima;
 /// Each [TimelineAsset] encapsulates all the relevant properties for drawing,
 /// as well as maintaining a reference to its original [TimelineEntry].
 class TimelineAsset {
-  TimelineAsset(
-    this.width,
-    this.height,
-    this.filename,
-    this.scale,
-  );
-
+  TimelineAsset(this.width, this.height, this.filename, this.scale);
   final double width;
   final double height;
   final String filename;
@@ -44,13 +40,7 @@ class TimelineImage extends TimelineAsset {
     double height,
     String filename,
     double scale,
-  ) : super(
-          width,
-          height,
-          filename,
-          scale,
-        );
-
+  ) : super(width, height, filename, scale);
   final ui.Image image;
 }
 
@@ -65,13 +55,7 @@ class TimelineAnimatedAsset extends TimelineAsset {
     double height,
     String filename,
     double scale,
-  ) : super(
-          width,
-          height,
-          filename,
-          scale,
-        );
-
+  ) : super(width, height, filename, scale);
   final bool loop;
   final double offset;
   final double gap;
@@ -94,17 +78,7 @@ class TimelineFlare extends TimelineAnimatedAsset {
     double height,
     String filename,
     double scale,
-  ) : super(
-          loop,
-          offset,
-          gap,
-          0.0,
-          width,
-          height,
-          filename,
-          scale,
-        );
-
+  ) : super(loop, offset, gap, 0.0, width, height, filename, scale);
   final flare.FlutterActorArtboard actorStatic;
   final flare.FlutterActorArtboard actor;
   final flare.AABB setupAABB;
@@ -136,17 +110,7 @@ class TimelineNima extends TimelineAnimatedAsset {
     double height,
     String filename,
     double scale,
-  ) : super(
-          loop,
-          offset,
-          gap,
-          0.0,
-          width,
-          height,
-          filename,
-          scale,
-        );
-
+  ) : super(loop, offset, gap, 0.0, width, height, filename, scale);
   final nima.FlutterActor actorStatic;
   final nima.FlutterActor actor;
   final nima.AABB setupAABB;
@@ -170,25 +134,23 @@ class TimelineEntry {
     this.type,
     this.startMs,
     this.endMs,
-    this.articleFilename,
     this.asset,
     this.accent,
     this.id,
   ) {
     _handleLabelNewlineCount();
   }
-
-  static final int todaysAdTimeYears = TimeController.to.now2().year;
   final String _label;
   final TimelineEntryType type;
   final double startMs;
   final double endMs;
-  final String articleFilename;
   final TimelineAsset asset;
 
   /// not always given in json input file, thus nullable:
   Color? accent;
   String? id;
+
+  static final int todaysAdTimeYears = TimeController.to.now2().year;
 
   /// Used to calculate how many lines to draw for the bubble in the timeline.
   int lineCount = 1;
@@ -226,11 +188,19 @@ class TimelineEntry {
   /// I think it is true when one gutter event hides another
   bool isGutterEventOccluded = false;
 
-  bool get isVisible {
-    return opacity > 0.0;
+  bool get isVisible => opacity > 0.0;
+
+  /// Still needed for favorites, up/dn Btn boundary detect, etc.
+  String get label => _label;
+
+  /// The article title trKey is made from appending _label to 'i.' or 'a.'.
+  String get trValTitle {
+    String title = 'i.$_label'.tr;
+    return title.startsWith('i.') ? a('a.$_label') : title;
   }
 
-  String get label => _label;
+  /// The article trKey is made from appending _label to 't.'.
+  String get trValArticle => 't.$_label'.tr;
 
   /// Some labels have a newline characters to adjust their alignment.
   /// Detect the occurrence and add information regarding the line-count.
@@ -239,46 +209,42 @@ class TimelineEntry {
 
     int startIdx = 0;
     while (true) {
-      startIdx = _label.indexOf('\n', startIdx);
-      if (startIdx == -1) {
-        break;
-      }
+      startIdx = trValTitle.indexOf('\n', startIdx);
+      if (startIdx == -1) break;
       lineCount++; // found a new line, continue
       startIdx++; // to go past current new line
     }
   }
 
-  /// Debug information.
-  @override
-  String toString() {
-    return 'TIMELINE ENTRY: $label -($startMs,$endMs)';
-  }
+  // /// Debug information.
+  // @override
+  // String toString() => 'TIMELINE ENTRY: $label -($startMs,$endMs)';
 
   /// Pretty-printing for the entry date.
-  String formatYearsAgo({double? eventYear}) {
+  String trValYearsAgo({double? eventYear}) {
     eventYear ??= startMs;
 
-    if (eventYear <= -10000) {
-      return TimelineEntry.formatYears(startMs) + ' Ago';
-    }
+    if (eventYear <= -10000) return trValYears(startMs) + ' ' + 'i.Ago'.tr;
 
-    double yearsAgo;
-    String bc = ' AD (';
+    double trValYearsAgo;
+    String adBc = ' ${'i.AD'.tr} (';
     if (eventYear <= 0) {
-      bc = ' BC (';
-      yearsAgo = eventYear.abs() + todaysAdTimeYears;
+      adBc = ' ${'i.BC'.tr} (';
+      trValYearsAgo = eventYear.abs() + todaysAdTimeYears;
     } else {
-      yearsAgo = todaysAdTimeYears - eventYear;
+      trValYearsAgo = todaysAdTimeYears - eventYear;
     }
-    return eventYear.abs().toStringAsFixed(0) +
-        bc +
-        yearsAgo.toStringAsFixed(0) +
-        ' Years Ago)';
+    return cns(eventYear.abs().toStringAsFixed(0)) +
+        adBc +
+        cns(trValYearsAgo.toStringAsFixed(0)) +
+        ' ' +
+        'i.Years Ago'.tr +
+        ')';
   }
 
   /// Shortens large numbers, e.g. 10,000,000 returns "10 million years"
   /// Dart int supports -9223372036854775808 - 9223372036854775807
-  static String formatYears(double eventYear) {
+  String trValYears(double eventYear) {
     String label;
     int valueAbs = eventYear.round().abs();
     if (valueAbs >= 1000000000000000000) {
@@ -286,39 +252,45 @@ class TimelineEntry {
 
       label = (valueAbs / 1000000000000000000)
               .toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
-          ' Quintillion ';
+          ' ' +
+          'i.Quintillion'.tr;
     } else if (valueAbs >= 1000000000000000) {
       double v = (valueAbs / 100000000000000.0).floorToDouble() / 10.0;
 
       label = (valueAbs / 1000000000000000)
               .toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
-          ' Quadrillion ';
+          ' ' +
+          'i.Quadrillion'.tr;
     } else if (valueAbs >= 1000000000000) {
       double v = (valueAbs / 100000000000.0).floorToDouble() / 10.0;
 
       label = (valueAbs / 1000000000000)
               .toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
-          ' Trillion ';
+          ' ' +
+          'i.Trillion'.tr;
     } else if (valueAbs >= 1000000000) {
       double v = (valueAbs / 100000000.0).floorToDouble() / 10.0;
 
       label = (valueAbs / 1000000000)
               .toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
-          ' Billion';
+          ' ' +
+          'i.Billion'.tr;
     } else if (valueAbs >= 1000000) {
       double v = (valueAbs / 100000.0).floorToDouble() / 10.0;
       label =
           (valueAbs / 1000000).toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
-              ' Million';
+              ' ' +
+              'i.Million'.tr;
     } else if (valueAbs >= 10000) {
       double v = (valueAbs / 100.0).floorToDouble() / 10.0;
       label =
           (valueAbs / 1000).toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
-              ' Thousand';
+              ' ' +
+              'i.Thousand'.tr;
     } else {
-      label = valueAbs.toStringAsFixed(0);
-      return label + (label == '1' ? ' Year' : ' Years');
+      label = cns(valueAbs.toStringAsFixed(0));
+      return label + ' ' + (label == '1' ? 'i.Year'.tr : 'i.Years'.tr);
     }
-    return label + ' Years';
+    return cns(label) + ' ' + 'i.Years'.tr;
   }
 }
