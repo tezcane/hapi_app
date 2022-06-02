@@ -165,9 +165,19 @@ extension EnumUtil on QUEST {
     bool isNotInPinnedSalahRow = !ZamanController.to.isSalahRowPinned(zRow);
     if (isNotInPinnedSalahRow) return QUEST_STATE.NOT_ACTIVE_YET;
 
-    // if it is the current quest (next in line) and pinned, ACTIVE_CURR_QUEST
-    bool isQuestAtCurrIdx = ajrC.isQuestAtCurrIdx(this);
-    if (isQuestAtCurrIdx) return QUEST_STATE.ACTIVE_CURR_QUEST;
+    Z currZ = ZamanController.to.currZ;
+
+    if (ajrC.isQuestAtCurrIdx(this)) {
+      // Edge case, can't do Maghrib tasks until maghrib time comes in. We need
+      // this since Sunsetting time is active/pinned on maghrib zRow before
+      // maghrib times comes in, NOT_ACTIVE_YET
+      if (this == QUEST.MAGHRIB_FARD && currZ != Z.Maghrib) {
+        return QUEST_STATE.NOT_ACTIVE_YET;
+      } else {
+        // Normal, if current quest (next in line) and pinned, ACTIVE_CURR_QUEST
+        return QUEST_STATE.ACTIVE_CURR_QUEST;
+      }
+    }
 
     // find out if the salah's      for this pinned row are complete or not
     // find out if adhkar and dhikr for this pinned row are complete or not
@@ -185,8 +195,6 @@ extension EnumUtil on QUEST {
         if (ajrC.isNotComplete(q)) adhkarAndThikrAreComplete = false;
       }
     }
-
-    Z currZ = ZamanController.to.currZ;
 
     // if we got here: Quest's zRow is Pinned but it's not the current quest
     switch (this) {

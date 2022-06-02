@@ -310,24 +310,24 @@ class ZamanController extends GetxHapi {
   /// highlighted on UI as there are special cases on Duha and Maghrib to
   /// bold/highlight karahat cells instead of the header.
   bool isSalahRowPinned(Z z) {
-    List<Z> zs = [z]; // add Z here so don't have to insert everywhere below
+    Map<Z, String> zs = {z: ''}; // add Z here so not inserted everywhere below
 
     switch (z) {
       case Z.Fajr:
         break;
       case Z.Duha:
-        zs = [Z.Shuruq, Z.Ishraq, Z.Duha, Z.Istiwa];
+        zs.addAll({Z.Shuruq: '', Z.Ishraq: '', Z.Duha: '', Z.Istiwa: ''});
         break;
       case Z.Dhuhr:
         break;
       case Z.Asr:
         // if Asr ibadah not done, give until sunset (maghrib) to complete
         // Asr's EVENING ADHKAR, DHIKR and DUA only. Fard ends at Karahat time.
-        if (!ActiveQuestsAjrController.to.isAsrComplete) zs.add(Z.Ghurub);
+        if (!ActiveQuestsAjrController.to.isAsrComplete) zs[Z.Ghurub] = '';
         break;
       case Z.Maghrib:
         // if asr ibadah done, pin maghrib row which has Karahat time there
-        if (ActiveQuestsAjrController.to.isAsrComplete) zs.add(Z.Ghurub);
+        if (ActiveQuestsAjrController.to.isAsrComplete) zs[Z.Ghurub] = '';
         break;
       case Z.Isha:
         // if isha ibadah done, then we move to Layl times right away (we don't
@@ -341,11 +341,7 @@ class ZamanController extends GetxHapi {
         return l.E('isSalahRowPinned: Invalid Zaman "$z" given');
     }
 
-    for (Z z in zs) {
-      if (z == _currZ) return true; // zaman is active
-    }
-
-    return false; // zaman inactive
+    return zs.containsKey(_currZ); // true= zaman is active, false inactive
   }
 
   /// Break this out from isSalahRowPinned() to optimize since called so much.
