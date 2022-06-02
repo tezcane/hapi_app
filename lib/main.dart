@@ -12,29 +12,18 @@ import 'package:hapi/controllers/notification_controller.dart';
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/helpers/loading.dart';
 import 'package:hapi/main_controller.dart';
-import 'package:hapi/menu/about_ui.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/onboard/auth/auth_controller.dart';
-import 'package:hapi/onboard/auth/sign_in_ui.dart';
-import 'package:hapi/onboard/auth/sign_up_ui.dart';
 import 'package:hapi/onboard/onboarding_controller.dart';
-import 'package:hapi/onboard/onboarding_ui.dart';
 import 'package:hapi/onboard/splash_ui.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
 import 'package:hapi/quest/daily/daily_quests_controller.dart';
-import 'package:hapi/quest/quests_ui.dart';
 import 'package:hapi/settings/language/language_controller.dart';
-import 'package:hapi/settings/reset_password_ui.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 import 'package:hapi/settings/theme/theme_controller.dart';
-import 'package:hapi/settings/update_profile_ui.dart';
-import 'package:hapi/tarikh/article/tarikh_article_ui.dart';
-import 'package:hapi/tarikh/main_menu/tarikh_favorites_ui.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
-import 'package:hapi/tarikh/tarikh_ui.dart';
-import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
 //import 'package:timezone/data/latest.dart' as tz;
 //import 'package:timezone/data/latest_10y.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tz;
@@ -149,7 +138,7 @@ class MyApp extends StatelessWidget {
                   darkTheme: AppThemes.darkTheme,
                   themeMode: ThemeMode.dark,
                   initialRoute: '/',
-                  getPages: AppRoutes.routes,
+                  getPages: [GetPage(name: '/', page: () => SplashUI())],
                 ),
               ),
             ),
@@ -160,21 +149,21 @@ class MyApp extends StatelessWidget {
   }
 }
 
-/// contains the app routes.
-class AppRoutes {
-  AppRoutes._(); //this is to prevent anyone from instantiating this object
-  static final routes = [
-    GetPage(name: '/', page: () => SplashUI()),
-    GetPage(name: '/onboard', page: () => OnboardingUI()),
-    GetPage(name: '/sign-in', page: () => SignInUI()),
-    GetPage(name: '/sign-up', page: () => SignUpUI()),
-    GetPage(name: '/quest', page: () => const QuestsUI()),
-    GetPage(name: '/tarikh', page: () => const TarikhUI()),
-    GetPage(name: '/tarikh/favorite', page: () => const TarikhFavoritesUI()),
-    GetPage(name: '/tarikh/article', page: () => TarikhArticleUI()),
-    GetPage(name: '/tarikh/timeline', page: () => TarikhTimelineUI()),
-    GetPage(name: '/about', page: () => AboutUI()),
-    GetPage(name: '/about/up-prof', page: () => UpdateProfileUI()),
-    GetPage(name: '/about/up-prof/reset-pw', page: () => ResetPasswordUI()),
-  ];
-}
+// /// contains the app routes.
+// class AppRoutes {
+//   AppRoutes._(); //this is to prevent anyone from instantiating this object
+//   static final routes = [
+//     GetPage(name: '/', page: () => SplashUI()),
+//     GetPage(name: '/onboard', page: () => OnboardingUI()),
+//     GetPage(name: '/sign-in', page: () => SignInUI()),
+//     GetPage(name: '/sign-up', page: () => SignUpUI()),
+//     GetPage(name: '/quest', page: () => const QuestsUI()),
+//     GetPage(name: '/tarikh', page: () => const TarikhUI()),
+//     GetPage(name: '/tarikh/favorite', page: () => const TarikhFavoritesUI()),
+//     GetPage(name: '/tarikh/article', page: () => TarikhArticleUI()),
+//     GetPage(name: '/tarikh/timeline', page: () => TarikhTimelineUI()),
+//     GetPage(name: '/about', page: () => AboutUI()),
+//     GetPage(name: '/about/up-prof', page: () => UpdateProfileUI()),
+//     GetPage(name: '/about/up-prof/reset-pw', page: () => ResetPasswordUI()),
+//   ];
+// }
