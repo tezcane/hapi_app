@@ -1,10 +1,10 @@
 import 'package:flare_flutter/flare_actor.dart' show FlareActor;
 import 'package:flutter/material.dart';
-//import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
 import 'package:hapi/menu/fab_sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/settings/language/language_controller.dart';
 import 'package:hapi/tarikh/article/timeline_entry_widget.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
@@ -81,23 +81,21 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
       listIndent: 20.0,
       blockquotePadding: const EdgeInsets.all(20.0),
     );
+    loadMarkdown();
     setState(() {
       _trValTitle = widget.article.trValTitle;
       _trValSubTitle = widget.article.trValYearsAgo();
-      _trValArticleMarkdown = widget.article.trValArticle;
     });
   }
 
-  // /// Load the markdown file from the assets and set the contents of the page to its value.
-  // void loadMarkdown(String filename) async {
-  //   rootBundle
-  //       .loadString('assets/tarikh/Articles/' + filename)
-  //       .then((String data) {
-  //     setState(() {
-  //       _articleMarkdown = data;
-  //     });
-  //   });
-  // }
+  /// Load the markdown file from the assets and set the contents of the page to its value.
+  void loadMarkdown() async {
+    String trValArticleMarkdown =
+        await LanguageController.to.trValTarikhArticle(widget.article.label);
+    setState(() {
+      _trValArticleMarkdown = trValArticleMarkdown;
+    });
+  }
 
   /// This widget is wrapped in a [Scaffold] to have the classic Material Design visual layout structure.
   /// It uses the [BlocProvider] to find out if this element is part of the favorites, to have the icon properly set up.
@@ -220,8 +218,9 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                         color: Theme.of(context).dividerColor,
                       ),
                       MarkdownBody(
-                          data: _trValArticleMarkdown,
-                          styleSheet: _markdownStyleSheet),
+                        data: _trValArticleMarkdown,
+                        styleSheet: _markdownStyleSheet,
+                      ),
                       const SizedBox(height: 100),
                     ],
                   ),

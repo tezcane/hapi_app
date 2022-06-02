@@ -199,9 +199,6 @@ class TimelineEntry {
     return title.startsWith('i.') ? a('a.$_label') : title;
   }
 
-  /// The article trKey is made from appending _label to 't.'.
-  String get trValArticle => 't.$_label'.tr;
-
   /// Some labels have a newline characters to adjust their alignment.
   /// Detect the occurrence and add information regarding the line-count.
   _handleLabelNewlineCount() {

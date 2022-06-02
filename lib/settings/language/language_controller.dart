@@ -186,16 +186,6 @@ class LanguageController extends GetxHapi {
     return true; // language NOT supported
   }
 
-  /// Must call before Get.updateLocale() or translation it's janky
-  _clearOldAndLoadNewLangFile(String newLangKey) async {
-    final String jsonData =
-        await rootBundle.loadString('assets/i18n/$newLangKey.json');
-    final Map<String, dynamic> jsonMap = json.decode(jsonData);
-    final Map<String, String> trMap = Map<String, String>.from(jsonMap);
-    Get.clearTranslations();
-    Get.addTranslations({newLangKey: trMap});
-  }
-
   /// Updates the language used in the app, instantly changes all text.
   updateLanguage(String newLangKey) async {
     if (_isNotSupportedLanguage(newLangKey)) {
@@ -242,5 +232,29 @@ class LanguageController extends GetxHapi {
     _pm = ' ' + 'i.PM'.tr; // tr ok
 
     TimeController.to.updateDaysOfWeek(); // needed to convert SunRing dates
+  }
+
+  /// Must call before Get.updateLocale() or translation it's janky
+  _clearOldAndLoadNewLangFile(String newLangKey) async {
+    final Map<String, String> trMap = await getTrMap('', newLangKey);
+    Get.clearTranslations();
+    Get.addTranslations({newLangKey: trMap});
+  }
+
+  /// The article trKey is made from appending label to 't.'. It is also
+  /// taken in real time from the i18n/tarikh_articles/ to not use up memory.
+  Future<String> trValTarikhArticle(String label) async {
+    return (await getTrMap('tarikh_articles/', currLangKey))['t.$label']!;
+  }
+
+  /// Get translation map.
+  static Future<Map<String, String>> getTrMap(
+      String path,
+      String langKey,
+      ) async {
+    final String jsonData =
+    await rootBundle.loadString('assets/i18n/$path$langKey.json');
+    final Map<String, dynamic> jsonMap = json.decode(jsonData);
+    return Map<String, String>.from(jsonMap);
   }
 }
