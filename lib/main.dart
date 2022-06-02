@@ -130,7 +130,7 @@ class MyApp extends StatelessWidget {
                   // navigatorObservers: [ // TODO
                   //   // FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
                   // ],
-                  debugShowCheckedModeBanner: false,
+                  // debugShowCheckedModeBanner: false,
                   // Also set in MenuC, but we do here for sign in/out pages:
                   defaultTransition: Transition.fade,
                   transitionDuration: const Duration(milliseconds: 1000),

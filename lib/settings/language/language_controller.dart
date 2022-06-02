@@ -31,7 +31,7 @@ final List<SettingsOption> languageOptions = [
   SettingsOption('gu', 'Gujarati - ગુજરાત'), // Gujarati
 //SettingsOption('he', 'Hebrew - '), // Hebrew TODO
   SettingsOption('hi', 'Hindi - हिन्दी'), // Hindi-Devanagari
-  SettingsOption('in', 'Indonesian - Bahasa Indonesia'), // Indonesian
+  SettingsOption('id', 'Indonesian - Bahasa Indonesia'), // Indonesian
   SettingsOption('it', 'Italian - Italiano'), // Italian
   SettingsOption('ja', 'Japanese - 日本語'), //Japanese
   SettingsOption('kk', 'Kazakh - Қазақ'), // Kazakh
@@ -143,9 +143,9 @@ class LanguageController extends GetxHapi {
     if (deviceLocal != null) {
       currentLanguage ??= _findLangCode(2, deviceLocal.toLanguageTag());
       currentLanguage ??= _findLangCode(3, deviceLocal.languageCode);
-      currentLanguage ??= _findLangCode(3, deviceLocal.scriptCode);
-      currentLanguage ??= _findLangCode(3, deviceLocal.countryCode);
-      currentLanguage ??= _findLangCode(3, deviceLocal.toString());
+      currentLanguage ??= _findLangCode(4, deviceLocal.scriptCode);
+      currentLanguage ??= _findLangCode(5, deviceLocal.countryCode);
+      currentLanguage ??= _findLangCode(6, deviceLocal.toString());
     }
 
     if (currentLanguage == null) {
@@ -220,7 +220,14 @@ class LanguageController extends GetxHapi {
     _arabicScriptLangs[newLangKey] ?? false
         ? HijriCalendar.setLocal('ar') // supports ar or en only
         : HijriCalendar.setLocal('en'); // switch out Arabic script, if was set
-    numCompactFormatter = NumberFormat.compact(locale: newLangKey);
+
+    try {
+      numCompactFormatter = NumberFormat.compact(locale: newLangKey);
+    } catch (e) {
+      l.e('$newLangKey is not supported by NumberFormat, default to use "en"');
+      numCompactFormatter = NumberFormat.compact(locale: 'en');
+    }
+
     _isRightToLeftLang = _nonLeftToRightLangs[newLangKey] ?? false;
     _isEnNumerals = _nonEnNumeralLangs[newLangKey] == null;
     if (_isEnNumerals) {
@@ -234,9 +241,17 @@ class LanguageController extends GetxHapi {
     TimeController.to.updateDaysOfWeek(); // needed to convert SunRing dates
   }
 
+  /// Get translation map.
+  Future<Map<String, String>> _getTrMap(String path, String langKey) async {
+    final String jsonData =
+        await rootBundle.loadString('assets/i18n/$path$langKey.json');
+    final Map<String, dynamic> jsonMap = json.decode(jsonData);
+    return Map<String, String>.from(jsonMap);
+  }
+
   /// Must call before Get.updateLocale() or translation it's janky
   _clearOldAndLoadNewLangFile(String newLangKey) async {
-    final Map<String, String> trMap = await getTrMap('', newLangKey);
+    final Map<String, String> trMap = await _getTrMap('', newLangKey);
     Get.clearTranslations();
     Get.addTranslations({newLangKey: trMap});
   }
@@ -244,17 +259,6 @@ class LanguageController extends GetxHapi {
   /// The article trKey is made from appending label to 't.'. It is also
   /// taken in real time from the i18n/tarikh_articles/ to not use up memory.
   Future<String> trValTarikhArticle(String label) async {
-    return (await getTrMap('tarikh_articles/', currLangKey))['t.$label']!;
-  }
-
-  /// Get translation map.
-  static Future<Map<String, String>> getTrMap(
-      String path,
-      String langKey,
-      ) async {
-    final String jsonData =
-    await rootBundle.loadString('assets/i18n/$path$langKey.json');
-    final Map<String, dynamic> jsonMap = json.decode(jsonData);
-    return Map<String, String>.from(jsonMap);
+    return (await _getTrMap('tarikh_articles/', currLangKey))['t.$label']!;
   }
 }
