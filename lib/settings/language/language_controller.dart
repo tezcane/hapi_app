@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/getx_hapi.dart';
@@ -126,9 +128,9 @@ class LanguageController extends GetxHapi {
   String get pm => _pm;
 
   @override
-  void onInit() {
+  void onInit() async {
     super.onInit();
-    updateLanguage(_findLanguage());
+    await updateLanguage(_findLanguage());
   }
 
   /// Retrieves and Sets language based on device settings
@@ -184,6 +186,16 @@ class LanguageController extends GetxHapi {
     return true; // language NOT supported
   }
 
+  /// Must call before Get.updateLocale() or translation it's janky
+  _clearOldAndLoadNewLangFile(String newLangKey) async {
+    final String jsonData =
+        await rootBundle.loadString('assets/i18n/$newLangKey.json');
+    final Map<String, dynamic> jsonMap = json.decode(jsonData);
+    final Map<String, String> trMap = Map<String, String>.from(jsonMap);
+    Get.clearTranslations();
+    Get.addTranslations({newLangKey: trMap});
+  }
+
   /// Updates the language used in the app, instantly changes all text.
   updateLanguage(String newLangKey) async {
     if (_isNotSupportedLanguage(newLangKey)) {
@@ -192,10 +204,12 @@ class LanguageController extends GetxHapi {
     }
 
     try {
+      await _clearOldAndLoadNewLangFile(newLangKey);
       await Get.updateLocale(Locale(newLangKey)); // calls Get.forceAppUpdate()
     } catch (error) {
       l.e('updateLanguage: updateLocale call failed, the language "$newLangKey" is not supported, using default "$defaultLangKey"');
       newLangKey = defaultLangKey;
+      _clearOldAndLoadNewLangFile(newLangKey);
       await Get.updateLocale(Locale(newLangKey)); // calls Get.forceAppUpdate()
     }
 

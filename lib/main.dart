@@ -26,7 +26,6 @@ import 'package:hapi/quest/active/zaman_controller.dart';
 import 'package:hapi/quest/daily/daily_quests_controller.dart';
 import 'package:hapi/quest/quests_ui.dart';
 import 'package:hapi/settings/language/language_controller.dart';
-import 'package:hapi/settings/language/localization.g.dart';
 import 'package:hapi/settings/reset_password_ui.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 import 'package:hapi/settings/theme/theme_controller.dart';
@@ -136,9 +135,9 @@ class MyApp extends StatelessWidget {
                   );
                 }),
                 body: GetMaterialApp(
-                  translations: Localization(),
-                  //locale: c.getLocale, // we set in LanguageController
-                  fallbackLocale: const Locale('en', 'US'), // uses if .tr fails
+                  // translations: Localization(),
+                  // locale: c.getLocale, // we set in LanguageController
+                  // fallbackLocale: const Locale('en', 'US'), // uses if .tr fails
                   // navigatorObservers: [ // TODO
                   //   // FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
                   // ],
