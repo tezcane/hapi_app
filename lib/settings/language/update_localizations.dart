@@ -9,7 +9,7 @@ import 'package:http/http.dart' as http;
 void main() async {
   //the document id for your google sheet
   const String documentId = '17UktLwAEDS01i_XYqIULRvj6UMDsA6mY0mOcXTYTXYA';
-//the sheetid of your google sheet
+  //the sheetId of your google sheet
   const String sheetId = '0';
 
   const String url =
@@ -87,8 +87,9 @@ void main() async {
     }
 
     //_updateLocalizationFile(localizations); // obsolete, uses too much memory
-    _updateTranslationFiles(localizations, true);
-    _updateTranslationFiles(localizations, false);
+    await _updateTranslationFiles(localizations, true, false);
+    await _updateTranslationFiles(localizations, true, true);
+    await _updateTranslationFiles(localizations, false, false);
   } catch (e) {
     //output error
     stderr.writeln('error: networking error');
@@ -101,10 +102,13 @@ void main() async {
 /// filterTarikhArticles is true, otherwise add them to $path.
 Future _updateTranslationFiles(
   List<LocalizationModel> localizations,
-  filterTarikhArticles,
+  bool filterTarikhArticles,
+  bool createArabicFile,
 ) async {
   int count = 0;
   for (var localization in localizations) {
+    if (createArabicFile && localization.language != 'ar') continue;
+
     count++;
     String text = '{';
     for (var phrase in localization.phrases) {
@@ -113,8 +117,12 @@ Future _updateTranslationFiles(
       if (filterTarikhArticles) {
         if (phrase.key.startsWith('t.')) continue;
       } else {
-        if (!phrase.key.startsWith('t.')) continue;
+        if (!createArabicFile) {
+          if (!phrase.key.startsWith('t.')) continue;
+        }
       }
+
+      if (createArabicFile && !phrase.key.startsWith('a.')) continue;
 
       String phraseKey =
           phrase.key.replaceAll(r'"', '\\"').replaceAll('\n', '\\n');
@@ -128,7 +136,8 @@ Future _updateTranslationFiles(
     text += '\n}\n';
 
     String path = filterTarikhArticles ? '' : 'tarikh_articles/';
-    String filename = '../../../assets/i18n/$path${localization.language}.json';
+    String filePrefix = !createArabicFile ? localization.language : 'a';
+    String filename = '../../../assets/i18n/$path$filePrefix.json';
     stdout.writeln('Saving $filename');
     final file = File(filename);
     await file.writeAsString(text);
