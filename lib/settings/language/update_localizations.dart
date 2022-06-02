@@ -20,7 +20,7 @@ void main() async {
   stdout.writeln('Downloading Google sheet url "$url" ...');
   stdout.writeln('---------------------------------------');
 
-  String _phraseKey = '';
+  String phraseKey = '';
   List<LocalizationModel> localizations = [];
 
   try {
@@ -65,20 +65,20 @@ void main() async {
 
       row.forEach((key, value) {
         if (key == 'key') {
-          _phraseKey = value;
+          phraseKey = value;
         } else {
-          bool _languageAdded = false;
+          bool languageAdded = false;
           for (var element in localizations) {
             if (element.language == key) {
-              element.phrases.add(PhraseModel(key: _phraseKey, phrase: value));
-              _languageAdded = true;
+              element.phrases.add(PhraseModel(key: phraseKey, phrase: value));
+              languageAdded = true;
             }
           }
-          if (_languageAdded == false) {
+          if (languageAdded == false) {
             localizations.add(
               LocalizationModel(
                 language: key,
-                phrases: [PhraseModel(key: _phraseKey, phrase: value)],
+                phrases: [PhraseModel(key: phraseKey, phrase: value)],
               ),
             );
           }
@@ -86,8 +86,8 @@ void main() async {
       });
     }
 
-    //updateLocalizationFile(localizations); // obsolete, uses too much memory
-    updateLocalizationFiles(localizations);
+    updateLocalizationFile(localizations); // obsolete, uses too much memory
+    //updateLocalizationFiles(localizations);
   } catch (e) {
     //output error
     stderr.writeln('error: networking error');
@@ -101,24 +101,23 @@ Future updateLocalizationFiles(List<LocalizationModel> localizations) async {
   int count = 0;
   for (var localization in localizations) {
     count++;
-    String _currentLanguageTextCode = '{';
-    for (var _phrase in localization.phrases) {
-      String _phraseKey =
-          _phrase.key.replaceAll(r'"', '\\"').replaceAll('\n', '\\n');
-      String _phrasePhrase =
-          _phrase.phrase.replaceAll(r'"', '\\"').replaceAll('\n', '\\n');
-      String _currentPhraseTextCode = '\n"$_phraseKey": "$_phrasePhrase",';
-      _currentLanguageTextCode += _currentPhraseTextCode;
+    String text = '{';
+    for (var phrase in localization.phrases) {
+      String phraseKey =
+          phrase.key.replaceAll(r'"', '\\"').replaceAll('\n', '\\n');
+      String phrasePhrase =
+          phrase.phrase.replaceAll(r'"', '\\"').replaceAll('\n', '\\n');
+      String currentPhraseTextCode = '\n"$phraseKey": "$phrasePhrase",';
+      text += currentPhraseTextCode;
     }
     // Remove last comma
-    _currentLanguageTextCode = _currentLanguageTextCode.substring(
-        0, _currentLanguageTextCode.length - 1);
-    _currentLanguageTextCode += '\n}\n';
+    text = text.substring(0, text.length - 1);
+    text += '\n}\n';
 
     String filename = '../../../assets/i18n/${localization.language}.json';
     stdout.writeln('Saving $filename');
     final file = File(filename);
-    await file.writeAsString(_currentLanguageTextCode);
+    await file.writeAsString(text);
   }
   stdout.writeln('Done writing $count json files');
 }
@@ -126,40 +125,37 @@ Future updateLocalizationFiles(List<LocalizationModel> localizations) async {
 /// Creates a single dart file with all translations, ok if your app is small
 /// but if you have lots of translation it takes up too much memory.
 Future updateLocalizationFile(List<LocalizationModel> localizations) async {
-  String _localizationFile = """import 'package:get/get.dart';
+  String localizationFile = """import 'package:get/get.dart';
 
 class Localization extends Translations {
   @override
   Map<String, Map<String, String>> get keys => {
     """;
 
-  for (var _localization in localizations) {
-    String _language = _localization.language;
-    String _currentLanguageTextCode = "'$_language': {\n";
-    _localizationFile = _localizationFile + _currentLanguageTextCode;
-    for (var _phrase in _localization.phrases) {
-      String _phraseKey =
-          _phrase.key.replaceAll(r"'", "\\'").replaceAll('\n', '\\n');
-      String _phrasePhrase =
-          _phrase.phrase.replaceAll(r"'", "\\'").replaceAll('\n', '\\n');
-      String _currentPhraseTextCode = "'$_phraseKey': '$_phrasePhrase',\n";
-      _localizationFile = _localizationFile + _currentPhraseTextCode;
+  for (var localization in localizations) {
+    String language = localization.language;
+    localizationFile += "'$language': {\n";
+    for (var phrase in localization.phrases) {
+      String phraseKey =
+          phrase.key.replaceAll(r"'", "\\'").replaceAll('\n', '\\n');
+      String phrasePhrase =
+          phrase.phrase.replaceAll(r"'", "\\'").replaceAll('\n', '\\n');
+      String currentPhraseTextCode = "'$phraseKey': '$phrasePhrase',\n";
+      localizationFile += currentPhraseTextCode;
     }
-    String _currentLanguageCodeEnding = '},\n';
-    _localizationFile = _localizationFile + _currentLanguageCodeEnding;
+    localizationFile += '},\n';
   }
-  String _fileEnding = '''
-        };
-      }
-      ''';
-  _localizationFile = _localizationFile + _fileEnding;
+  localizationFile += '''
+  };
+}
+''';
 
   stdout.writeln('');
   stdout.writeln('---------------------------------------');
   stdout.writeln('Saving localization.g.dart');
   stdout.writeln('---------------------------------------');
   final file = File('localization.g.dart');
-  await file.writeAsString(_localizationFile);
+  await file.writeAsString(localizationFile);
   stdout.writeln('Done...');
 }
 
