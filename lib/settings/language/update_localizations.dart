@@ -86,8 +86,9 @@ void main() async {
       });
     }
 
-    updateLocalizationFile(localizations); // obsolete, uses too much memory
-    //updateLocalizationFiles(localizations);
+    //_updateLocalizationFile(localizations); // obsolete, uses too much memory
+    _updateTranslationFiles(localizations, true);
+    _updateTranslationFiles(localizations, false);
   } catch (e) {
     //output error
     stderr.writeln('error: networking error');
@@ -96,13 +97,25 @@ void main() async {
 }
 
 /// Creates multiple json files with all translations. App must load each one
-/// when the language preference updates.
-Future updateLocalizationFiles(List<LocalizationModel> localizations) async {
+/// when the language preference updates. We filter out "t." tarikh articles if
+/// filterTarikhArticles is true, otherwise add them to $path.
+Future _updateTranslationFiles(
+  List<LocalizationModel> localizations,
+  filterTarikhArticles,
+) async {
   int count = 0;
   for (var localization in localizations) {
     count++;
     String text = '{';
     for (var phrase in localization.phrases) {
+      if (phrase.key.startsWith('dummy.')) continue;
+
+      if (filterTarikhArticles) {
+        if (phrase.key.startsWith('t.')) continue;
+      } else {
+        if (!phrase.key.startsWith('t.')) continue;
+      }
+
       String phraseKey =
           phrase.key.replaceAll(r'"', '\\"').replaceAll('\n', '\\n');
       String phrasePhrase =
@@ -114,7 +127,8 @@ Future updateLocalizationFiles(List<LocalizationModel> localizations) async {
     text = text.substring(0, text.length - 1);
     text += '\n}\n';
 
-    String filename = '../../../assets/i18n/${localization.language}.json';
+    String path = filterTarikhArticles ? '' : 'tarikh_articles/';
+    String filename = '../../../assets/i18n/$path${localization.language}.json';
     stdout.writeln('Saving $filename');
     final file = File(filename);
     await file.writeAsString(text);
