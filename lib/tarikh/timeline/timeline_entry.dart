@@ -40,7 +40,7 @@ class TimelineImage extends TimelineAsset {
     String filename,
     double scale,
   ) : super(width, height, filename, scale);
-  final ui.Image image;
+  final Image image;
 }
 
 /// This asset also has information regarding its animations.
