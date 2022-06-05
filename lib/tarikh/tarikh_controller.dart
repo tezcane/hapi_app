@@ -240,9 +240,9 @@ class TarikhController extends GetxHapi {
   }
 
   void updateTimeBtnEntry(TimeBtn timeBtn, TimelineEntry? entry) {
-    String trValTitle = ' '; // these can't be blank/'' because of FittedBox
-    String trValTimeUntil = ' ';
-    String trValPageScrolls = ' ';
+    String trValTitle = '';
+    String trValTimeUntil = '';
+    String trValPageScrolls = '';
 
     if (entry != null) {
       trValTitle = entry.trValTitle;

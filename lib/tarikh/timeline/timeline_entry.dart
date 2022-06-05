@@ -1,4 +1,3 @@
-import 'dart:ui' as ui;
 import 'dart:ui';
 
 import 'package:flare_dart/math/aabb.dart' as flare;

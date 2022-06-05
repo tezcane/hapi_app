@@ -22,21 +22,19 @@ class ThumbnailWidget extends StatelessWidget {
     if (asset is TimelineImage) {
       thumbnail = RawImage(image: asset.image);
     } else if (asset is TimelineNima || asset is TimelineFlare) {
-      /// If not, retrieve the image from the Nima/Flare [TimelineAsset], and set it as inactive (i.e. a static image).
-      thumbnail = TimelineEntryWidget(
-        isActive: false,
-        timelineEntry: entry,
-      );
+      /// If not, retrieve the image from the Nima/Flare [TimelineAsset], and
+      /// set it as inactive (i.e. a static image).
+      /// TODO turn active on/off?
+      thumbnail = TimelineEntryWidget(isActive: false, timelineEntry: entry);
     } else {
-      thumbnail = Container(
-        color: Colors.transparent,
-      );
+      thumbnail = Container(color: Colors.transparent);
     }
 
     return SizedBox(
-        width: radius * 2,
-        height: radius * 2,
-        child: ClipPath(clipper: CircleClipper(), child: thumbnail));
+      width: radius * 4,
+      height: radius * 4,
+      child: ClipPath(clipper: CircleClipper(), child: thumbnail),
+    );
   }
 }
 
@@ -45,9 +43,12 @@ class CircleClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     return Path()
-      ..addOval(Rect.fromCircle(
+      ..addOval(
+        Rect.fromCircle(
           center: Offset(size.width / 2, size.height / 2),
-          radius: size.width / 2));
+          radius: size.width / 2,
+        ),
+      );
   }
 
   @override

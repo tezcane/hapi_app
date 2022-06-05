@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flare_dart/math/aabb.dart' as flare;
 import 'package:flutter/material.dart';
 import 'package:hapi/main_controller.dart';
+import 'package:hapi/settings/language/language_controller.dart';
 import 'package:hapi/settings/theme/app_themes.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
@@ -87,6 +88,22 @@ class TimelineRenderObject extends RenderBox {
     Color.fromARGB(255, 128, 28, 15)
   ];
 
+  static const double MaxLabelWidth = 1200.0;
+  static const double BubblePadding = 20.0;
+
+  static const double fullMargin = 50.0;
+  static const double eventRadius = 26.0; //was 20
+  static const double padEvents = 20.0;
+
+  static final Paint accentPaint = Paint()
+    ..color = AppThemes.eventsGutterAccent
+    ..style = PaintingStyle.stroke
+    ..strokeWidth = 2.0;
+  static final Paint accentFill = Paint()
+    ..color = AppThemes.eventsGutterAccent
+    ..style = PaintingStyle.fill;
+  static final Paint whitePaint = Paint()..color = Colors.white;
+
   double _topOverlap = 0.01; //.01 since check below, we use 0.0 by default now
   final Ticks _ticks = Ticks();
   MenuItemData? _focusItem;
@@ -108,9 +125,7 @@ class TimelineRenderObject extends RenderBox {
   MenuItemData? get focusItem => _focusItem;
 
   set topOverlap(double value) {
-    if (_topOverlap == value) {
-      return;
-    }
+    if (_topOverlap == value) return;
     _topOverlap = value;
     updateFocusItem();
     markNeedsPaint();
@@ -119,9 +134,7 @@ class TimelineRenderObject extends RenderBox {
 
   /// Tez: was set timeline(Timeline? value) TODO search old code of any usage of this
   set needsRepaint(bool value) {
-    if (_needsRepaint == value) {
-      return;
-    }
+    if (_needsRepaint == value) return;
     _needsRepaint = value;
     updateFocusItem();
     t.onNeedPaint = markNeedsPaint;
@@ -130,9 +143,7 @@ class TimelineRenderObject extends RenderBox {
   }
 
   set focusItem(MenuItemData? value) {
-    if (_focusItem == value) {
-      return;
-    }
+    if (_focusItem == value) return;
     _focusItem = value;
     _processedFocusItem = null;
     updateFocusItem();
@@ -140,13 +151,9 @@ class TimelineRenderObject extends RenderBox {
 
   /// If [_focusItem] has been updated with a new value, update the current view.
   void updateFocusItem() {
-    if (_processedFocusItem == _focusItem) {
-      return;
-    }
+    if (_processedFocusItem == _focusItem) return;
     // Tez: was also checking timeline == null:
-    if (_focusItem == null || topOverlap == 0.0) {
-      return;
-    }
+    if (_focusItem == null || topOverlap == 0.0) return;
 
     /// Adjust the current timeline padding and consequently the viewport.
     if (_focusItem!.pad) {
@@ -184,15 +191,11 @@ class TimelineRenderObject extends RenderBox {
   }
 
   @override
-  void performResize() {
-    size = constraints.biggest;
-  }
+  void performResize() => size = constraints.biggest;
 
   /// Adjust the viewport when needed.
   @override
-  void performLayout() {
-    t.setViewport(height: size.height, animate: true);
-  }
+  void performLayout() => t.setViewport(height: size.height, animate: true);
 
   @override
   void paint(PaintingContext context, Offset offset) {
@@ -222,7 +225,11 @@ class TimelineRenderObject extends RenderBox {
       /// Fill Background.
       backgroundPaint = ui.Paint()
         ..shader = ui.Gradient.linear(
-            ui.Offset(0.0, y1), ui.Offset(0.0, y2), colors, stops)
+          ui.Offset(0.0, y1),
+          ui.Offset(0.0, y2),
+          colors,
+          stops,
+        )
         ..style = ui.PaintingStyle.fill;
 
       if (y1 > offset.dy) {
@@ -255,14 +262,15 @@ class TimelineRenderObject extends RenderBox {
           /// Draw the correct asset.
           if (asset is TimelineImage) {
             canvas.drawImageRect(
-                asset.image,
-                Rect.fromLTWH(0.0, 0.0, asset.width, asset.height),
-                Rect.fromLTWH(
-                    offset.dx + size.width - w, asset.y, w * rs, h * rs),
-                Paint()
-                  ..isAntiAlias = true
-                  ..filterQuality = ui.FilterQuality.low
-                  ..color = Colors.white.withOpacity(asset.opacity));
+              asset.image,
+              Rect.fromLTWH(0.0, 0.0, asset.width, asset.height),
+              Rect.fromLTWH(
+                  offset.dx + size.width - w, asset.y, w * rs, h * rs),
+              Paint()
+                ..isAntiAlias = true
+                ..filterQuality = ui.FilterQuality.low
+                ..color = Colors.white.withOpacity(asset.opacity),
+            );
           } else if (asset is TimelineNima) {
             /// If we have a [TimelineNima] asset, set it up properly and paint it.
             ///
@@ -270,7 +278,7 @@ class TimelineRenderObject extends RenderBox {
             /// An Axis-Aligned Bounding Box (AABB) is already set up when the asset is first loaded.
             /// We rely on this AABB to perform screen-space calculations.
             Alignment alignment = Alignment.center;
-            BoxFit fit = BoxFit.cover;
+            // BoxFit fit = BoxFit.cover;
 
             nima.AABB bounds = asset.setupAABB;
 
@@ -294,38 +302,38 @@ class TimelineRenderObject extends RenderBox {
             /// This widget is always set up to use [BoxFit.cover].
             /// But this behavior can be customized according to anyone's needs.
             /// The following switch/case contains all the various alternatives native to Flutter.
-            switch (fit) {
-              case BoxFit.fill:
-                scaleX = renderSize.width / contentWidth;
-                scaleY = renderSize.height / contentHeight;
-                break;
-              case BoxFit.contain:
-                double minScale = min(renderSize.width / contentWidth,
-                    renderSize.height / contentHeight);
-                scaleX = scaleY = minScale;
-                break;
-              case BoxFit.cover:
-                double maxScale = max(renderSize.width / contentWidth,
-                    renderSize.height / contentHeight);
-                scaleX = scaleY = maxScale;
-                break;
-              case BoxFit.fitHeight:
-                double minScale = renderSize.height / contentHeight;
-                scaleX = scaleY = minScale;
-                break;
-              case BoxFit.fitWidth:
-                double minScale = renderSize.width / contentWidth;
-                scaleX = scaleY = minScale;
-                break;
-              case BoxFit.none:
-                scaleX = scaleY = 1.0;
-                break;
-              case BoxFit.scaleDown:
-                double minScale = min(renderSize.width / contentWidth,
-                    renderSize.height / contentHeight);
-                scaleX = scaleY = minScale < 1.0 ? minScale : 1.0;
-                break;
-            }
+            // switch (fit) {
+            //   case BoxFit.fill:
+            //     scaleX = renderSize.width / contentWidth;
+            //     scaleY = renderSize.height / contentHeight;
+            //     break;
+            //   case BoxFit.contain:
+            //     double minScale = min(renderSize.width / contentWidth,
+            //         renderSize.height / contentHeight);
+            //     scaleX = scaleY = minScale;
+            //     break;
+            //   case BoxFit.cover:
+            double maxScale = max(renderSize.width / contentWidth,
+                renderSize.height / contentHeight);
+            scaleX = scaleY = maxScale;
+            //     break;
+            //   case BoxFit.fitHeight:
+            //     double minScale = renderSize.height / contentHeight;
+            //     scaleX = scaleY = minScale;
+            //     break;
+            //   case BoxFit.fitWidth:
+            //     double minScale = renderSize.width / contentWidth;
+            //     scaleX = scaleY = minScale;
+            //     break;
+            //   case BoxFit.none:
+            //     scaleX = scaleY = 1.0;
+            //     break;
+            //   case BoxFit.scaleDown:
+            //     double minScale = min(renderSize.width / contentWidth,
+            //         renderSize.height / contentHeight);
+            //     scaleX = scaleY = minScale < 1.0 ? minScale : 1.0;
+            //     break;
+            // }
 
             /// 2. Move the [canvas] to the right position so that the widget's position
             /// is center-aligned based on its offset, size and alignment position.
@@ -359,7 +367,7 @@ class TimelineRenderObject extends RenderBox {
             /// An Axis-Aligned Bounding Box (AABB) is already set up when the asset is first loaded.
             /// We rely on this AABB to perform screen-space calculations.
             Alignment alignment = Alignment.center;
-            BoxFit fit = BoxFit.cover;
+            // BoxFit fit = BoxFit.cover;
 
             flare.AABB bounds = asset.setupAABB;
             double contentWidth = bounds[2] - bounds[0];
@@ -382,38 +390,38 @@ class TimelineRenderObject extends RenderBox {
             /// This widget is always set up to use [BoxFit.cover].
             /// But this behavior can be customized according to anyone's needs.
             /// The following switch/case contains all the various alternatives native to Flutter.
-            switch (fit) {
-              case BoxFit.fill:
-                scaleX = renderSize.width / contentWidth;
-                scaleY = renderSize.height / contentHeight;
-                break;
-              case BoxFit.contain:
-                double minScale = min(renderSize.width / contentWidth,
-                    renderSize.height / contentHeight);
-                scaleX = scaleY = minScale;
-                break;
-              case BoxFit.cover:
-                double maxScale = max(renderSize.width / contentWidth,
-                    renderSize.height / contentHeight);
-                scaleX = scaleY = maxScale;
-                break;
-              case BoxFit.fitHeight:
-                double minScale = renderSize.height / contentHeight;
-                scaleX = scaleY = minScale;
-                break;
-              case BoxFit.fitWidth:
-                double minScale = renderSize.width / contentWidth;
-                scaleX = scaleY = minScale;
-                break;
-              case BoxFit.none:
-                scaleX = scaleY = 1.0;
-                break;
-              case BoxFit.scaleDown:
-                double minScale = min(renderSize.width / contentWidth,
-                    renderSize.height / contentHeight);
-                scaleX = scaleY = minScale < 1.0 ? minScale : 1.0;
-                break;
-            }
+            // switch (fit) {
+            //   case BoxFit.fill:
+            //     scaleX = renderSize.width / contentWidth;
+            //     scaleY = renderSize.height / contentHeight;
+            //     break;
+            //   case BoxFit.contain:
+            //     double minScale = min(renderSize.width / contentWidth,
+            //         renderSize.height / contentHeight);
+            //     scaleX = scaleY = minScale;
+            //     break;
+            //   case BoxFit.cover:
+            double maxScale = max(renderSize.width / contentWidth,
+                renderSize.height / contentHeight);
+            scaleX = scaleY = maxScale;
+            //     break;
+            //   case BoxFit.fitHeight:
+            //     double minScale = renderSize.height / contentHeight;
+            //     scaleX = scaleY = minScale;
+            //     break;
+            //   case BoxFit.fitWidth:
+            //     double minScale = renderSize.width / contentWidth;
+            //     scaleX = scaleY = minScale;
+            //     break;
+            //   case BoxFit.none:
+            //     scaleX = scaleY = 1.0;
+            //     break;
+            //   case BoxFit.scaleDown:
+            //     double minScale = min(renderSize.width / contentWidth,
+            //         renderSize.height / contentHeight);
+            //     scaleX = scaleY = minScale < 1.0 ? minScale : 1.0;
+            //     break;
+            // }
 
             /// 2. Move the [canvas] to the right position so that the widget's position
             /// is center-aligned based on its offset, size and alignment position.
@@ -701,25 +709,13 @@ class TimelineRenderObject extends RenderBox {
     if (cTrkh.isGutterModeAll) events = cTrkh.events;
 
     if (!cTrkh.isGutterModeOff && events.isNotEmpty) {
-      Paint accentPaint = Paint()
-        ..color = AppThemes.eventsGutterAccent
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = 2.0;
-      Paint accentFill = Paint()
-        ..color = AppThemes.eventsGutterAccent
-        ..style = PaintingStyle.fill;
-      Paint whitePaint = Paint()..color = Colors.white;
       double scale = t.computeScale(t.renderStart, t.renderEnd);
-      double fullMargin = 50.0;
-      double eventRadius = 26.0; //was 20
       double fullMarginOffset = fullMargin + eventRadius + 16.5; //was 11.0
       double x = offset.dx -
           fullMargin +
           (t.gutterWidth - Timeline.GutterLeft) /
               (Timeline.GutterLeftExpanded - Timeline.GutterLeft) *
               fullMarginOffset;
-
-      double padEvents = 20.0;
 
       /// Order events by distance from mid.
       List<TimelineEntry> nearbyEvents = List<TimelineEntry>.from(events);
@@ -732,19 +728,13 @@ class TimelineRenderObject extends RenderBox {
       for (int i = 0; i < nearbyEvents.length; i++) {
         TimelineEntry event = nearbyEvents[i];
         double y = ((event.startMs - t.renderStart) * scale).clamp(
-            offset.dy +
-                eventRadius +
-                padEvents +
-                GutterPadTop, //was also + topOverlap
-            offset.dy +
-                size.height -
-                eventRadius -
-                padEvents -
-                GutterPadBottom);
+          offset.dy + eventRadius + padEvents + GutterPadTop, //had + topOverlap
+          offset.dy + size.height - eventRadius - padEvents - GutterPadBottom,
+        );
         event.gutterEventY = y;
 
-        /// Check all closer events to see if this one is occluded by a previous closer one.
-        /// Works because we sorted by distance.
+        /// Check all closer events to see if this one is occluded by a previous
+        /// closer one. Works because we sorted by distance.
         event.isGutterEventOccluded = false;
         for (int j = 0; j < i; j++) {
           TimelineEntry closer = nearbyEvents[j];
@@ -757,18 +747,18 @@ class TimelineRenderObject extends RenderBox {
 
       /// Iterate the list from the bottom.
       for (TimelineEntry event in nearbyEvents.reversed) {
-        if (event.isGutterEventOccluded) {
-          continue;
-        }
+        if (event.isGutterEventOccluded) continue;
+
         double y = event.gutterEventY;
 
         /// Draw the event circle in the gutter for this item.
         canvas.drawCircle(
-            Offset(x, y),
-            eventRadius,
-            backgroundPaint ?? Paint()
-              ..color = Colors.white
-              ..style = PaintingStyle.fill);
+          Offset(x, y),
+          eventRadius,
+          backgroundPaint ?? Paint()
+            ..color = Colors.white
+            ..style = PaintingStyle.fill,
+        );
         canvas.drawCircle(Offset(x, y), eventRadius, accentPaint);
         canvas.drawCircle(Offset(x, y), eventRadius - 4.0, whitePaint);
 
@@ -778,11 +768,33 @@ class TimelineRenderObject extends RenderBox {
         Offset renderOffset = Offset(x - assetSize / 2.0, y - assetSize / 2.0);
 
         Alignment alignment = Alignment.center;
-        BoxFit fit = BoxFit.cover;
+        // BoxFit fit = BoxFit.cover;
 
         /// Draw the assets statically within the circle.
         /// Calculations here are the same as seen in [paint()] for the assets.
-        if (asset is TimelineNima) {
+        if (asset is TimelineImage) {
+          canvas.drawImageRect(
+            asset.image,
+            Rect.fromLTWH(0.0, 0.0, asset.width, asset.height),
+            Rect.fromLTWH(
+              renderOffset.dx +
+                  // renderSize.width / 2.0 +
+                  (alignment.x * renderSize.width / 2.0),
+              renderOffset.dy +
+                  // renderSize.height / 2.0 +
+                  (alignment.y * renderSize.height / 2.0),
+              32,
+              32,
+            ),
+            Paint()
+              ..isAntiAlias = true
+              ..filterQuality = ui.FilterQuality.low
+              ..color = Colors.white.withOpacity(asset.opacity),
+          );
+          _tapTargets.add(
+            TapTarget(asset.entry, renderOffset & renderSize, zoom: true),
+          );
+        } else if (asset is TimelineNima) {
           nima.AABB bounds = asset.setupAABB;
 
           double contentHeight = bounds[3] - bounds[1];
@@ -798,56 +810,62 @@ class TimelineRenderObject extends RenderBox {
           double scaleX = 1.0, scaleY = 1.0;
 
           canvas.save();
-          canvas.clipRRect(RRect.fromRectAndRadius(
-              renderOffset & renderSize, Radius.circular(eventRadius)));
+          canvas.clipRRect(
+            RRect.fromRectAndRadius(
+              renderOffset & renderSize,
+              const Radius.circular(eventRadius),
+            ),
+          );
 
-          switch (fit) {
-            case BoxFit.fill:
-              scaleX = renderSize.width / contentWidth;
-              scaleY = renderSize.height / contentHeight;
-              break;
-            case BoxFit.contain:
-              double minScale = min(renderSize.width / contentWidth,
-                  renderSize.height / contentHeight);
-              scaleX = scaleY = minScale;
-              break;
-            case BoxFit.cover:
-              double maxScale = max(renderSize.width / contentWidth,
-                  renderSize.height / contentHeight);
-              scaleX = scaleY = maxScale;
-              break;
-            case BoxFit.fitHeight:
-              double minScale = renderSize.height / contentHeight;
-              scaleX = scaleY = minScale;
-              break;
-            case BoxFit.fitWidth:
-              double minScale = renderSize.width / contentWidth;
-              scaleX = scaleY = minScale;
-              break;
-            case BoxFit.none:
-              scaleX = scaleY = 1.0;
-              break;
-            case BoxFit.scaleDown:
-              double minScale = min(renderSize.width / contentWidth,
-                  renderSize.height / contentHeight);
-              scaleX = scaleY = minScale < 1.0 ? minScale : 1.0;
-              break;
-          }
+          // switch (fit) {
+          //   case BoxFit.fill:
+          //     scaleX = renderSize.width / contentWidth;
+          //     scaleY = renderSize.height / contentHeight;
+          //     break;
+          //   case BoxFit.contain:
+          //     double minScale = min(renderSize.width / contentWidth,
+          //         renderSize.height / contentHeight);
+          //     scaleX = scaleY = minScale;
+          //     break;
+          //   case BoxFit.cover:
+          double maxScale = max(renderSize.width / contentWidth,
+              renderSize.height / contentHeight);
+          scaleX = scaleY = maxScale;
+          //     break;
+          //   case BoxFit.fitHeight:
+          //     double minScale = renderSize.height / contentHeight;
+          //     scaleX = scaleY = minScale;
+          //     break;
+          //   case BoxFit.fitWidth:
+          //     double minScale = renderSize.width / contentWidth;
+          //     scaleX = scaleY = minScale;
+          //     break;
+          //   case BoxFit.none:
+          //     scaleX = scaleY = 1.0;
+          //     break;
+          //   case BoxFit.scaleDown:
+          //     double minScale = min(renderSize.width / contentWidth,
+          //         renderSize.height / contentHeight);
+          //     scaleX = scaleY = minScale < 1.0 ? minScale : 1.0;
+          //     break;
+          // }
 
           canvas.translate(
-              renderOffset.dx +
-                  renderSize.width / 2.0 +
-                  (alignment.x * renderSize.width / 2.0),
-              renderOffset.dy +
-                  renderSize.height / 2.0 +
-                  (alignment.y * renderSize.height / 2.0));
+            renderOffset.dx +
+                renderSize.width / 2.0 +
+                (alignment.x * renderSize.width / 2.0),
+            renderOffset.dy +
+                renderSize.height / 2.0 +
+                (alignment.y * renderSize.height / 2.0),
+          );
           canvas.scale(scaleX, -scaleY);
           canvas.translate(x, y);
 
           asset.actorStatic.draw(canvas);
           canvas.restore();
           _tapTargets.add(
-              TapTarget(asset.entry, renderOffset & renderSize, zoom: true));
+            TapTarget(asset.entry, renderOffset & renderSize, zoom: true),
+          );
         } else if (asset is TimelineFlare) {
           flare.AABB bounds = asset.setupAABB;
           double contentWidth = bounds[2] - bounds[0];
@@ -863,59 +881,64 @@ class TimelineRenderObject extends RenderBox {
           double scaleX = 1.0, scaleY = 1.0;
 
           canvas.save();
-          canvas.clipRRect(RRect.fromRectAndRadius(
-              renderOffset & renderSize, Radius.circular(eventRadius)));
+          canvas.clipRRect(
+            RRect.fromRectAndRadius(
+              renderOffset & renderSize,
+              const Radius.circular(eventRadius),
+            ),
+          );
 
-          switch (fit) {
-            case BoxFit.fill:
-              scaleX = renderSize.width / contentWidth;
-              scaleY = renderSize.height / contentHeight;
-              break;
-            case BoxFit.contain:
-              double minScale = min(renderSize.width / contentWidth,
-                  renderSize.height / contentHeight);
-              scaleX = scaleY = minScale;
-              break;
-            case BoxFit.cover:
-              double maxScale = max(renderSize.width / contentWidth,
-                  renderSize.height / contentHeight);
-              scaleX = scaleY = maxScale;
-              break;
-            case BoxFit.fitHeight:
-              double minScale = renderSize.height / contentHeight;
-              scaleX = scaleY = minScale;
-              break;
-            case BoxFit.fitWidth:
-              double minScale = renderSize.width / contentWidth;
-              scaleX = scaleY = minScale;
-              break;
-            case BoxFit.none:
-              scaleX = scaleY = 1.0;
-              break;
-            case BoxFit.scaleDown:
-              double minScale = min(renderSize.width / contentWidth,
-                  renderSize.height / contentHeight);
-              scaleX = scaleY = minScale < 1.0 ? minScale : 1.0;
-              break;
-          }
+          // switch (fit) {
+          //   case BoxFit.fill:
+          //     scaleX = renderSize.width / contentWidth;
+          //     scaleY = renderSize.height / contentHeight;
+          //     break;
+          //   case BoxFit.contain:
+          //     double minScale = min(renderSize.width / contentWidth,
+          //         renderSize.height / contentHeight);
+          //     scaleX = scaleY = minScale;
+          //     break;
+          //   case BoxFit.cover:
+          double maxScale = max(
+            renderSize.width / contentWidth,
+            renderSize.height / contentHeight,
+          );
+          scaleX = scaleY = maxScale;
+          //     break;
+          //   case BoxFit.fitHeight:
+          //     double minScale = renderSize.height / contentHeight;
+          //     scaleX = scaleY = minScale;
+          //     break;
+          //   case BoxFit.fitWidth:
+          //     double minScale = renderSize.width / contentWidth;
+          //     scaleX = scaleY = minScale;
+          //     break;
+          //   case BoxFit.none:
+          //     scaleX = scaleY = 1.0;
+          //     break;
+          //   case BoxFit.scaleDown:
+          //     double minScale = min(renderSize.width / contentWidth,
+          //         renderSize.height / contentHeight);
+          //     scaleX = scaleY = minScale < 1.0 ? minScale : 1.0;
+          //     break;
+          // }
 
           canvas.translate(
-              renderOffset.dx +
-                  renderSize.width / 2.0 +
-                  (alignment.x * renderSize.width / 2.0),
-              renderOffset.dy +
-                  renderSize.height / 2.0 +
-                  (alignment.y * renderSize.height / 2.0));
+            renderOffset.dx +
+                renderSize.width / 2.0 +
+                (alignment.x * renderSize.width / 2.0),
+            renderOffset.dy +
+                renderSize.height / 2.0 +
+                (alignment.y * renderSize.height / 2.0),
+          );
           canvas.scale(scaleX, scaleY);
           canvas.translate(x, y);
 
           asset.actorStatic.draw(canvas);
           canvas.restore();
           _tapTargets.add(
-              TapTarget(asset.entry, renderOffset & renderSize, zoom: true));
-        } else {
-          _tapTargets.add(
-              TapTarget(asset.entry, renderOffset & renderSize, zoom: true));
+            TapTarget(asset.entry, renderOffset & renderSize, zoom: true),
+          );
         }
       }
 
@@ -931,41 +954,51 @@ class TimelineRenderObject extends RenderBox {
         if (previous != null) {
           double distance = (event.gutterEventY - previous.gutterEventY);
           if (distance > eventRadius * 2.0) {
-            canvas.drawLine(Offset(x, previous.gutterEventY + eventRadius),
-                Offset(x, event.gutterEventY - eventRadius), accentPaint);
+            canvas.drawLine(
+              Offset(x, previous.gutterEventY + eventRadius),
+              Offset(x, event.gutterEventY - eventRadius),
+              accentPaint,
+            );
             double labelY = previous.gutterEventY + distance / 2.0;
             double labelWidth = 37.0;
             double labelHeight = 8.5 * 2.0;
             if (distance - eventRadius * 2.0 > labelHeight) {
               ui.ParagraphBuilder builder = ui.ParagraphBuilder(
                 ui.ParagraphStyle(
-                    textAlign: TextAlign.center,
-                    fontFamily: 'RobotoMedium',
-                    fontSize: 10.0),
+                  textAlign: TextAlign.center,
+                  fontFamily: 'Roboto',
+                  fontSize: 10.0,
+                ),
               )..pushStyle(ui.TextStyle(color: Colors.white));
 
               int value = (event.startMs - previous.startMs).round().abs();
               String label;
-              if (value < 9000) {
+              if (value < 10000) {
                 label = value.toStringAsFixed(0);
               } else {
-                NumberFormat formatter = NumberFormat.compact();
+                NumberFormat formatter = LanguageController.numCompactFormatter;
                 label = formatter.format(value);
               }
 
-              builder.addText(label);
+              // This is the text in the pink circle between gutter events
+              builder.addText(cns(label));
               ui.Paragraph distanceParagraph = builder.build();
               distanceParagraph.layout(
                 ui.ParagraphConstraints(width: labelWidth),
               );
 
               canvas.drawRRect(
-                  RRect.fromRectAndRadius(
-                    Rect.fromLTWH(x - labelWidth / 2.0,
-                        labelY - labelHeight / 2.0, labelWidth, labelHeight),
-                    Radius.circular(labelHeight),
+                RRect.fromRectAndRadius(
+                  Rect.fromLTWH(
+                    x - labelWidth / 2.0,
+                    labelY - labelHeight / 2.0,
+                    labelWidth,
+                    labelHeight,
                   ),
-                  accentFill);
+                  Radius.circular(labelHeight),
+                ),
+                accentFill,
+              );
               canvas.drawParagraph(
                 distanceParagraph,
                 Offset(
@@ -983,20 +1016,24 @@ class TimelineRenderObject extends RenderBox {
 
   /// Given a list of [entries], draw the label with its bubble beneath.
   /// Draw also the dots&lines on the left side of the timeline. These represent
-  /// the starting/ending points for a given event and are meant to give the idea of
-  /// the timespan encompassing that event, as well as putting the vent into context
-  /// relative to the other events.
-  void drawItems(PaintingContext context, Offset offset,
-      List<TimelineEntry> entries, double x, double scale, int depth) {
+  /// the starting/ending points for a given event and are meant to give the
+  /// idea of the time span encompassing that event, as well as putting the vent
+  /// into context relative to the other events.
+  void drawItems(
+    PaintingContext context,
+    Offset offset,
+    List<TimelineEntry> entries,
+    double x,
+    double scale,
+    int depth,
+  ) {
     final Canvas canvas = context.canvas;
 
     for (TimelineEntry item in entries) {
+      /// Don't paint this item if:
       if (!item.isVisible ||
           item.y > size.height + Timeline.BubbleHeight ||
-          item.endY < -Timeline.BubbleHeight) {
-        /// Don't paint this item.
-        continue;
-      }
+          item.endY < -Timeline.BubbleHeight) continue;
 
       double legOpacity = item.legOpacity * item.opacity;
       Offset entryOffset = Offset(x + Timeline.LineWidth / 2.0, item.y);
@@ -1029,22 +1066,23 @@ class TimelineRenderObject extends RenderBox {
         );
       }
 
-      const double MaxLabelWidth = 1200.0;
-      const double BubblePadding = 20.0;
-
       /// Let the timeline calculate the height for the current item's bubble.
       double bubbleHeight = t.bubbleHeight(item);
 
       /// Use [ui.ParagraphBuilder] to construct the label for canvas.
       ui.ParagraphBuilder builder = ui.ParagraphBuilder(
-          ui.ParagraphStyle(textAlign: TextAlign.start, fontSize: 20.0))
-        ..pushStyle(
-            ui.TextStyle(color: const Color.fromRGBO(255, 255, 255, 1.0)));
+        ui.ParagraphStyle(textAlign: TextAlign.start, fontSize: 20.0),
+      )..pushStyle(
+          ui.TextStyle(
+            color: const Color.fromRGBO(255, 255, 255, 1.0),
+          ),
+        );
 
       builder.addText(item.trValTitle);
       ui.Paragraph labelParagraph = builder.build();
-      labelParagraph
-          .layout(const ui.ParagraphConstraints(width: MaxLabelWidth));
+      labelParagraph.layout(
+        const ui.ParagraphConstraints(width: MaxLabelWidth),
+      );
 
       double textWidth =
           labelParagraph.maxIntrinsicWidth * item.opacity * item.labelOpacity;
@@ -1060,14 +1098,16 @@ class TimelineRenderObject extends RenderBox {
           makeBubblePath(textWidth + BubblePadding * 2.0, bubbleHeight);
 
       canvas.drawPath(
-          bubble,
-          Paint()
-            ..color = (item.accent != null
-                    ? item.accent!
-                    : LineColors[depth % LineColors.length])
-                .withOpacity(item.opacity * item.labelOpacity));
-      canvas
-          .clipRect(Rect.fromLTWH(BubblePadding, 0.0, textWidth, bubbleHeight));
+        bubble,
+        Paint()
+          ..color = (item.accent != null
+                  ? item.accent!
+                  : LineColors[depth % LineColors.length])
+              .withOpacity(item.opacity * item.labelOpacity),
+      );
+      canvas.clipRect(
+        Rect.fromLTWH(BubblePadding, 0.0, textWidth, bubbleHeight),
+      );
       _tapTargets.add(
         TapTarget(
           item,
