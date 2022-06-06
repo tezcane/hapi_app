@@ -363,4 +363,16 @@ class AuthController extends GetxHapi {
     passwordController.clear();
     return _auth.signOut();
   }
+
+  /// Prevent exceptions when pages called without auth init done.
+  waitForFirebaseLogin(String caller) async {
+    int sleepBackoffMs = 250;
+    // No internet needed if already initialized
+    while (AuthController.to.firebaseUser.value == null) {
+      l.d('AuthController.waitForFirebaseLogin($caller): try again after sleeping $sleepBackoffMs ms...');
+      //sleep(Duration(milliseconds: sleepBackoffMs));
+      await Future.delayed(Duration(milliseconds: sleepBackoffMs));
+      if (sleepBackoffMs < 1000) sleepBackoffMs += 250;
+    }
+  }
 }

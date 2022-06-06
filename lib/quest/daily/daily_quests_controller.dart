@@ -1,8 +1,5 @@
-import 'dart:async';
-
 import 'package:get/get.dart';
 import 'package:hapi/getx_hapi.dart';
-import 'package:hapi/main_controller.dart';
 import 'package:hapi/onboard/auth/auth_controller.dart';
 import 'package:hapi/quest/daily/do_list/do_list_model.dart';
 import 'package:hapi/services/db.dart';
@@ -25,16 +22,9 @@ class DailyQuestsController extends GetxHapi {
 
   // TODO test this:
   void _initDoList() async {
-    int sleepBackoffSecs = 1;
-
     // No internet needed to init, but we put a back off just in case:
-    while (AuthController.to.firebaseUser.value == null) {
-      l.w('DailyQuestsController.initDoList: not ready, try again after sleeping $sleepBackoffSecs Secs...');
-      await Future.delayed(Duration(seconds: sleepBackoffSecs));
-      if (sleepBackoffSecs < 4) {
-        sleepBackoffSecs++;
-      }
-    }
+    await AuthController.to
+        .waitForFirebaseLogin('DailyQuestController._initDoList');
 
     _doList.bindStream(Db.doListStream()); //stream from firebase
   }

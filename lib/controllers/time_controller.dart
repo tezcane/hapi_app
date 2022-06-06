@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:hapi/controllers/connectivity_controller.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main_controller.dart';
+import 'package:hapi/onboard/auth/auth_controller.dart';
 import 'package:hapi/quest/active/athan/athan.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
 import 'package:hapi/settings/language/language_controller.dart';
@@ -160,6 +161,8 @@ class TimeController extends GetxHapi {
 
   @override
   void onInit() async {
+    super.onInit();
+
     await updateTime(); // TODO do during splash screen?
 
     // Initialize currDay as yesterday in case app is started after midnight.
@@ -171,10 +174,12 @@ class TimeController extends GetxHapi {
     currDayDate = TZDateTime.from(DateTime.parse(currDay), tzLoc);
     nextDayDate = dateToTomorrow(currDayDate);
 
-    // times should be initialized, so start Zaman Controller
-    if (!ZamanController.to.isInitialized) ZamanController.to.updateZaman();
-
-    super.onInit();
+    // times should be initialized, so start Zaman Controller on initx
+    if (!ZamanController.to.isInitialized) {
+      // Need to wait for user login so we can init quest in zaman controller
+      await AuthController.to.waitForFirebaseLogin('TimeController.onInit');
+      ZamanController.to.updateZaman();
+    }
   }
 
   DateTime dateToYesterday(DateTime dT) => dT.subtract(const Duration(days: 1));
