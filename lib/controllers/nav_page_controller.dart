@@ -41,7 +41,7 @@ class NavPageController extends GetxHapi {
     return l.E('tabEnumList "$tabEnumList" missing ${pageIdxMap[navPage]!}');
   }
 
-  // String getLastIdxName(NavPage navPage) => pageIdxMap[navPage]!;
+  String getLastIdxName(NavPage navPage) => pageIdxMap[navPage]!;
   // setLastIdxName(NavPage navPage, String newIdxName) =>
   //     pageIdxMap[navPage] = newIdxName;
 

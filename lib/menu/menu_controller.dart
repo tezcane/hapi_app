@@ -4,6 +4,7 @@ import 'dart:math';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hapi/controllers/nav_page_controller.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/helpers/loading.dart';
 import 'package:hapi/main_controller.dart';
@@ -171,40 +172,48 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
       return; // POSSIBLE HAPI QUEST: "Interrupt/Break Menu Button" hapi task
     }
 
-    // if on main menu page, just show/hide menu per usual
+    /// Show/Hide menu hit (only available on main NavPage)
     if (_subPageStack.isEmpty) {
       if (_isMenuShowing) {
         hideMenu(); // just hit close on fab
       } else {
         showMenu(); // just hit menu on fab
       }
-    } else {
-      // if we are in sub page then it means back button was hit
-      if (_subPageStack.length == 1) {
-        // if page before main menu page, play animation
-        _acFabIcon.reverse();
-        // and switch back to menu close icon
-        _fabAnimatedIcon = AnimatedIcons.menu_close;
-        update();
-      }
+      return;
+    }
 
-      // pop the page out of the stack
-      _subPageStack.removeLast();
+    /// If here, back button was hit
 
-      // if timeline showing again, turn timeline rendering back on
+    /// if going back to main nav page, play animation
+    if (_subPageStack.length == 1) {
+      _acFabIcon.reverse();
+      _fabAnimatedIcon = AnimatedIcons.menu_close; // switch to menu close icon
+      update();
+    }
+
+    /// pop the page out of the stack
+    _subPageStack.removeLast();
+
+    /// handle tarikh animated pages, set active/inactive
+    if (getLastNavPage() == NavPage.Tarikh) {
+      // if timeline showing again (after article view), make timeline active
       if (_subPageStack.isNotEmpty &&
           _subPageStack.last == SubPage.Tarikh_Timeline) {
-        TarikhController.to.isActiveTimeline = true;
+        TarikhController.to.isActiveTimeline = true; // reactivate timeline
       } else {
-        if (_subPageStack.isEmpty && getLastNavPage() == NavPage.Tarikh) {
-          TarikhController.to.isActiveTarikhMenu = true;
+        TarikhController.to.isActiveTimeline = false; // inactivate timeline
+
+        if (_subPageStack.isEmpty &&
+            NavPageController.to.getLastIdxName(NavPage.Tarikh) ==
+                TARIKH_TAB.Menu.name) {
+          TarikhController.to.isActiveTarikhMenu = true; // reactivate menu
         }
       }
-
-      Get.back(); // pop the sub menu stack
-
-      update(); // updates FAB tooltip to say what back button does
     }
+
+    Get.back(); // pop the sub menu stack
+
+    update(); // updates FAB tooltip to say what back button does
   }
 
   /// Handle the fab button hint, required update() to be called on page
@@ -237,17 +246,11 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
   // TODO Persist this, where possible, pass in arguments to classes to rebuild:
   List<SubPage> _subPageStack = [];
 
-  int _getLastNavIdx() {
-    return s.rd('lastNavIdx') ?? NavPage.Quests.index;
-  }
+  int _getLastNavIdx() => s.rd('lastNavIdx') ?? NavPage.Quests.index;
 
-  NavPage getLastNavPage() {
-    return _getNavPage(_getLastNavIdx());
-  }
+  NavPage getLastNavPage() => _getNavPage(_getLastNavIdx());
 
-  bool isFastStartupMode() {
-    return s.rd('fastStartupMode') ?? true; // TODO write this setting
-  }
+  bool isFastStartupMode() => s.rd('fastStartupMode') ?? true; // TODO persists
 
   /// set foreground to last opened page
   initAppsFirstPage() {
@@ -370,18 +373,20 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
 
     /// HERE WE HANDLE THE FAB BUTTON ANIMATIONS ON INSERTING NEW SUB PAGES
     // if adding first sub page, animate menu turning into an arrow
+    // e.g. go to about page tapped: Menu x -> Menu -> "<-" Back arrow
     if (_subPageStack.length == 1) {
       fabButtonIsTransitioning = true;
-      if (_isMenuShowing) {
-        // i.e. about page is clicked
-        hideMenu(); // spin out of showing X to menu, then we turn into arrow
-      }
+      if (_isMenuShowing) hideMenu();
       Timer(animationDuration, () {
         _fabAnimatedIcon = AnimatedIcons.menu_arrow;
         update();
         _acFabIcon.forward();
         fabButtonIsTransitioning = false;
       }); // requires new thread
+    }
+
+    if (getLastNavPage() == NavPage.Tarikh) {
+      TarikhController.to.isActiveTarikhMenu = false; // inactivate tarikh menu
     }
 
     switch (subPage) {

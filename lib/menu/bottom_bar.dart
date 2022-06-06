@@ -160,7 +160,7 @@ class _BottomBarItemWidget extends StatelessWidget {
 }
 
 class BottomBarItem {
-  BottomBarItem(
+  const BottomBarItem(
     this.mainWidget,
     this.settingsWidget,
     this.trValTitle,

@@ -65,13 +65,9 @@ class TarikhController extends GetxHapi {
   set isActiveTimeline(bool nv) {
     if (nv != _isActiveTimeline) {
       _isActiveTimeline = nv;
-      if (_isActiveTimeline) {
-        t.startRendering();
-        updateOnThread(); //update() causes error
-      }
-    } else {
-      l.w('_isActiveTimeline already set to $_isActiveTimeline');
+      if (_isActiveTimeline) t.startRendering();
     }
+    updateOnThread(); //update() causes error
   }
 
   // MENU SECTION RENDER ENABLE/DISABLE:
@@ -86,10 +82,8 @@ class TarikhController extends GetxHapi {
   set isActiveTarikhMenu(bool nv) {
     if (nv != _isActiveTarikhMenu) {
       _isActiveTarikhMenu = nv;
-      updateOnThread1Ms(); // needed for bottom bar init
-    } else {
-      l.w('_isActiveTarikhMenu already set to $_isActiveTarikhMenu');
     }
+    updateOnThread1Ms(); // needed for bottom bar init
   }
 
   /// Loaded from JSON input that's stored in the assets folder which provides
