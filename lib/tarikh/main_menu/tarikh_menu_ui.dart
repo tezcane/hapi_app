@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/components/seperator.dart';
 import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/tarikh/main_menu/main_menu_section.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
