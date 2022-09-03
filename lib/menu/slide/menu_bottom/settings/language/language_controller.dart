@@ -25,7 +25,7 @@ final List<SettingsOption> languageOptions = [
   SettingsOption('zh', 'Chinese - 中国人'), // Chinese
   SettingsOption('da', 'Danish - dansk'), // Danish
   SettingsOption('nl', 'Dutch - Nederlands'), // Dutch
-  SettingsOption('en', 'English'), // English
+  SettingsOption('en', 'English - إنجليزي'), // English
   SettingsOption('fr', 'French - Français'), // French
   SettingsOption('de', 'German - Deutsch'), // German
   SettingsOption('gu', 'Gujarati - ગુજરાત'), // Gujarati

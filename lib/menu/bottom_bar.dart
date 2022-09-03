@@ -28,7 +28,8 @@ class BottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double width = w(context) / (items.length + 1); // + 1 for FAB space
+    final int itemCount = items.length;
+    final double width = (w(context) - 80) / itemCount; // -80 for FAB space
 
     return Container(
       height: height,
@@ -36,9 +37,10 @@ class BottomBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: LanguageController.to.axisStart,
         children: List<Widget>.generate(
-          items.length,
+          itemCount,
           (int index) {
             return _BottomBarItemWidget(
+              itemCount: itemCount,
               bottomBarItem: items.elementAt(index),
               width: width,
               index: index,
@@ -57,6 +59,7 @@ class BottomBar extends StatelessWidget {
 
 class _BottomBarItemWidget extends StatelessWidget {
   const _BottomBarItemWidget({
+    required this.itemCount,
     required this.bottomBarItem,
     required this.width,
     required this.index,
@@ -67,6 +70,7 @@ class _BottomBarItemWidget extends StatelessWidget {
     required this.duration,
     this.useHapiLogoFont = true,
   });
+  final int itemCount;
   final BottomBarItem bottomBarItem;
   final double width;
   final int index;
@@ -87,8 +91,11 @@ class _BottomBarItemWidget extends StatelessWidget {
         ? const TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Lobster')
         : tsB;
 
-    const double iconSize = 30;
-    double w = width - iconSize;
+    final bool rowMode = itemCount < 5; // false means column mode
+
+    double iconSize = 30;
+    final double w = width - iconSize;
+    if(!rowMode && isSelected) iconSize = 40;
 
     Color selectedColor = bottomBarItem.selectedColor;
     Color selectedColorWithOpacity = selectedColor.withOpacity(0.1);
@@ -117,23 +124,57 @@ class _BottomBarItemWidget extends StatelessWidget {
               splashColor: selectedColorWithOpacity,
               hoverColor: selectedColorWithOpacity,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  if (!isSelected) SizedBox(width: w / 2),
-                  IconTheme(
-                    data: IconThemeData(
-                      color: Color.lerp(_inactiveColor, selectedColor, value),
-                      size: iconSize,
-                    ),
-                    child: bottomBarItem.iconData == Icons.brightness_3_outlined
-                        ? Transform.rotate(
+                  if (index == 0) SizedBox(width: rowMode ? w/4 : w), // give space on left
+                  if (!isSelected) SizedBox(width: w / 2.5),
+                  rowMode ?
+                    IconTheme(
+                      data: IconThemeData(
+                        color: Color.lerp(_inactiveColor, selectedColor, value),
+                        size: iconSize,
+                      ),
+                      child: bottomBarItem.iconData == Icons.brightness_3_outlined
+                          ? Transform.rotate(
+                              angle: 2.8, // Rotates crescent
+                              child: Icon(bottomBarItem.iconData, size: iconSize),
+                            )
+                          : Icon(bottomBarItem.iconData, size: iconSize),
+                    ) :
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconTheme(
+                          data: IconThemeData(
+                            color: Color.lerp(_inactiveColor, selectedColor, value),
+                            size: iconSize,
+                          ),
+                          child: bottomBarItem.iconData == Icons.brightness_3_outlined
+                              ? Transform.rotate(
                             angle: 2.8, // Rotates crescent
                             child: Icon(bottomBarItem.iconData, size: iconSize),
                           )
-                        : Icon(bottomBarItem.iconData, size: iconSize),
-                  ),
-                  if (!isSelected) SizedBox(width: w / 2),
-                  if (isSelected)
+                              : Icon(bottomBarItem.iconData, size: iconSize),
+                        ),
+                        if (isSelected)
+                          DefaultTextStyle(
+                            style: textStyle.copyWith(
+                              color: Color.lerp(
+                                Colors.transparent,
+                                selectedColor,
+                                value,
+                              ),
+                            ),
+                            child: T(
+                              bottomBarItem.trValTitle,
+                              textStyle,
+                              w: w * 4,
+                              trVal: true,
+                            ),
+                          ),
+                      ],
+                    ),
+                  if (!isSelected) SizedBox(width: w / 2.5),
+                  if (isSelected && rowMode)
                     DefaultTextStyle(
                       style: textStyle.copyWith(
                         color: Color.lerp(
@@ -169,8 +210,8 @@ class BottomBarItem {
     this.selectedColor, {
     this.onPressed,
   });
-  final Widget mainWidget; // used by bottom_bar_menu
-  final Widget? settingsWidget; // used by bottom_bar_menu
+  final Widget mainWidget;
+  final Widget? settingsWidget;
   final String trValTitle;
   final String trValTooltip;
   final IconData iconData;
