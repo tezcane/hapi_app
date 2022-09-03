@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hapi/main_controller.dart';
-import 'package:hapi/settings/language/language_controller.dart';
-import 'package:hapi/settings/settings_option.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/language/language_controller.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/settings_option.dart';
 
 /// shows a dropdown list.
 ///

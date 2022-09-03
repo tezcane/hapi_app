@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/controllers/nav_page_controller.dart';
 import 'package:hapi/menu/bottom_bar.dart';
-import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 
 /// Controls NavPage bottom bars and loads/persists new tab selections.
 // ignore: must_be_immutable

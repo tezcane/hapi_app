@@ -4,8 +4,7 @@ import 'package:hapi/components/form_vertical_spacing.dart';
 import 'package:hapi/components/logo_graphic_header.dart';
 import 'package:hapi/components/primary_button.dart';
 import 'package:hapi/helpers/validator.dart';
-import 'package:hapi/menu/fab_sub_page.dart';
-import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/onboard/auth/auth_controller.dart';
 
 /// Sends a password reset email to the user.

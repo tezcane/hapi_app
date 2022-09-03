@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main_controller.dart';
-import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 
 /// Controller to track a NavPages last selected SubPages. Used to persist UI
 /// (e.g. bottom bar, lists of sub pages, etc.) last selected idx. Does this so

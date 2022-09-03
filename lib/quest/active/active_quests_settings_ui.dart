@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hapi/components/toggle_switch.dart';
 import 'package:hapi/main_controller.dart';
-import 'package:hapi/menu/toggle_switch.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/calculation_method.dart';
 import 'package:hapi/quest/active/athan/z.dart';
-import 'package:hapi/settings/theme/app_themes.dart';
 
 typedef OnToggle = void Function(int index);
 

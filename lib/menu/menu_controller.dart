@@ -8,128 +8,19 @@ import 'package:hapi/controllers/nav_page_controller.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/helpers/loading.dart';
 import 'package:hapi/main_controller.dart';
-import 'package:hapi/menu/about_ui.dart';
-import 'package:hapi/menu/settings_ui.dart';
+import 'package:hapi/menu/slide/menu_bottom/about/about_ui.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/profile/reset_password_ui.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/profile/update_profile_ui.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/settings_ui.dart';
+import 'package:hapi/menu/slide/menu_right/nav_page.dart';
+import 'package:hapi/menu/sub_page.dart';
+import 'package:hapi/onboard/auth/auth_controller.dart';
 import 'package:hapi/quest/active/active_quest_action_ui.dart';
 import 'package:hapi/quest/quests_ui.dart';
-import 'package:hapi/settings/language/language_controller.dart';
-import 'package:hapi/settings/reset_password_ui.dart';
-import 'package:hapi/settings/update_profile_ui.dart';
 import 'package:hapi/tarikh/article/tarikh_article_ui.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/tarikh_ui.dart';
 import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
-
-/// NPV= Nav Page Value holds values used to init a NavPage.
-class NPV {
-  const NPV(this.navPage, this.initTabName, this.icon);
-  final NavPage navPage;
-  final String initTabName;
-  final IconData icon;
-}
-
-/// Must keep in sync with NavPage/menu list
-final navPageValues = [
-  NPV(NavPage.Ajr, '', Icons.leaderboard_rounded),
-  NPV(NavPage.Tools, '', Icons.explore_outlined),
-  NPV(NavPage.Dua, '', Icons.volunteer_activism),
-  NPV(NavPage.Hadith, '', Icons.menu_book_outlined),
-  NPV(NavPage.Quran, '', Icons.auto_stories),
-  NPV(NavPage.Tarikh, TARIKH_TAB.Menu.name, Icons.history_edu_outlined),
-  NPV(NavPage.Relics, '', Icons.brightness_3_outlined),
-  NPV(NavPage.Quests, QUEST_TAB.Active.name, Icons.how_to_reg_outlined),
-];
-
-/// must keep in sync with navPageValues
-enum NavPage {
-  Ajr,
-  Tools,
-  Dua,
-  Hadith,
-  Quran,
-  Tarikh,
-  Relics,
-  Quests,
-}
-
-extension EnumUtil on NavPage {
-  String get trKey {
-    String transliteration = name;
-    switch (this) {
-      case (NavPage.Ajr):
-      case (NavPage.Dua):
-      case (NavPage.Hadith):
-      case (NavPage.Quran):
-      case (NavPage.Tarikh):
-        break;
-      case (NavPage.Tools):
-        transliteration = "'Adawat";
-        break;
-      case (NavPage.Relics):
-        transliteration = 'Alathar';
-        break;
-      case (NavPage.Quests):
-        transliteration = "'Asyila";
-        break;
-    }
-    return 'a.$transliteration';
-  }
-
-  String get trValTooltip {
-    switch (this) {
-      case (NavPage.Ajr):
-        return 'i.View your rewards'.tr;
-      case (NavPage.Dua):
-        return 'i.Find prayers'.tr;
-      case (NavPage.Hadith):
-        return 'i.Read from Books of Hadith'.tr;
-      case (NavPage.Quran):
-        return 'i.Read the Quran'.tr;
-      case (NavPage.Tarikh):
-        return 'i.View the history of Islam and our Universe'.tr;
-      case (NavPage.Tools):
-        return 'i.Use tools like the Qiblah Finder and Islamic Dictionary'.tr;
-      case (NavPage.Relics):
-        return 'i.Collect, upgrade and learn from Relics'.tr;
-      case (NavPage.Quests):
-        return 'i.Earn rewards for this life and the next'.tr;
-      default:
-        return l.E('Quests.trValTooltip: Unknown Quest "$this"');
-    }
-  }
-
-  List<dynamic> get ltrTabList {
-    switch (this) {
-      // case (NavPage.Ajr):
-      // case (NavPage.Dua):
-      // case (NavPage.Hadith):
-      // case (NavPage.Quran):
-      case (NavPage.Tarikh):
-        return TARIKH_TAB.values;
-      // case (NavPage.Tools):
-      // case (NavPage.Relics):
-      case (NavPage.Quests):
-        return QUEST_TAB.values;
-      default:
-        return l.E('Quests.tabEnum: Unknown Quest "$this"');
-    }
-  }
-
-  List<dynamic> get rtlTabList => List<dynamic>.from(ltrTabList.reversed);
-
-  List<dynamic> get tabEnumList =>
-      LanguageController.to.isRTL ? rtlTabList : ltrTabList;
-}
-
-enum SubPage {
-  About,
-  Settings,
-  Update_Profile,
-  Reset_Password,
-  Tarikh_Timeline,
-  Tarikh_Article,
-  Active_Quest_Action,
-}
 
 class MenuController extends GetxHapi with GetTickerProviderStateMixin {
   static MenuController get to => Get.find();
@@ -189,6 +80,13 @@ class MenuController extends GetxHapi with GetTickerProviderStateMixin {
       _acFabIcon.reverse();
       _fabAnimatedIcon = AnimatedIcons.menu_close; // switch to menu close icon
       update();
+    }
+
+    /// User may have updated profile settings and hit back button before saving
+    if(_subPageStack.isNotEmpty && _subPageStack.last == SubPage.Update_Profile) {
+      AuthController c = AuthController.to;
+      c.nameController.text = c.firestoreUser.value!.name;
+      c.emailController.text = c.firestoreUser.value!.email;
     }
 
     /// pop the page out of the stack

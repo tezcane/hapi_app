@@ -7,8 +7,8 @@ import 'package:get/get.dart';
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/main_controller.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/settings_option.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
-import 'package:hapi/settings/settings_option.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/intl.dart';
 

@@ -3,9 +3,9 @@ import 'package:get/get.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/bottom_bar.dart';
 import 'package:hapi/menu/bottom_bar_menu.dart';
-import 'package:hapi/menu/fab_nav_page.dart';
-import 'package:hapi/menu/menu_controller.dart';
-import 'package:hapi/settings/language/language_controller.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/language/language_controller.dart';
+import 'package:hapi/menu/slide/menu_right/nav_page.dart';
+import 'package:hapi/menu/slide/menu_right/menu_right_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_favorites_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_menu_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_search_ui.dart';
@@ -71,10 +71,9 @@ class TarikhUI extends StatelessWidget {
           settingsWidgets.add(bbItems[idx].settingsWidget);
         }
 
-        return FabNavPage(
+        return MenuRightUI(
           navPage: navPage,
           settingsWidgets: settingsWidgets,
-          bottomWidget: HapiShareUI(),
           foregroundPage: BottomBarMenu(navPage, bbItems, mainWidgets),
         );
       });

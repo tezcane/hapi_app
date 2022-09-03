@@ -3,7 +3,7 @@ library bottom_bar;
 import 'package:flutter/material.dart';
 import 'package:hapi/helpers/keep_alive_page.dart';
 import 'package:hapi/main_controller.dart';
-import 'package:hapi/settings/language/language_controller.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/language/language_controller.dart';
 
 /// Display a bar with multiple icons and titles to hold different UIs
 class BottomBar extends StatelessWidget {

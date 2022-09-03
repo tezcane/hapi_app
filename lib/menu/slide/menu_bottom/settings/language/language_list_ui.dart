@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/components/dropdown_picker.dart';
 import 'package:hapi/main_controller.dart';
-import 'package:hapi/settings/language/language_controller.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/language/language_controller.dart';
 
 class LanguageListUI extends StatelessWidget {
   const LanguageListUI(this.width);

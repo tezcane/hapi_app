@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/athan/z.dart';
 import 'package:hapi/quest/active/sun_mover/multi_color_ring.dart';
-import 'package:hapi/settings/theme/app_themes.dart';
 
 class QuestRing extends StatelessWidget {
   const QuestRing(this.diameter, this.strokeWidth, this.colorSlices);

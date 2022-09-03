@@ -4,9 +4,9 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/language/language_controller.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/onboard/auth/auth_controller.dart';
-import 'package:hapi/settings/language/language_controller.dart';
-import 'package:hapi/settings/theme/app_themes.dart';
 
 class MainController extends GetxHapi {
   static MainController get to => Get.find();

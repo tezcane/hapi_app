@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/controllers/nav_page_controller.dart';
 import 'package:hapi/menu/menu_controller.dart';
-import 'package:hapi/settings/theme/app_themes.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
+import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 
-class MenuSlide extends StatefulWidget {
-  const MenuSlide({
+class MenuBottom extends StatefulWidget {
+  const MenuBottom({
     Key? key,
     required this.navPage,
     required this.foregroundPage,
@@ -31,10 +32,10 @@ class MenuSlide extends StatefulWidget {
   final Curve closeAnimationCurve;
 
   @override
-  _MenuSlideState createState() => _MenuSlideState();
+  _MenuBottomState createState() => _MenuBottomState();
 }
 
-class _MenuSlideState extends State<MenuSlide>
+class _MenuBottomState extends State<MenuBottom>
     with SingleTickerProviderStateMixin {
   final MenuController cMenu = MenuController.to;
 

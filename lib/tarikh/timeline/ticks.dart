@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:hapi/main_controller.dart';
-import 'package:hapi/settings/language/language_controller.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/language/language_controller.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
 import 'package:hapi/tarikh/timeline/timeline_utils.dart';

@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/controllers/nav_page_controller.dart';
 import 'package:hapi/menu/menu_controller.dart';
-import 'package:hapi/settings/theme/app_themes.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
+import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 
 /// Signature for creating widget to open/close Side Menu.
 typedef SideMenuAnimationBuilder = Widget Function();
@@ -22,9 +23,9 @@ const Curve _kCurveAnimation = Curves.linear;
 const Color _kButtonColorSelected = AppThemes.selected;
 const Color _kButtonColorUnselected = Color(0xFF1D1E33);
 
-/// The [MenuNav] controls the items from the lateral menu.
-class MenuNav extends StatefulWidget {
-  const MenuNav({
+/// The [MenuRight] controls the items from the lateral menu.
+class MenuRight extends StatefulWidget {
+  const MenuRight({
     required this.initNavPage,
     required this.settingsWidgets,
     required this.builder,
@@ -47,10 +48,10 @@ class MenuNav extends StatefulWidget {
   final List<Widget> items;
 
   @override
-  _MenuNavState createState() => _MenuNavState();
+  _MenuRightState createState() => _MenuRightState();
 }
 
-class _MenuNavState extends State<MenuNav> {
+class _MenuRightState extends State<MenuRight> {
   void _displayMenuDragGesture(DragEndDetails endDetails) {
     if (!MenuController.to.isMenuShowing) {
       final velocity = endDetails.primaryVelocity!;
@@ -166,7 +167,7 @@ class _MenuNavState extends State<MenuNav> {
   }
 }
 
-/// A [MenuItem]/A button for the [MenuNav]
+/// A [MenuItem]/A button for the [MenuRight]
 class MenuItem extends StatelessWidget {
   const MenuItem({
     Key? key,
@@ -193,7 +194,7 @@ class MenuItem extends StatelessWidget {
   /// `height` for the [MenuItem]
   final double height;
 
-  /// [AnimationController] used in the [MenuNav]
+  /// [AnimationController] used in the [MenuRight]
   final AnimationController acNavMenu;
 
   /// Animation [Curve]

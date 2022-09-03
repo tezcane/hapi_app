@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hapi/main_controller.dart';
-import 'package:hapi/menu/fab_sub_page.dart';
+import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
-import 'package:hapi/settings/language/language_list_ui.dart';
-import 'package:hapi/settings/theme/theme_list_ui.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/language/language_list_ui.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/theme/theme_list_ui.dart';
 
 class SettingsUI extends StatelessWidget {
   @override
@@ -11,7 +11,7 @@ class SettingsUI extends StatelessWidget {
     double padding = 20; // p for padding
     double width = w(context) - padding * 2;
     return FabSubPage(
-      subPage: SubPage.About,
+      subPage: SubPage.Settings,
       child: Scaffold(
         // Note: Can't use Get.theme here, doesn't switch background color
         backgroundColor: Theme.of(context).backgroundColor,

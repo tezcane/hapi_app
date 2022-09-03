@@ -8,6 +8,9 @@ import 'package:hapi/components/two_colored_icon.dart';
 import 'package:hapi/controllers/notification_controller.dart';
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/main_controller.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/language/language_controller.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
+import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
@@ -16,8 +19,6 @@ import 'package:hapi/quest/active/sun_mover/multi_color_ring.dart';
 import 'package:hapi/quest/active/sun_mover/quest_ring.dart';
 import 'package:hapi/quest/active/sun_mover/sun_ring.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
-import 'package:hapi/settings/language/language_controller.dart';
-import 'package:hapi/settings/theme/app_themes.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 class ActiveQuestsUI extends StatelessWidget {

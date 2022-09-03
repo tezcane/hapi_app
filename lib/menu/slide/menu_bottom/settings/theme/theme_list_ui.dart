@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/components/segmented_selector.dart';
 import 'package:hapi/main_controller.dart';
-import 'package:hapi/settings/language/language_controller.dart';
-import 'package:hapi/settings/settings_option.dart';
-import 'package:hapi/settings/theme/theme_controller.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/language/language_controller.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/settings_option.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/theme/theme_controller.dart';
 
 class ThemeListUI extends StatelessWidget {
   const ThemeListUI(this.width);

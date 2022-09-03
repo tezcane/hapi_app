@@ -3,13 +3,13 @@ import 'package:get/get.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/bottom_bar.dart';
 import 'package:hapi/menu/bottom_bar_menu.dart';
-import 'package:hapi/menu/fab_nav_page.dart';
-import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/language/language_controller.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
+import 'package:hapi/menu/slide/menu_right/menu_right_ui.dart';
+import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/quest/active/active_quests_settings_ui.dart';
 import 'package:hapi/quest/active/active_quests_ui.dart';
 import 'package:hapi/quest/daily/do_list/do_list_quest_ui.dart';
-import 'package:hapi/settings/language/language_controller.dart';
-import 'package:hapi/settings/theme/app_themes.dart';
 
 enum QUEST_TAB {
   hapi,
@@ -73,10 +73,9 @@ class QuestsUI extends StatelessWidget {
         settingsWidgets.add(bbItems[idx].settingsWidget);
       }
 
-      return FabNavPage(
+      return MenuRightUI(
         navPage: navPage,
         settingsWidgets: settingsWidgets,
-        bottomWidget: HapiShareUI(),
         foregroundPage: BottomBarMenu(navPage, bbItems, mainWidgets),
       );
     });

@@ -8,9 +8,9 @@ import 'package:hapi/components/label_button.dart';
 import 'package:hapi/components/logo_graphic_header.dart';
 import 'package:hapi/components/primary_button.dart';
 import 'package:hapi/helpers/validator.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/profile/reset_password_ui.dart';
 import 'package:hapi/onboard/auth/auth_controller.dart';
 import 'package:hapi/onboard/auth/sign_up_ui.dart';
-import 'package:hapi/settings/reset_password_ui.dart';
 
 /// allows user to login with email and password.
 class SignInUI extends StatelessWidget {
