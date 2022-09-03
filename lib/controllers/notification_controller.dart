@@ -44,7 +44,7 @@ class NotificationController extends GetxHapi {
         defaultVal = false;
       }
       _playAthan[z] = s.rd('playAthan${z.name}') ?? defaultVal;
-      _playBeep[z] = s.rd('playBeep${z.name}') ?? defaultVal;
+      _playBeep[z] = s.rd('playBeep${z.name}') ?? false;
       _vibrate[z] = s.rd('vibrate${z.name}') ?? defaultVal;
     }
 
