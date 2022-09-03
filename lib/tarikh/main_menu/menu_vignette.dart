@@ -46,13 +46,12 @@ class MenuVignette extends LeafRenderObjectWidget {
       ..needsRepaint = needsRepaint;
   }
 
-  @override
-
   // TODO who and when is this called?  needsRepaint needed then?
   // Need this like timeline_render_widget.dart too?:
   //   cTrkh.t.onNeedPaint = markNeedsPaint;
   //   markNeedsPaint();
   //   markNeedsLayout();
+  @override
   void updateRenderObject(
       BuildContext context, covariant MenuVignetteRenderObject renderObject) {
     /// The [BlocProvider] widgets down the tree to access its components

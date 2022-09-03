@@ -127,6 +127,7 @@ class TimeController extends GetxHapi {
   static TimeController get to => Get.find();
 
   static DAY_OF_WEEK defaultDayOfWeek = DAY_OF_WEEK.Monday;
+  static int thisYear = TimeController.to.now2().year;
 
   int _ntpOffset = DUMMY_NTP_OFFSET;
 
@@ -191,6 +192,7 @@ class TimeController extends GetxHapi {
     await _updateNtpTime();
     await _updateTimezoneLocation();
     l.d('updateTime: after: ntpOffset=$_ntpOffset, tzLoc=$tzLoc');
+    thisYear = TimeController.to.now2().year;
     update();
   }
 

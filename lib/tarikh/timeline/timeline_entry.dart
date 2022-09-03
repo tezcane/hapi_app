@@ -135,7 +135,6 @@ class TimelineEntry {
     this.endMs,
     this.asset,
     this.accent,
-    this.id,
   ) {
     _handleLabelNewlineCount();
   }
@@ -147,9 +146,6 @@ class TimelineEntry {
 
   /// not always given in json input file, thus nullable:
   Color? accent;
-  String? id;
-
-  static final int todaysAdTimeYears = TimeController.to.now2().year;
 
   /// Used to calculate how many lines to draw for the bubble in the timeline.
   int lineCount = 1;
@@ -224,11 +220,12 @@ class TimelineEntry {
 
     double trValYearsAgo;
     String adBc = ' ${'i.AD'.tr} (';
+
     if (eventYear <= 0) {
       adBc = ' ${'i.BC'.tr} (';
-      trValYearsAgo = eventYear.abs() + todaysAdTimeYears;
+      trValYearsAgo = eventYear.abs() + TimeController.thisYear;
     } else {
-      trValYearsAgo = todaysAdTimeYears - eventYear;
+      trValYearsAgo = TimeController.thisYear - eventYear;
     }
     return cns(eventYear.abs().toStringAsFixed(0)) +
         adBc +

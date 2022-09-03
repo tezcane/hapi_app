@@ -372,7 +372,8 @@ class TimelineInitHandler {
       Color? accent;
       if (map.containsKey('accent')) accent = colorFromList(map['accent']);
 
-      /// OPTIONAL FIELD 2 of 2: Some entries will also have an id
+      /// OPTIONAL FIELD 2 of 2: Some entries will also have an id that is
+      /// looked up to find the menu animation.
       String? id;
       if (map.containsKey('id')) id = map['id'];
 
@@ -387,7 +388,6 @@ class TimelineInitHandler {
         endMs,
         asset,
         accent,
-        id,
       );
 
       /// Add TimelineEntry reference 1 of 2:

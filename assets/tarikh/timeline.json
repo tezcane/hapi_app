@@ -217,7 +217,7 @@
 		"end": -65000000,
 		"label": "Dinosaur Age",
 		"id":"dinosaur",
-		"asset": 
+		"asset":
 		{
 			"source": "flare/Dinosaurs.flr",
 			"width": 800,

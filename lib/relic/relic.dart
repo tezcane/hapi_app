@@ -1,4 +1,6 @@
-class Relic {
+import 'package:hapi/tarikh/timeline/timeline_entry.dart';
+
+class Relic { //}extends TimelineEntry {
   Relic(
     this.category,
     this.nameEn,
@@ -8,7 +10,7 @@ class Relic {
     this.dateEra,
     this.dateBegin,
     this.dateEnd,
-  );
+  );// : super('', null, 0.0, 0.0, null, null);
   final String category;
   final String nameEn;
   final String nameAr;
