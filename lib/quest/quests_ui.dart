@@ -34,7 +34,7 @@ class QuestsUI extends StatelessWidget {
           a('a.hapi'),
           'i.Set long-term goals'.tr,
           Icons.brightness_3_outlined,
-          AppThemes.logoText,
+          AppThemes.ajr0Missed,
         ),
         BottomBarItem(
           Container(),
@@ -42,7 +42,7 @@ class QuestsUI extends StatelessWidget {
           a('a.Zaman'),
           'i.Manage and prioritize your time'.tr,
           Icons.timer_outlined,
-          AppThemes.ajr3Rare,
+          AppThemes.ajr4Epic,
         ),
         BottomBarItem(
           const DoListUI(),
@@ -50,7 +50,7 @@ class QuestsUI extends StatelessWidget {
           'i.Daily'.tr,
           'i.Build religious and healthy habits'.tr,
           Icons.brightness_high_outlined,
-          AppThemes.ajr4Epic,
+          AppThemes.ajr5Legendary,
         ),
         BottomBarItem(
           const ActiveQuestsUI(),
@@ -58,7 +58,7 @@ class QuestsUI extends StatelessWidget {
           'i.Active'.tr,
           '                 ${'i.Pray like the Prophet (AS)'.tr}                 ', // FAB
           Icons.how_to_reg_outlined,
-          AppThemes.ajr5Legendary,
+          AppThemes.ajr6Mythic,
         ),
       ];
 

@@ -36,7 +36,7 @@ class TarikhUI extends StatelessWidget {
             'i.Favorites'.tr,
             at('at.{0} Favorites'.tr, [navPage.trKey]),
             Icons.favorite_border_outlined,
-            Colors.pinkAccent, //const Color(0xFFF1AC44),
+            AppThemes.ajr0Missed,
             onPressed: setTarikhMenuInactive,
           ),
           BottomBarItem(
@@ -45,7 +45,7 @@ class TarikhUI extends StatelessWidget {
             'i.Search'.tr,
             at('at.{0} Search'.tr, [navPage.trKey]),
             Icons.search_outlined,
-            AppThemes.logoText,
+            AppThemes.ajr1Common,
             onPressed: setTarikhMenuInactive,
           ),
           BottomBarItem(
@@ -56,7 +56,7 @@ class TarikhUI extends StatelessWidget {
                 at('at.{0} Menu'.tr, [navPage.trKey]) +
                 '                 ', // FAB padding
             Icons.menu_open_rounded,
-            AppThemes.ajr5Legendary,
+            AppThemes.ajr6Mythic,
             onPressed: setTarikhMenuActive,
           ),
         ];

@@ -22,7 +22,7 @@ final navPageValues = [
   NPV(NavPage.Hadith, '', Icons.menu_book_outlined),
   NPV(NavPage.Quran, '', Icons.auto_stories),
   NPV(NavPage.Tarikh, TARIKH_TAB.Menu.name, Icons.history_edu_outlined),
-  NPV(NavPage.Relics, RELIC_TAB.Anbia.name, Icons.brightness_3_outlined),
+  NPV(NavPage.Relics, RELIC_TAB.Allah.name, Icons.brightness_3_outlined),
   NPV(NavPage.Quests, QUEST_TAB.Active.name, Icons.how_to_reg_outlined),
 ];
 

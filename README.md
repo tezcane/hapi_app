@@ -1,3 +1,64 @@
+// enum QUEST_TYPE {
+//   ACTIVE, // FARD, MUAK, NAFL, // Other Sunnah, miswak, washing hands, etc.
+//   DAILY, // DAILY, Mumeen chests
+//   TIME, // USER'S PERSONAL HEALTH, PERSONAL/FAMILY TIME, etc. fall in here
+//   HAPI, // HAPI QUESTS, like collect 10 names of Allah SWT.
+// }
+//
+// // Halal- 5 levels - Haram
+// enum SUNNAH_CLASS {
+//   FARD,
+//   MUAK, // MUAKKADAH/
+//   NAFL,
+// }
+//
+// enum IBADAH_TYPE {
+//   //https://seekersguidance.org/articles/knowledge/ten-types-of-ibadah-worship-imam-al-ghazzali/
+//   SALAH,
+//   SAWM,
+//   CHARITY, // ZAKAT,SADAQAH,
+//   TRAVEL, // HAJJ, UMRAH, VISIT MASJID HARAM, NABAWAI, AQSA,
+//   THIKR, //READ, DUA,
+//   SOCIAL, //DAWAH, WORK, FAMILY Fullfil obligations to others, family/neighbors/friends
+//   JIHAD,
+// }
+
+// FARD_SAWM, // RAMADAN
+// FARD_ZAKAT,
+// FARD_HAJJ,
+
+// MUAK_SALAH_JUMA,
+// MUAK_JUMA_GHUSUL,
+//
+// MUAK_QURAN,
+// MUAK_SADAQAH,
+// MUAK_UMRAH,
+// MUAK_SAWM_ARAFAT,
+//
+// NAFL_SALAH_TARAWEH, // **TAHAJUD in RAMADAN?
+//
+// NAFL_SALAH_ISTIKHARA,
+// NAFL_SALAH_TAHIYATUL_WUDU,
+// NAFL_SALAH_TAHIYATUL_MASJID,
+//
+// USER_WORK_TIME,
+// USER_FAMILY_TIME,
+// USER_PERSONAL_TIME,
+// USER_CALENDAR_EVENT, //TODO import from user calendar
+//
+// USER_CUSTOM,
+//
+// // Halal- 5 levels - Haram
+// enum Ahkam {
+//   //https://en.wikipedia.org/wiki/Ahkam
+//   //https://www.thedeenshow.com/halal-mustahabb-mubah-makrooh-haram/
+//   FARD, // WAJIB
+//   MUSTAHABB, // or MANDOOK, SHOULD DO FOR AJR
+//   MUBAH, // PERMITTED, DON'T DO NO SIN
+//   MAKRUH, // DON'T DO IS BETTER, DO TOO MUCH IS SIN
+//   HARAM, // SIN
+// }
+
 ## CODE GLOSSARY  
 
 a/at - Arabic Translation/Transliteration/Template keys, e.g. "a.Fajr", "at.{} on", see MainC's a()  

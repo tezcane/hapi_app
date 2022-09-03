@@ -9,12 +9,13 @@ import 'package:hapi/quest/active/zaman_controller.dart';
 import 'package:hapi/services/db.dart';
 
 const int ajr0Missed = 0; // shows that they missed all quests
-const int ajr1Common = 1;
-const int ajr2Uncommon = 2;
-const int ajr3Rare = 3;
-const int ajr4Epic = 4;
-const int ajr5Legendary = 5;
-const int ajr6TimeNotInYet = 6; // so can show blank around ring
+// const int ajr1Common = 1;
+// const int ajr2Uncommon = 2;
+// const int ajr3Rare = 3;
+// const int ajr4Epic = 4;
+// const int ajr5Legendary = 5;
+// const int ajr6Mythic = 6;
+const int ajr7TimeNotInYet = 7; // so can show blank around ring
 
 /// ONLY NEW VALUES CAN BE ADDED TO PRESERVE ENUM IN DB:
 enum QUEST {
@@ -503,90 +504,14 @@ class ActiveQuestsAjrController extends GetxHapi {
       for (QUEST q in quests) {
         if (isMiss(q)) missCount++;
       }
-      ajrCount = missCount == quests.length ? ajr0Missed : ajr6TimeNotInYet;
+      ajrCount = missCount == quests.length ? ajr0Missed : ajr7TimeNotInYet;
     } else {
-      if (quests.length == 6) {
-        if (ajrCount == 6) {
-          ajrCount = ajr5Legendary; // 6 = legendary
-        } else if (ajrCount == 5) {
-          ajrCount = ajr4Epic; // 5 = epic
-        }
-      } else if (quests.length == 5) {
-        // no special logic needed, 5 = legendary
-      } else if (quests.length == 4) {
-        if (ajrCount == ajr4Epic) ajrCount = ajr5Legendary; // 4 = legendary
-      } else if (quests.length == 3) {
-        if (ajrCount == 3) {
-          ajrCount = ajr5Legendary; // 3 = legendary
-        } else if (ajrCount == 2) {
-          ajrCount = ajr4Epic; // 2 = epic
-        } else if (ajrCount == 1) {
-          ajrCount = ajr3Rare; // 1 = rare
-        }
+      if (quests.length < 6) {
+        int ajrStartingPoint = 6 - quests.length;
+        ajrCount += ajrStartingPoint;
       }
     }
 
     questRingColors[z] = ajrCount;
   }
 }
-
-// enum QUEST_TYPE {
-//   ACTIVE, // FARD, MUAK, NAFL, // Other Sunnah, miswak, washing hands, etc.
-//   DAILY, // DAILY, Mumeen chests
-//   TIME, // USER'S PERSONAL HEALTH, PERSONAL/FAMILY TIME, etc. fall in here
-//   HAPI, // HAPI QUESTS, like collect 10 names of Allah SWT.
-// }
-//
-// // Halal- 5 levels - Haram
-// enum SUNNAH_CLASS {
-//   FARD,
-//   MUAK, // MUAKKADAH/
-//   NAFL,
-// }
-//
-// enum IBADAH_TYPE {
-//   //https://seekersguidance.org/articles/knowledge/ten-types-of-ibadah-worship-imam-al-ghazzali/
-//   SALAH,
-//   SAWM,
-//   CHARITY, // ZAKAT,SADAQAH,
-//   TRAVEL, // HAJJ, UMRAH, VISIT MASJID HARAM, NABAWAI, AQSA,
-//   THIKR, //READ, DUA,
-//   SOCIAL, //DAWAH, WORK, FAMILY Fullfil obligations to others, family/neighbors/friends
-//   JIHAD,
-// }
-
-// FARD_SAWM, // RAMADAN
-// FARD_ZAKAT,
-// FARD_HAJJ,
-
-// MUAK_SALAH_JUMA,
-// MUAK_JUMA_GHUSUL,
-//
-// MUAK_QURAN,
-// MUAK_SADAQAH,
-// MUAK_UMRAH,
-// MUAK_SAWM_ARAFAT,
-//
-// NAFL_SALAH_TARAWEH, // **TAHAJUD in RAMADAN?
-//
-// NAFL_SALAH_ISTIKHARA,
-// NAFL_SALAH_TAHIYATUL_WUDU,
-// NAFL_SALAH_TAHIYATUL_MASJID,
-//
-// USER_WORK_TIME,
-// USER_FAMILY_TIME,
-// USER_PERSONAL_TIME,
-// USER_CALENDAR_EVENT, //TODO import from user calendar
-//
-// USER_CUSTOM,
-//
-// // Halal- 5 levels - Haram
-// enum Ahkam {
-//   //https://en.wikipedia.org/wiki/Ahkam
-//   //https://www.thedeenshow.com/halal-mustahabb-mubah-makrooh-haram/
-//   FARD, // WAJIB
-//   MUSTAHABB, // or MANDOOK, SHOULD DO FOR AJR
-//   MUBAH, // PERMITTED, DON'T DO NO SIN
-//   MAKRUH, // DON'T DO IS BETTER, DO TOO MUCH IS SIN
-//   HARAM, // SIN
-// }
