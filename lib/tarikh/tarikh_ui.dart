@@ -4,6 +4,7 @@ import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/bottom_bar.dart';
 import 'package:hapi/menu/bottom_bar_menu.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_controller.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/menu/slide/menu_right/menu_right_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_favorites_ui.dart';
@@ -44,7 +45,7 @@ class TarikhUI extends StatelessWidget {
             'i.Search'.tr,
             at('at.{0} Search'.tr, [navPage.trKey]),
             Icons.search_outlined,
-            Colors.greenAccent.shade700, //.orange,
+            AppThemes.logoText,
             onPressed: setTarikhMenuInactive,
           ),
           BottomBarItem(
@@ -55,7 +56,7 @@ class TarikhUI extends StatelessWidget {
                 at('at.{0} Menu'.tr, [navPage.trKey]) +
                 '                 ', // FAB padding
             Icons.menu_open_rounded,
-            Colors.blue,
+            AppThemes.ajr5Legendary,
             onPressed: setTarikhMenuActive,
           ),
         ];

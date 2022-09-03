@@ -10,18 +10,23 @@ import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/quest/active/active_quests_settings_ui.dart';
 import 'package:hapi/quest/active/active_quests_ui.dart';
 import 'package:hapi/quest/daily/do_list/do_list_quest_ui.dart';
+import 'package:hapi/relic/relics_favorites_ui.dart';
+import 'package:hapi/relic/relics_search_ui.dart';
 
-enum QUEST_TAB {
-  hapi,
-  Time,
-  Daily,
-  Active,
+enum RELIC_TAB {
+  Favorites,
+  Search,
+  Universities,
+  Relics, // a.Alathar
+  Mosques,
+  Anbia,
+  Asma_ul_Husna,
 }
 
 /// Init active/daily/timed/hapi quests with slick bottom bar navigation
-class QuestsUI extends StatelessWidget {
-  const QuestsUI();
-  static const navPage = NavPage.Quests;
+class RelicsUI extends StatelessWidget {
+  const RelicsUI();
+  static const navPage = NavPage.Relics;
 
   @override
   Widget build(BuildContext context) {
@@ -29,35 +34,59 @@ class QuestsUI extends StatelessWidget {
       // do here to save memory:
       final List<BottomBarItem> bottomBarItems = [
         BottomBarItem(
-          Container(),
+          const RelicsFavoritesUI(),
           null,
-          a('a.hapi'),
-          'i.Set long-term goals'.tr,
-          Icons.brightness_3_outlined,
+          'i.Favorites'.tr,
+          at('at.{0} Favorites'.tr, [navPage.trKey]),
+          Icons.favorite_border_outlined,
+          Colors.pinkAccent,
+        ),
+        BottomBarItem(
+          const RelicsSearchUI(),
+          null,
+          'i.Search'.tr,
+          at('at.{0} Search'.tr, [navPage.trKey]),
+          Icons.search_outlined,
           AppThemes.logoText,
         ),
         BottomBarItem(
-          Container(),
+          T('i.Coming Soon', tsB),
           null,
-          a('a.Zaman'),
-          'i.Manage and prioritize your time'.tr,
-          Icons.timer_outlined,
+          'i.Universities'.tr,
+          'i.Famous Muslim Universities'.tr,
+          Icons.school_outlined,
+          AppThemes.ajr1Common,
+        ),
+        BottomBarItem(
+          T('i.Coming Soon', tsB),
+          null,
+          'a.Alathar'.tr,
+          'i.Religious relics and locations'.tr,
+          Icons.wine_bar_sharp,
+          AppThemes.ajr2Uncommon
+        ),
+        BottomBarItem(
+          T('i.Coming Soon', tsB),
+          null,
+          'i.Mosques'.tr,
+          'i.Famous mosques'.tr,
+          Icons.mosque_outlined,
           AppThemes.ajr3Rare,
         ),
         BottomBarItem(
-          const DoListUI(),
+          Container(),
           null,
-          'i.Daily'.tr,
-          'i.Build religious and healthy habits'.tr,
-          Icons.brightness_high_outlined,
-          AppThemes.ajr4Epic,
+          a('a.Anbia'),
+          '       '+'i.Prophets mentioned in the Quran'.tr+'              ',
+          Icons.connect_without_contact_outlined,
+            AppThemes.ajr4Epic,
         ),
         BottomBarItem(
-          const ActiveQuestsUI(),
-          ActiveQuestsSettingsUI(),
-          'i.Active'.tr,
-          '                 ${'i.Pray like the Prophet (AS)'.tr}                 ', // FAB
-          Icons.how_to_reg_outlined,
+          T('i.Coming Soon', tsB),
+          null,
+          a('i.Asma-ul-Husna'),
+          '       '+at('at.99 names of {0} {1}', ['a.Allah', 'a.SWT'])+'              ',
+          Icons.apps_outlined,
           AppThemes.ajr5Legendary,
         ),
       ];

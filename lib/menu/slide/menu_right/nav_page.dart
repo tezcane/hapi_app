@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/quest/quests_ui.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_controller.dart';
+import 'package:hapi/relic/relics_ui.dart';
 import 'package:hapi/tarikh/tarikh_ui.dart';
 
 /// NPV= Nav Page Value holds values used to init a NavPage.
@@ -21,7 +22,7 @@ final navPageValues = [
   NPV(NavPage.Hadith, '', Icons.menu_book_outlined),
   NPV(NavPage.Quran, '', Icons.auto_stories),
   NPV(NavPage.Tarikh, TARIKH_TAB.Menu.name, Icons.history_edu_outlined),
-  NPV(NavPage.Relics, '', Icons.brightness_3_outlined),
+  NPV(NavPage.Relics, RELIC_TAB.Anbia.name, Icons.brightness_3_outlined),
   NPV(NavPage.Quests, QUEST_TAB.Active.name, Icons.how_to_reg_outlined),
 ];
 
@@ -92,7 +93,8 @@ extension EnumUtil on NavPage {
       case (NavPage.Tarikh):
         return TARIKH_TAB.values;
     // case (NavPage.Tools):
-    // case (NavPage.Relics):
+      case (NavPage.Relics):
+        return RELIC_TAB.values;
       case (NavPage.Quests):
         return QUEST_TAB.values;
       default:
