@@ -671,9 +671,9 @@ class SalahRow extends StatelessWidget {
               ZamanController.to.athan!.fajrTomorrow,
             ),
           ),
-          flex: 99, // NOTE, 100 and without below flex: 3, UI was broken.
+          flex: 100, // NOTE, 100 and without below flex: 3, UI was broken.
         ),
-        Expanded(child: Container(), flex: 3), // move fajrTomorrow a bit left
+        Expanded(child: Container(), flex: 2), // move fajrTomorrow a bit left
       ],
     );
   }
