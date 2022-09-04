@@ -1,4 +1,5 @@
 import 'package:hapi/main_controller.dart';
+import 'package:hapi/quran/quran.dart';
 import 'package:hapi/relic/relic.dart';
 
 class Prophet extends Relic {
