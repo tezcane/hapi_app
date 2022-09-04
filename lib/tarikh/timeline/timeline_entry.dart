@@ -14,10 +14,10 @@ import 'package:nima/nima/math/aabb.dart' as nima;
 /// Each [TimelineAsset] encapsulates all the relevant properties for drawing,
 /// as well as maintaining a reference to its original [TimelineEntry].
 class TimelineAsset {
-  TimelineAsset(this.width, this.height, this.filename, this.scale);
+  TimelineAsset(this.filename, this.width, this.height, this.scale);
+  final String filename;
   final double width;
   final double height;
-  final String filename;
 
   /// Can be overwritten
   double scale;
@@ -34,27 +34,23 @@ class TimelineAsset {
 /// A renderable image.
 class TimelineImage extends TimelineAsset {
   TimelineImage(
-    this.image,
-    double width,
-    double height,
-    String filename,
-    double scale,
-  ) : super(width, height, filename, scale);
+      String filename, double width, double height, double scale, this.image)
+      : super(filename, width, height, scale);
   final Image image;
 }
 
 /// This asset also has information regarding its animations.
 class TimelineAnimatedAsset extends TimelineAsset {
   TimelineAnimatedAsset(
+    String filename,
+    double width,
+    double height,
+    double scale,
     this.loop,
     this.offset,
     this.gap,
     this.animationTime,
-    double width,
-    double height,
-    String filename,
-    double scale,
-  ) : super(width, height, filename, scale);
+  ) : super(filename, width, height, scale);
   final bool loop;
   final double offset;
   final double gap;
@@ -66,18 +62,18 @@ class TimelineAnimatedAsset extends TimelineAsset {
 /// A `Flare` Asset.
 class TimelineFlare extends TimelineAnimatedAsset {
   TimelineFlare(
+    String filename,
+    double width,
+    double height,
+    double scale,
+    bool loop,
+    double offset,
+    double gap,
     this.actorStatic,
     this.actor,
     this.setupAABB,
     this.animation,
-    bool loop,
-    double offset,
-    double gap,
-    double width,
-    double height,
-    String filename,
-    double scale,
-  ) : super(loop, offset, gap, 0.0, width, height, filename, scale);
+  ) : super(filename, width, height, scale, loop, offset, gap, 0.0);
   final flare.FlutterActorArtboard actorStatic;
   final flare.FlutterActorArtboard actor;
   final flare.AABB setupAABB;
@@ -98,28 +94,30 @@ class TimelineFlare extends TimelineAnimatedAsset {
 /// An `Nima` Asset.
 class TimelineNima extends TimelineAnimatedAsset {
   TimelineNima(
+    String filename,
+    double width,
+    double height,
+    double scale,
+    bool loop,
+    double offset,
+    double gap,
     this.actorStatic,
     this.actor,
     this.setupAABB,
     this.animation,
-    bool loop,
-    double offset,
-    double gap,
-    double width,
-    double height,
-    String filename,
-    double scale,
-  ) : super(loop, offset, gap, 0.0, width, height, filename, scale);
+  ) : super(filename, width, height, scale, loop, offset, gap, 0.0);
   final nima.FlutterActor actorStatic;
   final nima.FlutterActor actor;
   final nima.AABB setupAABB;
   final nima.ActorAnimation animation;
 }
 
-/// A label for [TimelineEntry].
 enum TimelineEntryType {
+  // from json data:
   Era,
   Incident,
+  // from hapi data:
+  Relic,
 }
 
 /// Each entry in the timeline is represented by an instance of this object.
@@ -129,8 +127,9 @@ enum TimelineEntryType {
 /// They are all initialized at startup time by the [BlocProvider] constructor.
 class TimelineEntry {
   TimelineEntry(
-    this._label,
     this.type,
+    this.trKeyEndTagLabel,
+    this.era,
     this.startMs,
     this.endMs,
     this.asset,
@@ -138,8 +137,10 @@ class TimelineEntry {
   ) {
     _handleLabelNewlineCount();
   }
-  final String _label;
+
   final TimelineEntryType type;
+  final String trKeyEndTagLabel; // trKey's end tag: i.<end tag> or a.<end tag>
+  final String era;
   final double startMs;
   final double endMs;
   final TimelineAsset asset;
@@ -185,13 +186,15 @@ class TimelineEntry {
 
   bool get isVisible => opacity > 0.0;
 
+  bool isTimeLineEntry() => startMs != 0 && endMs != 0;
+
   /// Still needed for favorites, up/dn Btn boundary detect, etc.
-  String get label => _label;
+  // String get trKeyEndTagLabel => _trKeyEndTagLabel;
 
   /// The article title trKey is made from appending _label to 'i.' or 'a.'.
   String get trValTitle {
-    String title = 'i.$_label'.tr;
-    return title.startsWith('i.') ? a('a.$_label') : title;
+    String title = 'i.$trKeyEndTagLabel'.tr;
+    return title.startsWith('i.') ? a('a.$trKeyEndTagLabel') : title;
   }
 
   /// Some labels have a newline characters to adjust their alignment.

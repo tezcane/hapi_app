@@ -190,8 +190,9 @@ class TarikhController extends GetxHapi {
   /// Persists the data to disk.
   _saveFavorites() {
     // note saves in any order, must sort on reading in from disk
-    List<String> favsList =
-        _eventFavorites.map((TimelineEntry entry) => entry.label).toList();
+    List<String> favsList = _eventFavorites
+        .map((TimelineEntry entry) => entry.trKeyEndTagLabel)
+        .toList();
     s.wr('TARIKH_FAVS', favsList);
     update(); // favorites changed so notify people using it
   }
@@ -292,6 +293,9 @@ class TimelineInitHandler {
         await rootBundle.loadString('assets/tarikh/timeline.json');
     final List jsonEntries = json.decode(jsonData);
 
+    // TODO test add "era" field per entry and also auto generate it's start and end and zoom by looking at its incidents:
+    String lastEra = '';
+
     /// The JSON decode doesn't provide strong typing, so we'll iterate
     /// on the dynamic entries in the [jsonEntries] list.
     for (Map map in jsonEntries) {
@@ -303,7 +307,7 @@ class TimelineInitHandler {
       /// an `Incident`, or look for the `start` property if it's an `Era` instead.
       /// Some entries will have a `start` element, but not an `end` specified.
       /// These entries specify a particular event such as the appearance of
-      /// "Humans" in history, which hasn't come to an end -- yet.
+      /// "Humans" in history, which hasn't come to an end yet.
       TimelineEntryType type;
       double startMs;
       if (map.containsKey('date')) {
@@ -314,6 +318,7 @@ class TimelineInitHandler {
         type = TimelineEntryType.Era;
         dynamic startVal = map['start'];
         startMs = startVal is int ? startVal.toDouble() : startVal;
+        lastEra = label;
       }
 
       /// Some elements will have an `end` time specified.
@@ -331,6 +336,8 @@ class TimelineInitHandler {
       } else {
         endMs = startMs;
       }
+
+      l.d('lastEra=$lastEra, label=$label');
 
       /// Get Timeline Color Setup:
       if (map.containsKey('timelineColors')) {
@@ -382,8 +389,9 @@ class TimelineInitHandler {
 
       /// Finally create TimeLineEntry object
       var timelineEntry = TimelineEntry(
-        label,
         type,
+        label,
+        lastEra,
         startMs,
         endMs,
         asset,
@@ -398,7 +406,7 @@ class TimelineInitHandler {
 
       /// Add this entry to the list.
       TarikhController.to.eventMap
-          .putIfAbsent(timelineEntry.label, () => timelineEntry);
+          .putIfAbsent(timelineEntry.trKeyEndTagLabel, () => timelineEntry);
       TarikhController.to.events.add(timelineEntry); // sort is probably needed
     }
 
@@ -519,21 +527,15 @@ class TimelineInitHandler {
     switch (getFileExtension(source)) {
       case 'flr':
         asset = await loadFlareAsset(
-            assetMap, filename, loop, offset, gap, width, height, scale);
+            filename, width, height, scale, loop, offset, gap, assetMap);
         break;
       case 'nma':
         asset = await loadNimaAsset(
-            assetMap, filename, loop, offset, gap, width, height, scale);
+            filename, width, height, scale, loop, offset, gap, assetMap);
         break;
-      default: // TODO TEST THIS, MVP can ship with just pictures
-        /// Legacy fallback case: some elements could have been just images.
-        ByteData data = await rootBundle.load(filename);
-        Uint8List list = Uint8List.view(data.buffer);
-        ui.Codec codec = await ui.instantiateImageCodec(list);
-        ui.FrameInfo frame = await codec.getNextFrame();
-
-        asset = TimelineImage(frame.image, width, height, filename, scale);
-
+      default:
+        // Legacy fallback case: some elements just use images.
+        asset = await loadImageAsset(filename, width, height, scale);
         break;
     }
 
@@ -541,14 +543,14 @@ class TimelineInitHandler {
   }
 
   Future<TimelineAsset> loadFlareAsset(
-    Map assetMap,
     String filename,
-    bool loop,
-    double offset,
-    double gap,
     double width,
     double height,
     double scale,
+    bool loop,
+    double offset,
+    double gap,
+    Map assetMap,
   ) async {
     flare.FlutterActor flutterActor = flare.FlutterActor();
 
@@ -608,17 +610,17 @@ class TimelineInitHandler {
     }
 
     TimelineFlare flareAsset = TimelineFlare(
+      filename,
+      width,
+      height,
+      scale,
+      loop,
+      offset,
+      gap,
       actorStatic,
       actor,
       setupAABB,
       animation,
-      loop,
-      offset,
-      gap,
-      width,
-      height,
-      filename,
-      scale,
     );
 
     // set optional fields, if they exist:
@@ -630,14 +632,14 @@ class TimelineInitHandler {
   }
 
   Future<TimelineAsset> loadNimaAsset(
-    Map assetMap,
     String filename,
-    bool loop,
-    double offset,
-    double gap,
     double width,
     double height,
     double scale,
+    bool loop,
+    double offset,
+    double gap,
+    Map assetMap,
   ) async {
     nima.FlutterActor flutterActor = nima.FlutterActor();
     await flutterActor.loadFromBundle(filename);
@@ -670,20 +672,34 @@ class TimelineInitHandler {
     }
 
     TimelineNima nimaAsset = TimelineNima(
+      filename,
+      width,
+      height,
+      scale,
+      loop,
+      offset,
+      gap,
       actorStatic,
       actor,
       setupAABB,
       animation,
-      loop,
-      offset,
-      gap,
-      width,
-      height,
-      filename,
-      scale,
     );
 
     return nimaAsset;
+  }
+
+  Future<TimelineAsset> loadImageAsset(
+    String filename,
+    double width,
+    double height,
+    double scale,
+  ) async {
+    ByteData data = await rootBundle.load(filename);
+    Uint8List list = Uint8List.view(data.buffer);
+    ui.Codec codec = await ui.instantiateImageCodec(list);
+    ui.FrameInfo frame = await codec.getNextFrame();
+
+    return TimelineImage(filename, width, height, scale, frame.image);
   }
 
   /// Helper function for [MenuVignette].

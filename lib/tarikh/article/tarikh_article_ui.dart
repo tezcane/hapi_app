@@ -50,7 +50,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
   initState() {
     super.initState();
 
-    _labelLowerCase = widget.article.label.toLowerCase();
+    _labelLowerCase = widget.article.trKeyEndTagLabel.toLowerCase();
 
     TextStyle h1 = Get.theme.textTheme.headline4!
         .copyWith(fontSize: 32.0, height: 1.625, fontWeight: FontWeight.bold);
@@ -89,8 +89,8 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
 
   /// Load the markdown file from the assets and set the contents of the page to its value.
   void loadMarkdown() async {
-    String trValArticleMarkdown =
-        await LanguageController.to.trValTarikhArticle(widget.article.label);
+    String trValArticleMarkdown = await LanguageController.to
+        .trValTarikhArticle(widget.article.trKeyEndTagLabel);
     setState(() {
       _trValArticleMarkdown = trValArticleMarkdown;
     });
@@ -105,8 +105,8 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
   Widget build(BuildContext context) {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
     List<TimelineEntry> favs = TarikhController.to.eventFavorites;
-    bool isFav =
-        favs.any((TimelineEntry e) => e.label.toLowerCase() == _labelLowerCase);
+    bool isFav = favs.any((TimelineEntry e) =>
+        e.trKeyEndTagLabel.toLowerCase() == _labelLowerCase); // TODO needed?
     return FabSubPage(
       subPage: SubPage.Tarikh_Article,
       child: Stack(

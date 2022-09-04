@@ -1,34 +1,44 @@
+import 'package:hapi/tarikh/timeline/timeline_entry.dart';
+
+/// Each relic subsection (e.g. Ummah->Prophet) needs to have a RELIC_TYPE so
+/// it can be easily filtered/found later. TODO WIP
 enum RELIC_TYPE {
-  // UMMAH:
+  // Ummah Tab:
   Prophet,
 }
 
-class Relic {
-  //}extends TimelineEntry {
+class Relic extends TimelineEntry {
   Relic({
-    this.ajrLevel,
-    required this.relicId,
+    // TimelineEntry data:
+    required String trKeyEndTagLabel,
+    required String era,
+    required double startMs,
+    required double endMs,
+    required TimelineAsset asset,
+    // Relic data:
     required this.relicType,
-    required this.nameEn,
-    required this.nameAr,
+    required this.relicId,
+    required this.ajrLevel,
     required this.trKeySummary, // e.g. Prophet Summary (ps. keys)
     required this.trKeySummary2, // e.g. Prophet Quran Mentions (pq. keys)
-    this.dateEra,
-    this.dateBegin,
-    this.dateEnd,
-  }); // : super('', null, 0.0, 0.0, null, null);
-  final int? ajrLevel;
+  }) : super(
+          TimelineEntryType.Relic,
+          trKeyEndTagLabel,
+          era,
+          startMs,
+          endMs,
+          asset,
+          null, // accent TODO
+        );
+  final int ajrLevel;
   final RELIC_ID relicId;
   final RELIC_TYPE relicType;
-  final String nameEn;
-  final String nameAr;
   final String trKeySummary;
   final String trKeySummary2;
-  final String? dateEra;
-  final int? dateBegin;
-  final int? dateEnd;
 }
 
+/// For the DB to track ajrLevel, we need each relic to have a unique RELIC_ID.
+/// DB will store the int value of the enum, e.g. RELIC_ID.Prophet_Adam.index
 enum RELIC_ID {
   Prophet_Adam,
   Prophet_Idris,

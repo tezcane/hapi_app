@@ -11,14 +11,14 @@ import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 /// Data container loaded in [TarikhMenuInitHandler.loadFromBundle()].
 class MenuSectionData {
   MenuSectionData(
-    this.label,
+    this.trKeyEndTagLabel,
     this.textColor,
     this.backgroundColor,
     this.assetId,
     this.items,
   );
 
-  final String label;
+  final String trKeyEndTagLabel;
   final Color textColor;
   final Color backgroundColor;
   final String assetId;
@@ -27,8 +27,8 @@ class MenuSectionData {
 
 /// Data container for all the sub-elements of the [MenuSection].
 class MenuItemData {
-  MenuItemData(this.label, this.startMs, this.endMs);
-  final String label;
+  MenuItemData(this.trKeyEndTagLabel, this.startMs, this.endMs);
+  final String trKeyEndTagLabel;
   final double startMs;
   final double endMs;
 
@@ -36,14 +36,15 @@ class MenuItemData {
   double padTop = 0.0;
 //double padBottom = 0.0; // not used, always 0
 
+  /// Attempts to translate 'i.<tag>' if fails, tries 'a.<tag>'.
   String get trValTitle {
-    String title = 'i.$label'.tr;
-    return title.startsWith('i.') ? a('a.$label') : title;
+    String title = 'i.$trKeyEndTagLabel'.tr;
+    return title.startsWith('i.') ? a('a.$trKeyEndTagLabel') : title;
   }
 
   /// When initializing this object from a [TimelineEntry], fill in the
   /// fields according to the [entry] provided. The entry in fact specifies
-  /// a [label], a [startMs] and [endMs] times.
+  /// a [trKeyEndTagLabel], a [startMs] and [endMs] times.
   /// Padding is built depending on the type of the [entry] provided.
   static MenuItemData fromEntry(TimelineEntry entry) {
     // put in timer so btns updates after navigation
@@ -92,7 +93,7 @@ class MenuItemData {
       end = entry.endMs + range;
     }
 
-    var menuItemData = MenuItemData(entry.label, start, end);
+    var menuItemData = MenuItemData(entry.trKeyEndTagLabel, start, end);
     menuItemData.pad = pad;
     menuItemData.padTop = padTop;
 

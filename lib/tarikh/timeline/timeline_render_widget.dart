@@ -515,9 +515,10 @@ class TimelineRenderObject extends RenderBox {
     // Fixes bug where if we drag the timeline beyond first or last entry both
     // up and down buttons show the first/last entry.
     if (cTrkh.timeBtnUp.entry != null && cTrkh.timeBtnDn.entry != null) {
-      String upLabel = cTrkh.timeBtnUp.entry!.label;
-      if (upLabel == cTrkh.timeBtnDn.entry!.label) {
+      String upLabel = cTrkh.timeBtnUp.entry!.trKeyEndTagLabel;
+      if (upLabel == cTrkh.timeBtnDn.entry!.trKeyEndTagLabel) {
         if (upLabel == 'Big Bang') {
+          // TODO asdf broken with new era Birth of Universe?
           l.d('***************** TOO HIGH FIXING ************************');
           cTrkh.updateTimeBtnEntry(cTrkh.timeBtnUp, null);
         } else {

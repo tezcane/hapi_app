@@ -17,7 +17,7 @@ typedef NavigateTo = Function(MenuItemData item);
 /// Since this widget expands and contracts when tapped, it needs to maintain a [State].
 class MenuSection extends StatefulWidget {
   const MenuSection(
-    this.menuTitle,
+    this.trKeyEndTagMenuTitle,
     this.backgroundColor,
     this.accentColor,
     this.menuOptions,
@@ -25,7 +25,7 @@ class MenuSection extends StatefulWidget {
     this.isActive, {
     required this.assetId,
   });
-  final String menuTitle;
+  final String trKeyEndTagMenuTitle;
   final Color backgroundColor;
   final Color accentColor;
   final List<MenuItemData> menuOptions;
@@ -34,8 +34,8 @@ class MenuSection extends StatefulWidget {
   final bool isActive;
 
   String get trValTitle {
-    String title = 'i.$menuTitle'.tr;
-    return title.startsWith('i.') ? a('a.$menuTitle') : title;
+    String title = 'i.$trKeyEndTagMenuTitle'.tr;
+    return title.startsWith('i.') ? a('a.$trKeyEndTagMenuTitle') : title;
   }
 
   @override

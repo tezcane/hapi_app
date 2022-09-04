@@ -3,7 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:get/get.dart';
 import 'package:hapi/components/alerts/bounce_alert.dart';
-import 'package:hapi/components/seperator.dart';
+import 'package:hapi/components/separator.dart';
 import 'package:hapi/components/two_colored_icon.dart';
 import 'package:hapi/controllers/notification_controller.dart';
 import 'package:hapi/controllers/time_controller.dart';

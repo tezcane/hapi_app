@@ -74,7 +74,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   initState() {
     if (widget.entry == null) {
       // lookup entry manually since not provided on init
-      widget.entry = TarikhController.to.eventMap[widget.focusItem.label];
+      widget.entry =
+          TarikhController.to.eventMap[widget.focusItem.trKeyEndTagLabel];
 
       // We need entry just to update down/up past/future btns. Since it wasn't
       // used/available/wanted? by the original caller to this class, we ignore

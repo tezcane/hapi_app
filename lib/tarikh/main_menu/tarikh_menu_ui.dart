@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/components/seperator.dart';
+import 'package:hapi/components/separator.dart';
 import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/tarikh/main_menu/main_menu_section.dart';
@@ -51,7 +51,7 @@ class TarikhMenuUI extends StatelessWidget {
                     margin: const EdgeInsets.only(top: 20.0),
                     child: GetBuilder<TarikhController>(builder: (c) {
                       return MenuSection(
-                        c.tarikhMenuData[index].label,
+                        c.tarikhMenuData[index].trKeyEndTagLabel,
                         c.tarikhMenuData[index].backgroundColor,
                         c.tarikhMenuData[index].textColor,
                         c.tarikhMenuData[index].items,

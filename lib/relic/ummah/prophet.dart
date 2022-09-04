@@ -1,20 +1,27 @@
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/quran/quran.dart';
 import 'package:hapi/relic/relic.dart';
+import 'package:hapi/tarikh/tarikh_controller.dart';
+import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
 class Prophet extends Relic {
   Prophet({
-    required Map<int, int> ajrLevels,
+    // TimelineEntry data:
+    required String trKeyEndTagLabel,
+    required era,
+    required double startMs,
+    required double endMs,
+    required TimelineAsset asset,
+    // Relic data:
     required RELIC_ID relicId,
-    required String trKeyEndTag,
-    required String? dateEra,
-    required int? dateBegin,
-    required int? dateEnd,
-    required this.mentionsInQuran,
+    required int ajrLevel,
+    // Required prophet data:
     required this.sentTo,
+    required this.quranMentionCount,
     required this.nabi,
+    // Optional prophet data:
     this.rasul,
-    this.ulualazm,
+    this.uluAlAzm,
     this.nameLatin,
     this.trKeyNameNicknamesAr,
     this.locationBirth,
@@ -28,29 +35,27 @@ class Prophet extends Relic {
     this.childrenAr,
     this.relativesAr,
     this.kitabAr,
-    this.livedDuring,
   }) : super(
-          ajrLevel: ajrLevels[relicId.index],
-          relicId: relicId,
+          // TimelineEntry data:
+          trKeyEndTagLabel: trKeyEndTagLabel,
+          era: era,
+          startMs: startMs,
+          endMs: endMs,
+          asset: asset,
+          // Relic data:
           relicType: RELIC_TYPE.Prophet,
-          nameEn: trKeyEndTag,
-          nameAr: a('a.$trKeyEndTag'),
-          trKeySummary: 'ps.$trKeyEndTag',
-          trKeySummary2: 'pq.$trKeyEndTag',
-          dateEra: dateEra,
-          dateBegin: dateBegin,
-          dateEnd: dateEnd,
+          relicId: relicId,
+          ajrLevel: ajrLevel,
+          trKeySummary: 'ps.$trKeyEndTagLabel', // ps=Prophet Summary
+          trKeySummary2: 'pq.$trKeyEndTagLabel', // pq=Prophet Quran mentions
         );
-  // Prophet (nabī) نَبِيّ	Messenger (rasūl) رَسُول
-  // Archprophet (ʾulu al-'azm)
-  final int mentionsInQuran;
-  // nation the prophet was sent to:
-  final String sentTo;
-  // final List<QV> quranVerses;
-  final QV nabi;
-
-  final QV? rasul;
-  final List<QV>? ulualazm;
+  // Required prophet data:
+  final int quranMentionCount;
+  final String sentTo; // nation the prophet was sent to:
+  final QV nabi; // Prophet (nabī) نَبِيّ
+  // Optional prophet data:
+  final QV? rasul; //Messenger (rasūl) رَسُول
+  final List<QV>? uluAlAzm; // Archprophet (ʾUlu Al-'Azm)
   final String? nameLatin;
   final List<String>? trKeyNameNicknamesAr;
   final String? locationBirth;
@@ -64,20 +69,24 @@ class Prophet extends Relic {
   final List<String>? childrenAr;
   final List<String>? relativesAr;
   final String? kitabAr;
-  final String? livedDuring;
+
+  bool isRasul() => rasul != null;
+  bool isUluAlAzm() => uluAlAzm != null && uluAlAzm!.isNotEmpty;
 }
 
 List<Prophet> prophets = [];
-initProphets(Map<int, int> ajrLevels) {
+initProphets(Map<int, int> ajrLevels) async {
   prophets.add(Prophet(
-      ajrLevels: ajrLevels,
+      asset: await TarikhController.tih.loadImageAsset(
+          '${RELIC_ID.Prophet_Adam.name.split('_')[1]}.png', 528, 528, -40),
+      ajrLevel: ajrLevels[RELIC_ID.Prophet_Adam.index]!,
       relicId: RELIC_ID.Prophet_Adam,
-      trKeyEndTag: 'Adam',
-      dateEra: 'p.Birth of humanity',
-      dateBegin: -3400000,
-      dateEnd: -3399050,
-      mentionsInQuran: 25,
-      sentTo: 'p.Earth (4:1)',
+      trKeyEndTagLabel: 'Adam',
+      era: 'p.Birth of humanity',
+      startMs: -3400000,
+      endMs: -3399050,
+      quranMentionCount: 25,
+      sentTo: 'p.First man on Earth (4:1)',
       nabi: QV(2, 31),
       rasul: QV(2, 31),
       nameLatin: 'Adam',
@@ -91,16 +100,17 @@ initProphets(Map<int, int> ajrLevels) {
       spousesAr: ['a.Hawwa'],
       childrenAr: ['a.Habel', 'a.Qabel', 'a.Sheth'],
       relativesAr: null,
-      kitabAr: null,
-      livedDuring: 'Birth of humanity'));
+      kitabAr: null));
   prophets.add(Prophet(
-      ajrLevels: ajrLevels,
+      asset: await TarikhController.tih.loadImageAsset(
+          '${RELIC_ID.Prophet_Idris.name.split('_')[1]}.png', 528, 528, -40),
+      ajrLevel: ajrLevels[RELIC_ID.Prophet_Idris.index]!,
       relicId: RELIC_ID.Prophet_Idris,
-      trKeyEndTag: 'Idris',
-      dateEra: null,
-      dateBegin: null,
-      dateEnd: null,
-      mentionsInQuran: 2,
+      trKeyEndTagLabel: 'Idris',
+      era: 'p.Early humans',
+      startMs: 0,
+      endMs: 0,
+      quranMentionCount: 2,
       sentTo: 'p.Babylon',
       nabi: QV(19, 56),
       nameLatin: 'Enoch',
@@ -114,20 +124,21 @@ initProphets(Map<int, int> ajrLevels) {
       spousesAr: null,
       childrenAr: ["a.'Anaq"],
       relativesAr: null,
-      kitabAr: null,
-      livedDuring: null));
+      kitabAr: null));
   prophets.add(Prophet(
-      ajrLevels: ajrLevels,
+      asset: await TarikhController.tih.loadImageAsset(
+          '${RELIC_ID.Prophet_Nuh.name.split('_')[1]}.png', 528, 528, -40),
+      ajrLevel: ajrLevels[RELIC_ID.Prophet_Nuh.index]!,
       relicId: RELIC_ID.Prophet_Nuh,
-      trKeyEndTag: 'Nuh',
-      dateEra: 'p.Great Flood',
-      dateBegin: null,
-      dateEnd: null,
-      mentionsInQuran: 43,
+      trKeyEndTagLabel: 'Nuh',
+      era: 'p.Great Flood',
+      startMs: 0,
+      endMs: 0,
+      quranMentionCount: 43,
       sentTo: 'p.The people of Noah (26:105)',
       nabi: QV(6, 89),
       rasul: QV(25, 107),
-      ulualazm: [QV(46, 35), QV(33, 7)],
+      uluAlAzm: [QV(46, 35), QV(33, 7)],
       nameLatin: 'Noah',
       locationBirth: null,
       locationDeath: null,
@@ -139,16 +150,17 @@ initProphets(Map<int, int> ajrLevels) {
       spousesAr: null,
       childrenAr: null,
       relativesAr: null,
-      kitabAr: null,
-      livedDuring: 'Great Flood'));
+      kitabAr: null));
   prophets.add(Prophet(
-      ajrLevels: ajrLevels,
+      asset: await TarikhController.tih.loadImageAsset(
+          '${RELIC_ID.Prophet_Hud.name.split('_')[1]}.png', 528, 528, -40),
+      ajrLevel: ajrLevels[RELIC_ID.Prophet_Hud.index]!,
       relicId: RELIC_ID.Prophet_Hud,
-      trKeyEndTag: 'Hud',
-      dateEra: null,
-      dateBegin: -2400,
-      dateEnd: null,
-      mentionsInQuran: 7,
+      trKeyEndTagLabel: 'Hud',
+      era: 'Unknown',
+      startMs: -2400,
+      endMs: 0,
+      quranMentionCount: 7,
       sentTo: 'p.Ad tribe (7:65)',
       nabi: QV(26, 125),
       rasul: QV(26, 125),
@@ -162,16 +174,17 @@ initProphets(Map<int, int> ajrLevels) {
       spousesAr: null,
       childrenAr: ['a.Shem', 'a.Ham', 'a.Yam', 'a.Japheth'],
       relativesAr: null,
-      kitabAr: null,
-      livedDuring: 'c. 2400 BC[78]'));
+      kitabAr: null));
   prophets.add(Prophet(
-      ajrLevels: ajrLevels,
+      asset: await TarikhController.tih.loadImageAsset(
+          '${RELIC_ID.Prophet_Saleh.name.split('_')[1]}.png', 528, 528, -40),
+      ajrLevel: ajrLevels[RELIC_ID.Prophet_Saleh.index]!,
       relicId: RELIC_ID.Prophet_Saleh,
-      trKeyEndTag: 'Saleh',
-      dateEra: null,
-      dateBegin: null,
-      dateEnd: null,
-      mentionsInQuran: 9,
+      trKeyEndTagLabel: 'Saleh',
+      era: 'Unknown',
+      startMs: 0,
+      endMs: 0,
+      quranMentionCount: 9,
       sentTo: 'p.Thamud tribe (7:73)',
       nabi: QV(26, 143),
       rasul: QV(26, 143),
@@ -186,20 +199,21 @@ initProphets(Map<int, int> ajrLevels) {
       spousesAr: null,
       childrenAr: null,
       relativesAr: ['a.Thamud'],
-      kitabAr: null,
-      livedDuring: null));
+      kitabAr: null));
   prophets.add(Prophet(
-      ajrLevels: ajrLevels,
+      asset: await TarikhController.tih.loadImageAsset(
+          '${RELIC_ID.Prophet_Ibrahim.name.split('_')[1]}.png', 528, 528, -40),
+      ajrLevel: ajrLevels[RELIC_ID.Prophet_Ibrahim.index]!,
       relicId: RELIC_ID.Prophet_Ibrahim,
-      trKeyEndTag: 'Ibrahim',
-      dateEra: 'p.Migration of the Jews to Iraq',
-      dateBegin: null,
-      dateEnd: null,
-      mentionsInQuran: 69,
+      trKeyEndTagLabel: 'Ibrahim',
+      era: 'p.Migration of the Jews to Iraq',
+      startMs: 0,
+      endMs: 0,
+      quranMentionCount: 69,
       sentTo: 'p.Babylon, The people of Iraq & Syria (22:43)',
       nabi: QV(19, 41),
       rasul: QV(9, 70),
-      ulualazm: [QV(2, 124)],
+      uluAlAzm: [QV(2, 124)],
       nameLatin: 'Abraham',
       trKeyNameNicknamesAr: ['a.Khalīlullāh'],
       locationBirth: 'p.Ur al-Chaldees, Bilād ar-Rāfidayn',
@@ -214,16 +228,17 @@ initProphets(Map<int, int> ajrLevels) {
       relativesAr: [
         at('at.{0} (nephew)', ['a.Lut'])
       ],
-      kitabAr: 'Scrolls of Abraham (87:19)',
-      livedDuring: 'Migration of the Jews to Iraq'));
+      kitabAr: 'Scrolls of Abraham (87:19)'));
   prophets.add(Prophet(
-      ajrLevels: ajrLevels,
+      asset: await TarikhController.tih.loadImageAsset(
+          '${RELIC_ID.Prophet_Lut.name.split('_')[1]}.png', 528, 528, -40),
+      ajrLevel: ajrLevels[RELIC_ID.Prophet_Lut.index]!,
       relicId: RELIC_ID.Prophet_Lut,
-      trKeyEndTag: 'Lut',
-      dateEra: null,
-      dateBegin: null,
-      dateEnd: null,
-      mentionsInQuran: 27,
+      trKeyEndTagLabel: 'Lut',
+      era: 'Unknown',
+      startMs: 0,
+      endMs: 0,
+      quranMentionCount: 27,
       sentTo: 'p.Sodom and Gomorrah (7:80)',
       nabi: QV(6, 86),
       rasul: QV(37, 133),
@@ -238,16 +253,17 @@ initProphets(Map<int, int> ajrLevels) {
       spousesAr: null,
       childrenAr: ["a.Isma'il", "a.Is'ḥaq"],
       relativesAr: ['Ibrahim (uncle)'],
-      kitabAr: null,
-      livedDuring: null));
+      kitabAr: null));
   prophets.add(Prophet(
-      ajrLevels: ajrLevels,
+      asset: await TarikhController.tih.loadImageAsset(
+          '${RELIC_ID.Prophet_Isma_il.name.split('_')[1]}.png', 528, 528, -40),
+      ajrLevel: ajrLevels[RELIC_ID.Prophet_Isma_il.index]!,
       relicId: RELIC_ID.Prophet_Isma_il,
-      trKeyEndTag: "Isma'il",
-      dateEra: null,
-      dateBegin: -1800,
-      dateEnd: -1664,
-      mentionsInQuran: 12,
+      trKeyEndTagLabel: "Isma'il",
+      era: 'Unknown',
+      startMs: -1800,
+      endMs: -1664,
+      quranMentionCount: 12,
       sentTo: 'p.Pre-Islamic Arabia (Mecca)',
       nabi: QV(19, 54),
       rasul: QV(19, 54),
@@ -262,18 +278,19 @@ initProphets(Map<int, int> ajrLevels) {
       spousesAr: null,
       childrenAr: null,
       relativesAr: [
-        at("{0} (half-brother)", ["p.Is'haq"])
+        at('at.{0} (Half-Brother)', ["p.Is'haq"])
       ],
-      kitabAr: null,
-      livedDuring: null));
+      kitabAr: null));
   prophets.add(Prophet(
-      ajrLevels: ajrLevels,
+      asset: await TarikhController.tih.loadImageAsset(
+          '${RELIC_ID.Prophet_Is_haq.name.split('_')[1]}.png', 528, 528, -40),
+      ajrLevel: ajrLevels[RELIC_ID.Prophet_Is_haq.index]!,
       relicId: RELIC_ID.Prophet_Is_haq,
-      trKeyEndTag: "Is'haq",
-      dateEra: null,
-      dateBegin: null,
-      dateEnd: null,
-      mentionsInQuran: 17,
+      trKeyEndTagLabel: "Is'haq",
+      era: 'Unknown',
+      startMs: 0,
+      endMs: 0,
+      quranMentionCount: 17,
       sentTo: 'p.Palestine/Canaan',
       nabi: QV(19, 49),
       nameLatin: 'Isaac',
@@ -290,16 +307,17 @@ initProphets(Map<int, int> ajrLevels) {
         at('{0} (half-brother)', ["a.Isma'il"]),
         'forefather of the Twelve Tribes of Israel'
       ],
-      kitabAr: null,
-      livedDuring: null));
+      kitabAr: null));
   prophets.add(Prophet(
-      ajrLevels: ajrLevels,
+      asset: await TarikhController.tih.loadImageAsset(
+          '${RELIC_ID.Prophet_Yaqub.name.split('_')[1]}.png', 528, 528, -40),
+      ajrLevel: ajrLevels[RELIC_ID.Prophet_Yaqub.index]!,
       relicId: RELIC_ID.Prophet_Yaqub,
-      trKeyEndTag: 'Yaqub',
-      dateEra: 'p.Twelve Tribes of Israel',
-      dateBegin: null,
-      dateEnd: null,
-      mentionsInQuran: 16,
+      trKeyEndTagLabel: 'Yaqub',
+      era: 'p.Twelve Tribes of Israel',
+      startMs: 0,
+      endMs: 0,
+      quranMentionCount: 16,
       sentTo: 'p.Palestine/Canaan',
       nabi: QV(19, 49),
       nameLatin: 'Jacob',
@@ -314,16 +332,17 @@ initProphets(Map<int, int> ajrLevels) {
       spousesAr: null,
       childrenAr: ['a.Yaqub', 'a.Esau'],
       relativesAr: null,
-      kitabAr: null,
-      livedDuring: 'Twelve Tribes of Israel'));
+      kitabAr: null));
   prophets.add(Prophet(
-      ajrLevels: ajrLevels,
+      asset: await TarikhController.tih.loadImageAsset(
+          '${RELIC_ID.Prophet_Yusuf.name.split('_')[1]}.png', 528, 528, -40),
+      ajrLevel: ajrLevels[RELIC_ID.Prophet_Yusuf.index]!,
       relicId: RELIC_ID.Prophet_Yusuf,
-      trKeyEndTag: 'Yusuf',
-      dateEra: null,
-      dateBegin: null,
-      dateEnd: null,
-      mentionsInQuran: 27,
+      trKeyEndTagLabel: 'Yusuf',
+      era: 'Unknown',
+      startMs: 0,
+      endMs: 0,
+      quranMentionCount: 27,
       sentTo: 'p.Ancient Kingdom of Egypt',
       nabi: QV(4, 89),
       rasul: QV(40, 34),
@@ -338,16 +357,17 @@ initProphets(Map<int, int> ajrLevels) {
       spousesAr: null,
       childrenAr: ['a.Yusuf', 'a.Bunyamin', '10 others'],
       relativesAr: null,
-      kitabAr: null,
-      livedDuring: null));
+      kitabAr: null));
   prophets.add(Prophet(
-      ajrLevels: ajrLevels,
+      asset: await TarikhController.tih.loadImageAsset(
+          '${RELIC_ID.Prophet_Ayyub.name.split('_')[1]}.png', 528, 528, -40),
+      ajrLevel: ajrLevels[RELIC_ID.Prophet_Ayyub.index]!,
       relicId: RELIC_ID.Prophet_Ayyub,
-      trKeyEndTag: 'Ayyub',
-      dateEra: null,
-      dateBegin: null,
-      dateEnd: null,
-      mentionsInQuran: 4,
+      trKeyEndTagLabel: 'Ayyub',
+      era: 'Unknown',
+      startMs: 0,
+      endMs: 0,
+      quranMentionCount: 4,
       sentTo: 'p.Edom',
       nabi: QV(4, 89),
       nameLatin: 'Job',
@@ -359,16 +379,17 @@ initProphets(Map<int, int> ajrLevels) {
       fatherAr: null,
       spousesAr: null,
       childrenAr: null,
-      kitabAr: null,
-      livedDuring: null));
+      kitabAr: null));
   prophets.add(Prophet(
-      ajrLevels: ajrLevels,
+      asset: await TarikhController.tih.loadImageAsset(
+          '${RELIC_ID.Prophet_Shu_ayb.name.split('_')[1]}.png', 528, 528, -40),
+      ajrLevel: ajrLevels[RELIC_ID.Prophet_Shu_ayb.index]!,
       relicId: RELIC_ID.Prophet_Shu_ayb,
-      trKeyEndTag: "Shu'ayb",
-      dateEra: null,
-      dateBegin: null,
-      dateEnd: null,
-      mentionsInQuran: 9,
+      trKeyEndTagLabel: "Shu'ayb",
+      era: 'Unknown',
+      startMs: 0,
+      endMs: 0,
+      quranMentionCount: 9,
       sentTo: 'p.Midian (7:85)',
       nabi: QV(26, 178),
       rasul: QV(26, 178),
@@ -381,20 +402,21 @@ initProphets(Map<int, int> ajrLevels) {
       fatherAr: null,
       spousesAr: null,
       childrenAr: null,
-      kitabAr: null,
-      livedDuring: null));
+      kitabAr: null));
   prophets.add(Prophet(
-      ajrLevels: ajrLevels,
+      asset: await TarikhController.tih.loadImageAsset(
+          '${RELIC_ID.Prophet_Musa.name.split('_')[1]}.png', 528, 528, -40),
+      ajrLevel: ajrLevels[RELIC_ID.Prophet_Musa.index]!,
       relicId: RELIC_ID.Prophet_Musa,
-      trKeyEndTag: 'Musa',
-      dateEra: 'p.Ancient Pharaoh Kingdoms Of Egypt',
-      dateBegin: -1300,
-      dateEnd: -1200,
-      mentionsInQuran: 136,
+      trKeyEndTagLabel: 'Musa',
+      era: 'p.Ancient Pharaoh Kingdoms Of Egypt',
+      startMs: -1300,
+      endMs: -1200,
+      quranMentionCount: 136,
       sentTo: 'p.Egypt Pharaoh and his establishment (43:46)',
       nabi: QV(20, 47),
       rasul: QV(20, 47),
-      ulualazm: [QV(46, 35), QV(33, 7)],
+      uluAlAzm: [QV(46, 35), QV(33, 7)],
       nameLatin: 'Moses',
       locationBirth: null,
       locationDeath: null,
@@ -406,17 +428,17 @@ initProphets(Map<int, int> ajrLevels) {
       spousesAr: null,
       childrenAr: null,
       relativesAr: ['Harun (Brother)'],
-      kitabAr: 'Ten Commandments, Tawrah (Torah); Scrolls of Moses (53:36)',
-      livedDuring:
-          'c. 1400s BCE – c. 1300s BCE, or c. 1300s BCE – c. 1200s BCE'));
+      kitabAr: 'p.Ten Commandments, Tawrah (Torah); Scrolls of Moses (53:36)'));
   prophets.add(Prophet(
-      ajrLevels: ajrLevels,
+      asset: await TarikhController.tih.loadImageAsset(
+          '${RELIC_ID.Prophet_Harun.name.split('_')[1]}.png', 528, 528, -40),
+      ajrLevel: ajrLevels[RELIC_ID.Prophet_Harun.index]!,
       relicId: RELIC_ID.Prophet_Harun,
-      trKeyEndTag: 'Harun',
-      dateEra: null,
-      dateBegin: -1300,
-      dateEnd: -1200,
-      mentionsInQuran: 20,
+      trKeyEndTagLabel: 'Harun',
+      era: 'Unknown',
+      startMs: -1300,
+      endMs: -1200,
+      quranMentionCount: 20,
       sentTo: 'p.Egypt Pharaoh and his establishment (43:46)',
       nabi: QV(19, 53),
       rasul: QV(20, 47),
@@ -431,16 +453,17 @@ initProphets(Map<int, int> ajrLevels) {
       spousesAr: null,
       childrenAr: null,
       relativesAr: ['Musa (Brother)'],
-      kitabAr: null,
-      livedDuring: null));
+      kitabAr: null));
   prophets.add(Prophet(
-      ajrLevels: ajrLevels,
+      asset: await TarikhController.tih.loadImageAsset(
+          '${RELIC_ID.Prophet_Dawud.name.split('_')[1]}.png', 528, 528, -40),
+      ajrLevel: ajrLevels[RELIC_ID.Prophet_Dawud.index]!,
       relicId: RELIC_ID.Prophet_Dawud,
-      trKeyEndTag: 'Dawud',
-      dateEra: 'p.King of Israel',
-      dateBegin: -1000,
-      dateEnd: -971,
-      mentionsInQuran: 16,
+      trKeyEndTagLabel: 'Dawud',
+      era: 'p.King of Israel',
+      startMs: -1000,
+      endMs: -971,
+      quranMentionCount: 16,
       sentTo: 'p.Jerusalem',
       nabi: QV(6, 89),
       rasul: QV(6, 89),
@@ -455,16 +478,17 @@ initProphets(Map<int, int> ajrLevels) {
       spousesAr: null,
       childrenAr: null,
       relativesAr: null,
-      kitabAr: 'Zabur (Psalms) (17:55, 4:163, 17:55, 21:105)',
-      livedDuring: 'c. 1000s BCE – c. 971 BCE'));
+      kitabAr: 'Zabur (Psalms) (17:55, 4:163, 17:55, 21:105)'));
   prophets.add(Prophet(
-      ajrLevels: ajrLevels,
+      asset: await TarikhController.tih.loadImageAsset(
+          '${RELIC_ID.Prophet_Suleyman.name.split('_')[1]}.png', 528, 528, -40),
+      ajrLevel: ajrLevels[RELIC_ID.Prophet_Suleyman.index]!,
       relicId: RELIC_ID.Prophet_Suleyman,
-      trKeyEndTag: 'Suleyman',
-      dateEra: 'p.King of Israel',
-      dateBegin: -971,
-      dateEnd: -931,
-      mentionsInQuran: 17,
+      trKeyEndTagLabel: 'Suleyman',
+      era: 'p.King of Israel',
+      startMs: -971,
+      endMs: -931,
+      quranMentionCount: 17,
       sentTo: 'p.Jerusalem',
       nabi: QV(6, 89),
       nameLatin: 'Solomon',
@@ -478,16 +502,17 @@ initProphets(Map<int, int> ajrLevels) {
       spousesAr: null,
       childrenAr: null,
       relativesAr: null,
-      kitabAr: null,
-      livedDuring: 'c. 971 BCE – c. 931 BCE'));
+      kitabAr: null));
   prophets.add(Prophet(
-      ajrLevels: ajrLevels,
+      asset: await TarikhController.tih.loadImageAsset(
+          '${RELIC_ID.Prophet_Ilyas.name.split('_')[1]}.png', 528, 528, -40),
+      ajrLevel: ajrLevels[RELIC_ID.Prophet_Ilyas.index]!,
       relicId: RELIC_ID.Prophet_Ilyas,
-      trKeyEndTag: 'Ilyas',
-      dateEra: null,
-      dateBegin: null,
-      dateEnd: null,
-      mentionsInQuran: 2,
+      trKeyEndTagLabel: 'Ilyas',
+      era: 'Unknown',
+      startMs: 0,
+      endMs: 0,
+      quranMentionCount: 2,
       sentTo: 'p.Sumaria, The people of Ilyas (37:124)',
       nabi: QV(6, 89),
       rasul: QV(37, 123),
@@ -503,16 +528,17 @@ initProphets(Map<int, int> ajrLevels) {
       spousesAr: null,
       childrenAr: null,
       relativesAr: null,
-      kitabAr: null,
-      livedDuring: null));
+      kitabAr: null));
   prophets.add(Prophet(
-      ajrLevels: ajrLevels,
+      asset: await TarikhController.tih.loadImageAsset(
+          '${RELIC_ID.Prophet_Alyasa.name.split('_')[1]}.png', 528, 528, -40),
+      ajrLevel: ajrLevels[RELIC_ID.Prophet_Alyasa.index]!,
       relicId: RELIC_ID.Prophet_Alyasa,
-      trKeyEndTag: 'Alyasa',
-      dateEra: null,
-      dateBegin: null,
-      dateEnd: null,
-      mentionsInQuran: 2,
+      trKeyEndTagLabel: 'Alyasa',
+      era: 'Unknown',
+      startMs: 0,
+      endMs: 0,
+      quranMentionCount: 2,
       sentTo: 'p.Samaria, Eastern Arabia, & Persia',
       nabi: QV(6, 89),
       nameLatin: 'Elisha',
@@ -527,16 +553,17 @@ initProphets(Map<int, int> ajrLevels) {
       spousesAr: null,
       childrenAr: null,
       relativesAr: null,
-      kitabAr: null,
-      livedDuring: null));
+      kitabAr: null));
   prophets.add(Prophet(
-      ajrLevels: ajrLevels,
+      asset: await TarikhController.tih.loadImageAsset(
+          '${RELIC_ID.Prophet_Yunus.name.split('_')[1]}.png', 528, 528, -40),
+      ajrLevel: ajrLevels[RELIC_ID.Prophet_Yunus.index]!,
       relicId: RELIC_ID.Prophet_Yunus,
-      trKeyEndTag: 'Yunus',
-      dateEra: null,
-      dateBegin: null,
-      dateEnd: null,
-      mentionsInQuran: 4,
+      trKeyEndTagLabel: 'Yunus',
+      era: 'Unknown',
+      startMs: 0,
+      endMs: 0,
+      quranMentionCount: 4,
       sentTo: 'p.Ninevah, The people of Yunus (10:98)',
       nabi: QV(6, 89),
       rasul: QV(37, 139),
@@ -551,16 +578,20 @@ initProphets(Map<int, int> ajrLevels) {
       spousesAr: null,
       childrenAr: null,
       relativesAr: null,
-      kitabAr: null,
-      livedDuring: null));
+      kitabAr: null));
   prophets.add(Prophet(
-      ajrLevels: ajrLevels,
+      asset: await TarikhController.tih.loadImageAsset(
+          '${RELIC_ID.Prophet_Dhu_al_Kifl.name.split('_')[1]}.png',
+          528,
+          528,
+          -40),
+      ajrLevel: ajrLevels[RELIC_ID.Prophet_Dhu_al_Kifl.index]!,
       relicId: RELIC_ID.Prophet_Dhu_al_Kifl,
-      trKeyEndTag: 'Dhu al-Kifl',
-      dateEra: null,
-      dateBegin: null,
-      dateEnd: null,
-      mentionsInQuran: 2,
+      trKeyEndTagLabel: 'Dhu al-Kifl',
+      era: 'Unknown',
+      startMs: 0,
+      endMs: 0,
+      quranMentionCount: 2,
       sentTo: 'p.Babylon',
       nabi: QV(21, 85, ayaEnd: 86),
       nameLatin: 'Ezekiel?, Buddha?, Joshua?, Obadiah?, Isaiah?',
@@ -575,16 +606,20 @@ initProphets(Map<int, int> ajrLevels) {
       spousesAr: null,
       childrenAr: null,
       relativesAr: null,
-      kitabAr: null,
-      livedDuring: null));
+      kitabAr: null));
   prophets.add(Prophet(
-      ajrLevels: ajrLevels,
+      asset: await TarikhController.tih.loadImageAsset(
+          '${RELIC_ID.Prophet_Zakariyya.name.split('_')[1]}.png',
+          528,
+          528,
+          -40),
+      ajrLevel: ajrLevels[RELIC_ID.Prophet_Zakariyya.index]!,
       relicId: RELIC_ID.Prophet_Zakariyya,
-      trKeyEndTag: 'Zakariyya',
-      dateEra: null,
-      dateBegin: null,
-      dateEnd: null,
-      mentionsInQuran: 7,
+      trKeyEndTagLabel: 'Zakariyya',
+      era: 'Unknown',
+      startMs: 0,
+      endMs: 0,
+      quranMentionCount: 7,
       sentTo: 'p.Jerusalem',
       nabi: QV(6, 89),
       nameLatin: 'Zechariah',
@@ -598,16 +633,17 @@ initProphets(Map<int, int> ajrLevels) {
       spousesAr: null,
       childrenAr: null,
       relativesAr: null,
-      kitabAr: null,
-      livedDuring: null));
+      kitabAr: null));
   prophets.add(Prophet(
-      ajrLevels: ajrLevels,
+      asset: await TarikhController.tih.loadImageAsset(
+          '${RELIC_ID.Prophet_Yahya.name.split('_')[1]}.png', 528, 528, -40),
+      ajrLevel: ajrLevels[RELIC_ID.Prophet_Yahya.index]!,
       relicId: RELIC_ID.Prophet_Yahya,
-      trKeyEndTag: 'Yahya',
-      dateEra: null,
-      dateBegin: null,
-      dateEnd: null,
-      mentionsInQuran: 5,
+      trKeyEndTagLabel: 'Yahya',
+      era: 'Unknown',
+      startMs: 0,
+      endMs: 0,
+      quranMentionCount: 5,
       sentTo: 'p.Jerusalem',
       nabi: QV(3, 39),
       nameLatin: 'John',
@@ -620,20 +656,21 @@ initProphets(Map<int, int> ajrLevels) {
       spousesAr: null,
       childrenAr: null,
       relativesAr: ['Isa (cousin)'],
-      kitabAr: null,
-      livedDuring: null));
+      kitabAr: null));
   prophets.add(Prophet(
-      ajrLevels: ajrLevels,
+      asset: await TarikhController.tih.loadImageAsset(
+          '${RELIC_ID.Prophet_Isa.name.split('_')[1]}.png', 528, 528, -40),
+      ajrLevel: ajrLevels[RELIC_ID.Prophet_Isa.index]!,
       relicId: RELIC_ID.Prophet_Isa,
-      trKeyEndTag: 'Isa',
-      dateEra: null,
-      dateBegin: -4,
-      dateEnd: 30,
-      mentionsInQuran: 25,
+      trKeyEndTagLabel: 'Isa',
+      era: 'Unknown',
+      startMs: -4,
+      endMs: 30,
+      quranMentionCount: 25,
       sentTo: 'p.Banu Israel, The Children of Israel (61:6)',
       nabi: QV(19, 30),
       rasul: QV(4, 171),
-      ulualazm: [QV(42, 13)],
+      uluAlAzm: [QV(42, 13)],
       nameLatin: 'Jesus',
       trKeyNameNicknamesAr: ['a.Masih'],
       locationBirth: 'p.Judea, Roman Empire',
@@ -647,20 +684,21 @@ initProphets(Map<int, int> ajrLevels) {
       spousesAr: null,
       childrenAr: null,
       relativesAr: ['Zakariyya (uncle)', 'Yahya (cousin)'],
-      kitabAr: 'Injil (Gospel) (57:27)',
-      livedDuring: 'c. 4 BCE – c. 30 CE'));
+      kitabAr: 'Injil (Gospel) (57:27)'));
   prophets.add(Prophet(
-      ajrLevels: ajrLevels,
+      asset: await TarikhController.tih.loadImageAsset(
+          '${RELIC_ID.Prophet_Muhammad.name.split('_')[1]}.png', 528, 528, -40),
+      ajrLevel: ajrLevels[RELIC_ID.Prophet_Muhammad.index]!,
       relicId: RELIC_ID.Prophet_Muhammad,
-      trKeyEndTag: 'Muhammad',
-      dateEra: null,
-      dateBegin: 570,
-      dateEnd: 632,
-      mentionsInQuran: 4,
+      trKeyEndTagLabel: 'Muhammad',
+      era: 'Rebirth of Islam',
+      startMs: 570, // TODO 571?
+      endMs: 632,
+      quranMentionCount: 4,
       sentTo: 'p.All humanity and jinn (21:107)',
       nabi: QV(33, 40),
       rasul: QV(33, 40),
-      ulualazm: [QV(2, 124)],
+      uluAlAzm: [QV(2, 124)],
       trKeyNameNicknamesAr: [
         'a.Khātam al-Nabiyyīn',
         'a.Ahmad',
@@ -683,7 +721,7 @@ initProphets(Map<int, int> ajrLevels) {
           ['a.Aliathnayn']),
       tomb: null,
       predecessorAr: 'a.Isa',
-      successorAr: null,
+      successorAr: 'p.None but Mahdi and Isa will follow Islam',
       motherAr: 'a.Amina bint Wahb',
       fatherAr: 'a.Abdullah ibn Abd al-Muttalib',
       spousesAr: null,
@@ -697,6 +735,5 @@ initProphets(Map<int, int> ajrLevels) {
         'Ibrahim (630–632)'
       ],
       relativesAr: null,
-      kitabAr: 'Quran (42:7)',
-      livedDuring: '571 – 632'));
+      kitabAr: 'Quran (42:7)'));
 }
