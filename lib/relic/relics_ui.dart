@@ -9,6 +9,7 @@ import 'package:hapi/menu/slide/menu_right/menu_right_ui.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/relic/relics_favorites_ui.dart';
 import 'package:hapi/relic/relics_search_ui.dart';
+import 'package:hapi/relic/ummah/ummah_ui.dart';
 
 enum RELIC_TAB {
   Favorites,
@@ -47,19 +48,19 @@ class RelicsUI extends StatelessWidget {
           AppThemes.ajr1Common,
         ),
         BottomBarItem(
-            Center(child: T('i.Coming Soon', tsN, h: 50)),
-            null,
-            'a.Alathar'.tr, // Relics
-            'i.Islamic relics'.tr,
-            Icons.brightness_3_outlined, // Icons.wine_bar_sharp
-            AppThemes.ajr2Uncommon
+          Center(child: T('i.Coming Soon', tsN, h: 50)),
+          null,
+          'a.Alathar'.tr, // Relics
+          'i.Islamic relics'.tr,
+          Icons.brightness_3_outlined, // Icons.wine_bar_sharp
+          AppThemes.ajr2Uncommon,
         ),
         BottomBarItem(
           Center(child: T('i.Coming Soon', tsN, h: 50)),
           null,
           'i.Places'.tr,
           'i.Famous Muslim Places'.tr,
-          Icons.map_outlined, // TODO Icons.mosque_outlined, Icons.school_outlined
+          Icons.map_outlined, // TODO Icons.mosque_outlined/.school_outlined
           AppThemes.ajr3Rare,
         ),
         BottomBarItem(
@@ -71,10 +72,10 @@ class RelicsUI extends StatelessWidget {
           AppThemes.ajr4Epic,
         ),
         BottomBarItem(
-          Container(),
+          const UmmahUI(trKeyTitle: 'a.Ummah'),
           null,
           a('a.Ummah'),
-          '              '+'i.Well known Muslims'.tr+'              ',
+          '              ' + 'i.Well known Muslims'.tr + '              ',
           Icons.connect_without_contact_outlined,
           AppThemes.ajr5Legendary,
         ),
@@ -82,7 +83,9 @@ class RelicsUI extends StatelessWidget {
           const Center(child: T('i.Coming Soon', tsN, h: 50)),
           null,
           a('a.Allah'), //a('i.Asma-ul-Husna'),
-          '              '+at('at.About {0} {1}', ['a.Allah', 'a.SWT'])+'              ',
+          '              ' +
+              at('at.About {0} {1}', ['a.Allah', 'a.SWT']) +
+              '              ',
           Icons.apps_outlined,
           AppThemes.ajr6Mythic,
         ),
