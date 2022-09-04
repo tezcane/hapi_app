@@ -8,10 +8,10 @@ import 'package:hapi/components/two_colored_icon.dart';
 import 'package:hapi/controllers/notification_controller.dart';
 import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/main_controller.dart';
+import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_controller.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/sub_page.dart';
-import 'package:hapi/menu/menu_controller.dart';
 import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/athan/z.dart';
@@ -650,8 +650,8 @@ class SalahRow extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end, // needed or 3 QUESTS are off
       children: [
         _Cell(T('a.Nayam', tsN, w: w1p6), z, QUEST.LAYL_SLEEP, flex: 166),
-        _Cell(T('a.Tahajjud', tsN, w: w1p6), z, QUEST.LAYL_TAHAJJUD, flex: 167),
-        _Cell(T('a.Witr', tsN, w: w1p6), z, QUEST.LAYL_WITR, flex: 167),
+        _Cell(T('a.Tahajjud', tsN, w: w1p6), z, QUEST.LAYL_TAHAJJUD, flex: 166),
+        _Cell(T('a.Witr', tsN, w: w1p6), z, QUEST.LAYL_WITR, flex: 166),
         Expanded(
           child: Container(
             color: bg, // hides bottom results bar as scrolls up
@@ -671,8 +671,9 @@ class SalahRow extends StatelessWidget {
               ZamanController.to.athan!.fajrTomorrow,
             ),
           ),
-          flex: 100,
+          flex: 99, // NOTE, 100 and without below flex: 3, UI was broken.
         ),
+        Expanded(child: Container(), flex: 3), // move fajrTomorrow a bit left
       ],
     );
   }
