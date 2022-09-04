@@ -47,7 +47,7 @@ class RelicsUI extends StatelessWidget {
           AppThemes.ajr1Common,
         ),
         BottomBarItem(
-            T('i.Coming Soon', tsB),
+            Center(child: T('i.Coming Soon', tsN, h: 50)),
             null,
             'a.Alathar'.tr, // Relics
             'i.Islamic relics'.tr,
@@ -55,7 +55,7 @@ class RelicsUI extends StatelessWidget {
             AppThemes.ajr2Uncommon
         ),
         BottomBarItem(
-          T('i.Coming Soon', tsB),
+          Center(child: T('i.Coming Soon', tsN, h: 50)),
           null,
           'i.Places'.tr,
           'i.Famous Muslim Places'.tr,
@@ -63,7 +63,7 @@ class RelicsUI extends StatelessWidget {
           AppThemes.ajr3Rare,
         ),
         BottomBarItem(
-          T('i.Coming Soon', tsB),
+          Center(child: T('i.Coming Soon', tsN, h: 50)),
           null,
           'a.Deleel'.tr,
           'i.Proofs of Islam'.tr,
@@ -79,7 +79,7 @@ class RelicsUI extends StatelessWidget {
           AppThemes.ajr5Legendary,
         ),
         BottomBarItem(
-          T('i.Coming Soon', tsB),
+          const Center(child: T('i.Coming Soon', tsN, h: 50)),
           null,
           a('a.Allah'), //a('i.Asma-ul-Husna'),
           '              '+at('at.About {0} {1}', ['a.Allah', 'a.SWT'])+'              ',
