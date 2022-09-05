@@ -126,15 +126,15 @@ enum TimelineEntryType {
 ///
 /// They are all initialized at startup time by the [BlocProvider] constructor.
 class TimelineEntry {
-  TimelineEntry(
-    this.type,
-    this.trKeyEndTagLabel,
-    this.era,
-    this.startMs,
-    this.endMs,
-    this.asset,
+  TimelineEntry({
+    required this.type,
+    required this.era,
+    required this.trKeyEndTagLabel,
+    required this.startMs, // TODO are these ms or years?!
+    required this.endMs,
+    required this.asset,
     this.accent,
-  ) {
+  }) {
     _handleLabelNewlineCount();
   }
 

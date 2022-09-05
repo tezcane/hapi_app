@@ -294,7 +294,7 @@ class TimelineInitHandler {
     final List jsonEntries = json.decode(jsonData);
 
     // TODO test add "era" field per entry and also auto generate it's start and end and zoom by looking at its incidents:
-    String lastEra = '';
+    String era = '';
 
     /// The JSON decode doesn't provide strong typing, so we'll iterate
     /// on the dynamic entries in the [jsonEntries] list.
@@ -318,7 +318,7 @@ class TimelineInitHandler {
         type = TimelineEntryType.Era;
         dynamic startVal = map['start'];
         startMs = startVal is int ? startVal.toDouble() : startVal;
-        lastEra = label;
+        era = label;
       }
 
       /// Some elements will have an `end` time specified.
@@ -337,7 +337,7 @@ class TimelineInitHandler {
         endMs = startMs;
       }
 
-      l.d('lastEra=$lastEra, label=$label');
+      //l.d('lastEra=$era, label=$label'); TODO fix
 
       /// Get Timeline Color Setup:
       if (map.containsKey('timelineColors')) {
@@ -389,13 +389,13 @@ class TimelineInitHandler {
 
       /// Finally create TimeLineEntry object
       var timelineEntry = TimelineEntry(
-        type,
-        label,
-        lastEra,
-        startMs,
-        endMs,
-        asset,
-        accent,
+        type: type,
+        era: era,
+        trKeyEndTagLabel: label,
+        startMs: startMs,
+        endMs: endMs,
+        asset: asset,
+        accent: accent,
       );
 
       /// Add TimelineEntry reference 1 of 2:

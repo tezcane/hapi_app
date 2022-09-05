@@ -5,13 +5,19 @@ import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 enum RELIC_TYPE {
   // Ummah Tab:
   Prophet,
+  //TODO:
+  // Bayt_Family,
+  // Sahabah,
+  // Ulamah,
+  // Khalifa,
+  // Leaders,
 }
 
 class Relic extends TimelineEntry {
   Relic({
     // TimelineEntry data:
-    required String trKeyEndTagLabel,
     required String era,
+    required String trKeyEndTagLabel,
     required double startMs,
     required double endMs,
     required TimelineAsset asset,
@@ -22,13 +28,13 @@ class Relic extends TimelineEntry {
     required this.trKeySummary, // e.g. Prophet Summary (ps. keys)
     required this.trKeySummary2, // e.g. Prophet Quran Mentions (pq. keys)
   }) : super(
-          TimelineEntryType.Relic,
-          trKeyEndTagLabel,
-          era,
-          startMs,
-          endMs,
-          asset,
-          null, // accent TODO
+          type: TimelineEntryType.Relic,
+          era: era,
+          trKeyEndTagLabel: trKeyEndTagLabel,
+          startMs: startMs,
+          endMs: endMs,
+          asset: asset,
+          accent: null,
         );
   final int ajrLevel;
   final RELIC_ID relicId;
@@ -44,15 +50,15 @@ enum RELIC_ID {
   Prophet_Idris,
   Prophet_Nuh,
   Prophet_Hud,
-  Prophet_Saleh,
+  Prophet_Salih,
   Prophet_Ibrahim,
   Prophet_Lut,
-  Prophet_Isma_il,
-  Prophet_Is_haq,
+  Prophet_Ismail,
+  Prophet_Ishaq,
   Prophet_Yaqub,
   Prophet_Yusuf,
   Prophet_Ayyub,
-  Prophet_Shu_ayb,
+  Prophet_Shuayb,
   Prophet_Musa,
   Prophet_Harun,
   Prophet_Dawud,
@@ -60,8 +66,8 @@ enum RELIC_ID {
   Prophet_Ilyas,
   Prophet_Alyasa,
   Prophet_Yunus,
-  Prophet_Dhu_al_Kifl,
-  Prophet_Zakariyya,
+  Prophet_DhulKifl,
+  Prophet_Zakariya,
   Prophet_Yahya,
   Prophet_Isa,
   Prophet_Muhammad,

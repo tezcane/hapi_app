@@ -90,9 +90,11 @@ muak - Muakkadah
 nav  - Navigate/Navigator  
 np   - NavPage  
 nv   - new value  
-P    - placement (start, center, end)    
-qyam - Qiyam  
+P    - placement (start, center, end)
 qust - Quest  
+qyam - Qiyam  
+qv   - Quran Verse
+qvs  - Quran Verses
 R    - Right (use with Left/Right->L/R)  
 Rkt  - Rakat  
 rv   - return value  
