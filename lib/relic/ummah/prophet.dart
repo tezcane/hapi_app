@@ -5,6 +5,8 @@ import 'package:hapi/relic/relic.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
+const String _ = ' '; // space/gap
+
 class Prophet extends Relic {
   Prophet({
     // TimelineEntry data:
@@ -91,7 +93,7 @@ initProphets(Map<int, int> ajrLevels) async {
       // Required prophet data:
       trValBiblicalNames: 'Adam',
       trValSentTo:
-          a('a.Earth') + 'i._from_'.tr + a('a.Heaven') + ' ' + cns('(4:1)'),
+          a('a.Earth') + 'i._from_'.tr + a('a.Heaven') + _ + cns('(4:1)'),
       quranMentionCount: 25,
       qvNabi: QV(2, 31),
       // Optional prophet data:
@@ -153,7 +155,7 @@ initProphets(Map<int, int> ajrLevels) async {
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Nuh.index]!,
       // Required prophet data:
       trValBiblicalNames: 'Noach, Noe, Noah',
-      trValSentTo: 'p.The people of_'.tr + a('a.Noah') + ' ' + cns('(26:105)'),
+      trValSentTo: 'p.The people of_'.tr + a('a.Noah') + _ + cns('(26:105)'),
       quranMentionCount: 43,
       qvNabi: QV(6, 89),
       // Optional prophet data:
@@ -184,7 +186,7 @@ initProphets(Map<int, int> ajrLevels) async {
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Hud.index]!,
       // Required prophet data:
       trValBiblicalNames: 'p.Possibly Eber (Heber) or his son'.tr,
-      trValSentTo: a('a.Ad') + 'i._tribe_'.tr + ' ' + cns('(7:65)'),
+      trValSentTo: a('a.Ad') + _ + a('a.Tribe') + _ + cns('(7:65)'),
       quranMentionCount: 7,
       qvNabi: QV(26, 125),
       // Optional prophet data:
@@ -216,7 +218,7 @@ initProphets(Map<int, int> ajrLevels) async {
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Salih.index]!,
       // Required prophet data:
       trValBiblicalNames: 'p.Possibly Shelah, Selah, Sala'.tr,
-      trValSentTo: a('a.Thamud') + 'i._tribe_'.tr + ' ' + cns('(7:73)'),
+      trValSentTo: a('a.Thamud') + _ + a('a.Tribe') + _ + cns('(7:73)'),
       quranMentionCount: 9,
       qvNabi: QV(26, 143),
       // Optional prophet data:
@@ -256,7 +258,7 @@ initProphets(Map<int, int> ajrLevels) async {
       qvNabi: QV(19, 41),
       // Optional prophet data:
       qvRasul: QV(9, 70),
-      trValKitab: 'p.Scrolls of_'.tr + a('a.Ibrahim') + ' ' + cns('(87:19)'),
+      trValKitab: 'p.Scrolls of_'.tr + a('a.Ibrahim') + _ + cns('(87:19)'),
       qvsUluAlAzm: [QV(2, 124)],
       trKeyNameNicknamesAr: ['a.Khalilullah'],
       locationBirth: 'p.Ur al-Chaldees, Bilād ar-Rāfidayn',
@@ -287,7 +289,7 @@ initProphets(Map<int, int> ajrLevels) async {
       trValSentTo: a('a.Saddoom') + // سدوم Sodom
           'i._and_'.tr +
           a("a.'Amoorah") + //  عمورة Gomorrah
-          ' ' +
+          _ +
           cns('(7:80)'), // TODO arabee
       quranMentionCount: 27,
       qvNabi: QV(6, 86),
@@ -305,7 +307,8 @@ initProphets(Map<int, int> ajrLevels) async {
       fatherAr: 'p.Haran',
       spousesAr: null,
       childrenAr: [
-        "p.Possibly two daughters, but can also be metaphorical to mean women of his nation."
+        'p.Possibly had two daughters, but the daughters referenced in the Quran could also mean the women of his nation.'
+            .tr
       ],
       relativesAr: [
         'p.Ibrahim (Uncle)'
@@ -323,8 +326,7 @@ initProphets(Map<int, int> ajrLevels) async {
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Ismail.index]!,
       // Required prophet data:
       trValBiblicalNames: 'Yishmael, Ismael, Ismahel, Ishmael',
-      trValSentTo:
-          'p.Pre-Islamic_' + a('a.Arabia') + 'i.,'.tr + ' ' + a('a.Mecca'),
+      trValSentTo: 'p.Pre-Islamic_' + a('a.Arabia') + 'i.,_'.tr + a('a.Mecca'),
       quranMentionCount: 12,
       qvNabi: QV(19, 54),
       // Optional prophet data:
@@ -507,7 +509,7 @@ initProphets(Map<int, int> ajrLevels) async {
       // Required prophet data:
       trValBiblicalNames: 'p.None (Absent from Bible)'.tr,
       trValSentTo: a('a.Madyan') + // Midian
-          ' ' +
+          _ +
           cns('(7:85)'),
       quranMentionCount: 9,
       qvNabi: QV(26, 178),
@@ -640,7 +642,7 @@ initProphets(Map<int, int> ajrLevels) async {
       relativesAr: null));
   prophets.add(Prophet(
       // TimelineEntry data:
-      trValEra: 'i.Kings of_'.tr + ' ' + a('a.Israel'),
+      trValEra: 'i.Kings of_'.tr + a('a.Israel'),
       trKeyEndTagLabel: 'Dawud',
       startMs: -1000,
       endMs: -971,
@@ -657,7 +659,7 @@ initProphets(Map<int, int> ajrLevels) async {
       // Optional prophet data:
       qvRasul: QV(6, 89),
       trValKitab: a('a.Zabur') + // Psalms
-          ' ' +
+          _ +
           cns('(17:55, 4:163, 17:55, 21:105)'),
       qvsUluAlAzm: null,
       trKeyNameNicknamesAr: null,
@@ -674,7 +676,7 @@ initProphets(Map<int, int> ajrLevels) async {
       relativesAr: null));
   prophets.add(Prophet(
       // TimelineEntry data:
-      trValEra: 'i.Kings of_'.tr + ' ' + a('a.Israel'),
+      trValEra: 'i.Kings of_'.tr + a('a.Israel'),
       trKeyEndTagLabel: 'Suleyman',
       startMs: -971,
       endMs: -931,
@@ -706,7 +708,7 @@ initProphets(Map<int, int> ajrLevels) async {
       relativesAr: null));
   prophets.add(Prophet(
       // TimelineEntry data:
-      trValEra: 'i.Kings of_'.tr + ' ' + a('a.Israel'), // TODO unsure
+      trValEra: 'i.Kings of_'.tr + a('a.Israel'), // TODO unsure
       trKeyEndTagLabel: 'Ilyas',
       startMs: 0,
       endMs: 0,
@@ -718,11 +720,10 @@ initProphets(Map<int, int> ajrLevels) async {
       // Required prophet data:
       trValBiblicalNames: 'Eliya, Eliou, Elias, Ilias, Elijah',
       trValSentTo: a('a.Samaria') + //  TODO
-          'i.,'.tr +
-          ' ' +
+          'i.,_'.tr +
           'p.The people of_'.tr +
           a('a.Ilyas') +
-          ' ' +
+          _ +
           cns('(37:124)'),
       quranMentionCount: 2,
       qvNabi: QV(6, 89),
@@ -743,7 +744,7 @@ initProphets(Map<int, int> ajrLevels) async {
       relativesAr: null));
   prophets.add(Prophet(
       // TimelineEntry data:
-      trValEra: 'i.Kings of_'.tr + ' ' + a('a.Israel'), // TODO unsure
+      trValEra: 'i.Kings of_'.tr + a('a.Israel'), // TODO unsure
       trKeyEndTagLabel: 'Alyasa',
       startMs: 0,
       endMs: 0,
@@ -755,9 +756,9 @@ initProphets(Map<int, int> ajrLevels) async {
       // Required prophet data:
       trValBiblicalNames: 'Elishua, Elisaie, Eliseus, Elisha',
       trValSentTo: a('a.Samaria') + //  TODO
-          'i.,'.tr +
-          ' ' +
-          'p.Eastern_' +
+          'i.,_'.tr +
+          a('a.East') +
+          _ +
           a('a.Arabia') +
           'i._and_' +
           a('a.Fars'), //Fars? Persia
@@ -771,8 +772,7 @@ initProphets(Map<int, int> ajrLevels) async {
       locationBirth: null,
       locationDeath: null,
       tomb: 'p.Eğil district of Diyarbakir Province'.tr +
-          'i.,'.tr +
-          ' ' +
+          'i.,_'.tr +
           a('a.Turkiye'), //' or Al-Awjam, Saudi Arabia.'
       predecessorAr: 'a.Ilyas',
       successorAr: 'a.Yunus',
@@ -910,7 +910,7 @@ initProphets(Map<int, int> ajrLevels) async {
           at('p.{0} of {1} in {2}', ['a.Children', 'a.Israel', 'a.Al-Quds']) +
               'p._as written in the_' +
               a('a.Quran') +
-              ' ' +
+              _ +
               cns('61:6') +
               "p._which references the Bible's Matthew_".tr +
               cns('15:24'),
@@ -919,7 +919,7 @@ initProphets(Map<int, int> ajrLevels) async {
       // Optional prophet data:
       qvRasul: QV(4, 171),
       trValKitab: a('a.Injil') + // Gospel
-          ' ' +
+          _ +
           cns('(57:27)'),
       qvsUluAlAzm: [QV(42, 13)],
       trKeyNameNicknamesAr: ['a.Masih'],
@@ -952,22 +952,22 @@ initProphets(Map<int, int> ajrLevels) async {
       trValBiblicalNames: 'Muhammad-im (מחמד' + // no tr here
           'p. - Hebrew) as written in Song of Songs 5:16'.tr, // just tr here
       trValSentTo: 'p.All the worlds'.tr +
-          'i.,'.tr +
+          'i.,_'.tr +
           a('a.Nas') + // mankind
           'i._and_'.tr +
           a('a.Jinn') +
-          ' ' +
+          _ +
           cns('(21:107)'),
       quranMentionCount: 4,
       qvNabi: QV(33, 40),
       // Optional prophet data:
       qvRasul: QV(33, 40),
       trValKitab: a('a.Quran') +
-          ' ' +
+          _ +
           cns('(42:7)') +
           'i._and_'.tr +
           a('a.Sunnah') +
-          ' ' +
+          _ +
           cns('(3:31, 3:164, 4:59, 4:115, 59:7)'),
       qvsUluAlAzm: [QV(2, 124)],
       trKeyNameNicknamesAr: [
