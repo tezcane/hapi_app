@@ -8,7 +8,7 @@ import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 class Prophet extends Relic {
   Prophet({
     // TimelineEntry data:
-    required era,
+    required trValEra,
     required String trKeyEndTagLabel,
     required double startMs,
     required double endMs,
@@ -38,7 +38,7 @@ class Prophet extends Relic {
     this.relativesAr,
   }) : super(
           // TimelineEntry data:
-          era: era,
+          trValEra: trValEra,
           trKeyEndTagLabel: trKeyEndTagLabel,
           startMs: startMs,
           endMs: endMs,
@@ -79,7 +79,7 @@ List<Prophet> prophets = [];
 initProphets(Map<int, int> ajrLevels) async {
   prophets.add(Prophet(
       // TimelineEntry data:
-      era: 'p.Birth of humanity',
+      trValEra: 'i.Birth of Humans'.tr,
       trKeyEndTagLabel: 'Adam',
       startMs: -3400000,
       endMs: -3399050,
@@ -111,7 +111,7 @@ initProphets(Map<int, int> ajrLevels) async {
       relativesAr: null));
   prophets.add(Prophet(
       // TimelineEntry data:
-      era: 'p.Early humans',
+      trValEra: 'i.Birth of Humans'.tr,
       trKeyEndTagLabel: 'Idris',
       startMs: 0,
       endMs: 0,
@@ -142,7 +142,7 @@ initProphets(Map<int, int> ajrLevels) async {
       relativesAr: null));
   prophets.add(Prophet(
       // TimelineEntry data:
-      era: 'p.Great Flood',
+      trValEra: 'i.Great Flood'.tr,
       trKeyEndTagLabel: 'Nuh',
       startMs: 0,
       endMs: 0,
@@ -173,7 +173,7 @@ initProphets(Map<int, int> ajrLevels) async {
       relativesAr: null));
   prophets.add(Prophet(
       // TimelineEntry data:
-      era: 'Unknown',
+      trValEra: 'i.Unknown'.tr,
       trKeyEndTagLabel: 'Hud',
       startMs: -2400,
       endMs: 0,
@@ -205,7 +205,7 @@ initProphets(Map<int, int> ajrLevels) async {
       relativesAr: null));
   prophets.add(Prophet(
       // TimelineEntry data:
-      era: 'Unknown',
+      trValEra: 'i.Unknown'.tr,
       trKeyEndTagLabel: 'Salih',
       startMs: 0,
       endMs: 0,
@@ -237,7 +237,7 @@ initProphets(Map<int, int> ajrLevels) async {
       relativesAr: ['p.Possibly related to Eber (Heber)']));
   prophets.add(Prophet(
       // TimelineEntry data:
-      era: 'a.Ibrahim',
+      trValEra: a('a.Ibrahim'),
       trKeyEndTagLabel: 'Ibrahim',
       startMs: 0,
       endMs: 0,
@@ -273,7 +273,7 @@ initProphets(Map<int, int> ajrLevels) async {
       ]));
   prophets.add(Prophet(
       // TimelineEntry data:
-      era: 'a.Ibrahim',
+      trValEra: a('a.Ibrahim'),
       trKeyEndTagLabel: 'Lut',
       startMs: 0,
       endMs: 0,
@@ -312,7 +312,7 @@ initProphets(Map<int, int> ajrLevels) async {
       ]));
   prophets.add(Prophet(
       // TimelineEntry data:
-      era: 'a.Ibrahim',
+      trValEra: a('a.Ibrahim'),
       trKeyEndTagLabel: 'Ismail',
       startMs: -1800,
       endMs: -1664,
@@ -350,7 +350,7 @@ initProphets(Map<int, int> ajrLevels) async {
       ]));
   prophets.add(Prophet(
       // TimelineEntry data:
-      era: 'a.Ibrahim',
+      trValEra: a('a.Ibrahim'),
       trKeyEndTagLabel: 'Ishaq',
       startMs: 0,
       endMs: 0,
@@ -391,7 +391,7 @@ initProphets(Map<int, int> ajrLevels) async {
       ]));
   prophets.add(Prophet(
       // TimelineEntry data:
-      era: 'Old Egyptian Kingdom',
+      trValEra: 'i.Old Egyptian Kingdom'.tr,
       trKeyEndTagLabel: 'Yaqub',
       startMs: 0,
       endMs: 0,
@@ -428,7 +428,7 @@ initProphets(Map<int, int> ajrLevels) async {
       relativesAr: null));
   prophets.add(Prophet(
     // TimelineEntry data:
-    era: 'Old Egyptian Kingdom',
+    trValEra: 'i.Old Egyptian Kingdoms'.tr,
     trKeyEndTagLabel: 'Yusuf',
     startMs: 0,
     endMs: 0,
@@ -464,7 +464,7 @@ initProphets(Map<int, int> ajrLevels) async {
   ));
   prophets.add(Prophet(
       // TimelineEntry data:
-      era: 'Unknown',
+      trValEra: 'i.Unknown'.tr,
       trKeyEndTagLabel: 'Ayyub',
       startMs: 0,
       endMs: 0,
@@ -495,7 +495,7 @@ initProphets(Map<int, int> ajrLevels) async {
       relativesAr: ['Probably a descendant of Al-Els, son of Ishaq.']));
   prophets.add(Prophet(
       // TimelineEntry data:
-      era: 'Unknown',
+      trValEra: 'i.Unknown'.tr,
       trKeyEndTagLabel: 'Shuayb',
       startMs: 0,
       endMs: 0,
@@ -529,7 +529,7 @@ initProphets(Map<int, int> ajrLevels) async {
       relativesAr: ['p.Descendant of Ibrahim']));
   prophets.add(Prophet(
       // TimelineEntry data:
-      era: a('a.Firaun') + 'p._Kingdoms Of_'.tr + a('a.Misr'), // Egypt
+      trValEra: a('a.Firaun') + 'i._New_Kingdoms of_'.tr + a('a.Misr'), // Egypt
       trKeyEndTagLabel: 'Musa',
       startMs: -1300,
       endMs: -1200,
@@ -570,7 +570,7 @@ initProphets(Map<int, int> ajrLevels) async {
       ]));
   prophets.add(Prophet(
       // TimelineEntry data:
-      era: 'p.Pharaoh Kingdoms Of Egypt',
+      trValEra: a('a.Firaun') + 'i._New_Kingdoms of_'.tr + a('a.Misr'), // Egypt
       trKeyEndTagLabel: 'Harun',
       startMs: -1303,
       endMs: -1200,
@@ -607,7 +607,7 @@ initProphets(Map<int, int> ajrLevels) async {
       ]));
   prophets.add(Prophet(
       // TimelineEntry data:
-      era: 'Start of Buddhism?',
+      trValEra: 'i.Start of Buddhism'.tr,
       trKeyEndTagLabel: 'Dhul-Kifl',
       startMs: -600, // TODO Buddha: 6th or 5th century BCE
       endMs: -500,
@@ -640,7 +640,7 @@ initProphets(Map<int, int> ajrLevels) async {
       relativesAr: null));
   prophets.add(Prophet(
       // TimelineEntry data:
-      era: 'p.Kings of Israel',
+      trValEra: 'i.Kings of_'.tr + ' ' + a('a.Israel'),
       trKeyEndTagLabel: 'Dawud',
       startMs: -1000,
       endMs: -971,
@@ -674,7 +674,7 @@ initProphets(Map<int, int> ajrLevels) async {
       relativesAr: null));
   prophets.add(Prophet(
       // TimelineEntry data:
-      era: 'p.Kings of Israel',
+      trValEra: 'i.Kings of_'.tr + ' ' + a('a.Israel'),
       trKeyEndTagLabel: 'Suleyman',
       startMs: -971,
       endMs: -931,
@@ -706,7 +706,7 @@ initProphets(Map<int, int> ajrLevels) async {
       relativesAr: null));
   prophets.add(Prophet(
       // TimelineEntry data:
-      era: 'p.Kings of Israel?',
+      trValEra: 'i.Kings of_'.tr + ' ' + a('a.Israel'), // TODO unsure
       trKeyEndTagLabel: 'Ilyas',
       startMs: 0,
       endMs: 0,
@@ -743,7 +743,7 @@ initProphets(Map<int, int> ajrLevels) async {
       relativesAr: null));
   prophets.add(Prophet(
       // TimelineEntry data:
-      era: 'p.Kings of Israel?',
+      trValEra: 'i.Kings of_'.tr + ' ' + a('a.Israel'), // TODO unsure
       trKeyEndTagLabel: 'Alyasa',
       startMs: 0,
       endMs: 0,
@@ -783,7 +783,7 @@ initProphets(Map<int, int> ajrLevels) async {
       relativesAr: null));
   prophets.add(Prophet(
       // TimelineEntry data:
-      era: 'Unknown',
+      trValEra: 'i.Unknown'.tr,
       trKeyEndTagLabel: 'Yunus',
       startMs:
           -800, // uncertain (8th century BCE or post-exilic period) in Wikipedia
@@ -823,7 +823,7 @@ initProphets(Map<int, int> ajrLevels) async {
       relativesAr: null));
   prophets.add(Prophet(
       // TimelineEntry data:
-      era: 'a.Masih',
+      trValEra: a('a.Masih'),
       trKeyEndTagLabel: 'Zakariya',
       startMs: 0,
       endMs: 0,
@@ -859,7 +859,7 @@ initProphets(Map<int, int> ajrLevels) async {
       relativesAr: null));
   prophets.add(Prophet(
       // TimelineEntry data:
-      era: 'a.Masih',
+      trValEra: a('a.Masih'),
       trKeyEndTagLabel: 'Yahya',
       startMs: -100,
       endMs: 28, // AD 28–36
@@ -895,7 +895,7 @@ initProphets(Map<int, int> ajrLevels) async {
       ]));
   prophets.add(Prophet(
       // TimelineEntry data:
-      era: 'a.Masih',
+      trValEra: a('a.Masih'),
       trKeyEndTagLabel: 'Isa',
       startMs: -4,
       endMs: 30,
@@ -939,7 +939,7 @@ initProphets(Map<int, int> ajrLevels) async {
       ]));
   prophets.add(Prophet(
       // TimelineEntry data:
-      era: at('a.Prophet {0}', ['a.Muhammad']),
+      trValEra: a('a.Muhammad'), // Muhammad
       trKeyEndTagLabel: 'Muhammad',
       startMs: 570,
       endMs: 632,

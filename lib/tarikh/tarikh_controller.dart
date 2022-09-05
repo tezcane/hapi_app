@@ -390,7 +390,7 @@ class TimelineInitHandler {
       /// Finally create TimeLineEntry object
       var timelineEntry = TimelineEntry(
         type: type,
-        era: era,
+        trValEra: TimelineEntry.trValFromTrKeyEndTag(era),
         trKeyEndTagLabel: label,
         startMs: startMs,
         endMs: endMs,

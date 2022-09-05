@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:get/get.dart';
-import 'package:hapi/main_controller.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
@@ -36,11 +34,7 @@ class MenuItemData {
   double padTop = 0.0;
 //double padBottom = 0.0; // not used, always 0
 
-  /// Attempts to translate 'i.<tag>' if fails, tries 'a.<tag>'.
-  String get trValTitle {
-    String title = 'i.$trKeyEndTagLabel'.tr;
-    return title.startsWith('i.') ? a('a.$trKeyEndTagLabel') : title;
-  }
+  String get trValTitle => TimelineEntry.trValFromTrKeyEndTag(trKeyEndTagLabel);
 
   /// When initializing this object from a [TimelineEntry], fill in the
   /// fields according to the [entry] provided. The entry in fact specifies

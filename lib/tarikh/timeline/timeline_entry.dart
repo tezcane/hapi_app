@@ -128,7 +128,7 @@ enum TimelineEntryType {
 class TimelineEntry {
   TimelineEntry({
     required this.type,
-    required this.era,
+    required this.trValEra,
     required this.trKeyEndTagLabel,
     required this.startMs, // TODO are these ms or years?!
     required this.endMs,
@@ -139,8 +139,8 @@ class TimelineEntry {
   }
 
   final TimelineEntryType type;
+  final String trValEra;
   final String trKeyEndTagLabel; // trKey's end tag: i.<end tag> or a.<end tag>
-  final String era;
   final double startMs;
   final double endMs;
   final TimelineAsset asset;
@@ -188,13 +188,12 @@ class TimelineEntry {
 
   bool isTimeLineEntry() => startMs != 0 && endMs != 0;
 
-  /// Still needed for favorites, up/dn Btn boundary detect, etc.
-  // String get trKeyEndTagLabel => _trKeyEndTagLabel;
+  String get trValTitle => TimelineEntry.trValFromTrKeyEndTag(trKeyEndTagLabel);
 
-  /// The article title trKey is made from appending _label to 'i.' or 'a.'.
-  String get trValTitle {
-    String title = 'i.$trKeyEndTagLabel'.tr;
-    return title.startsWith('i.') ? a('a.$trKeyEndTagLabel') : title;
+  /// Attempts to translate 'i.<trKeyEndTag>' if fails, tries 'a.<trKeyEndTag>'.
+  static String trValFromTrKeyEndTag(String trKeyEndTag) {
+    String trVal = 'i.$trKeyEndTag'.tr;
+    return trVal.startsWith('i.') ? a('a.$trKeyEndTag') : trVal;
   }
 
   /// Some labels have a newline characters to adjust their alignment.

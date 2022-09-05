@@ -16,7 +16,7 @@ enum RELIC_TYPE {
 class Relic extends TimelineEntry {
   Relic({
     // TimelineEntry data:
-    required String era,
+    required String trValEra,
     required String trKeyEndTagLabel,
     required double startMs,
     required double endMs,
@@ -29,7 +29,7 @@ class Relic extends TimelineEntry {
     required this.trKeySummary2, // e.g. Prophet Quran Mentions (pq. keys)
   }) : super(
           type: TimelineEntryType.Relic,
-          era: era,
+          trValEra: trValEra,
           trKeyEndTagLabel: trKeyEndTagLabel,
           startMs: startMs,
           endMs: endMs,
