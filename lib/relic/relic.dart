@@ -6,6 +6,7 @@ enum RELIC_TYPE {
   // Ummah Tab:
   Prophet,
   //TODO:
+  // Muhammad Laqab (Nicknames similar to 99 names of Allah)
   // Bayt_Family,
   // Sahabah,
   // Ulamah,
