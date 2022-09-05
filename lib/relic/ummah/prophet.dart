@@ -23,7 +23,7 @@ class Prophet extends Relic {
     required this.qvNabi,
     // Optional prophet data:
     this.qvRasul,
-    this.kitabAr,
+    this.trValKitab,
     this.qvsUluAlAzm,
     this.trKeyNameNicknamesAr,
     this.locationBirth,
@@ -57,7 +57,7 @@ class Prophet extends Relic {
   final QV qvNabi; // Prophet (nabī) نَبِيّ
   // Optional prophet data:
   final QV? qvRasul; //Messenger (rasūl) رَسُول
-  final String? kitabAr;
+  final String? trValKitab;
   final List<QV>? qvsUluAlAzm; // Archprophet (ʾUlu Al-'Azm)
   final List<String>? trKeyNameNicknamesAr;
   final String? locationBirth;
@@ -96,7 +96,7 @@ initProphets(Map<int, int> ajrLevels) async {
       qvNabi: QV(2, 31),
       // Optional prophet data:
       qvRasul: QV(2, 31),
-      kitabAr: null,
+      trValKitab: null,
       qvsUluAlAzm: null,
       trKeyNameNicknamesAr: null,
       locationBirth: 'a.Jennah',
@@ -127,7 +127,7 @@ initProphets(Map<int, int> ajrLevels) async {
       qvNabi: QV(19, 56),
       // Optional prophet data:
       qvRasul: null,
-      kitabAr: null,
+      trValKitab: null,
       qvsUluAlAzm: null,
       trKeyNameNicknamesAr: null,
       locationBirth: a('a.Babylon'),
@@ -158,7 +158,7 @@ initProphets(Map<int, int> ajrLevels) async {
       qvNabi: QV(6, 89),
       // Optional prophet data:
       qvRasul: QV(25, 107),
-      kitabAr: null,
+      trValKitab: null,
       qvsUluAlAzm: [QV(46, 35), QV(33, 7)],
       trKeyNameNicknamesAr: null,
       locationBirth: null,
@@ -189,7 +189,7 @@ initProphets(Map<int, int> ajrLevels) async {
       qvNabi: QV(26, 125),
       // Optional prophet data:
       qvRasul: QV(26, 125),
-      kitabAr: null,
+      trValKitab: null,
       qvsUluAlAzm: null,
       trKeyNameNicknamesAr: null,
       locationBirth: null,
@@ -221,7 +221,7 @@ initProphets(Map<int, int> ajrLevels) async {
       qvNabi: QV(26, 143),
       // Optional prophet data:
       qvRasul: QV(26, 143),
-      kitabAr: null,
+      trValKitab: null,
       qvsUluAlAzm: null,
       trKeyNameNicknamesAr: null,
       locationBirth: null,
@@ -256,7 +256,7 @@ initProphets(Map<int, int> ajrLevels) async {
       qvNabi: QV(19, 41),
       // Optional prophet data:
       qvRasul: QV(9, 70),
-      kitabAr: 'p.Scrolls of Abraham (87:19)',
+      trValKitab: 'p.Scrolls of_'.tr + a('a.Ibrahim') + ' ' + cns('(87:19)'),
       qvsUluAlAzm: [QV(2, 124)],
       trKeyNameNicknamesAr: ['a.Khalilullah'],
       locationBirth: 'p.Ur al-Chaldees, Bilād ar-Rāfidayn',
@@ -293,7 +293,7 @@ initProphets(Map<int, int> ajrLevels) async {
       qvNabi: QV(6, 86),
       // Optional prophet data:
       qvRasul: QV(37, 133),
-      kitabAr: null,
+      trValKitab: null,
       qvsUluAlAzm: null,
       trKeyNameNicknamesAr: null,
       locationBirth: null,
@@ -305,7 +305,7 @@ initProphets(Map<int, int> ajrLevels) async {
       fatherAr: 'p.Haran',
       spousesAr: null,
       childrenAr: [
-        "p.Lot's daughters, can also be metaphorical to mean women of the nation."
+        "p.Possibly two daughters, but can also be metaphorical to mean women of his nation."
       ],
       relativesAr: [
         'p.Ibrahim (Uncle)'
@@ -329,7 +329,7 @@ initProphets(Map<int, int> ajrLevels) async {
       qvNabi: QV(19, 54),
       // Optional prophet data:
       qvRasul: QV(19, 54),
-      kitabAr: null,
+      trValKitab: null,
       qvsUluAlAzm: null,
       trKeyNameNicknamesAr: null,
       locationBirth: a('a.Falastin') + // فلسطين Palestine
@@ -368,7 +368,7 @@ initProphets(Map<int, int> ajrLevels) async {
       qvNabi: QV(19, 49),
       // Optional prophet data:
       qvRasul: null,
-      kitabAr: null,
+      trValKitab: null,
       qvsUluAlAzm: null,
       trKeyNameNicknamesAr: null,
       locationBirth: null,
@@ -409,7 +409,7 @@ initProphets(Map<int, int> ajrLevels) async {
       qvNabi: QV(19, 49),
       // Optional prophet data:
       qvRasul: null,
-      kitabAr: null,
+      trValKitab: null,
       qvsUluAlAzm: null,
       trKeyNameNicknamesAr: ['a.Israel'], //  إِسْرَآءِيل
       locationBirth: null,
@@ -444,7 +444,7 @@ initProphets(Map<int, int> ajrLevels) async {
     qvNabi: QV(4, 89),
     // Optional prophet data:
     qvRasul: QV(40, 34),
-    kitabAr: null,
+    trValKitab: null,
     qvsUluAlAzm: null,
     trKeyNameNicknamesAr: null,
     locationBirth: null,
@@ -480,7 +480,7 @@ initProphets(Map<int, int> ajrLevels) async {
       qvNabi: QV(4, 89),
       // Optional prophet data:
       qvRasul: null,
-      kitabAr: null,
+      trValKitab: null,
       qvsUluAlAzm: null,
       trKeyNameNicknamesAr: null,
       locationBirth: null,
@@ -513,7 +513,7 @@ initProphets(Map<int, int> ajrLevels) async {
       qvNabi: QV(26, 178),
       // Optional prophet data:
       qvRasul: QV(26, 178),
-      kitabAr: null,
+      trValKitab: null,
       qvsUluAlAzm: null,
       trKeyNameNicknamesAr: null,
       locationBirth: null,
@@ -547,7 +547,8 @@ initProphets(Map<int, int> ajrLevels) async {
       qvNabi: QV(20, 47),
       // Optional prophet data:
       qvRasul: QV(20, 47),
-      kitabAr: 'p.Ten Commandments, Tawrah (Torah); Scrolls of Moses (53:36)',
+      trValKitab:
+          'p.Ten Commandments, Tawrah (Torah); Scrolls of Moses (53:36)',
       qvsUluAlAzm: [QV(46, 35), QV(33, 7)],
       trKeyNameNicknamesAr: null,
       locationBirth: null,
@@ -587,7 +588,7 @@ initProphets(Map<int, int> ajrLevels) async {
       qvNabi: QV(19, 53),
       // Optional prophet data:
       qvRasul: QV(20, 47),
-      kitabAr: null,
+      trValKitab: null,
       qvsUluAlAzm: null,
       trKeyNameNicknamesAr: null,
       locationBirth: null,
@@ -624,7 +625,7 @@ initProphets(Map<int, int> ajrLevels) async {
       qvNabi: QV(21, 85, ayaEnd: 86),
       // Optional prophet data:
       qvRasul: null,
-      kitabAr: null,
+      trValKitab: null,
       qvsUluAlAzm: null,
       trKeyNameNicknamesAr: null,
       locationBirth: null,
@@ -655,7 +656,9 @@ initProphets(Map<int, int> ajrLevels) async {
       qvNabi: QV(6, 89),
       // Optional prophet data:
       qvRasul: QV(6, 89),
-      kitabAr: 'Zabur (Psalms) (17:55, 4:163, 17:55, 21:105)',
+      trValKitab: a('a.Zabur') + // Psalms
+          ' ' +
+          cns('(17:55, 4:163, 17:55, 21:105)'),
       qvsUluAlAzm: null,
       trKeyNameNicknamesAr: null,
       locationBirth: a('a.Al-Quds'),
@@ -687,7 +690,7 @@ initProphets(Map<int, int> ajrLevels) async {
       qvNabi: QV(6, 89),
       // Optional prophet data:
       qvRasul: null,
-      kitabAr: null,
+      trValKitab: null,
       qvsUluAlAzm: null,
       trKeyNameNicknamesAr: null,
       locationBirth: 'p.Kingdom of Israel in_' + a('a.Al-Quds'),
@@ -725,7 +728,7 @@ initProphets(Map<int, int> ajrLevels) async {
       qvNabi: QV(6, 89),
       // Optional prophet data:
       qvRasul: QV(37, 123),
-      kitabAr: null,
+      trValKitab: null,
       qvsUluAlAzm: null,
       trKeyNameNicknamesAr: null,
       locationBirth: null,
@@ -762,7 +765,7 @@ initProphets(Map<int, int> ajrLevels) async {
       qvNabi: QV(6, 89),
       // Optional prophet data:
       qvRasul: null,
-      kitabAr: null,
+      trValKitab: null,
       qvsUluAlAzm: null,
       trKeyNameNicknamesAr: null,
       locationBirth: null,
@@ -801,7 +804,7 @@ initProphets(Map<int, int> ajrLevels) async {
       qvNabi: QV(6, 89),
       // Optional prophet data:
       qvRasul: QV(37, 139),
-      kitabAr: null,
+      trValKitab: null,
       qvsUluAlAzm: null,
       trKeyNameNicknamesAr: [
         'a.Dhul-Nun' // ذُو ٱلنُّوْن - The One of the Fish
@@ -837,7 +840,7 @@ initProphets(Map<int, int> ajrLevels) async {
       qvNabi: QV(6, 89),
       // Optional prophet data:
       qvRasul: null,
-      kitabAr: null,
+      trValKitab: null,
       qvsUluAlAzm: null,
       trKeyNameNicknamesAr: null,
       locationBirth: null,
@@ -873,7 +876,7 @@ initProphets(Map<int, int> ajrLevels) async {
       qvNabi: QV(3, 39),
       // Optional prophet data:
       qvRasul: null,
-      kitabAr: null,
+      trValKitab: null,
       qvsUluAlAzm: null,
       trKeyNameNicknamesAr: null,
       locationBirth: null,
@@ -915,7 +918,9 @@ initProphets(Map<int, int> ajrLevels) async {
       qvNabi: QV(19, 30),
       // Optional prophet data:
       qvRasul: QV(4, 171),
-      kitabAr: a('a.Injil') + 'p. (Gospel) (57:27)'.tr,
+      trValKitab: a('a.Injil') + // Gospel
+          ' ' +
+          cns('(57:27)'),
       qvsUluAlAzm: [QV(42, 13)],
       trKeyNameNicknamesAr: ['a.Masih'],
       locationBirth: 'p.Judea, Roman Empire',
@@ -957,7 +962,13 @@ initProphets(Map<int, int> ajrLevels) async {
       qvNabi: QV(33, 40),
       // Optional prophet data:
       qvRasul: QV(33, 40),
-      kitabAr: 'Quran (42:7) and Sunnah (3:31, 3:164, 4:59, 4:115, 59:7)',
+      trValKitab: a('a.Quran') +
+          ' ' +
+          cns('(42:7)') +
+          'i._and_'.tr +
+          a('a.Sunnah') +
+          ' ' +
+          cns('(3:31, 3:164, 4:59, 4:115, 59:7)'),
       qvsUluAlAzm: [QV(2, 124)],
       trKeyNameNicknamesAr: [
         'a.Khātam al-Nabiyyīn',
