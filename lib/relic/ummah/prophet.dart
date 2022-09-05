@@ -17,8 +17,8 @@ class Prophet extends Relic {
     required RELIC_ID relicId,
     required int ajrLevel,
     // Required prophet data:
-    required this.biblicalNames,
-    required this.sentTo,
+    required this.trValBiblicalNames,
+    required this.trValSentTo,
     required this.quranMentionCount,
     required this.qvNabi,
     // Optional prophet data:
@@ -51,8 +51,8 @@ class Prophet extends Relic {
           trKeySummary2: 'pq.$trKeyEndTagLabel', // pq=Prophet Quran
         );
   // Required prophet data:
-  final String biblicalNames;
-  final String sentTo; // nation the prophet was sent to:
+  final String trValBiblicalNames;
+  final String trValSentTo; // nation the prophet was sent to:
   final int quranMentionCount;
   final QV qvNabi; // Prophet (nabī) نَبِيّ
   // Optional prophet data:
@@ -89,8 +89,9 @@ initProphets(Map<int, int> ajrLevels) async {
       relicId: RELIC_ID.Prophet_Adam,
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Adam.index]!,
       // Required prophet data:
-      biblicalNames: 'Adam',
-      sentTo: 'p.Sent to Earth from Heaven (4:1)',
+      trValBiblicalNames: 'Adam',
+      trValSentTo:
+          a('a.Earth') + 'i._from_'.tr + a('a.Heaven') + ' ' + cns('(4:1)'),
       quranMentionCount: 25,
       qvNabi: QV(2, 31),
       // Optional prophet data:
@@ -120,8 +121,8 @@ initProphets(Map<int, int> ajrLevels) async {
       relicId: RELIC_ID.Prophet_Idris,
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Idris.index]!,
       // Required prophet data:
-      biblicalNames: 'Chanokh, Enoch',
-      sentTo: 'p.Babylon',
+      trValBiblicalNames: 'Chanokh, Enoch',
+      trValSentTo: a('a.Babylon'),
       quranMentionCount: 2,
       qvNabi: QV(19, 56),
       // Optional prophet data:
@@ -129,7 +130,7 @@ initProphets(Map<int, int> ajrLevels) async {
       kitabAr: null,
       qvsUluAlAzm: null,
       trKeyNameNicknamesAr: null,
-      locationBirth: 'p.Babylon',
+      locationBirth: a('a.Babylon'),
       locationDeath: 'p.Sixth Heaven',
       tomb: null,
       predecessorAr: 'p.Sheth',
@@ -151,8 +152,8 @@ initProphets(Map<int, int> ajrLevels) async {
       relicId: RELIC_ID.Prophet_Nuh,
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Nuh.index]!,
       // Required prophet data:
-      biblicalNames: 'Noach, Noe, Noah',
-      sentTo: 'p.The people of Noah (26:105)',
+      trValBiblicalNames: 'Noach, Noe, Noah',
+      trValSentTo: 'p.The people of_'.tr + a('a.Noah') + ' ' + cns('(26:105)'),
       quranMentionCount: 43,
       qvNabi: QV(6, 89),
       // Optional prophet data:
@@ -182,8 +183,8 @@ initProphets(Map<int, int> ajrLevels) async {
       relicId: RELIC_ID.Prophet_Hud,
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Hud.index]!,
       // Required prophet data:
-      biblicalNames: 'p.Possibly Eber (Heber) or his son',
-      sentTo: 'p.Ad tribe (7:65)',
+      trValBiblicalNames: 'p.Possibly Eber (Heber) or his son'.tr,
+      trValSentTo: a('a.Ad') + 'i._tribe_'.tr + ' ' + cns('(7:65)'),
       quranMentionCount: 7,
       qvNabi: QV(26, 125),
       // Optional prophet data:
@@ -214,8 +215,8 @@ initProphets(Map<int, int> ajrLevels) async {
       relicId: RELIC_ID.Prophet_Salih,
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Salih.index]!,
       // Required prophet data:
-      biblicalNames: 'p.Possibly Shelah, Selah, Sala',
-      sentTo: 'p.Thamud tribe (7:73)',
+      trValBiblicalNames: 'p.Possibly Shelah, Selah, Sala'.tr,
+      trValSentTo: a('a.Thamud') + 'i._tribe_'.tr + ' ' + cns('(7:73)'),
       quranMentionCount: 9,
       qvNabi: QV(26, 143),
       // Optional prophet data:
@@ -246,8 +247,11 @@ initProphets(Map<int, int> ajrLevels) async {
       relicId: RELIC_ID.Prophet_Ibrahim,
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Ibrahim.index]!,
       // Required prophet data:
-      biblicalNames: 'Avraham, Abraam, Abraham',
-      sentTo: 'p.Babylon, The people of Iraq & Syria (22:43)',
+      trValBiblicalNames: 'Avraham, Abraam, Abraham',
+      trValSentTo: a('a.Babylon') +
+          'i.,'.tr +
+          'p._The people of Iraq and Syria_'.tr +
+          cns('(22:43)'),
       quranMentionCount: 69,
       qvNabi: QV(19, 41),
       // Optional prophet data:
@@ -279,8 +283,12 @@ initProphets(Map<int, int> ajrLevels) async {
       relicId: RELIC_ID.Prophet_Lut,
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Lut.index]!,
       // Required prophet data:
-      biblicalNames: 'Lot',
-      sentTo: 'p.Sodom and Gomorrah (7:80)',
+      trValBiblicalNames: 'Lot',
+      trValSentTo: a('a.Saddoom') + // سدوم Sodom
+          'i._and_'.tr +
+          a("a.'Amoorah") + //  عمورة Gomorrah
+          ' ' +
+          cns('(7:80)'), // TODO arabee
       quranMentionCount: 27,
       qvNabi: QV(6, 86),
       // Optional prophet data:
@@ -289,7 +297,7 @@ initProphets(Map<int, int> ajrLevels) async {
       qvsUluAlAzm: null,
       trKeyNameNicknamesAr: null,
       locationBirth: null,
-      locationDeath: "p.Bani Na'im",
+      locationDeath: "p.Bani Na'im".tr,
       tomb: null,
       predecessorAr: null,
       successorAr: null,
@@ -314,8 +322,9 @@ initProphets(Map<int, int> ajrLevels) async {
       relicId: RELIC_ID.Prophet_Ismail,
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Ismail.index]!,
       // Required prophet data:
-      biblicalNames: 'Yishmael, Ismael, Ismahel, Ishmael',
-      sentTo: 'p.Pre-Islamic Arabia (Mecca)',
+      trValBiblicalNames: 'Yishmael, Ismael, Ismahel, Ishmael',
+      trValSentTo:
+          'p.Pre-Islamic_' + a('a.Arabia') + 'i.,'.tr + ' ' + a('a.Mecca'),
       quranMentionCount: 12,
       qvNabi: QV(19, 54),
       // Optional prophet data:
@@ -323,7 +332,9 @@ initProphets(Map<int, int> ajrLevels) async {
       kitabAr: null,
       qvsUluAlAzm: null,
       trKeyNameNicknamesAr: null,
-      locationBirth: 'p.Palestine/Canaan',
+      locationBirth: a('a.Falastin') + // فلسطين Palestine
+          '/' +
+          'p.Canaan'.tr,
       locationDeath: 'p.Age 136, Mecca, Arabia',
       tomb: null,
       predecessorAr: 'a.Ibrahim',
@@ -349,8 +360,10 @@ initProphets(Map<int, int> ajrLevels) async {
       relicId: RELIC_ID.Prophet_Ishaq,
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Ishaq.index]!,
       // Required prophet data:
-      biblicalNames: 'Yitzhak, Itzhak, Isaak, Issac, Isaac',
-      sentTo: 'p.Palestine/Canaan',
+      trValBiblicalNames: 'Yitzhak, Itzhak, Isaak, Issac, Isaac',
+      trValSentTo: a('a.Falastin') + // فلسطين Palestine
+          '/' +
+          'p.Canaan'.tr,
       quranMentionCount: 17,
       qvNabi: QV(19, 49),
       // Optional prophet data:
@@ -388,8 +401,10 @@ initProphets(Map<int, int> ajrLevels) async {
       relicId: RELIC_ID.Prophet_Yaqub,
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Yaqub.index]!,
       // Required prophet data:
-      biblicalNames: 'Yaakov, Iakob, Iacob, Jacob',
-      sentTo: 'p.Palestine/Canaan',
+      trValBiblicalNames: 'Yaakov, Iakob, Iacob, Jacob',
+      trValSentTo: a('a.Falastin') + // فلسطين Palestine
+          '/' +
+          'p.Canaan'.tr,
       quranMentionCount: 16,
       qvNabi: QV(19, 49),
       // Optional prophet data:
@@ -423,8 +438,8 @@ initProphets(Map<int, int> ajrLevels) async {
     relicId: RELIC_ID.Prophet_Yusuf,
     ajrLevel: ajrLevels[RELIC_ID.Prophet_Yusuf.index]!,
     // Required prophet data:
-    biblicalNames: 'Yosef, Iosef, Ioseph, Joseph',
-    sentTo: 'p.Ancient Kingdom of Egypt',
+    trValBiblicalNames: 'Yosef, Iosef, Ioseph, Joseph',
+    trValSentTo: 'p.Ancient Kingdom of_'.tr + a('a.Misr'), // Egypt
     quranMentionCount: 27,
     qvNabi: QV(4, 89),
     // Optional prophet data:
@@ -459,8 +474,8 @@ initProphets(Map<int, int> ajrLevels) async {
       relicId: RELIC_ID.Prophet_Ayyub,
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Ayyub.index]!,
       // Required prophet data:
-      biblicalNames: 'Iyyov, Iyov, Iob, Job',
-      sentTo: 'p.Edom?', // TODO
+      trValBiblicalNames: 'Iyyov, Iyov, Iob, Job',
+      trValSentTo: a('a.Edom'), // TODO Arabee version
       quranMentionCount: 4,
       qvNabi: QV(4, 89),
       // Optional prophet data:
@@ -490,8 +505,10 @@ initProphets(Map<int, int> ajrLevels) async {
       relicId: RELIC_ID.Prophet_Shuayb,
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Shuayb.index]!,
       // Required prophet data:
-      biblicalNames: 'p.None (Absent from Bible)',
-      sentTo: 'p.Madyan/Midian (7:85)',
+      trValBiblicalNames: 'p.None (Absent from Bible)'.tr,
+      trValSentTo: a('a.Madyan') + // Midian
+          ' ' +
+          cns('(7:85)'),
       quranMentionCount: 9,
       qvNabi: QV(26, 178),
       // Optional prophet data:
@@ -512,7 +529,7 @@ initProphets(Map<int, int> ajrLevels) async {
       relativesAr: ['p.Descendant of Ibrahim']));
   prophets.add(Prophet(
       // TimelineEntry data:
-      era: 'p.Pharaoh Kingdoms Of Egypt',
+      era: a('a.Firaun') + 'p._Kingdoms Of_'.tr + a('a.Misr'), // Egypt
       trKeyEndTagLabel: 'Musa',
       startMs: -1300,
       endMs: -1200,
@@ -522,8 +539,10 @@ initProphets(Map<int, int> ajrLevels) async {
       relicId: RELIC_ID.Prophet_Musa,
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Musa.index]!,
       // Required prophet data:
-      biblicalNames: 'Moshe, Mouses, Moyses, Moses',
-      sentTo: 'p.Egypt Pharaoh and his establishment (43:46)',
+      trValBiblicalNames: 'Moshe, Mouses, Moyses, Moses',
+      trValSentTo: a('a.Firaun') + // Pharaoh فرعون
+          'p._and his establishment_' +
+          cns('(43:46)'),
       quranMentionCount: 136,
       qvNabi: QV(20, 47),
       // Optional prophet data:
@@ -560,8 +579,10 @@ initProphets(Map<int, int> ajrLevels) async {
       relicId: RELIC_ID.Prophet_Harun,
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Harun.index]!,
       // Required prophet data:
-      biblicalNames: 'Aharon, Aaron',
-      sentTo: 'p.Egypt Pharaoh and his establishment (43:46)',
+      trValBiblicalNames: 'Aharon, Aaron',
+      trValSentTo: a('a.Firaun') + // Pharaoh فرعون
+          'p._and his establishment_' +
+          cns('(43:46)'),
       quranMentionCount: 20,
       qvNabi: QV(19, 53),
       // Optional prophet data:
@@ -595,9 +616,10 @@ initProphets(Map<int, int> ajrLevels) async {
       relicId: RELIC_ID.Prophet_DhulKifl,
       ajrLevel: ajrLevels[RELIC_ID.Prophet_DhulKifl.index]!,
       // Required prophet data:
-      biblicalNames: 'Possibly Buddha, Ezekiel, Joshua, Obadiah or Isaiah',
-      sentTo:
-          'p.Possibly Babylon or the India subcontinent', // TODO Kifl or Kapilavastu in the northern Indian subcontinent
+      trValBiblicalNames:
+          'p.Possibly Buddha, Ezekiel, Joshua, Obadiah or Isaiah'.tr,
+      trValSentTo: 'p.Possibly India subcontinent or_'.tr +
+          a('a.Babylon'), // TODO Kifl or Kapilavastu in the northern Indian subcontinent
       quranMentionCount: 2,
       qvNabi: QV(21, 85, ayaEnd: 86),
       // Optional prophet data:
@@ -607,7 +629,7 @@ initProphets(Map<int, int> ajrLevels) async {
       trKeyNameNicknamesAr: null,
       locationBirth: null,
       locationDeath: null,
-      tomb: 'p.Makam Dağı in Ergani province of Diyarbakir, Turkey',
+      tomb: 'p.Makam Dağı in Ergani province of Diyarbakir,_' + a('a.Turkiye'),
       predecessorAr: null,
       successorAr: null,
       motherAr: null,
@@ -627,8 +649,8 @@ initProphets(Map<int, int> ajrLevels) async {
       relicId: RELIC_ID.Prophet_Dawud,
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Dawud.index]!,
       // Required prophet data:
-      biblicalNames: 'Dawid, Dauid, David',
-      sentTo: 'p.Jerusalem',
+      trValBiblicalNames: 'Dawid, Dauid, David',
+      trValSentTo: a('a.Al-Quds'), // Jerusalem - القدس
       quranMentionCount: 16,
       qvNabi: QV(6, 89),
       // Optional prophet data:
@@ -636,8 +658,8 @@ initProphets(Map<int, int> ajrLevels) async {
       kitabAr: 'Zabur (Psalms) (17:55, 4:163, 17:55, 21:105)',
       qvsUluAlAzm: null,
       trKeyNameNicknamesAr: null,
-      locationBirth: 'p.10th century BCE Jerusalem',
-      locationDeath: 'p.9th century BCE Jerusalem',
+      locationBirth: a('a.Al-Quds'),
+      locationDeath: a('a.Al-Quds'),
       tomb: 'Tomb of Aaron',
       predecessorAr:
           'p.In kingship: Talut? (Saul?), in prophethood: Samuil? (Samuel?)',
@@ -659,8 +681,8 @@ initProphets(Map<int, int> ajrLevels) async {
       relicId: RELIC_ID.Prophet_Suleyman,
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Suleyman.index]!,
       // Required prophet data:
-      biblicalNames: 'Shelomoh, Salomon, Solomon',
-      sentTo: 'p.Jerusalem',
+      trValBiblicalNames: 'Shelomoh, Salomon, Solomon',
+      trValSentTo: a('a.Al-Quds'),
       quranMentionCount: 17,
       qvNabi: QV(6, 89),
       // Optional prophet data:
@@ -668,8 +690,9 @@ initProphets(Map<int, int> ajrLevels) async {
       kitabAr: null,
       qvsUluAlAzm: null,
       trKeyNameNicknamesAr: null,
-      locationBirth: 'p.Kingdom of Israel, Jerusalem',
-      locationDeath: 'p.United Kingdom of Israel, Jerusalem',
+      locationBirth: 'p.Kingdom of Israel in_' + a('a.Al-Quds'),
+      locationDeath:
+          'p.United_'.tr + 'p.Kingdom of Israel in_' + a('a.Al-Quds'),
       tomb: 'Al-Ḥaram ash-Sharīf, Jerusalem',
       predecessorAr: null,
       successorAr: null,
@@ -690,8 +713,14 @@ initProphets(Map<int, int> ajrLevels) async {
       relicId: RELIC_ID.Prophet_Ilyas,
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Ilyas.index]!,
       // Required prophet data:
-      biblicalNames: 'Eliya, Eliou, Elias, Ilias,  Elijah',
-      sentTo: 'p.Sumaria, The people of Ilyas (37:124)',
+      trValBiblicalNames: 'Eliya, Eliou, Elias, Ilias, Elijah',
+      trValSentTo: a('a.Samaria') + //  TODO
+          'i.,'.tr +
+          ' ' +
+          'p.The people of_'.tr +
+          a('a.Ilyas') +
+          ' ' +
+          cns('(37:124)'),
       quranMentionCount: 2,
       qvNabi: QV(6, 89),
       // Optional prophet data:
@@ -721,8 +750,14 @@ initProphets(Map<int, int> ajrLevels) async {
       relicId: RELIC_ID.Prophet_Alyasa,
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Alyasa.index]!,
       // Required prophet data:
-      biblicalNames: 'Elishua, Elisaie, Eliseus, Elisha',
-      sentTo: 'p.Samaria, Eastern Arabia and Persia',
+      trValBiblicalNames: 'Elishua, Elisaie, Eliseus, Elisha',
+      trValSentTo: a('a.Samaria') + //  TODO
+          'i.,'.tr +
+          ' ' +
+          'p.Eastern_' +
+          a('a.Arabia') +
+          'i._and_' +
+          a('a.Fars'), //Fars? Persia
       quranMentionCount: 2,
       qvNabi: QV(6, 89),
       // Optional prophet data:
@@ -732,8 +767,10 @@ initProphets(Map<int, int> ajrLevels) async {
       trKeyNameNicknamesAr: null,
       locationBirth: null,
       locationDeath: null,
-      tomb:
-          'p.Eğil district of Diyarbakir Province, Turkey', //' or Al-Awjam, Saudi Arabia.'
+      tomb: 'p.Eğil district of Diyarbakir Province'.tr +
+          'i.,'.tr +
+          ' ' +
+          a('a.Turkiye'), //' or Al-Awjam, Saudi Arabia.'
       predecessorAr: 'a.Ilyas',
       successorAr: 'a.Yunus',
       motherAr: null,
@@ -754,8 +791,12 @@ initProphets(Map<int, int> ajrLevels) async {
       relicId: RELIC_ID.Prophet_Yunus,
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Yunus.index]!,
       // Required prophet data:
-      biblicalNames: 'Yonah, Yona, Iona, Ionas, Jonas, Jonah',
-      sentTo: 'p.Ninevah, the people of Yunus (10:98)',
+      trValBiblicalNames: 'Yonah, Yona, Iona, Ionas, Jonas, Jonah',
+      trValSentTo: a('a.Nineveh') + // TODO Ninevah? arabee?
+          'i.,'.tr +
+          'p._the people of_'.tr +
+          a('a.Yunus') +
+          cns('(10:98)'),
       quranMentionCount: 4,
       qvNabi: QV(6, 89),
       // Optional prophet data:
@@ -768,7 +809,8 @@ initProphets(Map<int, int> ajrLevels) async {
       locationBirth: null,
       locationDeath: null,
       tomb:
-          "p.Possibly at the Mosque of Yunus, Mosul, Iraq, Mashhad Village Gath-hepher, Israel; Halhul, Palestinian West Bank; Sarafand, Lebanon; Giv'at Yonah (Jonah's Hill) in Ashdod, Israel, near Fatih Pasha Mosque in Diyarbakir, Turkey.",
+          "p.Possibly at the Mosque of Yunus, Mosul, Iraq, Mashhad Village Gath-hepher, Israel; Halhul, Palestinian West Bank; Sarafand, Lebanon; Giv'at Yonah (Jonah's Hill) in Ashdod, Israel, near Fatih Pasha Mosque in Diyarbakir,_" +
+              a('a.Turkiye'),
       predecessorAr: 'p.Alyasa',
       successorAr: 'a.Zakariya',
       motherAr: null,
@@ -788,8 +830,9 @@ initProphets(Map<int, int> ajrLevels) async {
       relicId: RELIC_ID.Prophet_Zakariya,
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Zakariya.index]!,
       // Required prophet data:
-      biblicalNames: 'Zekharyah, Zacharias, Zaccharias, Zechariah, Zachariah',
-      sentTo: 'p.Jerusalem',
+      trValBiblicalNames:
+          'Zekharyah, Zacharias, Zaccharias, Zechariah, Zachariah',
+      trValSentTo: a('a.Al-Quds'),
       quranMentionCount: 7,
       qvNabi: QV(6, 89),
       // Optional prophet data:
@@ -823,8 +866,9 @@ initProphets(Map<int, int> ajrLevels) async {
       relicId: RELIC_ID.Prophet_Yahya,
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Yahya.index]!,
       // Required prophet data:
-      biblicalNames: 'Yochanan, Ioannes, Iohannes, John (the Baptist)',
-      sentTo: 'p.Children of Israel in Jerusalem',
+      trValBiblicalNames: 'Yochanan, Ioannes, Iohannes, John',
+      trValSentTo:
+          at('p.{0} of {1} in {2}', ['a.Children', 'a.Israel', 'a.Al-Quds']),
       quranMentionCount: 5,
       qvNabi: QV(3, 39),
       // Optional prophet data:
@@ -858,8 +902,15 @@ initProphets(Map<int, int> ajrLevels) async {
       relicId: RELIC_ID.Prophet_Isa,
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Isa.index]!,
       // Required prophet data:
-      biblicalNames: 'Yeshua, Iesous, Iesus, Iosue, Jesus',
-      sentTo: 'p.Children of Israel in Jerusalem (61:6), (Bible Matthew 15:24)',
+      trValBiblicalNames: 'Yeshua, Iesous, Iesus, Iosue, Jesus',
+      trValSentTo:
+          at('p.{0} of {1} in {2}', ['a.Children', 'a.Israel', 'a.Al-Quds']) +
+              'p._as written in the_' +
+              a('a.Quran') +
+              ' ' +
+              cns('61:6') +
+              "p._which references the Bible's Matthew_".tr +
+              cns('15:24'),
       quranMentionCount: 25,
       qvNabi: QV(19, 30),
       // Optional prophet data:
@@ -883,7 +934,7 @@ initProphets(Map<int, int> ajrLevels) async {
       ]));
   prophets.add(Prophet(
       // TimelineEntry data:
-      era: "p.Prophet Muhammad",
+      era: at('a.Prophet {0}', ['a.Muhammad']),
       trKeyEndTagLabel: 'Muhammad',
       startMs: 570,
       endMs: 632,
@@ -893,9 +944,15 @@ initProphets(Map<int, int> ajrLevels) async {
       relicId: RELIC_ID.Prophet_Muhammad,
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Muhammad.index]!,
       // Required prophet data:
-      biblicalNames:
-          'Muhammad-im (מחמד' + 'p. - Hebrew). See "Song of Songs" 5:16'.tr,
-      sentTo: 'p.All humanity and jinn (21:107)',
+      trValBiblicalNames: 'Muhammad-im (מחמד' + // no tr here
+          'p. - Hebrew) as written in Song of Songs 5:16'.tr, // just tr here
+      trValSentTo: 'p.All the worlds'.tr +
+          'i.,'.tr +
+          a('a.Nas') + // mankind
+          'i._and_'.tr +
+          a('a.Jinn') +
+          ' ' +
+          cns('(21:107)'),
       quranMentionCount: 4,
       qvNabi: QV(33, 40),
       // Optional prophet data:

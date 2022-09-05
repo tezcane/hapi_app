@@ -252,14 +252,18 @@ String a(String trKey) {
 }
 
 /// at = Arabic Translate/Template. Use "at." template trKey to insert other
-///   trKeys (Can also be tagged "a." if need to a() translate those too), e.g.:
+///   trKeys (Can also be tagged like "p." or "a." if need to a() those too),
+///   e.g.:
 ///     From this trKey template, replace {x}'s:
 ///       'Time until "{0}" ends and "{1}" begins'
 ///     With trKeysToInsert list's values [zc.currZ.trKey, zc.nextZ.trKey], so:
 ///       'Time until "Dhuhr" ends and "Asr" begins'
+///
+/// Note: trKeysToInsert should have only "a." trKeys passed in.
 String at(String trKeyTemplate, List<String> trKeysToInsert) {
-  String rv = a(trKeyTemplate);
+  String rv = a(trKeyTemplate); // does normal tr or "a." a() tr
 
+  // loop through translated text and add arabic/transliteration text:
   for (int idx = 0; idx < trKeysToInsert.length; idx++) {
     rv = rv.replaceFirst('{$idx}', a(trKeysToInsert[idx]));
   }
