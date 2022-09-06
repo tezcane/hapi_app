@@ -32,13 +32,13 @@ class Prophet extends Relic {
     this.trValLocationBirth,
     this.trValLocationDeath,
     this.trValTomb,
-    this.predecessorAr,
-    this.successorAr,
-    this.motherAr,
-    this.fatherAr,
-    this.spousesAr,
-    this.childrenAr,
-    this.relativesAr,
+    this.trValPredecessor,
+    this.trValSuccessor,
+    this.trValMother,
+    this.trValFather,
+    this.trValSpouses,
+    this.trValChildren,
+    this.trValRelatives,
   }) : super(
           // TimelineEntry data:
           trValEra: trValEra,
@@ -66,13 +66,13 @@ class Prophet extends Relic {
   final String? trValLocationBirth;
   final String? trValLocationDeath;
   final String? trValTomb;
-  final String? predecessorAr;
-  final String? successorAr;
-  final String? motherAr;
-  final String? fatherAr;
-  final List<String>? spousesAr;
-  final List<String>? childrenAr;
-  final List<String>? relativesAr;
+  final String? trValPredecessor;
+  final String? trValSuccessor;
+  final String? trValMother;
+  final String? trValFather;
+  final List<String>? trValSpouses;
+  final List<String>? trValChildren;
+  final List<String>? trValRelatives;
 
   bool isRasul() => qvRasul != null;
   bool isUluAlAzm() => qvsUluAlAzm != null && qvsUluAlAzm!.isNotEmpty;
@@ -105,13 +105,13 @@ initProphets(Map<int, int> ajrLevels) async {
       trValLocationBirth: a('a.Jennah'),
       trValLocationDeath: null,
       trValTomb: null,
-      predecessorAr: null,
-      successorAr: null,
-      motherAr: 'p.Created by Allah without a mother',
-      fatherAr: 'p.Created by Allah without a father',
-      spousesAr: ['a.Hawwa'],
-      childrenAr: ['a.Habel', 'a.Qabel', 'a.Sheth', 'a.Anaq'],
-      relativesAr: null));
+      trValPredecessor: null,
+      trValSuccessor: null,
+      trValMother: 'p.Created by Allah without a mother'.tr,
+      trValFather: 'p.Created by Allah without a father'.tr,
+      trValSpouses: [a('a.Hawwa')],
+      trValChildren: [a('a.Habel'), a('a.Qabel'), a('a.Sheth'), a('a.Anaq')],
+      trValRelatives: null));
   prophets.add(Prophet(
       // TimelineEntry data:
       trValEra: 'i.Birth of Humans'.tr,
@@ -136,13 +136,13 @@ initProphets(Map<int, int> ajrLevels) async {
       trValLocationBirth: a('a.Babylon'),
       trValLocationDeath: 'p.Sixth Heaven'.tr,
       trValTomb: null,
-      predecessorAr: 'p.Sheth',
-      successorAr: 'p.Nuh',
-      motherAr: null,
-      fatherAr: null,
-      spousesAr: null,
-      childrenAr: null,
-      relativesAr: null));
+      trValPredecessor: a('a.Sheth'),
+      trValSuccessor: a('a.Nuh'),
+      trValMother: null,
+      trValFather: null,
+      trValSpouses: null,
+      trValChildren: null,
+      trValRelatives: null));
   prophets.add(Prophet(
       // TimelineEntry data:
       trValEra: 'i.Great Flood'.tr,
@@ -167,13 +167,13 @@ initProphets(Map<int, int> ajrLevels) async {
       trValLocationBirth: null,
       trValLocationDeath: null,
       trValTomb: null,
-      predecessorAr: 'a.Idris',
-      successorAr: 'a.Hud',
-      motherAr: null,
-      fatherAr: null,
-      spousesAr: ['p.Naamah'], // TODO find arabic name
-      childrenAr: ['a.Shem', 'a.Ham', 'a.Yam', 'a.Japheth'],
-      relativesAr: null));
+      trValPredecessor: a('a.Idris'),
+      trValSuccessor: a('a.Hud'),
+      trValMother: null,
+      trValFather: null,
+      trValSpouses: [a('a.Naamah')], // TODO find arabic name
+      trValChildren: [a('a.Shem'), a('a.Ham'), a('a.Yam'), a('a.Japheth')],
+      trValRelatives: null));
   prophets.add(Prophet(
       // TimelineEntry data:
       trValEra: 'i.Unknown'.tr,
@@ -200,13 +200,13 @@ initProphets(Map<int, int> ajrLevels) async {
       trValTomb:
           'p.Several sites are revered as the tomb of Hud: Qabr Nabi Hud in Hadhramaut, Yemen; Near the Zamzam Well in Saudi Arabia; south wall of the Umayyad Mosque in Damascus, Syria.'
               .tr,
-      predecessorAr: 'a.Nuh',
-      successorAr: 'a.Salih',
-      motherAr: null,
-      fatherAr: null,
-      spousesAr: null,
-      childrenAr: null,
-      relativesAr: null));
+      trValPredecessor: a('a.Nuh'),
+      trValSuccessor: a('a.Salih'),
+      trValMother: null,
+      trValFather: null,
+      trValSpouses: null,
+      trValChildren: null,
+      trValRelatives: null));
   prophets.add(Prophet(
       // TimelineEntry data:
       trValEra: 'i.Unknown'.tr,
@@ -233,13 +233,13 @@ initProphets(Map<int, int> ajrLevels) async {
       trValTomb:
           "p.Possibly located in Mada'in Salih, Mecca. Also, another possible tomb is in Hasik, Oman."
               .tr,
-      predecessorAr: 'a.Hud',
-      successorAr: 'a.Ibrahim',
-      motherAr: null,
-      fatherAr: null,
-      spousesAr: null,
-      childrenAr: null,
-      relativesAr: ['p.Possibly related to Eber (Heber)']));
+      trValPredecessor: a('a.Hud'),
+      trValSuccessor: a('a.Ibrahim'),
+      trValMother: null,
+      trValFather: null,
+      trValSpouses: null,
+      trValChildren: null,
+      trValRelatives: ['p.Possibly related to Eber (Heber)'.tr]));
   prophets.add(Prophet(
       // TimelineEntry data:
       trValEra: a('a.Ibrahim'),
@@ -273,14 +273,14 @@ initProphets(Map<int, int> ajrLevels) async {
           'i.,_'.tr +
           a('Bilad al-Sham'), // Greater Syria لبِلَاد الشَّام
       trValTomb: 'p.Ibrahimi Mosque, Hebron'.tr,
-      predecessorAr: null,
-      successorAr: at('p.His sons {0} and {1}', ['a.Ishaq', 'a.Ismail']),
-      motherAr: 'a.Mahalath',
-      fatherAr: 'a.Aazar',
-      spousesAr: ['a.Hajar', 'a.Sarah'],
-      childrenAr: ['a.Ishaq', 'a.Ismail'],
-      relativesAr: [
-        at('p.{0} (Nephew)', ['a.Lut'])
+      trValPredecessor: null,
+      trValSuccessor: at('p.His sons {0} and {1}', ['a.Ishaq', 'a.Ismail']),
+      trValMother: a('a.Mahalath'),
+      trValFather: a('a.Aazar'),
+      trValSpouses: [a('a.Hajar'), a('a.Sarah')],
+      trValChildren: [a('a.Ishaq'), a('a.Ismail')],
+      trValRelatives: [
+        at('p.{0} (Nephew)', [a('a.Lut')])
       ]));
   prophets.add(Prophet(
       // TimelineEntry data:
@@ -311,17 +311,17 @@ initProphets(Map<int, int> ajrLevels) async {
       trValLocationDeath: a(
           "a.Bani Na'im"), //  بني نعيم  Palestinian town in the southern West Bank located 8 kilometers (5.0 mi) east of Hebron.
       trValTomb: null,
-      predecessorAr: null,
-      successorAr: null,
-      motherAr: null,
-      fatherAr: 'p.Haran',
-      spousesAr: null,
-      childrenAr: [
+      trValPredecessor: null,
+      trValSuccessor: null,
+      trValMother: null,
+      trValFather: a('a.Haran'),
+      trValSpouses: null,
+      trValChildren: [
         'p.Possibly had two daughters, but the daughters referenced in the Quran could also mean the women of his nation.'
             .tr
       ],
-      relativesAr: [
-        'p.Ibrahim (Uncle)'
+      trValRelatives: [
+        at('{0} (Uncle)', ['a.Ibrahim'])
       ]));
   prophets.add(Prophet(
       // TimelineEntry data:
@@ -353,16 +353,16 @@ initProphets(Map<int, int> ajrLevels) async {
       trValLocationDeath:
           a('a.Makkah al-Mukarramah'), // Mecca مكة المكرمة 'Makkah the Noble',
       trValTomb: null,
-      predecessorAr: 'a.Ibrahim',
-      successorAr: null,
-      motherAr: 'a.Hajar',
-      fatherAr: 'a.Ibrahim',
-      spousesAr: null,
-      childrenAr: [
-        'p.Father of the Arab people'
+      trValPredecessor: a('a.Ibrahim'),
+      trValSuccessor: null,
+      trValMother: a('a.Hajar'),
+      trValFather: a('a.Ibrahim'),
+      trValSpouses: null,
+      trValChildren: [
+        'p.Father of the Arab people'.tr
       ],
-      relativesAr: [
-        at('at.{0} (Half-Brother)', ['p.Ishaq'])
+      trValRelatives: [
+        at('at.{0} (Half-Brother)', ['a.Ishaq'])
       ]));
   prophets.add(Prophet(
       // TimelineEntry data:
@@ -390,19 +390,19 @@ initProphets(Map<int, int> ajrLevels) async {
       trValLocationBirth: null,
       trValLocationDeath: null,
       trValTomb: 'p.Cave of the Patriarchs, Hebron'.tr,
-      predecessorAr: 'a.Ibrahim',
-      successorAr: null,
-      motherAr: 'a.Sarah',
-      fatherAr: 'a.Ibrahim',
-      spousesAr: [
-        'a.Rebekah?' // TODO find arabic word
+      trValPredecessor: a('a.Ibrahim'),
+      trValSuccessor: null,
+      trValMother: a('a.Sarah'),
+      trValFather: a('a.Ibrahim'),
+      trValSpouses: [
+        a('a.Rebekah') // TODO find arabic word
       ],
-      childrenAr: [
-        'a.Yaqub',
-        'a.Al-Els', //  Esau (in Hebrew)
-        'p.Forefather of the 12 tribes of Israel'
+      trValChildren: [
+        a('a.Yaqub'),
+        a('a.Al-Els'), //  Esau (in Hebrew)
+        'p.Forefather of the 12 tribes of Israel'.tr
       ],
-      relativesAr: [
+      trValRelatives: [
         at('{0} (Half-Brother)', ['a.Ismail'])
       ]));
   prophets.add(Prophet(
@@ -431,17 +431,17 @@ initProphets(Map<int, int> ajrLevels) async {
       trValLocationBirth: null,
       trValLocationDeath: null,
       trValTomb: 'p.Cave of the Patriarchs, Hebron'.tr,
-      predecessorAr: null,
-      successorAr: 'a.Yusuf',
-      motherAr: 'a.Rafeqa',
-      fatherAr: 'a.Ishaq',
-      spousesAr: ['a.Rahil?', 'a.Lea?'], // TODO find Arabic
-      childrenAr: [
-        'a.Yusuf',
-        'a.Bunyamin',
-        'p.And ten others, Father of the 12 tribes of Israel',
+      trValPredecessor: null,
+      trValSuccessor: a('a.Yusuf'),
+      trValMother: a('a.Rafeqa'),
+      trValFather: a('a.Ishaq'),
+      trValSpouses: [a('a.Rahil'), a('a.Lea')], // TODO find Arabic
+      trValChildren: [
+        a('a.Yusuf'),
+        a('a.Bunyamin'),
+        'p.And ten others, Father of the 12 tribes of Israel'.tr,
       ],
-      relativesAr: null));
+      trValRelatives: null));
   prophets.add(Prophet(
     // TimelineEntry data:
     trValEra: 'i.Old Egyptian Kingdoms'.tr,
@@ -466,16 +466,16 @@ initProphets(Map<int, int> ajrLevels) async {
     trValLocationBirth: null,
     trValLocationDeath: null,
     trValTomb: null,
-    predecessorAr: 'a.Yaqub',
-    successorAr: null,
-    motherAr: 'a.Rahil?', // Biblical Latin: Rahel, Rachel
-    fatherAr: 'a.Yaqub',
-    spousesAr: null,
-    childrenAr: null,
-    relativesAr: [
+    trValPredecessor: a('a.Yaqub'),
+    trValSuccessor: null,
+    trValMother: a('a.Rahil'), // TODO Biblical Latin: Rahel, Rachel
+    trValFather: a('a.Yaqub'),
+    trValSpouses: null,
+    trValChildren: null,
+    trValRelatives: [
       at('p.{0} (Father)', ['a.Yaqub']),
       at('p.{0} (Brother)', ['a.Bunyamin']),
-      'p.And ten other brothers from the 12 tribes of Israel',
+      'p.And ten other brothers from the 12 tribes of Israel'.tr,
     ],
   ));
   prophets.add(Prophet(
@@ -502,13 +502,13 @@ initProphets(Map<int, int> ajrLevels) async {
       trValLocationBirth: null,
       trValLocationDeath: null,
       trValTomb: 'p.Possibly in Al-Qarah Mountains in southern Oman'.tr,
-      predecessorAr: null,
-      successorAr: null,
-      motherAr: null,
-      fatherAr: null,
-      spousesAr: null,
-      childrenAr: null,
-      relativesAr: ['Probably a descendant of Al-Els, son of Ishaq.']));
+      trValPredecessor: null,
+      trValSuccessor: null,
+      trValMother: null,
+      trValFather: null,
+      trValSpouses: null,
+      trValChildren: null,
+      trValRelatives: ['p.Probably a descendant of Al-Els, son of Ishaq'.tr]));
   prophets.add(Prophet(
       // TimelineEntry data:
       trValEra: 'i.Unknown'.tr,
@@ -537,13 +537,13 @@ initProphets(Map<int, int> ajrLevels) async {
       trValTomb:
           'p.Possibly in Wadi Shuʿayb, Jordan, Guriyeh, Shushtar, Iran or Hittin in the Galilee'
               .tr,
-      predecessorAr: 'a.Ayyub',
-      successorAr: 'a.Musa',
-      motherAr: null,
-      fatherAr: 'a.Mikil?', // TODO find arabic
-      spousesAr: null,
-      childrenAr: null,
-      relativesAr: ['p.Descendant of Ibrahim']));
+      trValPredecessor: a('a.Ayyub'),
+      trValSuccessor: a('a.Musa'),
+      trValMother: null,
+      trValFather: a('a.Mikil'), // TODO find arabic
+      trValSpouses: null,
+      trValChildren: null,
+      trValRelatives: ['p.Descendant of_'.tr + a('a.Ibrahim')]));
   prophets.add(Prophet(
       // TimelineEntry data:
       trValEra: a('a.Firaun') + 'i._New_Kingdoms of_'.tr + a('a.Misr'), // Egypt
@@ -571,17 +571,16 @@ initProphets(Map<int, int> ajrLevels) async {
       trValLocationBirth: null,
       trValLocationDeath: null,
       trValTomb: 'p.An-Nabi Musa, Jericho'.tr, // ٱلنَّبِي مُوْسَى
-      predecessorAr: 'a.Shuayb',
-      successorAr: 'a.Harun',
-      motherAr: a('a.Yukabid') + //يوكابد Latin: Jochebed
-          "p.. Other possible names are Ayaarkha or Ayaathakht (Ibn Katheer), Lawha (Al-Qurtubi) and Yoohaana (Ibn 'Atiyyah)."
-              .tr +
-          'p.. His foster mother was ' +
+      trValPredecessor: a('a.Shuayb'),
+      trValSuccessor: a('a.Harun'),
+      trValMother: a('a.Yukabid') + //يوكابد Latin: Jochebed
+          // Other possible names are Ayaarkha or Ayaathakht (Ibn Katheer), Lawha (Al-Qurtubi) and Yoohaana (Ibn 'Atiyyah)
+          'p._was his birth mother and his foster mother was_' +
           a('a.Asiya'), //يوكابد
-      fatherAr: 'a.Imran', // عمران
-      spousesAr: ['a.Saffurah'], // صفورة
-      childrenAr: null,
-      relativesAr: [
+      trValFather: a('a.Imran'), // عمران
+      trValSpouses: [a('a.Saffurah')], // صفورة
+      trValChildren: null,
+      trValRelatives: [
         at('p.{0} (Brother)', ['a.Harun']),
         at('p.{0} (Sister that followed Musa down river)', ['a.Miriam']),
       ]));
@@ -611,15 +610,13 @@ initProphets(Map<int, int> ajrLevels) async {
       trValLocationBirth: null,
       trValLocationDeath: null,
       trValTomb: 'p.Possibly in Jabal Harun, Jordan or in Sinai'.tr,
-      predecessorAr: 'p.Musa',
-      successorAr: null, // TODO 'p.Possibly '.tr + a('a.Dawud'),?
-      motherAr: a('a.Yukabid') + //يوكابد
-          "p.. Other possible names are Ayaarkha or Ayaathakht (Ibn Katheer), Lawha (Al-Qurtubi) and Yoohaana (Ibn 'Atiyyah)."
-              .tr,
-      fatherAr: 'a.Imran', // عمران
-      spousesAr: null,
-      childrenAr: null,
-      relativesAr: [
+      trValPredecessor: a('p.Musa'),
+      trValSuccessor: 'p.Possibly_'.tr + a('a.Dawud'),
+      trValMother: a('a.Yukabid'),
+      trValFather: a('a.Imran'), // عمران
+      trValSpouses: null,
+      trValChildren: null,
+      trValRelatives: [
         at('p.{0} (Brother)', ['a.Musa'])
       ]));
   prophets.add(Prophet(
@@ -647,15 +644,16 @@ initProphets(Map<int, int> ajrLevels) async {
       trValLaqab: null,
       trValLocationBirth: null,
       trValLocationDeath: null,
-      trValTomb:
-          'p.Makam Dağı in Ergani province of Diyarbakir,_'.tr + a('a.Turkiye'),
-      predecessorAr: null,
-      successorAr: null,
-      motherAr: null,
-      fatherAr: null,
-      spousesAr: null,
-      childrenAr: null,
-      relativesAr: null));
+      trValTomb: 'p.Makam Dağı in Ergani province of Diyarbakir'.tr +
+          'i.,_'.tr +
+          a('a.Turkiye'),
+      trValPredecessor: null,
+      trValSuccessor: null,
+      trValMother: null,
+      trValFather: null,
+      trValSpouses: null,
+      trValChildren: null,
+      trValRelatives: null));
   prophets.add(Prophet(
       // TimelineEntry data:
       trValEra: 'i.Kings of_'.tr + a('a.Israel'),
@@ -682,14 +680,15 @@ initProphets(Map<int, int> ajrLevels) async {
       trValLocationBirth: a('a.Al-Quds'),
       trValLocationDeath: a('a.Al-Quds'),
       trValTomb: 'p.Tomb of Harun, Jabal HarUn in Petra, Jordan'.tr,
-      predecessorAr:
-          'p.In kingship: Talut? (Saul?), in prophethood: Samuil? (Samuel?)',
-      successorAr: 'a.Suleyman',
-      motherAr: null,
-      fatherAr: null,
-      spousesAr: null,
-      childrenAr: ['a.Suleyman'],
-      relativesAr: null));
+      trValPredecessor:
+          'p.In kingship: Possibly Talut (Saul), in prophethood: Samuil (Samuel)'
+              .tr,
+      trValSuccessor: 'a.Suleyman',
+      trValMother: null,
+      trValFather: null,
+      trValSpouses: null,
+      trValChildren: [a('a.Suleyman')],
+      trValRelatives: null));
   prophets.add(Prophet(
       // TimelineEntry data:
       trValEra: 'i.Kings of_'.tr + a('a.Israel'),
@@ -715,13 +714,13 @@ initProphets(Map<int, int> ajrLevels) async {
       trValLocationDeath:
           a('a.United') + _ + 'p.Kingdom of Israel in_'.tr + a('a.Al-Quds'),
       trValTomb: 'p.Al-Ḥaram ash-Sharīf, Jerusalem'.tr,
-      predecessorAr: null,
-      successorAr: null,
-      motherAr: null,
-      fatherAr: 'a.Dawud',
-      spousesAr: null,
-      childrenAr: null,
-      relativesAr: null));
+      trValPredecessor: null,
+      trValSuccessor: null,
+      trValMother: null,
+      trValFather: a('a.Dawud'),
+      trValSpouses: null,
+      trValChildren: null,
+      trValRelatives: null));
   prophets.add(Prophet(
       // TimelineEntry data:
       trValEra: 'i.Kings of_'.tr + a('a.Israel'), // TODO unsure
@@ -751,13 +750,13 @@ initProphets(Map<int, int> ajrLevels) async {
       trValLocationBirth: null,
       trValLocationDeath: null,
       trValTomb: 'p.Possibly in Baalbek, Lebanon'.tr,
-      predecessorAr: 'a.Suleyman',
-      successorAr: 'a.Alyasa',
-      motherAr: null,
-      fatherAr: null,
-      spousesAr: null,
-      childrenAr: null,
-      relativesAr: null));
+      trValPredecessor: a('a.Suleyman'),
+      trValSuccessor: a('a.Alyasa'),
+      trValMother: null,
+      trValFather: null,
+      trValSpouses: null,
+      trValChildren: null,
+      trValRelatives: null));
   prophets.add(Prophet(
       // TimelineEntry data:
       trValEra: 'i.Kings of_'.tr + a('a.Israel'), // TODO unsure
@@ -790,13 +789,13 @@ initProphets(Map<int, int> ajrLevels) async {
       trValTomb: 'p.Eğil district of Diyarbakir Province'.tr +
           'i.,_'.tr +
           a('a.Turkiye'), //' or Al-Awjam, Saudi Arabia.'
-      predecessorAr: 'a.Ilyas',
-      successorAr: 'a.Yunus',
-      motherAr: null,
-      fatherAr: null,
-      spousesAr: null,
-      childrenAr: null,
-      relativesAr: null));
+      trValPredecessor: a('a.Ilyas'),
+      trValSuccessor: a('a.Yunus'),
+      trValMother: null,
+      trValFather: null,
+      trValSpouses: null,
+      trValChildren: null,
+      trValRelatives: null));
   prophets.add(Prophet(
       // TimelineEntry data:
       trValEra: 'i.Unknown'.tr,
@@ -830,13 +829,13 @@ initProphets(Map<int, int> ajrLevels) async {
                   .tr +
               'i.,_'.tr +
               a('a.Turkiye'),
-      predecessorAr: 'p.Alyasa',
-      successorAr: 'a.Zakariya',
-      motherAr: null,
-      fatherAr: 'a.Matta', // متى - Amittai latin
-      spousesAr: null,
-      childrenAr: null,
-      relativesAr: null));
+      trValPredecessor: a('a.Alyasa'),
+      trValSuccessor: a('a.Zakariya'),
+      trValMother: null,
+      trValFather: a('a.Matta'), // متى - Amittai latin
+      trValSpouses: null,
+      trValChildren: null,
+      trValRelatives: null));
   prophets.add(Prophet(
       // TimelineEntry data:
       trValEra: a('a.Masih'),
@@ -862,17 +861,17 @@ initProphets(Map<int, int> ajrLevels) async {
       trValLocationBirth: null,
       trValLocationDeath: null,
       trValTomb: 'p.Great Mosque of Aleppo, Syria'.tr,
-      predecessorAr: 'a.Yunus',
-      successorAr: 'a.Yahya',
-      motherAr: null,
-      fatherAr: null,
-      spousesAr: [
+      trValPredecessor: a('a.Yunus'),
+      trValSuccessor: a('a.Yahya'),
+      trValMother: null,
+      trValFather: null,
+      trValSpouses: [
         a('a.Ishba') + //Elizabeth', // TODO find arabic
-            at('p. (Barren all her life until miracle birth of {0} in her old age.',
+            at('p._Barren all her life until miracle birth of {0} in her old age.',
                 ['a.Yahya']),
       ],
-      childrenAr: ['a.Yahya'],
-      relativesAr: null));
+      trValChildren: ['a.Yahya'],
+      trValRelatives: null));
   prophets.add(Prophet(
       // TimelineEntry data:
       trValEra: a('a.Masih'),
@@ -898,15 +897,15 @@ initProphets(Map<int, int> ajrLevels) async {
       trValLocationBirth: null,
       trValLocationDeath: 'p.Decapitated by the ruler Herod Antipas'.tr,
       trValTomb: 'p.His head is possibly at the Umayyad Mosque in Damascus'.tr,
-      predecessorAr: 'a.Zakariya',
-      successorAr: 'a.Isa',
-      motherAr: a('a.Ishba') + //Elizabeth', // TODO find arabic
+      trValPredecessor: a('a.Zakariya'),
+      trValSuccessor: a('a.Isa'),
+      trValMother: a('a.Ishba') + //Elizabeth', // TODO find arabic
           at('p. (Barren all her life until miracle birth of {0} in her old age.',
               ['a.Yahya']),
-      fatherAr: 'a.Zakariya',
-      spousesAr: null,
-      childrenAr: null,
-      relativesAr: [
+      trValFather: a('a.Zakariya'),
+      trValSpouses: null,
+      trValChildren: null,
+      trValRelatives: [
         at('p.{0} (Cousin)', ['a.Isa'])
       ]));
   prophets.add(Prophet(
@@ -943,13 +942,13 @@ initProphets(Map<int, int> ajrLevels) async {
       trValLocationDeath:
           'p.Still alive, was raised to Heaven from_'.tr + a('a.Falastin'),
       trValTomb: 'p.None yet'.tr,
-      predecessorAr: 'a.Yahya',
-      successorAr: 'a.Muhammad',
-      motherAr: 'a.Maryam',
-      fatherAr: 'p.Created by Allah without a father',
-      spousesAr: ['p.None yet'.tr],
-      childrenAr: ['p.None yet'.tr],
-      relativesAr: [
+      trValPredecessor: a('a.Yahya'),
+      trValSuccessor: a('a.Muhammad'),
+      trValMother: a('a.Maryam'),
+      trValFather: 'p.Created by Allah without a father',
+      trValSpouses: ['p.None yet'.tr],
+      trValChildren: ['p.None yet'.tr],
+      trValRelatives: [
         at('p.{0} (Uncle)', ['a.Zakariya']),
         at('p.{0} (Cousin)', ['a.Yahya'])
       ]));
@@ -1041,40 +1040,40 @@ initProphets(Map<int, int> ajrLevels) async {
           a('a.Arabia'),
       trValTomb: at('p.Green Dome in {0}, {1}',
           ['a.Al-Masjid an-Nabawi', 'a.Al-Madinah']), //المسجد النبوي
-      predecessorAr: 'a.Isa',
-      successorAr: at(
-          'p.No more prophets, however, {0} and {1} will follow Islam',
-          ['a.Mahdi', 'a.Isa']),
-      motherAr: 'a.Amina bint Wahb', // آمِنَة ٱبْنَت وَهْب
-      fatherAr:
-          'a.Abdullah ibn Abd al-Muttalib', // عَبْد ٱللَّٰه ٱبْن عَبْد ٱلْمُطَّلِب
-      spousesAr: [
+      trValPredecessor: a('a.Isa'),
+      trValSuccessor: at(
+          'p.No more prophets, however, {0} and {1} will follow {3}',
+          ['a.Mahdi', 'a.Isa', 'a.Islam']),
+      trValMother: a('a.Amina bint Wahb'), // آمِنَة ٱبْنَت وَهْب
+      trValFather: a(
+          'a.Abdullah ibn Abd al-Muttalib'), // عَبْد ٱللَّٰه ٱبْن عَبْد ٱلْمُطَّلِب
+      trValSpouses: [
         //https://en.wikipedia.org/wiki/Muhammad%27s_wives
         //https://www.quora.com/After-the-death-of-Prophet-Muhammad-which-of-his-wives-died-first
-        '(595–619) Khadijah',
-        '(619–632) Sawdah',
-        '(623–632) Aisha', //- Only virgin',
-        '(625–632) Hafsah',
-        '(625–626) Umm al-Masakin',
-        '(625–632) Umm Salamah',
-        '(627–632) Zaynab',
-        '(628–632) Juwayriyah',
-        '(628–632) Umm Habibah',
-        '(629–632) Safiyyah',
-        '(629–632) Maymunah',
-        '(627–631) Rayhana', // concubine later married?
-        '(628–632) Maria', // concubine later married?
+        cns('595–619: ') + a('a.Khadijah'),
+        cns('619–632: ') + a('a.Sawdah'),
+        cns('623–632: ') + a('a.Aisha'), //- Only virgin',
+        cns('625–632: ') + a('a.Hafsah'),
+        cns('625–626: ') + a('a.Umm al-Masakin'),
+        cns('625–632: ') + a('a.Umm Salamah'),
+        cns('627–632: ') + a('a.Zaynab'),
+        cns('628–632: ') + a('a.Juwayriyah'),
+        cns('628–632: ') + a('a.Umm Habibah'),
+        cns('629–632: ') + a('a.Safiyyah'),
+        cns('629–632: ') + a('a.Maymunah'),
+        cns('627–631: ') + a('a.Rayhana'), // concubine later married?
+        cns('628–632: ') + a('a.Maria'), // concubine later married?
       ],
-      childrenAr: [
+      trValChildren: [
         // https://en.wikipedia.org/wiki/Muhammad%27s_children
-        '(581-629) Zayd ibn Harithah - Foster child mentioned in the Quran', //زَيْد ٱبْن حَارِثَة
-        '(598–601) Al-Qasim - Son of Khadija',
-        '(599–629) Zainab - Daughter of Khadija',
-        '(601–624) Ruqayyah - Daughter of Khadija',
-        '(603–630) Umm Kulthum - Daughter of Khadija',
-        '(605–632) Fatimah - Daughter of Khadija',
-        '(611–613) Abdullah - Son of Khadija',
-        '(630–632) Ibrahim - Son of Maria al-Qibtiyya.',
+        cns('581-629 ') + a('a.Zayd ibn Harithah'), // زَيْد ٱبْن حَارِثَة
+        cns('598–601 ') + a('a.Al-Qasim'),
+        cns('599–629 ') + a('a.Zainab'),
+        cns('601–624 ') + a('a.Ruqayyah'),
+        cns('603–630 ') + a('a.Umm Kulthum'),
+        cns('605–632 ') + a('a.Fatimah'),
+        cns('611–613 ') + a('a.Abdullah'),
+        cns('630–632 ') + a('a.Ibrahim'),
       ],
-      relativesAr: null)); // TODO Link to RELIC_TYPE.Bayt
+      trValRelatives: null)); // TODO Link to RELIC_TYPE.Bayt
 }
