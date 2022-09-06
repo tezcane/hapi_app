@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/bottom_bar.dart';
@@ -38,6 +39,7 @@ class RelicsUI extends StatelessWidget {
           at('at.{0} Favorites'.tr, [navPage.trKey]),
           Icons.favorite_border_outlined,
           AppThemes.ajr0Missed,
+          onPressed: hideKeyboard, // in case search is showing keyboard
         ),
         BottomBarItem(
           const RelicsSearchUI(),
@@ -54,6 +56,7 @@ class RelicsUI extends StatelessWidget {
           'i.Islamic relics'.tr,
           Icons.brightness_3_outlined, // Icons.wine_bar_sharp
           AppThemes.ajr2Uncommon,
+          onPressed: hideKeyboard,
         ),
         BottomBarItem(
           Center(child: T('i.Coming Soon', tsN, h: 50)),
@@ -62,6 +65,7 @@ class RelicsUI extends StatelessWidget {
           'i.Famous Muslim Places'.tr,
           Icons.map_outlined, // TODO Icons.mosque_outlined/.school_outlined
           AppThemes.ajr3Rare,
+          onPressed: hideKeyboard,
         ),
         BottomBarItem(
           Center(child: T('i.Coming Soon', tsN, h: 50)),
@@ -70,6 +74,7 @@ class RelicsUI extends StatelessWidget {
           'i.Proofs of Islam'.tr,
           Icons.auto_stories,
           AppThemes.ajr4Epic,
+          onPressed: hideKeyboard,
         ),
         BottomBarItem(
           const UmmahUI(trKeyTitle: 'a.Ummah'),
@@ -78,6 +83,7 @@ class RelicsUI extends StatelessWidget {
           '              ' + 'i.Well known Muslims'.tr + '              ',
           Icons.connect_without_contact_outlined,
           AppThemes.ajr5Legendary,
+          onPressed: hideKeyboard,
         ),
         BottomBarItem(
           const Center(child: T('i.Coming Soon', tsN, h: 50)),
@@ -88,6 +94,7 @@ class RelicsUI extends StatelessWidget {
               '              ',
           Icons.apps_outlined,
           AppThemes.ajr6Mythic,
+          onPressed: hideKeyboard,
         ),
       ];
 
@@ -109,4 +116,6 @@ class RelicsUI extends StatelessWidget {
       );
     });
   }
+
+  hideKeyboard() => SystemChannels.textInput.invokeMethod('TextInput.hide');
 }

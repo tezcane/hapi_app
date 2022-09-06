@@ -59,7 +59,9 @@ class BottomBarMenu extends StatelessWidget {
     // only do below work when we get final animated page or if swiped to page
     if (navMovingToIdx == newIdx || navMovingToIdx == -1) {
       if (navMovingToIdx == newIdx) navMovingToIdx = -1;
-      // Optional callback, can enable/disable a tab page's animations, etc.
+      // Optional callback, can enable/disable a tab page's animations,
+      // hide the keyboard (if for example was open from searching and user
+      // swiped screen to go to another bottom_bar/tab), etc.
       if (bottomBarItems[newIdx].onPressed != null) {
         bottomBarItems[newIdx].onPressed!.call();
       }

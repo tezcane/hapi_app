@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/bottom_bar.dart';
 import 'package:hapi/menu/bottom_bar_menu.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_controller.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
-import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/menu/slide/menu_right/menu_right_ui.dart';
+import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_favorites_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_menu_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_search_ui.dart';
@@ -81,6 +82,15 @@ class TarikhUI extends StatelessWidget {
     });
   }
 
-  setTarikhMenuInactive() => TarikhController.to.isActiveTarikhMenu = false;
-  setTarikhMenuActive() => TarikhController.to.isActiveTarikhMenu = true;
+  hideKeyboard() => SystemChannels.textInput.invokeMethod('TextInput.hide');
+
+  setTarikhMenuInactive() {
+    TarikhController.to.isActiveTarikhMenu = false;
+    hideKeyboard();
+  }
+
+  setTarikhMenuActive() {
+    TarikhController.to.isActiveTarikhMenu = true;
+    hideKeyboard();
+  }
 }
