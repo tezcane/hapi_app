@@ -337,7 +337,7 @@ initProphets(Map<int, int> ajrLevels) async {
       // Required prophet data:
       trValBiblicalNames: 'Yishmael, Ismael, Ismahel, Ishmael',
       trValSentTo: 'p.Pre-Islamic_' +
-          a('a.Arabia') +
+          a('a.Al-Arabiyyah') +
           'i.,_'.tr +
           a('a.Makkah al-Mukarramah'),
       quranMentionCount: 12,
@@ -774,7 +774,7 @@ initProphets(Map<int, int> ajrLevels) async {
           'i.,_'.tr +
           a('a.East') +
           _ +
-          a('a.Arabia') +
+          a('a.Al-Arabiyyah') +
           'i._and_' +
           a('a.Fars'), //Fars? Persia
       quranMentionCount: 2,
@@ -1016,9 +1016,9 @@ initProphets(Map<int, int> ajrLevels) async {
           'i.,_'.tr +
           a('a.Al-Madinah') + // Al Madinah Al Munawwarah المدينة المنورة,
           'i.,_'.tr +
-          a('a.Hejaz') +
+          a('a.Al-Hejaz') +
           'i.,_'.tr +
-          a('a.Arabia'),
+          a('a.Al-Arabiyyah'),
       trValLocationDeath: a(DAY_OF_WEEK.Monday.trKey) +
           'i.,_'.tr +
           cni(12) +
@@ -1031,13 +1031,13 @@ initProphets(Map<int, int> ajrLevels) async {
           cni(632) +
           a('i.AD') +
           'i.,_'.tr +
-          a('a.Aliathnayn') +
+          a('a.Aliathnayn') + // Monday
           'i.,_'.tr +
           a('a.Al-Madinah') +
           'i.,_'.tr +
-          a('a.Hejaz') +
+          a('a.Al-Hejaz') + // ٱلْحِجَاز al-Ḥijaz
           'i.,_'.tr +
-          a('a.Arabia'),
+          a('a.Al-Arabiyyah'), // Arabia - الْعَرَبِيَّة
       trValTomb: at('p.Green Dome in {0}, {1}',
           ['a.Al-Masjid an-Nabawi', 'a.Al-Madinah']), //المسجد النبوي
       trValPredecessor: a('a.Isa'),
