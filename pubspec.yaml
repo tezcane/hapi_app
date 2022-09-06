@@ -119,6 +119,8 @@ flutter:
     - assets/i18n/
     - assets/i18n/tarikh_articles/
     - assets/images/
+    - assets/images/Allah/
+    - assets/images/anbiya/
     - assets/images/logo/
     - assets/images/logo/gif/
     - assets/images/quests/

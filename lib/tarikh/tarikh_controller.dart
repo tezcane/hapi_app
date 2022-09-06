@@ -490,7 +490,7 @@ class TimelineInitHandler {
   ///   - scale: a custom scale value.
   Future<TimelineAsset> getTimelineAsset(Map assetMap) async {
     String source = assetMap['source'];
-    String filename = 'assets/tarikh/' + source;
+    String filename = 'assets/' + source;
 
     TimelineAsset asset;
 

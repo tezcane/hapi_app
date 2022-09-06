@@ -19,7 +19,7 @@
 		},
 		"asset":
 		{
-			"source": "flare/Big_Bang.flr",
+			"source": "tarikh/flare/Big_Bang.flr",
 			"width": 3628,
 			"height": 3620,
 			"offset": 1500,
@@ -48,7 +48,7 @@
 		},
 		"asset":
 		{
-			"source": "flare/Big_Bang.flr",
+			"source": "tarikh/flare/Big_Bang.flr",
 			"width": 3628,
 			"height": 3620,
 			"offset": 1500,
@@ -63,7 +63,7 @@
 		"id":"milky",
 		"asset":
 		{
-			"source": "flare/Milky Way.flr",
+			"source": "tarikh/flare/Milky Way.flr",
 			"width": 1293,
 			"height": 1210,
 			"scale": 0.5,
@@ -76,7 +76,7 @@
 		"accent": [255, 166, 20],
 		"asset": 
 		{
-			"source": "flare/Sun.flr",
+			"source": "tarikh/flare/Sun.flr",
 			"width": 800,
 			"height": 800,
 			"offset": -100,
@@ -90,7 +90,7 @@
 		"label": "Earth is Born",
 		"asset": 
 		{
-			"source": "flare/HeavyBombardment.flr",
+			"source": "tarikh/flare/HeavyBombardment.flr",
 			"width": 1210,
 			"height": 1210,
 			"scale": 0.25,
@@ -104,7 +104,7 @@
 		"accent": [255, 63, 0],
 		"asset": 
 		{
-			"source": "flare/HeavyBombardment.flr",
+			"source": "tarikh/flare/HeavyBombardment.flr",
 			"width": 1210,
 			"height": 1210,
 			"scale": 0.25,
@@ -130,7 +130,7 @@
 		},
 		"asset": 
 		{
-			"source": "flare/HeavyBombardment.flr",
+			"source": "tarikh/flare/HeavyBombardment.flr",
 			"width": 1210,
 			"height": 1210,
 			"intro":"Transformation",
@@ -145,7 +145,7 @@
 		"label": "Single Celled Organisms",
 		"asset": 
 		{
-			"source": "nima/Cells.nma",
+			"source": "tarikh/nima/Cells.nma",
 			"width": 800,
 			"height": 400
 		}
@@ -155,7 +155,7 @@
 		"label": "Animals",
 		"asset":
 		{
-			"source": "flare/Animals.flr",
+			"source": "tarikh/flare/Animals.flr",
 			"width": 814,
 			"height": 564,
 			"offset": -100,
@@ -183,7 +183,7 @@
 		"accent": [55, 134, 222],
 		"asset": 
 		{
-			"source": "nima/Fish_and_Stuff.nma",
+			"source": "tarikh/nima/Fish_and_Stuff.nma",
 			"width": 1290,
 			"height": 650,
 			"scale": 0.65,
@@ -196,7 +196,7 @@
 		"accent": [55, 134, 222],
 		"asset": 
 		{
-			"source": "nima/Insects.nma",
+			"source": "tarikh/nima/Insects.nma",
 			"width": 800,
 			"height": 528
 		}
@@ -207,7 +207,7 @@
 		"accent": [55, 134, 222],
 		"asset": 
 		{
-			"source": "nima/Reptiles.nma",
+			"source": "tarikh/nima/Reptiles.nma",
 			"width": 400,
 			"height": 600
 		}
@@ -219,7 +219,7 @@
 		"id":"dinosaur",
 		"asset":
 		{
-			"source": "flare/Dinosaurs.flr",
+			"source": "tarikh/flare/Dinosaurs.flr",
 			"width": 800,
 			"height": 570,
 			"offset":0,
@@ -232,7 +232,7 @@
 		"id":"mammal",
 		"asset":
 		{
-			"source": "nima/Mammals.nma",
+			"source": "tarikh/nima/Mammals.nma",
 			"offset":-200,
 			"width": 400,
 			"height": 400
@@ -244,7 +244,7 @@
 		"accent": [235, 155, 75],
 		"asset": 
 		{
-			"source": "nima/Dinosaurs.nma",
+			"source": "tarikh/nima/Dinosaurs.nma",
 			"width": 800,
 			"height": 570,
 			"offset":-200,
@@ -257,7 +257,7 @@
 		"accent": [235, 155, 75],
 		"asset": 
 		{
-			"source": "flare/Trex.flr",
+			"source": "tarikh/flare/Trex.flr",
 			"width": 800,
 			"height": 570,
 			"offset":-200
@@ -269,7 +269,7 @@
 		"accent": [235, 155, 75],
 		"asset": 
 		{
-			"source": "nima/Dinosaur_Demise.nma",
+			"source": "tarikh/nima/Dinosaur_Demise.nma",
 			"width": 700,
 			"height": 500,
 			"offset":-100
@@ -281,7 +281,7 @@
 		"accent": [202, 79, 63],
 		"asset":
 		{
-			"source": "nima/Apes.nma",
+			"source": "tarikh/nima/Apes.nma",
 			"width": 528,
 			"height": 528,
 			"offset": -40
@@ -305,10 +305,10 @@
 		},
 		"asset":
 		{
-			"source": "png/Adam.png",
-			"width": 528,
-			"height": 528,
-			"offset": -40
+			"source": "images/anbiya/Adam.png",
+			"width": 192,
+			"height": 192,
+			"offset": 0
 		}
 	},
 	{
@@ -316,7 +316,7 @@
 		"label": "Constructed Tools",
 		"asset":
 		{
-			"source": "nima/Constructive_Tools.nma",
+			"source": "tarikh/nima/Constructive_Tools.nma",
 			"width": 528,
 			"height": 528,
 			"offset": -40
@@ -327,7 +327,7 @@
 		"label": "Control Fire",
 		"asset":
 		{
-			"source": "nima/Fire.nma",
+			"source": "tarikh/nima/Fire.nma",
 			"width": 528,
 			"height": 528,
 			"offset": -50
@@ -338,7 +338,7 @@
 		"label": "First Temple",
 		"asset":
 		{
-			"source": "nima/First_Temple.nma",
+			"source": "tarikh/nima/First_Temple.nma",
 			"width": 340,
 			"height": 340,
 			"offset": -200
@@ -349,7 +349,7 @@
 		"label": "Agricultural Revolution",
 		"asset":
 		{
-			"source": "nima/Agricultural_evolution.nma",
+			"source": "tarikh/nima/Agricultural_evolution.nma",
 			"width": 528,
 			"height": 528,
 			"offset": -40,
@@ -361,7 +361,7 @@
 		"label": "Writing",
 		"asset":
 		{
-			"source": "nima/Writing.nma",
+			"source": "tarikh/nima/Writing.nma",
 			"width": 900,
 			"height": 1200,
 			"scale": 0.5,
@@ -374,7 +374,7 @@
 		"label": "Recorded History",
 		"asset":
 		{
-			"source": "nima/Recorded_history.nma",
+			"source": "tarikh/nima/Recorded_history.nma",
 			"width": 400,
 			"height": 400,
 			"offset": -200
@@ -385,7 +385,7 @@
 		"label": "First Pyramid Built",
 		"asset":
 		{
-			"source": "nima/Pyramid.nma",
+			"source": "tarikh/nima/Pyramid.nma",
 			"width": 400,
 			"height": 430,
 			"offset": -350
@@ -396,7 +396,7 @@
 		"label": "Roman Empire",
 		"asset":
 		{
-			"source": "nima/Roma.nma",
+			"source": "tarikh/nima/Roma.nma",
 			"width": 2100,
 			"height": 1375,
 			"scale": 0.5,
@@ -411,7 +411,7 @@
 		"accent": [227, 21, 55],
 		"asset": 
 		{
-			"source": "nima/Crusades.nma",
+			"source": "tarikh/nima/Crusades.nma",
 			"width": 528,
 			"height": 528,
 			"offset": -60
@@ -423,7 +423,7 @@
 		"label": "Black Plague",
 		"asset":
 		{
-			"source": "nima/BlackPlague.nma",
+			"source": "tarikh/nima/BlackPlague.nma",
 			"width": 800,
 			"height": 400
 		}
@@ -433,7 +433,7 @@
 		"label": "Constantinople/Istanbul",
 		"asset":
 		{
-			"source": "nima/Constantinople.nma",
+			"source": "tarikh/nima/Constantinople.nma",
 			"width": 500,
 			"height": 500
 		}
@@ -443,7 +443,7 @@
 		"label": "Newton and Gravity",
 		"asset":
 		{
-			"source": "nima/Newton_v2.nma",
+			"source": "tarikh/nima/Newton_v2.nma",
 			"width": 500,
 			"height": 500,
 			"idle":"apple_falls"
@@ -454,7 +454,7 @@
 		"label": "Industrialization",
 		"asset":
 		{
-			"source": "nima/Industrialization.nma",
+			"source": "tarikh/nima/Industrialization.nma",
 			"width": 500,
 			"height": 500,
 			"offset": -100
@@ -465,7 +465,7 @@
 		"label": "Darwin's\nTheory of Evolution",
 		"asset":
 		{
-			"source": "nima/Darwin 2.nma",
+			"source": "tarikh/nima/Darwin 2.nma",
 			"width": 1850,
 			"height": 2100,
 			"scale": 0.22,
@@ -480,7 +480,7 @@
 		"accent": [227, 21, 55],
 		"asset": 
 		{
-			"source": "nima/World_War_I.nma",
+			"source": "tarikh/nima/World_War_I.nma",
 			"width": 528,
 			"height": 528
 		}
@@ -492,7 +492,7 @@
 		"accent": [227, 21, 55],
 		"asset":
 		{
-			"source": "nima/World_War_II.nma",
+			"source": "tarikh/nima/World_War_II.nma",
 			"width": 528,
 			"height": 528,
 			"offset": -140
@@ -505,7 +505,7 @@
 		"accent": [227, 21, 55],
 		"asset":
 		{
-			"source": "nima/Cold_war.nma",
+			"source": "tarikh/nima/Cold_war.nma",
 			"width": 528,
 			"height": 528,
 			"offset": -80
@@ -517,7 +517,7 @@
 		"accent": [115, 132, 205],
 		"asset": 
 		{
-			"source": "nima/Moon.nma",
+			"source": "tarikh/nima/Moon.nma",
 			"width": 528,
 			"height": 528,
 			"offset": -100
@@ -529,7 +529,7 @@
 		"accent": [115, 132, 205],
 		"asset":
 		{
-			"source": "nima/Internet.nma",
+			"source": "tarikh/nima/Internet.nma",
 			"width": 528,
 			"height": 528,
 			"offset": -140
