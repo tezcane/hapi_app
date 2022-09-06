@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:hapi/controllers/time_controller.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/quran/quran.dart';
 import 'package:hapi/relic/relic.dart';
@@ -28,7 +29,7 @@ class Prophet extends Relic {
     this.trValKitab,
     this.qvsUluAlAzm,
     this.trValLaqab, // Laqab - Nicknames
-    this.locationBirth,
+    this.trValLocationBirth,
     this.locationDeath,
     this.tomb,
     this.predecessorAr,
@@ -62,7 +63,7 @@ class Prophet extends Relic {
   final String? trValKitab;
   final List<QV>? qvsUluAlAzm; // Archprophet (ʾUlu Al-'Azm)
   final List<String>? trValLaqab;
-  final String? locationBirth;
+  final String? trValLocationBirth;
   final String? locationDeath;
   final String? tomb;
   final String? predecessorAr;
@@ -101,7 +102,7 @@ initProphets(Map<int, int> ajrLevels) async {
       trValKitab: null,
       qvsUluAlAzm: null,
       trValLaqab: null,
-      locationBirth: 'a.Jennah',
+      trValLocationBirth: a('a.Jennah'),
       locationDeath: null,
       tomb: null,
       predecessorAr: null,
@@ -132,7 +133,7 @@ initProphets(Map<int, int> ajrLevels) async {
       trValKitab: null,
       qvsUluAlAzm: null,
       trValLaqab: null,
-      locationBirth: a('a.Babylon'),
+      trValLocationBirth: a('a.Babylon'),
       locationDeath: 'p.Sixth Heaven',
       tomb: null,
       predecessorAr: 'p.Sheth',
@@ -155,7 +156,7 @@ initProphets(Map<int, int> ajrLevels) async {
       ajrLevel: ajrLevels[RELIC_ID.Prophet_Nuh.index]!,
       // Required prophet data:
       trValBiblicalNames: 'Noach, Noe, Noah',
-      trValSentTo: 'p.The people of_'.tr + a('a.Noah') + _ + cns('(26:105)'),
+      trValSentTo: 'i.The people of_'.tr + a('a.Noah') + _ + cns('(26:105)'),
       quranMentionCount: 43,
       qvNabi: QV(6, 89),
       // Optional prophet data:
@@ -163,7 +164,7 @@ initProphets(Map<int, int> ajrLevels) async {
       trValKitab: null,
       qvsUluAlAzm: [QV(46, 35), QV(33, 7)],
       trValLaqab: null,
-      locationBirth: null,
+      trValLocationBirth: null,
       locationDeath: null,
       tomb: null,
       predecessorAr: 'a.Idris',
@@ -194,7 +195,7 @@ initProphets(Map<int, int> ajrLevels) async {
       trValKitab: null,
       qvsUluAlAzm: null,
       trValLaqab: null,
-      locationBirth: null,
+      trValLocationBirth: null,
       locationDeath: null,
       tomb:
           'p.Several sites are revered as the tomb of Hud: Qabr Nabi Hud in Hadhramaut, Yemen; Near the Zamzam Well in Saudi Arabia; south wall of the Umayyad Mosque in Damascus, Syria.',
@@ -226,7 +227,7 @@ initProphets(Map<int, int> ajrLevels) async {
       trValKitab: null,
       qvsUluAlAzm: null,
       trValLaqab: null,
-      locationBirth: null,
+      trValLocationBirth: null,
       locationDeath: null,
       tomb:
           "p.Possibly located in Mada'in Salih, Mecca. Also, another possible tomb is in Hasik, Oman.",
@@ -251,8 +252,12 @@ initProphets(Map<int, int> ajrLevels) async {
       // Required prophet data:
       trValBiblicalNames: 'Avraham, Abraam, Abraham',
       trValSentTo: a('a.Babylon') +
-          'i.,'.tr +
-          'p._The people of Iraq and Syria_'.tr +
+          'i.,_'.tr +
+          'i.The people of_'.tr +
+          a('a.Al-Eiraq') + // Iraq العراق
+          'i._and_'.tr +
+          a('a.Suria') + // Syria سوريا
+          _ +
           cns('(22:43)'),
       quranMentionCount: 69,
       qvNabi: QV(19, 41),
@@ -261,7 +266,7 @@ initProphets(Map<int, int> ajrLevels) async {
       trValKitab: 'p.Scrolls of_'.tr + a('a.Ibrahim') + _ + cns('(87:19)'),
       qvsUluAlAzm: [QV(2, 124)],
       trValLaqab: [a('a.Khalilullah')], // Friend of Allah
-      locationBirth: 'p.Ur al-Chaldees, Bilād ar-Rāfidayn',
+      trValLocationBirth: 'p.Ur al-Chaldees, Bilād ar-Rāfidayn'.tr,
       locationDeath: 'p.Hebron, Shaam',
       tomb: 'p.Ibrahimi Mosque, Hebron',
       predecessorAr: null,
@@ -298,7 +303,7 @@ initProphets(Map<int, int> ajrLevels) async {
       trValKitab: null,
       qvsUluAlAzm: null,
       trValLaqab: null,
-      locationBirth: null,
+      trValLocationBirth: null,
       locationDeath: "p.Bani Na'im".tr,
       tomb: null,
       predecessorAr: null,
@@ -334,9 +339,9 @@ initProphets(Map<int, int> ajrLevels) async {
       trValKitab: null,
       qvsUluAlAzm: null,
       trValLaqab: null,
-      locationBirth: a('a.Falastin') + // فلسطين Palestine
+      trValLocationBirth: a('a.Falastin') + // فلسطين Palestine
           '/' +
-          'p.Canaan'.tr,
+          'i.Canaan'.tr,
       locationDeath: 'p.Age 136, Mecca, Arabia',
       tomb: null,
       predecessorAr: 'a.Ibrahim',
@@ -365,7 +370,7 @@ initProphets(Map<int, int> ajrLevels) async {
       trValBiblicalNames: 'Yitzhak, Itzhak, Isaak, Issac, Isaac',
       trValSentTo: a('a.Falastin') + // فلسطين Palestine
           '/' +
-          'p.Canaan'.tr,
+          'i.Canaan'.tr,
       quranMentionCount: 17,
       qvNabi: QV(19, 49),
       // Optional prophet data:
@@ -373,7 +378,7 @@ initProphets(Map<int, int> ajrLevels) async {
       trValKitab: null,
       qvsUluAlAzm: null,
       trValLaqab: null,
-      locationBirth: null,
+      trValLocationBirth: null,
       locationDeath: null,
       tomb: 'p.Cave of the Patriarchs, Hebron',
       predecessorAr: 'a.Ibrahim',
@@ -406,7 +411,7 @@ initProphets(Map<int, int> ajrLevels) async {
       trValBiblicalNames: 'Yaakov, Iakob, Iacob, Jacob',
       trValSentTo: a('a.Falastin') + // فلسطين Palestine
           '/' +
-          'p.Canaan'.tr,
+          'i.Canaan'.tr,
       quranMentionCount: 16,
       qvNabi: QV(19, 49),
       // Optional prophet data:
@@ -414,7 +419,7 @@ initProphets(Map<int, int> ajrLevels) async {
       trValKitab: null,
       qvsUluAlAzm: null,
       trValLaqab: [a('a.Israel')], //  إِسْرَآءِيل
-      locationBirth: null,
+      trValLocationBirth: null,
       locationDeath: null,
       tomb: 'p.Cave of the Patriarchs, Hebron',
       predecessorAr: null,
@@ -449,7 +454,7 @@ initProphets(Map<int, int> ajrLevels) async {
     trValKitab: null,
     qvsUluAlAzm: null,
     trValLaqab: null,
-    locationBirth: null,
+    trValLocationBirth: null,
     locationDeath: null,
     tomb: null,
     predecessorAr: 'a.Yaqub',
@@ -485,7 +490,7 @@ initProphets(Map<int, int> ajrLevels) async {
       trValKitab: null,
       qvsUluAlAzm: null,
       trValLaqab: null,
-      locationBirth: null,
+      trValLocationBirth: null,
       locationDeath: null,
       tomb: 'p.Possibly in Al-Qarah Mountains in southern Oman',
       predecessorAr: null,
@@ -518,7 +523,7 @@ initProphets(Map<int, int> ajrLevels) async {
       trValKitab: null,
       qvsUluAlAzm: null,
       trValLaqab: null,
-      locationBirth: null,
+      trValLocationBirth: null,
       locationDeath: null,
       tomb:
           'Possibly in Wadi Shuʿayb, Jordan, Guriyeh, Shushtar, Iran or Hittin in the Galilee.',
@@ -553,7 +558,7 @@ initProphets(Map<int, int> ajrLevels) async {
           'p.Ten Commandments, Tawrah (Torah); Scrolls of Moses (53:36)',
       qvsUluAlAzm: [QV(46, 35), QV(33, 7)],
       trValLaqab: null,
-      locationBirth: null,
+      trValLocationBirth: null,
       locationDeath: null,
       tomb: 'p.An-Nabi Musa, Jericho', // ٱلنَّبِي مُوْسَى
       predecessorAr: 'a.Shuayb',
@@ -593,7 +598,7 @@ initProphets(Map<int, int> ajrLevels) async {
       trValKitab: null,
       qvsUluAlAzm: null,
       trValLaqab: null,
-      locationBirth: null,
+      trValLocationBirth: null,
       locationDeath: null,
       tomb: 'Possibly in Jabal Harun, Jordan or in Sinai.',
       predecessorAr: 'p.Musa',
@@ -630,7 +635,7 @@ initProphets(Map<int, int> ajrLevels) async {
       trValKitab: null,
       qvsUluAlAzm: null,
       trValLaqab: null,
-      locationBirth: null,
+      trValLocationBirth: null,
       locationDeath: null,
       tomb: 'p.Makam Dağı in Ergani province of Diyarbakir,_' + a('a.Turkiye'),
       predecessorAr: null,
@@ -663,7 +668,7 @@ initProphets(Map<int, int> ajrLevels) async {
           cns('(17:55, 4:163, 17:55, 21:105)'),
       qvsUluAlAzm: null,
       trValLaqab: null,
-      locationBirth: a('a.Al-Quds'),
+      trValLocationBirth: a('a.Al-Quds'),
       locationDeath: a('a.Al-Quds'),
       tomb: 'Tomb of Aaron',
       predecessorAr:
@@ -695,9 +700,9 @@ initProphets(Map<int, int> ajrLevels) async {
       trValKitab: null,
       qvsUluAlAzm: null,
       trValLaqab: null,
-      locationBirth: 'p.Kingdom of Israel in_' + a('a.Al-Quds'),
+      trValLocationBirth: 'p.Kingdom of Israel in_'.tr + a('a.Al-Quds'),
       locationDeath:
-          'p.United_'.tr + 'p.Kingdom of Israel in_' + a('a.Al-Quds'),
+          a('a.United') + _ + 'p.Kingdom of Israel in_'.tr + a('a.Al-Quds'),
       tomb: 'Al-Ḥaram ash-Sharīf, Jerusalem',
       predecessorAr: null,
       successorAr: null,
@@ -721,7 +726,7 @@ initProphets(Map<int, int> ajrLevels) async {
       trValBiblicalNames: 'Eliya, Eliou, Elias, Ilias, Elijah',
       trValSentTo: a('a.Samaria') + //  TODO
           'i.,_'.tr +
-          'p.The people of_'.tr +
+          'i.The people of_'.tr +
           a('a.Ilyas') +
           _ +
           cns('(37:124)'),
@@ -732,7 +737,7 @@ initProphets(Map<int, int> ajrLevels) async {
       trValKitab: null,
       qvsUluAlAzm: null,
       trValLaqab: null,
-      locationBirth: null,
+      trValLocationBirth: null,
       locationDeath: null,
       tomb: 'Possibly in Baalbek, Lebanon',
       predecessorAr: 'a.Suleyman',
@@ -769,7 +774,7 @@ initProphets(Map<int, int> ajrLevels) async {
       trValKitab: null,
       qvsUluAlAzm: null,
       trValLaqab: null,
-      locationBirth: null,
+      trValLocationBirth: null,
       locationDeath: null,
       tomb: 'p.Eğil district of Diyarbakir Province'.tr +
           'i.,_'.tr +
@@ -796,8 +801,8 @@ initProphets(Map<int, int> ajrLevels) async {
       // Required prophet data:
       trValBiblicalNames: 'Yonah, Yona, Iona, Ionas, Jonas, Jonah',
       trValSentTo: a('a.Nineveh') + // TODO Ninevah? arabee?
-          'i.,'.tr +
-          'p._the people of_'.tr +
+          'i.,_'.tr +
+          'i.The people of_'.tr +
           a('a.Yunus') +
           cns('(10:98)'),
       quranMentionCount: 4,
@@ -807,7 +812,7 @@ initProphets(Map<int, int> ajrLevels) async {
       trValKitab: null,
       qvsUluAlAzm: null,
       trValLaqab: [a('a.Dhul-Nun')], // ذُو ٱلنُّوْن - The One of the Fish
-      locationBirth: null,
+      trValLocationBirth: null,
       locationDeath: null,
       tomb:
           "p.Possibly at the Mosque of Yunus, Mosul, Iraq, Mashhad Village Gath-hepher, Israel; Halhul, Palestinian West Bank; Sarafand, Lebanon; Giv'at Yonah (Jonah's Hill) in Ashdod, Israel, near Fatih Pasha Mosque in Diyarbakir,_" +
@@ -841,7 +846,7 @@ initProphets(Map<int, int> ajrLevels) async {
       trValKitab: null,
       qvsUluAlAzm: null,
       trValLaqab: null,
-      locationBirth: null,
+      trValLocationBirth: null,
       locationDeath: null,
       tomb: 'Great Mosque of Aleppo, Syria',
       predecessorAr: 'a.Yunus',
@@ -877,7 +882,7 @@ initProphets(Map<int, int> ajrLevels) async {
       trValKitab: null,
       qvsUluAlAzm: null,
       trValLaqab: null,
-      locationBirth: null,
+      trValLocationBirth: null,
       locationDeath: 'p.Decapitated by the ruler Herod Antipas',
       tomb: 'His head is possibly at the Umayyad Mosque in Damascus',
       predecessorAr: 'a.Zakariya',
@@ -921,7 +926,7 @@ initProphets(Map<int, int> ajrLevels) async {
           cns('(57:27)'),
       qvsUluAlAzm: [QV(42, 13)],
       trValLaqab: [a('a.Masih')], // Messiah
-      locationBirth: 'p.Judea, Roman Empire',
+      trValLocationBirth: 'p.Judea, Roman Empire'.tr,
       locationDeath:
           'p.Still alive, at Age 33 he was raised to Heaven from Gethsemane?, Jerusalem, Roman Empire in in 30CE.',
       tomb: 'p.None yet',
@@ -983,12 +988,44 @@ initProphets(Map<int, int> ajrLevels) async {
         a('a.An-Nabiyyu l-Ummiyy'),
         a('a.Mustafa'),
       ],
-      locationBirth: at(
-          "at.{0}, 12 Rabi' al-Awwal 53 BH (570 CE), {1}, {2}, Arabia",
-          ['a.Aliathnayn', 'a.Medina', 'a.Hejaz']),
-      locationDeath: at(
-          "at.{0} 12 Rabi' al-Awwal 11 AH (June 8, 632 CE), {1}, {2}, Arabia",
-          ['a.Aliathnayn', 'a.Medina', 'a.Hejaz']),
+      trValLocationBirth: a(DAY_OF_WEEK.Monday.trKey) +
+          'i.,_'.tr +
+          cni(12) +
+          _ +
+          a("a.Rabi' Al-Thani") +
+          _ +
+          cni(53) +
+          a('i.BH') +
+          '/' +
+          cni(570) +
+          a('i.AD') +
+          'i.,_'.tr +
+          a('a.Aliathnayn') +
+          'i.,_'.tr +
+          a('a.Medina') +
+          'i.,_'.tr +
+          a('a.Hejaz') +
+          'i.,_'.tr +
+          a('a.Arabia'),
+      locationDeath: a(DAY_OF_WEEK.Monday.trKey) +
+          'i.,_'.tr +
+          cni(12) +
+          _ +
+          a("a.Rabi' Al-Thani") +
+          _ +
+          cni(11) +
+          a('i.AH') +
+          '/' +
+          cni(632) +
+          a('i.AD') +
+          'i.,_'.tr +
+          a('a.Aliathnayn') +
+          'i.,_'.tr +
+          a('a.Medina') +
+          'i.,_'.tr +
+          a('a.Hejaz') +
+          'i.,_'.tr +
+          a('a.Arabia'),
       tomb: at('p.Green Dome in {0}, {1}, Saudi Arabia',
           ['a.Al-Masjid an-Nabawi', 'a.Medina']), //المسجد النبوي
       predecessorAr: 'a.Isa',
