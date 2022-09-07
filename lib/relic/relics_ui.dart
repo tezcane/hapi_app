@@ -9,7 +9,6 @@ import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/slide/menu_right/menu_right_ui.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/relic/relic.dart';
-import 'package:hapi/relic/relic_controller.dart';
 import 'package:hapi/relic/relic_tab_bar.dart';
 import 'package:hapi/relic/relics_favorites_ui.dart';
 import 'package:hapi/relic/relics_search_ui.dart';
@@ -79,11 +78,9 @@ class RelicsUI extends StatelessWidget {
           onPressed: hideKeyboard,
         ),
         BottomBarItem(
-          GetBuilder<RelicController>(
-            builder: (c) => RelicController.to.isNotInitialized
-                ? const Center(child: T('بِسْمِ ٱللَّٰهِ', tsN, trVal: true))
-                : const RelicTabBar(
-                    trKeyTitle: 'a.Ummah', relicTypes: [RELIC_TYPE.Prophet]),
+          const RelicTabBar(
+            trKeyTitle: 'a.Ummah',
+            relicTypes: [RELIC_TYPE.Prophet],
           ),
           null,
           a('a.Ummah'),
