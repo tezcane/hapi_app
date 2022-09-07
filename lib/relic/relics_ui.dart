@@ -18,7 +18,7 @@ enum RELIC_TAB {
   Search,
   Relics, // a.Alathar
   Places,
-  Deleel,
+  Delil,
   Ummah,
   Allah, //Asma_ul_Husna,
 }
@@ -71,7 +71,7 @@ class RelicsUI extends StatelessWidget {
         BottomBarItem(
           Center(child: T('i.Coming Soon', tsN, h: 50)),
           null,
-          'a.Deleel'.tr,
+          'a.Delil'.tr,
           'i.Proofs of Islam'.tr,
           Icons.auto_stories,
           AppThemes.ajr4Epic,
