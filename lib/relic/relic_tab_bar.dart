@@ -60,13 +60,12 @@ class _RelicTabBarState extends State<RelicTabBar>
           tabController: tabController,
           listItemData: relicSets,
           verticalScrollPosition: VerticalScrollPosition.begin,
-          eachItemChild: (object, index) =>
-              RelicSetUI(relicSet: object as RelicSet),
+          eachItemChild: (object, index) => RelicSetUI(object as RelicSet),
           slivers: [
             SliverAppBar(
               pinned: true,
               floating: true,
-              backgroundColor: Theme.of(context).backgroundColor,
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
               expandedHeight: 0.0,
               // TODO get this working with pics of all RelicSets?
               // expandedHeight: 250.0,
