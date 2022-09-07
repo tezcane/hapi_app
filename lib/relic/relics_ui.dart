@@ -8,10 +8,10 @@ import 'package:hapi/menu/slide/menu_bottom/settings/language/language_controlle
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/slide/menu_right/menu_right_ui.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
+import 'package:hapi/relic/Favorites/relics_favorites_ui.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_tab_bar.dart';
-import 'package:hapi/relic/relics_favorites_ui.dart';
-import 'package:hapi/relic/relics_search_ui.dart';
+import 'package:hapi/relic/search/relics_search_ui.dart';
 
 enum RELIC_TAB {
   Favorites,
