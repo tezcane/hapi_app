@@ -118,7 +118,8 @@ class SunRing extends StatelessWidget {
     // calculate sunrise on the horizon, so we can set horizon right for gumbi and me
     DateTime currZTime = athan.getZamanTime(Z.Fajr)[0] as DateTime;
     DateTime nextZTime = athan.sunrise;
-    double elapsedSecs = nextZTime.difference(currZTime).inMilliseconds / 1000;
+    double elapsedSecs =
+        nextZTime.difference(currZTime).inMilliseconds / 1000; // TODO unused
 
     // Sunrise is constant at very right of circle, (no turn)
     // double sunrisePercentCorrection =

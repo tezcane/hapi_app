@@ -23,6 +23,7 @@ import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
 import 'package:hapi/quest/active/active_quests_controller.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
 import 'package:hapi/quest/daily/daily_quests_controller.dart';
+import 'package:hapi/relic/relic_controller.dart';
 import 'package:hapi/tarikh/tarikh_controller.dart';
 //import 'package:timezone/data/latest.dart' as tz;
 //import 'package:timezone/data/latest_10y.dart' as tz;
@@ -62,6 +63,8 @@ void main() async {
   Get.put<NotificationController>(NotificationController(),
       permanent: permOn); // requires AuthController
   Get.put<ActiveQuestsController>(ActiveQuestsController(),
+      permanent: permOn); // requires AuthController
+  Get.put<RelicController>(RelicController(),
       permanent: permOn); // requires AuthController
   Get.put<ZamanController>(ZamanController(),
       permanent: permOn); // requires ActiveQuestsController

@@ -1,26 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
-import 'package:hapi/relic/ummah/category_section.dart';
-import 'package:hapi/relic/ummah/example_data.dart';
+import 'package:hapi/relic/category_section.dart';
+import 'package:hapi/relic/relic.dart';
+import 'package:hapi/relic/relic_controller.dart';
 import 'package:vertical_scrollable_tabview/vertical_scrollable_tabview.dart';
 
-class UmmahUI extends StatefulWidget {
-  const UmmahUI({required this.trKeyTitle});
+class RelicSet<Relic> {
+  RelicSet({
+    required this.trKeyTitle,
+    required this.relics,
+    this.hasNotification = false,
+  });
   final String trKeyTitle;
-
-  @override
-  _UmmahUIState createState() => _UmmahUIState();
+  final List<Relic> relics;
+  bool hasNotification;
 }
 
-class _UmmahUIState extends State<UmmahUI> with SingleTickerProviderStateMixin {
-  final List<Category> data = ExampleData.data;
+class RelicTabBar extends StatefulWidget {
+  const RelicTabBar({
+    required this.trKeyTitle,
+    required this.relicTypes,
+  });
+  final String trKeyTitle;
+  final List<RELIC_TYPE> relicTypes;
 
+  @override
+  _RelicTabBarState createState() => _RelicTabBarState();
+}
+
+class _RelicTabBarState extends State<RelicTabBar>
+    with SingleTickerProviderStateMixin {
   // TabController More Information => https://api.flutter.dev/flutter/material/TabController-class.html
   late TabController tabController;
+  final List<RelicSet> relicSets = [];
 
   @override
   void initState() {
-    tabController = TabController(length: data.length, vsync: this);
+    tabController =
+        TabController(length: widget.relicTypes.length, vsync: this);
+    for (RELIC_TYPE relicType in widget.relicTypes) {
+      relicSets.add(RelicController.to.getRelicSet(relicType));
+    }
+
     super.initState();
   }
 
@@ -36,10 +57,10 @@ class _UmmahUIState extends State<UmmahUI> with SingleTickerProviderStateMixin {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: VerticalScrollableTabView(
         tabController: tabController,
-        listItemData: data,
+        listItemData: relicSets,
         verticalScrollPosition: VerticalScrollPosition.begin,
         eachItemChild: (object, index) =>
-            CategorySection(category: object as Category),
+            CategorySection(relicSet: object as RelicSet),
         slivers: [
           SliverAppBar(
             pinned: true,
@@ -62,7 +83,9 @@ class _UmmahUIState extends State<UmmahUI> with SingleTickerProviderStateMixin {
               labelColor: AppThemes.selected,
               unselectedLabelColor: AppThemes.ldTextColor,
               indicatorWeight: 3.0,
-              tabs: data.map((e) => Tab(text: e.title)).toList(),
+              tabs: relicSets
+                  .map((relicSet) => Tab(text: relicSet.trKeyTitle))
+                  .toList(),
               onTap: (index) => VerticalScrollableTabBarStatus.setIndex(index),
             ),
           ),

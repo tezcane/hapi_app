@@ -1,3 +1,4 @@
+import 'package:hapi/relic/relic_controller.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
 /// Each relic subsection (e.g. Ummah->Prophet) needs to have a RELIC_TYPE so
@@ -25,7 +26,6 @@ class Relic extends TimelineEntry {
     // Relic data:
     required this.relicType,
     required this.relicId,
-    required this.ajrLevel,
     required this.trKeySummary, // e.g. Prophet Summary (ps. keys)
     required this.trKeySummary2, // e.g. Prophet Quran Mentions (pq. keys)
   }) : super(
@@ -36,12 +36,16 @@ class Relic extends TimelineEntry {
           endMs: endMs,
           asset: asset,
           accent: null,
-        );
-  final int ajrLevel;
+        ) {
+    ajrLevel = RelicController.to.ajrLevels[relicId.index]; // loaded from db
+  }
   final RELIC_ID relicId;
   final RELIC_TYPE relicType;
   final String trKeySummary;
   final String trKeySummary2;
+
+  // not final so we can update UI to reflect relic upgrades
+  int ajrLevel = 0;
 }
 
 /// For the DB to track ajrLevel, we need each relic to have a unique RELIC_ID.

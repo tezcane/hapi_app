@@ -73,9 +73,9 @@ class Db {
         (QuerySnapshot query) {
           List<DoListModel> rv = [];
           for (var element in query.docs) {
-            var doList = element.data() as Map<String, dynamic>;
-            doList['id'] = element.id; // manually set id, it's not in schema
-            rv.add(DoListModel.fromJson(doList));
+            var json = element.data() as Map<String, dynamic>;
+            json['id'] = element.id; // manually set id, it's not in schema
+            rv.add(DoListModel.fromJson(json));
           }
           DailyQuestsController.to.update();
           return rv;
@@ -103,9 +103,36 @@ class Db {
         }
       });
     } catch (e) {
-      // ok to fail here, day not in db yet
+      // ok to fail here, day not in db yet??
       l.w('getActiveQuest($path) failed, error: $e');
       return null;
+    }
+  }
+
+  static Future<void> getRelicAjrLevels(List<int> ajrLevels) async {
+    String path = 'relic/$_uid';
+    try {
+      return await _db.doc(path).get().then((doc) {
+        if (doc.exists) {
+          var json = doc.data()!;
+          var map = json['lvl2']; // lvl = ajr level
+          if (map != null) {
+            for (String key in map.keys) {
+              ajrLevels[int.parse(key)] = map[key]; // merge in db values
+            }
+            l.d('getRelicAjrLevels($path): map length=${map.keys.length}');
+          } else {
+            l.w('getRelicAjrLevels($path): ajr level map not found in db');
+          }
+        } else {
+          l.w('getRelicAjrLevels($path): empty');
+        }
+        //return ajrLevels; // not necessary if ajrLevel on caller is same
+      });
+    } catch (e) {
+      // ok to fail here, day not in db yet??
+      l.e('getRelicAjrLevels($path) failed, error: $e');
+      //return ajrLevels; // not necessary if ajrLevel on caller is same
     }
   }
 }

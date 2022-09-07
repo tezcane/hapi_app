@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:hapi/relic/ummah/example_data.dart';
+import 'package:hapi/relic/relic.dart';
+import 'package:hapi/relic/relic_tab_bar.dart';
 
 class CategorySection extends StatelessWidget {
-  const CategorySection({
-    Key? key,
-    required this.category,
-  }) : super(key: key);
-
-  final Category category;
+  const CategorySection({Key? key, required this.relicSet}) : super(key: key);
+  final RelicSet relicSet;
 
   @override
   Widget build(BuildContext context) {
@@ -28,12 +25,11 @@ class CategorySection extends StatelessWidget {
   Widget _buildFoodTileList(BuildContext context) {
     return Column(
       children: List.generate(
-        category.foods.length,
+        relicSet.relics.length,
         (index) {
-          final food = category.foods[index];
-          bool isLastIndex = index == category.foods.length - 1;
-          return _buildFoodTile(
-            food: food,
+          bool isLastIndex = index == relicSet.relics.length - 1;
+          return _buildRelicTile(
+            relic: relicSet.relics[index],
             context: context,
             isLastIndex: isLastIndex,
           );
@@ -49,9 +45,9 @@ class CategorySection extends StatelessWidget {
         const SizedBox(height: 16),
         _sectionTitle(context),
         const SizedBox(height: 8.0),
-        category.subtitle != null
-            ? _sectionSubtitle(context)
-            : const SizedBox(),
+        // relicSet.trKeySubtitle != null
+        //     ? _sectionSubtitle(context)
+        //     : const SizedBox(),
         const SizedBox(height: 16),
       ],
     );
@@ -60,34 +56,34 @@ class CategorySection extends StatelessWidget {
   Widget _sectionTitle(BuildContext context) {
     return Row(
       children: [
-        if (category.isHotSale) _buildSectionHoteSaleIcon(),
+        if (relicSet.hasNotification) _buildSectionHoteSaleIcon(),
         Text(
-          category.title,
+          relicSet.trKeyTitle,
           style: _textTheme(context).headline6,
         )
       ],
     );
   }
 
-  Widget _sectionSubtitle(BuildContext context) {
-    return Text(
-      category.subtitle!,
-      style: _textTheme(context).subtitle2,
-    );
-  }
+  // Widget _sectionSubtitle(BuildContext context) {
+  //   return Text(
+  //     relicSet.trKeySubtitle!,
+  //     style: _textTheme(context).subtitle2,
+  //   );
+  // }
 
-  Widget _buildFoodTile({
+  Widget _buildRelicTile({
     required BuildContext context,
     required bool isLastIndex,
-    required Food food,
+    required Relic relic,
   }) {
     return Column(
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            _buildFoodDetail(food: food, context: context),
-            _buildFoodImage(food.imageUrl),
+            _buildRelicDetails(relic: relic, context: context),
+            _buildFoodImage(relic.asset.filename),
           ],
         ),
         !isLastIndex ? const Divider(height: 16.0) : const SizedBox(height: 8.0)
@@ -103,31 +99,30 @@ class CategorySection extends StatelessWidget {
     );
   }
 
-  Widget _buildFoodDetail({
+  Widget _buildRelicDetails({
     required BuildContext context,
-    required Food food,
+    required Relic relic,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(food.name, style: _textTheme(context).subtitle1),
-        const SizedBox(height: 16),
-        Row(
-          children: [
-            Text(
-              "特價" + food.price + " ",
-              style: _textTheme(context).caption,
-            ),
-            Text(
-              food.comparePrice,
-              style: _textTheme(context)
-                  .caption
-                  ?.copyWith(decoration: TextDecoration.lineThrough),
-            ),
-            const SizedBox(width: 8.0),
-            if (food.isHotSale) _buildFoodHotSaleIcon(),
-          ],
-        ),
+        Text(relic.trValTitle, style: _textTheme(context).subtitle1),
+        // const SizedBox(height: 16),
+        // Row(
+        //   children: [
+        //     // Text(
+        //     //   "特價" + relic.price + " ",
+        //     //   style: _textTheme(context).caption,
+        //     // ),
+        //     // Text(
+        //     //   relic.comparePrice,
+        //     //   style: _textTheme(context)
+        //     //       .caption
+        //     //       ?.copyWith(decoration: TextDecoration.lineThrough),
+        //     // ),
+        //     // const SizedBox(width: 8.0),
+        //   ],
+        // ),
       ],
     );
   }
@@ -143,16 +138,16 @@ class CategorySection extends StatelessWidget {
     );
   }
 
-  Widget _buildFoodHotSaleIcon() {
-    return Container(
-      child: const Icon(Icons.whatshot, color: Colors.pink, size: 16.0),
-      padding: const EdgeInsets.all(4.0),
-      decoration: BoxDecoration(
-        color: Colors.pink.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(16.0),
-      ),
-    );
-  }
+  // Widget _buildFoodHotSaleIcon() {
+  //   return Container(
+  //     child: const Icon(Icons.whatshot, color: Colors.pink, size: 16.0),
+  //     padding: const EdgeInsets.all(4.0),
+  //     decoration: BoxDecoration(
+  //       color: Colors.pink.withOpacity(0.1),
+  //       borderRadius: BorderRadius.circular(16.0),
+  //     ),
+  //   );
+  // }
 
   TextTheme _textTheme(context) => Theme.of(context).textTheme;
 }
