@@ -140,6 +140,10 @@ class _RelicsSearchUIState extends State<RelicsSearchUI> {
         _updateSearch(); // needed for init
       }
 
+      if (!initialized) {
+        return const Center(child: T('بِسْمِ ٱللَّٰهِ', tsN, trVal: true));
+      }
+
       double heightPadding = 0;
 
       // TODO TUNE THIS, BUT IT WORKS WELL:

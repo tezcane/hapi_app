@@ -29,7 +29,9 @@ class ActiveQuestsUI extends StatelessWidget {
     // Use builder here, since we need to make sure athan is set for all widgets
     return GetBuilder<ActiveQuestsController>(builder: (c) {
       // if not initialized yet, wait for UI before building
-      if (ZamanController.to.athan == null) return Container();
+      if (ZamanController.to.athan == null) {
+        return const Center(child: T('بِسْمِ ٱللَّٰهِ', tsN, trVal: true));
+      }
 
       // can make const, but we need to refresh all UIs on updates here
       return CustomScrollView(

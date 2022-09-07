@@ -81,11 +81,9 @@ class RelicsUI extends StatelessWidget {
         BottomBarItem(
           GetBuilder<RelicController>(
             builder: (c) => RelicController.to.isNotInitialized
-                ? const SizedBox() // wait for init
+                ? const Center(child: T('بِسْمِ ٱللَّٰهِ', tsN, trVal: true))
                 : const RelicTabBar(
-                    trKeyTitle: 'a.Ummah',
-                    relicTypes: [RELIC_TYPE.Prophet],
-                  ),
+                    trKeyTitle: 'a.Ummah', relicTypes: [RELIC_TYPE.Prophet]),
           ),
           null,
           a('a.Ummah'),
