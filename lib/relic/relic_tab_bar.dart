@@ -2,21 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
-import 'package:hapi/relic/category_section.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_controller.dart';
+import 'package:hapi/relic/relic_set.dart';
 import 'package:vertical_scrollable_tabview/vertical_scrollable_tabview.dart';
-
-class RelicSet<Relic> {
-  RelicSet({
-    required this.trKeyTitle,
-    required this.relics,
-    this.hasNotification = false,
-  });
-  final String trKeyTitle;
-  final List<Relic> relics;
-  bool hasNotification;
-}
 
 class RelicTabBar extends StatefulWidget {
   const RelicTabBar({
@@ -72,7 +61,7 @@ class _RelicTabBarState extends State<RelicTabBar>
           listItemData: relicSets,
           verticalScrollPosition: VerticalScrollPosition.begin,
           eachItemChild: (object, index) =>
-              CategorySection(relicSet: object as RelicSet),
+              RelicSetUI(relicSet: object as RelicSet),
           slivers: [
             SliverAppBar(
               pinned: true,

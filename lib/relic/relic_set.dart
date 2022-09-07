@@ -1,9 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:hapi/relic/relic.dart';
-import 'package:hapi/relic/relic_tab_bar.dart';
 
-class CategorySection extends StatelessWidget {
-  const CategorySection({Key? key, required this.relicSet}) : super(key: key);
+class RelicSet<Relic> {
+  RelicSet({
+    required this.trKeyTitle,
+    required this.relics,
+    this.hasNotification = false,
+  });
+  final String trKeyTitle;
+  final List<Relic> relics;
+  bool hasNotification;
+}
+
+class RelicSetUI extends StatelessWidget {
+  const RelicSetUI({Key? key, required this.relicSet}) : super(key: key);
   final RelicSet relicSet;
 
   @override

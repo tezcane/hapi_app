@@ -2,7 +2,7 @@ import 'package:get/get.dart';
 import 'package:hapi/getx_hapi.dart';
 import 'package:hapi/onboard/auth/auth_controller.dart';
 import 'package:hapi/relic/relic.dart';
-import 'package:hapi/relic/relic_tab_bar.dart';
+import 'package:hapi/relic/relic_set.dart';
 import 'package:hapi/relic/ummah/prophet.dart';
 import 'package:hapi/services/db.dart';
 
