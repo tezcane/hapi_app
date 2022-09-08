@@ -8,14 +8,14 @@ import 'package:hapi/quest/active/athan/z.dart';
 import 'package:hapi/quest/active/zaman_controller.dart';
 import 'package:hapi/services/db.dart';
 
-const int ajr0Missed = 0; // shows that they missed all quests
+const int ajrXMissed = 0; // shows that they missed all quests
 // const int ajr1Common = 1;
 // const int ajr2Uncommon = 2;
 // const int ajr3Rare = 3;
 // const int ajr4Epic = 4;
 // const int ajr5Legendary = 5;
 // const int ajr6Mythic = 6;
-const int ajr7TimeNotInYet = 7; // so can show blank around ring
+const int ajrXTimeNotInYet = 7; // so can show blank around ring
 
 /// ONLY NEW VALUES CAN BE ADDED TO PRESERVE ENUM IN DB:
 enum QUEST {
@@ -504,7 +504,7 @@ class ActiveQuestsAjrController extends GetxHapi {
       for (QUEST q in quests) {
         if (isMiss(q)) missCount++;
       }
-      ajrCount = missCount == quests.length ? ajr0Missed : ajr7TimeNotInYet;
+      ajrCount = missCount == quests.length ? ajrXMissed : ajrXTimeNotInYet;
     } else {
       if (quests.length < 6) {
         int ajrStartingPoint = 6 - quests.length;
