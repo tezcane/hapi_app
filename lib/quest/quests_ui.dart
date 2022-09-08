@@ -34,7 +34,7 @@ class QuestsUI extends StatelessWidget {
           a('a.hapi'),
           'i.Set long-term goals'.tr,
           Icons.brightness_3_outlined,
-          AppThemes.ajr0Missed,
+          AppThemes.ajrXMissed,
         ),
         BottomBarItem(
           Container(),

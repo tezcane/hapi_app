@@ -173,6 +173,7 @@ class TS extends TextStyle {
 
 /// Commonly used TextStyles: tsB (Bold), tsN (Normal), tsR (Red):
 TS tsB = TS(Get.theme.textTheme.headline6!.color!, fontWeight: FontWeight.bold);
+const TS tsNB = TS(AppThemes.ldTextColor, fontWeight: FontWeight.bold);
 const TS tsN = TS(AppThemes.ldTextColor);
 const TS tsR = TS(Colors.red);
 

@@ -37,7 +37,7 @@ class TarikhUI extends StatelessWidget {
             'i.Favorites'.tr,
             at('at.{0} Favorites'.tr, [navPage.trKey]),
             Icons.favorite_border_outlined,
-            AppThemes.ajr0Missed,
+            AppThemes.ajrXMissed,
             onPressed: setTarikhMenuInactive,
           ),
           BottomBarItem(

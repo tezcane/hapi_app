@@ -1,16 +1,22 @@
+// import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:hapi/main_controller.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/relic/relic.dart';
+import 'package:hapi/relic/relic_controller.dart';
 
 class RelicSet<Relic> {
-  RelicSet({
+  const RelicSet({
+    required this.relicType,
     required this.trKeyTitle,
+    required this.trValSubtitle,
     required this.relics,
-    this.hasNotification = false,
   });
+  final RELIC_TYPE relicType;
   final String trKeyTitle;
+  final String trValSubtitle;
   final List<Relic> relics;
-  bool hasNotification;
 }
 
 class RelicSetUI extends StatelessWidget {
@@ -25,40 +31,105 @@ class RelicSetUI extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _relicTileHeader(context),
+          const SizedBox(height: 10),
           _relicTileList(context),
+          const SizedBox(height: 5),
         ],
       ),
     );
   }
 
   Widget _relicTileHeader(BuildContext context) {
+    double wText = w(context) - 155; // 155 = 10 + 10 + 45 + 45 + 45
+    RELIC_TYPE relicType = relicSet.relicType;
+
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const SizedBox(height: 16),
+          Row(children: [
+            const SizedBox(width: 10),
+            T(relicSet.trValSubtitle, tsNB, w: wText, trVal: true),
+            const SizedBox(width: 10),
+          ]),
           Row(
             children: [
-              if (relicSet.hasNotification) _notificationIcon(),
-              T(relicSet.trKeyTitle, tsB)
+              InkWell(
+                onTap: () {
+                  RELIC_TYPE relicType = relicSet.relicType;
+                  int tpr = RelicController.to.getTilesPerRow(relicType);
+                  if (tpr < 11) tpr += 1;
+                  RelicController.to.setTilesPerRow(relicType, tpr);
+                },
+                child: SizedBox(
+                  width: 45,
+                  height: 45,
+                  child: Icon(
+                    Icons.remove,
+                    size: 25,
+                    color: RelicController.to.getTilesPerRow(relicType) > 10
+                        ? AppThemes.unselected
+                        : null,
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  int tpr = RelicController.to.getTilesPerRow(relicType);
+                  if (tpr > 1) tpr -= 1;
+                  RelicController.to.setTilesPerRow(relicType, tpr);
+                },
+                child: SizedBox(
+                  width: 45,
+                  height: 45,
+                  child: Icon(
+                    Icons.add,
+                    size: 25,
+                    color: RelicController.to.getTilesPerRow(relicType) < 2
+                        ? AppThemes.unselected
+                        : null,
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  RELIC_TYPE relicType = relicSet.relicType;
+                  RelicController.to.toggleShowTileHeader(relicType);
+                },
+                child: SizedBox(
+                  width: 45,
+                  height: 45,
+                  child: Icon(
+                    RelicController.to.getShowTileHeader(relicType)
+                        ? Icons.expand_less_outlined
+                        : Icons.expand_more_outlined,
+                    size: 25,
+                  ),
+                ),
+              ),
             ],
           ),
-          const SizedBox(height: 16),
         ],
       ),
     );
   }
 
   Widget _relicTileList(BuildContext context) {
-    return Column(
+    return Wrap(
+      alignment: WrapAlignment.center, // TY!, centers modules remainders
+      spacing: 4, // NOTE must subtract this from _relicTile() or overflows
+      runSpacing: 6, // gap under a row of tiles
       children: List.generate(
         relicSet.relics.length,
         (index) {
+          Relic relic = relicSet.relics[index];
+          int tilesPerRow = RelicController.to.getTilesPerRow(relic.relicType);
           return _relicTile(
-            relic: relicSet.relics[index],
             context: context,
-            isLastIndex: index == relicSet.relics.length - 1,
+            relic: relic,
+            tilesPerRow: tilesPerRow,
+            //isLastIndex: index == relicSet.relics.length - 1,
           );
         },
       ),
@@ -67,38 +138,50 @@ class RelicSetUI extends StatelessWidget {
 
   Widget _relicTile({
     required BuildContext context,
-    required bool isLastIndex,
     required Relic relic,
+    required int tilesPerRow,
+    //required bool isLastIndex,
   }) {
-    return Column(
-      children: [
-        Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Image(image: AssetImage(relic.asset.filename)),
-            T(relic.trValTitle, tsN),
-          ],
-        ),
-        isLastIndex ? const Divider(height: 16.0) : const SizedBox(height: 8.0)
-      ],
+    final bool showTileHeader =
+        RelicController.to.getShowTileHeader(relic.relicType);
+
+    final double wTile = w(context) / tilesPerRow - 4; //-4 for Wrap.spacing
+
+    // when tiles get tiny we force huge height to take up all width
+    final double hLabel = tilesPerRow > 6 ? wTile * .45 : wTile * .25;
+    final double hTile = wTile + (showTileHeader ? hLabel : 0);
+
+    return SizedBox(
+      width: wTile,
+      height: hTile,
+      child: Column(
+        children: [
+          Container(
+            // color: AppThemes.ajrColorsByIdx[Random().nextInt(7)],
+            color: AppThemes.ajrColorsByIdx[relic.ajrLevel],
+            child: SizedBox(
+              width: wTile,
+              height: wTile,
+              child: Image(
+                image: AssetImage(relic.asset.filename),
+                fit: BoxFit.fill,
+              ),
+            ),
+          ),
+          if (showTileHeader)
+            SizedBox(
+              width: wTile,
+              height: hLabel,
+              child: T(
+                relic.trValTitle,
+                tsN,
+                w: wTile,
+                h: hLabel,
+                alignment: Alignment.topCenter,
+              ),
+            ),
+        ],
+      ),
     );
   }
-
-  Widget _notificationIcon() {
-    return Container(
-      margin: const EdgeInsets.only(right: 4.0),
-      child: const Icon(Icons.whatshot, color: Colors.pink, size: 20.0),
-    );
-  }
-
-  // Widget _notificationIcon() {
-  //   return Container(
-  //     child: const Icon(Icons.whatshot, color: Colors.pink, size: 16.0),
-  //     padding: const EdgeInsets.all(4.0),
-  //     decoration: BoxDecoration(
-  //       color: Colors.pink.withOpacity(0.1),
-  //       borderRadius: BorderRadius.circular(16.0),
-  //     ),
-  //   );
-  // }
 }

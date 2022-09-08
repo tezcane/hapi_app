@@ -39,7 +39,7 @@ class RelicsUI extends StatelessWidget {
           'i.Favorites'.tr,
           at('at.{0} Favorites'.tr, [navPage.trKey]),
           Icons.favorite_border_outlined,
-          AppThemes.ajr0Missed,
+          AppThemes.ajrXMissed,
           onPressed: hideKeyboard, // in case search is showing keyboard
         ),
         BottomBarItem(

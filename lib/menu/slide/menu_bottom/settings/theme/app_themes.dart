@@ -8,23 +8,31 @@ class AppThemes {
   static const Color logoBackground = Color.fromRGBO(0x14, 0x1A, 0x42, 1);
   static const Color logoText = Color.fromRGBO(0xE3, 0x0A, 0x17, 1);
 
-  static const Color ajr0Missed = Color.fromRGBO(0xE3, 0x0A, 0x17, 1);
+  static const Color ajrXMissed = Color.fromRGBO(0xE3, 0x0A, 0x17, 1);
   static const Color ajr1Common = Colors.grey;
   static const Color ajr2Uncommon = Colors.green;
   static const Color ajr3Rare = Colors.blue;
   static const Color ajr4Epic = Colors.purple;
   static const Color ajr5Legendary = Colors.yellowAccent;
   static const Color ajr6Mythic = Color(0xFFF1AC44);
-  static const Color ajr7TimeNotInYet = Colors.transparent;
-  static const List ajrColorsByIdx = [
-    ajr0Missed,
+  static const List ajrColorsByIdxForQuestRing = [
+    ajrXMissed, // red ring when all quests are missed
     ajr1Common,
     ajr2Uncommon,
     ajr3Rare,
     ajr4Epic,
     ajr5Legendary,
     ajr6Mythic,
-    ajr7TimeNotInYet,
+    Colors.transparent, // Time is not in yet, so no ring  drawn
+  ];
+  static const List ajrColorsByIdx = [
+    Colors.transparent, // Relic Not owned yet
+    ajr1Common,
+    ajr2Uncommon,
+    ajr3Rare,
+    ajr4Epic,
+    ajr5Legendary,
+    ajr6Mythic,
   ];
 
   /// shared light and dark (ld) text color

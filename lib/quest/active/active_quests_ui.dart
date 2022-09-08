@@ -805,8 +805,8 @@ class SalahRow extends StatelessWidget {
       color2 = AppThemes.ajr2Uncommon;
 //  } else if (ActiveQuestsAjrController.to.isSkip(quest)) {
     } else if (ActiveQuestsAjrController.to.isMiss(quest)) {
-      color1 = AppThemes.ajr0Missed;
-      color2 = AppThemes.ajr0Missed;
+      color1 = AppThemes.ajrXMissed;
+      color2 = AppThemes.ajrXMissed;
     } else {
       color1 = Colors.transparent; // it's skipped/not active yet
       color2 = AppThemes.ajr1Common;

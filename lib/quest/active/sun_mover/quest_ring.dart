@@ -23,38 +23,38 @@ class QuestRing extends StatelessWidget {
     z = Z.Last_3rd_of_Night;
     elapsedSecs = 0;
     elapsedSecs += colorSlices[Z.Last_3rd_of_Night]!.elapsedSecs;
-    color = AppThemes.ajrColorsByIdx[questRingColors[z]!];
+    color = AppThemes.ajrColorsByIdxForQuestRing[questRingColors[z]!];
     questRingSlices[z] = ColorSlice(elapsedSecs, color);
 
     z = Z.Middle_of_Night;
     elapsedSecs = 0;
     elapsedSecs += colorSlices[Z.Middle_of_Night]!.elapsedSecs;
-    color = AppThemes.ajrColorsByIdx[questRingColors[z]!];
+    color = AppThemes.ajrColorsByIdxForQuestRing[questRingColors[z]!];
     questRingSlices[z] = ColorSlice(elapsedSecs, color);
 
     z = Z.Isha;
     elapsedSecs = 0;
     elapsedSecs += colorSlices[Z.Isha]!.elapsedSecs;
-    color = AppThemes.ajrColorsByIdx[questRingColors[z]!];
+    color = AppThemes.ajrColorsByIdxForQuestRing[questRingColors[z]!];
     questRingSlices[z] = ColorSlice(elapsedSecs, color);
 
     z = Z.Maghrib;
     elapsedSecs = 0;
     elapsedSecs += colorSlices[Z.Maghrib]!.elapsedSecs;
     elapsedSecs += colorSlices[Z.Ghurub]!.elapsedSecs;
-    color = AppThemes.ajrColorsByIdx[questRingColors[z]!];
+    color = AppThemes.ajrColorsByIdxForQuestRing[questRingColors[z]!];
     questRingSlices[z] = ColorSlice(elapsedSecs, color);
 
     z = Z.Asr;
     elapsedSecs = 0;
     elapsedSecs += colorSlices[Z.Asr]!.elapsedSecs;
-    color = AppThemes.ajrColorsByIdx[questRingColors[z]!];
+    color = AppThemes.ajrColorsByIdxForQuestRing[questRingColors[z]!];
     questRingSlices[z] = ColorSlice(elapsedSecs, color);
 
     z = Z.Dhuhr;
     elapsedSecs = 0;
     elapsedSecs += colorSlices[Z.Dhuhr]!.elapsedSecs;
-    color = AppThemes.ajrColorsByIdx[questRingColors[z]!];
+    color = AppThemes.ajrColorsByIdxForQuestRing[questRingColors[z]!];
     questRingSlices[z] = ColorSlice(elapsedSecs, color);
 
     z = Z.Duha;
@@ -63,13 +63,13 @@ class QuestRing extends StatelessWidget {
     elapsedSecs += colorSlices[Z.Duha]!.elapsedSecs;
     elapsedSecs += colorSlices[Z.Ishraq]!.elapsedSecs;
     elapsedSecs += colorSlices[Z.Shuruq]!.elapsedSecs;
-    color = AppThemes.ajrColorsByIdx[questRingColors[z]!];
+    color = AppThemes.ajrColorsByIdxForQuestRing[questRingColors[z]!];
     questRingSlices[z] = ColorSlice(elapsedSecs, color);
 
     z = Z.Fajr;
     elapsedSecs = 0;
     elapsedSecs += colorSlices[Z.Fajr]!.elapsedSecs;
-    color = AppThemes.ajrColorsByIdx[questRingColors[z]!];
+    color = AppThemes.ajrColorsByIdxForQuestRing[questRingColors[z]!];
     questRingSlices[z] = ColorSlice(elapsedSecs, color);
 
     return questRingSlices;

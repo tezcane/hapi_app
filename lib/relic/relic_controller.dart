@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:hapi/getx_hapi.dart';
+import 'package:hapi/main_controller.dart';
 import 'package:hapi/onboard/auth/auth_controller.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_set.dart';
@@ -29,7 +30,10 @@ class RelicController extends GetxHapi {
 
     // must have ajrLevels initialized before calling initProphets(), etc.
     relics[RELIC_TYPE.Prophet] = RelicSet(
-      trKeyTitle: 'a.Al-Anbiya',
+      relicType: RELIC_TYPE.Prophet,
+      trKeyTitle: 'a.Anbiya',
+      // TODO drop down other filters here:
+      trValSubtitle: '_i.mentioned in the_'.tr + ('a.Quran'),
       relics: await initProphets(),
     );
 
@@ -41,4 +45,28 @@ class RelicController extends GetxHapi {
   RelicSet getRelicSet(RELIC_TYPE relicType) => relics[relicType]!;
   List<Relic> getRelics(RELIC_TYPE relicType) =>
       relics[relicType]!.relics as List<Relic>;
+
+  // int getTilesPerRow(RELIC_TYPE relicType) {
+  //   s.wr('tilesPerRow${relicType.index}', 4);
+  //   return s.rd('tilesPerRow${relicType.index}') ?? 4; // 4 is default for all
+  // }
+  int getTilesPerRow(RELIC_TYPE relicType) =>
+      s.rd('tilesPerRow${relicType.index}') ?? 4; // 4 is default for all
+  setTilesPerRow(RELIC_TYPE relicType, int newVal) {
+    s.wr('tilesPerRow${relicType.index}', newVal);
+    update();
+  }
+
+  // toggleShowTileHeader(RELIC_TYPE relicType) {
+  //   s.wr('showTileHeader${relicType.index}', true);
+  //   setShowTileHeader(relicType, !getShowTileHeader(relicType));
+  // }
+  toggleShowTileHeader(RELIC_TYPE relicType) =>
+      _setShowTileHeader(relicType, !getShowTileHeader(relicType));
+  bool getShowTileHeader(RELIC_TYPE relicType) =>
+      s.rd('showTileHeader${relicType.index}') ?? true;
+  _setShowTileHeader(RELIC_TYPE relicType, bool newVal) {
+    s.wr('showTileHeader${relicType.index}', newVal);
+    updateOnThread1Ms();
+  }
 }
