@@ -117,6 +117,7 @@ class RelicSetUI extends StatelessWidget {
 
   Widget _relicTileList(BuildContext context) {
     return Wrap(
+      // direction: Axis.horizontal <-- TODO use this for landscape/portrait mode?
       alignment: WrapAlignment.center, // TY!, centers modules remainders
       spacing: 4, // NOTE must subtract this from _relicTile() or overflows
       runSpacing: 6, // gap under a row of tiles
