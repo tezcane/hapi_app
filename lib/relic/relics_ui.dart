@@ -79,8 +79,8 @@ class RelicsUI extends StatelessWidget {
         ),
         BottomBarItem(
           const RelicTabBar(
-            trKeyTitle: 'a.Ummah',
             relicTab: RELIC_TAB.Ummah,
+            trKeyTitle: 'a.Ummah',
             relicTypes: [
               RELIC_TYPE.Prophet,
               RELIC_TYPE.Prophet,
