@@ -1,47 +1,36 @@
 import 'package:flutter/material.dart';
 
-/// Use this widget to get a widget`s rectangle information in real-time .
-/// It has 2 constructors, pass a GlobalKey or use default key, and then
-/// you can use the key or object itself to get info.
-
+/// Get a widget's real-time rectangle information from inside a UI list.
 class RectGetter extends StatefulWidget {
+  /// Constructor with key passed to get child rect by using getRectFromKey()
+  const RectGetter({required this.key, required this.child}) : super(key: key);
   // ignore: annotate_overrides, overridden_fields
   final GlobalKey<RectGetterState> key;
   final Widget child;
 
-  /// Use this static method to get child`s rectangle information when had a custom GlobalKey
+  /// Static method to get child's rectangle information from custom GlobalKey
   static Rect? getRectFromKey(GlobalKey<RectGetterState> globalKey) {
-    var object = globalKey.currentContext?.findRenderObject();
-    var translation = object?.getTransformTo(null).getTranslation();
-    var size = object?.semanticBounds.size;
+    RenderObject? object = globalKey.currentContext?.findRenderObject();
+    var vector3 = object?.getTransformTo(null).getTranslation();
+    Size? size = object?.semanticBounds.size;
 
-    if (translation != null && size != null) {
-      return Rect.fromLTWH(
-          translation.x, translation.y, size.width, size.height);
+    if (vector3 != null && size != null) {
+      return Rect.fromLTWH(vector3.x, vector3.y, size.width, size.height);
     } else {
       return null;
     }
   }
 
-  /// create a custom GlobalKey , use this way to avoid type exception in dart2 .
-  static GlobalKey<RectGetterState> createGlobalKey() {
-    return GlobalKey<RectGetterState>();
-  }
+  /// Constructor that uses object itself's getRect() method to get child rect
+  factory RectGetter.defaultKey({required Widget child}) =>
+      RectGetter(key: GlobalKey(), child: child);
 
-  /// constructor with key passed, and then you can get child`s rect by using RectGetter.getRectFromKey(key)
-  const RectGetter({required this.key, required this.child}) : super(key: key);
-
-  /// Use defaultKey to build RectGetter, and then use object itself`s getRect() method to get child`s rect
-  factory RectGetter.defaultKey({required Widget child}) {
-    return RectGetter(key: GlobalKey(), child: child);
-  }
-
+  /// Get RectGetter.defaultKey() constructor style Rect back.
   Rect? getRect() => getRectFromKey(key);
 
-  /// make a clone with different GlobalKey
-  RectGetter clone() {
-    return RectGetter.defaultKey(child: child);
-  }
+  /// Creates a custom GlobalKey, use to avoid type exception in dart2.
+  static GlobalKey<RectGetterState> createGlobalKey() =>
+      GlobalKey<RectGetterState>();
 
   @override
   RectGetterState createState() => RectGetterState();

@@ -65,7 +65,6 @@ class VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
   //     // scrollDirection: widget.axisOrientation,
   //     itemBuilder: (BuildContext context, int index) {
   //       /// Initial Key of itemKeys
-  //       /// 初始化 itemKeys 的 key
   //       itemsKeys[index] = RectGetter.createGlobalKey();
   //       return buildItem(index);
   //     },
