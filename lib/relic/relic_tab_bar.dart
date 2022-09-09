@@ -39,7 +39,7 @@ class _RelicTabBarState extends State<RelicTabBar>
     VerticalScrollableTabBarStatus.setIndex(lastSelectedTab);
 
     tabController = TabController(
-      initialIndex: RelicController.to.getLastSelectedTab(widget.relicTab),
+      initialIndex: lastSelectedTab,
       length: widget.relicTypes.length,
       vsync: this,
     );
