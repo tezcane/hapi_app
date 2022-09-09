@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:hapi/main_controller.dart';
+import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/bottom_bar.dart';
 import 'package:hapi/menu/bottom_bar_menu.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_controller.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/slide/menu_right/menu_right_ui.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
@@ -30,7 +30,7 @@ class RelicsUI extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<LanguageController>(builder: (c) {
+    return GetBuilder<LanguageC>(builder: (c) {
       // do here to save memory:
       final List<BottomBarItem> bottomBarItems = [
         BottomBarItem(

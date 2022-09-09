@@ -1,4 +1,4 @@
-import 'package:hapi/main_controller.dart';
+import 'package:hapi/main_c.dart';
 import 'package:hapi/quest/active/athan/calculation_params.dart';
 
 enum CalcMethod {

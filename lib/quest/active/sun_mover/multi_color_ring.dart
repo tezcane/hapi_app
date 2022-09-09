@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:hapi/main_controller.dart';
+import 'package:hapi/main_c.dart';
 
 class ColorSlice {
   ColorSlice(this.elapsedSecs, this.color);

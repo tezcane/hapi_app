@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:hapi/tarikh/tarikh_controller.dart';
+import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
@@ -43,9 +43,8 @@ class MenuItemData {
   static MenuItemData fromEntry(TimelineEntry entry) {
     // put in timer so btns updates after navigation
     Timer(const Duration(milliseconds: 500), () {
-      TarikhController c = TarikhController.to;
-      c.updateTimeBtnEntry(c.timeBtnUp, entry.previous);
-      c.updateTimeBtnEntry(c.timeBtnDn, entry.next);
+      TarikhC.to.updateTimeBtnEntry(TarikhC.to.timeBtnUp, entry.previous);
+      TarikhC.to.updateTimeBtnEntry(TarikhC.to.timeBtnDn, entry.next);
     });
 
     /// Pad the edges of the screen.

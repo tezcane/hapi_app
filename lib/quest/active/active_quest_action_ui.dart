@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/main_controller.dart';
+import 'package:hapi/main_c.dart';
+import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/sub_page.dart';
-import 'package:hapi/menu/menu_controller.dart';
-import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
-import 'package:hapi/quest/active/active_quests_controller.dart';
+import 'package:hapi/quest/active/active_quests_ajr_c.dart';
+import 'package:hapi/quest/active/active_quests_c.dart';
 import 'package:hapi/quest/active/athan/z.dart';
 
 class ActiveQuestActionUI extends StatelessWidget {
@@ -52,7 +52,7 @@ class ActiveQuestActionUI extends StatelessWidget {
         bottomNavigationBar:
             // Do work in here so if active quest builder so we can update this
             // UI if Quest's time comes in/out while this dialog is open.
-            GetBuilder<ActiveQuestsController>(builder: (c) {
+            GetBuilder<ActiveQuestsC>(builder: (c) {
           QUEST_STATE questState = q.getActionState();
 
           String? trKey;
@@ -84,7 +84,7 @@ class ActiveQuestActionUI extends StatelessWidget {
             );
           }
 
-          ActiveQuestsAjrController cAjrA = ActiveQuestsAjrController.to;
+          ActiveQuestsAjrC cAjrA = ActiveQuestsAjrC.to;
           bool skipEnabled = !q.isFard; // not allowed to skip fard
 
           return Column(
@@ -112,7 +112,7 @@ class ActiveQuestActionUI extends StatelessWidget {
                           // }
                           cAjrA.setSkip(q);
                           // Handle's the sub page back button functionality
-                          MenuController.to.handlePressedFAB();
+                          MenuC.to.handlePressedFAB();
                         },
                         style: TextButton.styleFrom(
                           primary: Colors.white,
@@ -132,8 +132,8 @@ class ActiveQuestActionUI extends StatelessWidget {
                         // }
                         cAjrA.setDone(q); // writes to DB
                         // Handle's the sub page back button functionality
-                        MenuController.to.handlePressedFAB();
-                        MenuController.to.playConfetti();
+                        MenuC.to.handlePressedFAB();
+                        MenuC.to.playConfetti();
                       },
                       style: TextButton.styleFrom(
                         primary: Colors.white,

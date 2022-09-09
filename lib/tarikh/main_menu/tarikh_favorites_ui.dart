@@ -1,16 +1,16 @@
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/main_menu/thumbnail_detail_widget.dart';
-import 'package:hapi/tarikh/tarikh_controller.dart';
+import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
 /// This widget is displayed when tapping on the Favorites button in [TarikhUI].
 ///
-/// It displays the list of favorites kept by the [TarikhController], and moves into the timeline
+/// It displays the list of favorites kept by the [TarikhC], and moves into the timeline
 /// when tapping on one of them.
 ///
 /// To add any item as favorite, go to the [TarikhArticleUI] and tap on the heart button.
@@ -26,7 +26,7 @@ class TarikhFavoritesUI extends StatelessWidget {
       color: Theme.of(context).backgroundColor,
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: GetBuilder<TarikhController>(builder: (c) {
+        child: GetBuilder<TarikhC>(builder: (c) {
           return c.eventFavorites.isEmpty
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -77,7 +77,7 @@ class TarikhFavoritesUI extends StatelessWidget {
                       hasDivider: idx != 0,
                       tapSearchResult: (TimelineEntry entry) {
                         MenuItemData item = MenuItemData.fromEntry(entry);
-                        MenuController.to.pushSubPage(
+                        MenuC.to.pushSubPage(
                           SubPage.Tarikh_Timeline,
                           arguments: {'focusItem': item, 'entry': entry},
                         );

@@ -5,26 +5,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:hapi/controllers/connectivity_controller.dart';
-import 'package:hapi/controllers/location_controller.dart';
-import 'package:hapi/controllers/nav_page_controller.dart';
-import 'package:hapi/controllers/notification_controller.dart';
-import 'package:hapi/controllers/time_controller.dart';
-import 'package:hapi/helpers/loading.dart';
-import 'package:hapi/main_controller.dart';
-import 'package:hapi/menu/menu_controller.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_controller.dart';
+import 'package:hapi/controller/connectivity_c.dart';
+import 'package:hapi/controller/location_c.dart';
+import 'package:hapi/controller/nav_page_c.dart';
+import 'package:hapi/controller/notification_c.dart';
+import 'package:hapi/controller/time_c.dart';
+import 'package:hapi/helper/loading.dart';
+import 'package:hapi/main_c.dart';
+import 'package:hapi/menu/menu_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/theme/theme_controller.dart';
-import 'package:hapi/onboard/auth/auth_controller.dart';
-import 'package:hapi/onboard/onboarding_controller.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/theme/theme_c.dart';
+import 'package:hapi/onboard/auth/auth_c.dart';
+import 'package:hapi/onboard/onboarding_c.dart';
 import 'package:hapi/onboard/splash_ui.dart';
-import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
-import 'package:hapi/quest/active/active_quests_controller.dart';
-import 'package:hapi/quest/active/zaman_controller.dart';
-import 'package:hapi/quest/daily/daily_quests_controller.dart';
-import 'package:hapi/relic/relic_controller.dart';
-import 'package:hapi/tarikh/tarikh_controller.dart';
+import 'package:hapi/quest/active/active_quests_ajr_c.dart';
+import 'package:hapi/quest/active/active_quests_c.dart';
+import 'package:hapi/quest/active/zaman_c.dart';
+import 'package:hapi/quest/daily/daily_quests_c.dart';
+import 'package:hapi/relic/relic_c.dart';
+import 'package:hapi/tarikh/tarikh_c.dart';
 //import 'package:timezone/data/latest.dart' as tz;
 //import 'package:timezone/data/latest_10y.dart' as tz;
 import 'package:timezone/data/latest_all.dart' as tz;
@@ -44,34 +44,25 @@ void main() async {
 
   // TODO cleanup/optimize use Getx bindings?
   const bool permOn = true;
-  Get.put<MainController>(MainController(),
-      permanent: permOn); // should do first
-  Get.put<OnboardingController>(OnboardingController());
-  Get.put<NavPageController>(NavPageController(), permanent: permOn);
-  Get.put<MenuController>(MenuController(), // requires NavPageController
-      permanent: permOn); //requires TarikhController
-  Get.put<AuthController>(
-      AuthController()); // requires OnboardingController, MenuController
-  Get.put<ConnectivityController>(ConnectivityController(), permanent: permOn);
-  Get.put<TimeController>(TimeController(),
-      permanent: permOn); // requires ConnectivityController
-  Get.put<LocationController>(LocationController(),
-      permanent: permOn); // requires TimeController
-  Get.put<TarikhController>(TarikhController());
-  Get.put<DailyQuestsController>(DailyQuestsController(),
-      permanent: permOn); // requires AuthController
-  Get.put<NotificationController>(NotificationController(),
-      permanent: permOn); // requires AuthController
-  Get.put<ActiveQuestsController>(ActiveQuestsController(),
-      permanent: permOn); // requires AuthController
-  Get.put<RelicController>(RelicController(),
-      permanent: permOn); // requires AuthController
-  Get.put<ZamanController>(ZamanController(),
-      permanent: permOn); // requires ActiveQuestsController
-  Get.put<ActiveQuestsAjrController>(ActiveQuestsAjrController(),
-      permanent: permOn); // requires ActiveQuestsController, ZamanController
-  Get.put<ThemeController>(ThemeController());
-  Get.put<LanguageController>(LanguageController());
+  Get.put<MainC>(MainC(), permanent: permOn); // should do first
+  Get.put<OnboardingC>(OnboardingC());
+  Get.put<NavPageC>(NavPageC(), permanent: permOn);
+  Get.put<MenuC>(MenuC(), // requires NavPageC
+      permanent: permOn); //requires TarikhC
+  Get.put<AuthC>(AuthC()); // requires OnboardingC, MenuC
+  Get.put<ConnectivityC>(ConnectivityC(), permanent: permOn);
+  Get.put<TimeC>(TimeC(), permanent: permOn); // requires ConnectivityC
+  Get.put<LocationC>(LocationC(), permanent: permOn); // requires TimeC
+  Get.put<TarikhC>(TarikhC());
+  Get.put<DailyQuestsC>(DailyQuestsC(), permanent: permOn); // requires AuthC
+  Get.put<NotificationC>(NotificationC(), permanent: permOn); // requires AuthC
+  Get.put<ActiveQuestsC>(ActiveQuestsC(), permanent: permOn); // requires AuthC
+  Get.put<RelicC>(RelicC(), permanent: permOn); // requires AuthC
+  Get.put<ZamanC>(ZamanC(), permanent: permOn); // requires ActiveQuestsC
+  Get.put<ActiveQuestsAjrC>(ActiveQuestsAjrC(),
+      permanent: permOn); // requires ActiveQuestsC, ZamanC
+  Get.put<ThemeC>(ThemeC());
+  Get.put<LanguageC>(LanguageC());
 
   runApp(const MyApp());
 }
@@ -81,7 +72,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ThemeController.to.getThemeModeFromStore();
+    ThemeC.to.getThemeModeFromStore();
 
     // Must be in portrait at init, for splash, onboarding and orientation init
     SystemChrome.setPreferredOrientations([
@@ -92,15 +83,15 @@ class MyApp extends StatelessWidget {
 
     return OrientationBuilder(
       builder: (context, orientation) {
-        MainController.to.setOrientation(orientation == Orientation.portrait);
-        return GetBuilder<LanguageController>(
+        MainC.to.setOrientation(orientation == Orientation.portrait);
+        return GetBuilder<LanguageC>(
           builder: (c) => Loading(
             child: MaterialApp(
               home: Scaffold(
                 resizeToAvoidBottomInset: false, // fixes keyboard pushing UI up
-                floatingActionButton: GetBuilder<MenuController>(builder: (mc) {
+                floatingActionButton: GetBuilder<MenuC>(builder: (mc) {
                   return Visibility(
-                    visible: MainController.to.isAppInitDone,
+                    visible: MainC.to.isAppInitDone,
                     child: FloatingActionButton(
                       tooltip: mc.trValMenuTooltip(),
                       backgroundColor:
@@ -128,7 +119,7 @@ class MyApp extends StatelessWidget {
                 }),
                 body: GetMaterialApp(
                   // translations: Localization(),
-                  // locale: c.getLocale, // we set in LanguageController
+                  // locale: c.getLocale, // we set in LanguageC
                   // fallbackLocale: const Locale('en', 'US'), // uses if .tr fails
                   // navigatorObservers: [ // TODO
                   //   // FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),

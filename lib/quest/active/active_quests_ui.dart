@@ -2,23 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:get/get.dart';
-import 'package:hapi/components/alerts/bounce_alert.dart';
-import 'package:hapi/components/separator.dart';
-import 'package:hapi/components/two_colored_icon.dart';
-import 'package:hapi/controllers/notification_controller.dart';
-import 'package:hapi/controllers/time_controller.dart';
-import 'package:hapi/main_controller.dart';
-import 'package:hapi/menu/menu_controller.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_controller.dart';
+import 'package:hapi/component/alerts/bounce_alert.dart';
+import 'package:hapi/component/separator.dart';
+import 'package:hapi/component/two_colored_icon.dart';
+import 'package:hapi/controller/notification_c.dart';
+import 'package:hapi/controller/time_c.dart';
+import 'package:hapi/main_c.dart';
+import 'package:hapi/menu/menu_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/sub_page.dart';
-import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
-import 'package:hapi/quest/active/active_quests_controller.dart';
+import 'package:hapi/quest/active/active_quests_ajr_c.dart';
+import 'package:hapi/quest/active/active_quests_c.dart';
 import 'package:hapi/quest/active/athan/z.dart';
 import 'package:hapi/quest/active/sun_mover/multi_color_ring.dart';
 import 'package:hapi/quest/active/sun_mover/quest_ring.dart';
 import 'package:hapi/quest/active/sun_mover/sun_ring.dart';
-import 'package:hapi/quest/active/zaman_controller.dart';
+import 'package:hapi/quest/active/zaman_c.dart';
 import 'package:sliver_tools/sliver_tools.dart';
 
 class ActiveQuestsUI extends StatelessWidget {
@@ -27,9 +27,9 @@ class ActiveQuestsUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Use builder here, since we need to make sure athan is set for all widgets
-    return GetBuilder<ActiveQuestsController>(builder: (c) {
+    return GetBuilder<ActiveQuestsC>(builder: (c) {
       // if not initialized yet, wait for UI before building
-      if (ZamanController.to.athan == null) {
+      if (ZamanC.to.athan == null) {
         return const Center(child: T('بِسْمِ ٱللَّٰهِ', tsN, trVal: true));
       }
 
@@ -60,7 +60,7 @@ class ActiveQuestsUI extends StatelessWidget {
 
 class _SlidingAppBar extends StatelessWidget {
   const _SlidingAppBar(this.aqC);
-  final ActiveQuestsController aqC;
+  final ActiveQuestsC aqC;
 
   @override
   Widget build(BuildContext context) {
@@ -93,13 +93,13 @@ class _SlidingAppBar extends StatelessWidget {
         centerTitle: true,
         titlePadding: const EdgeInsets.all(12.0),
         title: Tooltip(
-          // This is handled in ZamanController, but when a quest is updated, it
-          // triggers ActiveQuestsController.update() so this is safe and better
-          // to keep here (ZamanController refreshes every second so don't do
+          // This is handled in ZamanC, but when a quest is updated, it
+          // triggers ActiveQuestsC.update() so this is safe and better
+          // to keep here (ZamanC refreshes every second so don't do
           // extra work if we don't have to:
-          message: ZamanController.to.trValTimeToNextZamanTooltip,
+          message: ZamanC.to.trValTimeToNextZamanTooltip,
           // Here is the ActiveQuest countdown timer
-          child: GetBuilder<ZamanController>(builder: (zc) {
+          child: GetBuilder<ZamanC>(builder: (zc) {
             String trValTime = zc.trValTimeToNextZaman;
             return Stack(
               children: [
@@ -220,7 +220,7 @@ class _Sliv extends StatelessWidget {
 /// SalahRow displays actions for it's time of day, e.g. Fajr, Duha, etc.
 class SalahRow extends StatelessWidget {
   const SalahRow(this.aqC, this.z);
-  final ActiveQuestsController aqC;
+  final ActiveQuestsC aqC;
   final Z z;
 
   static const TS tsFard = TS(AppThemes.ajr2Uncommon);
@@ -234,7 +234,7 @@ class SalahRow extends StatelessWidget {
     final Color fg = cf(context); // color foreground
     final TextStyle textStyle = Theme.of(context).textTheme.headline6!;
 
-    return ZamanController.to.isSalahRowPinned(z) && aqC.showPinnedSalahRow
+    return ZamanC.to.isSalahRowPinned(z) && aqC.showPinnedSalahRow
         ? MultiSliver(
             // salah actions and results are pinned under headers
             children: [
@@ -271,7 +271,7 @@ class SalahRow extends StatelessWidget {
   }
 
   Widget _getSalahRowHeaders(
-    ActiveQuestsController aqC,
+    ActiveQuestsC aqC,
     TextStyle textStyle,
     double w1,
     Color bg,
@@ -279,7 +279,7 @@ class SalahRow extends StatelessWidget {
     const Color cSound = Colors.greenAccent;
     const Color cVibrate = Colors.lightBlueAccent;
 
-    return GetBuilder<NotificationController>(builder: (c) {
+    return GetBuilder<NotificationC>(builder: (c) {
       return Slidable(
         // The end action pane is the one at the right or the bottom side.
         endActionPane: ActionPane(
@@ -339,7 +339,7 @@ class SalahRow extends StatelessWidget {
   }
 
   /// Toggle's force showing pinned salah row actions
-  void handlePinnedHeaderTapped(ActiveQuestsController aqC, Z z) {
+  void handlePinnedHeaderTapped(ActiveQuestsC aqC, Z z) {
     if (aqC.showPinnedSalahRow) {
       aqC.showPinnedSalahRow = false;
     } else {
@@ -353,7 +353,7 @@ class SalahRow extends StatelessWidget {
   ///   Night/2 <-> Middle of Night
   ///   Night/3 <-> Last 3rd of Night
   ///   Dhuhr <-> Jumah (switches on Friday only)
-  void handleUnpinnedHeaderTapped(ActiveQuestsController aqC, Z z) {
+  void handleUnpinnedHeaderTapped(ActiveQuestsC aqC, Z z) {
     if (z == Z.Middle_of_Night) {
       if (aqC.showLayl2) {
         aqC.showLayl2 = false;
@@ -367,7 +367,7 @@ class SalahRow extends StatelessWidget {
         aqC.showLayl3 = true;
       }
     } else if (z == Z.Dhuhr) {
-      if (TimeController.to.isFriday()) {
+      if (TimeC.to.isFriday()) {
         if (aqC.showJumahOnFriday) {
           aqC.showJumahOnFriday = false;
         } else {
@@ -378,7 +378,7 @@ class SalahRow extends StatelessWidget {
   }
 
   Widget _getSalahRowHeader(
-    ActiveQuestsController aqC,
+    ActiveQuestsC aqC,
     TextStyle textStyle,
     double w1,
     Color bg,
@@ -387,7 +387,7 @@ class SalahRow extends StatelessWidget {
 
     // Fajr, Dhuhr, Asr, Isha, Middle Of Night and Last 3rd of Night don't have
     // SideTimes that need to be highlighted, so isSalahRowPinned == isBold:
-    bool isPinned = ZamanController.to.isSalahRowPinned(z);
+    bool isPinned = ZamanC.to.isSalahRowPinned(z);
     bool isBold = isPinned;
 
     // However, for Duha and Maghrib they have multiple Z times (SideTimes),
@@ -395,10 +395,9 @@ class SalahRow extends StatelessWidget {
     // bold/un-bold is not handled here, but the center header text is:
     if (z == Z.Duha) {
       // Duha is bold during Ishraq and Duha salah times:
-      isBold = Z.Ishraq == ZamanController.to.currZ ||
-          Z.Duha == ZamanController.to.currZ;
+      isBold = Z.Ishraq == ZamanC.to.currZ || Z.Duha == ZamanC.to.currZ;
     } else if (z == Z.Maghrib) {
-      isBold = Z.Maghrib == ZamanController.to.currZ; // only if Z's time is in
+      isBold = Z.Maghrib == ZamanC.to.currZ; // only if Z's time is in
     }
 
     return InkWell(
@@ -427,7 +426,7 @@ class SalahRow extends StatelessWidget {
                     color: isBold ? textStyle.color : AppThemes.ldTextColor,
                     fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
                   ),
-                  alignment: LanguageController.to.centerRight,
+                  alignment: LanguageC.to.centerRight,
                   w: w2 - 10, // - 10 for center divider
                   h: 25, //_Sliv.slivH, // tuned to find best value in all cases
                 ),
@@ -440,16 +439,16 @@ class SalahRow extends StatelessWidget {
               child: Center(
                 // Center needed to make fit height work
                 child: T(
-                  TimeController.trValTime(
-                    ZamanController.to.athan!.getZamanRowTime(z),
-                    ActiveQuestsController.to.show12HourClock,
-                    ActiveQuestsController.to.showSecPrecision,
+                  TimeC.trValTime(
+                    ZamanC.to.athan!.getZamanRowTime(z),
+                    ActiveQuestsC.to.show12HourClock,
+                    ActiveQuestsC.to.showSecPrecision,
                   ),
                   textStyle.copyWith(
                     color: isBold ? textStyle.color : AppThemes.ldTextColor,
                     fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
                   ),
-                  alignment: LanguageController.to.centerLeft,
+                  alignment: LanguageC.to.centerLeft,
                   w: w2,
                   h: 25, //_Sliv.slivH, // tuned to find best value in all cases
                   trVal: true,
@@ -471,7 +470,7 @@ class SalahRow extends StatelessWidget {
   }
 
   Widget _getSalahRowActions(
-    ActiveQuestsController aqC,
+    ActiveQuestsC aqC,
     double w1,
     Color bg,
     Color fg,
@@ -520,7 +519,7 @@ class SalahRow extends StatelessWidget {
           _SideTime(
             const _IconSunrise(),
             Z.Shuruq, // Sunrise
-            ZamanController.to.athan!.sunrise,
+            ZamanC.to.athan!.sunrise,
           ),
           z,
           QUEST.KARAHAT_SUNRISE,
@@ -528,7 +527,7 @@ class SalahRow extends StatelessWidget {
         _Cell(
           T(
             Z.Ishraq.trKey,
-            ZamanController.to.currZ == Z.Ishraq ? tsB : tsN,
+            ZamanC.to.currZ == Z.Ishraq ? tsB : tsN,
             w: w2,
           ),
           z,
@@ -539,8 +538,7 @@ class SalahRow extends StatelessWidget {
           T(
             Z.Duha.trKey,
             // Duha salah is enabled with Ishraq
-            ZamanController.to.currZ == Z.Ishraq ||
-                    ZamanController.to.currZ == Z.Duha
+            ZamanC.to.currZ == Z.Ishraq || ZamanC.to.currZ == Z.Duha
                 ? tsB
                 : tsN,
             w: w2,
@@ -553,7 +551,7 @@ class SalahRow extends StatelessWidget {
           _SideTime(
             const _IconZenith(),
             Z.Istiwa, // Zawal/Zenith
-            ZamanController.to.athan!.istiwa,
+            ZamanC.to.athan!.istiwa,
           ),
           z,
           QUEST.KARAHAT_ISTIWA,
@@ -565,7 +563,7 @@ class SalahRow extends StatelessWidget {
   Widget _actionsDhuhr(bool showJumahOnFriday) {
     String fardRk = cni(4); // fard rakat
     String muakAf = cni(2); // muakaddah after
-    if (TimeController.to.isFriday() && showJumahOnFriday) {
+    if (TimeC.to.isFriday() && showJumahOnFriday) {
       fardRk = cni(2);
       muakAf = cni(6);
     }
@@ -603,7 +601,7 @@ class SalahRow extends StatelessWidget {
           _SideTime(
             const _IconSunset(),
             Z.Ghurub, // sunset
-            ZamanController.to.athan!.sunSetting,
+            ZamanC.to.athan!.sunSetting,
           ),
           z,
           QUEST.KARAHAT_SUNSET,
@@ -633,8 +631,7 @@ class SalahRow extends StatelessWidget {
   Widget _actionsMiddleOfNight(double w1) {
     double w4 = w1 * 4;
 
-    String trKeyQiyam =
-        TimeController.to.isMonthRamadan ? 'a.Taraweeh' : 'a.Qiyam';
+    String trKeyQiyam = TimeC.to.isMonthRamadan ? 'a.Taraweeh' : 'a.Qiyam';
 
     return Row(
       children: [
@@ -670,7 +667,7 @@ class SalahRow extends StatelessWidget {
                 ],
               ),
               Z.Fajr_Tomorrow,
-              ZamanController.to.athan!.fajrTomorrow,
+              ZamanC.to.athan!.fajrTomorrow,
             ),
           ),
           flex: 100, // NOTE, 100 and without below flex: 3, UI was broken.
@@ -800,11 +797,11 @@ class SalahRow extends StatelessWidget {
   Widget _getResult(QUEST quest, {int flex = 1}) {
     Color color1;
     Color color2;
-    if (ActiveQuestsAjrController.to.isDone(quest)) {
+    if (ActiveQuestsAjrC.to.isDone(quest)) {
       color1 = AppThemes.ajr2Uncommon;
       color2 = AppThemes.ajr2Uncommon;
-//  } else if (ActiveQuestsAjrController.to.isSkip(quest)) {
-    } else if (ActiveQuestsAjrController.to.isMiss(quest)) {
+//  } else if (ActiveQuestsAjrC.to.isSkip(quest)) {
+    } else if (ActiveQuestsAjrC.to.isMiss(quest)) {
       color1 = AppThemes.ajrXMissed;
       color2 = AppThemes.ajrXMissed;
     } else {
@@ -883,8 +880,8 @@ class _Cell extends StatelessWidget {
     return Expanded(
       flex: flex,
       child: InkWell(
-        onTap: () => MenuController.to
-            .pushSubPage(SubPage.Active_Quest_Action, arguments: {
+        onTap: () =>
+            MenuC.to.pushSubPage(SubPage.Active_Quest_Action, arguments: {
           'z': z,
           'quest': quest,
           'widget': actionWidget,
@@ -936,7 +933,7 @@ class _SideTime extends StatelessWidget {
     double h_2 = _Sliv.slivH / 2;
 
     // highlight Karahat cells when their times are in (header loses highlight)
-    bool isBold = ZamanController.to.currZ == z;
+    bool isBold = ZamanC.to.currZ == z;
 
     // Special case for Fajr Tomorrow to make text bigger and fix missing space
     // since it is only SideTime with icon size of  "_Sliv.slivH / 2".
@@ -963,10 +960,10 @@ class _SideTime extends StatelessWidget {
             T(z.trKey, isBold ? tsB : tsN, w: w1, h: h_2),
           sunIcon,
           T(
-            TimeController.trValTime(
+            TimeC.trValTime(
               time,
-              ActiveQuestsController.to.show12HourClock,
-              ActiveQuestsController.to.showSecPrecision,
+              ActiveQuestsC.to.show12HourClock,
+              ActiveQuestsC.to.showSecPrecision,
             ),
             isBold ? tsB : tsN,
             w: w1,

@@ -3,14 +3,14 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/components/two_colored_icon.dart';
-import 'package:hapi/controllers/time_controller.dart';
-import 'package:hapi/helpers/math_utils.dart';
-import 'package:hapi/main_controller.dart';
+import 'package:hapi/component/two_colored_icon.dart';
+import 'package:hapi/controller/time_c.dart';
+import 'package:hapi/helper/math_utils.dart';
+import 'package:hapi/main_c.dart';
 import 'package:hapi/quest/active/athan/athan.dart';
 import 'package:hapi/quest/active/athan/z.dart';
 import 'package:hapi/quest/active/sun_mover/multi_color_ring.dart';
-import 'package:hapi/quest/active/zaman_controller.dart';
+import 'package:hapi/quest/active/zaman_c.dart';
 
 // class SunMoverUI extends StatelessWidget {
 //   const SunMoverUI(this.athan, this.diameter);
@@ -64,7 +64,7 @@ class SunRing extends StatelessWidget {
   bool sunAnimationPassedHalfway = false;
 
   void _buildSunRingSlices() {
-    final Athan athan = ZamanController.to.athan!;
+    final Athan athan = ZamanC.to.athan!;
 
     double totalSecs = 0.0;
     int lastIdx = Z.values.length - 2; // don't go to FajrTomorrow
@@ -100,7 +100,7 @@ class SunRing extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Athan athan = ZamanController.to.athan!;
+    final Athan athan = ZamanC.to.athan!;
 
     if (!colorSliceInitialized || colorSlices.isEmpty) {
       colorSliceInitialized = true;
@@ -131,7 +131,7 @@ class SunRing extends StatelessWidget {
 
     //l.d('sunriseDegreeCorrection=$sunriseDegreeCorrection, fajrStartCorrection=$fajrStartCorrection->sunriseCorrection=$sunriseCorrection');
 
-    Z currZ = ZamanController.to.currZ;
+    Z currZ = ZamanC.to.currZ;
     bool isSunAboveHorizon = currZ.isAboveHorizon();
 
     // TODO clean this up
@@ -171,7 +171,7 @@ class SunRing extends StatelessWidget {
         onTap: () {
           isSunAnimationAllowed = true;
           setupSunAnimationToRun(fajrStartPercentCorrection);
-          ZamanController.to.updateOnThread1Ms(); // kick off animation
+          ZamanC.to.updateOnThread1Ms(); // kick off animation
         },
         child: SizedBox(
           width: diameter,
@@ -202,7 +202,7 @@ class SunRing extends StatelessWidget {
                   ),
                 ),
               if (isSunAboveHorizon) const _GumbiAndMeWithFamily(Colors.white),
-              GetBuilder<ZamanController>(
+              GetBuilder<ZamanC>(
                 builder: (c) {
                   double sunVal = (c.secsSinceFajr / ColorSlice.totalSecs) -
                       fajrStartPercentCorrection;
@@ -244,7 +244,7 @@ class SunRing extends StatelessWidget {
                       isSunAnimationAllowed = false; // done, found sun loc
                     } else {
                       sunVal = sunAnimationLoc;
-                      ZamanController.to.updateOnThread1Ms();
+                      ZamanC.to.updateOnThread1Ms();
                     }
                   }
 
@@ -286,8 +286,7 @@ class SunRing extends StatelessWidget {
     sunAnimationStep = 0;
     sunAnimationPassedHalfway = false;
 
-    double sunValuePercent =
-        ZamanController.to.secsSinceFajr / ColorSlice.totalSecs;
+    double sunValuePercent = ZamanC.to.secsSinceFajr / ColorSlice.totalSecs;
 
     sunAnimationPassed0 = false;
     if (sunValuePercent < fajrStartPercentCorrection) {
@@ -315,7 +314,7 @@ class _HijriAndGregoDate extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<TimeController>(builder: (c) {
+    return GetBuilder<TimeC>(builder: (c) {
       DAY_OF_WEEK hijriDay = c.dayOfWeekHijri;
       DAY_OF_WEEK gregoDay = c.dayOfWeekGrego;
 

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
-import 'package:hapi/quest/daily/daily_quests_controller.dart';
+import 'package:hapi/quest/daily/daily_quests_c.dart';
 import 'package:hapi/quest/daily/do_list/do_list_card.dart';
-import 'package:hapi/services/db.dart';
+import 'package:hapi/service/db.dart';
 
 class DoListUI extends StatelessWidget {
   const DoListUI({
@@ -16,7 +16,7 @@ class DoListUI extends StatelessWidget {
       children: <Widget>[
         const SizedBox(height: 20),
         AddDoList(),
-        GetBuilder<DailyQuestsController>(
+        GetBuilder<DailyQuestsC>(
           builder: (c) {
             return Expanded(
               child: ListView.builder(

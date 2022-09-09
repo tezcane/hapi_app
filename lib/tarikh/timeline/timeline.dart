@@ -6,7 +6,7 @@ import 'package:flare_flutter/flare.dart' as flare;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:hapi/tarikh/tarikh_controller.dart';
+import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 import 'package:hapi/tarikh/timeline/timeline_utils.dart';
 
@@ -365,7 +365,7 @@ class Timeline {
     // Tez: fixes exception when hitting back button from timeline back to root page
     // TODO isActive was not here before, needed to fix exception after upgrading
     // flutter version:
-    if (TarikhController.to.isActiveTimeline && onNeedPaint != null) {
+    if (TarikhC.to.isActiveTimeline && onNeedPaint != null) {
       onNeedPaint!();
     }
   }
@@ -406,7 +406,7 @@ class Timeline {
     /// Check if the left-hand side gutter has been toggled.
     /// If visible, make room for it.
     double targetGutterWidth =
-        TarikhController.to.isGutterModeOff ? GutterLeft : GutterLeftExpanded;
+        TarikhC.to.isGutterModeOff ? GutterLeft : GutterLeftExpanded;
     double dgw = targetGutterWidth - _gutterWidth;
     if (!animate || dgw.abs() < 1) {
       _gutterWidth = targetGutterWidth;
@@ -863,7 +863,7 @@ class Timeline {
             }
           }
         } else {
-          bool isActive = TarikhController.to.isActiveTimeline;
+          bool isActive = TarikhC.to.isActiveTimeline;
 
           /// Item is in view, apply the new animation time and advance the actor.
           if (asset is TimelineNima && isActive) {

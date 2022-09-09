@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:hapi/components/form_input_field_with_icon.dart';
-import 'package:hapi/components/form_vertical_spacing.dart';
-import 'package:hapi/components/logo_graphic_header.dart';
-import 'package:hapi/components/primary_button.dart';
-import 'package:hapi/helpers/validator.dart';
+import 'package:hapi/component/form_input_field_with_icon.dart';
+import 'package:hapi/component/form_vertical_spacing.dart';
+import 'package:hapi/component/logo_graphic_header.dart';
+import 'package:hapi/component/primary_button.dart';
+import 'package:hapi/helper/validator.dart';
 import 'package:hapi/menu/sub_page.dart';
-import 'package:hapi/onboard/auth/auth_controller.dart';
+import 'package:hapi/onboard/auth/auth_c.dart';
 
 /// Sends a password reset email to the user.
 class ResetPasswordUI extends StatelessWidget {
   final TextEditingController emailController = TextEditingController();
-  final AuthController authController = AuthController.to;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     // set initial email from what user already entered on previous screen
-    emailController.text = authController.emailController.text;
+    emailController.text = AuthC.to.emailController.text;
     return FabSubPage(
       subPage: SubPage.Reset_Password,
       child: Form(
@@ -45,7 +44,7 @@ class ResetPasswordUI extends StatelessWidget {
                     trKey: 'auth.resetPasswordButton',
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        await authController.sendPasswordResetEmail(
+                        await AuthC.to.sendPasswordResetEmail(
                             emailController.text.trim());
                       }
                     },

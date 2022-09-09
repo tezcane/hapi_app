@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/quest/daily/do_list/do_list_model.dart';
-import 'package:hapi/services/db.dart';
+import 'package:hapi/service/db.dart';
 
 class DoListCard extends StatelessWidget {
   final DoListModel doList;

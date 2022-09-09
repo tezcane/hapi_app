@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:hapi/models/date_time_converter.dart';
+import 'package:hapi/model/date_time_converter.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'do_list_model.g.dart';

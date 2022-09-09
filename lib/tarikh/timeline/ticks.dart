@@ -2,9 +2,9 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:hapi/main_controller.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_controller.dart';
-import 'package:hapi/tarikh/tarikh_controller.dart';
+import 'package:hapi/main_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
+import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
 import 'package:hapi/tarikh/timeline/timeline_utils.dart';
 import 'package:intl/intl.dart';
@@ -29,8 +29,8 @@ class Ticks {
   /// a reference to the [Timeline].
   void paint(PaintingContext context, Offset offset, double translation,
       double scale, double height) {
-    Timeline t = TarikhController.t;
-    TimelineInitHandler tih = TarikhController.tih;
+    Timeline t = TarikhC.t;
+    TimelineInitHandler tih = TarikhC.tih;
 
     final Canvas canvas = context.canvas;
 
@@ -161,7 +161,7 @@ class Ticks {
         if (value < 9000) {
           label = value.toStringAsFixed(0);
         } else {
-          NumberFormat formatter = LanguageController.numCompactFormatter;
+          NumberFormat formatter = LanguageC.numCompactFormatter;
           label = formatter.format(value);
           int digits = formatter.significantDigits!;
           while (usedValues.contains(label) && digits < 10) {

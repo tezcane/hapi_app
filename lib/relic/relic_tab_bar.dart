@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/components/vertical_scrollable_tabview/scroll_to_index/scroll_to_index.dart';
-import 'package:hapi/components/vertical_scrollable_tabview/vertical_scrollable_tabview.dart';
-import 'package:hapi/main_controller.dart';
+import 'package:hapi/component/vertical_scrollable_tabview/scroll_to_index/scroll_to_index.dart';
+import 'package:hapi/component/vertical_scrollable_tabview/vertical_scrollable_tabview.dart';
+import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/relic/relic.dart';
-import 'package:hapi/relic/relic_controller.dart';
+import 'package:hapi/relic/relic_c.dart';
 import 'package:hapi/relic/relic_set.dart';
 import 'package:hapi/relic/relics_ui.dart';
 
@@ -36,7 +36,7 @@ class _RelicTabBarState extends State<RelicTabBar>
   @override
   void initState() {
     tabController = TabController(
-      initialIndex: RelicController.to.getSelectedTab(widget.relicTab),
+      initialIndex: RelicC.to.getSelectedTab(widget.relicTab),
       length: widget.relicTypes.length,
       vsync: this,
     );
@@ -55,20 +55,20 @@ class _RelicTabBarState extends State<RelicTabBar>
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<RelicController>(builder: (c) {
-      if (RelicController.to.initNeeded) {
+    return GetBuilder<RelicC>(builder: (c) {
+      if (RelicC.to.initNeeded) {
         return const Center(child: T('بِسْمِ ٱللَّٰهِ', tsN, trVal: true));
       }
 
       if (initNeeded) {
         for (RELIC_TYPE relicType in widget.relicTypes) {
-          relicSets.add(RelicController.to.getRelicSet(relicType));
+          relicSets.add(RelicC.to.getRelicSet(relicType));
         }
 
         // Needed to scroll down to last selected tab at init:
         WidgetsBinding.instance.addPostFrameCallback(
           (_) => animateAndScrollTo(
-            RelicController.to.getSelectedTab(widget.relicTab),
+            RelicC.to.getSelectedTab(widget.relicTab),
           ),
         );
 
@@ -128,7 +128,7 @@ class _RelicTabBarState extends State<RelicTabBar>
 
     if (lastSelectedTabIdx != newIdx) {
       lastSelectedTabIdx = newIdx;
-      RelicController.to.setLastSelectedTab(widget.relicTab, newIdx);
+      RelicC.to.setLastSelectedTab(widget.relicTab, newIdx);
     }
   }
 }

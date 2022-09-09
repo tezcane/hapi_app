@@ -4,7 +4,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_gifimage/flutter_gifimage.dart';
 import 'package:get/get.dart';
-import 'package:hapi/onboard/auth/auth_controller.dart';
+import 'package:hapi/onboard/auth/auth_c.dart';
 
 // NOTE YOU CAN SKIP THIS WITH isFastStartupMode in MenuController:
 const int kGifAnimationMs = 1501; // time it takes to play animated gif
@@ -64,7 +64,7 @@ class _SplashUIState extends State<SplashUI> with TickerProviderStateMixin {
       cGif.animateTo(gifFrames,
           duration: const Duration(milliseconds: kGifAnimationMs));
       Timer(const Duration(milliseconds: kGifAnimationMs + 81),
-          () => AuthController.to.setGifAnimatingDone());
+          () => AuthC.to.setGifAnimatingDone());
     });
   }
 
@@ -84,7 +84,7 @@ class _SplashUIState extends State<SplashUI> with TickerProviderStateMixin {
   // After updateTimeMs time, refresh the loading bar.
   // TODO use Loading() progress bar instead?
   void updateLoadingMsg(int updateTimeMs, bool isBarGrowing) {
-    if (AuthController.to.isSplashScreenDone()) {
+    if (AuthC.to.isSplashScreenDone()) {
       _loadingBar = ''; // hide loading bar so hero/init navigation is cleaner
       return;
     }
@@ -123,7 +123,7 @@ class _SplashUIState extends State<SplashUI> with TickerProviderStateMixin {
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: Center(
-        child: GetBuilder<AuthController>(
+        child: GetBuilder<AuthC>(
           builder: (c) => Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[

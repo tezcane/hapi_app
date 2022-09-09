@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/components/segmented_selector.dart';
-import 'package:hapi/main_controller.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_controller.dart';
+import 'package:hapi/component/segmented_selector.dart';
+import 'package:hapi/main_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/settings_option.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/theme/theme_controller.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/theme/theme_c.dart';
 
 class ThemeListUI extends StatelessWidget {
   const ThemeListUI(this.width);
@@ -16,7 +16,7 @@ class ThemeListUI extends StatelessWidget {
     double separatorSize = 20;
     double w = width - iconSize - separatorSize;
 
-    return GetBuilder<ThemeController>(
+    return GetBuilder<ThemeC>(
       builder: (c) => Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -26,7 +26,7 @@ class ThemeListUI extends StatelessWidget {
               'i.Theme',
               tsN,
               w: w / 4,
-              alignment: LanguageController.to.centerLeft,
+              alignment: LanguageC.to.centerLeft,
             ),
           ]),
           SizedBox(

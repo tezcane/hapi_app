@@ -3,11 +3,11 @@ import 'dart:ui' as ui;
 
 import 'package:flare_dart/math/aabb.dart' as flare;
 import 'package:flutter/material.dart';
-import 'package:hapi/main_controller.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_controller.dart';
+import 'package:hapi/main_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
-import 'package:hapi/tarikh/tarikh_controller.dart';
+import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/timeline/ticks.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
@@ -66,7 +66,7 @@ class TimelineRenderWidget extends LeafRenderObjectWidget {
 
   @override
   didUnmountRenderObject(covariant TimelineRenderObject renderObject) {
-    TarikhController.to.isActiveTimeline = false;
+    TarikhC.to.isActiveTimeline = false;
   }
 }
 
@@ -76,9 +76,9 @@ class TimelineRenderWidget extends LeafRenderObjectWidget {
 /// The core method of this object is [paint()]: this is where all the elements
 /// are actually drawn to screen.
 class TimelineRenderObject extends RenderBox {
-  final TarikhController cTrkh = TarikhController.to;
-  static final Timeline t = TarikhController.t;
-  static final TimelineInitHandler tih = TarikhController.tih;
+  final TarikhC cTrkh = TarikhC.to;
+  static final Timeline t = TarikhC.t;
+  static final TimelineInitHandler tih = TarikhC.tih;
 
   static const List<Color> LineColors = [
     Color.fromARGB(255, 125, 195, 184),
@@ -977,7 +977,7 @@ class TimelineRenderObject extends RenderBox {
               if (value < 10000) {
                 label = value.toStringAsFixed(0);
               } else {
-                NumberFormat formatter = LanguageController.numCompactFormatter;
+                NumberFormat formatter = LanguageC.numCompactFormatter;
                 label = formatter.format(value);
               }
 

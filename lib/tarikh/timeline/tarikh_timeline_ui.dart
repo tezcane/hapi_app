@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/main_controller.dart';
-import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/main_c.dart';
+import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/tarikh/article/tarikh_article_ui.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
-import 'package:hapi/tarikh/tarikh_controller.dart';
+import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 import 'package:hapi/tarikh/timeline/timeline_render_widget.dart';
@@ -32,14 +32,14 @@ class TarikhTimelineUI extends StatefulWidget {
   TimelineEntry? entry;
 
   // TODO needed for widget update detect?:
-  final Timeline timeline = TarikhController.t;
+  final Timeline timeline = TarikhC.t;
 
   @override
   _TarikhTimelineUIState createState() => _TarikhTimelineUIState();
 }
 
 class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
-  static final Timeline t = TarikhController.t; // used a lot so shorten it.
+  static final Timeline t = TarikhC.t; // used a lot so shorten it.
 
   // TODO fix shows anytime no era on timeline, should be blank or something like "Unnamed Era"
   static const String trKeyDefaultEraName = ''; //i.Birth of the Universe';
@@ -67,15 +67,14 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   @override
   void dispose() {
     super.dispose();
-    TarikhController.to.isActiveTimeline = false;
+    TarikhC.to.isActiveTimeline = false;
   }
 
   @override
   initState() {
     if (widget.entry == null) {
       // lookup entry manually since not provided on init
-      widget.entry =
-          TarikhController.to.eventMap[widget.focusItem.trKeyEndTagLabel];
+      widget.entry = TarikhC.to.eventMap[widget.focusItem.trKeyEndTagLabel];
 
       // We need entry just to update down/up past/future btns. Since it wasn't
       // used/available/wanted? by the original caller to this class, we ignore
@@ -83,7 +82,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
       MenuItemData.fromEntry(widget.entry!);
     }
 
-    TarikhController.to.isActiveTimeline = true;
+    TarikhC.to.isActiveTimeline = true;
     _trValEraName = 'i.Era'.tr +
         ': ' +
         (t.currentEra != null
@@ -197,8 +196,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
         _navigateToTimeline(_touchedBubble!.entry, devicePadding.top);
       } else {
         // stop rendering here, menu controller re-enables it
-        TarikhController.to.isActiveTimeline = false;
-        MenuController.to.pushSubPage(SubPage.Tarikh_Article, arguments: {
+        TarikhC.to.isActiveTimeline = false;
+        MenuC.to.pushSubPage(SubPage.Tarikh_Article, arguments: {
           'article': _touchedBubble!.entry,
         });
 
@@ -304,7 +303,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
         child: Scaffold(
           floatingActionButtonLocation:
               FloatingActionButtonLocation.miniCenterDocked,
-          floatingActionButton: GetBuilder<TarikhController>(builder: (c) {
+          floatingActionButton: GetBuilder<TarikhC>(builder: (c) {
             TimeBtn btnUp = c.timeBtnUp;
             TimeBtn btnDn = c.timeBtnDn;
 
@@ -389,9 +388,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                     ),
                     Padding(
                       padding: EdgeInsets.only(
-                        left: !c.isGutterModeOff && MainController.to.isPortrait
-                            ? 25
-                            : 0,
+                        left:
+                            !c.isGutterModeOff && MainC.to.isPortrait ? 25 : 0,
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -530,7 +528,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                 Padding(
                   padding: EdgeInsets.only(
                     top: 20,
-                    left: MainController.to.isPortrait ? 60 : 20,
+                    left: MainC.to.isPortrait ? 60 : 20,
                   ),
                   child: T(
                     _trValEraName,

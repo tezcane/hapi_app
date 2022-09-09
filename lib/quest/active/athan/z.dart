@@ -1,7 +1,7 @@
-import 'package:hapi/controllers/time_controller.dart';
-import 'package:hapi/main_controller.dart';
-import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
-import 'package:hapi/quest/active/active_quests_controller.dart';
+import 'package:hapi/controller/time_c.dart';
+import 'package:hapi/main_c.dart';
+import 'package:hapi/quest/active/active_quests_ajr_c.dart';
+import 'package:hapi/quest/active/active_quests_c.dart';
 
 /// Z = Zaman/Time Of Day, enum that goes with each important islamic day point.
 /// Used with Athan class to match up those calculated times to this enum.
@@ -26,18 +26,17 @@ extension EnumUtil on Z {
   String get trKey {
     String transliteration = name;
     if (this == Z.Dhuhr) {
-      if (TimeController.to.isFriday() &&
-          ActiveQuestsController.to.showJumahOnFriday) {
+      if (TimeC.to.isFriday() && ActiveQuestsC.to.showJumahOnFriday) {
         return 'a.Jumah';
       } // else returns a.Dhuhr
     } else if (this == Z.Middle_of_Night) {
-      if (ActiveQuestsController.to.showLayl2) {
+      if (ActiveQuestsC.to.showLayl2) {
         return a('a.Layl{}') + '/' + cni(2); // UGLY but works, returns a trVal
       } else {
         return 'a.Muntasaf Allayl';
       }
     } else if (this == Z.Last_3rd_of_Night) {
-      if (ActiveQuestsController.to.showLayl3) {
+      if (ActiveQuestsC.to.showLayl3) {
         return a('a.Layl{}') + '/' + cni(3); // UGLY but works, returns a trVal
       } else {
         return 'a.Althuluth Al\'Akhir Min Allayl';

@@ -1,4 +1,4 @@
-import 'package:hapi/relic/relic_controller.dart';
+import 'package:hapi/relic/relic_c.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
 /// Each relic subsection (e.g. Ummah->Prophet) needs to have a RELIC_TYPE so
@@ -37,7 +37,7 @@ class Relic extends TimelineEntry {
           asset: asset,
           accent: null,
         ) {
-    ajrLevel = RelicController.to.ajrLevels[relicId.index]; // loaded from db
+    ajrLevel = RelicC.to.ajrLevels[relicId.index]; // loaded from db
   }
   final RELIC_ID relicId;
   final RELIC_TYPE relicType;

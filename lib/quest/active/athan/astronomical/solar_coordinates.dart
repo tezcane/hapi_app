@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:hapi/helpers/math_utils.dart';
+import 'package:hapi/helper/math_utils.dart';
 import 'package:hapi/quest/active/athan/astronomical/astronomical.dart';
 
 class SolarCoordinates {

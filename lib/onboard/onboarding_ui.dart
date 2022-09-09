@@ -1,10 +1,10 @@
 // TODO i18n
 import 'package:flutter/material.dart';
 import 'package:flutter_overboard/flutter_overboard.dart';
-import 'package:hapi/onboard/onboarding_controller.dart';
+import 'package:hapi/onboard/onboarding_c.dart';
 
 class OnboardingUI extends StatelessWidget {
-  final OnboardingController onboardingController = OnboardingController.to;
+  final OnboardingC onboardingController = OnboardingC.to;
 
   @override
   Widget build(BuildContext context) {

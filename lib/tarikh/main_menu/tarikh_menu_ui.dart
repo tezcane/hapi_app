@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/components/separator.dart';
-import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/component/separator.dart';
+import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/tarikh/main_menu/main_menu_section.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
-import 'package:hapi/tarikh/tarikh_controller.dart';
+import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
 
 /// The Main Menu Page of the Tarikh Section of the App.
@@ -17,13 +17,13 @@ class TarikhMenuUI extends StatelessWidget {
 
   /// Helper function which sets the [MenuItemData] for the [TarikhTimelineUI].
   /// This will trigger a transition from the current menu to the Timeline,
-  /// thus the push on the [MenuController.pushSubPage], and by providing the
+  /// thus the push on the [MenuC.pushSubPage], and by providing the
   /// [item] as a parameter to the [TarikhTimelineUI] constructor, this widget
   /// will know where to scroll to.
   navigateToTimeline(MenuItemData item) {
-    TarikhController.to.isActiveTarikhMenu = false;
+    TarikhC.to.isActiveTarikhMenu = false;
 
-    MenuController.to.pushSubPage(
+    MenuC.to.pushSubPage(
       SubPage.Tarikh_Timeline,
       arguments: {'focusItem': item, 'entry': null}, // null= up/dn btns not set
     );
@@ -41,7 +41,7 @@ class TarikhMenuUI extends StatelessWidget {
             const EdgeInsets.only(top: 20.0, left: 20, right: 20, bottom: 20),
         child: Column(
           children: [
-            GetBuilder<TarikhController>(builder: (c) {
+            GetBuilder<TarikhC>(builder: (c) {
               return ListView.builder(
                 shrinkWrap: true, // needed or app pukes
                 physics: const ScrollPhysics(), // needed to drag up/down
@@ -49,7 +49,7 @@ class TarikhMenuUI extends StatelessWidget {
                 itemBuilder: (_, index) {
                   return Container(
                     margin: const EdgeInsets.only(top: 20.0),
-                    child: GetBuilder<TarikhController>(builder: (c) {
+                    child: GetBuilder<TarikhC>(builder: (c) {
                       return MenuSection(
                         c.tarikhMenuData[index].trKeyEndTagLabel,
                         c.tarikhMenuData[index].backgroundColor,

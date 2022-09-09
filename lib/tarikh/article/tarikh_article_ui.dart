@@ -2,10 +2,10 @@ import 'package:flare_flutter/flare_actor.dart' show FlareActor;
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_controller.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/tarikh/article/timeline_entry_widget.dart';
-import 'package:hapi/tarikh/tarikh_controller.dart';
+import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
 /// This widget will paint the article page.
@@ -89,8 +89,8 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
 
   /// Load the markdown file from the assets and set the contents of the page to its value.
   void loadMarkdown() async {
-    String trValArticleMarkdown = await LanguageController.to
-        .trValTarikhArticle(widget.article.trKeyEndTagLabel);
+    String trValArticleMarkdown =
+        await LanguageC.to.trValTarikhArticle(widget.article.trKeyEndTagLabel);
     setState(() {
       _trValArticleMarkdown = trValArticleMarkdown;
     });
@@ -104,7 +104,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
   @override
   Widget build(BuildContext context) {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
-    List<TimelineEntry> favs = TarikhController.to.eventFavorites;
+    List<TimelineEntry> favs = TarikhC.to.eventFavorites;
     bool isFav = favs.any((TimelineEntry e) =>
         e.trKeyEndTagLabel.toLowerCase() == _labelLowerCase); // TODO needed?
     return FabSubPage(
@@ -200,11 +200,9 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                                   _isFavorite = !_isFavorite;
                                 });
                                 if (_isFavorite) {
-                                  TarikhController.to
-                                      .addFavorite(widget.article);
+                                  TarikhC.to.addFavorite(widget.article);
                                 } else {
-                                  TarikhController.to
-                                      .removeFavorite(widget.article);
+                                  TarikhC.to.removeFavorite(widget.article);
                                 }
                               },
                             ),

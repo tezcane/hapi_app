@@ -1,9 +1,9 @@
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/controllers/nav_page_controller.dart';
-import 'package:hapi/main_controller.dart';
-import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/controller/nav_page_c.dart';
+import 'package:hapi/main_c.dart';
+import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/menu_bottom.dart';
 import 'package:hapi/menu/slide/menu_bottom/menu_bottom_ui.dart';
 import 'package:hapi/menu/slide/menu_right/menu_right.dart';
@@ -23,7 +23,7 @@ class MenuRightUI extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<MenuController>(
+    return GetBuilder<MenuC>(
       builder: (c) => IgnorePointer(
         ignoring: c.isScreenDisabled,
         child: Scaffold(
@@ -45,8 +45,7 @@ class MenuRightUI extends StatelessWidget {
                       // TODO asdf move the confetti away from here
                       alignment: Alignment.topCenter,
                       child: ConfettiWidget(
-                        confettiController:
-                            MenuController.to.confettiController(),
+                        confettiController: MenuC.to.confettiController(),
                         blastDirectionality: BlastDirectionality.explosive,
                         shouldLoop: false,
                         numberOfParticles: 5,
@@ -62,14 +61,13 @@ class MenuRightUI extends StatelessWidget {
                           Colors.indigo,
                           Colors.purple,
                         ], // manually specify the colors to be used
-                        createParticlePath: MenuController.to.drawStar,
+                        createParticlePath: MenuC.to.drawStar,
                       ),
                     ),
                     Align(
                       alignment: Alignment.topCenter,
                       child: ConfettiWidget(
-                        confettiController:
-                            MenuController.to.confettiController(),
+                        confettiController: MenuC.to.confettiController(),
                         blastDirectionality: BlastDirectionality.explosive,
                         shouldLoop: false,
                         numberOfParticles: 5,
@@ -149,7 +147,7 @@ class MenuRightUI extends StatelessWidget {
                               ],
                             ),
                           ),
-                          GetBuilder<NavPageController>(builder: (c) {
+                          GetBuilder<NavPageC>(builder: (c) {
                             Color showSettingsColor = Colors.transparent;
                             if (nav.navPage == navPage &&
                                 settingsWidgets[c.getLastIdx(nav.navPage)] !=

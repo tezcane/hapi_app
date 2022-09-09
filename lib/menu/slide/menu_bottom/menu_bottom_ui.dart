@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/main_controller.dart';
-import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/main_c.dart';
+import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/sub_page.dart';
 import 'package:share/share.dart';
 
@@ -22,8 +22,8 @@ class MenuBottomUI extends StatelessWidget {
               message: at('at.About {0}', ['a.hapi']),
               child: InkWell(
                 onTap: () {
-                  MenuController.to.pushSubPage(SubPage.About);
-                  MenuController.to.hideMenu();
+                  MenuC.to.pushSubPage(SubPage.About);
+                  MenuC.to.hideMenu();
                 },
                 child: Hero(
                   tag: 'hapiLogo',
@@ -38,8 +38,8 @@ class MenuBottomUI extends StatelessWidget {
               message: at('at.About {0}', ['a.hapi']),
               child: InkWell(
                 onTap: () {
-                  MenuController.to.pushSubPage(SubPage.About);
-                  MenuController.to.hideMenu();
+                  MenuC.to.pushSubPage(SubPage.About);
+                  MenuC.to.hideMenu();
                 },
                 child: const Icon(
                   Icons.info_outline_rounded,
@@ -52,8 +52,8 @@ class MenuBottomUI extends StatelessWidget {
               message: 'i.Settings'.tr,
               child: InkWell(
                 onTap: () {
-                  MenuController.to.pushSubPage(SubPage.Settings);
-                  MenuController.to.hideMenu();
+                  MenuC.to.pushSubPage(SubPage.Settings);
+                  MenuC.to.hideMenu();
                 },
                 child: const Icon(
                   Icons.settings_rounded,

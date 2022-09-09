@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/controllers/nav_page_controller.dart';
-import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/controller/nav_page_c.dart';
+import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 
@@ -37,11 +37,11 @@ class MenuBottom extends StatefulWidget {
 
 class _MenuBottomState extends State<MenuBottom>
     with SingleTickerProviderStateMixin {
-  final MenuController cMenu = MenuController.to;
+  final MenuC cMenu = MenuC.to;
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<MenuController>(
+    return GetBuilder<MenuC>(
       builder: (c) {
         final double width = MediaQuery.of(context).size.width;
         final double height = MediaQuery.of(context).size.height;
@@ -68,7 +68,7 @@ class _MenuBottomState extends State<MenuBottom>
                         minWidth: widget.scaleWidth,
                         maxWidth: widget.scaleWidth,
                       ),
-                      child: GetBuilder<NavPageController>(builder: (c) {
+                      child: GetBuilder<NavPageC>(builder: (c) {
                         return Visibility(
                           visible: cMenu.isMenuShowingSettings,
                           child: widget.settingsWidgets[

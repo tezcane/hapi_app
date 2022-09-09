@@ -2,14 +2,14 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/main_controller.dart';
-import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/main_c.dart';
+import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/main_menu/search_widget.dart';
 import 'package:hapi/tarikh/main_menu/thumbnail_detail_widget.dart';
 import 'package:hapi/tarikh/search_manager.dart';
-import 'package:hapi/tarikh/tarikh_controller.dart';
+import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
 class RelicsSearchUI extends StatefulWidget {
@@ -120,7 +120,7 @@ class _RelicsSearchUIState extends State<RelicsSearchUI> {
 
   void _tapSearchResult(TimelineEntry entry) {
     MenuItemData item = MenuItemData.fromEntry(entry);
-    MenuController.to.pushSubPage(
+    MenuC.to.pushSubPage(
       SubPage.Tarikh_Timeline,
       arguments: {'focusItem': item, 'entry': entry},
     );
@@ -134,7 +134,7 @@ class _RelicsSearchUIState extends State<RelicsSearchUI> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<TarikhController>(builder: (c) {
+    return GetBuilder<TarikhC>(builder: (c) {
       if (c.isTimelineInitDone && initNeeded) {
         initNeeded = false;
         _updateSearch(); // needed for init

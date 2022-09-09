@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hapi/helpers/cord.dart';
-import 'package:hapi/main_controller.dart';
-import 'package:hapi/quest/active/active_quests_controller.dart';
+import 'package:hapi/helper/cord.dart';
+import 'package:hapi/main_c.dart';
+import 'package:hapi/quest/active/active_quests_c.dart';
 import 'package:hapi/quest/active/athan/astronomical/astronomical.dart';
 import 'package:hapi/quest/active/athan/astronomical/solar_time.dart';
 import 'package:hapi/quest/active/athan/calculation_method.dart';
@@ -47,7 +47,7 @@ class Athan {
   DateTime get highNoon => _highNoon;
   DateTime get dhuhr => _dhuhr_06;
   DateTime get asr =>
-      ActiveQuestsController.to.salahAsrEarlier ? _asrEarly_07 : _asrLater_08;
+      ActiveQuestsC.to.salahAsrEarlier ? _asrEarly_07 : _asrLater_08;
   DateTime get asrEarlier => _asrEarly_07;
   DateTime get asrLater => _asrLater_08;
   DateTime get sunSetting => _karahatAdkharSunSetting_09;
@@ -401,7 +401,7 @@ class Athan {
     } else if (z == Z.Dhuhr) {
       return [_dhuhr_06, Colors.yellow.shade700];
     } else if (z == Z.Asr) {
-      return ActiveQuestsController.to.salahAsrEarlier
+      return ActiveQuestsC.to.salahAsrEarlier
           ? [_asrEarly_07, Colors.yellow.shade900]
           : [_asrLater_08, Colors.yellow.shade900];
     } else if (z == Z.Ghurub) {
@@ -422,7 +422,7 @@ class Athan {
   }
 
   Z getCurrZaman(DateTime date) {
-    final ActiveQuestsController c = ActiveQuestsController.to;
+    final ActiveQuestsC activeQuestC = ActiveQuestsC.to;
 
     if (date.isAfter(_fajrTomorrow_14)) {
       return Z.Fajr_Tomorrow;
@@ -436,9 +436,9 @@ class Athan {
       return Z.Maghrib;
     } else if (date.isAfter(_karahatAdkharSunSetting_09)) {
       return Z.Ghurub;
-    } else if (!c.salahAsrEarlier && date.isAfter(_asrLater_08)) {
+    } else if (!activeQuestC.salahAsrEarlier && date.isAfter(_asrLater_08)) {
       return Z.Asr;
-    } else if (c.salahAsrEarlier && date.isAfter(_asrEarly_07)) {
+    } else if (activeQuestC.salahAsrEarlier && date.isAfter(_asrEarly_07)) {
       return Z.Asr;
     } else if (date.isAfter(_dhuhr_06)) {
       return Z.Dhuhr;

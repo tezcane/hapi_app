@@ -4,7 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flare_dart/math/aabb.dart' as flare;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:hapi/tarikh/tarikh_controller.dart';
+import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 import 'package:nima/nima/math/aabb.dart' as nima;
 
@@ -115,7 +115,7 @@ class MenuVignetteRenderObject extends RenderBox {
     updateRendering();
   }
 
-  TimelineEntry? get _timelineEntry => TarikhController.tih.getById(_assetId!);
+  TimelineEntry? get _timelineEntry => TarikhC.tih.getById(_assetId!);
 
   @override
   bool get sizedByParent => true;

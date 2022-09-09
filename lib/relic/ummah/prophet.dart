@@ -1,9 +1,9 @@
 import 'package:get/get.dart';
-import 'package:hapi/controllers/time_controller.dart';
-import 'package:hapi/main_controller.dart';
+import 'package:hapi/controller/time_c.dart';
+import 'package:hapi/main_c.dart';
 import 'package:hapi/quran/quran.dart';
 import 'package:hapi/relic/relic.dart';
-import 'package:hapi/tarikh/tarikh_controller.dart';
+import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
 const String _ = ' '; // space/gap
@@ -85,7 +85,7 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Adam',
     startMs: -3400000,
     endMs: -3399050,
-    asset: await TarikhController.tih.loadImageAsset(
+    asset: await TarikhC.tih.loadImageAsset(
         'assets/images/anbiya/${RELIC_ID.Prophet_Adam.name.split('_')[1]}.png',
         528,
         528,
@@ -120,7 +120,7 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Idris',
     startMs: 0,
     endMs: 0,
-    asset: await TarikhController.tih.loadImageAsset(
+    asset: await TarikhC.tih.loadImageAsset(
         'assets/images/anbiya/${RELIC_ID.Prophet_Idris.name.split('_')[1]}.png',
         528,
         528,
@@ -154,7 +154,7 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Nuh',
     startMs: 0,
     endMs: 0,
-    asset: await TarikhController.tih.loadImageAsset(
+    asset: await TarikhC.tih.loadImageAsset(
         'assets/images/anbiya/${RELIC_ID.Prophet_Nuh.name.split('_')[1]}.png',
         528,
         528,
@@ -188,7 +188,7 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Hud',
     startMs: -2400,
     endMs: 0,
-    asset: await TarikhController.tih.loadImageAsset(
+    asset: await TarikhC.tih.loadImageAsset(
         'assets/images/anbiya/${RELIC_ID.Prophet_Hud.name.split('_')[1]}.png',
         528,
         528,
@@ -224,7 +224,7 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Salih',
     startMs: 0,
     endMs: 0,
-    asset: await TarikhController.tih.loadImageAsset(
+    asset: await TarikhC.tih.loadImageAsset(
         'assets/images/anbiya/${RELIC_ID.Prophet_Salih.name.split('_')[1]}.png',
         528,
         528,
@@ -260,7 +260,7 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Ibrahim',
     startMs: 0,
     endMs: 0,
-    asset: await TarikhController.tih.loadImageAsset(
+    asset: await TarikhC.tih.loadImageAsset(
         'assets/images/anbiya/${RELIC_ID.Prophet_Ibrahim.name.split('_')[1]}.png',
         528,
         528,
@@ -305,7 +305,7 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Lut',
     startMs: 0,
     endMs: 0,
-    asset: await TarikhController.tih.loadImageAsset(
+    asset: await TarikhC.tih.loadImageAsset(
         'assets/images/anbiya/${RELIC_ID.Prophet_Lut.name.split('_')[1]}.png',
         528,
         528,
@@ -349,7 +349,7 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Ismail',
     startMs: -1800,
     endMs: -1664,
-    asset: await TarikhController.tih.loadImageAsset(
+    asset: await TarikhC.tih.loadImageAsset(
         'assets/images/anbiya/${RELIC_ID.Prophet_Ismail.name.split('_')[1]}.png',
         528,
         528,
@@ -391,7 +391,7 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Ishaq',
     startMs: 0,
     endMs: 0,
-    asset: await TarikhController.tih.loadImageAsset(
+    asset: await TarikhC.tih.loadImageAsset(
         'assets/images/anbiya/${RELIC_ID.Prophet_Ishaq.name.split('_')[1]}.png',
         528,
         528,
@@ -435,7 +435,7 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Yaqub',
     startMs: 0,
     endMs: 0,
-    asset: await TarikhController.tih.loadImageAsset(
+    asset: await TarikhC.tih.loadImageAsset(
         'assets/images/anbiya/${RELIC_ID.Prophet_Yaqub.name.split('_')[1]}.png',
         528,
         528,
@@ -475,7 +475,7 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Yusuf',
     startMs: 0,
     endMs: 0,
-    asset: await TarikhController.tih.loadImageAsset(
+    asset: await TarikhC.tih.loadImageAsset(
         'assets/images/anbiya/${RELIC_ID.Prophet_Yusuf.name.split('_')[1]}.png',
         528,
         528,
@@ -513,7 +513,7 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Ayyub',
     startMs: 0,
     endMs: 0,
-    asset: await TarikhController.tih.loadImageAsset(
+    asset: await TarikhC.tih.loadImageAsset(
         'assets/images/anbiya/${RELIC_ID.Prophet_Ayyub.name.split('_')[1]}.png',
         528,
         528,
@@ -547,7 +547,7 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Shuayb',
     startMs: 0,
     endMs: 0,
-    asset: await TarikhController.tih.loadImageAsset(
+    asset: await TarikhC.tih.loadImageAsset(
         'assets/images/anbiya/${RELIC_ID.Prophet_Shuayb.name.split('_')[1]}.png',
         528,
         528,
@@ -585,7 +585,7 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Musa',
     startMs: -1300,
     endMs: -1200,
-    asset: await TarikhController.tih.loadImageAsset(
+    asset: await TarikhC.tih.loadImageAsset(
         'assets/images/anbiya/${RELIC_ID.Prophet_Musa.name.split('_')[1]}.png',
         528,
         528,
@@ -627,7 +627,7 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Harun',
     startMs: -1303,
     endMs: -1200,
-    asset: await TarikhController.tih.loadImageAsset(
+    asset: await TarikhC.tih.loadImageAsset(
         'assets/images/anbiya/${RELIC_ID.Prophet_Harun.name.split('_')[1]}.png',
         528,
         528,
@@ -665,7 +665,7 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Dhul-Kifl',
     startMs: -600, // TODO Buddha: 6th or 5th century BCE
     endMs: -500,
-    asset: await TarikhController.tih.loadImageAsset(
+    asset: await TarikhC.tih.loadImageAsset(
         'assets/images/anbiya/${RELIC_ID.Prophet_DhulKifl.name.split('_')[1]}.png',
         528,
         528,
@@ -703,7 +703,7 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Dawud',
     startMs: -1000,
     endMs: -971,
-    asset: await TarikhController.tih.loadImageAsset(
+    asset: await TarikhC.tih.loadImageAsset(
         'assets/images/anbiya/${RELIC_ID.Prophet_Dawud.name.split('_')[1]}.png',
         528,
         528,
@@ -741,7 +741,7 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Suleyman',
     startMs: -971,
     endMs: -931,
-    asset: await TarikhController.tih.loadImageAsset(
+    asset: await TarikhC.tih.loadImageAsset(
         'assets/images/anbiya/${RELIC_ID.Prophet_Suleyman.name.split('_')[1]}.png',
         528,
         528,
@@ -776,7 +776,7 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Ilyas',
     startMs: 0,
     endMs: 0,
-    asset: await TarikhController.tih.loadImageAsset(
+    asset: await TarikhC.tih.loadImageAsset(
         'assets/images/anbiya/${RELIC_ID.Prophet_Ilyas.name.split('_')[1]}.png',
         528,
         528,
@@ -815,7 +815,7 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Alyasa',
     startMs: 0,
     endMs: 0,
-    asset: await TarikhController.tih.loadImageAsset(
+    asset: await TarikhC.tih.loadImageAsset(
         'assets/images/anbiya/${RELIC_ID.Prophet_Alyasa.name.split('_')[1]}.png',
         528,
         528,
@@ -858,7 +858,7 @@ Future<List<Prophet>> initProphets() async {
     startMs:
         -800, // uncertain (8th century BCE or post-exilic period) in Wikipedia
     endMs: 0,
-    asset: await TarikhController.tih.loadImageAsset(
+    asset: await TarikhC.tih.loadImageAsset(
         'assets/images/anbiya/${RELIC_ID.Prophet_Yunus.name.split('_')[1]}.png',
         528,
         528,
@@ -900,7 +900,7 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Zakariya',
     startMs: 0,
     endMs: 0,
-    asset: await TarikhController.tih.loadImageAsset(
+    asset: await TarikhC.tih.loadImageAsset(
         'assets/images/anbiya/${RELIC_ID.Prophet_Zakariya.name.split('_')[1]}.png',
         528,
         528,
@@ -939,7 +939,7 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Yahya',
     startMs: -100,
     endMs: 28, // AD 28–36
-    asset: await TarikhController.tih.loadImageAsset(
+    asset: await TarikhC.tih.loadImageAsset(
         'assets/images/anbiya/${RELIC_ID.Prophet_Yahya.name.split('_')[1]}.png',
         528,
         528,
@@ -978,7 +978,7 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Isa',
     startMs: -4,
     endMs: 30,
-    asset: await TarikhController.tih.loadImageAsset(
+    asset: await TarikhC.tih.loadImageAsset(
         'assets/images/anbiya/${RELIC_ID.Prophet_Isa.name.split('_')[1]}.png',
         528,
         528,
@@ -1025,7 +1025,7 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Muhammad',
     startMs: 570,
     endMs: 632,
-    asset: await TarikhController.tih.loadImageAsset(
+    asset: await TarikhC.tih.loadImageAsset(
         'assets/images/anbiya/${RELIC_ID.Prophet_Muhammad.name.split('_')[1]}.png',
         528,
         528,

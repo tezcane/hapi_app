@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:hapi/components/form_input_field_with_icon.dart';
-import 'package:hapi/components/form_vertical_spacing.dart';
-import 'package:hapi/components/label_button.dart';
-import 'package:hapi/components/logo_graphic_header.dart';
-import 'package:hapi/components/primary_button.dart';
-import 'package:hapi/helpers/validator.dart';
-import 'package:hapi/onboard/auth/auth_controller.dart';
+import 'package:hapi/component/form_input_field_with_icon.dart';
+import 'package:hapi/component/form_vertical_spacing.dart';
+import 'package:hapi/component/label_button.dart';
+import 'package:hapi/component/logo_graphic_header.dart';
+import 'package:hapi/component/primary_button.dart';
+import 'package:hapi/helper/validator.dart';
+import 'package:hapi/onboard/auth/auth_c.dart';
 import 'package:hapi/onboard/auth/sign_in_ui.dart';
 
 /// allows user to create a new account.
 class SignUpUI extends StatelessWidget {
-  final AuthController authController = AuthController.to;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
@@ -32,35 +31,33 @@ class SignUpUI extends StatelessWidget {
                   LogoGraphicHeader(),
                   const SizedBox(height: 48.0),
                   FormInputFieldWithIcon(
-                    controller: authController.nameController,
+                    controller: AuthC.to.nameController,
                     iconPrefix: Icons.person,
                     trKey: 'auth.nameFormField',
                     validator: Validator().name,
                     onChanged: (value) {},
-                    onSaved: (value) =>
-                        authController.nameController.text = value!,
+                    onSaved: (value) => AuthC.to.nameController.text = value!,
                   ),
                   const FormVerticalSpace(),
                   FormInputFieldWithIcon(
-                    controller: authController.emailController,
+                    controller: AuthC.to.emailController,
                     iconPrefix: Icons.email,
                     trKey: 'auth.emailFormField',
                     validator: Validator().email,
                     keyboardType: TextInputType.emailAddress,
                     onChanged: (value) {},
-                    onSaved: (value) =>
-                        authController.emailController.text = value!,
+                    onSaved: (value) => AuthC.to.emailController.text = value!,
                   ),
                   const FormVerticalSpace(),
                   FormInputFieldWithIcon(
-                    controller: authController.passwordController,
+                    controller: AuthC.to.passwordController,
                     iconPrefix: Icons.lock,
                     trKey: 'auth.passwordFormField',
                     validator: Validator().password,
                     obscureText: true,
                     onChanged: (value) {},
                     onSaved: (value) =>
-                        authController.passwordController.text = value!,
+                        AuthC.to.passwordController.text = value!,
                     maxLines: 1,
                   ),
                   const FormVerticalSpace(),
@@ -70,7 +67,7 @@ class SignUpUI extends StatelessWidget {
                         if (_formKey.currentState!.validate()) {
                           SystemChannels.textInput.invokeMethod(
                               'TextInput.hide'); //to hide the keyboard - if any
-                          authController.registerWithEmailAndPassword(context);
+                          AuthC.to.registerWithEmailAndPassword(context);
                         }
                       }),
                   const FormVerticalSpace(),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hapi/main_controller.dart';
-import 'package:hapi/menu/sub_page.dart';
-import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/main_c.dart';
+import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_list_ui.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/theme_list_ui.dart';
+import 'package:hapi/menu/sub_page.dart';
 
 class SettingsUI extends StatelessWidget {
   @override
@@ -47,7 +47,7 @@ class SettingsUI extends StatelessWidget {
                     tag: 'UPDATE PROFILE',
                     child: ElevatedButton.icon(
                       onPressed: () =>
-                          MenuController.to.pushSubPage(SubPage.Update_Profile),
+                          MenuC.to.pushSubPage(SubPage.Update_Profile),
                       icon: const Icon(Icons.perm_identity_outlined),
                       label: T('i.Update Profile', null, w: wm(context)),
                     ),

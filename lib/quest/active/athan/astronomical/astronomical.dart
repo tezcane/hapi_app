@@ -1,7 +1,7 @@
 import 'dart:math';
 
-import 'package:hapi/helpers/cord.dart';
-import 'package:hapi/helpers/math_utils.dart';
+import 'package:hapi/helper/cord.dart';
+import 'package:hapi/helper/math_utils.dart';
 
 class Astronomical {
   /* The geometric mean longitude of the sun in degrees. */

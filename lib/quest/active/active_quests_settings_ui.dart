@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/components/toggle_switch.dart';
-import 'package:hapi/main_controller.dart';
+import 'package:hapi/component/toggle_switch.dart';
+import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
-import 'package:hapi/quest/active/active_quests_controller.dart';
+import 'package:hapi/quest/active/active_quests_c.dart';
 import 'package:hapi/quest/active/athan/calculation_method.dart';
 import 'package:hapi/quest/active/athan/z.dart';
 
@@ -60,7 +60,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<ActiveQuestsController>(
+    return GetBuilder<ActiveQuestsC>(
       builder: (c) {
         return Column(
           children: [

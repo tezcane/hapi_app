@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
-import 'package:hapi/quest/active/active_quests_ajr_controller.dart';
+import 'package:hapi/quest/active/active_quests_ajr_c.dart';
 import 'package:hapi/quest/active/athan/z.dart';
 import 'package:hapi/quest/active/sun_mover/multi_color_ring.dart';
 
@@ -14,7 +14,7 @@ class QuestRing extends StatelessWidget {
   Map<Z, ColorSlice> _buildQuestRingSlices() {
     Map<Z, ColorSlice> questRingSlices = {};
 
-    Map<Z, int> questRingColors = ActiveQuestsAjrController.to.questRingColors;
+    Map<Z, int> questRingColors = ActiveQuestsAjrC.to.questRingColors;
 
     Z z;
     double elapsedSecs;

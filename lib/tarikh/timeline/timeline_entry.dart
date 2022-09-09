@@ -3,8 +3,8 @@ import 'dart:ui';
 import 'package:flare_dart/math/aabb.dart' as flare;
 import 'package:flare_flutter/flare.dart' as flare;
 import 'package:get/get.dart';
-import 'package:hapi/controllers/time_controller.dart';
-import 'package:hapi/main_controller.dart';
+import 'package:hapi/controller/time_c.dart';
+import 'package:hapi/main_c.dart';
 import 'package:nima/nima.dart' as nima;
 import 'package:nima/nima/animation/actor_animation.dart' as nima;
 import 'package:nima/nima/math/aabb.dart' as nima;
@@ -225,9 +225,9 @@ class TimelineEntry {
 
     if (eventYear <= 0) {
       adBc = ' ${'i.BC'.tr} (';
-      trValYearsAgo = eventYear.abs() + TimeController.thisYear;
+      trValYearsAgo = eventYear.abs() + TimeC.thisYear;
     } else {
-      trValYearsAgo = TimeController.thisYear - eventYear;
+      trValYearsAgo = TimeC.thisYear - eventYear;
     }
     return cns(eventYear.abs().toStringAsFixed(0)) +
         adBc +

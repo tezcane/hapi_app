@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/main_controller.dart';
+import 'package:hapi/main_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/quest/quests_ui.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_controller.dart';
 import 'package:hapi/relic/relics_ui.dart';
 import 'package:hapi/tarikh/tarikh_ui.dart';
 
@@ -86,13 +86,13 @@ extension EnumUtil on NavPage {
 
   List<dynamic> get ltrTabList {
     switch (this) {
-    // case (NavPage.Ajr):
-    // case (NavPage.Dua):
-    // case (NavPage.Hadith):
-    // case (NavPage.Quran):
+      // case (NavPage.Ajr):
+      // case (NavPage.Dua):
+      // case (NavPage.Hadith):
+      // case (NavPage.Quran):
       case (NavPage.Tarikh):
         return TARIKH_TAB.values;
-    // case (NavPage.Tools):
+      // case (NavPage.Tools):
       case (NavPage.Relics):
         return RELIC_TAB.values;
       case (NavPage.Quests):
@@ -104,6 +104,5 @@ extension EnumUtil on NavPage {
 
   List<dynamic> get rtlTabList => List<dynamic>.from(ltrTabList.reversed);
 
-  List<dynamic> get tabEnumList =>
-      LanguageController.to.isRTL ? rtlTabList : ltrTabList;
+  List<dynamic> get tabEnumList => LanguageC.to.isRTL ? rtlTabList : ltrTabList;
 }

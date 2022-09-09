@@ -1,10 +1,10 @@
 // import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:hapi/main_controller.dart';
+import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/relic/relic.dart';
-import 'package:hapi/relic/relic_controller.dart';
+import 'package:hapi/relic/relic_c.dart';
 
 class RelicSet<Relic> {
   const RelicSet({
@@ -22,8 +22,8 @@ class RelicSet<Relic> {
 // ignore: must_be_immutable
 class RelicSetUI extends StatelessWidget {
   RelicSetUI(this.relicSet) {
-    tilesPerRow = RelicController.to.getTilesPerRow(relicSet.relicType);
-    showTileText = RelicController.to.getShowTileText(relicSet.relicType);
+    tilesPerRow = RelicC.to.getTilesPerRow(relicSet.relicType);
+    showTileText = RelicC.to.getShowTileText(relicSet.relicType);
   }
   final RelicSet relicSet;
 
@@ -67,7 +67,7 @@ class RelicSetUI extends StatelessWidget {
                   RELIC_TYPE relicType = relicSet.relicType;
                   if (tilesPerRow < 11) {
                     tilesPerRow += 1;
-                    RelicController.to.setTilesPerRow(relicType, tilesPerRow);
+                    RelicC.to.setTilesPerRow(relicType, tilesPerRow);
                   }
                 },
                 child: SizedBox(
@@ -84,7 +84,7 @@ class RelicSetUI extends StatelessWidget {
                 onTap: () {
                   if (tilesPerRow > 1) {
                     tilesPerRow -= 1;
-                    RelicController.to.setTilesPerRow(relicType, tilesPerRow);
+                    RelicC.to.setTilesPerRow(relicType, tilesPerRow);
                   }
                 },
                 child: SizedBox(
@@ -101,7 +101,7 @@ class RelicSetUI extends StatelessWidget {
                 onTap: () {
                   RELIC_TYPE relicType = relicSet.relicType;
                   showTileText = !showTileText;
-                  RelicController.to.setShowTileText(relicType, showTileText);
+                  RelicC.to.setShowTileText(relicType, showTileText);
                 },
                 child: SizedBox(
                   width: 45,

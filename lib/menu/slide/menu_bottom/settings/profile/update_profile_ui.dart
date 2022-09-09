@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:hapi/components/form_input_field_with_icon.dart';
-import 'package:hapi/components/form_vertical_spacing.dart';
-import 'package:hapi/components/label_button.dart';
-import 'package:hapi/components/logo_graphic_header.dart';
-import 'package:hapi/components/primary_button.dart';
-import 'package:hapi/controllers/text_update_controller.dart';
-import 'package:hapi/helpers/validator.dart';
-import 'package:hapi/main_controller.dart';
-import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/component/form_input_field_with_icon.dart';
+import 'package:hapi/component/form_vertical_spacing.dart';
+import 'package:hapi/component/label_button.dart';
+import 'package:hapi/component/logo_graphic_header.dart';
+import 'package:hapi/component/primary_button.dart';
+import 'package:hapi/controller/text_update_c.dart';
+import 'package:hapi/helper/validator.dart';
+import 'package:hapi/main_c.dart';
+import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/sub_page.dart';
-import 'package:hapi/onboard/auth/auth_controller.dart';
+import 'package:hapi/onboard/auth/auth_c.dart';
 import 'package:hapi/onboard/user_model.dart';
 
 /// contains the settings screen for setting the theme and language and some user settings.
 class UpdateProfileUI extends StatelessWidget {
   static final _formKey1 = GlobalKey<FormState>();
   static final _formKey2 = GlobalKey<FormState>();
-  final AuthController c = AuthController.to;
+  final AuthC c = AuthC.to;
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +26,8 @@ class UpdateProfileUI extends StatelessWidget {
       subPage: SubPage.Update_Profile,
       child: Form(
         key: _formKey1,
-        child: GetBuilder<TextUpdateController>(
-            init: TextUpdateController(), // init fresh every time
+        child: GetBuilder<TextUpdateC>(
+            init: TextUpdateC(), // init fresh every time
             builder: (tu) {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24.0),
@@ -118,12 +118,12 @@ class UpdateProfileUI extends StatelessWidget {
                         const FormVerticalSpace(),
                         LabelButton(
                             trKey: 'auth.resetPasswordLabelButton',
-                            onPressed: () => MenuController.to
-                                .pushSubPage(SubPage.Reset_Password)),
+                            onPressed: () =>
+                                MenuC.to.pushSubPage(SubPage.Reset_Password)),
                         const SizedBox(height: 400), //hide sign out down page
                         Center(
                           child: ElevatedButton(
-                            onPressed: () => MainController.to.signOut(),
+                            onPressed: () => MainC.to.signOut(),
                             child: T('settings.signOut', null, w: wm(context)),
                           ),
                         ),
@@ -142,7 +142,7 @@ class UpdateProfileUI extends StatelessWidget {
     BuildContext context,
     UserModel updatedUser,
     String oldEmail,
-    TextUpdateController tu,
+    TextUpdateC tu,
   ) {
     final TextEditingController _password = TextEditingController();
     return showDialog<void>(

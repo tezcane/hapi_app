@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/controllers/nav_page_controller.dart';
-import 'package:hapi/menu/menu_controller.dart';
+import 'package:hapi/controller/nav_page_c.dart';
+import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 
@@ -53,10 +53,10 @@ class MenuRight extends StatefulWidget {
 
 class _MenuRightState extends State<MenuRight> {
   void _displayMenuDragGesture(DragEndDetails endDetails) {
-    if (!MenuController.to.isMenuShowing) {
+    if (!MenuC.to.isMenuShowing) {
       final velocity = endDetails.primaryVelocity!;
       if (velocity < 0) {
-        MenuController.to.showMenu();
+        MenuC.to.showMenu();
       }
     }
   }
@@ -93,23 +93,23 @@ class _MenuRightState extends State<MenuRight> {
                 // top centers nav buttons, bottom allows tapping verticle bar
                 padding: EdgeInsets.only(top: itemSize * sm, bottom: 88),
                 child: AnimatedBuilder(
-                  animation: MenuController.to.acNavMenu,
+                  animation: MenuC.to.acNavMenu,
                   builder: (context, child) => Stack(
                     children: [
                       /// dismiss the Menu when user taps outside the widget.
-                      if (MenuController.to.acNavMenu.value < 1 &&
-                          MenuController.to.isMenuShowing &&
-                          MenuController.to.isMenuShowingNav)
+                      if (MenuC.to.acNavMenu.value < 1 &&
+                          MenuC.to.isMenuShowing &&
+                          MenuC.to.isMenuShowingNav)
                         Align(
                           child: GestureDetector(
-                            onTap: () => MenuController.to.hideMenu(),
-                            onLongPress: () => MenuController.to.hideMenu(),
+                            onTap: () => MenuC.to.hideMenu(),
+                            onLongPress: () => MenuC.to.hideMenu(),
                           ),
                         ),
 
                       /// handle drag out of menu from right side of screen
                       if (_enableEdgeDragGesture &&
-                          MenuController.to.acNavMenu.isCompleted)
+                          MenuC.to.acNavMenu.isCompleted)
                         //!c.isMenuShowing()) // hasn't been flagged yet
                         Align(
                           alignment: Alignment.bottomRight, // was centerRight
@@ -123,14 +123,14 @@ class _MenuRightState extends State<MenuRight> {
 
                       /// Show Menu:
                       for (NavPage navPage in NavPage.values)
-                        GetBuilder<NavPageController>(
+                        GetBuilder<NavPageC>(
                           builder: (c) {
                             return MenuItem(
                               index: navPage.index,
                               length: NavPage.values.length,
                               width: kSideMenuWidth,
                               height: itemSize,
-                              acNavMenu: MenuController.to.acNavMenu,
+                              acNavMenu: MenuC.to.acNavMenu,
                               curve: _kCurveAnimation,
                               color: (navPage == widget.initNavPage)
                                   ? _kButtonColorSelected
@@ -141,14 +141,14 @@ class _MenuRightState extends State<MenuRight> {
                                             c.getLastIdx(navPage)] !=
                                         null) {
                                   // same page selected and it has settings
-                                  MenuController.to.hideMenuNav();
+                                  MenuC.to.hideMenuNav();
                                 } else if (navPage == widget.initNavPage) {
                                   // same page selected
-                                  MenuController.to.hideMenu();
+                                  MenuC.to.hideMenu();
                                 } else {
                                   // selected new nav page
-                                  MenuController.to.hideMenu();
-                                  MenuController.to.navigateToNavPage(navPage);
+                                  MenuC.to.hideMenu();
+                                  MenuC.to.navigateToNavPage(navPage);
                                 }
                               },
                               child: widget.items[navPage.index],

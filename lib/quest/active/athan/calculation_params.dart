@@ -1,4 +1,4 @@
-import 'package:hapi/main_controller.dart';
+import 'package:hapi/main_c.dart';
 import 'package:hapi/quest/active/athan/calculation_method.dart';
 
 /// Holds all low level parameters needed to calculate salah and Zaman times. It

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/controllers/nav_page_controller.dart';
+import 'package:hapi/controller/nav_page_c.dart';
 import 'package:hapi/menu/bottom_bar.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 
@@ -19,7 +19,7 @@ class BottomBarMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<NavPageController>(builder: (c) {
+    return GetBuilder<NavPageC>(builder: (c) {
       if (initNeeded) {
         initNeeded = false;
         _initPageControllerAndBottomBar(c.getLastIdx(navPage));
@@ -65,15 +65,15 @@ class BottomBarMenu extends StatelessWidget {
       if (bottomBarItems[newIdx].onPressed != null) {
         bottomBarItems[newIdx].onPressed!.call();
       }
-      NavPageController.to.setLastIdx(navPage, newIdx);
+      NavPageC.to.setLastIdx(navPage, newIdx);
     } else {
-      NavPageController.to.update(); // to flash intermediate bottom bar select
+      NavPageC.to.update(); // to flash intermediate bottom bar select
     }
   }
 
   /// Called only when bottom bar tab is tapped
   _onBottomBarTabTapped(int newIdx) {
-    if (newIdx == NavPageController.to.getLastIdx(navPage)) return; // we r here
+    if (newIdx == NavPageC.to.getLastIdx(navPage)) return; // we r here
     movingToIdx = newIdx;
     _handlePostFrameAnimation(newIdx); // needed for stateless widget to work
   }
@@ -88,7 +88,7 @@ class BottomBarMenu extends StatelessWidget {
         duration: const Duration(milliseconds: 750),
       ); // this animates to the page on tab press
       // jumpToPage/animateToPage triggers onPageChanged, so don't need:
-      //NavPageController.to.setLastIdx(widget.navPage, newIdx);
+      //NavPageC.to.setLastIdx(widget.navPage, newIdx);
     });
   }
 }
