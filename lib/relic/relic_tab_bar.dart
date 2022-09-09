@@ -121,16 +121,14 @@ class _RelicTabBarState extends State<RelicTabBar>
   }
 
   /// This is called at init and also when user taps a tab on the tab bar
-  void animateAndScrollTo(int index) async {
-    tabController.animateTo(index);
-    scrollController.scrollToIndex(
-      index,
-      preferPosition: AutoScrollPosition.begin,
-    );
+  void animateAndScrollTo(int newIdx) async {
+    tabController.animateTo(newIdx);
+    scrollController.scrollToIndex(newIdx,
+        preferPosition: AutoScrollPosition.begin);
 
-    if (lastSelectedTabIdx != index) {
-      lastSelectedTabIdx = index;
-      RelicController.to.setLastSelectedTab(widget.relicTab, index);
+    if (lastSelectedTabIdx != newIdx) {
+      lastSelectedTabIdx = newIdx;
+      RelicController.to.setLastSelectedTab(widget.relicTab, newIdx);
     }
   }
 }
