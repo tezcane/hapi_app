@@ -48,7 +48,7 @@ class RelicController extends GetxHapi {
       relics[relicType]!.relics as List<Relic>;
 
   int getTilesPerRow(RELIC_TYPE relicType) =>
-      s.rd('tilesPerRow${relicType.index}') ?? 4; // 4 is default for all relics
+      s.rd('tilesPerRow${relicType.index}') ?? 5; // default for all relics
   setTilesPerRow(RELIC_TYPE relicType, int newVal) {
     s.wr('tilesPerRow${relicType.index}', newVal);
     update();

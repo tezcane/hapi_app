@@ -27,7 +27,7 @@ class RelicSetUI extends StatelessWidget {
   }
   final RelicSet relicSet;
 
-  int tilesPerRow = 4;
+  int tilesPerRow = 5;
   bool showTileText = true;
 
   @override
@@ -38,9 +38,9 @@ class RelicSetUI extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           _relicTileHeader(context),
-          const SizedBox(height: 10),
+          const SizedBox(height: 8),
           _relicTileList(context),
-          const SizedBox(height: 5),
+          const SizedBox(height: 9),
         ],
       ),
     );
@@ -125,8 +125,8 @@ class RelicSetUI extends StatelessWidget {
     return Wrap(
       // direction: Axis.horizontal <-- TODO use this for landscape/portrait mode?
       alignment: WrapAlignment.center, // TY!, centers modules remainders
-      spacing: 4, // NOTE must subtract this from _relicTile() or overflows
-      runSpacing: 6, // gap under a row of tiles
+      spacing: 4, // NOTE: must subtract this from _relicTile() or overflows
+      runSpacing: showTileText ? 6 : 2.5, // gap under a row of tiles
       children: List.generate(
         relicSet.relics.length,
         (index) {
@@ -138,11 +138,11 @@ class RelicSetUI extends StatelessWidget {
   }
 
   Widget _relicTile({required BuildContext context, required Relic relic}) {
-    final double wTile = w(context) / tilesPerRow - 4; //-4 for Wrap.spacing
+    final double wTile = w(context) / tilesPerRow - 4; // -4 for Wrap.spacing!
 
     // when tiles get tiny we force huge height to take up all width
-    final double hLabel = tilesPerRow > 6 ? wTile * .45 : wTile * .25;
-    final double hTile = wTile + (showTileText ? hLabel : 0);
+    final double hTextHeight = tilesPerRow > 8 ? wTile * .28 : wTile * .22;
+    final double hTile = wTile + (showTileText ? hTextHeight : 0);
 
     return SizedBox(
       width: wTile,
@@ -161,18 +161,7 @@ class RelicSetUI extends StatelessWidget {
               ),
             ),
           ),
-          if (showTileText)
-            SizedBox(
-              width: wTile,
-              height: hLabel,
-              child: T(
-                relic.trValTitle,
-                tsN,
-                w: wTile,
-                h: hLabel,
-                alignment: Alignment.topCenter,
-              ),
-            ),
+          if (showTileText) T(relic.trValTitle, tsN, w: wTile, h: hTextHeight),
         ],
       ),
     );
