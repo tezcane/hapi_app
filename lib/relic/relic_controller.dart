@@ -4,6 +4,7 @@ import 'package:hapi/main_controller.dart';
 import 'package:hapi/onboard/auth/auth_controller.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_set.dart';
+import 'package:hapi/relic/relics_ui.dart';
 import 'package:hapi/relic/ummah/prophet.dart';
 import 'package:hapi/services/db.dart';
 
@@ -51,7 +52,7 @@ class RelicController extends GetxHapi {
   //   return s.rd('tilesPerRow${relicType.index}') ?? 4; // 4 is default for all
   // }
   int getTilesPerRow(RELIC_TYPE relicType) =>
-      s.rd('tilesPerRow${relicType.index}') ?? 4; // 4 is default for all
+      s.rd('tilesPerRow${relicType.index}') ?? 4; // 4 is default for all relics
   setTilesPerRow(RELIC_TYPE relicType, int newVal) {
     s.wr('tilesPerRow${relicType.index}', newVal);
     update();
@@ -68,5 +69,12 @@ class RelicController extends GetxHapi {
   _setShowTileHeader(RELIC_TYPE relicType, bool newVal) {
     s.wr('showTileHeader${relicType.index}', newVal);
     updateOnThread1Ms();
+  }
+
+  int getLastSelectedTab(RELIC_TAB relicTab) =>
+      s.rd('selectedTab${relicTab.index}') ?? 0;
+  setLastSelectedTab(RELIC_TAB relicTab, int newVal) {
+    s.wr('selectedTab${relicTab.index}', newVal);
+    //update();
   }
 }
