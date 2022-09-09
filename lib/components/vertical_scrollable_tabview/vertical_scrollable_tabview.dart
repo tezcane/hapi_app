@@ -14,10 +14,10 @@ class VerticalScrollableTabBarStatus {
   }
 }
 
-/// VerticalScrollPosition = is ann Animation style from scroll_to_index plugin's preferPosition,
-/// It's show the item position in listView.builder
-/// 用來設定動畫狀態的（參考 scroll_to_index 的 preferPosition 屬性）
-enum VerticalScrollPosition { begin, middle, end }
+// /// VerticalScrollPosition = is ann Animation style from scroll_to_index plugin's preferPosition,
+// /// It's show the item position in listView.builder
+// /// 用來設定動畫狀態的（參考 scroll_to_index 的 preferPosition 屬性）
+// enum VerticalScrollPosition { begin, middle, end }
 
 class VerticalScrollableTabView extends StatefulWidget {
   /// TabBar Controller to let widget listening TabBar changed
@@ -32,9 +32,9 @@ class VerticalScrollableTabView extends StatefulWidget {
   /// A callback 用來回傳一個 _listItemData 裡面的 Object 型態和 ListView.Builder 的 index
   final Widget Function(dynamic aaa, int index) _eachItemChild;
 
-  /// VerticalScrollPosition = is ann Animation style from scroll_to_index,
-  /// It's show the item position in listView.builder
-  final VerticalScrollPosition _verticalScrollPosition;
+  // /// VerticalScrollPosition = is ann Animation style from scroll_to_index,
+  // /// It's show the item position in listView.builder
+  // final VerticalScrollPosition _verticalScrollPosition;
 
   /// TODO Horizontal ScrollDirection
   // final Axis _axisOrientation;
@@ -50,8 +50,8 @@ class VerticalScrollableTabView extends StatefulWidget {
     /// TODO Horizontal ScrollDirection
     // required Axis scrollDirection,
     required Widget Function(dynamic aaa, int index) eachItemChild,
-    VerticalScrollPosition verticalScrollPosition =
-        VerticalScrollPosition.begin,
+    // VerticalScrollPosition verticalScrollPosition =
+    //     VerticalScrollPosition.begin,
     required List<Widget> slivers,
   })  : _tabController = tabController,
         _listItemData = listItemData,
@@ -59,7 +59,7 @@ class VerticalScrollableTabView extends StatefulWidget {
         ///TODO Horizontal ScrollDirection
         // _axisOrientation = scrollDirection,
         _eachItemChild = eachItemChild,
-        _verticalScrollPosition = verticalScrollPosition,
+        //_verticalScrollPosition = verticalScrollPosition,
         _slivers = slivers;
 
   @override
@@ -169,23 +169,23 @@ class _VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
     // Scroll 到 index 並使用 begin 的模式，結束後，把 pauseRectGetterIndex 設為 false 暫停執行 ScrollNotification
     pauseRectGetterIndex = true;
     widget._tabController.animateTo(index);
-    switch (widget._verticalScrollPosition) {
-      case VerticalScrollPosition.begin:
-        scrollController
-            .scrollToIndex(index, preferPosition: AutoScrollPosition.begin)
-            .then((value) => pauseRectGetterIndex = false);
-        break;
-      case VerticalScrollPosition.middle:
-        scrollController
-            .scrollToIndex(index, preferPosition: AutoScrollPosition.middle)
-            .then((value) => pauseRectGetterIndex = false);
-        break;
-      case VerticalScrollPosition.end:
-        scrollController
-            .scrollToIndex(index, preferPosition: AutoScrollPosition.end)
-            .then((value) => pauseRectGetterIndex = false);
-        break;
-    }
+    // switch (widget._verticalScrollPosition) {
+    //   case VerticalScrollPosition.begin:
+    scrollController
+        .scrollToIndex(index) //, preferPosition: AutoScrollPosition.begin)
+        .then((value) => pauseRectGetterIndex = false);
+    //     break;
+    //   case VerticalScrollPosition.middle:
+    //     scrollController
+    //         .scrollToIndex(index, preferPosition: AutoScrollPosition.middle)
+    //         .then((value) => pauseRectGetterIndex = false);
+    //     break;
+    //   case VerticalScrollPosition.end:
+    //     scrollController
+    //         .scrollToIndex(index, preferPosition: AutoScrollPosition.end)
+    //         .then((value) => pauseRectGetterIndex = false);
+    //     break;
+    // }
   }
 
   /// onScrollNotification of NotificationListener

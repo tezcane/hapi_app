@@ -75,7 +75,7 @@ class _RelicTabBarState extends State<RelicTabBar>
         body: VerticalScrollableTabView(
           tabController: tabController,
           listItemData: relicSets,
-          verticalScrollPosition: VerticalScrollPosition.begin,
+          // verticalScrollPosition: VerticalScrollPosition.begin,
           eachItemChild: (object, index) => RelicSetUI(object as RelicSet),
           slivers: [
             SliverAppBar(

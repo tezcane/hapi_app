@@ -1,16 +1,10 @@
-//Copyright (C) 2019 Potix Corporation. All Rights Reserved.
-//History: Tue Apr 24 09:17 CST 2019
-// Author: Jerry Chen
-
-library util;
-
 import 'dart:async';
 import 'dart:collection';
 
 import 'package:flutter/animation.dart';
 
 /// used to invoke async functions in order
-Future<T> co<T>(key, FutureOr<T> action()) async {
+Future<T> co<T>(key, FutureOr<T> Function() action) async {
   for (;;) {
     final c = _locks[key];
     if (c == null) break;
@@ -19,7 +13,7 @@ Future<T> co<T>(key, FutureOr<T> action()) async {
     } catch (_) {} //ignore error (so it will continue)
   }
 
-  final c = _locks[key] = new Completer<T>();
+  final c = _locks[key] = Completer<T>();
   void then(T result) {
     final c2 = _locks.remove(key);
     c.complete(result);
@@ -48,7 +42,7 @@ Future<T> co<T>(key, FutureOr<T> action()) async {
   return c.future;
 }
 
-final _locks = new HashMap<dynamic, Completer>();
+final _locks = HashMap<dynamic, Completer>();
 
 /// skip the TickerCanceled exception
 Future catchAnimationCancel(TickerFuture future) async {

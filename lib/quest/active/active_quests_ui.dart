@@ -194,12 +194,12 @@ class _Sliv extends StatelessWidget {
     this.widget, {
     this.minHeight = _Sliv.slivH,
     this.maxHeight = _Sliv.slivH,
-    this.pinned = true,
+    // this.pinned = true,
   });
   final Widget widget;
   final double minHeight;
   final double maxHeight;
-  final bool pinned;
+  // final bool pinned;
 
   static const double slivH = 32.0;
 
@@ -207,7 +207,7 @@ class _Sliv extends StatelessWidget {
   SliverPersistentHeader build(BuildContext context) {
     return SliverPersistentHeader(
       floating: false,
-      pinned: pinned,
+      pinned: true, //pinned,
       delegate: _SliverAppBarDelegate(
         minHeight: minHeight,
         maxHeight: maxHeight,

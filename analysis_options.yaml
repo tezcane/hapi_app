@@ -22,6 +22,7 @@ linter:
   # `// ignore_for_file: name_of_lint` syntax on the line or in the file
   # producing the lint.
   rules:
+    camel_case_types: false # Allows ENUM_TO_LOOK_LIKE_THIS
     constant_identifier_names: false # hide constant/final name warnings
     non_constant_identifier_names: false # hide constant/final name warnings
     use_key_in_widget_constructors: false # hide key to constructor warnings
