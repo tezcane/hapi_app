@@ -27,7 +27,7 @@ class RelicSetUI extends StatelessWidget {
   }
   final RelicSet relicSet;
 
-  int tilesPerRow = 5;
+  int tilesPerRow = 5; // value can only be 1-11, used for several calculations
   bool showTileText = true;
 
   @override
@@ -141,8 +141,8 @@ class RelicSetUI extends StatelessWidget {
     final double wTile = w(context) / tilesPerRow - 4; // -4 for Wrap.spacing!
 
     // when tiles get tiny we force huge height to take up all width
-    final double hTextHeight = tilesPerRow > 8 ? wTile * .28 : wTile * .22;
-    final double hTile = wTile + (showTileText ? hTextHeight : 0);
+    final double hText = 35 - (tilesPerRow.toDouble() * 2); // h size: 13-33
+    final double hTile = wTile + (showTileText ? hText : 0);
 
     return SizedBox(
       width: wTile,
@@ -161,7 +161,7 @@ class RelicSetUI extends StatelessWidget {
               ),
             ),
           ),
-          if (showTileText) T(relic.trValTitle, tsN, w: wTile, h: hTextHeight),
+          if (showTileText) T(relic.trValTitle, tsN, w: wTile, h: hText),
         ],
       ),
     );
