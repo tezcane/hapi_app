@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 
-/// 需要实时获得某个Widget的Rect信息时使用该控件
-/// 可选传GlobalKey和无参两种构造方式，之后利用对象本身或者构造传入的key以获取信息
 /// Use this widget to get a widget`s rectangle information in real-time .
-/// It has 2 constructors , pass a GlobalKey or use default key , and then
-/// you can use the key or object itself to get info .
+/// It has 2 constructors, pass a GlobalKey or use default key, and then
+/// you can use the key or object itself to get info.
 
 class RectGetter extends StatefulWidget {
   // ignore: annotate_overrides, overridden_fields
   final GlobalKey<RectGetterState> key;
   final Widget child;
 
-  /// 持有某RectGetter对象的key时利用该方法获得其child的rect
   /// Use this static method to get child`s rectangle information when had a custom GlobalKey
   static Rect? getRectFromKey(GlobalKey<RectGetterState> globalKey) {
     var object = globalKey.currentContext?.findRenderObject();
@@ -31,19 +28,16 @@ class RectGetter extends StatefulWidget {
     return GlobalKey<RectGetterState>();
   }
 
-  /// 传GlobalKey构造，之后可以RectGetter.getRectFromKey(key)的方式获得Rect
-  /// constructor with key passed , and then you can get child`s rect by using RectGetter.getRectFromKey(key)
+  /// constructor with key passed, and then you can get child`s rect by using RectGetter.getRectFromKey(key)
   const RectGetter({required this.key, required this.child}) : super(key: key);
 
-  /// 生成默认GlobalKey的命名无参构造，调用对象的getRect方法获得Rect
-  /// Use defaultKey to build RectGetter , and then use object itself`s getRect() method to get child`s rect
+  /// Use defaultKey to build RectGetter, and then use object itself`s getRect() method to get child`s rect
   factory RectGetter.defaultKey({required Widget child}) {
     return RectGetter(key: GlobalKey(), child: child);
   }
 
   Rect? getRect() => getRectFromKey(key);
 
-  /// 克隆出新对象实例，避免同一GlobalKey在组件树上重复出现导致的问题
   /// make a clone with different GlobalKey
   RectGetter clone() {
     return RectGetter.defaultKey(child: child);
