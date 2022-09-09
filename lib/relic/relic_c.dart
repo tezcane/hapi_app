@@ -3,7 +3,6 @@ import 'package:hapi/controller/getx_hapi.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/onboard/auth/auth_c.dart';
 import 'package:hapi/relic/relic.dart';
-import 'package:hapi/relic/relic_set.dart';
 import 'package:hapi/relic/relics_ui.dart';
 import 'package:hapi/relic/ummah/prophet.dart' as prophets;
 import 'package:hapi/service/db.dart';
