@@ -6,16 +6,8 @@ import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_c.dart';
 
-class RelicSet {
-  const RelicSet({required this.relicType, required this.relics});
-  final RELIC_TYPE relicType;
-  final List<Relic> relics;
-
-  String get trValTitle => relics[0].trValRelicSetTitle;
-  String get trValSubtitle => relics[0].trValRelicSetSubtitle;
-  List<RelicSetFilter> get filterList => relics[0].relicSetFilters;
-}
-
+/// An entire tab (tab and tile labels, relics, filters, etc.). Uses the
+/// RelicSet object found in relic.dart.
 // ignore: must_be_immutable
 class RelicSetUI extends StatelessWidget {
   RelicSetUI(this.relicSet) {

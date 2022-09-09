@@ -1,8 +1,8 @@
 import 'package:hapi/relic/relic_c.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
-/// Each relic subsection (e.g. Ummah->Prophet) needs to have a RELIC_TYPE so
-/// it can be easily filtered/found later. TODO WIP
+/// Each relic subsection/RelicSet (e.g. Ummah->Prophet) needs to have a
+/// RELIC_TYPE so it can be easily filtered/found/accessed later.
 enum RELIC_TYPE {
   // Ummah Tab:
   Prophet,
@@ -15,6 +15,8 @@ enum RELIC_TYPE {
   // Leaders,
 }
 
+/// Abstract class that all relics need to extend. Also extends TimelineEntry so
+/// we can show Relics on the Timeline (if they have dates), you're welcome.
 abstract class Relic extends TimelineEntry {
   Relic({
     // TimelineEntry data:
@@ -53,6 +55,24 @@ abstract class Relic extends TimelineEntry {
   List<RelicSetFilter> get relicSetFilters;
 }
 
+/// Stores all information needed to show a RelicSet, see RelicSetUI().
+class RelicSet {
+  const RelicSet({required this.relicType, required this.relics});
+  final RELIC_TYPE relicType;
+  final List<Relic> relics;
+
+  String get trValTitle => relics[0].trValRelicSetTitle;
+  String get trValSubtitle => relics[0].trValRelicSetSubtitle;
+  List<RelicSetFilter> get filterList => relics[0].relicSetFilters;
+}
+
+/// Used to tell RelicSetUI() what filter view to build and show.
+enum FILTER_TYPE {
+  Default,
+  IntSort,
+  Tree,
+}
+
 /// Used to be able to change Relic's view/information as a way for the user to
 /// learn from a RelicSet, e.g. see only or highlight Ulu Al-Azm Prophets from
 /// the list of all the Prophet relics. Another example, to show the Prophets or
@@ -74,12 +94,6 @@ class RelicSetFilter {
 
   // Optional Parameters
   final Object? data; // any data needed to create the filter TODO TBD
-}
-
-enum FILTER_TYPE {
-  Default,
-  IntSort,
-  Tree,
 }
 
 /// For the DB to track ajrLevel, we need each relic to have a unique RELIC_ID.
