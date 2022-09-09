@@ -47,10 +47,6 @@ class RelicController extends GetxHapi {
   List<Relic> getRelics(RELIC_TYPE relicType) =>
       relics[relicType]!.relics as List<Relic>;
 
-  // int getTilesPerRow(RELIC_TYPE relicType) {
-  //   s.wr('tilesPerRow${relicType.index}', 4);
-  //   return s.rd('tilesPerRow${relicType.index}') ?? 4; // 4 is default for all
-  // }
   int getTilesPerRow(RELIC_TYPE relicType) =>
       s.rd('tilesPerRow${relicType.index}') ?? 4; // 4 is default for all relics
   setTilesPerRow(RELIC_TYPE relicType, int newVal) {
@@ -58,16 +54,10 @@ class RelicController extends GetxHapi {
     update();
   }
 
-  // toggleShowTileHeader(RELIC_TYPE relicType) {
-  //   s.wr('showTileHeader${relicType.index}', true);
-  //   setShowTileHeader(relicType, !getShowTileHeader(relicType));
-  // }
-  toggleShowTileHeader(RELIC_TYPE relicType) =>
-      _setShowTileHeader(relicType, !getShowTileHeader(relicType));
-  bool getShowTileHeader(RELIC_TYPE relicType) =>
-      s.rd('showTileHeader${relicType.index}') ?? true;
-  _setShowTileHeader(RELIC_TYPE relicType, bool newVal) {
-    s.wr('showTileHeader${relicType.index}', newVal);
+  bool getShowTileText(RELIC_TYPE relicType) =>
+      s.rd('showTileText${relicType.index}') ?? true;
+  setShowTileText(RELIC_TYPE relicType, bool newVal) {
+    s.wr('showTileText${relicType.index}', newVal);
     updateOnThread1Ms();
   }
 

@@ -19,9 +19,16 @@ class RelicSet<Relic> {
   final List<Relic> relics;
 }
 
+// ignore: must_be_immutable
 class RelicSetUI extends StatelessWidget {
-  const RelicSetUI(this.relicSet);
+  RelicSetUI(this.relicSet) {
+    tilesPerRow = RelicController.to.getTilesPerRow(relicSet.relicType);
+    showTileText = RelicController.to.getShowTileText(relicSet.relicType);
+  }
   final RelicSet relicSet;
+
+  int tilesPerRow = 4;
+  bool showTileText = true;
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +65,10 @@ class RelicSetUI extends StatelessWidget {
               InkWell(
                 onTap: () {
                   RELIC_TYPE relicType = relicSet.relicType;
-                  int tpr = RelicController.to.getTilesPerRow(relicType);
-                  if (tpr < 11) tpr += 1;
-                  RelicController.to.setTilesPerRow(relicType, tpr);
+                  if (tilesPerRow < 11) {
+                    tilesPerRow += 1;
+                    RelicController.to.setTilesPerRow(relicType, tilesPerRow);
+                  }
                 },
                 child: SizedBox(
                   width: 45,
@@ -68,17 +76,16 @@ class RelicSetUI extends StatelessWidget {
                   child: Icon(
                     Icons.remove,
                     size: 25,
-                    color: RelicController.to.getTilesPerRow(relicType) > 10
-                        ? AppThemes.unselected
-                        : null,
+                    color: tilesPerRow > 10 ? AppThemes.unselected : null,
                   ),
                 ),
               ),
               InkWell(
                 onTap: () {
-                  int tpr = RelicController.to.getTilesPerRow(relicType);
-                  if (tpr > 1) tpr -= 1;
-                  RelicController.to.setTilesPerRow(relicType, tpr);
+                  if (tilesPerRow > 1) {
+                    tilesPerRow -= 1;
+                    RelicController.to.setTilesPerRow(relicType, tilesPerRow);
+                  }
                 },
                 child: SizedBox(
                   width: 45,
@@ -86,22 +93,21 @@ class RelicSetUI extends StatelessWidget {
                   child: Icon(
                     Icons.add,
                     size: 25,
-                    color: RelicController.to.getTilesPerRow(relicType) < 2
-                        ? AppThemes.unselected
-                        : null,
+                    color: tilesPerRow < 2 ? AppThemes.unselected : null,
                   ),
                 ),
               ),
               InkWell(
                 onTap: () {
                   RELIC_TYPE relicType = relicSet.relicType;
-                  RelicController.to.toggleShowTileHeader(relicType);
+                  showTileText = !showTileText;
+                  RelicController.to.setShowTileText(relicType, showTileText);
                 },
                 child: SizedBox(
                   width: 45,
                   height: 45,
                   child: Icon(
-                    RelicController.to.getShowTileHeader(relicType)
+                    showTileText
                         ? Icons.expand_less_outlined
                         : Icons.expand_more_outlined,
                     size: 25,
@@ -125,32 +131,18 @@ class RelicSetUI extends StatelessWidget {
         relicSet.relics.length,
         (index) {
           Relic relic = relicSet.relics[index];
-          int tilesPerRow = RelicController.to.getTilesPerRow(relic.relicType);
-          return _relicTile(
-            context: context,
-            relic: relic,
-            tilesPerRow: tilesPerRow,
-            //isLastIndex: index == relicSet.relics.length - 1,
-          );
+          return _relicTile(context: context, relic: relic);
         },
       ),
     );
   }
 
-  Widget _relicTile({
-    required BuildContext context,
-    required Relic relic,
-    required int tilesPerRow,
-    //required bool isLastIndex,
-  }) {
-    final bool showTileHeader =
-        RelicController.to.getShowTileHeader(relic.relicType);
-
+  Widget _relicTile({required BuildContext context, required Relic relic}) {
     final double wTile = w(context) / tilesPerRow - 4; //-4 for Wrap.spacing
 
     // when tiles get tiny we force huge height to take up all width
     final double hLabel = tilesPerRow > 6 ? wTile * .45 : wTile * .25;
-    final double hTile = wTile + (showTileHeader ? hLabel : 0);
+    final double hTile = wTile + (showTileText ? hLabel : 0);
 
     return SizedBox(
       width: wTile,
@@ -169,7 +161,7 @@ class RelicSetUI extends StatelessWidget {
               ),
             ),
           ),
-          if (showTileHeader)
+          if (showTileText)
             SizedBox(
               width: wTile,
               height: hLabel,
