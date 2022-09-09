@@ -42,10 +42,18 @@ class RelicC extends GetxHapi {
   RelicSet getRelicSet(RELIC_TYPE relicType) => relics[relicType]!;
   List<Relic> getRelics(RELIC_TYPE relicType) => relics[relicType]!.relics;
 
-  int getTilesPerRow(RELIC_TYPE relicType) =>
-      s.rd('tilesPerRow${relicType.index}') ?? 5; // default for all relics
-  setTilesPerRow(RELIC_TYPE relicType, int newVal) {
-    s.wr('tilesPerRow${relicType.index}', newVal);
+  int getRelicSetFilterIdx(RELIC_TYPE relicType) =>
+      s.rd('relicSetFilterIdx${relicType.index}') ?? 0;
+  setRelicSetFilterIdx(RELIC_TYPE relicType, int newVal) {
+    s.wr('relicSetFilterIdx${relicType.index}', newVal);
+    updateOnThread1Ms(); // update() worked, but this is safer.
+  }
+
+  int getTilesPerRow(RELIC_TYPE relicType, int relicSetFilterIdx) =>
+      s.rd('tilesPerRow${relicType.index}_$relicSetFilterIdx') ??
+      RelicSetFilter.DEFAULT_TPR;
+  setTilesPerRow(RELIC_TYPE relicType, int relicSetFilterIdx, int newVal) {
+    s.wr('tilesPerRow${relicType.index}_$relicSetFilterIdx', newVal);
     updateOnThread1Ms(); // update() worked, but this is safer.
   }
 

@@ -78,6 +78,9 @@ enum FILTER_TYPE {
 /// the list of all the Prophet relics. Another example, to show the Prophets or
 /// Muhammad's Al-Bayt family tree views.
 class RelicSetFilter {
+  /// We must ensure tprMin/tprMax for all filters can support this value:
+  static const DEFAULT_TPR = 5; // TODO
+
   RelicSetFilter({
     required this.type,
     required this.trValSubtitle,

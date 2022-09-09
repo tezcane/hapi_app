@@ -11,13 +11,35 @@ import 'package:hapi/relic/relic_c.dart';
 // ignore: must_be_immutable
 class RelicSetUI extends StatelessWidget {
   RelicSetUI(this.relicSet) {
-    tilesPerRow = RelicC.to.getTilesPerRow(relicSet.relicType);
-    showTileText = RelicC.to.getShowTileText(relicSet.relicType);
+    relicSetFilters = relicSet.filterList; // needs init separately
+
+    updateRelicSetFilter(RelicC.to.getRelicSetFilterIdx(relicSet.relicType));
   }
   final RelicSet relicSet;
 
-  int tilesPerRow = 5; // value can only be 1-11, used for several calculations
-  bool showTileText = true;
+  late final List<RelicSetFilter> relicSetFilters;
+
+  late RelicSetFilter filter;
+  int filterIdx = -1; // -1 forces update/rd/wr on next access (init)
+
+  // We need RelicSetFilter info to populate tpr (Tiles Per Row) variable.
+  // tpr values can only be 1-11 and are used for several calculations and to
+  // size the relic tiles/images appropriately based on filter needs. We call it
+  // tpr instead of tilesPerRow because it is more than tilesPerRow so we make
+  // it ambiguously as it is more of concept of two things. There are two other
+  // tpr values found here too: RelicSetFilter.tprMin()/tprMax().
+  late int tpr;
+  late bool showTileText;
+
+  updateRelicSetFilter(int newIdx) {
+    if (newIdx == filterIdx) return; // no need to do work, return
+    filterIdx = newIdx;
+
+    filter = relicSetFilters[filterIdx];
+    tpr = RelicC.to.getTilesPerRow(relicSet.relicType, filterIdx);
+
+    showTileText = RelicC.to.getShowTileText(relicSet.relicType);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,9 +76,9 @@ class RelicSetUI extends StatelessWidget {
               InkWell(
                 onTap: () {
                   RELIC_TYPE relicType = relicSet.relicType;
-                  if (tilesPerRow < 11) {
-                    tilesPerRow += 1;
-                    RelicC.to.setTilesPerRow(relicType, tilesPerRow);
+                  if (tpr < filter.tprMax) {
+                    tpr += 1;
+                    RelicC.to.setTilesPerRow(relicType, filterIdx, tpr);
                   }
                 },
                 child: SizedBox(
@@ -65,15 +87,15 @@ class RelicSetUI extends StatelessWidget {
                   child: Icon(
                     Icons.remove,
                     size: 25,
-                    color: tilesPerRow > 10 ? AppThemes.unselected : null,
+                    color: tpr == filter.tprMax ? AppThemes.unselected : null,
                   ),
                 ),
               ),
               InkWell(
                 onTap: () {
-                  if (tilesPerRow > 1) {
-                    tilesPerRow -= 1;
-                    RelicC.to.setTilesPerRow(relicType, tilesPerRow);
+                  if (tpr > filter.tprMin) {
+                    tpr -= 1;
+                    RelicC.to.setTilesPerRow(relicType, filterIdx, tpr);
                   }
                 },
                 child: SizedBox(
@@ -82,7 +104,7 @@ class RelicSetUI extends StatelessWidget {
                   child: Icon(
                     Icons.add,
                     size: 25,
-                    color: tilesPerRow < 2 ? AppThemes.unselected : null,
+                    color: tpr == filter.tprMin ? AppThemes.unselected : null,
                   ),
                 ),
               ),
@@ -127,10 +149,10 @@ class RelicSetUI extends StatelessWidget {
   }
 
   Widget _relicTile({required BuildContext context, required Relic relic}) {
-    final double wTile = w(context) / tilesPerRow - 4; // -4 for Wrap.spacing!
+    final double wTile = w(context) / tpr - 4; // -4 for Wrap.spacing!
 
     // when tiles get tiny we force huge height to take up all width
-    final double hText = 35 - (tilesPerRow.toDouble() * 2); // h size: 13-33
+    final double hText = 35 - (tpr.toDouble() * 2); // h size: 13-33
     final double hTile = wTile + (showTileText ? hText : 0);
 
     return SizedBox(

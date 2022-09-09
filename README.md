@@ -104,6 +104,7 @@ t    - timeline
 tt   - tooltip (used in translation keys)  
 ts   - text style  
 thjd - Tahajjud  
+tpr  - Tiles Per Row  
 tz   - time zone  
 trkh - Tarikh  
 val  - Value (like trVal)  
