@@ -15,33 +15,29 @@ class VerticalScrollableTabBarStatus {
 }
 
 class VerticalScrollableTabView extends StatefulWidget {
+  const VerticalScrollableTabView({
+    required this.tabController,
+    required this.listItemData,
+    required this.eachItemChild,
+    required this.slivers,
+//  required Axis this.scrollDirection,
+  });
+
   /// TabBar Controller to let widget listening TabBar changed
-  final TabController _tabController;
+  final TabController tabController;
 
   /// Required a List<dynamic> Type，you can put your data that you wanna put in item
-  final List<dynamic> _listItemData;
+  final List<dynamic> listItemData;
 
-  /// A callback that returns _listItemData and the index of ListView.Builder
-  final Widget Function(dynamic aaa, int index) _eachItemChild;
+  /// A callback that returns listItemData and the index of ListView.Builder
+  final Widget Function(dynamic aaa, int index) eachItemChild;
 
   /// Required SliverAppBar, And TabBar must inside of SliverAppBar, and In the TabBar
   /// onTap: (index) => VerticalScrollableTabBarStatus.setIndex(index);
-  final List<Widget> _slivers;
+  final List<Widget> slivers;
 
   /// TODO Horizontal ScrollDirection
-//final Axis _axisOrientation;
-
-  const VerticalScrollableTabView({
-    required TabController tabController,
-    required List<dynamic> listItemData,
-    required Widget Function(dynamic aaa, int index) eachItemChild,
-    required List<Widget> slivers,
-//  required Axis scrollDirection,
-  })  : _tabController = tabController,
-        _listItemData = listItemData,
-        _eachItemChild = eachItemChild,
-        _slivers = slivers;
-//      _axisOrientation = scrollDirection,
+//final Axis axisOrientation;
 
   @override
   _VerticalScrollableTabViewState createState() =>
@@ -66,7 +62,7 @@ class _VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
   void initState() {
     scrollController = AutoScrollController(); // must init first
 
-    widget._tabController.addListener(() {
+    widget.tabController.addListener(() {
       if (VerticalScrollableTabBarStatus.isOnTap) {
         animateAndScrollTo(VerticalScrollableTabBarStatus.isOnTapIndex);
         VerticalScrollableTabBarStatus.isOnTap = false;
@@ -95,7 +91,7 @@ class _VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
       child: NotificationListener<ScrollNotification>(
         child: CustomScrollView(
           controller: scrollController,
-          slivers: [...widget._slivers, buildVerticalSliverList()],
+          slivers: [...widget.slivers, buildVerticalSliverList()],
         ),
         onNotification: onScrollNotification,
       ),
@@ -105,10 +101,10 @@ class _VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
   /// TODO Horizontal sliding area
   // Widget buildScrollView() {
   //   return ListView.builder(
-  //     controller: widget._scrollController,
-  //     itemCount: widget._listItemData.length,
+  //     controller: widget.scrollController,
+  //     itemCount: widget.listItemData.length,
   //     /// TODO Horizontal ScrollDirection
-  //     // scrollDirection: widget._axisOrientation,
+  //     // scrollDirection: widget.axisOrientation,
   //     itemBuilder: (BuildContext context, int index) {
   //       /// Initial Key of itemKeys
   //       /// 初始化 itemKeys 的 key
@@ -122,7 +118,7 @@ class _VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
     return SliverList(
       delegate: SliverChildListDelegate(
         List.generate(
-          widget._listItemData.length,
+          widget.listItemData.length,
           (index) {
             itemsKeys[index] = RectGetter.createGlobalKey();
             return buildItem(index);
@@ -133,7 +129,7 @@ class _VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
   }
 
   Widget buildItem(int index) {
-    dynamic category = widget._listItemData[index];
+    dynamic category = widget.listItemData[index];
     return RectGetter(
       /// when announce GlobalKey，we can use RectGetter.getRectFromKey(key) to get Rect
       key: itemsKeys[index],
@@ -141,7 +137,7 @@ class _VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
         key: ValueKey(index),
         index: index,
         controller: scrollController,
-        child: widget._eachItemChild(category, index),
+        child: widget.eachItemChild(category, index),
       ),
     );
   }
@@ -150,7 +146,7 @@ class _VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
   /// This need to put inside TabBar onTap, but in this case we put inside tabBarListener
   void animateAndScrollTo(int index) async {
     pauseRectGetterIndex = true;
-    widget._tabController.animateTo(index);
+    widget.tabController.animateTo(index);
     scrollController
         .scrollToIndex(
           index,
@@ -170,7 +166,7 @@ class _VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
     // if (pauseRectGetterIndex) return true;
 
     // /// get tabBar index
-    // int lastTabIndex = widget._tabController.length - 1;
+    // int lastTabIndex = widget.tabController.length - 1;
 
     // List<int> visibleItems = getVisibleItemsIndex();
 
@@ -181,19 +177,19 @@ class _VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
 
     // /// if reachLastTabIndex, then scroll to last index
     // if (reachLastTabIndex) {
-    //   widget._tabController.animateTo(lastTabIndex);
+    //   widget.tabController.animateTo(lastTabIndex);
     // } else {
     //   // Get the median value of item in the screen. Example: The middle of 2,3,4 is 3
     //   // Find the product of a list of numbers
     //   int sumIndex = visibleItems.reduce((value, element) => value + element);
     //   // 5 ~/ 2 = 2  => Result is an int
     //   int middleIndex = sumIndex ~/ visibleItems.length;
-    //   if (widget._tabController.index != middleIndex) {
-    //     widget._tabController.animateTo(middleIndex);
+    //   if (widget.tabController.index != middleIndex) {
+    //     widget.tabController.animateTo(middleIndex);
     //   }
     // }
     List<int> visibleItems = getVisibleItemsIndex();
-    widget._tabController.animateTo(visibleItems[0]);
+    widget.tabController.animateTo(visibleItems[0]);
     return false;
   }
 
@@ -205,7 +201,7 @@ class _VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
     if (rect == null) return items;
 
     /// TODO Horizontal ScrollDirection
-    // bool isHoriontalScroll = widget._axisOrientation == Axis.horizontal;
+    // bool isHoriontalScroll = widget.axisOrientation == Axis.horizontal;
     bool isHoriontalScroll = false;
     itemsKeys.forEach((index, key) {
       Rect? itemRect = RectGetter.getRectFromKey(key);

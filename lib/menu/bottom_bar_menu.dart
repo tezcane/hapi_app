@@ -14,7 +14,7 @@ class BottomBarMenu extends StatelessWidget {
 
   late PageController _pageController;
   bool initNeeded = true;
-  int navMovingToIdx = -1;
+  int movingToIdx = -1;
   int curBottomBarHighlightIdx = 0; // to briefly highlight bottom bar indexes
 
   @override
@@ -57,8 +57,8 @@ class BottomBarMenu extends StatelessWidget {
     curBottomBarHighlightIdx = newIdx; // always highlight current page
 
     // only do below work when we get final animated page or if swiped to page
-    if (navMovingToIdx == newIdx || navMovingToIdx == -1) {
-      if (navMovingToIdx == newIdx) navMovingToIdx = -1;
+    if (movingToIdx == newIdx || movingToIdx == -1) {
+      if (movingToIdx == newIdx) movingToIdx = -1;
       // Optional callback, can enable/disable a tab page's animations,
       // hide the keyboard (if for example was open from searching and user
       // swiped screen to go to another bottom_bar/tab), etc.
@@ -74,7 +74,7 @@ class BottomBarMenu extends StatelessWidget {
   /// Called only when bottom bar tab is tapped
   _onBottomBarTabTapped(int newIdx) {
     if (newIdx == NavPageController.to.getLastIdx(navPage)) return; // we r here
-    navMovingToIdx = newIdx;
+    movingToIdx = newIdx;
     _handlePostFrameAnimation(newIdx); // needed for stateless widget to work
   }
 
