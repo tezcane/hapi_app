@@ -51,7 +51,6 @@ abstract class Relic extends TimelineEntry {
 
   // Abstract classes subclasses must implement:
   String get trValRelicSetTitle;
-  String get trValRelicSetSubtitle;
   List<RelicSetFilter> get relicSetFilters;
 }
 
@@ -62,7 +61,6 @@ class RelicSet {
   final List<Relic> relics;
 
   String get trValTitle => relics[0].trValRelicSetTitle;
-  String get trValSubtitle => relics[0].trValRelicSetSubtitle;
   List<RelicSetFilter> get filterList => relics[0].relicSetFilters;
 }
 
@@ -83,20 +81,23 @@ class RelicSetFilter {
 
   RelicSetFilter({
     required this.type,
-    required this.trValSubtitle,
-    this.isResizeAble = true,
+    required this.trValLabel,
     this.tprMin = 1,
     this.tprMax = 11,
     this.data,
-  });
+  }) {
+    isResizeable = tprMin != tprMax; // if tpr Min/Max different it's resizeable
+  }
   final FILTER_TYPE type; // used to build UI around this filter
-  final String trValSubtitle; // label/Subtitle of filter on filter options menu
-  final bool isResizeAble; // Tells UI if it should show -/+ buttons
+  final String trValLabel; // filter label/Subtitle of filter options menu
   final int tprMin; // tiles per row minimum (Can be used to size tiles too)
   final int tprMax; // tiles per row maximum (Can be used to size tiles too)
 
   // Optional Parameters
   final Object? data; // any data needed to create the filter TODO TBD
+
+  // Tells UI if it should show -/+ buttons:
+  late final bool isResizeable;
 }
 
 /// For the DB to track ajrLevel, we need each relic to have a unique RELIC_ID.

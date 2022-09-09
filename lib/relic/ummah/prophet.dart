@@ -78,13 +78,10 @@ class Prophet extends Relic {
   @override
   String get trValRelicSetTitle => a('a.Anbiya');
   @override
-  String get trValRelicSetSubtitle =>
-      at('at.Mentioned in the {0}', [('a.Quran')]);
-  @override
   List<RelicSetFilter> get relicSetFilters => [
         RelicSetFilter(
           type: FILTER_TYPE.Default,
-          trValSubtitle: trValRelicSetSubtitle,
+          trValLabel: at('at.Mentioned in the {0}', [('a.Quran')]),
         ),
       ];
 }

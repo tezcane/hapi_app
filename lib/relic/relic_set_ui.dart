@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:hapi/main_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_c.dart';
@@ -48,18 +49,18 @@ class RelicSetUI extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _relicTileHeader(context),
+          if (filter.type == FILTER_TYPE.Default) _tileHeaderDefault(context),
           const SizedBox(height: 8),
-          _relicTileList(context),
+          if (filter.type == FILTER_TYPE.Default) _tileListDefault(context),
           const SizedBox(height: 9),
         ],
       ),
     );
   }
 
-  Widget _relicTileHeader(BuildContext context) {
-    double wText = w(context) - 155; // 155 = 10 + 10 + 45 + 45 + 45
-    RELIC_TYPE relicType = relicSet.relicType;
+  Widget _tileHeaderDefault(BuildContext context) {
+    // width of extra spaces between 65-155: 65 (10+10+45) + 90 (45+45)
+    final double wText = w(context) - 65 - (filter.isResizeable ? 90 : 0);
 
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
@@ -68,51 +69,22 @@ class RelicSetUI extends StatelessWidget {
         children: [
           Row(children: [
             const SizedBox(width: 10),
-            T(relicSet.trValSubtitle, tsNB, w: wText, trVal: true),
+            T(
+              filter.trValLabel,
+              tsNB,
+              w: wText,
+              trVal: true,
+              alignment: LanguageC.to.centerLeft, // to match big/small labels
+            ),
             const SizedBox(width: 10),
           ]),
           Row(
             children: [
+              if (filter.isResizeable) _btnGroupRemoveAdd(),
               InkWell(
                 onTap: () {
-                  RELIC_TYPE relicType = relicSet.relicType;
-                  if (tpr < filter.tprMax) {
-                    tpr += 1;
-                    RelicC.to.setTilesPerRow(relicType, filterIdx, tpr);
-                  }
-                },
-                child: SizedBox(
-                  width: 45,
-                  height: 45,
-                  child: Icon(
-                    Icons.remove,
-                    size: 25,
-                    color: tpr == filter.tprMax ? AppThemes.unselected : null,
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  if (tpr > filter.tprMin) {
-                    tpr -= 1;
-                    RelicC.to.setTilesPerRow(relicType, filterIdx, tpr);
-                  }
-                },
-                child: SizedBox(
-                  width: 45,
-                  height: 45,
-                  child: Icon(
-                    Icons.add,
-                    size: 25,
-                    color: tpr == filter.tprMin ? AppThemes.unselected : null,
-                  ),
-                ),
-              ),
-              InkWell(
-                onTap: () {
-                  RELIC_TYPE relicType = relicSet.relicType;
                   showTileText = !showTileText;
-                  RelicC.to.setShowTileText(relicType, showTileText);
+                  RelicC.to.setShowTileText(relicSet.relicType, showTileText);
                 },
                 child: SizedBox(
                   width: 45,
@@ -132,7 +104,48 @@ class RelicSetUI extends StatelessWidget {
     );
   }
 
-  Widget _relicTileList(BuildContext context) {
+  Widget _btnGroupRemoveAdd() {
+    return Row(
+      children: [
+        InkWell(
+          onTap: () {
+            if (tpr < filter.tprMax) {
+              tpr += 1;
+              RelicC.to.setTilesPerRow(relicSet.relicType, filterIdx, tpr);
+            }
+          },
+          child: SizedBox(
+            width: 45,
+            height: 45,
+            child: Icon(
+              Icons.remove,
+              size: 25,
+              color: tpr == filter.tprMax ? AppThemes.unselected : null,
+            ),
+          ),
+        ),
+        InkWell(
+          onTap: () {
+            if (tpr > filter.tprMin) {
+              tpr -= 1;
+              RelicC.to.setTilesPerRow(relicSet.relicType, filterIdx, tpr);
+            }
+          },
+          child: SizedBox(
+            width: 45,
+            height: 45,
+            child: Icon(
+              Icons.add,
+              size: 25,
+              color: tpr == filter.tprMin ? AppThemes.unselected : null,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _tileListDefault(BuildContext context) {
     return Wrap(
       // direction: Axis.horizontal <-- TODO use this for landscape/portrait mode?
       alignment: WrapAlignment.center, // TY!, centers modules remainders
@@ -141,14 +154,13 @@ class RelicSetUI extends StatelessWidget {
       children: List.generate(
         relicSet.relics.length,
         (index) {
-          Relic relic = relicSet.relics[index];
-          return _relicTile(context: context, relic: relic);
+          return _relicTile(context, relicSet.relics[index]);
         },
       ),
     );
   }
 
-  Widget _relicTile({required BuildContext context, required Relic relic}) {
+  Widget _relicTile(BuildContext context, Relic relic) {
     final double wTile = w(context) / tpr - 4; // -4 for Wrap.spacing!
 
     // when tiles get tiny we force huge height to take up all width
