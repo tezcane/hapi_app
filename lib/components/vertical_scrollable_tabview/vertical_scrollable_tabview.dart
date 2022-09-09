@@ -85,6 +85,8 @@ class _VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
 
   @override
   void initState() {
+    scrollController = AutoScrollController();
+
     widget._tabController.addListener(() {
       // will call two times, because 底層呼叫 2 次 notifyListeners()
       // https://stackoverflow.com/questions/60252355/tabcontroller-listener-called-multiple-times-how-does-indexischanging-work
@@ -93,7 +95,12 @@ class _VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
         VerticalScrollableTabBarStatus.isOnTap = false;
       }
     });
-    scrollController = AutoScrollController();
+
+    if (VerticalScrollableTabBarStatus.isOnTap) {
+      animateAndScrollTo(VerticalScrollableTabBarStatus.isOnTapIndex);
+      VerticalScrollableTabBarStatus.isOnTap = false;
+    }
+
     super.initState();
   }
 
@@ -166,26 +173,16 @@ class _VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
   /// Animation Function for tabBarListener
   /// This need to put inside TabBar onTap, but in this case we put inside tabBarListener
   void animateAndScrollTo(int index) async {
-    // Scroll 到 index 並使用 begin 的模式，結束後，把 pauseRectGetterIndex 設為 false 暫停執行 ScrollNotification
     pauseRectGetterIndex = true;
     widget._tabController.animateTo(index);
-    // switch (widget._verticalScrollPosition) {
-    //   case VerticalScrollPosition.begin:
     scrollController
-        .scrollToIndex(index) //, preferPosition: AutoScrollPosition.begin)
-        .then((value) => pauseRectGetterIndex = false);
-    //     break;
-    //   case VerticalScrollPosition.middle:
-    //     scrollController
-    //         .scrollToIndex(index, preferPosition: AutoScrollPosition.middle)
-    //         .then((value) => pauseRectGetterIndex = false);
-    //     break;
-    //   case VerticalScrollPosition.end:
-    //     scrollController
-    //         .scrollToIndex(index, preferPosition: AutoScrollPosition.end)
-    //         .then((value) => pauseRectGetterIndex = false);
-    //     break;
-    // }
+        .scrollToIndex(
+          index,
+          preferPosition: AutoScrollPosition.begin,
+        )
+        .then(
+          (value) => pauseRectGetterIndex = false,
+        );
   }
 
   /// onScrollNotification of NotificationListener

@@ -30,7 +30,6 @@ class _RelicTabBarState extends State<RelicTabBar>
   final List<RelicSet> relicSets = [];
 
   bool notInitialized = true;
-  // bool notInitializedSelectedTab = true;
 
   @override
   void initState() {
@@ -65,16 +64,11 @@ class _RelicTabBarState extends State<RelicTabBar>
         notInitialized = false;
       }
 
-      // if (notInitializedSelectedTab) {
-      //   WidgetsBinding.instance.addPostFrameCallback(_setLastSelectedTab);
-      // }
-
       return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: VerticalScrollableTabView(
           tabController: tabController,
           listItemData: relicSets,
-          // verticalScrollPosition: VerticalScrollPosition.begin,
           eachItemChild: (object, index) => RelicSetUI(object as RelicSet),
           slivers: [
             SliverAppBar(
@@ -113,18 +107,4 @@ class _RelicTabBarState extends State<RelicTabBar>
       );
     });
   }
-
-  // void _setLastSelectedTab(_) {
-  //   // if (!notInitializedSelectedTab) return;
-  //
-  //   int selectedTab =
-  //       RelicController.to.getLastSelectedTab(widget.relicTab);
-  //   debugPrint('asdf=$lastSelectedTab');
-  //   //tabController.animateTo(selectedTab);
-  //   VerticalScrollableTabBarStatus.setIndex(selectedTab);
-  //   notInitializedSelectedTab = false;
-  //   //verticalScrollableTabView.animateAndScrollTo(selectedTab);
-  //
-  //   // RelicController.to.updateOnThread1Ms();
-  // }
 }
