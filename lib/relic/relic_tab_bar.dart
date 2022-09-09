@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hapi/components/vertical_scrollable_tabview/scroll_to_index/scroll_to_index.dart';
 import 'package:hapi/components/vertical_scrollable_tabview/vertical_scrollable_tabview.dart';
 import 'package:hapi/main_controller.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
@@ -24,8 +25,8 @@ class RelicTabBar extends StatefulWidget {
 
 class _RelicTabBarState extends State<RelicTabBar>
     with SingleTickerProviderStateMixin {
-  // TabController More Information => https://api.flutter.dev/flutter/material/TabController-class.html
   late TabController tabController;
+  late AutoScrollController scrollController;
   late VerticalScrollableTabView verticalScrollableTabView;
   final List<RelicSet> relicSets = [];
 
@@ -33,20 +34,21 @@ class _RelicTabBarState extends State<RelicTabBar>
 
   @override
   void initState() {
-    int selectedTab = RelicController.to.getSelectedTab(widget.relicTab);
-    VerticalScrollableTabBarStatus.setIndex(selectedTab);
-
     tabController = TabController(
-      initialIndex: selectedTab,
+      initialIndex: RelicController.to.getSelectedTab(widget.relicTab),
       length: widget.relicTypes.length,
       vsync: this,
     );
+
+    scrollController = AutoScrollController();
+
     super.initState();
   }
 
   @override
   void dispose() {
     tabController.dispose();
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -61,6 +63,11 @@ class _RelicTabBarState extends State<RelicTabBar>
         for (RELIC_TYPE relicType in widget.relicTypes) {
           relicSets.add(RelicController.to.getRelicSet(relicType));
         }
+
+        // Needed to scroll down to last selected tab at init:
+        WidgetsBinding.instance.addPostFrameCallback((_) => animateAndScrollTo(
+            RelicController.to.getSelectedTab(widget.relicTab)));
+
         initNeeded = false;
       }
 
@@ -68,6 +75,7 @@ class _RelicTabBarState extends State<RelicTabBar>
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: VerticalScrollableTabView(
           tabController: tabController,
+          scrollController: scrollController,
           listItemData: relicSets,
           eachItemChild: (object, index) => RelicSetUI(object as RelicSet),
           slivers: [
@@ -97,7 +105,7 @@ class _RelicTabBarState extends State<RelicTabBar>
                     .map((relicSet) => Tab(text: relicSet.trKeyTitle))
                     .toList(),
                 onTap: (index) {
-                  VerticalScrollableTabBarStatus.setIndex(index);
+                  animateAndScrollTo(index);
                   RelicController.to.setLastSelectedTab(widget.relicTab, index);
                 },
               ),
@@ -106,5 +114,14 @@ class _RelicTabBarState extends State<RelicTabBar>
         ),
       );
     });
+  }
+
+  /// This is called at init and also when user taps a tab on the tab bar
+  void animateAndScrollTo(int index) async {
+    tabController.animateTo(index);
+    scrollController.scrollToIndex(
+      index,
+      preferPosition: AutoScrollPosition.begin,
+    );
   }
 }

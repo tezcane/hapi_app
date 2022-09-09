@@ -2,21 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:hapi/components/vertical_scrollable_tabview/rect_getter/rect_getter.dart';
 import 'package:hapi/components/vertical_scrollable_tabview/scroll_to_index/scroll_to_index.dart';
 
-/// Detect TabBar Status, isOnTap = is to check TabBar is on Tap or not,
-/// isOnTapIndex = is on Tap Index
-class VerticalScrollableTabBarStatus {
-  static bool isOnTap = false;
-  static int isOnTapIndex = 0;
-
-  static void setIndex(int index) {
-    VerticalScrollableTabBarStatus.isOnTap = true;
-    VerticalScrollableTabBarStatus.isOnTapIndex = index;
-  }
-}
-
 class VerticalScrollableTabView extends StatefulWidget {
   const VerticalScrollableTabView({
     required this.tabController,
+    required this.scrollController,
     required this.listItemData,
     required this.eachItemChild,
     required this.slivers,
@@ -26,6 +15,8 @@ class VerticalScrollableTabView extends StatefulWidget {
   /// TabBar Controller to let widget listening TabBar changed
   final TabController tabController;
 
+  final AutoScrollController scrollController;
+
   /// Required a List<dynamic> Type，you can put your data that you wanna put in item
   final List<dynamic> listItemData;
 
@@ -33,25 +24,18 @@ class VerticalScrollableTabView extends StatefulWidget {
   final Widget Function(dynamic aaa, int index) eachItemChild;
 
   /// Required SliverAppBar, And TabBar must inside of SliverAppBar, and In the TabBar
-  /// onTap: (index) => VerticalScrollableTabBarStatus.setIndex(index);
   final List<Widget> slivers;
 
   /// TODO Horizontal ScrollDirection
 //final Axis axisOrientation;
 
   @override
-  _VerticalScrollableTabViewState createState() =>
-      _VerticalScrollableTabViewState();
+  VerticalScrollableTabViewState createState() =>
+      VerticalScrollableTabViewState();
 }
 
-class _VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
+class VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
     with SingleTickerProviderStateMixin {
-  /// Instantiate scroll_to_index
-  late AutoScrollController scrollController;
-
-  /// When the animation is started, need to pause onScrollNotification to calculate Rect
-  bool pauseRectGetterIndex = false;
-
   /// Instantiate RectGetter
   final listViewKey = RectGetter.createGlobalKey();
 
@@ -59,38 +43,12 @@ class _VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
   Map<int, dynamic> itemsKeys = {};
 
   @override
-  void initState() {
-    scrollController = AutoScrollController(); // must init first
-
-    widget.tabController.addListener(() {
-      if (VerticalScrollableTabBarStatus.isOnTap) {
-        animateAndScrollTo(VerticalScrollableTabBarStatus.isOnTapIndex);
-        VerticalScrollableTabBarStatus.isOnTap = false;
-      }
-    });
-
-    // call at init since the above listener requires UI to be touched to run
-    if (VerticalScrollableTabBarStatus.isOnTap) {
-      animateAndScrollTo(VerticalScrollableTabBarStatus.isOnTapIndex);
-      VerticalScrollableTabBarStatus.isOnTap = false;
-    }
-
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    scrollController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return RectGetter(
       key: listViewKey,
       child: NotificationListener<ScrollNotification>(
         child: CustomScrollView(
-          controller: scrollController,
+          controller: widget.scrollController,
           slivers: [...widget.slivers, buildVerticalSliverList()],
         ),
         onNotification: onScrollNotification,
@@ -136,58 +94,14 @@ class _VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
       child: AutoScrollTag(
         key: ValueKey(index),
         index: index,
-        controller: scrollController,
+        controller: widget.scrollController,
         child: widget.eachItemChild(category, index),
       ),
     );
   }
 
-  /// Animation Function for tabBarListener
-  /// This need to put inside TabBar onTap, but in this case we put inside tabBarListener
-  void animateAndScrollTo(int index) async {
-    pauseRectGetterIndex = true;
-    widget.tabController.animateTo(index);
-    scrollController
-        .scrollToIndex(
-          index,
-          preferPosition: AutoScrollPosition.begin,
-        )
-        .then(
-          (value) => pauseRectGetterIndex = false,
-        );
-  }
-
   /// onScrollNotification of NotificationListener
-  /// true means that the current notification is consumed and the notification
-  /// will not be delivered to the upper-level NotificationListener, and if
-  /// false, the notification will be delivered to the upper-level
-  /// NotificationListener.
   bool onScrollNotification(ScrollNotification notification) {
-    // if (pauseRectGetterIndex) return true;
-
-    // /// get tabBar index
-    // int lastTabIndex = widget.tabController.length - 1;
-
-    // List<int> visibleItems = getVisibleItemsIndex();
-
-    // /// define what is reachLastTabIndex
-    // bool reachLastTabIndex = visibleItems.isNotEmpty &&
-    //     visibleItems.length <= 2 &&
-    //     visibleItems.last == lastTabIndex;
-
-    // /// if reachLastTabIndex, then scroll to last index
-    // if (reachLastTabIndex) {
-    //   widget.tabController.animateTo(lastTabIndex);
-    // } else {
-    //   // Get the median value of item in the screen. Example: The middle of 2,3,4 is 3
-    //   // Find the product of a list of numbers
-    //   int sumIndex = visibleItems.reduce((value, element) => value + element);
-    //   // 5 ~/ 2 = 2  => Result is an int
-    //   int middleIndex = sumIndex ~/ visibleItems.length;
-    //   if (widget.tabController.index != middleIndex) {
-    //     widget.tabController.animateTo(middleIndex);
-    //   }
-    // }
     List<int> visibleItems = getVisibleItemsIndex();
     widget.tabController.animateTo(visibleItems[0]);
     return false;
