@@ -12,11 +12,9 @@ import 'package:hapi/relic/relics_ui.dart';
 class RelicTabBar extends StatefulWidget {
   const RelicTabBar({
     required this.relicTab,
-    required this.trKeyTitle,
     required this.relicTypes,
   });
   final RELIC_TAB relicTab;
-  final String trKeyTitle;
   final List<RELIC_TYPE> relicTypes;
 
   @override
