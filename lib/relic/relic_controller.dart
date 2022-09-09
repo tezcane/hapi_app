@@ -71,7 +71,7 @@ class RelicController extends GetxHapi {
     updateOnThread1Ms();
   }
 
-  int getLastSelectedTab(RELIC_TAB relicTab) =>
+  int getSelectedTab(RELIC_TAB relicTab) =>
       s.rd('selectedTab${relicTab.index}') ?? 0;
   setLastSelectedTab(RELIC_TAB relicTab, int newVal) {
     s.wr('selectedTab${relicTab.index}', newVal);

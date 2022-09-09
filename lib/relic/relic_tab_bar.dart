@@ -30,16 +30,15 @@ class _RelicTabBarState extends State<RelicTabBar>
   final List<RelicSet> relicSets = [];
 
   bool notInitialized = true;
-  bool notInitializedLastSelectedTab = true;
+  // bool notInitializedSelectedTab = true;
 
   @override
   void initState() {
-    int lastSelectedTab =
-        RelicController.to.getLastSelectedTab(widget.relicTab);
-    VerticalScrollableTabBarStatus.setIndex(lastSelectedTab);
+    int selectedTab = RelicController.to.getSelectedTab(widget.relicTab);
+    VerticalScrollableTabBarStatus.setIndex(selectedTab);
 
     tabController = TabController(
-      initialIndex: lastSelectedTab,
+      initialIndex: selectedTab,
       length: widget.relicTypes.length,
       vsync: this,
     );
@@ -66,7 +65,7 @@ class _RelicTabBarState extends State<RelicTabBar>
         notInitialized = false;
       }
 
-      // if (notInitializedLastSelectedTab) {
+      // if (notInitializedSelectedTab) {
       //   WidgetsBinding.instance.addPostFrameCallback(_setLastSelectedTab);
       // }
 
@@ -116,15 +115,15 @@ class _RelicTabBarState extends State<RelicTabBar>
   }
 
   // void _setLastSelectedTab(_) {
-  //   // if (!notInitializedLastSelectedTab) return;
+  //   // if (!notInitializedSelectedTab) return;
   //
-  //   int lastSelectedTab =
+  //   int selectedTab =
   //       RelicController.to.getLastSelectedTab(widget.relicTab);
   //   debugPrint('asdf=$lastSelectedTab');
-  //   //tabController.animateTo(lastSelectedTab);
-  //   VerticalScrollableTabBarStatus.setIndex(lastSelectedTab);
-  //   notInitializedLastSelectedTab = false;
-  //   //verticalScrollableTabView.animateAndScrollTo(lastSelectedTab);
+  //   //tabController.animateTo(selectedTab);
+  //   VerticalScrollableTabBarStatus.setIndex(selectedTab);
+  //   notInitializedSelectedTab = false;
+  //   //verticalScrollableTabView.animateAndScrollTo(selectedTab);
   //
   //   // RelicController.to.updateOnThread1Ms();
   // }
