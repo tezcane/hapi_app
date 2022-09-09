@@ -74,9 +74,22 @@ class Prophet extends Relic {
 
   bool isRasul() => qvRasul != null;
   bool isUluAlAzm() => qvsUluAlAzm != null && qvsUluAlAzm!.isNotEmpty;
+
+  @override
+  String get trValRelicSetTitle => a('a.Anbiya');
+  @override
+  String get trValRelicSetSubtitle =>
+      at('at.Mentioned in the {0}', [('a.Quran')]);
+  @override
+  List<RelicSetFilter> get relicSetFilters => [
+        RelicSetFilter(
+          type: FILTER_TYPE.Default,
+          trValSubtitle: trValRelicSetSubtitle,
+        ),
+      ];
 }
 
-Future<List<Prophet>> initProphets() async {
+Future<List<Prophet>> init() async {
   List<Prophet> rv = [];
 
   rv.add(Prophet(

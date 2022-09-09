@@ -6,17 +6,14 @@ import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_c.dart';
 
-class RelicSet<Relic> {
-  const RelicSet({
-    required this.relicType,
-    required this.trKeyTitle,
-    required this.trValSubtitle,
-    required this.relics,
-  });
+class RelicSet {
+  const RelicSet({required this.relicType, required this.relics});
   final RELIC_TYPE relicType;
-  final String trKeyTitle;
-  final String trValSubtitle;
   final List<Relic> relics;
+
+  String get trValTitle => relics[0].trValRelicSetTitle;
+  String get trValSubtitle => relics[0].trValRelicSetSubtitle;
+  List<RelicSetFilter> get filterList => relics[0].relicSetFilters;
 }
 
 // ignore: must_be_immutable

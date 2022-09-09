@@ -5,7 +5,7 @@ import 'package:hapi/onboard/auth/auth_c.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_set.dart';
 import 'package:hapi/relic/relics_ui.dart';
-import 'package:hapi/relic/ummah/prophet.dart';
+import 'package:hapi/relic/ummah/prophet.dart' as prophets;
 import 'package:hapi/service/db.dart';
 
 class RelicC extends GetxHapi {
@@ -32,10 +32,7 @@ class RelicC extends GetxHapi {
     // must have ajrLevels initialized before calling initProphets(), etc.
     relics[RELIC_TYPE.Prophet] = RelicSet(
       relicType: RELIC_TYPE.Prophet,
-      trKeyTitle: 'a.Anbiya',
-      // TODO drop down other filters here:
-      trValSubtitle: '_i.mentioned in the_'.tr + ('a.Quran'),
-      relics: await initProphets(),
+      relics: await prophets.init(),
     );
 
     initNeeded = false; // Relic UIs can now initialize
@@ -44,14 +41,13 @@ class RelicC extends GetxHapi {
   }
 
   RelicSet getRelicSet(RELIC_TYPE relicType) => relics[relicType]!;
-  List<Relic> getRelics(RELIC_TYPE relicType) =>
-      relics[relicType]!.relics as List<Relic>;
+  List<Relic> getRelics(RELIC_TYPE relicType) => relics[relicType]!.relics;
 
   int getTilesPerRow(RELIC_TYPE relicType) =>
       s.rd('tilesPerRow${relicType.index}') ?? 5; // default for all relics
   setTilesPerRow(RELIC_TYPE relicType, int newVal) {
     s.wr('tilesPerRow${relicType.index}', newVal);
-    update();
+    updateOnThread1Ms(); // update() worked, but this is safer.
   }
 
   bool getShowTileText(RELIC_TYPE relicType) =>
@@ -65,6 +61,6 @@ class RelicC extends GetxHapi {
       s.rd('selectedTab${relicTab.index}') ?? 0;
   setLastSelectedTab(RELIC_TAB relicTab, int newVal) {
     s.wr('selectedTab${relicTab.index}', newVal);
-    //update();
+    //updateOnThread1Ms(); <- not needed, called after UI changes are done
   }
 }

@@ -129,7 +129,7 @@ class TimelineEntry {
   TimelineEntry({
     required this.type,
     required this.trValEra,
-    required this.trKeyEndTagLabel,
+    required this.trKeyEndTagLabel, // TODO make it trVal
     required this.startMs, // TODO are these ms or years?!
     required this.endMs,
     required this.asset,

@@ -15,7 +15,7 @@ enum RELIC_TYPE {
   // Leaders,
 }
 
-class Relic extends TimelineEntry {
+abstract class Relic extends TimelineEntry {
   Relic({
     // TimelineEntry data:
     required String trValEra,
@@ -46,6 +46,40 @@ class Relic extends TimelineEntry {
 
   // not final so we can update UI to reflect relic upgrades
   int ajrLevel = 0;
+
+  // Abstract classes subclasses must implement:
+  String get trValRelicSetTitle;
+  String get trValRelicSetSubtitle;
+  List<RelicSetFilter> get relicSetFilters;
+}
+
+/// Used to be able to change Relic's view/information as a way for the user to
+/// learn from a RelicSet, e.g. see only or highlight Ulu Al-Azm Prophets from
+/// the list of all the Prophet relics. Another example, to show the Prophets or
+/// Muhammad's Al-Bayt family tree views.
+class RelicSetFilter {
+  RelicSetFilter({
+    required this.type,
+    required this.trValSubtitle,
+    this.isResizeAble = true,
+    this.tprMin = 1,
+    this.tprMax = 11,
+    this.data,
+  });
+  final FILTER_TYPE type; // used to build UI around this filter
+  final String trValSubtitle; // label/Subtitle of filter on filter options menu
+  final bool isResizeAble; // Tells UI if it should show -/+ buttons
+  final int tprMin; // tiles per row minimum (Can be used to size tiles too)
+  final int tprMax; // tiles per row maximum (Can be used to size tiles too)
+
+  // Optional Parameters
+  final Object? data; // any data needed to create the filter TODO TBD
+}
+
+enum FILTER_TYPE {
+  Default,
+  IntSort,
+  Tree,
 }
 
 /// For the DB to track ajrLevel, we need each relic to have a unique RELIC_ID.

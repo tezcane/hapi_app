@@ -107,7 +107,7 @@ class _RelicTabBarState extends State<RelicTabBar>
                 unselectedLabelColor: AppThemes.ldTextColor,
                 indicatorWeight: 3.0,
                 tabs: relicSets
-                    .map((relicSet) => Tab(text: relicSet.trKeyTitle))
+                    .map((relicSet) => Tab(text: relicSet.trValTitle))
                     .toList(),
                 onTap: (index) {
                   animateAndScrollTo(index);
