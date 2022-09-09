@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/component/vertical_scrollable_tabview/scroll_to_index/scroll_to_index.dart';
-import 'package:hapi/component/vertical_scrollable_tabview/vertical_scrollable_tabview.dart';
+import 'package:hapi/component/auto_scroll_tab_view/auto_scroll_controller/auto_scroll_controller.dart';
+import 'package:hapi/component/auto_scroll_tab_view/auto_scroll_tab_view.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/relic/relic.dart';
@@ -23,10 +23,10 @@ class RelicTabBar extends StatefulWidget {
 
 class _RelicTabBarState extends State<RelicTabBar>
     with SingleTickerProviderStateMixin {
-  late TabController tabController;
-  late AutoScrollController scrollController;
-  late VerticalScrollableTabView verticalScrollableTabView;
   final List<RelicSet> relicSets = [];
+
+  late TabController tabController;
+  late AutoScrollController autoScrollController;
 
   bool initNeeded = true;
   int lastSelectedTabIdx = -1;
@@ -39,7 +39,7 @@ class _RelicTabBarState extends State<RelicTabBar>
       vsync: this,
     );
 
-    scrollController = AutoScrollController();
+    autoScrollController = AutoScrollController();
 
     super.initState();
   }
@@ -47,7 +47,7 @@ class _RelicTabBarState extends State<RelicTabBar>
   @override
   void dispose() {
     tabController.dispose();
-    scrollController.dispose();
+    autoScrollController.dispose();
     super.dispose();
   }
 
@@ -75,10 +75,10 @@ class _RelicTabBarState extends State<RelicTabBar>
 
       return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-        body: VerticalScrollableTabView(
+        body: AutoScrollTabView(
           relicTab: widget.relicTab,
           tabController: tabController,
-          scrollController: scrollController,
+          autoScrollController: autoScrollController,
           listItemData: relicSets,
           eachItemChild: (object, index) => RelicSetUI(object as RelicSet),
           slivers: [
@@ -121,8 +121,10 @@ class _RelicTabBarState extends State<RelicTabBar>
   /// This is called at init and also when user taps a tab on the tab bar
   void animateAndScrollTo(int newIdx) async {
     tabController.animateTo(newIdx);
-    scrollController.scrollToIndex(newIdx,
-        preferPosition: AutoScrollPosition.begin);
+    autoScrollController.scrollToIndex(
+      newIdx,
+      preferPosition: AutoScrollPosition.begin,
+    );
 
     if (lastSelectedTabIdx != newIdx) {
       lastSelectedTabIdx = newIdx;

@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:hapi/component/vertical_scrollable_tabview/rect_getter/rect_getter.dart';
-import 'package:hapi/component/vertical_scrollable_tabview/scroll_to_index/scroll_to_index.dart';
+import 'package:hapi/component/auto_scroll_tab_view/auto_scroll_controller/auto_scroll_controller.dart';
+import 'package:hapi/component/auto_scroll_tab_view/rect_getter/rect_getter.dart';
 import 'package:hapi/relic/relic_c.dart';
 import 'package:hapi/relic/relics_ui.dart';
 
-class VerticalScrollableTabView extends StatefulWidget {
-  const VerticalScrollableTabView({
+class AutoScrollTabView extends StatefulWidget {
+  const AutoScrollTabView({
     required this.relicTab,
     required this.tabController,
-    required this.scrollController,
+    required this.autoScrollController,
     required this.listItemData,
     required this.eachItemChild,
     required this.slivers,
-//  required Axis this.scrollDirection,
   });
 
   final RELIC_TAB relicTab;
@@ -20,7 +19,7 @@ class VerticalScrollableTabView extends StatefulWidget {
   /// TabBar Controller to let widget listening TabBar changed
   final TabController tabController;
 
-  final AutoScrollController scrollController;
+  final AutoScrollController autoScrollController;
 
   /// Required a List<dynamic> Type，you can put your data that you wanna put in item
   final List<dynamic> listItemData;
@@ -31,15 +30,11 @@ class VerticalScrollableTabView extends StatefulWidget {
   /// Required SliverAppBar, And TabBar must inside of SliverAppBar, and In the TabBar
   final List<Widget> slivers;
 
-  /// TODO Horizontal ScrollDirection
-//final Axis axisOrientation;
-
   @override
-  VerticalScrollableTabViewState createState() =>
-      VerticalScrollableTabViewState();
+  AutoScrollTabViewState createState() => AutoScrollTabViewState();
 }
 
-class VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
+class AutoScrollTabViewState extends State<AutoScrollTabView>
     with SingleTickerProviderStateMixin {
   /// Instantiate RectGetter
   final listViewKey = RectGetter.createGlobalKey();
@@ -55,7 +50,7 @@ class VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
       key: listViewKey,
       child: NotificationListener<ScrollNotification>(
         child: CustomScrollView(
-          controller: widget.scrollController,
+          controller: widget.autoScrollController,
           slivers: [...widget.slivers, buildVerticalSliverList()],
         ),
         onNotification: onScrollNotification,
@@ -68,7 +63,6 @@ class VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
   //   return ListView.builder(
   //     controller: widget.scrollController,
   //     itemCount: widget.listItemData.length,
-  //     /// TODO Horizontal ScrollDirection
   //     // scrollDirection: widget.axisOrientation,
   //     itemBuilder: (BuildContext context, int index) {
   //       /// Initial Key of itemKeys
@@ -100,7 +94,7 @@ class VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
       child: AutoScrollTag(
         key: ValueKey(index),
         index: index,
-        controller: widget.scrollController,
+        controller: widget.autoScrollController,
         child: widget.eachItemChild(category, index),
       ),
     );
@@ -128,7 +122,6 @@ class VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
     List<int> items = [];
     if (rect == null) return items;
 
-    /// TODO Horizontal ScrollDirection
     // bool isHoriontalScroll = widget.axisOrientation == Axis.horizontal;
     bool isHoriontalScroll = false;
     itemsKeys.forEach((index, key) {

@@ -1,3 +1,4 @@
+// // TODO do we need this? how does it build for web only? had 'library' on top before...
 // import 'dart:async';
 // // In order to *not* need this ignore, consider extracting the "web" version
 // // of your plugin as a separate package, instead of inlining it in the same
@@ -8,16 +9,16 @@
 // import 'package:flutter/services.dart';
 // import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 //
-// /// A web implementation of the VerticalScrollableTabview plugin.
-// class VerticalScrollableTabviewWeb {
+// /// A web implementation of the AutoScrollTabView plugin.
+// class AutoScrollTabViewWeb {
 //   static void registerWith(Registrar registrar) {
 //     final MethodChannel channel = MethodChannel(
-//       'vertical_scrollable_tabview',
+//       'auto_scroll_tab_view',
 //       const StandardMethodCodec(),
 //       registrar,
 //     );
 //
-//     final pluginInstance = VerticalScrollableTabviewWeb();
+//     final pluginInstance = AutoScrollTabViewWeb();
 //     channel.setMethodCallHandler(pluginInstance.handleMethodCall);
 //   }
 //
@@ -31,7 +32,8 @@
 //       default:
 //         throw PlatformException(
 //           code: 'Unimplemented',
-//           details: 'vertical_scrollable_tabview for web doesn\'t implement \'${call.method}\'',
+//           details:
+//               'auto_scroll_tab_view for web doesn\'t implement \'${call.method}\'',
 //         );
 //     }
 //   }
