@@ -33,7 +33,7 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
   final ScrollController _scrollController = ScrollController();
 
   bool scrollToEnd = false;
-  bool initialized = false;
+  bool initNeeded = true;
 
   @override
   initState() {
@@ -135,12 +135,12 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<TarikhController>(builder: (c) {
-      if (c.isTimelineInitDone && !initialized) {
-        initialized = true;
+      if (c.isTimelineInitDone && initNeeded) {
+        initNeeded = false;
         _updateSearch(); // needed for init
       }
 
-      if (!initialized) {
+      if (initNeeded) {
         return const Center(child: T('بِسْمِ ٱللَّٰهِ', tsN, trVal: true));
       }
 

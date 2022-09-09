@@ -29,7 +29,7 @@ class _RelicTabBarState extends State<RelicTabBar>
   late VerticalScrollableTabView verticalScrollableTabView;
   final List<RelicSet> relicSets = [];
 
-  bool notInitialized = true;
+  bool initNeeded = true;
 
   @override
   void initState() {
@@ -53,15 +53,15 @@ class _RelicTabBarState extends State<RelicTabBar>
   @override
   Widget build(BuildContext context) {
     return GetBuilder<RelicController>(builder: (c) {
-      if (RelicController.to.isNotInitialized) {
+      if (RelicController.to.initNeeded) {
         return const Center(child: T('بِسْمِ ٱللَّٰهِ', tsN, trVal: true));
       }
 
-      if (notInitialized) {
+      if (initNeeded) {
         for (RELIC_TYPE relicType in widget.relicTypes) {
           relicSets.add(RelicController.to.getRelicSet(relicType));
         }
-        notInitialized = false;
+        initNeeded = false;
       }
 
       return Scaffold(

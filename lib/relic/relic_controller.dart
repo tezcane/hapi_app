@@ -15,7 +15,7 @@ class RelicController extends GetxHapi {
   final List<int> ajrLevels = List.filled(RELIC_ID.values.length, 0);
   final Map<RELIC_TYPE, RelicSet> relics = {};
 
-  bool isNotInitialized = true;
+  bool initNeeded = true;
 
   @override
   void onInit() {
@@ -38,7 +38,7 @@ class RelicController extends GetxHapi {
       relics: await initProphets(),
     );
 
-    isNotInitialized = false; // Relic UIs can now initialize
+    initNeeded = false; // Relic UIs can now initialize
 
     update(); // we better repaint for all those waiting UIs!
   }
