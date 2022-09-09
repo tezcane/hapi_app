@@ -109,13 +109,13 @@ class VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
   /// onScrollNotification of NotificationListener
   bool onScrollNotification(ScrollNotification notification) {
     List<int> visibleItems = getVisibleItemsIndex();
-    int index = visibleItems[0];
+    int newIdx = visibleItems[0];
 
-    widget.tabController.animateTo(index);
+    widget.tabController.animateTo(newIdx);
 
-    if (lastSelectedTabIdx != index) {
-      lastSelectedTabIdx = index;
-      RelicController.to.setLastSelectedTab(widget.relicTab, index);
+    if (lastSelectedTabIdx != newIdx) {
+      lastSelectedTabIdx = newIdx;
+      RelicController.to.setLastSelectedTab(widget.relicTab, newIdx);
     }
 
     return false;
