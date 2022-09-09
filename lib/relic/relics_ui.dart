@@ -26,6 +26,7 @@ enum RELIC_TAB {
 /// Init active/daily/timed/hapi quests with slick bottom bar navigation
 class RelicsUI extends StatelessWidget {
   const RelicsUI();
+
   static const navPage = NavPage.Relics;
 
   @override

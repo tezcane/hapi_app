@@ -9,6 +9,9 @@ import 'package:hapi/relic/relic_c.dart';
 import 'package:hapi/relic/relic_set_ui.dart';
 import 'package:hapi/relic/relics_ui.dart';
 
+/// A single RELIC_TAB bar which holds one or more RelicSets that are accessible
+/// via an AutoScrollTabView, meaning when the user scrolls vertically the
+/// Tab Bar's selection of the current RelicSet in view gets highlighted.
 class RelicTabBar extends StatefulWidget {
   const RelicTabBar({
     required this.relicTab,
@@ -24,12 +27,11 @@ class RelicTabBar extends StatefulWidget {
 class _RelicTabBarState extends State<RelicTabBar>
     with SingleTickerProviderStateMixin {
   final List<RelicSet> relicSets = [];
-
-  late TabController tabController;
-  late AutoScrollController autoScrollController;
+  late final TabController tabController;
+  late final AutoScrollController autoScrollController;
 
   bool initNeeded = true;
-  int lastSelectedTabIdx = -1;
+  int lastSelectedTabIdx = -1; // -1 forces update/rd/wr on next access (init)
 
   @override
   void initState() {
@@ -65,9 +67,7 @@ class _RelicTabBarState extends State<RelicTabBar>
 
         // Needed to scroll down to last selected tab at init:
         WidgetsBinding.instance.addPostFrameCallback(
-          (_) => animateAndScrollTo(
-            RelicC.to.getSelectedTab(widget.relicTab),
-          ),
+          (_) => animateAndScrollTo(RelicC.to.getSelectedTab(widget.relicTab)),
         );
 
         initNeeded = false;
