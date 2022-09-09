@@ -31,6 +31,7 @@ class _RelicTabBarState extends State<RelicTabBar>
   final List<RelicSet> relicSets = [];
 
   bool initNeeded = true;
+  int lastSelectedTabIdx = -1;
 
   @override
   void initState() {
@@ -65,8 +66,11 @@ class _RelicTabBarState extends State<RelicTabBar>
         }
 
         // Needed to scroll down to last selected tab at init:
-        WidgetsBinding.instance.addPostFrameCallback((_) => animateAndScrollTo(
-            RelicController.to.getSelectedTab(widget.relicTab)));
+        WidgetsBinding.instance.addPostFrameCallback(
+          (_) => animateAndScrollTo(
+            RelicController.to.getSelectedTab(widget.relicTab),
+          ),
+        );
 
         initNeeded = false;
       }
@@ -74,6 +78,7 @@ class _RelicTabBarState extends State<RelicTabBar>
       return Scaffold(
         backgroundColor: Theme.of(context).scaffoldBackgroundColor,
         body: VerticalScrollableTabView(
+          relicTab: widget.relicTab,
           tabController: tabController,
           scrollController: scrollController,
           listItemData: relicSets,
@@ -106,7 +111,6 @@ class _RelicTabBarState extends State<RelicTabBar>
                     .toList(),
                 onTap: (index) {
                   animateAndScrollTo(index);
-                  RelicController.to.setLastSelectedTab(widget.relicTab, index);
                 },
               ),
             ),
@@ -123,5 +127,10 @@ class _RelicTabBarState extends State<RelicTabBar>
       index,
       preferPosition: AutoScrollPosition.begin,
     );
+
+    if (lastSelectedTabIdx != index) {
+      lastSelectedTabIdx = index;
+      RelicController.to.setLastSelectedTab(widget.relicTab, index);
+    }
   }
 }

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hapi/components/vertical_scrollable_tabview/rect_getter/rect_getter.dart';
 import 'package:hapi/components/vertical_scrollable_tabview/scroll_to_index/scroll_to_index.dart';
+import 'package:hapi/relic/relic_controller.dart';
+import 'package:hapi/relic/relics_ui.dart';
 
 class VerticalScrollableTabView extends StatefulWidget {
   const VerticalScrollableTabView({
+    required this.relicTab,
     required this.tabController,
     required this.scrollController,
     required this.listItemData,
@@ -11,6 +14,8 @@ class VerticalScrollableTabView extends StatefulWidget {
     required this.slivers,
 //  required Axis this.scrollDirection,
   });
+
+  final RELIC_TAB relicTab;
 
   /// TabBar Controller to let widget listening TabBar changed
   final TabController tabController;
@@ -41,6 +46,8 @@ class VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
 
   /// To save the item's Rect
   Map<int, dynamic> itemsKeys = {};
+
+  int lastSelectedTabIdx = -1;
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +109,15 @@ class VerticalScrollableTabViewState extends State<VerticalScrollableTabView>
   /// onScrollNotification of NotificationListener
   bool onScrollNotification(ScrollNotification notification) {
     List<int> visibleItems = getVisibleItemsIndex();
-    widget.tabController.animateTo(visibleItems[0]);
+    int index = visibleItems[0];
+
+    widget.tabController.animateTo(index);
+
+    if (lastSelectedTabIdx != index) {
+      lastSelectedTabIdx = index;
+      RelicController.to.setLastSelectedTab(widget.relicTab, index);
+    }
+
     return false;
   }
 
