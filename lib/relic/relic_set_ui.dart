@@ -6,59 +6,68 @@ import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_c.dart';
+import 'package:hapi/relic/ummah/prophet.dart';
 
 /// An entire tab (tab and tile labels, relics, filters, etc.). Uses the
 /// RelicSet object found in relic.dart.
 // ignore: must_be_immutable
 class RelicSetUI extends StatelessWidget {
   RelicSetUI(this.relicSet) {
-    relicSetFilters = relicSet.filterList; // needs init separately
+    filters = relicSet.filterList; // needs init separately
 
-    updateRelicSetFilter(RelicC.to.getRelicSetFilterIdx(relicSet.relicType));
+    _updateFilter(RelicC.to.getFilterIdx(relicSet.relicType));
   }
   final RelicSet relicSet;
 
-  late final List<RelicSetFilter> relicSetFilters;
-
+  late final List<RelicSetFilter> filters;
   late RelicSetFilter filter;
-  int filterIdx = -1; // -1 forces update/rd/wr on next access (init)
+  late int filterIdx = -1; // -1 forces update/rd/wr on next access (init)
 
-  // We need RelicSetFilter info to populate tpr (Tiles Per Row) variable.
-  // tpr values can only be 1-11 and are used for several calculations and to
-  // size the relic tiles/images appropriately based on filter needs. We call it
-  // tpr instead of tilesPerRow because it is more than tilesPerRow so we make
-  // it ambiguously as it is more of concept of two things. There are two other
-  // tpr values found here too: RelicSetFilter.tprMin()/tprMax().
+  /// tpr (Tiles Per Row) valid range is 1-11, within this range it can be set
+  /// to lower values to prevent tiles from changing too big/small in
+  /// conjunction with tprMin/tprMax values.
   late int tpr;
+
   late bool showTileText;
 
-  updateRelicSetFilter(int newIdx) {
+  _updateFilter(int newIdx) {
     if (newIdx == filterIdx) return; // no need to do work, return
-    filterIdx = newIdx;
-
-    filter = relicSetFilters[filterIdx];
-    tpr = RelicC.to.getTilesPerRow(relicSet.relicType, filterIdx);
+    filter = filters[newIdx];
+    tpr = RelicC.to.getTilesPerRow(relicSet.relicType, newIdx);
 
     showTileText = RelicC.to.getShowTileText(relicSet.relicType);
+
+    if (filterIdx != -1) RelicC.to.setFilterIdx(relicSet.relicType, newIdx);
+    filterIdx = newIdx;
   }
 
   @override
   Widget build(BuildContext context) {
+    late List<Widget> tileWidgetList;
+    switch (filter.type) {
+      case (FILTER_TYPE.Default):
+        tileWidgetList = _getTileListDefault(context);
+        break;
+      case (FILTER_TYPE.IdxList):
+        tileWidgetList = _getTileIdxList(context);
+        break;
+    }
+
     return Container(
       color: Theme.of(context).backgroundColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          if (filter.type == FILTER_TYPE.Default) _tileHeaderDefault(context),
+          _tileHeader(context),
           const SizedBox(height: 8),
-          if (filter.type == FILTER_TYPE.Default) _tileListDefault(context),
+          _tileList(context, tileWidgetList),
           const SizedBox(height: 9),
         ],
       ),
     );
   }
 
-  Widget _tileHeaderDefault(BuildContext context) {
+  Widget _tileHeader(BuildContext context) {
     // width of extra spaces between 65-155: 65 (10+10+45) + 90 (45+45)
     final double wText = w(context) - 65 - (filter.isResizeable ? 90 : 0);
 
@@ -69,12 +78,17 @@ class RelicSetUI extends StatelessWidget {
         children: [
           Row(children: [
             const SizedBox(width: 10),
-            T(
-              filter.trValLabel,
-              tsNB,
-              w: wText,
-              trVal: true,
-              alignment: LanguageC.to.centerLeft, // to match big/small labels
+            SizedBox(
+              width: wText,
+              child: filters.length == 1
+                  ? T(
+                      filter.trValLabel,
+                      tsNB,
+                      w: wText,
+                      trVal: true,
+                      alignment: LanguageC.to.centerLeft,
+                    ) // only one item, no drop menu needed
+                  : _filterDropMenu(context), // to match big/small labels
             ),
             const SizedBox(width: 10),
           ]),
@@ -101,6 +115,41 @@ class RelicSetUI extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _filterDropMenu(BuildContext context) {
+    return DropdownButton<int>(
+      isExpanded: true,
+      isDense: false,
+      value: RelicC.to.getFilterIdx(relicSet.relicType),
+      iconEnabledColor: Colors.white,
+      iconSize: 25,
+      style: AppThemes.textStyleBtn,
+      dropdownColor: cf(context),
+      //itemHeight: 55.0,
+      menuMaxHeight: 700.0,
+      borderRadius: BorderRadius.circular(AppThemes.cornerRadius),
+      underline: Container(height: 0),
+      onChanged: (int? newValue) {
+        _updateFilter(newValue!);
+
+        // Needed to reflect dropdown menu selection on UI:
+        WidgetsBinding.instance.addPostFrameCallback((_) => RelicC.to.update());
+      },
+      items: List<int>.generate(relicSet.filterList.length, (i) => i)
+          .map<DropdownMenuItem<int>>(
+        (int value) {
+          return DropdownMenuItem<int>(
+            value: value,
+            child: T(
+              relicSet.filterList[value].trValLabel,
+              RelicC.to.getFilterIdx(relicSet.relicType) == value ? ts : tsN,
+              alignment: LanguageC.to.centerLeft,
+            ),
+          );
+        },
+      ).toList(),
     );
   }
 
@@ -145,19 +194,27 @@ class RelicSetUI extends StatelessWidget {
     );
   }
 
-  Widget _tileListDefault(BuildContext context) {
-    return Wrap(
-      // direction: Axis.horizontal <-- TODO use this for landscape/portrait mode?
-      alignment: WrapAlignment.center, // TY!, centers modules remainders
-      spacing: 4, // NOTE: must subtract this from _relicTile() or overflows
-      runSpacing: showTileText ? 6 : 2.5, // gap under a row of tiles
-      children: List.generate(
+  List<Widget> _getTileListDefault(BuildContext context) {
+    final List<Widget> tileWidgets = []; // TODO can cache for UI speed up
+    for (Relic relic in relicSet.relics) {
+      tileWidgets.add(_relicTile(context, relic));
+    }
+    // Acts same as above:
+    /* List.generate(
         relicSet.relics.length,
         (index) {
           return _relicTile(context, relicSet.relics[index]);
         },
-      ),
-    );
+      ) */
+    return tileWidgets;
+  }
+
+  List<Widget> _getTileIdxList(BuildContext context) {
+    final List<Widget> tileWidgets = []; // TODO can cache for UI speed up
+    for (int index in filter.idxList!) {
+      tileWidgets.add(_relicTileWithField(context, relicSet.relics[index]));
+    }
+    return tileWidgets;
   }
 
   Widget _relicTile(BuildContext context, Relic relic) {
@@ -187,6 +244,55 @@ class RelicSetUI extends StatelessWidget {
           if (showTileText) T(relic.trValTitle, tsN, w: wTile, h: hText),
         ],
       ),
+    );
+  }
+
+  Widget _relicTileWithField(BuildContext context, Relic relic) {
+    bool hasField = filter.field != null;
+    String field = '';
+    if (hasField) {
+      switch (filter.field) {
+        case (FILTER_FIELD.Prophet_quranMentionCount):
+          field = cni((relic as Prophet).quranMentionCount);
+          break;
+      }
+    }
+
+    final double wTile = w(context) / tpr - 4; // -4 for Wrap.spacing!
+
+    // when tiles get tiny we force huge height to take up all width
+    final double hText = 35 - (tpr.toDouble() * 2); // h size: 13-33
+    final double hTile = wTile + (showTileText ? (hText * 2) : 0);
+
+    return SizedBox(
+      width: wTile,
+      height: hTile,
+      child: Column(
+        children: [
+          Container(
+            // color: AppThemes.ajrColorsByIdx[Random().nextInt(7)],
+            color: AppThemes.ajrColorsByIdx[relic.ajrLevel],
+            child: SizedBox(
+              width: wTile,
+              height: wTile,
+              child: Image(
+                  image: AssetImage(relic.asset.filename), fit: BoxFit.fill),
+            ),
+          ),
+          if (showTileText && hasField) T(field, tsN, w: wTile, h: hText),
+          if (showTileText) T(relic.trValTitle, tsN, w: wTile, h: hText),
+        ],
+      ),
+    );
+  }
+
+  Widget _tileList(BuildContext context, List<Widget> tileWidgets) {
+    return Wrap(
+      // direction: Axis.horizontal <-- TODO use this for landscape/portrait mode?
+      alignment: WrapAlignment.center, // TY!, centers modules remainders
+      spacing: 4, // NOTE: must subtract this from _relicTile() or overflows
+      runSpacing: showTileText ? 6 : 2.5, // gap under a row of tiles
+      children: tileWidgets,
     );
   }
 }

@@ -10,13 +10,6 @@ import 'package:hapi/quest/active/athan/z.dart';
 typedef OnToggle = void Function(int index);
 
 class ActiveQuestsSettingsUI extends StatelessWidget {
-  final TextStyle tsTitle = const TextStyle(
-      color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14);
-  final TextStyle textStyleBtn = const TextStyle(
-      color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14);
-
-  static const double cornerRadius = 5.0;
-
   Widget addSetting({
     required String trValTitle,
     required String trValTooltip,
@@ -32,7 +25,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
           Center(
             child: T(
               trValTitle,
-              tsTitle,
+              AppThemes.tsTitle,
               w: 150,
               h: 16,
               boxFit: BoxFit.contain,
@@ -46,7 +39,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
             fontSize: 14,
             initialLabelIndex: initialLabelIndex,
             trValLabels: trValLabels,
-            cornerRadius: cornerRadius,
+            cornerRadius: AppThemes.cornerRadius,
             activeBgColor: AppThemes.selected,
             activeFgColor: Colors.white,
             inactiveBgColor: Colors.grey, //const Color(0xFF1D1E33),
@@ -68,10 +61,10 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
               message: 'tt.calculationMethod'.tr,
               child: Column(
                 children: [
-                  Center(
+                  const Center(
                     child: T(
                       'i.Calculation Method',
-                      tsTitle,
+                      AppThemes.tsTitle,
                       w: 150, // TODO get from slide out menu width
                       h: 16,
                       boxFit: BoxFit.contain,
@@ -85,11 +78,11 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
                     //icon: const Icon(Icons.arrow_downward),
                     iconEnabledColor: Colors.white,
                     iconSize: 25,
-                    style: textStyleBtn,
+                    style: AppThemes.textStyleBtn,
                     dropdownColor: Colors.grey,
                     //itemHeight: 55.0,
                     menuMaxHeight: 700.0,
-                    borderRadius: BorderRadius.circular(cornerRadius),
+                    borderRadius: BorderRadius.circular(AppThemes.cornerRadius),
                     underline: Container(height: 0),
                     onChanged: (int? newValue) => c.salahCalcMethod = newValue!,
                     items: List<int>.generate(

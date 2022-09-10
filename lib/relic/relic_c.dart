@@ -34,6 +34,14 @@ class RelicC extends GetxHapi {
       relics: await prophets.init(),
     );
 
+    // // Playground to find sort order data or dump defaults:
+    // RelicSet relicSet = relics[RELIC_TYPE.Prophet]!;
+    // int idx = 0;
+    // for (Relic relic in relicSet.relics) {
+    //   print('$idx, // ${(relic as Prophet).quranMentionCount} ${relic.trKeyEndTagLabel}');
+    //   idx++;
+    // }
+
     initNeeded = false; // Relic UIs can now initialize
 
     update(); // we better repaint for all those waiting UIs!
@@ -42,11 +50,11 @@ class RelicC extends GetxHapi {
   RelicSet getRelicSet(RELIC_TYPE relicType) => relics[relicType]!;
   List<Relic> getRelics(RELIC_TYPE relicType) => relics[relicType]!.relics;
 
-  int getRelicSetFilterIdx(RELIC_TYPE relicType) =>
-      s.rd('relicSetFilterIdx${relicType.index}') ?? 0;
-  setRelicSetFilterIdx(RELIC_TYPE relicType, int newVal) {
-    s.wr('relicSetFilterIdx${relicType.index}', newVal);
-    updateOnThread1Ms(); // update() worked, but this is safer.
+  int getFilterIdx(RELIC_TYPE relicType) =>
+      s.rd('filterIdx${relicType.index}') ?? 0;
+  setFilterIdx(RELIC_TYPE relicType, int newVal) {
+    s.wr('filterIdx${relicType.index}', newVal);
+    //updateOnThread1Ms(); // <-can't do or UI loops continuously
   }
 
   int getTilesPerRow(RELIC_TYPE relicType, int relicSetFilterIdx) =>
@@ -64,10 +72,10 @@ class RelicC extends GetxHapi {
     updateOnThread1Ms();
   }
 
-  int getSelectedTab(RELIC_TAB relicTab) =>
-      s.rd('selectedTab${relicTab.index}') ?? 0;
-  setLastSelectedTab(RELIC_TAB relicTab, int newVal) {
-    s.wr('selectedTab${relicTab.index}', newVal);
+  int getSelectedTabIdx(RELIC_TAB relicTab) =>
+      s.rd('selectedTabIdx${relicTab.index}') ?? 0;
+  setLastSelectedTabIdx(RELIC_TAB relicTab, int newVal) {
+    s.wr('selectedTabIdx${relicTab.index}', newVal);
     //updateOnThread1Ms(); <- not needed, called after UI changes are done
   }
 }

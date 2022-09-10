@@ -81,6 +81,14 @@ class AppThemes {
     textTheme: Typography.whiteMountainView,
     unselectedWidgetColor: selected, // set un-checked checkbox
   );
+
+  static const double cornerRadius = 5.0;
+
+  // TODO best place/way of doing this?:
+  static const TextStyle tsTitle =
+      TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14);
+  static const TextStyle textStyleBtn =
+      TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14);
 }
 /*
 /// contains info related to our light and dark themes.

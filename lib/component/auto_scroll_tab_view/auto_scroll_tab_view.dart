@@ -109,7 +109,7 @@ class AutoScrollTabViewState extends State<AutoScrollTabView>
 
     if (lastSelectedTabIdx != newIdx) {
       lastSelectedTabIdx = newIdx;
-      RelicC.to.setLastSelectedTab(widget.relicTab, newIdx);
+      RelicC.to.setLastSelectedTabIdx(widget.relicTab, newIdx);
     }
 
     return false;

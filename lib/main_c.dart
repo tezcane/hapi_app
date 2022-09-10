@@ -172,10 +172,14 @@ class TS extends TextStyle {
 }
 
 /// Commonly used TextStyles: tsB (Bold), tsN (Normal), tsR (Red):
+// TODO ts and tsB don't work on light/dark change:
+TS ts = TS(Get.theme.textTheme.headline6!.color!);
 TS tsB = TS(Get.theme.textTheme.headline6!.color!, fontWeight: FontWeight.bold);
 const TS tsNB = TS(AppThemes.ldTextColor, fontWeight: FontWeight.bold);
+const TS tsWB = TS(Colors.white, fontWeight: FontWeight.bold);
 const TS tsN = TS(AppThemes.ldTextColor);
 const TS tsR = TS(Colors.red);
+const TS tsW = TS(Colors.white);
 
 // TODO change to TK - Translate trKey, and TV - Translate trValue
 /// "T"/"t" short for Text, use to translate or fit text in UI.

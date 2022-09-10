@@ -79,9 +79,67 @@ class Prophet extends Relic {
   String get trValRelicSetTitle => a('a.Anbiya');
   @override
   List<RelicSetFilter> get relicSetFilters => [
+        // Prophet default order (Rough prophethood order):
+        //  0, // Adam
+        //  1, // Idris
+        //  2, // Nuh
+        //  3, // Hud
+        //  4, // Salih
+        //  5, // Ibrahim
+        //  6, // Lut
+        //  7, // Ismail
+        //  8, // Ishaq
+        //  9, // Yaqub
+        // 10, // Yusuf
+        // 11, // Ayyub
+        // 12, // Shuayb
+        // 13, // Musa
+        // 14, // Harun
+        // 15, // Dhul-Kifl
+        // 16, // Dawud
+        // 17, // Suleyman
+        // 18, // Ilyas
+        // 19, // Alyasa
+        // 20, // Yunus
+        // 21, // Zakariya
+        // 22, // Yahya
+        // 23, // Isa
+        // 24, // Muhammad
         RelicSetFilter(
           type: FILTER_TYPE.Default,
-          trValLabel: at('at.Mentioned in the {0}', [('a.Quran')]),
+          trValLabel: 'i.Sort by ~Prophethood'.tr,
+        ),
+        RelicSetFilter(
+          type: FILTER_TYPE.IdxList,
+          trValLabel: 'i.Sort by Quran mentions'.tr,
+          field: FILTER_FIELD.Prophet_quranMentionCount,
+          idxList: [
+            13, // 136 Musa
+            5, //   69 Ibrahim
+            2, //   43 Nuh
+            6, //   27 Lut
+            10, //  27 Yusuf
+            0, //   25 Adam
+            23, //  25 Isa
+            14, //  20 Harun
+            8, //   17 Ishaq
+            17, //  17 Suleyman
+            9, //   16 Yaqub
+            16, //  16 Dawud
+            7, //   12 Ismail
+            4, //    9 Salih
+            12, //   9 Shuayb
+            3, //    7 Hud
+            21, //   7 Zakariya
+            22, //   5 Yahya
+            11, //   4 Ayyub
+            20, //   4 Yunus
+            24, //   4 Muhammad
+            1, //    2 Idris
+            15, //   2 Dhul-Kifl
+            18, //   2 Ilyas
+            19, //   2 Alyasa
+          ],
         ),
       ];
 }

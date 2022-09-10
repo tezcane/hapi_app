@@ -67,8 +67,12 @@ class RelicSet {
 /// Used to tell RelicSetUI() what filter view to build and show.
 enum FILTER_TYPE {
   Default,
-  IntSort,
+  IdxList,
   Tree,
+}
+
+enum FILTER_FIELD {
+  Prophet_quranMentionCount,
 }
 
 /// Used to be able to change Relic's view/information as a way for the user to
@@ -84,17 +88,26 @@ class RelicSetFilter {
     required this.trValLabel,
     this.tprMin = 1,
     this.tprMax = 11,
-    this.data,
+    this.field,
+    this.idxList,
   }) {
     isResizeable = tprMin != tprMax; // if tpr Min/Max different it's resizeable
   }
   final FILTER_TYPE type; // used to build UI around this filter
   final String trValLabel; // filter label/Subtitle of filter options menu
-  final int tprMin; // tiles per row minimum (Can be used to size tiles too)
-  final int tprMax; // tiles per row maximum (Can be used to size tiles too)
+  /// Work with "tpr" variable found and initialized in the UI (Yeah, I know...)
+  final int tprMin;
+  final int tprMax;
 
   // Optional Parameters
-  final Object? data; // any data needed to create the filter TODO TBD
+  /// OPTIONAL: You can add a string/int/object? and we will have a switch in
+  /// the UI to detect this and then display it appropriately.
+  final FILTER_FIELD? field;
+
+  /// OPTIONAL: List of indexes to original relic list to display a full or
+  /// subset of that list. For example, you can send in order of Prophets
+  /// mentioned in the Quran count, i.e. [13, (136 Musa), 5, (69 Ibrahim)...]).
+  final List<int>? idxList;
 
   // Tells UI if it should show -/+ buttons:
   late final bool isResizeable;

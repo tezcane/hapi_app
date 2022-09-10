@@ -13,10 +13,7 @@ import 'package:hapi/relic/relics_ui.dart';
 /// via an AutoScrollTabView, meaning when the user scrolls vertically the
 /// Tab Bar's selection of the current RelicSet in view gets highlighted.
 class RelicTabBar extends StatefulWidget {
-  const RelicTabBar({
-    required this.relicTab,
-    required this.relicTypes,
-  });
+  const RelicTabBar({required this.relicTab, required this.relicTypes});
   final RELIC_TAB relicTab;
   final List<RELIC_TYPE> relicTypes;
 
@@ -31,12 +28,12 @@ class _RelicTabBarState extends State<RelicTabBar>
   late final AutoScrollController autoScrollController;
 
   bool initNeeded = true;
-  int lastSelectedTabIdx = -1; // -1 forces update/rd/wr on next access (init)
+  int tabIdx = -1; // -1 forces update/rd/wr on next access (init)
 
   @override
   void initState() {
     tabController = TabController(
-      initialIndex: RelicC.to.getSelectedTab(widget.relicTab),
+      initialIndex: RelicC.to.getSelectedTabIdx(widget.relicTab),
       length: widget.relicTypes.length,
       vsync: this,
     );
@@ -67,7 +64,9 @@ class _RelicTabBarState extends State<RelicTabBar>
 
         // Needed to scroll down to last selected tab at init:
         WidgetsBinding.instance.addPostFrameCallback(
-          (_) => animateAndScrollTo(RelicC.to.getSelectedTab(widget.relicTab)),
+          (_) => animateAndScrollTo(
+            RelicC.to.getSelectedTabIdx(widget.relicTab),
+          ),
         );
 
         initNeeded = false;
@@ -126,9 +125,11 @@ class _RelicTabBarState extends State<RelicTabBar>
       preferPosition: AutoScrollPosition.begin,
     );
 
-    if (lastSelectedTabIdx != newIdx) {
-      lastSelectedTabIdx = newIdx;
-      RelicC.to.setLastSelectedTab(widget.relicTab, newIdx);
+    if (tabIdx != newIdx) {
+      if (tabIdx != -1) {
+        RelicC.to.setLastSelectedTabIdx(widget.relicTab, newIdx);
+      }
+      tabIdx = newIdx;
     }
   }
 }
