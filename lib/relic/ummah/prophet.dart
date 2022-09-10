@@ -72,24 +72,24 @@ class Prophet extends Relic {
   final List<String>? trValChildren;
   final List<String>? trValRelatives;
 
-  bool isRasul() => qvRasul != null;
-  bool isUluAlAzm() => qvsUluAlAzm != null && qvsUluAlAzm!.isNotEmpty;
+//bool isRasul() => qvRasul != null;
+//bool isUluAlAzm() => qvsUluAlAzm != null && qvsUluAlAzm!.isNotEmpty;
 
   @override
   String get trValRelicSetTitle => a('a.Anbiya');
   @override
   List<RelicSetFilter> get relicSetFilters => [
         // Prophet default order (Rough prophethood order):
-        //  0, // Adam
-        //  1, // Idris
-        //  2, // Nuh
-        //  3, // Hud
-        //  4, // Salih
-        //  5, // Ibrahim
-        //  6, // Lut
-        //  7, // Ismail
-        //  8, // Ishaq
-        //  9, // Yaqub
+        // 0, //  Adam
+        // 1, //  Idris
+        // 2, //  Nuh
+        // 3, //  Hud
+        // 4, //  Salih
+        // 5, //  Ibrahim
+        // 6, //  Lut
+        // 7, //  Ismail
+        // 8, //  Ishaq
+        // 9, //  Yaqub
         // 10, // Yusuf
         // 11, // Ayyub
         // 12, // Shuayb
@@ -139,6 +139,39 @@ class Prophet extends Relic {
             15, //   2 Dhul-Kifl
             18, //   2 Ilyas
             19, //   2 Alyasa
+          ],
+        ),
+        RelicSetFilter(
+          type: FILTER_TYPE.IdxList,
+          trValLabel: a('a.Rasul'),
+          idxList: [
+            0, //  Adam
+            2, //  Nuh
+            3, //  Hud
+            4, //  Salih
+            5, //  Ibrahim
+            6, //  Lut
+            7, //  Ismail
+            10, // Yusuf
+            12, // Shuayb
+            13, // Musa
+            14, // Harun
+            16, // Dawud
+            18, // Ilyas
+            20, // Yunus
+            23, // Isa
+            24, // Muhammad
+          ],
+        ),
+        RelicSetFilter(
+          type: FILTER_TYPE.IdxList,
+          trValLabel: a('a.Ulu Al-Azm'),
+          idxList: [
+            2, // Nuh
+            5, // Ibrahim
+            13, // Musa
+            23, // Isa
+            24, // Muhammad
           ],
         ),
       ];
