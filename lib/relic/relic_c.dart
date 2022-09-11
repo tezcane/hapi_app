@@ -4,7 +4,7 @@ import 'package:hapi/main_c.dart';
 import 'package:hapi/onboard/auth/auth_c.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relics_ui.dart';
-import 'package:hapi/relic/ummah/prophet.dart' as prophets;
+import 'package:hapi/relic/ummah/prophet.dart';
 import 'package:hapi/service/db.dart';
 
 class RelicC extends GetxHapi {
@@ -28,19 +28,24 @@ class RelicC extends GetxHapi {
 
     await Db.getRelicAjrLevels(ajrLevels); // updates ajrLevel
 
-    // must have ajrLevels initialized before calling initProphets(), etc.
+    // ajrLevels must initialize before calling initProphets, etc. on any Relics
     relics[RELIC_TYPE.Prophet] = RelicSet(
       relicType: RELIC_TYPE.Prophet,
-      relics: await prophets.init(),
+      relics: await initProphets(),
     );
 
     // // Playground to find sort order data or dump defaults:
     // RelicSet relicSet = relics[RELIC_TYPE.Prophet]!;
     // int idx = 0;
+    // print('********* RELIC INIT START *********');
     // for (Relic relic in relicSet.relics) {
-    //   print('$idx, // ${(relic as Prophet).quranMentionCount} ${relic.trKeyEndTagLabel}');
+    //   if ((relic as Prophet).isUluAlAzm() /* isRasul()) { */) {
+    //     print(
+    //         '$idx, // ${(relic as Prophet).quranMentionCount} ${relic.trKeyEndTagLabel}');
+    //   }
     //   idx++;
     // }
+    // print('********* RELIC INIT DONE *********');
 
     initNeeded = false; // Relic UIs can now initialize
 

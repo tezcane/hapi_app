@@ -72,8 +72,8 @@ class Prophet extends Relic {
   final List<String>? trValChildren;
   final List<String>? trValRelatives;
 
-//bool isRasul() => qvRasul != null;
-//bool isUluAlAzm() => qvsUluAlAzm != null && qvsUluAlAzm!.isNotEmpty;
+  bool isRasul() => qvRasul != null;
+  bool isUluAlAzm() => qvsUluAlAzm != null && qvsUluAlAzm!.isNotEmpty;
 
   @override
   String get trValRelicSetTitle => a('a.Anbiya');
@@ -107,11 +107,23 @@ class Prophet extends Relic {
         // 24, // Muhammad
         RelicSetFilter(
           type: FILTER_TYPE.Default,
-          trValLabel: 'i.Sort by ~Prophethood'.tr,
+          trValLabel: a('a.Nabi'),
         ),
         RelicSetFilter(
           type: FILTER_TYPE.IdxList,
-          trValLabel: 'i.Sort by Quran mentions'.tr,
+          trValLabel: a('a.Rasul'),
+          // Adam,Nuh,Hud,Salih,Ibrahim,Lut,Ismail,Yusuf,Shuayb,Musa,Harun,Dawud,Ilyas,Yunus,Isa,Muhammad
+          idxList: [0, 2, 3, 4, 5, 6, 7, 10, 12, 13, 14, 16, 18, 20, 23, 24],
+        ),
+        RelicSetFilter(
+          type: FILTER_TYPE.IdxList,
+          trValLabel: a('a.Ulu Al-Azm'),
+          tprMax: 5,
+          idxList: [2, 5, 13, 23, 24], // Nuh, Ibrahim, Musa, Isa, Muhammad
+        ),
+        RelicSetFilter(
+          type: FILTER_TYPE.IdxList,
+          trValLabel: 'i.Quran Name Mentions'.tr,
           field: FILTER_FIELD.Prophet_quranMentionCount,
           idxList: [
             13, // 136 Musa
@@ -142,42 +154,13 @@ class Prophet extends Relic {
           ],
         ),
         RelicSetFilter(
-          type: FILTER_TYPE.IdxList,
-          trValLabel: a('a.Rasul'),
-          idxList: [
-            0, //  Adam
-            2, //  Nuh
-            3, //  Hud
-            4, //  Salih
-            5, //  Ibrahim
-            6, //  Lut
-            7, //  Ismail
-            10, // Yusuf
-            12, // Shuayb
-            13, // Musa
-            14, // Harun
-            16, // Dawud
-            18, // Ilyas
-            20, // Yunus
-            23, // Isa
-            24, // Muhammad
-          ],
-        ),
-        RelicSetFilter(
-          type: FILTER_TYPE.IdxList,
-          trValLabel: a('a.Ulu Al-Azm'),
-          idxList: [
-            2, // Nuh
-            5, // Ibrahim
-            13, // Musa
-            23, // Isa
-            24, // Muhammad
-          ],
+          type: FILTER_TYPE.Tree,
+          trValLabel: 'i.Prophet Family Tree'.tr,
         ),
       ];
 }
 
-Future<List<Prophet>> init() async {
+Future<List<Prophet>> initProphets() async {
   List<Prophet> rv = [];
 
   rv.add(Prophet(
