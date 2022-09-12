@@ -123,7 +123,7 @@ class RelicSetFilter {
     required this.type,
     required this.trValLabel,
     this.tprMin = 1,
-    this.tprMax = 11,
+    this.tprMax = 12,
     this.field,
     this.idxList,
   }) {
@@ -131,7 +131,7 @@ class RelicSetFilter {
   }
   final FILTER_TYPE type; // used to build UI around this filter
   final String trValLabel; // filter label/Subtitle of filter options menu
-  /// Work with "tpr" variable found and initialized in the UI (Yeah, I know...)
+  /// Work with "tpr" variable found and initialized in RelicSetUI (Sorry...)
   final int tprMin;
   final int tprMax;
 

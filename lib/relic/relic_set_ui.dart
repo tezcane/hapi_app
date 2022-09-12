@@ -24,9 +24,9 @@ class RelicSetUI extends StatelessWidget {
   late RelicSetFilter filter;
   late int filterIdx = -1; // -1 forces update/rd/wr on next access (init)
 
-  /// tpr (Tiles Per Row) valid range is 1-11, within this range it can be set
-  /// to lower values to prevent tiles from changing too big/small in
-  /// conjunction with tprMin/tprMax values.
+  /// tpr (Tiles Per Row) valid range is RelicSetFilter.tprMin-RelicSetFilter.
+  /// Variable is used to tell UI how many relic tiles to draw per row, thus
+  /// controlling the size of the relic tiles on the screen.
   late int tpr;
 
   late bool showTileText;
