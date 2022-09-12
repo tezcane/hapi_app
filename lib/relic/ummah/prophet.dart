@@ -8,6 +8,33 @@ import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
 const String _ = ' '; // space/gap
 
+enum PROPHET {
+  Adam, //      0
+  Idris, //     1
+  Nuh, //       2
+  Hud, //       3
+  Salih, //     4
+  Ibrahim, //   5
+  Lut, //       6
+  Ismail, //    7
+  Ishaq, //     8
+  Yaqub, //     9
+  Yusuf, //    10
+  Ayyub, //    11
+  Shuayb, //   12
+  Musa, //     13
+  Harun, //    14
+  Dawud, //    15
+  Suleyman, // 16
+  Ilyas, //    17
+  Alyasa, //   18
+  Yunus, //    19
+  Zakariya, // 20
+  Yahya, //    21
+  Isa, //      22
+  Muhammad, // 23
+}
+
 class Prophet extends Relic {
   Prophet({
     // TimelineEntry data:
@@ -17,7 +44,7 @@ class Prophet extends Relic {
     required double endMs,
     required TimelineAsset asset,
     // Relic data:
-    required RELIC_ID relicId,
+    required int relicId,
     // Required prophet data:
     required this.trValBiblicalNames,
     required this.trValSentTo,
@@ -46,7 +73,7 @@ class Prophet extends Relic {
           endMs: endMs,
           asset: asset,
           // Relic data:
-          relicType: RELIC_TYPE.Prophet,
+          relicType: RELIC_TYPE.Quran_AlAnbiya,
           relicId: relicId,
           trKeySummary: 'ps.$trKeyEndTagLabel', // ps=Prophet Summary
           trKeySummary2: 'pq.$trKeyEndTagLabel', // pq=Prophet Quran
@@ -79,32 +106,6 @@ class Prophet extends Relic {
   String get trValRelicSetTitle => a('a.Anbiya');
   @override
   List<RelicSetFilter> get relicSetFilters => [
-        // Prophet default order (Rough prophethood order):
-        // 0, //  Adam
-        // 1, //  Idris
-        // 2, //  Nuh
-        // 3, //  Hud
-        // 4, //  Salih
-        // 5, //  Ibrahim
-        // 6, //  Lut
-        // 7, //  Ismail
-        // 8, //  Ishaq
-        // 9, //  Yaqub
-        // 10, // Yusuf
-        // 11, // Ayyub
-        // 12, // Shuayb
-        // 13, // Musa
-        // 14, // Harun
-        // 15, // Dhul-Kifl
-        // 16, // Dawud
-        // 17, // Suleyman
-        // 18, // Ilyas
-        // 19, // Alyasa
-        // 20, // Yunus
-        // 21, // Zakariya
-        // 22, // Yahya
-        // 23, // Isa
-        // 24, // Muhammad
         RelicSetFilter(
           type: FILTER_TYPE.Default,
           trValLabel: a('a.Nabi'),
@@ -112,45 +113,67 @@ class Prophet extends Relic {
         RelicSetFilter(
           type: FILTER_TYPE.IdxList,
           trValLabel: a('a.Rasul'),
-          // Adam,Nuh,Hud,Salih,Ibrahim,Lut,Ismail,Yusuf,Shuayb,Musa,Harun,Dawud,Ilyas,Yunus,Isa,Muhammad
-          idxList: [0, 2, 3, 4, 5, 6, 7, 10, 12, 13, 14, 16, 18, 20, 23, 24],
+          idxList: [
+            PROPHET.Adam.index,
+            PROPHET.Nuh.index,
+            PROPHET.Hud.index,
+            PROPHET.Salih.index,
+            PROPHET.Ibrahim.index,
+            PROPHET.Lut.index,
+            PROPHET.Ismail.index,
+            PROPHET.Yusuf.index,
+            PROPHET.Shuayb.index,
+            PROPHET.Musa.index,
+            PROPHET.Harun.index,
+            PROPHET.Dawud.index,
+            PROPHET.Ilyas.index,
+            PROPHET.Yunus.index,
+            PROPHET.Isa.index,
+            PROPHET.Muhammad.index,
+          ],
         ),
         RelicSetFilter(
           type: FILTER_TYPE.IdxList,
           trValLabel: a('a.Ulu Al-Azm'),
           tprMax: 5,
-          idxList: [2, 5, 13, 23, 24], // Nuh, Ibrahim, Musa, Isa, Muhammad
+          idxList: [
+            PROPHET.Nuh.index,
+            PROPHET.Ibrahim.index,
+            PROPHET.Musa.index,
+            PROPHET.Isa.index,
+            PROPHET.Muhammad.index,
+          ],
         ),
         RelicSetFilter(
           type: FILTER_TYPE.IdxList,
           trValLabel: 'i.Quran Name Mentions'.tr,
           field: FILTER_FIELD.Prophet_quranMentionCount,
           idxList: [
-            13, // 136 Musa
-            5, //   69 Ibrahim
-            2, //   43 Nuh
-            6, //   27 Lut
-            10, //  27 Yusuf
-            0, //   25 Adam
-            23, //  25 Isa
-            14, //  20 Harun
-            8, //   17 Ishaq
-            17, //  17 Suleyman
-            9, //   16 Yaqub
-            16, //  16 Dawud
-            7, //   12 Ismail
-            4, //    9 Salih
-            12, //   9 Shuayb
-            3, //    7 Hud
-            21, //   7 Zakariya
-            22, //   5 Yahya
-            11, //   4 Ayyub
-            20, //   4 Yunus
-            24, //   4 Muhammad
-            1, //    2 Idris
-            15, //   2 Dhul-Kifl
-            18, //   2 Ilyas
-            19, //   2 Alyasa
+            PROPHET.Musa.index, //    136 <-Mentions in Quran
+            PROPHET.Ibrahim.index, //  69
+            PROPHET.Nuh.index, //      43
+            PROPHET.Lut.index, //      27
+            PROPHET.Yusuf.index, //    27
+            PROPHET.Adam.index, //     25
+            PROPHET.Isa.index, //      25
+            PROPHET.Harun.index, //    20
+            PROPHET.Ishaq.index, //    17
+            PROPHET.Suleyman.index, // 17
+            PROPHET.Yaqub.index, //    16
+            PROPHET.Dawud.index, //    16
+            PROPHET.Ismail.index, //   12
+            PROPHET.Salih.index, //     9
+            PROPHET.Shuayb.index, //    9
+            PROPHET.Hud.index, //       7
+            PROPHET.Zakariya.index, //  7
+            PROPHET.Yahya.index, //     5
+            PROPHET.Ayyub.index, //     4
+            PROPHET.Yunus.index, //     4
+            PROPHET.Muhammad.index, //  4
+            PROPHET.Idris.index, //     2
+            // DhulKifl                 2 TODO other righteous men/women counts
+            PROPHET.Ilyas.index, //     2
+            PROPHET.Alyasa.index, //    2
           ],
         ),
         RelicSetFilter(
@@ -169,13 +192,9 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Adam',
     startMs: -3400000,
     endMs: -3399050,
-    asset: await TarikhC.tih.loadImageAsset(
-        'assets/images/anbiya/${RELIC_ID.Prophet_Adam.name.split('_')[1]}.png',
-        528,
-        528,
-        -40),
+    asset: await _getTimelineImageAsset(PROPHET.Adam),
     // Relic data:
-    relicId: RELIC_ID.Prophet_Adam,
+    relicId: PROPHET.Adam.index,
     // Required prophet data:
     trValBiblicalNames: 'Adam',
     trValSentTo:
@@ -204,13 +223,9 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Idris',
     startMs: 0,
     endMs: 0,
-    asset: await TarikhC.tih.loadImageAsset(
-        'assets/images/anbiya/${RELIC_ID.Prophet_Idris.name.split('_')[1]}.png',
-        528,
-        528,
-        -40),
+    asset: await _getTimelineImageAsset(PROPHET.Idris),
     // Relic data:
-    relicId: RELIC_ID.Prophet_Idris,
+    relicId: PROPHET.Idris.index,
     // Required prophet data:
     trValBiblicalNames: 'Chanokh, Enoch',
     trValSentTo: a('a.Babylon'),
@@ -238,13 +253,9 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Nuh',
     startMs: 0,
     endMs: 0,
-    asset: await TarikhC.tih.loadImageAsset(
-        'assets/images/anbiya/${RELIC_ID.Prophet_Nuh.name.split('_')[1]}.png',
-        528,
-        528,
-        -40),
+    asset: await _getTimelineImageAsset(PROPHET.Nuh),
     // Relic data:
-    relicId: RELIC_ID.Prophet_Nuh,
+    relicId: PROPHET.Nuh.index,
     // Required prophet data:
     trValBiblicalNames: 'Noach, Noe, Noah',
     trValSentTo: 'i.The people of_'.tr + a('a.Noah') + _ + cns('(26:105)'),
@@ -272,13 +283,9 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Hud',
     startMs: -2400,
     endMs: 0,
-    asset: await TarikhC.tih.loadImageAsset(
-        'assets/images/anbiya/${RELIC_ID.Prophet_Hud.name.split('_')[1]}.png',
-        528,
-        528,
-        -40),
+    asset: await _getTimelineImageAsset(PROPHET.Hud),
     // Relic data:
-    relicId: RELIC_ID.Prophet_Hud,
+    relicId: PROPHET.Hud.index,
     // Required prophet data:
     trValBiblicalNames: 'p.Possibly Eber (Heber) or his son'.tr,
     trValSentTo: a('a.Ad') + _ + a('a.Tribe') + _ + cns('(7:65)'),
@@ -308,13 +315,9 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Salih',
     startMs: 0,
     endMs: 0,
-    asset: await TarikhC.tih.loadImageAsset(
-        'assets/images/anbiya/${RELIC_ID.Prophet_Salih.name.split('_')[1]}.png',
-        528,
-        528,
-        -40),
+    asset: await _getTimelineImageAsset(PROPHET.Salih),
     // Relic data:
-    relicId: RELIC_ID.Prophet_Salih,
+    relicId: PROPHET.Salih.index,
     // Required prophet data:
     trValBiblicalNames: 'p.Possibly Shelah, Selah, Sala'.tr,
     trValSentTo: a('a.Thamud') + _ + a('a.Tribe') + _ + cns('(7:73)'),
@@ -344,13 +347,9 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Ibrahim',
     startMs: 0,
     endMs: 0,
-    asset: await TarikhC.tih.loadImageAsset(
-        'assets/images/anbiya/${RELIC_ID.Prophet_Ibrahim.name.split('_')[1]}.png',
-        528,
-        528,
-        -40),
+    asset: await _getTimelineImageAsset(PROPHET.Ibrahim),
     // Relic data:
-    relicId: RELIC_ID.Prophet_Ibrahim,
+    relicId: PROPHET.Ibrahim.index,
     // Required prophet data:
     trValBiblicalNames: 'Avraham, Abraam, Abraham',
     trValSentTo: a('a.Babylon') +
@@ -389,13 +388,9 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Lut',
     startMs: 0,
     endMs: 0,
-    asset: await TarikhC.tih.loadImageAsset(
-        'assets/images/anbiya/${RELIC_ID.Prophet_Lut.name.split('_')[1]}.png',
-        528,
-        528,
-        -40),
+    asset: await _getTimelineImageAsset(PROPHET.Lut),
     // Relic data:
-    relicId: RELIC_ID.Prophet_Lut,
+    relicId: PROPHET.Lut.index,
     // Required prophet data:
     trValBiblicalNames: 'Lot',
     trValSentTo: a('a.Saddoom') + // سدوم Sodom
@@ -433,13 +428,9 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Ismail',
     startMs: -1800,
     endMs: -1664,
-    asset: await TarikhC.tih.loadImageAsset(
-        'assets/images/anbiya/${RELIC_ID.Prophet_Ismail.name.split('_')[1]}.png',
-        528,
-        528,
-        -40),
+    asset: await _getTimelineImageAsset(PROPHET.Ismail),
     // Relic data:
-    relicId: RELIC_ID.Prophet_Ismail,
+    relicId: PROPHET.Ismail.index,
     // Required prophet data:
     trValBiblicalNames: 'Yishmael, Ismael, Ismahel, Ishmael',
     trValSentTo: 'p.Pre-Islamic_' +
@@ -475,13 +466,9 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Ishaq',
     startMs: 0,
     endMs: 0,
-    asset: await TarikhC.tih.loadImageAsset(
-        'assets/images/anbiya/${RELIC_ID.Prophet_Ishaq.name.split('_')[1]}.png',
-        528,
-        528,
-        -40),
+    asset: await _getTimelineImageAsset(PROPHET.Ishaq),
     // Relic data:
-    relicId: RELIC_ID.Prophet_Ishaq,
+    relicId: PROPHET.Ishaq.index,
     // Required prophet data:
     trValBiblicalNames: 'Yitzhak, Itzhak, Isaak, Issac, Isaac',
     trValSentTo: a('a.Falastin') + // فلسطين Palestine
@@ -519,13 +506,9 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Yaqub',
     startMs: 0,
     endMs: 0,
-    asset: await TarikhC.tih.loadImageAsset(
-        'assets/images/anbiya/${RELIC_ID.Prophet_Yaqub.name.split('_')[1]}.png',
-        528,
-        528,
-        -40),
+    asset: await _getTimelineImageAsset(PROPHET.Yaqub),
     // Relic data:
-    relicId: RELIC_ID.Prophet_Yaqub,
+    relicId: PROPHET.Yaqub.index,
     // Required prophet data:
     trValBiblicalNames: 'Yaakov, Iakob, Iacob, Jacob',
     trValSentTo: a('a.Falastin') + // فلسطين Palestine
@@ -559,13 +542,9 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Yusuf',
     startMs: 0,
     endMs: 0,
-    asset: await TarikhC.tih.loadImageAsset(
-        'assets/images/anbiya/${RELIC_ID.Prophet_Yusuf.name.split('_')[1]}.png',
-        528,
-        528,
-        -40),
+    asset: await _getTimelineImageAsset(PROPHET.Yusuf),
     // Relic data:
-    relicId: RELIC_ID.Prophet_Yusuf,
+    relicId: PROPHET.Yusuf.index,
     // Required prophet data:
     trValBiblicalNames: 'Yosef, Iosef, Ioseph, Joseph',
     trValSentTo: 'p.Ancient Kingdom of_'.tr + a('a.Misr'), // Egypt
@@ -597,13 +576,9 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Ayyub',
     startMs: 0,
     endMs: 0,
-    asset: await TarikhC.tih.loadImageAsset(
-        'assets/images/anbiya/${RELIC_ID.Prophet_Ayyub.name.split('_')[1]}.png',
-        528,
-        528,
-        -40),
+    asset: await _getTimelineImageAsset(PROPHET.Ayyub),
     // Relic data:
-    relicId: RELIC_ID.Prophet_Ayyub,
+    relicId: PROPHET.Ayyub.index,
     // Required prophet data:
     trValBiblicalNames: 'Iyyov, Iyov, Iob, Job',
     trValSentTo: a('a.Edom'), // TODO Arabee version
@@ -631,13 +606,9 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Shuayb',
     startMs: 0,
     endMs: 0,
-    asset: await TarikhC.tih.loadImageAsset(
-        'assets/images/anbiya/${RELIC_ID.Prophet_Shuayb.name.split('_')[1]}.png',
-        528,
-        528,
-        -40),
+    asset: await _getTimelineImageAsset(PROPHET.Shuayb),
     // Relic data:
-    relicId: RELIC_ID.Prophet_Shuayb,
+    relicId: PROPHET.Shuayb.index,
     // Required prophet data:
     trValBiblicalNames: 'p.None (Absent from Bible)'.tr,
     trValSentTo: a('a.Madyan') + // Midian
@@ -669,13 +640,9 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Musa',
     startMs: -1300,
     endMs: -1200,
-    asset: await TarikhC.tih.loadImageAsset(
-        'assets/images/anbiya/${RELIC_ID.Prophet_Musa.name.split('_')[1]}.png',
-        528,
-        528,
-        -40),
+    asset: await _getTimelineImageAsset(PROPHET.Musa),
     // Relic data:
-    relicId: RELIC_ID.Prophet_Musa,
+    relicId: PROPHET.Musa.index,
     // Required prophet data:
     trValBiblicalNames: 'Moshe, Mouses, Moyses, Moses',
     trValSentTo: a('a.Firaun') + // Pharaoh فرعون
@@ -711,13 +678,9 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Harun',
     startMs: -1303,
     endMs: -1200,
-    asset: await TarikhC.tih.loadImageAsset(
-        'assets/images/anbiya/${RELIC_ID.Prophet_Harun.name.split('_')[1]}.png',
-        528,
-        528,
-        -40),
+    asset: await _getTimelineImageAsset(PROPHET.Harun),
     // Relic data:
-    relicId: RELIC_ID.Prophet_Harun,
+    relicId: PROPHET.Harun.index,
     // Required prophet data:
     trValBiblicalNames: 'Aharon, Aaron',
     trValSentTo: a('a.Firaun') + // Pharaoh فرعون
@@ -745,55 +708,13 @@ Future<List<Prophet>> initProphets() async {
   ));
   rv.add(Prophet(
     // TimelineEntry data:
-    trValEra: 'i.Start of Buddhism'.tr,
-    trKeyEndTagLabel: 'Dhul-Kifl',
-    startMs: -600, // TODO Buddha: 6th or 5th century BCE
-    endMs: -500,
-    asset: await TarikhC.tih.loadImageAsset(
-        'assets/images/anbiya/${RELIC_ID.Prophet_DhulKifl.name.split('_')[1]}.png',
-        528,
-        528,
-        -40),
-    // Relic data:
-    relicId: RELIC_ID.Prophet_DhulKifl,
-    // Required prophet data:
-    trValBiblicalNames:
-        'p.Possibly Buddha, Ezekiel, Joshua, Obadiah or Isaiah'.tr,
-    // TODO Kifl or Kapilavastu in the northern Indian subcontinent:
-    trValSentTo: 'p.Possibly India subcontinent or_'.tr + a('a.Babylon'),
-    quranMentionCount: 2,
-    qvNabi: QV(21, 85, ayaEnd: 86),
-    // Optional prophet data:
-    qvRasul: null,
-    trValKitab: null,
-    qvsUluAlAzm: null,
-    trValLaqab: null,
-    trValLocationBirth: null,
-    trValLocationDeath: null,
-    trValTomb: 'p.Makam Dağı in Ergani province of Diyarbakir'.tr +
-        'i.,_'.tr +
-        a('a.Turkiye'),
-    trValPredecessor: null,
-    trValSuccessor: null,
-    trValMother: null,
-    trValFather: null,
-    trValSpouses: null,
-    trValChildren: null,
-    trValRelatives: null,
-  ));
-  rv.add(Prophet(
-    // TimelineEntry data:
     trValEra: 'i.Kings of_'.tr + a('a.Israel'),
     trKeyEndTagLabel: 'Dawud',
     startMs: -1000,
     endMs: -971,
-    asset: await TarikhC.tih.loadImageAsset(
-        'assets/images/anbiya/${RELIC_ID.Prophet_Dawud.name.split('_')[1]}.png',
-        528,
-        528,
-        -40),
+    asset: await _getTimelineImageAsset(PROPHET.Dawud),
     // Relic data:
-    relicId: RELIC_ID.Prophet_Dawud,
+    relicId: PROPHET.Dawud.index,
     // Required prophet data:
     trValBiblicalNames: 'Dawid, Dauid, David',
     trValSentTo: a('a.Al-Quds'), // Jerusalem - القدس
@@ -825,13 +746,9 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Suleyman',
     startMs: -971,
     endMs: -931,
-    asset: await TarikhC.tih.loadImageAsset(
-        'assets/images/anbiya/${RELIC_ID.Prophet_Suleyman.name.split('_')[1]}.png',
-        528,
-        528,
-        -40),
+    asset: await _getTimelineImageAsset(PROPHET.Suleyman),
     // Relic data:
-    relicId: RELIC_ID.Prophet_Suleyman,
+    relicId: PROPHET.Suleyman.index,
     // Required prophet data:
     trValBiblicalNames: 'Shelomoh, Salomon, Solomon',
     trValSentTo: a('a.Al-Quds'),
@@ -860,13 +777,9 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Ilyas',
     startMs: 0,
     endMs: 0,
-    asset: await TarikhC.tih.loadImageAsset(
-        'assets/images/anbiya/${RELIC_ID.Prophet_Ilyas.name.split('_')[1]}.png',
-        528,
-        528,
-        -40),
+    asset: await _getTimelineImageAsset(PROPHET.Ilyas),
     // Relic data:
-    relicId: RELIC_ID.Prophet_Ilyas,
+    relicId: PROPHET.Ilyas.index,
     // Required prophet data:
     trValBiblicalNames: 'Eliya, Eliou, Elias, Ilias, Elijah',
     trValSentTo: a('a.Samaria') + //  TODO
@@ -899,13 +812,9 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Alyasa',
     startMs: 0,
     endMs: 0,
-    asset: await TarikhC.tih.loadImageAsset(
-        'assets/images/anbiya/${RELIC_ID.Prophet_Alyasa.name.split('_')[1]}.png',
-        528,
-        528,
-        -40),
+    asset: await _getTimelineImageAsset(PROPHET.Alyasa),
     // Relic data:
-    relicId: RELIC_ID.Prophet_Alyasa,
+    relicId: PROPHET.Alyasa.index,
     // Required prophet data:
     trValBiblicalNames: 'Elishua, Elisaie, Eliseus, Elisha',
     trValSentTo: a('a.Samaria') + //  TODO
@@ -942,13 +851,9 @@ Future<List<Prophet>> initProphets() async {
     startMs:
         -800, // uncertain (8th century BCE or post-exilic period) in Wikipedia
     endMs: 0,
-    asset: await TarikhC.tih.loadImageAsset(
-        'assets/images/anbiya/${RELIC_ID.Prophet_Yunus.name.split('_')[1]}.png',
-        528,
-        528,
-        -40),
+    asset: await _getTimelineImageAsset(PROPHET.Yunus),
     // Relic data:
-    relicId: RELIC_ID.Prophet_Yunus,
+    relicId: PROPHET.Yunus.index,
     // Required prophet data:
     trValBiblicalNames: 'Yonah, Yona, Iona, Ionas, Jonas, Jonah',
     trValSentTo: a('a.Nineveh') + // TODO Ninevah? arabee?
@@ -984,13 +889,9 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Zakariya',
     startMs: 0,
     endMs: 0,
-    asset: await TarikhC.tih.loadImageAsset(
-        'assets/images/anbiya/${RELIC_ID.Prophet_Zakariya.name.split('_')[1]}.png',
-        528,
-        528,
-        -40),
+    asset: await _getTimelineImageAsset(PROPHET.Zakariya),
     // Relic data:
-    relicId: RELIC_ID.Prophet_Zakariya,
+    relicId: PROPHET.Zakariya.index,
     // Required prophet data:
     trValBiblicalNames:
         'Zekharyah, Zacharias, Zaccharias, Zechariah, Zachariah',
@@ -1023,13 +924,9 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Yahya',
     startMs: -100,
     endMs: 28, // AD 28–36
-    asset: await TarikhC.tih.loadImageAsset(
-        'assets/images/anbiya/${RELIC_ID.Prophet_Yahya.name.split('_')[1]}.png',
-        528,
-        528,
-        -40),
+    asset: await _getTimelineImageAsset(PROPHET.Yahya),
     // Relic data:
-    relicId: RELIC_ID.Prophet_Yahya,
+    relicId: PROPHET.Yahya.index,
     // Required prophet data:
     trValBiblicalNames: 'Yochanan, Ioannes, Iohannes, John',
     trValSentTo:
@@ -1062,13 +959,9 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Isa',
     startMs: -4,
     endMs: 30,
-    asset: await TarikhC.tih.loadImageAsset(
-        'assets/images/anbiya/${RELIC_ID.Prophet_Isa.name.split('_')[1]}.png',
-        528,
-        528,
-        -40),
+    asset: await _getTimelineImageAsset(PROPHET.Isa),
     // Relic data:
-    relicId: RELIC_ID.Prophet_Isa,
+    relicId: PROPHET.Isa.index,
     // Required prophet data:
     trValBiblicalNames: 'Yeshua, Iesous, Iesus, Iosue, Jesus',
     trValSentTo:
@@ -1109,13 +1002,9 @@ Future<List<Prophet>> initProphets() async {
     trKeyEndTagLabel: 'Muhammad',
     startMs: 570,
     endMs: 632,
-    asset: await TarikhC.tih.loadImageAsset(
-        'assets/images/anbiya/${RELIC_ID.Prophet_Muhammad.name.split('_')[1]}.png',
-        528,
-        528,
-        -40),
+    asset: await _getTimelineImageAsset(PROPHET.Muhammad),
     // Relic data:
-    relicId: RELIC_ID.Prophet_Muhammad,
+    relicId: PROPHET.Muhammad.index,
     // Required prophet data:
     trValBiblicalNames: 'Muhammad-im (מחמד' + // no tr here
         'p. - Hebrew) as written in Song of Songs 5:16'.tr, // just tr here
@@ -1235,3 +1124,51 @@ Future<List<Prophet>> initProphets() async {
 
   return rv;
 }
+
+Future<TimelineAsset> _getTimelineImageAsset(
+  PROPHET prophet, {
+  double width = 192,
+  double height = 192,
+  double scale = 0,
+}) async =>
+    await TarikhC.tih.loadImageAsset(
+      'assets/images/anbiya/${prophet.name}.png',
+      width,
+      height,
+      scale,
+    );
+
+// rv.add(Prophet(
+//   // TimelineEntry data:
+//   trValEra: 'i.Start of Buddhism'.tr,
+//   trKeyEndTagLabel: 'Dhul-Kifl',
+//   startMs: -600, // TODO Buddha: 6th or 5th century BCE
+//   endMs: -500,
+//   asset: await _getTimelineImageAsset(PROPHET.DhulKifl),
+//   // Relic data:
+//   relicId: PROPHET.DhulKifl.index,
+//   // Required prophet data:
+//   trValBiblicalNames:
+//       'p.Possibly Buddha, Ezekiel, Joshua, Obadiah or Isaiah'.tr,
+//   // TODO Kifl or Kapilavastu in the northern Indian subcontinent:
+//   trValSentTo: 'p.Possibly India subcontinent or_'.tr + a('a.Babylon'),
+//   quranMentionCount: 2,
+//   qvNabi: QV(21, 85, ayaEnd: 86),
+//   // Optional prophet data:
+//   qvRasul: null,
+//   trValKitab: null,
+//   qvsUluAlAzm: null,
+//   trValLaqab: null,
+//   trValLocationBirth: null,
+//   trValLocationDeath: null,
+//   trValTomb: 'p.Makam Dağı in Ergani province of Diyarbakir'.tr +
+//       'i.,_'.tr +
+//       a('a.Turkiye'),
+//   trValPredecessor: null,
+//   trValSuccessor: null,
+//   trValMother: null,
+//   trValFather: null,
+//   trValSpouses: null,
+//   trValChildren: null,
+//   trValRelatives: null,
+// ));

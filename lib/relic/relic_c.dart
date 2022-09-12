@@ -10,29 +10,59 @@ import 'package:hapi/service/db.dart';
 class RelicC extends GetxHapi {
   static RelicC get to => Get.find();
 
-  /// perfect hash map[int RELIC_ID.index] = int ajrLevel (init with 0's)
-  final List<int> ajrLevels = List.filled(RELIC_ID.values.length, 0);
-  final Map<RELIC_TYPE, RelicSet> relics = {};
+  /// Perfect hash, access via [RELIC_TYPE.index]
+  final List<RelicSet> _relicSets = [];
 
   bool initNeeded = true;
 
   @override
   void onInit() {
-    _initRelics();
+    _initRelicSets();
     super.onInit();
   }
 
-  void _initRelics() async {
+  // TODO get working via something like Relic.init() abstract method...
+  Future<List<Relic>> _initRelics(RELIC_TYPE relicType) async {
+    switch (relicType) {
+      case (RELIC_TYPE.Quran_AlAnbiya):
+        return await initProphets();
+      default:
+        return []; // TODO enable: return l.E('relicType=${relicType.name} init() not implemented yet');
+    }
+  }
+
+  void _initRelicSets() async {
     // No internet needed to init, but we put a back off just in case:
     await AuthC.to.waitForFirebaseLogin('RelicC._initRelics');
 
-    await Db.getRelicAjrLevels(ajrLevels); // updates ajrLevel
+    /// perfect hash ajrLevel[RELIC_TYPE.index] = Map<relicId, int ajrLevel>
+    final List<Map<int, int>> ajrLevels = [];
 
-    // ajrLevels must initialize before calling initProphets, etc. on any Relics
-    relics[RELIC_TYPE.Prophet] = RelicSet(
-      relicType: RELIC_TYPE.Prophet,
-      relics: await initProphets(),
-    );
+    // init relics and ajrLevels with empty Maps structures
+    for (RELIC_TYPE relicType in RELIC_TYPE.values) {
+      RelicSet relicSet = RelicSet(
+        relicType: relicType,
+        relics: await _initRelics(relicType),
+      );
+      _relicSets.add(relicSet);
+
+      // init ajrLevels to be used in DB access
+      Map<int, int> relicIdMap = {};
+      for (int relicId = 0; relicId < relicSet.relics.length; relicId++) {
+        relicIdMap[relicId] = 0; // set all relicId's for given RELIC_TYPE
+      }
+      ajrLevels.add(relicIdMap);
+    }
+
+    await Db.getRelicAjrLevels(ajrLevels); // merge DB ajrLevels into default 0
+
+    // RelicSets.relics initialized and DB ajrLevels returned, set ajrLevels:
+    for (RELIC_TYPE relicType in RELIC_TYPE.values) {
+      int relicId = 0;
+      for (Relic relic in _relicSets[relicType.index].relics) {
+        relic.ajrLevel = ajrLevels[relicType.index][relicId++]!;
+      }
+    }
 
     // // Playground to find sort order data or dump defaults:
     // RelicSet relicSet = relics[RELIC_TYPE.Prophet]!;
@@ -52,14 +82,14 @@ class RelicC extends GetxHapi {
     update(); // we better repaint for all those waiting UIs!
   }
 
-  RelicSet getRelicSet(RELIC_TYPE relicType) => relics[relicType]!;
-  List<Relic> getRelics(RELIC_TYPE relicType) => relics[relicType]!.relics;
+  RelicSet getRelicSet(RELIC_TYPE relicType) => _relicSets[relicType.index];
+  // List<Relic> getRelics(RELIC_TYPE relicType) => _relicSets[relicType.index].relics;
 
   int getFilterIdx(RELIC_TYPE relicType) =>
       s.rd('filterIdx${relicType.index}') ?? 0;
   setFilterIdx(RELIC_TYPE relicType, int newVal) {
     s.wr('filterIdx${relicType.index}', newVal);
-    //updateOnThread1Ms(); // <-can't do or UI loops continuously
+    updateOnThread1Ms(); // NOTE: Used to lock UI so used addPostFrameCallback()
   }
 
   int getTilesPerRow(RELIC_TYPE relicType, int relicSetFilterIdx) =>

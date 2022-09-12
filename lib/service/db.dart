@@ -94,49 +94,54 @@ class Db {
   }
 
   static Future<ActiveQuestModel?> getActiveQuest(String day) async {
-    String path = 'questActive/$_uid/day/$day';
+    final String path = 'questActive/$_uid/day/$day';
+    final String func = 'getActiveQuest($path)';
     try {
       return await _db.doc(path).get().then((doc) {
         if (doc.exists) {
           ActiveQuestModel m = ActiveQuestModel.fromJson(doc.data()!);
-          l.d('getActiveQuest($path): done=${m.done}, skip=${m.skip}, miss=${m.miss})');
+          l.d('$func: done=${m.done}, skip=${m.skip}, miss=${m.miss})');
           return m;
         } else {
-          l.d('getActiveQuest($path)=null');
+          l.d('$func: doc does not exist');
           return null;
         }
       });
     } catch (e) {
-      // ok to fail here, day not in db yet??
-      l.w('getActiveQuest($path) failed, error: $e');
+      l.w('$func failed, error: $e'); // TODO ok to fail here??
       return null;
     }
   }
 
-  static Future<void> getRelicAjrLevels(List<int> ajrLevels) async {
-    String path = 'relic/$_uid';
+  /// DB stores Map<'int relicType.index', Map<'int relicId', int ajrLevel>>.
+  /// Using '' quotes above since firestore only allows string keys, not ints.
+  static Future<void> getRelicAjrLevels(List<Map<int, int>> ajrLevels) async {
+    final String path = 'relic/$_uid';
+    final String func = 'getRelicAjrLevels($path)';
     try {
       return await _db.doc(path).get().then((doc) {
         if (doc.exists) {
           var json = doc.data()!;
-          var map = json['lvl2']; // lvl = ajr level
-          if (map != null) {
-            for (String key in map.keys) {
-              ajrLevels[int.parse(key)] = map[key]; // merge in db values
+
+          for (int typeIdx = 0; typeIdx < ajrLevels.length; typeIdx++) {
+            var dbTypeMap = json['$typeIdx'];
+            if (dbTypeMap == null) {
+              l.d('$func: ajr level map not found in db, typeIdx=$typeIdx');
+              continue;
             }
-            l.d('getRelicAjrLevels($path): map length=${map.keys.length}');
-          } else {
-            l.w('getRelicAjrLevels($path): ajr level map not found in db');
+
+            Map<int, int> relicIdMap = ajrLevels[typeIdx];
+            for (String key in dbTypeMap.keys) {
+              relicIdMap[int.parse(key)] = dbTypeMap[key]; // merge in db vals
+            }
           }
         } else {
-          l.w('getRelicAjrLevels($path): empty');
+          return l.d('$func: doc does not exist');
         }
         //return ajrLevels; // not necessary if ajrLevel on caller is same
       });
     } catch (e) {
-      // ok to fail here, day not in db yet??
-      l.e('getRelicAjrLevels($path) failed, error: $e');
-      //return ajrLevels; // not necessary if ajrLevel on caller is same
+      return l.e('$func failed, error: $e'); // TODO ok to fail here??
     }
   }
 }

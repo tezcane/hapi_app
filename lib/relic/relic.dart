@@ -1,18 +1,53 @@
-import 'package:hapi/relic/relic_c.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
 /// Each relic subsection/RelicSet (e.g. Ummah->Prophet) needs to have a
 /// RELIC_TYPE so it can be easily filtered/found/accessed later.
 enum RELIC_TYPE {
-  // Ummah Tab:
-  Prophet,
-  //TODO:
-  // Muhammad Laqab (Nicknames similar to 99 names of Allah)
-  // Bayt_Family,
-  // Sahabah,
-  // Ulamah,
-  // Khalifa,
-  // Leaders,
+  Heaven_Allah, // AsmaUlHusna - 99 names of allah
+  Heaven_Angels,
+  Heaven_DoorsOfJannah,
+  Heaven_LevelsOfJannah,
+  Heaven_LevelsOfHell,
+
+  Quran_AlAnbiya, // Prophets
+  Quran_Saliheen, // righteous people
+  Quran_Disbelievers, // bad people mentioned in the quran
+  Quran_Tribes,
+  Quran_Foods,
+
+  Delil_Quran,
+  Delil_Sunnah,
+  Delil_Prophecies,
+  Delil_Nature,
+  Delil_Ruins,
+
+  Islam_5Pillars,
+  Islam_6ArticlesOfFaith,
+  Islam_HolyPlaces,
+  Islam_Relics, // Kaba, black stone, Prophets Bow, etc.
+
+  Muhammad_Laqab,
+  Muhammad_AlBayt,
+  Muhammad_Zojah,
+  Muhammad_Children,
+
+  Ummah_Sahabah,
+  Ummah_Ulama,
+  Ummah_Dai, // Givers of Dawah
+  Ummah_Leaders, // Amirs/Khalif
+
+  Dynasty_Rashidun,
+  Dynasty_Ummayad,
+  Dynasty_Andalus,
+  Dynasty_Abbasid,
+  Dynasty_Selcuk,
+  Dynasty_Ayyubi,
+  Dynasty_Mamluk,
+  Dynasty_Ottoman,
+
+  Places_Mosques,
+  Places_Schools, // Still functioning or not
+  Places_Cities, // mentioned in the Quran,Ruins,  Conquered or not, Istanbul, Rome
 }
 
 /// Abstract class that all relics need to extend. Also extends TimelineEntry so
@@ -38,16 +73,17 @@ abstract class Relic extends TimelineEntry {
           endMs: endMs,
           asset: asset,
           accent: null,
-        ) {
-    ajrLevel = RelicC.to.ajrLevels[relicId.index]; // loaded from db
-  }
-  final RELIC_ID relicId;
+        );
+  // DB stores Map<'int relicType.index', Map<'int relicId', int ajrLevel>>.
+  // Using '' quotes above since firestore only allows string keys, not ints.
   final RELIC_TYPE relicType;
+  final int relicId;
   final String trKeySummary;
   final String trKeySummary2;
 
-  // not final so we can update UI to reflect relic upgrades
-  int ajrLevel = 0;
+  /// NOTE 1: Uses 'late' to force external/db init before UI can use it.
+  /// NOTE 2: Not final so we can update UI to reflect relic upgrades.
+  late int ajrLevel;
 
   // Abstract classes subclasses must implement:
   String get trValRelicSetTitle;
@@ -111,34 +147,4 @@ class RelicSetFilter {
 
   // Tells UI if it should show -/+ buttons:
   late final bool isResizeable;
-}
-
-/// For the DB to track ajrLevel, we need each relic to have a unique RELIC_ID.
-/// DB will store the int value of the enum, e.g. RELIC_ID.Prophet_Adam.index
-enum RELIC_ID {
-  Prophet_Adam,
-  Prophet_Idris,
-  Prophet_Nuh,
-  Prophet_Hud,
-  Prophet_Salih,
-  Prophet_Ibrahim,
-  Prophet_Lut,
-  Prophet_Ismail,
-  Prophet_Ishaq,
-  Prophet_Yaqub,
-  Prophet_Yusuf,
-  Prophet_Ayyub,
-  Prophet_Shuayb,
-  Prophet_Musa,
-  Prophet_Harun,
-  Prophet_Dawud,
-  Prophet_Suleyman,
-  Prophet_Ilyas,
-  Prophet_Alyasa,
-  Prophet_Yunus,
-  Prophet_DhulKifl,
-  Prophet_Zakariya,
-  Prophet_Yahya,
-  Prophet_Isa,
-  Prophet_Muhammad,
 }

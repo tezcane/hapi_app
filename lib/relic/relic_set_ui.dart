@@ -143,8 +143,9 @@ class RelicSetUI extends StatelessWidget {
       onChanged: (int? newValue) {
         _updateFilter(newValue!);
 
-        // Needed to reflect dropdown menu selection on UI:
-        WidgetsBinding.instance.addPostFrameCallback((_) => RelicC.to.update());
+        // updateOnThread1Ms() after RelicC.setFilterIdx() is OK, so don't need:
+        //   Needed to reflect dropdown menu selection on UI:
+        //   WidgetsBinding.instance.addPostFrameCallback((_) => RelicC.to.update());
       },
       items: List<int>.generate(relicSet.filterList.length, (i) => i)
           .map<DropdownMenuItem<int>>(
@@ -264,6 +265,8 @@ class RelicSetUI extends StatelessWidget {
         case (FILTER_FIELD.Prophet_quranMentionCount):
           field = cni((relic as Prophet).quranMentionCount);
           break;
+        default:
+          return l.E('filter.field ${filter.field!.name} not implemented yet');
       }
     }
 
@@ -418,7 +421,7 @@ class _TreeViewPageState extends State<TreeViewPage> {
               BoxShadow(color: Colors.blue[100]!, spreadRadius: 1),
             ],
           ),
-          child: Text('Node ${a}')),
+          child: Text('$a ${PROPHET.values[a!].name}')),
     );
   }
 
@@ -428,8 +431,35 @@ class _TreeViewPageState extends State<TreeViewPage> {
   @override
   void initState() {
     final Adam = Node.Id(0);
-    final Edris = Node.Id(1);
-    graph.addEdge(Adam, Edris);
+    final Idris = Node.Id(1);
+    final Nuh = Node.Id(2);
+    final Hud = Node.Id(3);
+    final Salih = Node.Id(4);
+    final Ibrahim = Node.Id(5);
+    final Lut = Node.Id(6);
+    final Ismail = Node.Id(7);
+    final Ishaq = Node.Id(8);
+    final Yaqub = Node.Id(9);
+    final Yusuf = Node.Id(10);
+    final Ayyub = Node.Id(11);
+    final Shuayb = Node.Id(12);
+    final Musa = Node.Id(13);
+    final Harun = Node.Id(14);
+    final DhulKifl = Node.Id(15);
+    final Dawud = Node.Id(16);
+    final Suleyman = Node.Id(17);
+    final Ilyas = Node.Id(18);
+    final Alyasa = Node.Id(19);
+    final Yunus = Node.Id(20);
+    final Zakariya = Node.Id(21);
+    final Yahya = Node.Id(22);
+    final Isa = Node.Id(23);
+    final Muhammad = Node.Id(24);
+
+    graph.addEdge(Adam, Idris);
+    graph.addEdge(Idris, Nuh);
+    graph.addEdge(Nuh, Hud);
+    graph.addEdge(Nuh, Salih);
 
     // final node1 = Node.Id(1);
     // final node2 = Node.Id(2);
