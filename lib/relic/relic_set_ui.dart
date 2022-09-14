@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:hapi/main_c.dart';
@@ -44,15 +42,20 @@ class RelicSetUI extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late List<Widget> tileWidgetList;
+    Widget tileView;
     switch (filter.type) {
       case (FILTER_TYPE.Default):
-        tileWidgetList = _getTileListDefault(context);
+        tileView = _tileList(context, _getTileListDefault(context));
         break;
       case (FILTER_TYPE.IdxList):
-        tileWidgetList = _getTileIdxList(context);
+        tileView = _tileList(context, _getTileIdxList(context));
         break;
       case (FILTER_TYPE.Tree):
+        tileView = SizedBox(
+          width: w(context) - 2,
+          height: h(context),
+          child: _getTreeView(filter.treeGraph!),
+        );
         break;
     }
 
@@ -63,13 +66,7 @@ class RelicSetUI extends StatelessWidget {
         children: [
           _tileHeader(context),
           const SizedBox(height: 8),
-          filter.type == FILTER_TYPE.Tree
-              ? SizedBox(
-                  width: w(context),
-                  height: h(context),
-                  child: TreeViewPage(),
-                )
-              : _tileList(context, tileWidgetList),
+          tileView,
           const SizedBox(height: 9),
         ],
       ),
@@ -307,80 +304,18 @@ class RelicSetUI extends StatelessWidget {
       children: tileWidgets,
     );
   }
-}
 
-class TreeViewPage extends StatefulWidget {
-  @override
-  _TreeViewPageState createState() => _TreeViewPageState();
-}
+  Widget _getTreeView(Graph graph) {
+    BuchheimWalkerConfiguration builder = BuchheimWalkerConfiguration()
+      ..siblingSeparation = (10)
+      ..levelSeparation = (40)
+      ..subtreeSeparation = (10)
+      ..orientation = (BuchheimWalkerConfiguration.ORIENTATION_TOP_BOTTOM);
 
-class _TreeViewPageState extends State<TreeViewPage> {
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
-        // appBar: AppBar(),
         body: Column(
       mainAxisSize: MainAxisSize.max,
       children: [
-        // Wrap(
-        //   children: [
-        //     Container(
-        //       width: 100,
-        //       child: TextFormField(
-        //         initialValue: builder.siblingSeparation.toString(),
-        //         decoration: InputDecoration(labelText: 'Sibling Separation'),
-        //         onChanged: (text) {
-        //           builder.siblingSeparation = int.tryParse(text) ?? 10;
-        //           this.setState(() {});
-        //         },
-        //       ),
-        //     ),
-        //     Container(
-        //       width: 100,
-        //       child: TextFormField(
-        //         initialValue: builder.levelSeparation.toString(),
-        //         decoration: InputDecoration(labelText: 'Level Separation'),
-        //         onChanged: (text) {
-        //           builder.levelSeparation = int.tryParse(text) ?? 40;
-        //           this.setState(() {});
-        //         },
-        //       ),
-        //     ),
-        //     Container(
-        //       width: 100,
-        //       child: TextFormField(
-        //         initialValue: builder.subtreeSeparation.toString(),
-        //         decoration: InputDecoration(labelText: 'Subtree separation'),
-        //         onChanged: (text) {
-        //           builder.subtreeSeparation = int.tryParse(text) ?? 10;
-        //           this.setState(() {});
-        //         },
-        //       ),
-        //     ),
-        //     Container(
-        //       width: 100,
-        //       child: TextFormField(
-        //         initialValue: builder.orientation.toString(),
-        //         decoration: InputDecoration(labelText: 'Orientation'),
-        //         onChanged: (text) {
-        //           builder.orientation = int.tryParse(text) ?? 100;
-        //           this.setState(() {});
-        //         },
-        //       ),
-        //     ),
-        //     ElevatedButton(
-        //       onPressed: () {
-        //         final node12 = Node.Id(r.nextInt(100));
-        //         var edge =
-        //             graph.getNodeAtPosition(r.nextInt(graph.nodeCount()));
-        //         print(edge);
-        //         graph.addEdge(edge, node12);
-        //         setState(() {});
-        //       },
-        //       child: Text('Add'),
-        //     )
-        //   ],
-        // ),
         Expanded(
           child: InteractiveViewer(
               constrained: false,
@@ -406,8 +341,6 @@ class _TreeViewPageState extends State<TreeViewPage> {
     ));
   }
 
-  Random r = Random();
-
   Widget rectangleWidget(int? a) {
     return InkWell(
       onTap: () {
@@ -421,74 +354,7 @@ class _TreeViewPageState extends State<TreeViewPage> {
               BoxShadow(color: Colors.blue[100]!, spreadRadius: 1),
             ],
           ),
-          child: Text('$a ${PROPHET.values[a!].name}')),
+          child: Text('$a ${PF.values[a!].name}')),
     );
-  }
-
-  final Graph graph = Graph()..isTree = true;
-  BuchheimWalkerConfiguration builder = BuchheimWalkerConfiguration();
-
-  @override
-  void initState() {
-    final Adam = Node.Id(0);
-    final Idris = Node.Id(1);
-    final Nuh = Node.Id(2);
-    final Hud = Node.Id(3);
-    final Salih = Node.Id(4);
-    final Ibrahim = Node.Id(5);
-    final Lut = Node.Id(6);
-    final Ismail = Node.Id(7);
-    final Ishaq = Node.Id(8);
-    final Yaqub = Node.Id(9);
-    final Yusuf = Node.Id(10);
-    final Ayyub = Node.Id(11);
-    final Shuayb = Node.Id(12);
-    final Musa = Node.Id(13);
-    final Harun = Node.Id(14);
-    final DhulKifl = Node.Id(15);
-    final Dawud = Node.Id(16);
-    final Suleyman = Node.Id(17);
-    final Ilyas = Node.Id(18);
-    final Alyasa = Node.Id(19);
-    final Yunus = Node.Id(20);
-    final Zakariya = Node.Id(21);
-    final Yahya = Node.Id(22);
-    final Isa = Node.Id(23);
-    final Muhammad = Node.Id(24);
-
-    graph.addEdge(Adam, Idris);
-    graph.addEdge(Idris, Nuh);
-    graph.addEdge(Nuh, Hud);
-    graph.addEdge(Nuh, Salih);
-
-    // final node1 = Node.Id(1);
-    // final node2 = Node.Id(2);
-    // final node3 = Node.Id(3);
-    // final node4 = Node.Id(4);
-    // final node5 = Node.Id(5);
-    // final node6 = Node.Id(6);
-    // final node8 = Node.Id(7);
-    // final node7 = Node.Id(8);
-    // final node9 = Node.Id(9);
-    // final node10 = Node.Id(10);
-    // final node11 = Node.Id(11);
-    // final node12 = Node.Id(12);
-    // graph.addEdge(node1, node2);
-    // graph.addEdge(node1, node3, paint: Paint()..color = Colors.red);
-    // graph.addEdge(node1, node4, paint: Paint()..color = Colors.blue);
-    // graph.addEdge(node2, node5);
-    // graph.addEdge(node2, node6);
-    // graph.addEdge(node6, node7, paint: Paint()..color = Colors.red);
-    // graph.addEdge(node6, node8, paint: Paint()..color = Colors.red);
-    // graph.addEdge(node4, node9);
-    // graph.addEdge(node4, node10, paint: Paint()..color = Colors.black);
-    // graph.addEdge(node4, node11, paint: Paint()..color = Colors.red);
-    // graph.addEdge(node11, node12);
-
-    builder
-      ..siblingSeparation = (10)
-      ..levelSeparation = (40)
-      ..subtreeSeparation = (10)
-      ..orientation = (BuchheimWalkerConfiguration.ORIENTATION_TOP_BOTTOM);
   }
 }

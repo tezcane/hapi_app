@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -100,16 +101,18 @@ class Log {
 
   /// Prints error (if log level permits) and throws exception.
   E(String msg) {
-    if (ll > llO0) debugPrint('H_ERR: $msg');
-    throw 'H_ERR: $msg';
+    if (kDebugMode) {
+      if (ll > llO0) debugPrint('H_ERR: $msg');
+      throw 'H_ERR: $msg'; // Don't throw error in production, GOOD LUCK!
+    }
   }
 
   /// e->error/failures, w->warn, i->info, d->debug, v->verbose:
-  e(String msg) => {if (ll > llO0) debugPrint('H_ERROR!!!: $msg')};
-  w(String msg) => {if (ll > llE1) debugPrint('H_WARNING!!!: $msg')};
-  i(String msg) => {if (ll > llW2) debugPrint('H_INF0: $msg')};
-  d(String msg) => {if (ll > llI3) debugPrint('H_DBUG: $msg')};
-  v(String msg) => {if (ll > llD4) debugPrint('H_VRBS: $msg')};
+  e(String m) => {if (kDebugMode && ll > llO0) debugPrint('H_ERROR!!!: $m')};
+  w(String m) => {if (kDebugMode && ll > llE1) debugPrint('H_WARNING!!!: $m')};
+  i(String m) => {if (kDebugMode && ll > llW2) debugPrint('H_INF0: $m')};
+  d(String m) => {if (kDebugMode && ll > llI3) debugPrint('H_DBUG: $m')};
+  v(String m) => {if (kDebugMode && ll > llD4) debugPrint('H_VRBS: $m')};
 }
 
 /// "s" short for Storage, use for all Storage access in app.
@@ -245,6 +248,12 @@ Map<String, String?> aMap = {
 /// Arabic script.
 String a(String trKey) {
   if (!trKey.startsWith('a.')) return trKey.tr; // no "a" key, tr and return
+  // if (kDebugMode && !trKey.startsWith('a.')) {
+  //   return l.E('a(): must pass in "a.", key got "$trKey"');
+  // }
+  //
+  // List<String> keySplit = trKey.split('.');
+  // if (keySplit.length == 1) return trKey.tr;
 
   String transliteration = trKey.split('.')[1]; // transliteration is aMap's key
   bool containsKey = aMap.containsKey(transliteration);
@@ -253,7 +262,7 @@ String a(String trKey) {
     if (rv == null) return transliteration; // user wants transliteration only
     return rv; // user wants Arabic alphabet
   }
-  return trKey.tr; // not found, just translate it now
+  return trKey.tr; // not found in aMap, translate to en/tr/etc.
 }
 
 /// at = Arabic Translate/Template. Use "at." template trKey to insert other
@@ -267,6 +276,8 @@ String a(String trKey) {
 /// Note: trKeysToInsert should have only "a." trKeys passed in.
 String at(String trKeyTemplate, List<String> trKeysToInsert) {
   String rv = a(trKeyTemplate); // does normal tr or "a." a() tr
+  // String rv =
+  //     trKeyTemplate.startsWith('a.') ? a(trKeyTemplate) : trKeyTemplate.tr;
 
   // loop through translated text and add arabic/transliteration text:
   for (int idx = 0; idx < trKeysToInsert.length; idx++) {

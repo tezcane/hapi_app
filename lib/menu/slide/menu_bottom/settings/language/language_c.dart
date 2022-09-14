@@ -68,6 +68,10 @@ class LanguageC extends GetxHapi {
   /// Always a 2 character language key, e.g. "ar", "en", etc.
   String currLangKey = '';
 
+  /// Holds all a.json Arabic "transileration"->"Arabic" variables that the app
+  /// uses to teach Arabic to the user.
+  late final Map<String, String> aMap;
+
   final Map<String, bool> _arabicScriptLangs = {
     'ar': true, // Arabic
     'ps': true, // Pashto
@@ -130,6 +134,7 @@ class LanguageC extends GetxHapi {
   @override
   void onInit() async {
     super.onInit();
+    aMap = await _getTrMap('', 'a');
     await updateLanguage(_findLanguage());
   }
 
@@ -260,4 +265,7 @@ class LanguageC extends GetxHapi {
   /// taken in real time from the i18n/tarikh_articles/ to not use up memory.
   Future<String> trValTarikhArticle(String label) async =>
       (await _getTrMap('tarikh_articles/', currLangKey))['t.$label']!;
+
+  /// Give "a.<transliteration> and get Arabic script translation back
+  String ar(String trKey) => aMap[trKey]!;
 }
