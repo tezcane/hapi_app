@@ -9,15 +9,14 @@ import 'package:hapi/quest/active/active_quests_c.dart';
 import 'package:hapi/quest/active/athan/z.dart';
 
 class ActiveQuestActionUI extends StatelessWidget {
-  late final Z z;
-  late final QUEST q;
-  late final Widget callerWidget;
-
   ActiveQuestActionUI() {
     z = Get.arguments['z'];
     q = Get.arguments['quest'];
     callerWidget = Get.arguments['widget'];
   }
+  late final Z z;
+  late final QUEST q;
+  late final Widget callerWidget;
 
   @override
   Widget build(BuildContext context) {

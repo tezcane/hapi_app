@@ -8,6 +8,7 @@ enum SubPage {
   Tarikh_Timeline,
   Tarikh_Article,
   Active_Quest_Action,
+  Family_Tree,
 }
 
 /// FAB (Floating Action Button) Sub Page, used to track animations for FAB.

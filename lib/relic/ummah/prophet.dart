@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/utils.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:hapi/controller/time_c.dart';
@@ -5,6 +6,7 @@ import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/quran/quran.dart';
 import 'package:hapi/relic/relic.dart';
+import 'package:hapi/relic/relic_c.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
@@ -185,8 +187,8 @@ Future<List<Prophet>> initProphets() async {
     trValLaqab: null,
     trValPredecessors: [PF.Adam], // TODO handle no predecesor for adam
     trValSuccessors: [PF.Sheth],
-    trValMother: PF.Created_without_a_mother,
-    trValFather: PF.Created_without_a_father,
+    trValMother: null,
+    trValFather: null,
     trValSpouses: [PF.Hawwa],
     trValSons: [PF.Habel, PF.Qabel, PF.Anaq, PF.Sheth],
     trValDaughters: null, // TODO
@@ -216,7 +218,7 @@ Future<List<Prophet>> initProphets() async {
         trValLatin: 'Enoch'),
     trValLaqab: null,
     trValPredecessors: [
-      PF.Adam,
+//    PF.Adam,
       PF.Sheth,
       PF.Anwas,
       PF.Qinan,
@@ -255,7 +257,7 @@ Future<List<Prophet>> initProphets() async {
     ),
     trValLaqab: null,
     trValPredecessors: [
-      PF.Idris,
+//    PF.Idris,
       PF.Matulshalkh,
     ],
     trValSuccessors: [PF.Hud],
@@ -293,14 +295,13 @@ Future<List<Prophet>> initProphets() async {
     ),
     trValLaqab: null,
     trValPredecessors: [
-      PF.Nuh,
+//    PF.Nuh,
       PF.Sam,
       PF.Irem,
       PF.Aush,
       PF.Ad,
       PF.Khalud,
       PF.Raya,
-      PF.Abdullah,
     ],
     trValSuccessors: [PF.Salih],
     trValMother: null,
@@ -339,8 +340,8 @@ Future<List<Prophet>> initProphets() async {
     ),
     trValLaqab: null,
     trValPredecessors: [
-      PF.Nuh,
-      PF.Sam,
+//    PF.Nuh,
+//    PF.Sam,
       PF.Irem,
       PF.Ars,
       PF.Samud,
@@ -348,11 +349,10 @@ Future<List<Prophet>> initProphets() async {
       PF.Ubayd,
       PF.Masih,
       PF.Auf,
-      PF.Abir_Ubayd,
     ],
     trValSuccessors: [PF.Ibrahim],
     trValMother: null,
-    trValFather: null,
+    trValFather: PF.Abir_Ubayd,
     trValSpouses: null,
     trValDaughters: null,
     trValSons: null,
@@ -389,7 +389,7 @@ Future<List<Prophet>> initProphets() async {
       'Father of Abrahimic faiths', // TODO
     ],
     trValPredecessors: [
-      PF.Nuh,
+//    PF.Nuh,
       PF.Sam,
       PF.Arfakhshad,
       PF.Shalikh,
@@ -443,8 +443,8 @@ Future<List<Prophet>> initProphets() async {
     ),
     trValLaqab: null,
     trValPredecessors: [
-      PF.Nuh,
-      PF.Sam,
+//    PF.Nuh,
+//    PF.Sam,
       PF.Arfakhshad,
       PF.Shalikh,
       PF.Abir,
@@ -659,7 +659,7 @@ Future<List<Prophet>> initProphets() async {
     ),
     trValLaqab: null,
     trValPredecessors: [
-      PF.Ishaq,
+//    PF.Ishaq,
       PF.Isu,
       PF.Rimil,
     ],
@@ -739,7 +739,7 @@ Future<List<Prophet>> initProphets() async {
     ),
     trValLaqab: null,
     trValPredecessors: [
-      PF.Ibrahim,
+//    PF.Ibrahim,
       PF.Madyan,
       PF.Yashjar,
     ],
@@ -784,7 +784,7 @@ Future<List<Prophet>> initProphets() async {
     ),
     trValLaqab: null,
     trValPredecessors: [
-      PF.Yaqub,
+//    PF.Yaqub,
       PF.Lawi,
       PF.Kehath_Yashur,
     ],
@@ -832,8 +832,8 @@ Future<List<Prophet>> initProphets() async {
     ),
     trValLaqab: null,
     trValPredecessors: [
-      PF.Yaqub,
-      PF.Lawi,
+//    PF.Yaqub,
+//    PF.Lawi,
       PF.Kehath_Yashur,
     ],
     trValSuccessors: [PF.Dawud],
@@ -873,7 +873,7 @@ Future<List<Prophet>> initProphets() async {
     ),
     trValLaqab: null,
     trValPredecessors: [
-      PF.Dawud,
+//    PF.Dawud,
       PF.Yahudzha,
       PF.Gap,
     ], // TODO 'p.In kingship: Possibly Talut (Saul), in prophethood: Samuil (Samuel)'
@@ -1046,7 +1046,7 @@ Future<List<Prophet>> initProphets() async {
     trValLaqab: [a('a.Dhul-Nun')], // ذُو ٱلنُّوْن - The One of the Fish
     trValPredecessors: [
       PF.Bunyamin,
-      PF.Matta,
+      PF.Gap,
     ],
     trValSuccessors: [PF.Zakariya],
     trValMother: null,
@@ -1091,9 +1091,9 @@ Future<List<Prophet>> initProphets() async {
     ),
     trValLaqab: null,
     trValPredecessors: [
-      PF.Yaqub,
-      PF.Yahudzha,
-      PF.Gap,
+//    PF.Yaqub,
+//    PF.Yahudzha,
+//    PF.Gap,
       PF.Suleyman,
       PF.Gap,
     ],
@@ -1171,14 +1171,13 @@ Future<List<Prophet>> initProphets() async {
       PF.Suleyman,
       PF.Gap,
       PF.ImranAbuMaryam,
-      PF.Maryam,
     ],
     trValSuccessors: [PF.Muhammad],
     trValMother: PF.Maryam,
-    trValFather: PF.Created_without_a_father,
-    trValSpouses: [PF.NotYet],
-    trValDaughters: [PF.NotYet],
-    trValSons: [PF.NotYet],
+    trValFather: null,
+    trValSpouses: null,
+    trValDaughters: null,
+    trValSons: null,
     trValRelatives: [PF.Zakariya, PF.Yahya],
     trValRelativesTypes: [RELATIVE.DistantCousin, RELATIVE.DistantCousin],
     // Required prophet data:
@@ -1226,10 +1225,14 @@ Future<List<Prophet>> initProphets() async {
       a('a.An-Nabiyyu l-Ummiyy'),
       a('a.Mustafa'),
     ],
-    trValPredecessors: [PF.Ismail, PF.Gap], // TODO big gap here
+    trValPredecessors: [
+      PF.Ismail,
+      PF.Gap,
+      PF.Abdull_Muttalib,
+    ],
     trValSuccessors: [PF.Mahdi, PF.Isa],
     trValMother: PF.Amina_Bint_Wahb,
-    trValFather: PF.AbdullahIbn_Abd_Al__Muttalib,
+    trValFather: PF.Abdullah_,
     trValSpouses: [
       // TODO Link to RELIC_TYPE.Bayt:
       //https://en.wikipedia.org/wiki/Muhammad%27s_wives
@@ -1248,20 +1251,22 @@ Future<List<Prophet>> initProphets() async {
       PF.Rayhana, //      cns('627–631: ') + a('a.Rayhana'), // concubine later married?
       PF.Maria, //        cns('628–632: ') + a('a.Maria'), // concubine later married?
     ],
-    trValDaughters: [
-      PF.Zainab, //          cns('599–629 ') + a('a.Zainab'),
-      PF.Ruqayyah, //        cns('601–624 ') + a('a.Ruqayyah'),
-      PF.Umm_Kulthum, //     cns('603–630 ') + a('a.Umm Kulthum'),
-      PF.Fatimah, //         cns('605–632 ') + a('a.Fatimah'),
-    ],
-    trValSons: [
-      // TODO Link to RELIC_TYPE.Bayt:
-      // https://en.wikipedia.org/wiki/Muhammad%27s_children
-      PF.Zayd_Ibn_Harithah, //    cns('581-629 ') + a('a.Zayd ibn Harithah'),
-      PF.Qasim, //                cns('598–601 ') + a('a.Al-Qasim'),
-      PF.Abdullah_Ibn_Muhmmad, // cns('611–613 ') + a('a.Abdullah'),
-      PF.Ibrahim_Ibn_Muhmmad, //  cns('630–632 ') + a('a.Ibrahim'),
-    ],
+    // TODO Link to RELIC_TYPE.Bayt:
+    trValDaughters: null,
+    // trValDaughters: [ // TODO Disable for now since UI gets too big
+    //   PF.Zainab, //       cns('599–629 ') + a('a.Zainab'),
+    //   PF.Ruqayyah, //     cns('601–624 ') + a('a.Ruqayyah'),
+    //   PF.Umm_Kulthum, //  cns('603–630 ') + a('a.Umm Kulthum'),
+    //   PF.Fatimah, //      cns('605–632 ') + a('a.Fatimah'),
+    // ],
+    trValSons: null,
+    // trValSons: [
+    //   // https://en.wikipedia.org/wiki/Muhammad%27s_children
+    //   PF.Zayd_Ibn_Harithah, //    cns('581-629 ') + a('a.Zayd ibn Harithah'),
+    //   PF.Qasim, //                cns('598–601 ') + a('a.Al-Qasim'),
+    //   PF.Abdullah_Ibn_Muhmmad, // cns('611–613 ') + a('a.Abdullah'),
+    //   PF.Ibrahim_Ibn_Muhmmad, //  cns('630–632 ') + a('a.Ibrahim'),
+    // ],
     trValRelatives: null,
     // Required prophet data:
     trValSentTo: 'p.All the worlds'.tr +
@@ -1369,6 +1374,9 @@ enum PF {
   Isa, //      23
   Muhammad, // 24
 
+  // special case area
+  Gap, // We probably know trValPredecessor
+
   // Wife of:
   Hawwa, //        Adam-Havva
   Naamah, //       Nuh // TODO find arabic name
@@ -1378,7 +1386,6 @@ enum PF {
   Rahil_Bint_Leban, //        Yaqub Rachel
   Lia, //          Yaqub Leah
   Saffurah, //     Musa  صفورة
-  NotYet, //       Isa
 
   // Mother of:
   Mahalath, // Ibrahim
@@ -1388,12 +1395,6 @@ enum PF {
 
   // Sister of:
   Miriam, // Musa and Harun // TODO Sister that followed Musa down river (Same name as Maryam?)
-
-  // special case area
-  Gap, // We probably know trValPredecessor
-  Unknown,
-  Created_without_a_mother,
-  Created_without_a_father,
 
 //   Adam
   /* TODO has ~40-120 more kids! */
@@ -1414,6 +1415,12 @@ enum PF {
   /*       */ Yafith, //   Japeth
   /*       */ Sam, //      Shem
   /*          */ Irem,
+  /*             */ Aush, //        ?-Avs
+  /*                */ Ad, //       ?
+  /*                */ Khalud, //   ?-Halud
+  /*                */ Raya, //     ?-Rebah
+  /*                */ Abdullah, // ?
+//                     Hud
   /*             */ Ars, //       Abir?
   /*                */ Samud, //  -Semud
   /*                */ Hadzir, // -Hadir
@@ -1422,12 +1429,6 @@ enum PF {
   /*                */ Auf, //    -Esif/Asit
   /*                */ Abir_Ubayd, //   Ubayd?
 //                     Salih
-  /*             */ Aush, //        ?-Avs
-  /*                */ Ad, //       ?
-  /*                */ Khalud, //   ?-Halud
-  /*                */ Raya, //     ?-Rebah
-  /*                */ Abdullah, // ?
-//                     Hud
   /*          */ Arfakhshad, // -Erfahşed
   /*          */ Shalikh, // -Şalıh
   /*          */ Abir, // NOTE: NOT HUD
@@ -1489,8 +1490,9 @@ enum PF {
 
 // Muhammad's Bayt:
   Mahdi, // Future!
-  Amina_Bint_Wahb, // Muhammad  // آمِنَة ٱبْنَت وَهْب
-  AbdullahIbn_Abd_Al__Muttalib, // عَبْد ٱللَّٰه ٱبْن عَبْد ٱلْمُطَّلِب
+  Amina_Bint_Wahb, // Mother // آمِنَة ٱبْنَت وَهْب
+  Abdull_Muttalib, // Grandfather
+  Abdullah_, //       Father عَبْد ٱللَّٰه ٱبْن عَبْد ٱلْمُطَّلِب
 // Wives:
   Khadijah, //     Muhammad 1
   Sawdah, //       Muhammad 2
@@ -1505,13 +1507,14 @@ enum PF {
   Maymunah, //     Muhammad 11
   Rayhana, //      Muhammad 12
   Maria, //        Muhammad 13
-// Kids:
-  Zayd_Ibn_Harithah, // زَيْد ٱبْن حَارِثَة
-  Qasim,
+// Daughters:
   Zainab,
   Ruqayyah,
   Umm_Kulthum,
   Fatimah,
+// Sons:
+  Zayd_Ibn_Harithah, // زَيْد ٱبْن حَارِثَة  (foster son)
+  Qasim,
   Abdullah_Ibn_Muhmmad,
   Ibrahim_Ibn_Muhmmad,
 }
@@ -1617,74 +1620,137 @@ abstract class Fam<T> extends Relic {
   final T? trValFather;
 }
 
-Graph _getTreeGraph() {
-  List<Node> ns = []; // ns = nodes
-  for (PF pf in PF.values) {
-    ns.add(Node.Id(pf.index));
+addGraphEdge(Graph graph, lastNode, node, Color color) {
+  graph.addEdge(
+    lastNode,
+    node,
+    paint: Paint()..color = color,
+  );
+}
+
+addProphetNodes(
+  Map<int, Node> nodeMap,
+  Graph graph,
+  //Prophet lastProphet,
+  Prophet prophet,
+) {
+  Node lastNode = nodeMap[prophet.trValPredecessors[0].index]!;
+
+  // add predecessors
+  bool gapFound = false;
+
+  for (int idx = 1; idx < prophet.trValPredecessors.length; idx++) {
+    int mapIdx = prophet.trValPredecessors[idx].index;
+    print('trValPredecessors: ${lastNode.key}->$mapIdx ' +
+        prophet.trValPredecessors[idx].name);
+    if (mapIdx == PF.Gap.index) {
+      gapFound = true;
+      continue;
+    }
+    Node node = Node.Id(mapIdx);
+    nodeMap[mapIdx] = node;
+    addGraphEdge(graph, lastNode, node, gapFound ? Colors.red : Colors.green);
+    lastNode = node;
+    gapFound = false;
   }
 
+  // add parents
+  bool motherNodeFound = false;
+  if (prophet.trValMother != null && prophet.trValFather == null) {
+    motherNodeFound = true;
+    print('trValMother: ${lastNode.key}->${prophet.trValMother!.index} ' +
+        prophet.trValMother!.name);
+    Node node = Node.Id(prophet.trValMother!.index);
+    nodeMap[prophet.trValMother!.index] = node;
+    addGraphEdge(graph, lastNode, node, gapFound ? Colors.red : Colors.green);
+    lastNode = node;
+    gapFound = false;
+  } else if (prophet.trValFather != null) {
+    Node? fatherNode = nodeMap[prophet.relicId];
+    if (fatherNode == null) {
+      print('trValFather: ${lastNode.key}->${prophet.trValFather!.index} ' +
+          prophet.trValFather!.name);
+      Node node = Node.Id(prophet.trValFather!.index);
+      nodeMap[prophet.trValFather!.index] = node;
+      addGraphEdge(graph, lastNode, node, gapFound ? Colors.red : Colors.green);
+      lastNode = node;
+      gapFound = false;
+      fatherNode = node;
+    }
+    lastNode = fatherNode;
+    // if (prophet.trValMother != null) {
+    //   Node mother = Node.Id(prophet.trValMother!.index);
+    //   nodes.add(mother);
+    //   graph.addEdge(mother, prophetNode);
+    // }
+  }
+
+  // Add Prophet node
+  // May have been added before, e.g. Ibrahim->Ismail
+  Node? prophetNode = nodeMap[prophet.relicId];
+  if (prophetNode == null) {
+    print('prophet: ${lastNode.key}->${prophet.relicId} ' +
+        prophet.trKeyEndTagLabel);
+    Node node = Node.Id(prophet.relicId);
+    nodeMap[prophet.relicId] = node;
+    addGraphEdge(graph, lastNode, node, gapFound ? Colors.red : Colors.green);
+    lastNode = node;
+    gapFound = false;
+    prophetNode = node;
+  }
+  lastNode = prophetNode;
+
+  // add kids
+  for (PF pf in prophet.trValDaughters ?? []) {
+    print('trValDaughters: ${prophetNode.key}->${pf.index} ' + pf.name);
+    Node node = Node.Id(pf.index);
+    nodeMap[pf.index] = node;
+    addGraphEdge(
+        graph, prophetNode, node, gapFound ? Colors.red : Colors.green);
+    lastNode = node;
+    gapFound = false;
+  }
+  for (PF pf in prophet.trValSons ?? []) {
+    print('trValSons: ${prophetNode.key}->${pf.index} ' + pf.name);
+    Node node = Node.Id(pf.index);
+    nodeMap[pf.index] = node;
+    addGraphEdge(
+        graph, prophetNode, node, gapFound ? Colors.red : Colors.green);
+    lastNode = node;
+    gapFound = false;
+  }
+
+  // return lastProphet;
+}
+
+Graph _getTreeGraph() {
+  Map<int, Node> nodeMap = {};
   final Graph graph = Graph()..isTree = true;
 
-  graph.addEdge(ns[PF.Idris.index], ns[PF.Nuh.index]);
-  graph.addEdge(ns[PF.Nuh.index], ns[PF.Hud.index]);
-  graph.addEdge(ns[PF.Nuh.index], ns[PF.Salih.index]);
+  // Init tree with Adam and his kids
+  Prophet prophet = RelicC.to
+      .getRelicSet(RELIC_TYPE.Quran_AlAnbiya)
+      .relics[PF.Adam.index] as Prophet;
+  Node prophetNode = Node.Id(PF.Adam.index);
+  // add kids
+  for (PF pf in prophet.trValDaughters ?? []) {
+    Node node = Node.Id(pf.index);
+    nodeMap[pf.index] = node;
+    graph.addEdge(prophetNode, node);
+  }
+  for (PF pf in prophet.trValSons ?? []) {
+    Node node = Node.Id(pf.index);
+    nodeMap[pf.index] = node;
+    graph.addEdge(prophetNode, node);
+  }
 
-  // final Adam = Node.Id(0);
-  // final Idris = Node.Id(1);
-  // final Nuh = Node.Id(2);
-  // final Hud = Node.Id(3);
-  // final Salih = Node.Id(4);
-  // final Ibrahim = Node.Id(5);
-  // final Lut = Node.Id(6);
-  // final Ismail = Node.Id(7);
-  // final Ishaq = Node.Id(8);
-  // final Yaqub = Node.Id(9);
-  // final Yusuf = Node.Id(10);
-  // final Ayyub = Node.Id(11);
-  // final Shuayb = Node.Id(12);
-  // final Musa = Node.Id(13);
-  // final Harun = Node.Id(14);
-  // final DhulKifl = Node.Id(15);
-  // final Dawud = Node.Id(16);
-  // final Suleyman = Node.Id(17);
-  // final Ilyas = Node.Id(18);
-  // final Alyasa = Node.Id(19);
-  // final Yunus = Node.Id(20);
-  // final Zakariya = Node.Id(21);
-  // final Yahya = Node.Id(22);
-  // final Isa = Node.Id(23);
-  // final Muhammad = Node.Id(24);
-
-  // final Graph graph = Graph()..isTree = true;
-  // graph.addEdge(Adam, Idris);
-  // graph.addEdge(Idris, Nuh);
-  // graph.addEdge(Nuh, Hud);
-  // graph.addEdge(Nuh, Salih);
-
-  // final node1 = Node.Id(1);
-  // final node2 = Node.Id(2);
-  // final node3 = Node.Id(3);
-  // final node4 = Node.Id(4);
-  // final node5 = Node.Id(5);
-  // final node6 = Node.Id(6);
-  // final node8 = Node.Id(7);
-  // final node7 = Node.Id(8);
-  // final node9 = Node.Id(9);
-  // final node10 = Node.Id(10);
-  // final node11 = Node.Id(11);
-  // final node12 = Node.Id(12);
-  // graph.addEdge(node1, node2);
-  // graph.addEdge(node1, node3, paint: Paint()..color = Colors.red);
-  // graph.addEdge(node1, node4, paint: Paint()..color = Colors.blue);
-  // graph.addEdge(node2, node5);
-  // graph.addEdge(node2, node6);
-  // graph.addEdge(node6, node7, paint: Paint()..color = Colors.red);
-  // graph.addEdge(node6, node8, paint: Paint()..color = Colors.red);
-  // graph.addEdge(node4, node9);
-  // graph.addEdge(node4, node10, paint: Paint()..color = Colors.black);
-  // graph.addEdge(node4, node11, paint: Paint()..color = Colors.red);
-  // graph.addEdge(node11, node12);
-
+  for (int pfIdx = 1; pfIdx < 25; pfIdx++) {
+    addProphetNodes(
+      nodeMap,
+      graph,
+      RelicC.to.getRelicSet(RELIC_TYPE.Quran_AlAnbiya).relics[pfIdx] as Prophet,
+    );
+  }
   return graph;
 }
 

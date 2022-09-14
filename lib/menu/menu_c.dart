@@ -17,6 +17,7 @@ import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/onboard/auth/auth_c.dart';
 import 'package:hapi/quest/active/active_quest_action_ui.dart';
 import 'package:hapi/quest/quests_ui.dart';
+import 'package:hapi/relic/family_tree_ui.dart';
 import 'package:hapi/relic/relics_ui.dart';
 import 'package:hapi/tarikh/article/tarikh_article_ui.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
@@ -296,7 +297,15 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
     }
 
     switch (subPage) {
-      case (SubPage.Tarikh_Timeline):
+      case SubPage.About:
+        Get.to(
+          () => AboutUI(),
+          arguments: arguments,
+          transition: transition,
+          duration: Duration(milliseconds: transitionMs),
+        );
+        break;
+      case SubPage.Tarikh_Timeline:
         await _handleTimelineNotInitializedYet();
         Get.to(
           () => TarikhTimelineUI(),
@@ -305,7 +314,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
           duration: Duration(milliseconds: transitionMs),
         );
         break;
-      case (SubPage.Tarikh_Article):
+      case SubPage.Tarikh_Article:
         Get.to(
           () => TarikhArticleUI(),
           arguments: arguments,
@@ -313,7 +322,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
           duration: Duration(milliseconds: transitionMs),
         );
         break;
-      case (SubPage.Active_Quest_Action):
+      case SubPage.Active_Quest_Action:
         Get.to(
           () => ActiveQuestActionUI(),
           arguments: arguments,
@@ -321,7 +330,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
           duration: Duration(milliseconds: transitionMs),
         );
         break;
-      case (SubPage.Update_Profile):
+      case SubPage.Update_Profile:
         Get.to(
           () => UpdateProfileUI(),
           arguments: arguments,
@@ -329,7 +338,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
           duration: Duration(milliseconds: transitionMs),
         );
         break;
-      case (SubPage.Reset_Password):
+      case SubPage.Reset_Password:
         Get.to(
           () => ResetPasswordUI(),
           arguments: arguments,
@@ -337,7 +346,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
           duration: Duration(milliseconds: transitionMs),
         );
         break;
-      case (SubPage.Settings):
+      case SubPage.Settings:
         Get.to(
           () => SettingsUI(),
           arguments: arguments,
@@ -345,10 +354,9 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
           duration: Duration(milliseconds: transitionMs),
         );
         break;
-      case (SubPage.About):
-      default:
+      case SubPage.Family_Tree:
         Get.to(
-          () => AboutUI(),
+          () => FamilyTreeUI(),
           arguments: arguments,
           transition: transition,
           duration: Duration(milliseconds: transitionMs),

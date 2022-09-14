@@ -83,8 +83,8 @@ class RelicsUI extends StatelessWidget {
             relicTab: RELIC_TAB.Ummah,
             relicTypes: [
               RELIC_TYPE.Quran_AlAnbiya,
-              RELIC_TYPE.Quran_AlAnbiya,
-              RELIC_TYPE.Quran_AlAnbiya
+              // RELIC_TYPE.Quran_AlAnbiya,
+              // RELIC_TYPE.Quran_AlAnbiya,
             ],
           ),
           null,

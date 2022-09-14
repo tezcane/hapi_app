@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:graphview/GraphView.dart';
 import 'package:hapi/main_c.dart';
+import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
+import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_c.dart';
 import 'package:hapi/relic/ummah/prophet.dart';
@@ -36,6 +37,13 @@ class RelicSetUI extends StatelessWidget {
 
     showTileText = RelicC.to.getShowTileText(relicSet.relicType);
 
+    if (filter.type == FILTER_TYPE.Tree) {
+      MenuC.to.pushSubPage(SubPage.Family_Tree, arguments: {
+        'graph': filter.treeGraph,
+      });
+      return;
+    }
+
     if (filterIdx != -1) RelicC.to.setFilterIdx(relicSet.relicType, newIdx);
     filterIdx = newIdx;
   }
@@ -44,19 +52,14 @@ class RelicSetUI extends StatelessWidget {
   Widget build(BuildContext context) {
     Widget tileView;
     switch (filter.type) {
-      case (FILTER_TYPE.Default):
+      case FILTER_TYPE.Default:
         tileView = _tileList(context, _getTileListDefault(context));
         break;
-      case (FILTER_TYPE.IdxList):
+      case FILTER_TYPE.IdxList:
         tileView = _tileList(context, _getTileIdxList(context));
         break;
-      case (FILTER_TYPE.Tree):
-        tileView = SizedBox(
-          width: w(context) - 2,
-          height: h(context),
-          child: _getTreeView(filter.treeGraph!),
-        );
-        break;
+      case FILTER_TYPE.Tree:
+        return l.E('FILTER_TYPE.${FILTER_TYPE.Tree.name} has its on UI');
     }
 
     return Container(
@@ -302,59 +305,6 @@ class RelicSetUI extends StatelessWidget {
       spacing: 4, // NOTE: must subtract this from _relicTile() or overflows
       runSpacing: showTileText ? 6 : 2.5, // gap under a row of tiles
       children: tileWidgets,
-    );
-  }
-
-  Widget _getTreeView(Graph graph) {
-    BuchheimWalkerConfiguration builder = BuchheimWalkerConfiguration()
-      ..siblingSeparation = (10)
-      ..levelSeparation = (40)
-      ..subtreeSeparation = (10)
-      ..orientation = (BuchheimWalkerConfiguration.ORIENTATION_TOP_BOTTOM);
-
-    return Scaffold(
-        body: Column(
-      mainAxisSize: MainAxisSize.max,
-      children: [
-        Expanded(
-          child: InteractiveViewer(
-              constrained: false,
-              boundaryMargin: EdgeInsets.all(100),
-              minScale: 0.01,
-              maxScale: 5.6,
-              child: GraphView(
-                graph: graph,
-                algorithm:
-                    BuchheimWalkerAlgorithm(builder, TreeEdgeRenderer(builder)),
-                paint: Paint()
-                  ..color = Colors.green
-                  ..strokeWidth = 1
-                  ..style = PaintingStyle.stroke,
-                builder: (Node node) {
-                  // I can decide what widget should be shown here based on the id
-                  var a = node.key!.value as int?;
-                  return rectangleWidget(a);
-                },
-              )),
-        ),
-      ],
-    ));
-  }
-
-  Widget rectangleWidget(int? a) {
-    return InkWell(
-      onTap: () {
-        print('clicked');
-      },
-      child: Container(
-          padding: EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(4),
-            boxShadow: [
-              BoxShadow(color: Colors.blue[100]!, spreadRadius: 1),
-            ],
-          ),
-          child: Text('$a ${PF.values[a!].name}')),
     );
   }
 }
