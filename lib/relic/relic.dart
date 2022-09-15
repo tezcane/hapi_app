@@ -29,7 +29,7 @@ enum RELIC_TYPE {
   Islam_6ArticlesOfFaith,
   Islam_HadithBooks, // Sahih Bukhari, Sahih Muslim, Muwatta Imam Malik, Sunan Ibn Majah, Musnad Imam Ahmad, Jami Tirmidhi, Sunan Nisaa'i, Sunan Abi Dawud
   Islam_HolyPlaces,
-  Islam_Relics, // Kaba, black stone, Prophets Bow, etc.
+  Islam_Relics, // Kaba, black stone, Prophets Bow, etc. Coins?
 
   Ummah_Muhammad_Laqab,
   Ummah_Muhammad_AlBayt, //Zojah, Children,
@@ -37,6 +37,7 @@ enum RELIC_TYPE {
   Ummah_Ulama, // Madhab+, alive/dead
   Ummah_Dai, // Givers of Dawah
   Ummah_Famous, // Amirs/Khalif not in Dynasties, Athletes,
+  Ummah_Battles, // Badr, Uhud, etc. Battles
 
   Dynasty_Rashidun,
   Dynasty_Ummayad,
