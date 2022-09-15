@@ -13,7 +13,7 @@ import 'package:hapi/onboard/auth/auth_c.dart';
 // /// POWER: All enums inside the Project will get this functionality!
 // extension on Enum {
 //   int get idx => index;
-//   String get isim => name.replaceFirst('__', '-').replaceFirst('_', ' ');
+//   String get isim => name.replaceFirst('___', '/')..replaceFirst('__', '-').replaceFirst('_', ' ');
 // }
 
 class MainC extends GetxHapi {

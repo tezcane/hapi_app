@@ -10,6 +10,7 @@ import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
 const String _ = ' '; // space/gap
 
+/// Peace be upon all (SAW) the Prophets mentioned in the code.
 class Prophet extends FamilyTree {
   Prophet({
     // TimelineEntry data:
@@ -1237,8 +1238,27 @@ Future<List<Prophet>> initProphets() async {
     ],
     trValPredecessors: [
       PF.Ismail,
-      PF.Gap,
-      PF.Abdull_Muttalib,
+      PF.Gap, // TODO iktilaf here, find best one
+      PF.Adnan,
+      PF.Ma__add,
+      PF.Nizar,
+      PF.Mudar,
+      PF.Ilyas_,
+      PF.Mudrikah,
+      PF.Khuzaimah,
+      PF.Kinanah,
+      PF.An__Nadr___Quraysh,
+      PF.Malik,
+      PF.Fihr,
+      PF.Ghalib,
+      PF.Lu__ayy,
+      PF.Ka__b,
+      PF.Murrah,
+      PF.Kilab,
+      PF.Qusayy,
+      PF.Abd_Manaf,
+      PF.Hashim,
+      PF.Abdull_Muttalib___Shaybah,
     ],
     trValSuccessors: [PF.Mahdi, PF.Isa],
     trValMother: PF.Amina_Bint_Wahb,
@@ -1406,18 +1426,19 @@ enum PF {
   // Sister of:
   Miriam, // Musa and Harun // TODO Sister that followed Musa down river (Same name as Maryam?)
 
+  // TODO Good resource for Arabic/Hebrew/Greek names: https://en.wikipedia.org/wiki/Family_tree_of_Muhammad
 //   Adam
   /* TODO has ~40-120 more kids! */
   /* */ Habel, //       Cain-Habil
   /* */ Qabel, //       Abel-Kabil
   /* */ Anaq, //        ?
   /* */ Sheth, //       Seth? Shayth? Seth-Şit
-  /*    */ Anwas, //    Anoush? Enush? Enosh-Enuş
-  /*    */ Qinan, //    Kenan-Kinan
+  /*    */ Anwas, //    Anūsh أَنُوش or: Yānish يَانِش Enosh-Enuş
+  /*    */ Qinan, //    Kenan-Kinan (Hebrew: קֵינָן‎‎, Modern: Qēnan, Tiberian: Qēnān; Arabic: قَيْنَان, romanized: Qaynān; Biblical Greek: Καϊνάμ, romanized: Kaïnám)
   /*    */ Mahlail, //  Mahlabeel? Mahalel
-  /*    */ Yarid, //    Yard? Jared-Yarid
-//         Idris AKA Ahnuh/Uhnuh
-  /*    */ Matulshalkh, // Mitoshilkh?  Methusaleh-Mettu Şelah
+  /*    */ Yarid, //    Yard? Jared-Yarid Jared or Jered (Hebrew: יֶרֶד‎ Yereḏ, in pausa יָרֶד‎ Yāreḏ, "to descend"; Greek: Ἰάρετ Iáret; Arabic: أليارد al-Yārid)
+//         Idris AKA Ahnuh/Uhnuh Enoch (Arabic: أَخْنُوخ, romanized: ʼAkhnūkh)
+  /*    */ Matulshalkh, // Mitoshilkh?  Methusaleh-Mettu Şelah (Hebrew: מְתוּשֶׁלַח Məṯūšélaḥ, in pausa מְתוּשָׁלַח‎ Məṯūšālaḥ, "His death shall send" or "Man of the javelin" or "Death of Sword";[1] Greek: Μαθουσάλας Mathousalas) Mattūshalakh= Ibn Ishaq and Ibn Hisham geneology of Muhammad
   /*    */ Lamik, //       Lamech-Lamek/Lemek/Lemk
 //         Nuh
   /*       */ Ham, //      Ham
@@ -1455,7 +1476,7 @@ enum PF {
   /*                   */ Mikeel, //  Mankeel? Safyon? -Mikail
 //                        Shuayb
 //                     Ismail
-//                        ... <- Save for Muhammad's SAW Family Tree
+//                        ... Muhammad's Family Tree is below
 //                        Muhammad
 //                     Ishaq
   /*                   */ Isu, //   AlEls? Els? Ish? Isu? Easu-Ays Brother of Jacob
@@ -1498,11 +1519,34 @@ enum PF {
   /*                                  */ Maryam, // Specia case,  prophethood through mom
 //                                          Isa
 
-// Muhammad's Bayt:
-  Mahdi, // Future!
-  Amina_Bint_Wahb, // Mother // آمِنَة ٱبْنَت وَهْب
-  Abdull_Muttalib, // Grandfather
+// Muhammad's Lineage:
+  //Ismail
+  //Gap, // TODO iktilaf here, find best one
+  Adnan,
+  Ma__add,
+  Nizar,
+  Mudar,
+  Ilyas_,
+  Mudrikah,
+  Khuzaimah,
+  Kinanah,
+  An__Nadr___Quraysh,
+  Malik,
+  Fihr,
+  Ghalib,
+  Lu__ayy,
+  Ka__b,
+  Murrah,
+  Kilab,
+  Qusayy,
+  Abd_Manaf,
+  Hashim,
+  Abdull_Muttalib___Shaybah, // Abd al-Muttalib? Grandfather
   Abdullah_, //       Father عَبْد ٱللَّٰه ٱبْن عَبْد ٱلْمُطَّلِب
+  //Muhammad
+  Mahdi, // Future!
+//Mother
+  Amina_Bint_Wahb, // Mother // آمِنَة ٱبْنَت وَهْب
 // Wives:
   Khadijah, //     Muhammad 1
   Sawdah, //       Muhammad 2
