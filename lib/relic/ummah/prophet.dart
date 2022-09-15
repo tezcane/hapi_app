@@ -86,15 +86,16 @@ class Prophet extends Fam<PF> {
   bool isRasul() => qvRasul != null;
   bool isUluAlAzm() => qvsUluAlAzm != null && qvsUluAlAzm!.isNotEmpty;
 
-  List<RelicSetFilter>? _relicSetFilters;
-
   @override
   String get trValRelicSetTitle => a('a.Anbiya');
   @override
   List<RelicSetFilter> get relicSetFilters {
-    if (_relicSetFilters != null) return _relicSetFilters!;
+    if (_relicSetFilters.isNotEmpty) return _relicSetFilters;
 
-    _relicSetFilters = [
+    // Add special cases here, if needed
+    Graph graph = getFamilyTreeGraph();
+
+    _relicSetFilters.addAll([
       RelicSetFilter(
         type: FILTER_TYPE.Default,
         trValLabel: a('a.Nabi'),
@@ -168,11 +169,11 @@ class Prophet extends Fam<PF> {
       RelicSetFilter(
         type: FILTER_TYPE.Tree,
         trValLabel: 'i.Family Tree'.tr,
-        treeGraph: _getTreeGraph(),
+        treeGraph: graph,
       ),
-    ];
+    ]);
 
-    return _relicSetFilters!;
+    return _relicSetFilters;
   }
 }
 
@@ -1626,134 +1627,118 @@ abstract class Fam<T> extends Relic {
   final List<RELATIVE>? trValRelativesTypes;
   final T? trValMother;
   final T? trValFather;
-}
 
-addGraphEdge(Graph graph, lastNode, node, Color color) {
-  graph.addEdge(
-    lastNode,
-    node,
-    paint: Paint()..color = color,
-  );
-}
+  final List<RelicSetFilter> _relicSetFilters = [];
 
-addProphetNodes(
-  Map<int, Node> nodeMap,
-  Graph graph,
-  Prophet prophet,
-) {
-  Node lastNode = nodeMap[prophet.trValPredecessors[0].index]!;
-
-  // add predecessors
-  bool gapFound = false;
-
-  for (int idx = 1; idx < prophet.trValPredecessors.length; idx++) {
-    int mapIdx = prophet.trValPredecessors[idx].index;
-    l.d('trValPredecessors: ${lastNode.key}->$mapIdx ' +
-        prophet.trValPredecessors[idx].name);
-    if (mapIdx == PF.Gap.index) {
-      gapFound = true;
-      continue;
-    }
-    Node node = Node.Id(mapIdx);
-    nodeMap[mapIdx] = node;
-    addGraphEdge(graph, lastNode, node, gapFound ? Colors.red : Colors.green);
-    lastNode = node;
-    gapFound = false;
+  addGraphEdge(Graph graph, lastNode, node, Color color) {
+    graph.addEdge(
+      lastNode,
+      node,
+      paint: Paint()
+        ..color = color
+        ..strokeWidth = 3,
+    );
   }
 
-  // add parents
-  bool motherNodeFound = false;
-  if (prophet.trValMother != null && prophet.trValFather == null) {
-    motherNodeFound = true;
-    l.d('trValMother: ${lastNode.key}->${prophet.trValMother!.index} ' +
-        prophet.trValMother!.name);
-    Node node = Node.Id(prophet.trValMother!.index);
-    nodeMap[prophet.trValMother!.index] = node;
-    addGraphEdge(graph, lastNode, node, gapFound ? Colors.red : Colors.green);
-    lastNode = node;
-    gapFound = false;
-  } else if (prophet.trValFather != null) {
-    Node? fatherNode = nodeMap[prophet.relicId];
-    if (fatherNode == null) {
-      l.d('trValFather: ${lastNode.key}->${prophet.trValFather!.index} ' +
-          prophet.trValFather!.name);
-      Node node = Node.Id(prophet.trValFather!.index);
-      nodeMap[prophet.trValFather!.index] = node;
+  addMainNodeWithFam(
+    Map<int, Node> nodeMap,
+    Graph graph,
+    Prophet prophet,
+  ) {
+    Node lastNode = nodeMap[prophet.trValPredecessors[0].index]!;
+
+    // add predecessors
+    bool gapFound = false;
+
+    for (int idx = 1; idx < prophet.trValPredecessors.length; idx++) {
+      int mapIdx = prophet.trValPredecessors[idx].index;
+      l.d('trValPredecessors: ${lastNode.key}->$mapIdx ' +
+          prophet.trValPredecessors[idx].name);
+      if (mapIdx == PF.Gap.index) {
+        gapFound = true;
+        continue;
+      }
+      Node node = Node.Id(mapIdx);
+      nodeMap[mapIdx] = node;
       addGraphEdge(graph, lastNode, node, gapFound ? Colors.red : Colors.green);
       lastNode = node;
       gapFound = false;
-      fatherNode = node;
     }
-    lastNode = fatherNode;
+
+    // add parents
+    bool motherNodeFound = false;
+    if (prophet.trValMother != null && prophet.trValFather == null) {
+      motherNodeFound = true;
+      l.d('trValMother: ${lastNode.key}->${prophet.trValMother!.index} ' +
+          prophet.trValMother!.name);
+      Node node = Node.Id(prophet.trValMother!.index);
+      nodeMap[prophet.trValMother!.index] = node;
+      addGraphEdge(graph, lastNode, node, gapFound ? Colors.red : Colors.green);
+      lastNode = node;
+      gapFound = false;
+    } else if (prophet.trValFather != null) {
+      Node? fatherNode = nodeMap[prophet.relicId];
+      if (fatherNode == null) {
+        l.d('trValFather: ${lastNode.key}->${prophet.trValFather!.index} ' +
+            prophet.trValFather!.name);
+        Node node = Node.Id(prophet.trValFather!.index);
+        nodeMap[prophet.trValFather!.index] = node;
+        addGraphEdge(
+            graph, lastNode, node, gapFound ? Colors.red : Colors.green);
+        lastNode = node;
+        gapFound = false;
+        fatherNode = node;
+      }
+      lastNode = fatherNode;
+    }
+
+    // Add Prophet node
+    // May have been added before, e.g. Ibrahim->Ismail
+    Node? prophetNode = nodeMap[prophet.relicId];
+    if (prophetNode == null) {
+      l.d('prophet: ${lastNode.key}->${prophet.relicId} ' +
+          prophet.trKeyEndTagLabel);
+      Node node = Node.Id(prophet.relicId);
+      nodeMap[prophet.relicId] = node;
+      addGraphEdge(graph, lastNode, node, gapFound ? Colors.red : Colors.green);
+      lastNode = node;
+      gapFound = false;
+      prophetNode = node;
+    }
+    lastNode = prophetNode;
+
+    // add kids
+    for (PF pf in prophet.trValDaughters ?? []) {
+      l.d('trValDaughters: ${prophetNode.key}->${pf.index} ' + pf.name);
+      Node node = Node.Id(pf.index);
+      nodeMap[pf.index] = node;
+      addGraphEdge(
+          graph, prophetNode, node, gapFound ? Colors.red : Colors.green);
+      lastNode = node;
+      gapFound = false;
+    }
+    for (PF pf in prophet.trValSons ?? []) {
+      l.d('trValSons: ${prophetNode.key}->${pf.index} ' + pf.name);
+      Node node = Node.Id(pf.index);
+      nodeMap[pf.index] = node;
+      addGraphEdge(
+          graph, prophetNode, node, gapFound ? Colors.red : Colors.green);
+      lastNode = node;
+      gapFound = false;
+    }
   }
 
-  // Add Prophet node
-  // May have been added before, e.g. Ibrahim->Ismail
-  Node? prophetNode = nodeMap[prophet.relicId];
-  if (prophetNode == null) {
-    l.d('prophet: ${lastNode.key}->${prophet.relicId} ' +
-        prophet.trKeyEndTagLabel);
-    Node node = Node.Id(prophet.relicId);
-    nodeMap[prophet.relicId] = node;
-    addGraphEdge(graph, lastNode, node, gapFound ? Colors.red : Colors.green);
-    lastNode = node;
-    gapFound = false;
-    prophetNode = node;
-  }
-  lastNode = prophetNode;
+  Graph getFamilyTreeGraph() {
+    Map<int, Node> nodeMap = {};
+    final Graph graph = Graph()..isTree = true;
 
-  // add kids
-  for (PF pf in prophet.trValDaughters ?? []) {
-    l.d('trValDaughters: ${prophetNode.key}->${pf.index} ' + pf.name);
-    Node node = Node.Id(pf.index);
-    nodeMap[pf.index] = node;
-    addGraphEdge(
-        graph, prophetNode, node, gapFound ? Colors.red : Colors.green);
-    lastNode = node;
-    gapFound = false;
+    // // Init tree with Adam and his kids
+    nodeMap[0] = Node.Id(0); // initate first node, e.g. Adam in Prophet.
+    for (Relic relic in RelicC.to.getRelicSet(relicType).relics) {
+      addMainNodeWithFam(nodeMap, graph, relic as Prophet);
+    }
+    return graph;
   }
-  for (PF pf in prophet.trValSons ?? []) {
-    l.d('trValSons: ${prophetNode.key}->${pf.index} ' + pf.name);
-    Node node = Node.Id(pf.index);
-    nodeMap[pf.index] = node;
-    addGraphEdge(
-        graph, prophetNode, node, gapFound ? Colors.red : Colors.green);
-    lastNode = node;
-    gapFound = false;
-  }
-
-  // return lastProphet;
-}
-
-Graph _getTreeGraph() {
-  Map<int, Node> nodeMap = {};
-  final Graph graph = Graph()..isTree = true;
-
-  // Init tree with Adam and his kids
-  Prophet prophet = RelicC.to
-      .getRelicSet(RELIC_TYPE.Quran_AlAnbiya)
-      .relics[PF.Adam.index] as Prophet;
-  Node prophetNode = Node.Id(PF.Adam.index);
-  // add kids
-  for (PF pf in prophet.trValDaughters ?? []) {
-    Node node = Node.Id(pf.index);
-    nodeMap[pf.index] = node;
-    graph.addEdge(prophetNode, node);
-  }
-  for (PF pf in prophet.trValSons ?? []) {
-    Node node = Node.Id(pf.index);
-    nodeMap[pf.index] = node;
-    graph.addEdge(prophetNode, node);
-  }
-
-  for (int pfIdx = 1; pfIdx < 25; pfIdx++) {
-    addProphetNodes(
-      nodeMap,
-      graph,
-      RelicC.to.getRelicSet(RELIC_TYPE.Quran_AlAnbiya).relics[pfIdx] as Prophet,
-    );
-  }
-  return graph;
 }
 
 // TODO: https://www.quora.com/Is-it-true-that-all-the-Christian-prophets-are-well-quoted-in-The-Holy-Quran
