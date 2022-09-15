@@ -86,86 +86,94 @@ class Prophet extends Fam<PF> {
   bool isRasul() => qvRasul != null;
   bool isUluAlAzm() => qvsUluAlAzm != null && qvsUluAlAzm!.isNotEmpty;
 
+  List<RelicSetFilter>? _relicSetFilters;
+
   @override
   String get trValRelicSetTitle => a('a.Anbiya');
   @override
-  List<RelicSetFilter> get relicSetFilters => [
-        RelicSetFilter(
-          type: FILTER_TYPE.Default,
-          trValLabel: a('a.Nabi'),
-        ),
-        RelicSetFilter(
-          type: FILTER_TYPE.IdxList,
-          trValLabel: a('a.Rasul'),
-          idxList: [
-            PF.Adam.index,
-            PF.Nuh.index,
-            PF.Hud.index,
-            PF.Salih.index,
-            PF.Ibrahim.index,
-            PF.Lut.index,
-            PF.Ismail.index,
-            PF.Yusuf.index,
-            PF.Shuayb.index,
-            PF.Musa.index,
-            PF.Harun.index,
-            PF.Dawud.index,
-            PF.Ilyas.index,
-            PF.Yunus.index,
-            PF.Isa.index,
-            PF.Muhammad.index,
-          ],
-        ),
-        RelicSetFilter(
-          type: FILTER_TYPE.IdxList,
-          trValLabel: a('a.Ulu Al-Azm'),
-          tprMax: 5,
-          idxList: [
-            PF.Nuh.index,
-            PF.Ibrahim.index,
-            PF.Musa.index,
-            PF.Isa.index,
-            PF.Muhammad.index,
-          ],
-        ),
-        RelicSetFilter(
-          type: FILTER_TYPE.IdxList,
-          trValLabel: 'i.Quran Name Mentions'.tr,
-          field: FILTER_FIELD.Prophet_quranMentionCount,
-          idxList: [
-            PF.Musa.index, //    136 <-Mentions in Quran
-            PF.Ibrahim.index, //  69
-            PF.Nuh.index, //      43
-            PF.Lut.index, //      27
-            PF.Yusuf.index, //    27
-            PF.Adam.index, //     25
-            PF.Isa.index, //      25
-            PF.Harun.index, //    20
-            PF.Ishaq.index, //    17
-            PF.Suleyman.index, // 17
-            PF.Yaqub.index, //    16
-            PF.Dawud.index, //    16
-            PF.Ismail.index, //   12
-            PF.Salih.index, //     9
-            PF.Shuayb.index, //    9
-            PF.Hud.index, //       7
-            PF.Zakariya.index, //  7
-            PF.Yahya.index, //     5
-            PF.Ayyub.index, //     4
-            PF.Yunus.index, //     4
-            PF.Muhammad.index, //  4
-            PF.Idris.index, //     2
-            PF.DhulKifl.index, //  2 TODO other righteous men/women counts
-            PF.Ilyas.index, //     2
-            PF.Alyasa.index, //    2
-          ],
-        ),
-        RelicSetFilter(
-          type: FILTER_TYPE.Tree,
-          trValLabel: 'i.Family Tree'.tr,
-          treeGraph: _getTreeGraph(),
-        ),
-      ];
+  List<RelicSetFilter> get relicSetFilters {
+    if (_relicSetFilters != null) return _relicSetFilters!;
+
+    _relicSetFilters = [
+      RelicSetFilter(
+        type: FILTER_TYPE.Default,
+        trValLabel: a('a.Nabi'),
+      ),
+      RelicSetFilter(
+        type: FILTER_TYPE.IdxList,
+        trValLabel: a('a.Rasul'),
+        idxList: [
+          PF.Adam.index,
+          PF.Nuh.index,
+          PF.Hud.index,
+          PF.Salih.index,
+          PF.Ibrahim.index,
+          PF.Lut.index,
+          PF.Ismail.index,
+          PF.Yusuf.index,
+          PF.Shuayb.index,
+          PF.Musa.index,
+          PF.Harun.index,
+          PF.Dawud.index,
+          PF.Ilyas.index,
+          PF.Yunus.index,
+          PF.Isa.index,
+          PF.Muhammad.index,
+        ],
+      ),
+      RelicSetFilter(
+        type: FILTER_TYPE.IdxList,
+        trValLabel: a('a.Ulu Al-Azm'),
+        tprMax: 5,
+        idxList: [
+          PF.Nuh.index,
+          PF.Ibrahim.index,
+          PF.Musa.index,
+          PF.Isa.index,
+          PF.Muhammad.index,
+        ],
+      ),
+      RelicSetFilter(
+        type: FILTER_TYPE.IdxList,
+        trValLabel: 'i.Quran Name Mentions'.tr,
+        field: FILTER_FIELD.Prophet_quranMentionCount,
+        idxList: [
+          PF.Musa.index, //    136 <-Mentions in Quran
+          PF.Ibrahim.index, //  69
+          PF.Nuh.index, //      43
+          PF.Lut.index, //      27
+          PF.Yusuf.index, //    27
+          PF.Adam.index, //     25
+          PF.Isa.index, //      25
+          PF.Harun.index, //    20
+          PF.Ishaq.index, //    17
+          PF.Suleyman.index, // 17
+          PF.Yaqub.index, //    16
+          PF.Dawud.index, //    16
+          PF.Ismail.index, //   12
+          PF.Salih.index, //     9
+          PF.Shuayb.index, //    9
+          PF.Hud.index, //       7
+          PF.Zakariya.index, //  7
+          PF.Yahya.index, //     5
+          PF.Ayyub.index, //     4
+          PF.Yunus.index, //     4
+          PF.Muhammad.index, //  4
+          PF.Idris.index, //     2
+          PF.DhulKifl.index, //  2 TODO other righteous men/women counts
+          PF.Ilyas.index, //     2
+          PF.Alyasa.index, //    2
+        ],
+      ),
+      RelicSetFilter(
+        type: FILTER_TYPE.Tree,
+        trValLabel: 'i.Family Tree'.tr,
+        treeGraph: _getTreeGraph(),
+      ),
+    ];
+
+    return _relicSetFilters!;
+  }
 }
 
 Future<List<Prophet>> initProphets() async {
@@ -1631,7 +1639,6 @@ addGraphEdge(Graph graph, lastNode, node, Color color) {
 addProphetNodes(
   Map<int, Node> nodeMap,
   Graph graph,
-  //Prophet lastProphet,
   Prophet prophet,
 ) {
   Node lastNode = nodeMap[prophet.trValPredecessors[0].index]!;
@@ -1641,7 +1648,7 @@ addProphetNodes(
 
   for (int idx = 1; idx < prophet.trValPredecessors.length; idx++) {
     int mapIdx = prophet.trValPredecessors[idx].index;
-    print('trValPredecessors: ${lastNode.key}->$mapIdx ' +
+    l.d('trValPredecessors: ${lastNode.key}->$mapIdx ' +
         prophet.trValPredecessors[idx].name);
     if (mapIdx == PF.Gap.index) {
       gapFound = true;
@@ -1658,7 +1665,7 @@ addProphetNodes(
   bool motherNodeFound = false;
   if (prophet.trValMother != null && prophet.trValFather == null) {
     motherNodeFound = true;
-    print('trValMother: ${lastNode.key}->${prophet.trValMother!.index} ' +
+    l.d('trValMother: ${lastNode.key}->${prophet.trValMother!.index} ' +
         prophet.trValMother!.name);
     Node node = Node.Id(prophet.trValMother!.index);
     nodeMap[prophet.trValMother!.index] = node;
@@ -1668,7 +1675,7 @@ addProphetNodes(
   } else if (prophet.trValFather != null) {
     Node? fatherNode = nodeMap[prophet.relicId];
     if (fatherNode == null) {
-      print('trValFather: ${lastNode.key}->${prophet.trValFather!.index} ' +
+      l.d('trValFather: ${lastNode.key}->${prophet.trValFather!.index} ' +
           prophet.trValFather!.name);
       Node node = Node.Id(prophet.trValFather!.index);
       nodeMap[prophet.trValFather!.index] = node;
@@ -1678,18 +1685,13 @@ addProphetNodes(
       fatherNode = node;
     }
     lastNode = fatherNode;
-    // if (prophet.trValMother != null) {
-    //   Node mother = Node.Id(prophet.trValMother!.index);
-    //   nodes.add(mother);
-    //   graph.addEdge(mother, prophetNode);
-    // }
   }
 
   // Add Prophet node
   // May have been added before, e.g. Ibrahim->Ismail
   Node? prophetNode = nodeMap[prophet.relicId];
   if (prophetNode == null) {
-    print('prophet: ${lastNode.key}->${prophet.relicId} ' +
+    l.d('prophet: ${lastNode.key}->${prophet.relicId} ' +
         prophet.trKeyEndTagLabel);
     Node node = Node.Id(prophet.relicId);
     nodeMap[prophet.relicId] = node;
@@ -1702,7 +1704,7 @@ addProphetNodes(
 
   // add kids
   for (PF pf in prophet.trValDaughters ?? []) {
-    print('trValDaughters: ${prophetNode.key}->${pf.index} ' + pf.name);
+    l.d('trValDaughters: ${prophetNode.key}->${pf.index} ' + pf.name);
     Node node = Node.Id(pf.index);
     nodeMap[pf.index] = node;
     addGraphEdge(
@@ -1711,7 +1713,7 @@ addProphetNodes(
     gapFound = false;
   }
   for (PF pf in prophet.trValSons ?? []) {
-    print('trValSons: ${prophetNode.key}->${pf.index} ' + pf.name);
+    l.d('trValSons: ${prophetNode.key}->${pf.index} ' + pf.name);
     Node node = Node.Id(pf.index);
     nodeMap[pf.index] = node;
     addGraphEdge(
