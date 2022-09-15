@@ -12,7 +12,7 @@ import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
 const String _ = ' '; // space/gap
 
-class Prophet extends FamilyTree<PF> {
+class Prophet extends FamilyTree {
   Prophet({
     // TimelineEntry data:
     required String trValEra,
@@ -24,17 +24,17 @@ class Prophet extends FamilyTree<PF> {
 
     // Required Fam data:
     required Isim isim,
-    required List<PF> trValPredecessors,
+    required List<Enum> trValPredecessors,
     // Optional Fam data:
     List<String>? trValLaqab, // Laqab - Nicknames
-    List<PF>? trValSuccessors,
-    List<PF>? trValSpouses,
-    List<PF>? trValDaughters,
-    List<PF>? trValSons,
-    List<PF>? trValRelatives,
+    List<Enum>? trValSuccessors,
+    List<Enum>? trValSpouses,
+    List<Enum>? trValDaughters,
+    List<Enum>? trValSons,
+    List<Enum>? trValRelatives,
     List<RELATIVE>? trValRelativesTypes,
-    PF? trValMother,
-    PF? trValFather,
+    Enum? trValMother,
+    Enum? trValFather,
 
     // Required prophet data:
     required this.trValSentTo,
@@ -85,6 +85,9 @@ class Prophet extends FamilyTree<PF> {
 
   bool isRasul() => qvRasul != null;
   bool isUluAlAzm() => qvsUluAlAzm != null && qvsUluAlAzm!.isNotEmpty;
+
+  @override
+  int get gapIdx => PF.Gap.index;
 
   @override
   String get trValRelicSetTitle => a('a.Anbiya');
@@ -1532,14 +1535,14 @@ enum PF {
 /// in scripture (Bible/Torah/Quran relations).
 class Isim {
   Isim(
-    this.pf, {
+    this.e, {
     this.trValAramaic,
     this.trValHebrew,
     this.trValGreek,
     this.trValLatin,
     this.possibly = false,
   });
-  final PF pf;
+  final Enum e;
   final String? trValAramaic;
   final String? trValHebrew;
   final String? trValGreek;
@@ -1547,15 +1550,15 @@ class Isim {
   // Something in data is unsure, e.g. Hud is Eber in Bible.
   final bool possibly; // TODO convert to string with why possibly
 
-  String get trValTransilteration => pf.name;
-  String get trValTranslation => a('a.${pf.name}');
-  String get trValArabic => LanguageC.to.ar('a.${pf.name}');
+  String get trValTransilteration => e.name;
+  String get trValTranslation => a('a.${e.name}');
+  String get trValArabic => LanguageC.to.ar('a.${e.name}');
 
   /// Arabic Transileration
-  String get trKeyEndTagLabel => pf.name;
+  String get trKeyEndTagLabel => e.name;
   //if (pf == PF.DhulKifl) return 'Dhul-Kifl'; // TODO auto make nice?
 
-  int get relicId => pf.index;
+  int get relicId => e.index;
 
   /// Add * to mark something as "Possibly" being true
   String addPossibly(String trVal) => trVal + (possibly ? '*' : '');
@@ -1580,7 +1583,7 @@ enum RELATIVE {
 ///   1. If Father->Son are both relics, Father must declare son in trValSons.
 ///   2. If Father->Son are both relics, Son must have trValPredecessors = []
 ///   3. The root node must have trValPredecessors = []
-abstract class FamilyTree<T> extends Relic {
+abstract class FamilyTree extends Relic {
   FamilyTree({
     // TimelineEntry data:
     required String trValEra,
@@ -1619,30 +1622,33 @@ abstract class FamilyTree<T> extends Relic {
         );
   // Required Fam data:
   final Isim isim;
-  final List<T> trValPredecessors;
+  final List<Enum> trValPredecessors;
   // Optional Fam data:
   final List<String>? trValLaqab;
-  final List<T>? trValSuccessors;
-  final List<T>? trValSpouses;
-  final List<T>? trValDaughters;
-  final List<T>? trValSons;
-  final List<T>? trValRelatives;
+  final List<Enum>? trValSuccessors;
+  final List<Enum>? trValSpouses;
+  final List<Enum>? trValDaughters;
+  final List<Enum>? trValSons;
+  final List<Enum>? trValRelatives;
   final List<RELATIVE>? trValRelativesTypes;
-  final T? trValMother;
-  final T? trValFather;
+  final Enum? trValMother;
+  final Enum? trValFather;
 
   final List<RelicSetFilter> _relicSetFilters = [];
+
+  // Implement on inhertting classes
+  int get gapIdx;
 
   Graph getFamilyTreeGraph() {
     final Graph graph = Graph()..isTree = true;
     for (Relic relic in RelicC.to.getRelicSet(relicType).relics) {
-      addFamilyNodes(graph, relic as Prophet);
+      addFamilyNodes(graph, relic as FamilyTree);
     }
     return graph;
   }
 
   /// Init tree with all relics and the relic's ancestors, parents, and kids.
-  addFamilyNodes(Graph graph, Prophet p) {
+  addFamilyNodes(Graph graph, FamilyTree ft) {
     Node? lastNode;
     bool paintGapEdgeNext = false;
 
@@ -1671,32 +1677,32 @@ abstract class FamilyTree<T> extends Relic {
     }
 
     // add predecessors, is [] on root and when Father->Son set previously
-    for (PF pf in p.trValPredecessors) {
-      if (pf.index == PF.Gap.index) {
+    for (Enum e in ft.trValPredecessors) {
+      if (e.index == gapIdx) {
         paintGapEdgeNext = true;
         l.d('FAM_NODE:Predecessors:GAP: set flag paintGapEdgeNext=true');
         continue; // don't add "Gap" edge, flag makes next edge red
       }
-      addEdge(pf.index, 'Predecessors', pf.name);
+      addEdge(e.index, 'Predecessors', e.name);
     }
 
     // add mother (Nothing for now, can handle on UI or special case init area)
 
     // add father, may already been created, e.g. Ibrahim->Ismail/Issac
-    if (p.trValFather != null) {
-      addEdge(p.trValFather!.index, 'Father', p.trValFather!.name);
+    if (ft.trValFather != null) {
+      addEdge(ft.trValFather!.index, 'Father', ft.trValFather!.name);
     }
 
     // Add Prophet (Handles case of Adam fine)
-    addEdge(p.relicId, 'Prophet', p.trKeyEndTagLabel);
+    addEdge(ft.relicId, 'Prophet', ft.trKeyEndTagLabel);
 
     // add daughters to Prophet node
-    for (PF pf in p.trValDaughters ?? []) {
-      addEdge(pf.index, 'Daughters', pf.name, updateLastNode: false);
+    for (Enum e in ft.trValDaughters ?? []) {
+      addEdge(e.index, 'Daughters', e.name, updateLastNode: false);
     }
     // add sons to Prophet node
-    for (PF pf in p.trValSons ?? []) {
-      addEdge(pf.index, 'Sons', pf.name, updateLastNode: false);
+    for (Enum e in ft.trValSons ?? []) {
+      addEdge(e.index, 'Sons', e.name, updateLastNode: false);
     }
   }
 }
