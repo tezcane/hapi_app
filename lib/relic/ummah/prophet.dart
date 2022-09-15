@@ -998,7 +998,7 @@ Future<List<Prophet>> initProphets() async {
     ),
     trValLaqab: null,
     trValPredecessors: [
-      PF.Yaqub,
+      PF.Yusuf,
       PF.Efraim,
       PF.Shultem,
     ],

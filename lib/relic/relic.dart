@@ -12,6 +12,7 @@ enum RELIC_TYPE {
   Heaven_LevelsOfHell,
 
   Quran_AlAnbiya, // Prophets
+  Quran_Surahs,
   Quran_Saliheen, // righteous people
   Quran_Disbelievers, // bad people mentioned in the quran
   Quran_Tribes,
