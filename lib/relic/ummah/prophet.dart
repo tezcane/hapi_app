@@ -1630,26 +1630,24 @@ abstract class Fam<T> extends Relic {
 
   final List<RelicSetFilter> _relicSetFilters = [];
 
-  addGraphEdge(Graph graph, lastNode, node, Color color) {
-    graph.addEdge(
-      lastNode,
-      node,
-      paint: Paint()
-        ..color = color
-        ..strokeWidth = 3,
-    );
+  Graph getFamilyTreeGraph() {
+    Map<int, Node> nodeMap = {};
+    final Graph graph = Graph()..isTree = true;
+
+    nodeMap[0] = Node.Id(0); // initate first node, e.g. Adam in Prophet.
+    for (Relic relic in RelicC.to.getRelicSet(relicType).relics) {
+      addMainNodeWithFam(nodeMap, graph, relic as Prophet);
+    }
+    return graph;
   }
 
-  addMainNodeWithFam(
-    Map<int, Node> nodeMap,
-    Graph graph,
-    Prophet prophet,
-  ) {
+  /// Init tree with all relics and the relic's ancestors, parents, and kids.
+  addMainNodeWithFam(Map<int, Node> nodeMap, Graph graph, Prophet prophet) {
     Node lastNode = nodeMap[prophet.trValPredecessors[0].index]!;
 
-    // add predecessors
     bool gapFound = false;
 
+    // add predecessors
     for (int idx = 1; idx < prophet.trValPredecessors.length; idx++) {
       int mapIdx = prophet.trValPredecessors[idx].index;
       l.d('trValPredecessors: ${lastNode.key}->$mapIdx ' +
@@ -1666,9 +1664,9 @@ abstract class Fam<T> extends Relic {
     }
 
     // add parents
-    bool motherNodeFound = false;
+    // bool motherNodeFound = false; TODO
     if (prophet.trValMother != null && prophet.trValFather == null) {
-      motherNodeFound = true;
+      // motherNodeFound = true;
       l.d('trValMother: ${lastNode.key}->${prophet.trValMother!.index} ' +
           prophet.trValMother!.name);
       Node node = Node.Id(prophet.trValMother!.index);
@@ -1692,8 +1690,7 @@ abstract class Fam<T> extends Relic {
       lastNode = fatherNode;
     }
 
-    // Add Prophet node
-    // May have been added before, e.g. Ibrahim->Ismail
+    // Add Prophet node, NOTE: May already exist, e.g. Ibrahim->Ismail
     Node? prophetNode = nodeMap[prophet.relicId];
     if (prophetNode == null) {
       l.d('prophet: ${lastNode.key}->${prophet.relicId} ' +
@@ -1728,16 +1725,14 @@ abstract class Fam<T> extends Relic {
     }
   }
 
-  Graph getFamilyTreeGraph() {
-    Map<int, Node> nodeMap = {};
-    final Graph graph = Graph()..isTree = true;
-
-    // // Init tree with Adam and his kids
-    nodeMap[0] = Node.Id(0); // initate first node, e.g. Adam in Prophet.
-    for (Relic relic in RelicC.to.getRelicSet(relicType).relics) {
-      addMainNodeWithFam(nodeMap, graph, relic as Prophet);
-    }
-    return graph;
+  addGraphEdge(Graph graph, lastNode, node, Color color) {
+    graph.addEdge(
+      lastNode,
+      node,
+      paint: Paint()
+        ..color = color
+        ..strokeWidth = 3,
+    );
   }
 }
 
