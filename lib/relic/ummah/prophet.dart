@@ -12,7 +12,7 @@ import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
 const String _ = ' '; // space/gap
 
-class Prophet extends Fam<PF> {
+class Prophet extends FamilyTree<PF> {
   Prophet({
     // TimelineEntry data:
     required String trValEra,
@@ -194,7 +194,7 @@ Future<List<Prophet>> initProphets() async {
       trValLatin: 'Adam',
     ),
     trValLaqab: null,
-    trValPredecessors: [], // Adam has no predecessors, root of the tree
+    trValPredecessors: [], // must be blank, root of the tree
     trValSuccessors: [PF.Sheth],
     trValMother: null, // must leave blank for tree logic
     trValFather: null, // must leave blank for tree logic
@@ -504,7 +504,7 @@ Future<List<Prophet>> initProphets() async {
       trValLatin: 'Ismahel',
     ),
     trValLaqab: ['p.Father of the Arabs'], // TODO
-    trValPredecessors: [PF.Ibrahim],
+    trValPredecessors: [], // must be blank, Father->Son used to build tree
     trValSuccessors: null,
     trValMother: PF.Hajar,
     trValFather: PF.Ibrahim,
@@ -547,7 +547,7 @@ Future<List<Prophet>> initProphets() async {
       trValLatin: 'Isaac',
     ),
     trValLaqab: ['p.Father of the Hebrews/Jews'], // TODO
-    trValPredecessors: [PF.Ibrahim],
+    trValPredecessors: [],
     trValSuccessors: [PF.Yaqub],
     trValMother: PF.Sarah,
     trValFather: PF.Ibrahim,
@@ -590,7 +590,7 @@ Future<List<Prophet>> initProphets() async {
       a('a.Israel'), //  إِسْرَآءِيل
       'Father of the 12 tribes of Israel',
     ],
-    trValPredecessors: [PF.Ishaq],
+    trValPredecessors: [],
     trValSuccessors: [PF.Yusuf],
     trValMother: PF.Rafeqa,
     trValFather: PF.Ishaq,
@@ -631,7 +631,7 @@ Future<List<Prophet>> initProphets() async {
       trValLatin: 'Ioseph',
     ),
     trValLaqab: null,
-    trValPredecessors: [PF.Yaqub],
+    trValPredecessors: [],
     trValSuccessors: null,
     trValMother: PF.Rahil_Bint_Leban,
     trValFather: PF.Yaqub,
@@ -677,7 +677,7 @@ Future<List<Prophet>> initProphets() async {
     trValFather: PF.Amose,
     trValSpouses: null,
     trValDaughters: null,
-    trValSons: null,
+    trValSons: [PF.DhulKifl],
     trValRelatives: [PF.Lut],
     trValRelativesTypes: [RELATIVE.Grandfather],
     // Required prophet data:
@@ -709,10 +709,10 @@ Future<List<Prophet>> initProphets() async {
       possibly: true,
     ),
     trValLaqab: null,
-    trValPredecessors: [PF.Ayyub],
+    trValPredecessors: [],
     trValSuccessors: null,
     trValMother: null,
-    trValFather: null,
+    trValFather: PF.Ayyub,
     trValSpouses: null,
     trValDaughters: null,
     trValSons: null,
@@ -924,7 +924,7 @@ Future<List<Prophet>> initProphets() async {
       trValLatin: 'Solomon',
     ),
     trValLaqab: null,
-    trValPredecessors: [PF.Dawud],
+    trValPredecessors: [],
     trValSuccessors: [PF.Ilyas],
     trValMother: null,
     trValFather: PF.Dawud,
@@ -1140,7 +1140,7 @@ Future<List<Prophet>> initProphets() async {
       trValLatin: 'Iohannes',
     ),
     trValLaqab: ['p.Christians add "the Babtist" to the end of his name'.tr],
-    trValPredecessors: [PF.Zakariya],
+    trValPredecessors: [],
     trValSuccessors: [PF.Isa],
     trValMother: PF.Ishba,
     trValFather: PF.Zakariya,
@@ -1575,10 +1575,13 @@ enum RELATIVE {
   DistantCousin,
 }
 
-/// Fam=Family. Used to mark all we can about a Prophet/Person's lineauge so we
-/// can use on a Family tree or UI to show lots of info about them.
-abstract class Fam<T> extends Relic {
-  Fam({
+/// Used to save all we can about a Prophet's/Leader's/Person's family lineauge
+/// so we use to build a family tree or nice UI about this relic.  A few rules:
+///   1. If Father->Son are both relics, Father must declare son in trValSons.
+///   2. If Father->Son are both relics, Son must have trValPredecessors = []
+///   3. The root node must have trValPredecessors = []
+abstract class FamilyTree<T> extends Relic {
+  FamilyTree({
     // TimelineEntry data:
     required String trValEra,
     required double startMs,
@@ -1631,24 +1634,21 @@ abstract class Fam<T> extends Relic {
   final List<RelicSetFilter> _relicSetFilters = [];
 
   Graph getFamilyTreeGraph() {
-    Map<int, Node> nodeMap = {};
     final Graph graph = Graph()..isTree = true;
-
     for (Relic relic in RelicC.to.getRelicSet(relicType).relics) {
-      addFamilyNodes(nodeMap, graph, relic as Prophet);
+      addFamilyNodes(graph, relic as Prophet);
     }
     return graph;
   }
 
   /// Init tree with all relics and the relic's ancestors, parents, and kids.
-  addFamilyNodes(Map<int, Node> nodeMap, Graph graph, Prophet p) {
+  addFamilyNodes(Graph graph, Prophet p) {
     Node? lastNode;
     bool paintGapEdgeNext = false;
 
     /// Embedded function so we can use this methods variables
     addEdge(int idx, String dbgMsg, String name, {bool updateLastNode = true}) {
       Node node = Node.Id(idx);
-      nodeMap[idx] = node;
 
       if (lastNode == null) {
         lastNode = node; // lastNode inits to whoever calls addEdge() first
@@ -1670,27 +1670,21 @@ abstract class Fam<T> extends Relic {
       if (updateLastNode) lastNode = node; // needed to add next node
     }
 
-    // add predecessors, start at idx 1, since idx 0 handled above
+    // add predecessors, is [] on root and when Father->Son set previously
     for (PF pf in p.trValPredecessors) {
       if (pf.index == PF.Gap.index) {
-        l.d('FAM_NODE:Predecessors2: found gap! painting different edge...');
         paintGapEdgeNext = true;
+        l.d('FAM_NODE:Predecessors:GAP: set flag paintGapEdgeNext=true');
         continue; // don't add "Gap" edge, flag makes next edge red
       }
-      addEdge(pf.index, 'Predecessors1', pf.name);
+      addEdge(pf.index, 'Predecessors', pf.name);
     }
 
-    // add mother (Nothing for now)
+    // add mother (Nothing for now, can handle on UI or special case init area)
 
-    // add father, may already exist, e.g. Ibrahim->Ismail/Issac
+    // add father, may already been created, e.g. Ibrahim->Ismail/Issac
     if (p.trValFather != null) {
-      int mapIdx = p.trValFather!.index;
-      if (nodeMap[mapIdx] != null) {
-        l.d('FAM_NODE:Father2: nodeMap[$mapIdx] != null: ${p.trValFather!.name}');
-        lastNode = nodeMap[mapIdx]!;
-      } else {
-        addEdge(mapIdx, 'Father1', p.trValFather!.name);
-      }
+      addEdge(p.trValFather!.index, 'Father', p.trValFather!.name);
     }
 
     // Add Prophet (Handles case of Adam fine)
