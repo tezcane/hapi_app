@@ -194,10 +194,10 @@ Future<List<Prophet>> initProphets() async {
       trValLatin: 'Adam',
     ),
     trValLaqab: null,
-    trValPredecessors: [PF.Adam], // TODO handle no predecesor for adam
+    trValPredecessors: [], // Adam has no predecessors, root of the tree
     trValSuccessors: [PF.Sheth],
-    trValMother: null,
-    trValFather: null,
+    trValMother: null, // must leave blank for tree logic
+    trValFather: null, // must leave blank for tree logic
     trValSpouses: [PF.Hawwa],
     trValSons: [PF.Habel, PF.Qabel, PF.Anaq, PF.Sheth],
     trValDaughters: null, // TODO
@@ -1634,105 +1634,76 @@ abstract class Fam<T> extends Relic {
     Map<int, Node> nodeMap = {};
     final Graph graph = Graph()..isTree = true;
 
-    nodeMap[0] = Node.Id(0); // initate first node, e.g. Adam in Prophet.
     for (Relic relic in RelicC.to.getRelicSet(relicType).relics) {
-      addMainNodeWithFam(nodeMap, graph, relic as Prophet);
+      addFamilyNodes(nodeMap, graph, relic as Prophet);
     }
     return graph;
   }
 
   /// Init tree with all relics and the relic's ancestors, parents, and kids.
-  addMainNodeWithFam(Map<int, Node> nodeMap, Graph graph, Prophet prophet) {
-    Node lastNode = nodeMap[prophet.trValPredecessors[0].index]!;
+  addFamilyNodes(Map<int, Node> nodeMap, Graph graph, Prophet p) {
+    Node? lastNode;
+    bool paintGapEdgeNext = false;
 
-    bool gapFound = false;
+    /// Embedded function so we can use this methods variables
+    addEdge(int idx, String dbgMsg, String name, {bool updateLastNode = true}) {
+      Node node = Node.Id(idx);
+      nodeMap[idx] = node;
 
-    // add predecessors
-    for (int idx = 1; idx < prophet.trValPredecessors.length; idx++) {
-      int mapIdx = prophet.trValPredecessors[idx].index;
-      l.d('trValPredecessors: ${lastNode.key}->$mapIdx ' +
-          prophet.trValPredecessors[idx].name);
-      if (mapIdx == PF.Gap.index) {
-        gapFound = true;
-        continue;
+      if (lastNode == null) {
+        lastNode = node; // lastNode inits to whoever calls addEdge() first
+        l.d('FAM_NODE:INIT:$dbgMsg: ${lastNode!.key}->$idx $name');
+        return;
       }
-      Node node = Node.Id(mapIdx);
-      nodeMap[mapIdx] = node;
-      addGraphEdge(graph, lastNode, node, gapFound ? Colors.red : Colors.green);
-      lastNode = node;
-      gapFound = false;
+
+      l.d('FAM_NODE:$dbgMsg: ${lastNode!.key}->$idx $name');
+
+      graph.addEdge(
+        lastNode!,
+        node,
+        paint: Paint()
+          ..color = paintGapEdgeNext ? Colors.red : Colors.green
+          ..strokeWidth = 3,
+      );
+
+      paintGapEdgeNext = false; // if it was set we clear it now
+      if (updateLastNode) lastNode = node; // needed to add next node
     }
 
-    // add parents
-    // bool motherNodeFound = false; TODO
-    if (prophet.trValMother != null && prophet.trValFather == null) {
-      // motherNodeFound = true;
-      l.d('trValMother: ${lastNode.key}->${prophet.trValMother!.index} ' +
-          prophet.trValMother!.name);
-      Node node = Node.Id(prophet.trValMother!.index);
-      nodeMap[prophet.trValMother!.index] = node;
-      addGraphEdge(graph, lastNode, node, gapFound ? Colors.red : Colors.green);
-      lastNode = node;
-      gapFound = false;
-    } else if (prophet.trValFather != null) {
-      Node? fatherNode = nodeMap[prophet.relicId];
-      if (fatherNode == null) {
-        l.d('trValFather: ${lastNode.key}->${prophet.trValFather!.index} ' +
-            prophet.trValFather!.name);
-        Node node = Node.Id(prophet.trValFather!.index);
-        nodeMap[prophet.trValFather!.index] = node;
-        addGraphEdge(
-            graph, lastNode, node, gapFound ? Colors.red : Colors.green);
-        lastNode = node;
-        gapFound = false;
-        fatherNode = node;
+    // add predecessors, start at idx 1, since idx 0 handled above
+    for (PF pf in p.trValPredecessors) {
+      if (pf.index == PF.Gap.index) {
+        l.d('FAM_NODE:Predecessors2: found gap! painting different edge...');
+        paintGapEdgeNext = true;
+        continue; // don't add "Gap" edge, flag makes next edge red
       }
-      lastNode = fatherNode;
+      addEdge(pf.index, 'Predecessors1', pf.name);
     }
 
-    // Add Prophet node, NOTE: May already exist, e.g. Ibrahim->Ismail
-    Node? prophetNode = nodeMap[prophet.relicId];
-    if (prophetNode == null) {
-      l.d('prophet: ${lastNode.key}->${prophet.relicId} ' +
-          prophet.trKeyEndTagLabel);
-      Node node = Node.Id(prophet.relicId);
-      nodeMap[prophet.relicId] = node;
-      addGraphEdge(graph, lastNode, node, gapFound ? Colors.red : Colors.green);
-      lastNode = node;
-      gapFound = false;
-      prophetNode = node;
-    }
-    lastNode = prophetNode;
+    // add mother (Nothing for now)
 
-    // add kids
-    for (PF pf in prophet.trValDaughters ?? []) {
-      l.d('trValDaughters: ${prophetNode.key}->${pf.index} ' + pf.name);
-      Node node = Node.Id(pf.index);
-      nodeMap[pf.index] = node;
-      addGraphEdge(
-          graph, prophetNode, node, gapFound ? Colors.red : Colors.green);
-      lastNode = node;
-      gapFound = false;
+    // add father, may already exist, e.g. Ibrahim->Ismail/Issac
+    if (p.trValFather != null) {
+      int mapIdx = p.trValFather!.index;
+      if (nodeMap[mapIdx] != null) {
+        l.d('FAM_NODE:Father2: nodeMap[$mapIdx] != null: ${p.trValFather!.name}');
+        lastNode = nodeMap[mapIdx]!;
+      } else {
+        addEdge(mapIdx, 'Father1', p.trValFather!.name);
+      }
     }
-    for (PF pf in prophet.trValSons ?? []) {
-      l.d('trValSons: ${prophetNode.key}->${pf.index} ' + pf.name);
-      Node node = Node.Id(pf.index);
-      nodeMap[pf.index] = node;
-      addGraphEdge(
-          graph, prophetNode, node, gapFound ? Colors.red : Colors.green);
-      lastNode = node;
-      gapFound = false;
-    }
-  }
 
-  addGraphEdge(Graph graph, lastNode, node, Color color) {
-    graph.addEdge(
-      lastNode,
-      node,
-      paint: Paint()
-        ..color = color
-        ..strokeWidth = 3,
-    );
+    // Add Prophet (Handles case of Adam fine)
+    addEdge(p.relicId, 'Prophet', p.trKeyEndTagLabel);
+
+    // add daughters to Prophet node
+    for (PF pf in p.trValDaughters ?? []) {
+      addEdge(pf.index, 'Daughters', pf.name, updateLastNode: false);
+    }
+    // add sons to Prophet node
+    for (PF pf in p.trValSons ?? []) {
+      addEdge(pf.index, 'Sons', pf.name, updateLastNode: false);
+    }
   }
 }
 
