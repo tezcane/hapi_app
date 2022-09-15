@@ -9,6 +9,13 @@ import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/onboard/auth/auth_c.dart';
 
+// // TODO we can make use of this for naming conventions:
+// /// POWER: All enums inside the Project will get this functionality!
+// extension on Enum {
+//   int get idx => index;
+//   String get isim => name.replaceFirst('__', '-').replaceFirst('_', ' ');
+// }
+
 class MainC extends GetxHapi {
   static MainC get to => Get.find();
 

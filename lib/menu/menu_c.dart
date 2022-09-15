@@ -17,7 +17,7 @@ import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/onboard/auth/auth_c.dart';
 import 'package:hapi/quest/active/active_quest_action_ui.dart';
 import 'package:hapi/quest/quests_ui.dart';
-import 'package:hapi/relic/family_tree_ui.dart';
+import 'package:hapi/relic/family_tree/family_tree_ui.dart';
 import 'package:hapi/relic/relics_ui.dart';
 import 'package:hapi/tarikh/article/tarikh_article_ui.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';

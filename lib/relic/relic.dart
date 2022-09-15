@@ -90,6 +90,9 @@ abstract class Relic extends TimelineEntry {
   // Abstract classes subclasses must implement:
   String get trValRelicSetTitle;
   List<RelicSetFilter> get relicSetFilters;
+
+  /// Used to prevent UI from constantly rebuilding
+  final List<RelicSetFilter> relicSetFiltersInit = [];
 }
 
 /// Stores all information needed to show a RelicSet, see RelicSetUI().
