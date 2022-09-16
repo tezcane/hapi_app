@@ -11,6 +11,7 @@ import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 /// user isn't presented possibly wrong information as truth.
 class Isim {
   const Isim({
+    this.trKeyLaqab,
     this.trValAramaic,
     this.trValHebrew,
     this.trKeyHebrewMeaning,
@@ -18,6 +19,7 @@ class Isim {
     this.trValLatin,
     this.possibly = false,
   });
+  final List<String>? trKeyLaqab; // Laqab = Nicknames
   final String? trValAramaic;
   final String? trValHebrew;
   final String? trKeyHebrewMeaning;
@@ -66,15 +68,14 @@ abstract class FamilyTree extends Relic {
     required this.e,
     required this.trValPredecessors,
     // Fam Optional
-    this.trValLaqab,
-    this.trValSuccessors,
-    this.trValMother,
     this.trValFather,
+    this.trValMother,
     this.trValSpouses,
     this.trValSons,
     this.trValDaughters,
     this.trValRelatives,
     this.trValRelativesTypes,
+    this.trValSuccessors,
   }) : super(
           // TimelineEntry data:
           trValEra: trValEra,
@@ -92,15 +93,14 @@ abstract class FamilyTree extends Relic {
   final Enum e;
   final List<Enum> trValPredecessors;
   // Optional Fam data:
-  final List<String>? trValLaqab;
-  final List<Enum>? trValSuccessors;
+  final Enum? trValFather;
+  final Enum? trValMother;
   final List<Enum>? trValSpouses;
   final List<Enum>? trValDaughters;
   final List<Enum>? trValSons;
   final List<Enum>? trValRelatives;
   final List<RELATIVE>? trValRelativesTypes;
-  final Enum? trValMother;
-  final Enum? trValFather;
+  final List<Enum>? trValSuccessors;
 }
 
 Graph getFamilyTreeGraph(RELIC_TYPE relicType, int gapIdx) {

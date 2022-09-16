@@ -25,15 +25,14 @@ class Prophet extends FamilyTree {
     required PF pf,
     required List<PF> trValPredecessors,
     // Optional Fam data:
-    List<String>? trValLaqab, // Laqab = Nicknames
-    List<PF>? trValSuccessors,
+    PF? trValFather,
+    PF? trValMother,
     List<PF>? trValSpouses,
     List<PF>? trValDaughters,
     List<PF>? trValSons,
     List<PF>? trValRelatives,
     List<RELATIVE>? trValRelativesTypes,
-    PF? trValMother,
-    PF? trValFather,
+    List<PF>? trValSuccessors,
 
     // Required prophet data:
     required this.trValSentTo,
@@ -58,17 +57,16 @@ class Prophet extends FamilyTree {
           trKeySummary2: 'pq.${pf.name}', // pq=Prophet Quran
           // Required Fam data:
           e: pf,
-          trValLaqab: trValLaqab,
           trValPredecessors: trValPredecessors,
           // Optional Fam data:
-          trValSuccessors: trValSuccessors,
+          trValFather: trValFather,
+          trValMother: trValMother,
           trValSpouses: trValSpouses,
           trValDaughters: trValDaughters,
           trValSons: trValSons,
           trValRelatives: trValRelatives,
           trValRelativesTypes: trValRelativesTypes,
-          trValMother: trValMother,
-          trValFather: trValFather,
+          trValSuccessors: trValSuccessors,
         );
   // Required prophet data:
   final String trValSentTo; // nation the prophet was sent to:
@@ -187,15 +185,14 @@ Future<List<Prophet>> initProphets() async {
     asset: await _getTimelineImageAsset(PF.Adam),
     // Fam data:
     pf: PF.Adam,
-    trValLaqab: null,
     trValPredecessors: [], // must be blank, root of the tree
-    trValSuccessors: [PF.Sheth],
-    trValMother: null, // must leave blank for tree logic
     trValFather: null, // must leave blank for tree logic
+    trValMother: null, // must leave blank for tree logic
     trValSpouses: [PF.Hawwa],
     trValSons: [PF.Habel, PF.Qabel, PF.Anaq, PF.Sheth],
     trValDaughters: null, // TODO
     trValRelatives: null,
+    trValSuccessors: [PF.Sheth],
     // Required prophet data:
     trValSentTo: 'p.Earth from Heaven'.tr + _ + cns('(4:1)'),
     quranMentionCount: 25,
@@ -216,7 +213,6 @@ Future<List<Prophet>> initProphets() async {
     asset: await _getTimelineImageAsset(PF.Idris),
     // Fam data:
     pf: PF.Idris,
-    trValLaqab: null,
     trValPredecessors: [
 //    PF.Adam,
       PF.Sheth,
@@ -224,12 +220,12 @@ Future<List<Prophet>> initProphets() async {
       PF.Qinan,
       PF.Mahlail,
     ],
-    trValSuccessors: [PF.Nuh],
-    trValMother: null,
     trValFather: PF.Yarid,
+    trValMother: null,
     trValSpouses: null,
     trValSons: [PF.Matulshalkh],
     trValRelatives: null,
+    trValSuccessors: [PF.Nuh],
     // Required prophet data:
     trValSentTo: a('a.Babylon'),
     quranMentionCount: 2,
@@ -250,18 +246,17 @@ Future<List<Prophet>> initProphets() async {
     asset: await _getTimelineImageAsset(PF.Nuh),
     // Fam data:
     pf: PF.Nuh,
-    trValLaqab: null,
     trValPredecessors: [
 //    PF.Idris,
       PF.Matulshalkh,
     ],
-    trValSuccessors: [PF.Hud],
-    trValMother: null,
     trValFather: PF.Lamik,
+    trValMother: null,
     trValSpouses: [PF.Naamah],
     trValDaughters: null, // TODO
     trValSons: [PF.Ham, PF.Yam, PF.Yafith, PF.Sam],
     trValRelatives: null,
+    trValSuccessors: [PF.Hud],
     // Required prophet data:
     trValSentTo: 'p.The people of_'.tr + a('a.Nuh') + _ + cns('(26:105)'),
     quranMentionCount: 43,
@@ -282,7 +277,6 @@ Future<List<Prophet>> initProphets() async {
     asset: await _getTimelineImageAsset(PF.Hud),
     // Fam data:
     pf: PF.Hud,
-    trValLaqab: null,
     trValPredecessors: [
 //    PF.Nuh,
       PF.Sam,
@@ -292,13 +286,13 @@ Future<List<Prophet>> initProphets() async {
       PF.Khalud,
       PF.Raya,
     ],
-    trValSuccessors: [PF.Salih],
-    trValMother: null,
     trValFather: PF.Abdullah,
+    trValMother: null,
     trValSpouses: null,
     trValDaughters: null,
     trValSons: null,
     trValRelatives: null,
+    trValSuccessors: [PF.Salih],
     // Required prophet data:
     trValSentTo: a('a.Ad') + _ + a('a.Tribe') + _ + cns('(7:65)'),
     quranMentionCount: 7,
@@ -321,7 +315,6 @@ Future<List<Prophet>> initProphets() async {
     asset: await _getTimelineImageAsset(PF.Salih),
     // Fam data:
     pf: PF.Salih,
-    trValLaqab: null,
     trValPredecessors: [
 //    PF.Nuh,
 //    PF.Sam,
@@ -333,14 +326,14 @@ Future<List<Prophet>> initProphets() async {
       PF.Masih,
       PF.Auf,
     ],
-    trValSuccessors: [PF.Ibrahim],
-    trValMother: null,
     trValFather: PF.Abir_Ubayd,
+    trValMother: null,
     trValSpouses: null,
     trValDaughters: null,
     trValSons: null,
     trValRelatives: null,
     trValRelativesTypes: null,
+    trValSuccessors: [PF.Ibrahim],
     // Required prophet data:
     trValSentTo: a('a.Thamud') + _ + a('a.Tribe') + _ + cns('(7:73)'),
     quranMentionCount: 9,
@@ -361,10 +354,6 @@ Future<List<Prophet>> initProphets() async {
     asset: await _getTimelineImageAsset(PF.Ibrahim),
     // Fam data:
     pf: PF.Ibrahim,
-    trValLaqab: [
-      a('a.Khalilullah'), // Friend of Allah
-      'Father of Abrahimic faiths', // TODO
-    ],
     trValPredecessors: [
 //    PF.Nuh,
       PF.Sam,
@@ -376,14 +365,14 @@ Future<List<Prophet>> initProphets() async {
       PF.Sarukh,
       PF.Nahur,
     ],
-    trValSuccessors: [PF.Ishaq, PF.Ismail],
-    trValMother: PF.Mahalath,
     trValFather: PF.Azar_Taruh,
+    trValMother: PF.Mahalath,
     trValSpouses: [PF.Sarah, PF.Hajar],
     trValDaughters: null,
     trValSons: [PF.Ismail, PF.Ishaq, PF.Madyan],
     trValRelatives: [PF.Lut],
     trValRelativesTypes: [RELATIVE.Nephew],
+    trValSuccessors: [PF.Ishaq, PF.Ismail],
     // Required prophet data:
     trValSentTo: a('a.Babylon') +
         'i.,_'.tr +
@@ -413,7 +402,6 @@ Future<List<Prophet>> initProphets() async {
     asset: await _getTimelineImageAsset(PF.Lut),
     // Fam data:
     pf: PF.Lut,
-    trValLaqab: null,
     trValPredecessors: [
 //    PF.Nuh,
 //    PF.Sam,
@@ -425,9 +413,8 @@ Future<List<Prophet>> initProphets() async {
       PF.Sarukh,
       PF.Nahur,
     ],
-    trValSuccessors: null,
-    trValMother: null,
     trValFather: PF.Haran,
+    trValMother: null,
     trValSpouses: null,
     // TODO Possibly had 2+ daughters, but the daughters referenced in the
     //  Quran could also mean the women of his nation:
@@ -435,6 +422,7 @@ Future<List<Prophet>> initProphets() async {
     trValSons: null,
     trValRelatives: [PF.Ibrahim, PF.Ayyub, PF.Shuayb],
     trValRelativesTypes: [RELATIVE.Uncle, RELATIVE.Grandson, RELATIVE.Grandson],
+    trValSuccessors: null,
     // Required prophet data:
     trValSentTo: a('a.Saddoom') + // سدوم Sodom
         'i._and_'.tr +
@@ -460,16 +448,15 @@ Future<List<Prophet>> initProphets() async {
     asset: await _getTimelineImageAsset(PF.Ismail),
     // Fam data:
     pf: PF.Ismail,
-    trValLaqab: ['p.Father of the Arabs'], // TODO
     trValPredecessors: [], // must be blank, Father->Son used to build tree
-    trValSuccessors: null,
-    trValMother: PF.Hajar,
     trValFather: PF.Ibrahim,
+    trValMother: PF.Hajar,
     trValSpouses: null,
     trValDaughters: null,
     trValSons: null,
     trValRelatives: [PF.Ishaq],
     trValRelativesTypes: [RELATIVE.HalfBrother],
+    trValSuccessors: null,
     // Required prophet data:
     trValSentTo: 'p.Pre-Islamic_' +
         a('a.Al-Arabiyyah') +
@@ -496,16 +483,15 @@ Future<List<Prophet>> initProphets() async {
     asset: await _getTimelineImageAsset(PF.Ishaq),
     // Fam data:
     pf: PF.Ishaq,
-    trValLaqab: ['p.Father of the Hebrews/Jews'], // TODO
     trValPredecessors: [],
-    trValSuccessors: [PF.Yaqub],
-    trValMother: PF.Sarah,
     trValFather: PF.Ibrahim,
+    trValMother: PF.Sarah,
     trValSpouses: [PF.Rafeqa],
     trValDaughters: null,
     trValSons: [PF.Yaqub, PF.Isu],
     trValRelatives: [PF.Ismail],
     trValRelativesTypes: [RELATIVE.HalfBrother],
+    trValSuccessors: [PF.Yaqub],
     // Required prophet data:
     trValSentTo: a('a.Falastin') + // فلسطين Palestine
         '/' +
@@ -528,14 +514,9 @@ Future<List<Prophet>> initProphets() async {
     asset: await _getTimelineImageAsset(PF.Yaqub),
     // Fam data:
     pf: PF.Yaqub,
-    trValLaqab: [
-      a('a.Israel'), //  إِسْرَآءِيل
-      'Father of the 12 tribes of Israel',
-    ],
     trValPredecessors: [],
-    trValSuccessors: [PF.Yusuf],
-    trValMother: PF.Rafeqa,
     trValFather: PF.Ishaq,
+    trValMother: PF.Rafeqa,
     trValSpouses: [PF.Rahil_Bint_Leban, PF.Lia],
     trValDaughters: null,
     trValSons: [
@@ -546,6 +527,8 @@ Future<List<Prophet>> initProphets() async {
       // TODO And all 12 tribe founders
     ],
     trValRelatives: null,
+    trValSuccessors: [PF.Yusuf],
+    // Required prophet data:
     trValSentTo: a('a.Falastin') + // فلسطين Palestine
         '/' +
         'i.Canaan'.tr,
@@ -567,16 +550,15 @@ Future<List<Prophet>> initProphets() async {
     asset: await _getTimelineImageAsset(PF.Yusuf),
     // Fam data:
     pf: PF.Yusuf,
-    trValLaqab: null,
     trValPredecessors: [],
-    trValSuccessors: null,
-    trValMother: PF.Rahil_Bint_Leban,
     trValFather: PF.Yaqub,
+    trValMother: PF.Rahil_Bint_Leban,
     trValSpouses: null,
     trValDaughters: null,
     trValSons: null,
     trValRelatives: [PF.Bunyamin], // TODO 10 more!
     trValRelativesTypes: [RELATIVE.Brother], // TODO 10 more!
+    trValSuccessors: null, // TODO
     // Required prophet data:
     trValSentTo: 'p.Ancient Kingdom of_'.tr + a('a.Misr'), // Egypt
     quranMentionCount: 27,
@@ -597,20 +579,19 @@ Future<List<Prophet>> initProphets() async {
     asset: await _getTimelineImageAsset(PF.Ayyub),
     // Fam data:
     pf: PF.Ayyub,
-    trValLaqab: null,
     trValPredecessors: [
 //    PF.Ishaq,
       PF.Isu,
       PF.Rimil,
     ],
-    trValSuccessors: null,
-    trValMother: PF.DaughterOfLut,
     trValFather: PF.Amose,
+    trValMother: PF.DaughterOfLut,
     trValSpouses: null,
     trValDaughters: null,
     trValSons: [PF.DhulKifl],
     trValRelatives: [PF.Lut],
     trValRelativesTypes: [RELATIVE.Grandfather],
+    trValSuccessors: null,
     // Required prophet data:
     trValSentTo: a('a.Edom'), // TODO Arabee version
     quranMentionCount: 4,
@@ -631,15 +612,14 @@ Future<List<Prophet>> initProphets() async {
     asset: await _getTimelineImageAsset(PF.DhulKifl),
     // Fam data:
     pf: PF.DhulKifl,
-    trValLaqab: null,
     trValPredecessors: [],
-    trValSuccessors: null,
-    trValMother: null,
     trValFather: PF.Ayyub,
+    trValMother: null,
     trValSpouses: null,
     trValDaughters: null,
     trValSons: null,
     trValRelatives: null,
+    trValSuccessors: null,
     // Required prophet data:
     // TODO Kifl or Kapilavastu in the northern Indian subcontinent:
     trValSentTo: 'p.Possibly Babylon or Indain subcontinent'.tr,
@@ -663,20 +643,19 @@ Future<List<Prophet>> initProphets() async {
     asset: await _getTimelineImageAsset(PF.Shuayb),
     // Fam data:
     pf: PF.Shuayb,
-    trValLaqab: null,
     trValPredecessors: [
 //    PF.Ibrahim,
       PF.Madyan,
       PF.Yashjar,
     ],
-    trValSuccessors: [PF.Musa],
-    trValMother: PF.DaughterOfLut,
     trValFather: PF.Mikeel,
+    trValMother: PF.DaughterOfLut,
     trValSpouses: null,
     trValDaughters: null,
     trValSons: null,
     trValRelatives: [PF.Lut],
     trValRelativesTypes: [RELATIVE.Grandfather],
+    trValSuccessors: [PF.Musa],
     // Required prophet data:
     trValSentTo: a('a.Madyan') + // Midian
         _ +
@@ -701,15 +680,13 @@ Future<List<Prophet>> initProphets() async {
     asset: await _getTimelineImageAsset(PF.Musa),
     // Fam data:
     pf: PF.Musa,
-    trValLaqab: null,
     trValPredecessors: [
 //    PF.Yaqub,
       PF.Lawi,
       PF.Kehath_Yashur,
     ],
-    trValSuccessors: [PF.Harun],
-    trValMother: PF.Yukabid,
     trValFather: PF.Imran,
+    trValMother: PF.Yukabid,
     trValSpouses: [PF.Saffurah],
     trValDaughters: null,
     trValSons: null,
@@ -719,6 +696,7 @@ Future<List<Prophet>> initProphets() async {
       RELATIVE.Sister,
       RELATIVE.FosterMother,
     ],
+    trValSuccessors: [PF.Harun],
     // Required prophet data:
     trValSentTo: a('a.Firaun') + // Pharaoh فرعون
         'p._and his establishment_' +
@@ -741,20 +719,19 @@ Future<List<Prophet>> initProphets() async {
     asset: await _getTimelineImageAsset(PF.Harun),
     // Fam data:
     pf: PF.Harun,
-    trValLaqab: null,
     trValPredecessors: [
 //    PF.Yaqub,
 //    PF.Lawi,
       PF.Kehath_Yashur,
     ],
-    trValSuccessors: [PF.Dawud],
-    trValMother: PF.Yukabid,
     trValFather: PF.Imran,
+    trValMother: PF.Yukabid,
     trValSpouses: null,
     trValDaughters: null,
     trValSons: null,
     trValRelatives: [PF.Musa, PF.Miriam],
     trValRelativesTypes: [RELATIVE.Brother, RELATIVE.Sister],
+    trValSuccessors: [PF.Dawud],
     // Required prophet data:
     trValSentTo: a('a.Firaun') + // Pharaoh فرعون
         'p._and his establishment_' +
@@ -777,19 +754,18 @@ Future<List<Prophet>> initProphets() async {
     asset: await _getTimelineImageAsset(PF.Dawud),
     // Fam data:
     pf: PF.Dawud,
-    trValLaqab: null,
     trValPredecessors: [
 //    PF.Dawud,
       PF.Yahudzha,
       PF.Gap,
     ], // TODO 'p.In kingship: Possibly Talut (Saul), in prophethood: Samuil (Samuel)'
-    trValSuccessors: [PF.Suleyman],
-    trValMother: null,
     trValFather: null,
+    trValMother: null,
     trValSpouses: null,
     trValDaughters: null,
     trValSons: [PF.Suleyman],
     trValRelatives: null,
+    trValSuccessors: [PF.Suleyman],
     // Required prophet data:
     trValSentTo: a('a.Al-Quds'), // Jerusalem - القدس
     quranMentionCount: 16,
@@ -812,15 +788,14 @@ Future<List<Prophet>> initProphets() async {
     asset: await _getTimelineImageAsset(PF.Suleyman),
     // Fam data:
     pf: PF.Suleyman,
-    trValLaqab: null,
     trValPredecessors: [],
-    trValSuccessors: [PF.Ilyas],
-    trValMother: null,
     trValFather: PF.Dawud,
+    trValMother: null,
     trValSpouses: null,
     trValDaughters: null,
     trValSons: null,
     trValRelatives: null,
+    trValSuccessors: [PF.Ilyas],
     // Required prophet data:
     trValSentTo: a('a.Al-Quds'),
     quranMentionCount: 17,
@@ -842,19 +817,18 @@ Future<List<Prophet>> initProphets() async {
     asset: await _getTimelineImageAsset(PF.Ilyas),
     // Fam data:
     pf: PF.Ilyas,
-    trValLaqab: null,
     trValPredecessors: [
       PF.Harun,
       PF.Izar,
       PF.Fahnaz,
     ],
-    trValSuccessors: [PF.Alyasa],
-    trValMother: null,
     trValFather: PF.Yasin,
+    trValMother: null,
     trValSpouses: null,
     trValDaughters: null,
     trValSons: null,
     trValRelatives: null,
+    trValSuccessors: [PF.Alyasa],
     // Required prophet data:
     trValSentTo: a('a.Samaria') + //  TODO
         'i.,_'.tr +
@@ -880,19 +854,18 @@ Future<List<Prophet>> initProphets() async {
     asset: await _getTimelineImageAsset(PF.Alyasa),
     // Fam data:
     pf: PF.Alyasa,
-    trValLaqab: null,
     trValPredecessors: [
       PF.Yusuf,
       PF.Efraim,
       PF.Shultem,
     ],
-    trValSuccessors: [PF.Yunus],
-    trValMother: null,
     trValFather: PF.Adi,
+    trValMother: null,
     trValSpouses: null,
     trValDaughters: null,
     trValSons: null,
     trValRelatives: null,
+    trValSuccessors: [PF.Yunus],
     // Required prophet data:
     trValSentTo: a('a.Samaria') + //  TODO
         'i.,_'.tr +
@@ -922,18 +895,17 @@ Future<List<Prophet>> initProphets() async {
     asset: await _getTimelineImageAsset(PF.Yunus),
     // Fam data:
     pf: PF.Yunus,
-    trValLaqab: [a('a.Dhul-Nun')], // ذُو ٱلنُّوْن - The One of the Fish
     trValPredecessors: [
       PF.Bunyamin,
       PF.Gap,
     ],
-    trValSuccessors: [PF.Zakariya],
-    trValMother: null,
     trValFather: PF.Matta,
+    trValMother: null,
     trValSpouses: null,
     trValDaughters: null,
     trValSons: null,
     trValRelatives: null,
+    trValSuccessors: [PF.Zakariya],
     // Required prophet data:
     trValSentTo: a('a.Nineveh') + // TODO Ninevah? arabee?
         'i.,_'.tr +
@@ -962,7 +934,6 @@ Future<List<Prophet>> initProphets() async {
     asset: await _getTimelineImageAsset(PF.Zakariya),
     // Fam data:
     pf: PF.Zakariya,
-    trValLaqab: null,
     trValPredecessors: [
 //    PF.Yaqub,
 //    PF.Yahudzha,
@@ -970,13 +941,13 @@ Future<List<Prophet>> initProphets() async {
       PF.Suleyman,
       PF.Gap,
     ],
-    trValSuccessors: [PF.Yahya],
-    trValMother: null,
     trValFather: null,
+    trValMother: null,
     trValSpouses: [PF.Ishba],
     trValDaughters: null,
     trValSons: [PF.Yahya],
     trValRelatives: null, // TODO relation to Isa?
+    trValSuccessors: [PF.Yahya],
     // Required prophet data:
     trValSentTo: a('a.Al-Quds'),
     quranMentionCount: 7,
@@ -997,16 +968,15 @@ Future<List<Prophet>> initProphets() async {
     asset: await _getTimelineImageAsset(PF.Yahya),
     // Fam data:
     pf: PF.Yahya,
-    trValLaqab: ['p.Christians add "the Babtist" to the end of his name'.tr],
     trValPredecessors: [],
-    trValSuccessors: [PF.Isa],
-    trValMother: PF.Ishba,
     trValFather: PF.Zakariya,
+    trValMother: PF.Ishba,
     trValSpouses: null,
     trValDaughters: null,
     trValSons: null,
     trValRelatives: [PF.Isa],
     trValRelativesTypes: [RELATIVE.DistantCousin],
+    trValSuccessors: [PF.Isa],
     // Required prophet data:
     trValSentTo:
         at('p.{0} of {1} in {2}', ['a.Children', 'a.Israel', 'a.Al-Quds']),
@@ -1028,20 +998,19 @@ Future<List<Prophet>> initProphets() async {
     asset: await _getTimelineImageAsset(PF.Isa),
     // Fam data:
     pf: PF.Isa,
-    trValLaqab: [a('a.Masih')], // Messiah
     trValPredecessors: [
       PF.Suleyman,
       PF.Gap,
       PF.ImranAbuMaryam,
     ],
-    trValSuccessors: [PF.Muhammad],
-    trValMother: PF.Maryam,
     trValFather: null,
+    trValMother: PF.Maryam,
     trValSpouses: null,
     trValDaughters: null,
     trValSons: null,
     trValRelatives: [PF.Zakariya, PF.Yahya],
     trValRelativesTypes: [RELATIVE.DistantCousin, RELATIVE.DistantCousin],
+    trValSuccessors: [PF.Muhammad],
     // Required prophet data:
     trValSentTo:
         at('p.{0} of {1} in {2}', ['a.Children', 'a.Israel', 'a.Al-Quds']) +
@@ -1072,21 +1041,6 @@ Future<List<Prophet>> initProphets() async {
     asset: await _getTimelineImageAsset(PF.Muhammad),
     // Fam data:
     pf: PF.Muhammad,
-    trValLaqab: [
-      a('a.Khātam al-Nabiyyīn'),
-      a('a.Abu al-Qasim'),
-      a('a.Ahmad'),
-      a('a.Al-Mahi'),
-      a('a.al-Hashir'),
-      a('a.Al-Aqib'),
-      a('a.al-Nabī'),
-      a('a.Rasūl’Allāh'),
-      a('a.al-Ḥabīb'),
-      a('a.Ḥabīb Allāh'),
-      a("a.al-Raḥmah lil-'Ālamīn"),
-      a('a.An-Nabiyyu l-Ummiyy'),
-      a('a.Mustafa'),
-    ],
     trValPredecessors: [
       PF.Ismail,
       PF.Gap, // TODO iktilaf here, find best one
@@ -1261,6 +1215,10 @@ enum PF {
     possibly: true,
   )),
   Ibrahim(Isim(
+    trKeyLaqab: [
+      'a.Khalilullah', // Friend of Allah
+      'p.Father of Abrahimic faiths', // TODO
+    ],
     trValHebrew: 'אַבְרָהָם (Abraham)',
     trKeyHebrewMeaning: 'p.many, multitude',
     trValGreek: 'Ἀβραάμ (Abraam)',
@@ -1273,18 +1231,24 @@ enum PF {
     trValLatin: null,
   )), // İsmail
   Ismail(Isim(
+    trKeyLaqab: ['p.Father of the Arabs'], // TODO
     trValHebrew: 'יִשְׁמָעֵאל (Yishmael)',
     trKeyHebrewMeaning: 'p.God will hear',
     trValGreek: 'Ἰσμαήλ (Ismael)',
     trValLatin: 'Ismahel',
   )), // İshak
   Ishaq(Isim(
+    trKeyLaqab: ['p.Father of the Hebrews/Jews'], // TODO
     trValHebrew: 'יִצְחָק (Yitzhaq)',
     trKeyHebrewMeaning: 'p.he will laugh, he will rejoice',
     trValGreek: 'Ισαάκ ()',
     trValLatin: 'Isaac',
   )),
   Yaqub(Isim(
+    trKeyLaqab: [
+      'a.Israel', //  إِسْرَآءِيل
+      'p.Father of the 12 tribes of Israel',
+    ],
     trValHebrew: 'יַעֲקֹב (Yaaqov)',
     trKeyHebrewMeaning:
         'p.Possibly "holder of the heel" or derived from "may God protect"',
@@ -1355,6 +1319,7 @@ enum PF {
     trValLatin: 'Eliseus',
   )), // Elyesa
   Yunus(Isim(
+    trKeyLaqab: ['a.Dhul-Nun'], // ذُو ٱلنُّوْن - The One of the Fish
     trValHebrew: 'יוֹנָה (Yonah)',
     trKeyHebrewMeaning: 'p.dove',
     trValGreek: 'Ἰωνᾶς (Ionas)',
@@ -1367,17 +1332,35 @@ enum PF {
     trValLatin: 'Zaccharias',
   )),
   Yahya(Isim(
+    trKeyLaqab: ['p.Christians call him "John the Babtist"'],
     trValHebrew: 'יוֹחָנָן (Yochanan)',
     trKeyHebrewMeaning: 'p.God is gracious',
     trValGreek: 'Ἰωάννης (Ioannes)',
     trValLatin: 'Iohannes',
   )),
   Isa(Isim(
+    trKeyLaqab: ['a.Masih'], // Messiah
     trValAramaic: 'יֵשׁוּעַ (Ishoʿ)',
     trValGreek: 'Ιησους (Iesous)',
     trValLatin: 'Iesus',
   )),
-  Muhammad(Isim()),
+  Muhammad(Isim(
+    trKeyLaqab: [
+      'a.Khātam al-Nabiyyīn',
+      'a.Abu al-Qasim',
+      'a.Ahmad',
+      'a.Al-Mahi',
+      'a.al-Hashir',
+      'a.Al-Aqib',
+      'a.al-Nabī',
+      'a.Rasūl’Allāh',
+      'a.al-Ḥabīb',
+      'a.Ḥabīb Allāh',
+      "a.al-Raḥmah lil-'Ālamīn",
+      'a.An-Nabiyyu l-Ummiyy',
+      'a.Mustafa',
+    ],
+  )),
 
   // special case area
   Gap(Isim()), // needed
