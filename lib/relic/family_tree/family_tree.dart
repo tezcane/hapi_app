@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:hapi/main_c.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_c.dart';
 import 'package:hapi/tarikh/timeline/timeline_entry.dart';
@@ -11,38 +10,30 @@ import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 /// languages. Possibly is also used if the names are certain or not, so the
 /// user isn't presented possibly wrong information as truth.
 class Isim {
-  Isim(
-    this.e, {
+  const Isim({
     this.trValAramaic,
     this.trValHebrew,
+    this.trKeyHebrewMeaning,
     this.trValGreek,
     this.trValLatin,
     this.possibly = false,
   });
-  final Enum e;
   final String? trValAramaic;
   final String? trValHebrew;
+  final String? trKeyHebrewMeaning;
   final String? trValGreek;
   final String? trValLatin;
   // Something in data is unsure, e.g. Hud is Eber in Bible.
   final bool possibly; // TODO convert to string with why possibly
 
-  String get trValTransilteration => e.name;
-  String get trValTranslation => a('a.${e.name}');
-  String get trValArabic => LanguageC.to.ar('a.${e.name}');
-
-  /// Arabic Transliteration
-  String get trKeyEndTagLabel => e.name;
-  //if (pf == PF.DhulKifl) return 'Dhul-Kifl'; // TODO auto make nice?
-
-  int get relicId => e.index;
-
   /// Add * to mark something as "Possibly" being true
   String addPossibly(String trVal) => trVal + (possibly ? '*' : '');
+
+  // String get trValArabic => LanguageC.to.ar('a.${e.name}');
 }
 
 enum RELATIVE {
-  Possibly, // Possibly a distant relative
+  Possibly, // Possibly a distant relative TODO PossiblyMother, etc.
   Uncle,
   Grandson,
   Grandfather,
@@ -72,7 +63,7 @@ abstract class FamilyTree extends Relic {
     required String trKeySummary,
     required String trKeySummary2,
     // Fam Required
-    required this.isim,
+    required this.e,
     required this.trValPredecessors,
     // Fam Optional
     this.trValLaqab,
@@ -87,18 +78,18 @@ abstract class FamilyTree extends Relic {
   }) : super(
           // TimelineEntry data:
           trValEra: trValEra,
-          trKeyEndTagLabel: isim.trKeyEndTagLabel,
+          trKeyEndTagLabel: e.name,
           startMs: startMs,
           endMs: endMs,
           asset: asset,
           // Relic data:
           relicType: relicType,
-          relicId: isim.relicId,
+          relicId: e.index,
           trKeySummary: trKeySummary,
           trKeySummary2: trKeySummary2,
         );
   // Required Fam data:
-  final Isim isim;
+  final Enum e;
   final List<Enum> trValPredecessors;
   // Optional Fam data:
   final List<String>? trValLaqab;
@@ -113,7 +104,7 @@ abstract class FamilyTree extends Relic {
 
   final List<RelicSetFilter> _relicSetFilters = [];
 
-  // Implement on inhertting classes
+  // Implement on inheriting classes
   int get gapIdx;
 
   Graph getFamilyTreeGraph() {

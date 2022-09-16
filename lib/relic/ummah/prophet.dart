@@ -22,18 +22,18 @@ class Prophet extends FamilyTree {
     // Relic data not needed to pass in, it is auto-generated in super() call
 
     // Required Fam data:
-    required Isim isim,
-    required List<Enum> trValPredecessors,
+    required PF pf,
+    required List<PF> trValPredecessors,
     // Optional Fam data:
-    List<String>? trValLaqab, // Laqab - Nicknames
-    List<Enum>? trValSuccessors,
-    List<Enum>? trValSpouses,
-    List<Enum>? trValDaughters,
-    List<Enum>? trValSons,
-    List<Enum>? trValRelatives,
+    List<String>? trValLaqab, // Laqab = Nicknames
+    List<PF>? trValSuccessors,
+    List<PF>? trValSpouses,
+    List<PF>? trValDaughters,
+    List<PF>? trValSons,
+    List<PF>? trValRelatives,
     List<RELATIVE>? trValRelativesTypes,
-    Enum? trValMother,
-    Enum? trValFather,
+    PF? trValMother,
+    PF? trValFather,
 
     // Required prophet data:
     required this.trValSentTo,
@@ -54,10 +54,10 @@ class Prophet extends FamilyTree {
           asset: asset,
           // Relic data:
           relicType: RELIC_TYPE.Quran_AlAnbiya,
-          trKeySummary: 'ps.${isim.trKeyEndTagLabel}', // ps=Prophet Summary
-          trKeySummary2: 'pq.${isim.trKeyEndTagLabel}', // pq=Prophet Quran
+          trKeySummary: 'ps.${pf.name}', // ps=Prophet Summary
+          trKeySummary2: 'pq.${pf.name}', // pq=Prophet Quran
           // Required Fam data:
-          isim: isim,
+          e: pf,
           trValLaqab: trValLaqab,
           trValPredecessors: trValPredecessors,
           // Optional Fam data:
@@ -189,12 +189,7 @@ Future<List<Prophet>> initProphets() async {
     endMs: -3399050,
     asset: await _getTimelineImageAsset(PF.Adam),
     // Fam data:
-    isim: Isim(
-      PF.Adam,
-      trValHebrew: 'אדם (Adam) - ' + 'p.Meaning:_'.tr + 'p.man'.tr,
-      trValGreek: 'Αδάμ (Adam)',
-      trValLatin: 'Adam',
-    ),
+    pf: PF.Adam,
     trValLaqab: null,
     trValPredecessors: [], // must be blank, root of the tree
     trValSuccessors: [PF.Sheth],
@@ -223,10 +218,7 @@ Future<List<Prophet>> initProphets() async {
     endMs: 0,
     asset: await _getTimelineImageAsset(PF.Idris),
     // Fam data:
-    isim: Isim(PF.Idris,
-        trValHebrew: 'חֲנוֹך (Hanokh) - ' + 'p.Meaning:_'.tr + 'i.dedicated'.tr,
-        trValGreek: 'Ἐνώχ (Enoch)',
-        trValLatin: 'Enoch'),
+    pf: PF.Idris,
     trValLaqab: null,
     trValPredecessors: [
 //    PF.Adam,
@@ -260,12 +252,7 @@ Future<List<Prophet>> initProphets() async {
     endMs: 0,
     asset: await _getTimelineImageAsset(PF.Nuh),
     // Fam data:
-    isim: Isim(
-      PF.Nuh,
-      trValHebrew: 'נֹחַ (Noach) - ' + 'p.Meaning:_'.tr + 'i.rest, repose'.tr,
-      trValGreek: 'Νῶε (Noe)',
-      trValLatin: null,
-    ),
+    pf: PF.Nuh,
     trValLaqab: null,
     trValPredecessors: [
 //    PF.Idris,
@@ -297,13 +284,7 @@ Future<List<Prophet>> initProphets() async {
     endMs: 0,
     asset: await _getTimelineImageAsset(PF.Hud),
     // Fam data:
-    isim: Isim(
-      PF.Hud,
-      trValHebrew: 'עבר (Eber) - ' + 'p.Meaning:_'.tr + 'i.region beyond'.tr,
-      trValGreek: null,
-      trValLatin: null,
-      possibly: true, //Possibly Eber or his son
-    ),
+    pf: PF.Hud,
     trValLaqab: null,
     trValPredecessors: [
 //    PF.Nuh,
@@ -342,13 +323,7 @@ Future<List<Prophet>> initProphets() async {
     endMs: 0,
     asset: await _getTimelineImageAsset(PF.Salih),
     // Fam data:
-    isim: Isim(
-      PF.Salih,
-      trValHebrew: null,
-      trValGreek: null,
-      trValLatin: null,
-      possibly: true,
-    ),
+    pf: PF.Salih,
     trValLaqab: null,
     trValPredecessors: [
 //    PF.Nuh,
@@ -388,13 +363,7 @@ Future<List<Prophet>> initProphets() async {
     endMs: 0,
     asset: await _getTimelineImageAsset(PF.Ibrahim),
     // Fam data:
-    isim: Isim(
-      PF.Ibrahim,
-      trValHebrew:
-          'אַבְרָהָם (Abraham) - ' + 'p.Meaning:_'.tr + 'i.many, multitude'.tr,
-      trValGreek: 'Ἀβραάμ (Abraam)',
-      trValLatin: 'Abraham',
-    ),
+    pf: PF.Ibrahim,
     trValLaqab: [
       a('a.Khalilullah'), // Friend of Allah
       'Father of Abrahimic faiths', // TODO
@@ -446,12 +415,7 @@ Future<List<Prophet>> initProphets() async {
     endMs: 0,
     asset: await _getTimelineImageAsset(PF.Lut),
     // Fam data:
-    isim: Isim(
-      PF.Lut,
-      trValHebrew: 'לוֹט (Lot) - ' + 'p.Meaning:_'.tr + 'p.covering, veil'.tr,
-      trValGreek: null,
-      trValLatin: null,
-    ),
+    pf: PF.Lut,
     trValLaqab: null,
     trValPredecessors: [
 //    PF.Nuh,
@@ -498,13 +462,7 @@ Future<List<Prophet>> initProphets() async {
     endMs: -1664,
     asset: await _getTimelineImageAsset(PF.Ismail),
     // Fam data:
-    isim: Isim(
-      PF.Ismail,
-      trValHebrew:
-          'יִשְׁמָעֵאל (Yishmael) - ' + 'p.Meaning:_'.tr + 'i.God will hear'.tr,
-      trValGreek: 'Ἰσμαήλ (Ismael)',
-      trValLatin: 'Ismahel',
-    ),
+    pf: PF.Ismail,
     trValLaqab: ['p.Father of the Arabs'], // TODO
     trValPredecessors: [], // must be blank, Father->Son used to build tree
     trValSuccessors: null,
@@ -540,14 +498,7 @@ Future<List<Prophet>> initProphets() async {
     endMs: 0,
     asset: await _getTimelineImageAsset(PF.Ishaq),
     // Fam data:
-    isim: Isim(
-      PF.Ishaq,
-      trValHebrew: 'יִצְחָק (Yitzhaq) - ' +
-          'p.Meaning:_'.tr +
-          'i.he will laugh, he will rejoice'.tr,
-      trValGreek: 'Ισαάκ ()',
-      trValLatin: 'Isaac',
-    ),
+    pf: PF.Ishaq,
     trValLaqab: ['p.Father of the Hebrews/Jews'], // TODO
     trValPredecessors: [],
     trValSuccessors: [PF.Yaqub],
@@ -579,15 +530,7 @@ Future<List<Prophet>> initProphets() async {
     endMs: 0,
     asset: await _getTimelineImageAsset(PF.Yaqub),
     // Fam data:
-    isim: Isim(
-      PF.Yaqub,
-      trValHebrew: 'יַעֲקֹב (Yaaqov) - ' +
-          'p.Meaning:_'.tr +
-          'i.Possibly "holder of the heel" or derived from "may God protect"'
-              .tr,
-      trValGreek: 'Ἰακώβ (Iakob)',
-      trValLatin: 'Iacob',
-    ),
+    pf: PF.Yaqub,
     trValLaqab: [
       a('a.Israel'), //  إِسْرَآءِيل
       'Father of the 12 tribes of Israel',
@@ -626,12 +569,7 @@ Future<List<Prophet>> initProphets() async {
     endMs: 0,
     asset: await _getTimelineImageAsset(PF.Yusuf),
     // Fam data:
-    isim: Isim(
-      PF.Yusuf,
-      trValHebrew: 'יוֹסֵף (Yosef) - ' + 'p.Meaning:_'.tr + 'i.he will add'.tr,
-      trValGreek: 'Ἰωσήφ (Ioseph)',
-      trValLatin: 'Ioseph',
-    ),
+    pf: PF.Yusuf,
     trValLaqab: null,
     trValPredecessors: [],
     trValSuccessors: null,
@@ -661,13 +599,7 @@ Future<List<Prophet>> initProphets() async {
     endMs: 0,
     asset: await _getTimelineImageAsset(PF.Ayyub),
     // Fam data:
-    isim: Isim(
-      PF.Ayyub,
-      trValHebrew:
-          'אִיּוֹב (Iyyov) - ' + 'p.Meaning:_'.tr + 'i.persecuted, hated'.tr,
-      trValGreek: 'Ἰώβ (Iob)',
-      trValLatin: 'Iob',
-    ),
+    pf: PF.Ayyub,
     trValLaqab: null,
     trValPredecessors: [
 //    PF.Ishaq,
@@ -701,15 +633,7 @@ Future<List<Prophet>> initProphets() async {
     endMs: 0,
     asset: await _getTimelineImageAsset(PF.DhulKifl),
     // Fam data:
-    isim: Isim(
-      PF.DhulKifl,
-      trValHebrew: 'יְחֶזְקֵאל (Yechezkel) - ' +
-          'p.Meaning:_'.tr +
-          'i.God will strengthen'.tr,
-      trValGreek: 'Ἰεζεκιήλ (Iezekiel)',
-      trValLatin: 'Ezechiel, Hiezecihel',
-      possibly: true,
-    ),
+    pf: PF.DhulKifl,
     trValLaqab: null,
     trValPredecessors: [],
     trValSuccessors: null,
@@ -741,13 +665,7 @@ Future<List<Prophet>> initProphets() async {
     endMs: 0,
     asset: await _getTimelineImageAsset(PF.Shuayb),
     // Fam data:
-    isim: Isim(
-      PF.Shuayb,
-      trValHebrew: 'יִתְרוֹ (Yitro) - ' + 'p.Meaning:_'.tr + 'i.abundance'.tr,
-      trValGreek: null,
-      trValLatin: 'Jethro',
-      possibly: true,
-    ),
+    pf: PF.Shuayb,
     trValLaqab: null,
     trValPredecessors: [
 //    PF.Ibrahim,
@@ -785,14 +703,7 @@ Future<List<Prophet>> initProphets() async {
     endMs: -1200,
     asset: await _getTimelineImageAsset(PF.Musa),
     // Fam data:
-    isim: Isim(
-      PF.Musa,
-      trValHebrew: 'מֹשֶׁה (Moshe) - ' +
-          'p.Meaning:_'.tr +
-          'i.Possibly from Egyptian "son" or Hebrew "deliver"'.tr,
-      trValGreek: 'Μωϋσῆς (Mouses)',
-      trValLatin: 'Moyses',
-    ),
+    pf: PF.Musa,
     trValLaqab: null,
     trValPredecessors: [
 //    PF.Yaqub,
@@ -832,15 +743,7 @@ Future<List<Prophet>> initProphets() async {
     endMs: -1200,
     asset: await _getTimelineImageAsset(PF.Harun),
     // Fam data:
-    isim: Isim(
-      PF.Harun,
-      trValHebrew: 'אַהֲרֹן (Aharon) - ' +
-          'p.Meaning:_'.tr +
-          'i.Possibly from unknown Egyptian origin or a derivation of Hebrew "high mountain" or "exalted"'
-              .tr,
-      trValGreek: 'Ἀαρών (Aaron)',
-      trValLatin: 'Aaron',
-    ),
+    pf: PF.Harun,
     trValLaqab: null,
     trValPredecessors: [
 //    PF.Yaqub,
@@ -876,12 +779,7 @@ Future<List<Prophet>> initProphets() async {
     endMs: -971,
     asset: await _getTimelineImageAsset(PF.Dawud),
     // Fam data:
-    isim: Isim(
-      PF.Dawud,
-      trValHebrew: 'דָּוִד (Dawid) - ' + 'p.Meaning:_'.tr + 'i.beloved'.tr,
-      trValGreek: 'Δαυίδ (Dauid)',
-      trValLatin: 'David',
-    ),
+    pf: PF.Dawud,
     trValLaqab: null,
     trValPredecessors: [
 //    PF.Dawud,
@@ -916,15 +814,7 @@ Future<List<Prophet>> initProphets() async {
     endMs: -931,
     asset: await _getTimelineImageAsset(PF.Suleyman),
     // Fam data:
-    isim: Isim(
-      PF.Suleyman,
-      trValHebrew: 'שְׁלֹמֹה (Shelomoh) - ' +
-          'p.Meaning:_'.tr +
-          'p.Derived from "peace"'.tr +
-          ' (שָׁלוֹם shalom)',
-      trValGreek: 'Σαλωμών (Salomon)',
-      trValLatin: 'Solomon',
-    ),
+    pf: PF.Suleyman,
     trValLaqab: null,
     trValPredecessors: [],
     trValSuccessors: [PF.Ilyas],
@@ -954,14 +844,7 @@ Future<List<Prophet>> initProphets() async {
     endMs: 0,
     asset: await _getTimelineImageAsset(PF.Ilyas),
     // Fam data:
-    isim: Isim(
-      PF.Ilyas,
-      trValHebrew: 'אֱלִיָּהוּ (Eliyyahu), אֵלִיָה (Eliya) - ' +
-          'p.Meaning:_'.tr +
-          'i.my God is Yahweh'.tr,
-      trValGreek: 'Ηλίας (Ilias)',
-      trValLatin: 'Elias',
-    ),
+    pf: PF.Ilyas,
     trValLaqab: null,
     trValPredecessors: [
       PF.Harun,
@@ -999,14 +882,7 @@ Future<List<Prophet>> initProphets() async {
     endMs: 0,
     asset: await _getTimelineImageAsset(PF.Alyasa),
     // Fam data:
-    isim: Isim(
-      PF.Alyasa,
-      trValHebrew: 'אֱלִישַׁע (Alysha\'e/Elisha) - ' +
-          'p.Meaning:_'.tr +
-          'i.my God is salvation'.tr,
-      trValGreek: 'Ἐλισαιέ (Elisaie)',
-      trValLatin: 'Eliseus',
-    ),
+    pf: PF.Alyasa,
     trValLaqab: null,
     trValPredecessors: [
       PF.Yusuf,
@@ -1048,12 +924,7 @@ Future<List<Prophet>> initProphets() async {
     endMs: 0,
     asset: await _getTimelineImageAsset(PF.Yunus),
     // Fam data:
-    isim: Isim(
-      PF.Yunus,
-      trValHebrew: 'יוֹנָה (Yonah) - ' + 'p.Meaning:_'.tr + 'i.dove'.tr,
-      trValGreek: 'Ἰωνᾶς (Ionas)',
-      trValLatin: 'Ionas',
-    ),
+    pf: PF.Yunus,
     trValLaqab: [a('a.Dhul-Nun')], // ذُو ٱلنُّوْن - The One of the Fish
     trValPredecessors: [
       PF.Bunyamin,
@@ -1093,13 +964,7 @@ Future<List<Prophet>> initProphets() async {
     endMs: 0,
     asset: await _getTimelineImageAsset(PF.Zakariya),
     // Fam data:
-    isim: Isim(
-      PF.Zakariya,
-      trValHebrew:
-          'זְכַרְיָה (Zekharyah) - ' + 'p.Meaning:_'.tr + 'i.God remembers'.tr,
-      trValGreek: 'Ζαχαρίας (Zacharias)',
-      trValLatin: 'Zaccharias',
-    ),
+    pf: PF.Zakariya,
     trValLaqab: null,
     trValPredecessors: [
 //    PF.Yaqub,
@@ -1134,13 +999,7 @@ Future<List<Prophet>> initProphets() async {
     endMs: 28, // AD 28–36
     asset: await _getTimelineImageAsset(PF.Yahya),
     // Fam data:
-    isim: Isim(
-      PF.Yahya,
-      trValHebrew:
-          'יוֹחָנָן (Yochanan) - ' + 'p.Meaning:_'.tr + 'i.God is gracious'.tr,
-      trValGreek: 'Ἰωάννης (Ioannes)',
-      trValLatin: 'Iohannes',
-    ),
+    pf: PF.Yahya,
     trValLaqab: ['p.Christians add "the Babtist" to the end of his name'.tr],
     trValPredecessors: [],
     trValSuccessors: [PF.Isa],
@@ -1171,12 +1030,7 @@ Future<List<Prophet>> initProphets() async {
     endMs: 30,
     asset: await _getTimelineImageAsset(PF.Isa),
     // Fam data:
-    isim: Isim(
-      PF.Isa,
-      trValAramaic: 'יֵשׁוּעַ (Ishoʿ)',
-      trValGreek: 'Ιησους (Iesous)',
-      trValLatin: 'Iesus',
-    ),
+    pf: PF.Isa,
     trValLaqab: [a('a.Masih')], // Messiah
     trValPredecessors: [
       PF.Suleyman,
@@ -1220,7 +1074,7 @@ Future<List<Prophet>> initProphets() async {
     endMs: 632,
     asset: await _getTimelineImageAsset(PF.Muhammad),
     // Fam data:
-    isim: Isim(PF.Muhammad),
+    pf: PF.Muhammad,
     trValLaqab: [
       a('a.Khātam al-Nabiyyīn'),
       a('a.Abu al-Qasim'),
@@ -1378,199 +1232,340 @@ Future<TimelineAsset> _getTimelineImageAsset(
 
 // PROPHET FAMILY (TODO Turkish Words: Hızır, Lukman, Yuşa, Kâlib b. Yüfena, Hızkıl, Şemûyel, Şâ'yâ
 enum PF {
-  Adam, //      0 Adem
-  Idris, //     1 İdris
-  Nuh, //       2
-  Hud, //       3
-  Salih, //     4
-  Ibrahim, //   5 İbrahim
-  Lut, //       6 İsmail
-  Ismail, //    7 İshak
-  Ishaq, //     8
-  Yaqub, //     9 Yakub
-  Yusuf, //    10
-  Ayyub, //    11 Eyyub
-  DhulKifl, // 12 Zülkifl
-  Shuayb, //   13 Şuayb
-  Musa, //     14
-  Harun, //    15
-  Dawud, //    16 Davud
-  Suleyman, // 17 Süleyman
-  Ilyas, //    18 İlyas
-  Alyasa, //   19 Elyesa
-  Yunus, //    20
-  Zakariya, // 21
-  Yahya, //    22
-  Isa, //      23
-  Muhammad, // 24
+  Adam(Isim(
+    trValHebrew: 'אדם (Adam)',
+    trKeyHebrewMeaning: 'p.man',
+    trValGreek: 'Αδάμ (Adam)',
+    trValLatin: 'Adam',
+  )),
+  Idris(Isim(
+    trValHebrew: 'חֲנוֹך (Hanokh)',
+    trKeyHebrewMeaning: 'p.dedicated',
+    trValGreek: 'Ἐνώχ (Enoch)',
+    trValLatin: 'Enoch',
+  )),
+  Nuh(Isim(
+    trValHebrew: 'נֹחַ (Noach)',
+    trKeyHebrewMeaning: 'p.rest, repose',
+    trValGreek: 'Νῶε (Noe)',
+    trValLatin: null,
+  )),
+  Hud(Isim(
+    trValHebrew: 'עבר (Eber)',
+    trKeyHebrewMeaning: 'p.region beyond',
+    trValGreek: null,
+    trValLatin: null,
+    possibly: true, //Possibly Eber or his son
+  )),
+  Salih(Isim(
+    trValHebrew: null, // TODO
+    trValGreek: null,
+    trValLatin: null,
+    possibly: true,
+  )),
+  Ibrahim(Isim(
+    trValHebrew: 'אַבְרָהָם (Abraham)',
+    trKeyHebrewMeaning: 'p.many, multitude',
+    trValGreek: 'Ἀβραάμ (Abraam)',
+    trValLatin: 'Abraham',
+  )), // İbrahim
+  Lut(Isim(
+    trValHebrew: 'לוֹט (Lot)',
+    trKeyHebrewMeaning: 'p.covering, veil',
+    trValGreek: null,
+    trValLatin: null,
+  )), // İsmail
+  Ismail(Isim(
+    trValHebrew: 'יִשְׁמָעֵאל (Yishmael)',
+    trKeyHebrewMeaning: 'p.God will hear',
+    trValGreek: 'Ἰσμαήλ (Ismael)',
+    trValLatin: 'Ismahel',
+  )), // İshak
+  Ishaq(Isim(
+    trValHebrew: 'יִצְחָק (Yitzhaq)',
+    trKeyHebrewMeaning: 'p.he will laugh, he will rejoice',
+    trValGreek: 'Ισαάκ ()',
+    trValLatin: 'Isaac',
+  )),
+  Yaqub(Isim(
+    trValHebrew: 'יַעֲקֹב (Yaaqov)',
+    trKeyHebrewMeaning:
+        'p.Possibly "holder of the heel" or derived from "may God protect"',
+    trValGreek: 'Ἰακώβ (Iakob)',
+    trValLatin: 'Iacob',
+  )), //  Yakub
+  Yusuf(Isim(
+    trValHebrew: 'יוֹסֵף (Yosef)',
+    trKeyHebrewMeaning: 'p.he will add',
+    trValGreek: 'Ἰωσήφ (Ioseph)',
+    trValLatin: 'Ioseph',
+  )),
+  Ayyub(Isim(
+    trValHebrew: 'אִיּוֹב (Iyyov)',
+    trKeyHebrewMeaning: 'p.persecuted, hated',
+    trValGreek: 'Ἰώβ (Iob)',
+    trValLatin: 'Iob',
+  )), // Eyyub
+  DhulKifl(Isim(
+    trValHebrew: 'יְחֶזְקֵאל (Yechezkel)',
+    trKeyHebrewMeaning: 'p.God will strengthen',
+    trValGreek: 'Ἰεζεκιήλ (Iezekiel)',
+    trValLatin: 'Ezechiel, Hiezecihel',
+    possibly: true,
+  )), // Zülkifl
+  Shuayb(Isim(
+    trValHebrew: 'יִתְרוֹ (Yitro)',
+    trKeyHebrewMeaning: 'p.abundance',
+    trValGreek: null,
+    trValLatin: 'Jethro',
+    possibly: true,
+  )), //  Şuayb
+  Musa(Isim(
+    trValHebrew: 'מֹשֶׁה (Moshe)',
+    trKeyHebrewMeaning: 'p.Possibly from Egyptian "son" or Hebrew "deliver"',
+    trValGreek: 'Μωϋσῆς (Mouses)',
+    trValLatin: 'Moyses',
+  )),
+  Harun(Isim(
+    trValHebrew: 'אַהֲרֹן (Aharon)',
+    trKeyHebrewMeaning:
+        'p.Possibly of Egyptian origin or from hebrew "high mountain" or "exalted"',
+    trValGreek: 'Ἀαρών (Aaron)',
+    trValLatin: 'Aaron',
+  )),
+  Dawud(Isim(
+    trValHebrew: 'דָּוִד (Dawid)',
+    trKeyHebrewMeaning: 'p.beloved',
+    trValGreek: 'Δαυίδ (Dauid)',
+    trValLatin: 'David',
+  )), // Davud
+  Suleyman(Isim(
+    trValHebrew: 'שְׁלֹמֹה (Shelomoh)',
+    trKeyHebrewMeaning: 'p.Derived from "peace" (שָׁלוֹם shalom)',
+    trValGreek: 'Σαλωμών (Salomon)',
+    trValLatin: 'Solomon',
+  )), // Süleyman
+  Ilyas(Isim(
+    trValHebrew: 'אֱלִיָּהוּ (Eliyyahu), אֵלִיָה (Eliya)',
+    trKeyHebrewMeaning: 'p.my God is Yahweh',
+    trValGreek: 'Ηλίας (Ilias)',
+    trValLatin: 'Elias',
+  )), // İlyas
+  Alyasa(Isim(
+    trValHebrew: 'אֱלִישַׁע (Alysha\'e/Elisha)',
+    trKeyHebrewMeaning: 'p.my God is salvation',
+    trValGreek: 'Ἐλισαιέ (Elisaie)',
+    trValLatin: 'Eliseus',
+  )), // Elyesa
+  Yunus(Isim(
+    trValHebrew: 'יוֹנָה (Yonah)',
+    trKeyHebrewMeaning: 'p.dove',
+    trValGreek: 'Ἰωνᾶς (Ionas)',
+    trValLatin: 'Ionas',
+  )),
+  Zakariya(Isim(
+    trValHebrew: 'זְכַרְיָה (Zekharyah)',
+    trKeyHebrewMeaning: 'p.God remembers',
+    trValGreek: 'Ζαχαρίας (Zacharias)',
+    trValLatin: 'Zaccharias',
+  )),
+  Yahya(Isim(
+    trValHebrew: 'יוֹחָנָן (Yochanan)',
+    trKeyHebrewMeaning: 'p.God is gracious',
+    trValGreek: 'Ἰωάννης (Ioannes)',
+    trValLatin: 'Iohannes',
+  )),
+  Isa(Isim(
+    trValAramaic: 'יֵשׁוּעַ (Ishoʿ)',
+    trValGreek: 'Ιησους (Iesous)',
+    trValLatin: 'Iesus',
+  )),
+  Muhammad(Isim()),
 
   // special case area
-  Gap, // We probably know trValPredecessor
+  Gap(Isim()), // needed
 
   // Wife of:
-  Hawwa, //        Adam-Havva
-  Naamah, //       Nuh // TODO find arabic name
-  Sarah, //        Ibrahim 1-Sare
-  Hajar, //        Ibrahim 2-Hacer
-  Rafeqa, //       Ishaq, mother of Ishaq Rebekah-Refaka
-  Rahil_Bint_Leban, //        Yaqub Rachel
-  Lia, //          Yaqub Leah
-  Saffurah, //     Musa  صفورة
+  Hawwa(Isim()), //        Adam-Havva
+  Naamah(Isim()), //       Nuh // TODO find arabic name
+  Sarah(Isim()), //        Ibrahim 1-Sare
+  Hajar(Isim()), //        Ibrahim 2-Hacer
+  Rafeqa(Isim()), //       Ishaq, mother of Ishaq Rebekah-Refaka
+  Rahil_Bint_Leban(Isim()), //        Yaqub Rachel
+  Lia(Isim()), //          Yaqub Leah
+  Saffurah(Isim()), //     Musa  صفورة
 
   // Mother of:
-  Mahalath, // Ibrahim
-  DaughterOfLut, // Ayyub and Shuayb's Mother
-  Yukabid, // Musa and Harun يوكابد  Latin: Jochebed // Other possible names are Ayaarkha or Ayaathakht (Ibn Katheer), Lawha (Al-Qurtubi) and Yoohaana (Ibn 'Atiyyah)
-  Asiya, // Musa foster mother, wife of Firaun
+  Mahalath(Isim()), // Ibrahim
+  DaughterOfLut(Isim()), // Ayyub and Shuayb's Mother
+  Yukabid(
+      Isim()), // Musa and Harun يوكابد  Latin: Jochebed // Other possible names are Ayaarkha or Ayaathakht (Ibn Katheer), Lawha (Al-Qurtubi) and Yoohaana (Ibn 'Atiyyah)
+  Asiya(Isim()), // Musa foster mother, wife of Firaun
 
   // Sister of:
-  Miriam, // Musa and Harun // TODO Sister that followed Musa down river (Same name as Maryam?)
+  Miriam(
+      Isim()), // Musa and Harun // TODO Sister that followed Musa down river (Same name as Maryam?)
 
   // TODO Good resource for Arabic/Hebrew/Greek names: https://en.wikipedia.org/wiki/Family_tree_of_Muhammad
 //   Adam
   /* TODO has ~40-120 more kids! */
-  /* */ Habel, //       Cain-Habil
-  /* */ Qabel, //       Abel-Kabil
-  /* */ Anaq, //        ?
-  /* */ Sheth, //       Seth? Shayth? Seth-Şit
-  /*    */ Anwas, //    Anūsh أَنُوش or: Yānish يَانِش Enosh-Enuş
-  /*    */ Qinan, //    Kenan-Kinan (Hebrew: קֵינָן‎‎, Modern: Qēnan, Tiberian: Qēnān; Arabic: قَيْنَان, romanized: Qaynān; Biblical Greek: Καϊνάμ, romanized: Kaïnám)
-  /*    */ Mahlail, //  Mahlabeel? Mahalel
-  /*    */ Yarid, //    Yard? Jared-Yarid Jared or Jered (Hebrew: יֶרֶד‎ Yereḏ, in pausa יָרֶד‎ Yāreḏ, "to descend"; Greek: Ἰάρετ Iáret; Arabic: أليارد al-Yārid)
+  /* */ Habel(Isim()), //       Cain-Habil
+  /* */ Qabel(Isim()), //       Abel-Kabil
+  /* */ Anaq(Isim()), //        ?
+  /* */ Sheth(Isim()), //       Seth? Shayth? Seth-Şit
+  /*    */ Anwas(Isim()), //    Anūsh أَنُوش or: Yānish يَانِش Enosh-Enuş
+  /*    */ Qinan(
+      Isim()), //    Kenan-Kinan (Hebrew: קֵינָן‎‎, Modern: Qēnan, Tiberian: Qēnān; Arabic: قَيْنَان, romanized: Qaynān; Biblical Greek: Καϊνάμ, romanized: Kaïnám)
+  /*    */ Mahlail(Isim()), //  Mahlabeel? Mahalel
+  /*    */ Yarid(
+      Isim()), //    Yard? Jared-Yarid Jared or Jered (Hebrew: יֶרֶד‎ Yereḏ, in pausa יָרֶד‎ Yāreḏ, "to descend"; Greek: Ἰάρετ Iáret; Arabic: أليارد al-Yārid)
 //         Idris AKA Ahnuh/Uhnuh Enoch (Arabic: أَخْنُوخ, romanized: ʼAkhnūkh)
-  /*    */ Matulshalkh, // Mitoshilkh?  Methusaleh-Mettu Şelah (Hebrew: מְתוּשֶׁלַח Məṯūšélaḥ, in pausa מְתוּשָׁלַח‎ Məṯūšālaḥ, "His death shall send" or "Man of the javelin" or "Death of Sword";[1] Greek: Μαθουσάλας Mathousalas) Mattūshalakh= Ibn Ishaq and Ibn Hisham geneology of Muhammad
-  /*    */ Lamik, //       Lamech-Lamek/Lemek/Lemk
+  /*    */ Matulshalkh(
+      Isim()), // Mitoshilkh?  Methusaleh-Mettu Şelah (Hebrew: מְתוּשֶׁלַח Məṯūšélaḥ, in pausa מְתוּשָׁלַח‎ Məṯūšālaḥ, "His death shall send" or "Man of the javelin" or "Death of Sword";[1] Greek: Μαθουσάλας Mathousalas) Mattūshalakh= Ibn Ishaq and Ibn Hisham geneology of Muhammad
+  /*    */ Lamik(Isim()), //       Lamech-Lamek/Lemek/Lemk
 //         Nuh
-  /*       */ Ham, //      Ham
-  /*       */ Yam, //      Yam (Killed in flood)
-  /*       */ Yafith, //   Japeth
-  /*       */ Sam, //      Shem
-  /*          */ Irem,
-  /*             */ Aush, //        ?-Avs
-  /*                */ Ad, //       ?
-  /*                */ Khalud, //   ?-Halud
-  /*                */ Raya, //     ?-Rebah
-  /*                */ Abdullah, // ?
+  /*       */ Ham(Isim()), //      Ham
+  /*       */ Yam(Isim()), //      Yam (Killed in flood)
+  /*       */ Yafith(Isim()), //   Japeth
+  /*       */ Sam(Isim()), //      Shem
+  /*          */ Irem(Isim()),
+  /*             */ Aush(Isim()), //        ?-Avs
+  /*                */ Ad(Isim()), //       ?
+  /*                */ Khalud(Isim()), //   ?-Halud
+  /*                */ Raya(Isim()), //     ?-Rebah
+  /*                */ Abdullah(Isim()), // ?
 //                     Hud
-  /*             */ Ars, //       Abir?
-  /*                */ Samud, //  -Semud
-  /*                */ Hadzir, // -Hadir
-  /*                */ Ubayd, //  -Ubeyd
-  /*                */ Masih, //  Kemaşic?
-  /*                */ Auf, //    -Esif/Asit
-  /*                */ Abir_Ubayd, //   Ubayd?
+  /*             */ Ars(Isim()), //       Abir?
+  /*                */ Samud(Isim()), //  -Semud
+  /*                */ Hadzir(Isim()), // -Hadir
+  /*                */ Ubayd(Isim()), //  -Ubeyd
+  /*                */ Masih(Isim()), //  Kemaşic?
+  /*                */ Auf(Isim()), //    -Esif/Asit
+  /*                */ Abir_Ubayd(Isim()), //   Ubayd?
 //                     Salih
-  /*          */ Arfakhshad, // -Erfahşed
-  /*          */ Shalikh, // -Şalıh
-  /*          */ Abir, // NOTE: NOT HUD
-  /*          */ Falikh, // -Falığ
-  /*          */ Rau_Ergu, // AKA Ergu
-  /*          */ Sarukh, // AKA Sharug -Şarug
-  /*          */ Nahur, // -Nahor
-  /*          */ Azar_Taruh, // AKA Taruh -Tarah // TODO Mentioned in Quran
-  /*             */ Haran, // AKA Taruh -Tarah, brother of Ibrahim
+  /*          */ Arfakhshad(Isim()), // -Erfahşed
+  /*          */ Shalikh(Isim()), // -Şalıh
+  /*          */ Abir(Isim()), // NOTE: NOT HUD
+  /*          */ Falikh(Isim()), // -Falığ
+  /*          */ Rau_Ergu(Isim()), // AKA Ergu
+  /*          */ Sarukh(Isim()), // AKA Sharug -Şarug
+  /*          */ Nahur(Isim()), // -Nahor
+  /*          */ Azar_Taruh(
+      Isim()), // AKA Taruh -Tarah // TODO Mentioned in Quran
+  /*             */ Haran(Isim()), // AKA Taruh -Tarah, brother of Ibrahim
 //                     Lut - Nephew of Abraham
 //                  Ibrahim
-  /*                */ Madyan, // Midian-Medyen
-  /*                   */ Yashjar, // Mubshakar? Issachar-Yeşcur
-  /*                   */ Mikeel, //  Mankeel? Safyon? -Mikail
+  /*                */ Madyan(Isim()), // Midian-Medyen
+  /*                   */ Yashjar(Isim()), // Mubshakar? Issachar-Yeşcur
+  /*                   */ Mikeel(Isim()), //  Mankeel? Safyon? -Mikail
 //                        Shuayb
 //                     Ismail
 //                        ... Muhammad's Family Tree is below
 //                        Muhammad
 //                     Ishaq
-  /*                   */ Isu, //   AlEls? Els? Ish? Isu? Easu-Ays Brother of Jacob
-  /*                      */ Rimil, // Razih? Tarekh? Rimil-Razıh
-  /*                      */ Amose, // Mose-Mus
+  /*                   */ Isu(
+      Isim()), //   AlEls? Els? Ish? Isu? Easu-Ays Brother of Jacob
+  /*                      */ Rimil(Isim()), // Razih? Tarekh? Rimil-Razıh
+  /*                      */ Amose(Isim()), // Mose-Mus
 //                           Ayyub
 //                           Dhul-Kifl
 //                        Yaqub  TODO And all 12 tribe founders
-  /*                      */ Bunyamin, // (son of Rahil) Benjamin-Bünyamin
+  /*                      */ Bunyamin(
+      Isim()), // (son of Rahil) Benjamin-Bünyamin
   //                             Abumatta?
-  /*                          */ Matta, // متى - Amittai latin, Matthew
+  /*                          */ Matta(Isim()), // متى - Amittai latin, Matthew
 //                               Yunus
 //                           Yusuf  (son of Rahil)
-  /*                         */ Efraim, //  Ephraim-Efrâîm // TODO branch out to Yusa here: Yuşa: b. Nûn b. Ephraim-Efrâim b. Yûsuf
-  /*                         */ Shultem, // Shultam-Şütlem
-  /*                         */ Adi, //     -Adiy
+  /*                         */ Efraim(
+      Isim()), //  Ephraim-Efrâîm // TODO branch out to Yusa here: Yuşa: b. Nûn b. Ephraim-Efrâim b. Yûsuf
+  /*                         */ Shultem(Isim()), // Shultam-Şütlem
+  /*                         */ Adi(Isim()), //     -Adiy
 //                              Alyasa TODO It is also said that Alyasa is the son of Ilyas's uncle Ukhtub-Ahtub (Through Harun, Not Yusuf like here).
-  /*                      */ Lawi,
-  /*                         */ Kehath_Yashur, //       Kohath-Kahis_Yashür
-  /*                         */ Imran, // عمران   -Lavi
+  /*                      */ Lawi(Isim()),
+  /*                         */ Kehath_Yashur(
+      Isim()), //       Kohath-Kahis_Yashür
+  /*                         */ Imran(Isim()), // عمران   -Lavi
 //                                 Musa
 //                                 Harun
-  /*                               */ Izar, // -Ayzar,
-  /*                               */ Fahnaz, // -Finhas,
-  /*                               */ Yasin,
+  /*                               */ Izar(Isim()), // -Ayzar,
+  /*                               */ Fahnaz(Isim()), // -Finhas,
+  /*                               */ Yasin(Isim()),
 //                                    Ilyas
-  /*                      */ Yahudzha,
+  /*                      */ Yahudzha(Isim()),
   //                         UNKNOWN GAP?
 //                           Dawud,
 //                           Suleyman,
 //                           UNKNOWN GAP? TODO Danyal, Uzeyir AND Bridge Isa + Zakariya/Yahya
-  /*                         */ Faqud, // TODO Mothers side of Isa, Zakariya, Yahya so not solid line?
-  /*                            */ Ishba, // Wife of Zakariya, Mother / of Yahya/Elizabeth', // TODO find arabic + Barren all her life until miracle birth of Yahya in her old age
+  /*                         */ Faqud(
+      Isim()), // TODO Mothers side of Isa, Zakariya, Yahya so not solid line?
+  /*                            */ Ishba(
+      Isim()), // Wife of Zakariya, Mother / of Yahya/Elizabeth', // TODO find arabic + Barren all her life until miracle birth of Yahya in her old age
   //                               +
 //                                 Zakariya
 //                                    Yahya
-  /*                            */ Hanna,
+  /*                            */ Hanna(Isim()),
   //                               +
-  /*                            */ ImranAbuMaryam,
-  /*                                  */ Maryam, // Specia case,  prophethood through mom
+  /*                            */ ImranAbuMaryam(Isim()),
+  /*                                  */ Maryam(
+      Isim()), // Specia case,  prophethood through mom
 //                                          Isa
 
 // Muhammad's Lineage:
   //Ismail
   //Gap, // TODO iktilaf here, find best one
-  Adnan,
-  Ma__add,
-  Nizar,
-  Mudar,
-  Ilyas_,
-  Mudrikah,
-  Khuzaimah,
-  Kinanah,
-  An__Nadr___Quraysh,
-  Malik,
-  Fihr,
-  Ghalib,
-  Lu__ayy,
-  Ka__b,
-  Murrah,
-  Kilab,
-  Qusayy,
-  Abd_Manaf,
-  Hashim,
-  Abdull_Muttalib___Shaybah, // Abd al-Muttalib? Grandfather
-  Abdullah_, //       Father عَبْد ٱللَّٰه ٱبْن عَبْد ٱلْمُطَّلِب
+  Adnan(Isim()),
+  Ma__add(Isim()),
+  Nizar(Isim()),
+  Mudar(Isim()),
+  Ilyas_(Isim()),
+  Mudrikah(Isim()),
+  Khuzaimah(Isim()),
+  Kinanah(Isim()),
+  An__Nadr___Quraysh(Isim()),
+  Malik(Isim()),
+  Fihr(Isim()),
+  Ghalib(Isim()),
+  Lu__ayy(Isim()),
+  Ka__b(Isim()),
+  Murrah(Isim()),
+  Kilab(Isim()),
+  Qusayy(Isim()),
+  Abd_Manaf(Isim()),
+  Hashim(Isim()),
+  Abdull_Muttalib___Shaybah(Isim()), // Abd al-Muttalib? Grandfather
+  Abdullah_(Isim()), //       Father عَبْد ٱللَّٰه ٱبْن عَبْد ٱلْمُطَّلِب
   //Muhammad
-  Mahdi, // Future!
+  Mahdi(Isim()), // Future!
 //Mother
-  Amina_Bint_Wahb, // Mother // آمِنَة ٱبْنَت وَهْب
+  Amina_Bint_Wahb(Isim()), // Mother // آمِنَة ٱبْنَت وَهْب
 // Wives:
-  Khadijah, //     Muhammad 1
-  Sawdah, //       Muhammad 2
-  Aisha, //        Muhammad 3
-  Hafsah, //       Muhammad 4
-  UmmAlMasakin, // Muhammad 5
-  UmmSalamah, //   Muhammad 6
-  Zaynab, //       Muhammad 7
-  Juwayriyah, //   Muhammad 8
-  UmmHabibah, //   Muhammad 9
-  Safiyyah, //     Muhammad 10
-  Maymunah, //     Muhammad 11
-  Rayhana, //      Muhammad 12
-  Maria, //        Muhammad 13
+  Khadijah(Isim()), //     Muhammad 1
+  Sawdah(Isim()), //       Muhammad 2
+  Aisha(Isim()), //        Muhammad 3
+  Hafsah(Isim()), //       Muhammad 4
+  UmmAlMasakin(Isim()), // Muhammad 5
+  UmmSalamah(Isim()), //   Muhammad 6
+  Zaynab(Isim()), //       Muhammad 7
+  Juwayriyah(Isim()), //   Muhammad 8
+  UmmHabibah(Isim()), //   Muhammad 9
+  Safiyyah(Isim()), //     Muhammad 10
+  Maymunah(Isim()), //     Muhammad 11
+  Rayhana(Isim()), //      Muhammad 12
+  Maria(Isim()), //        Muhammad 13
 // Daughters:
-  Zainab,
-  Ruqayyah,
-  Umm_Kulthum,
-  Fatimah,
+  Zainab(Isim()),
+  Ruqayyah(Isim()),
+  Umm_Kulthum(Isim()),
+  Fatimah(Isim()),
 // Sons:
-  Zayd_Ibn_Harithah, // زَيْد ٱبْن حَارِثَة  (foster son)
-  Qasim,
-  Abdullah_Ibn_Muhmmad,
-  Ibrahim_Ibn_Muhmmad,
+  Zayd_Ibn_Harithah(Isim()), // زَيْد ٱبْن حَارِثَة  (foster son)
+  Qasim(Isim()),
+  Abdullah_Ibn_Muhmmad(Isim()),
+  Ibrahim_Ibn_Muhmmad(Isim()),
+  ;
+
+  const PF(this.isim);
+  final Isim isim;
 }
 
 // TODO: https://www.quora.com/Is-it-true-that-all-the-Christian-prophets-are-well-quoted-in-The-Holy-Quran
