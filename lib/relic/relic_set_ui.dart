@@ -40,6 +40,7 @@ class RelicSetUI extends StatelessWidget {
     if (filter.type == FILTER_TYPE.Tree) {
       MenuC.to.pushSubPage(SubPage.Family_Tree, arguments: {
         'graph': filter.treeGraph,
+        'relicType': relicSet.relicType,
       });
       return;
     }
@@ -59,7 +60,8 @@ class RelicSetUI extends StatelessWidget {
         tileView = _tileList(context, _getTileIdxList(context));
         break;
       case FILTER_TYPE.Tree:
-        return l.E('FILTER_TYPE.${FILTER_TYPE.Tree.name} has its on UI');
+        l.e('FILTER_TYPE.${FILTER_TYPE.Tree.name} has its on UI');
+        return Container();
     }
 
     return Container(

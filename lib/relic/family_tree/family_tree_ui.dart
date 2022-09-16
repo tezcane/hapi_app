@@ -2,15 +2,27 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:graphview/GraphView.dart' as graph_view;
+import 'package:hapi/main_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/sub_page.dart';
-import 'package:hapi/relic/ummah/prophet.dart';
+import 'package:hapi/relic/relic.dart';
+import 'package:hapi/relic/relic_c.dart';
+import 'package:hapi/relic/ummah/prophet.dart'; // TODO remove need for this?
 
 /// Shows a Family Tree SubPage.
 class FamilyTreeUI extends StatelessWidget {
   FamilyTreeUI() {
     graph = Get.arguments['graph'];
+    relicType = Get.arguments['relicType'];
+    relicSet = RelicC.to.getRelicSet(relicType);
+    relics = relicSet.relics;
+    maxRelicIdx = relics.length - 1;
   }
   late final Graph graph;
+  late final RELIC_TYPE relicType;
+  late final RelicSet relicSet;
+  late final List<Relic> relics;
+  late final int maxRelicIdx;
 
   final BuchheimWalkerConfiguration builder = BuchheimWalkerConfiguration()
     ..siblingSeparation = (10)
@@ -44,9 +56,29 @@ class FamilyTreeUI extends StatelessWidget {
                     ..strokeWidth = 1
                     ..style = PaintingStyle.stroke,
                   builder: (graph_view.Node node) {
-                    // I can decide what widget should be shown here based on the id
-                    var a = node.key!.value as int?;
-                    return rectangleWidget(a, context);
+                    int tpr = 5;
+                    final double wTile =
+                        w(context) / tpr - 4; // -4 for Wrap.spacing!
+                    final double hText =
+                        35 - (tpr.toDouble() * 2); // h size: 13-33
+                    final double hTile = wTile + hText;
+
+                    int relicIdx = node.key!.value;
+                    return relicIdx > maxRelicIdx
+                        ? rectangleWidget(
+                            context,
+                            relicIdx,
+                            wTile,
+                            hTile,
+                            hText,
+                          )
+                        : _relicTileWithField(
+                            context,
+                            relics[relicIdx],
+                            wTile,
+                            hTile,
+                            hText,
+                          );
                   },
                 ),
               ),
@@ -57,13 +89,49 @@ class FamilyTreeUI extends StatelessWidget {
     );
   }
 
-  Widget rectangleWidget(int? a, context) {
+  Widget _relicTileWithField(
+    BuildContext context,
+    Relic relic,
+    double wTile,
+    double hTile,
+    double hText,
+  ) {
     return InkWell(
-      onTap: () {
-        print('clicked');
-      },
+      onTap: () => print('TODO clicked 2'), // TODO
+      child: SizedBox(
+        width: wTile,
+        height: hTile,
+        child: Column(
+          children: [
+            Container(
+              color: AppThemes.ajrColorsByIdx[relic.ajrLevel],
+              child: SizedBox(
+                width: wTile,
+                height: wTile,
+                child: Image(
+                  image: AssetImage(relic.asset.filename),
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
+            T(relic.trValTitle, tsN, w: wTile, h: hText),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget rectangleWidget(
+    BuildContext context,
+    int relicIdx,
+    double wTile,
+    double hTile,
+    double hText,
+  ) {
+    return InkWell(
+      onTap: () => print('TODO clicked'), // TODO
       child: Container(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(5),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(4),
           boxShadow: [
@@ -73,7 +141,8 @@ class FamilyTreeUI extends StatelessWidget {
             ),
           ],
         ),
-        child: Text('$a ${PF.values[a!].name}'),
+//      child: T('$relicIdx ${PF.values[relicIdx].name}', tsN, w: wTile, h: hText),
+        child: T(PF.values[relicIdx].name, tsN, w: wTile, h: hText),
       ),
     );
   }

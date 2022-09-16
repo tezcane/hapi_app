@@ -1052,7 +1052,7 @@ Future<List<Prophet>> initProphets() async {
       PF.Mudrikah,
       PF.Khuzaimah,
       PF.Kinanah,
-      PF.An__Nadr___Quraysh,
+      PF.An__Nadr,
       PF.Malik,
       PF.Fihr,
       PF.Ghalib,
@@ -1063,7 +1063,7 @@ Future<List<Prophet>> initProphets() async {
       PF.Qusayy,
       PF.Abd_Manaf,
       PF.Hashim,
-      PF.Abdull_Muttalib___Shaybah,
+      PF.Abdull_Muttalib,
     ],
     trValSuccessors: [PF.Mahdi, PF.Isa],
     trValMother: PF.Amina_Bint_Wahb,
@@ -1501,7 +1501,9 @@ enum PF {
   Mudrikah(Isim()),
   Khuzaimah(Isim()),
   Kinanah(Isim()),
-  An__Nadr___Quraysh(Isim()),
+  An__Nadr(Isim(
+    trKeyLaqab: ['Quraysh'],
+  )),
   Malik(Isim()),
   Fihr(Isim()),
   Ghalib(Isim()),
@@ -1512,7 +1514,9 @@ enum PF {
   Qusayy(Isim()),
   Abd_Manaf(Isim()),
   Hashim(Isim()),
-  Abdull_Muttalib___Shaybah(Isim()), // Abd al-Muttalib? Grandfather
+  Abdull_Muttalib(Isim(
+    trKeyLaqab: ['Shaybah'],
+  )), // Abd al-Muttalib? Grandfather
   Abdullah_(Isim()), //       Father عَبْد ٱللَّٰه ٱبْن عَبْد ٱلْمُطَّلِب
   //Muhammad
   Mahdi(Isim()), // Future!
