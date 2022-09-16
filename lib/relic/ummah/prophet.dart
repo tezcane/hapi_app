@@ -86,16 +86,13 @@ class Prophet extends FamilyTree {
   bool isUluAlAzm() => qvsUluAlAzm != null && qvsUluAlAzm!.isNotEmpty;
 
   @override
-  int get gapIdx => PF.Gap.index;
-
-  @override
   String get trValRelicSetTitle => a('a.Anbiya');
   @override
   List<RelicSetFilter> get relicSetFilters {
     if (relicSetFiltersInit.isNotEmpty) return relicSetFiltersInit;
 
     // Add special cases here, if needed
-    Graph graph = getFamilyTreeGraph();
+    Graph graph = getFamilyTreeGraph(RELIC_TYPE.Quran_AlAnbiya, PF.Gap.index);
 
     relicSetFiltersInit.addAll([
       RelicSetFilter(

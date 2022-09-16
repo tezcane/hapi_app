@@ -101,76 +101,71 @@ abstract class FamilyTree extends Relic {
   final List<RELATIVE>? trValRelativesTypes;
   final Enum? trValMother;
   final Enum? trValFather;
+}
 
-  final List<RelicSetFilter> _relicSetFilters = [];
+Graph getFamilyTreeGraph(RELIC_TYPE relicType, int gapIdx) {
+  final Graph graph = Graph()..isTree = true;
+  for (Relic relic in RelicC.to.getRelicSet(relicType).relics) {
+    addFamilyNodes(graph, relic as FamilyTree, gapIdx);
+  }
+  return graph;
+}
 
-  // Implement on inheriting classes
-  int get gapIdx;
+/// Init tree with all relics and the relic's ancestors, parents, and kids.
+addFamilyNodes(Graph graph, FamilyTree ft, int gapIdx) {
+  Node? lastNode;
+  bool paintGapEdgeNext = false;
 
-  Graph getFamilyTreeGraph() {
-    final Graph graph = Graph()..isTree = true;
-    for (Relic relic in RelicC.to.getRelicSet(relicType).relics) {
-      addFamilyNodes(graph, relic as FamilyTree);
+  /// Embedded function so we can use this methods variables
+  addEdge(int idx, String dbgMsg, String name, {bool updateLastNode = true}) {
+    Node node = Node.Id(idx);
+
+    if (lastNode == null) {
+      lastNode = node; // lastNode inits to whoever calls addEdge() first
+      l.d('FAM_NODE:INIT:$dbgMsg: ${lastNode!.key}->$idx $name');
+      return;
     }
-    return graph;
+
+    l.d('FAM_NODE:$dbgMsg: ${lastNode!.key}->$idx $name');
+
+    graph.addEdge(
+      lastNode!,
+      node,
+      paint: Paint()
+        ..color = paintGapEdgeNext ? Colors.red : Colors.green
+        ..strokeWidth = 3,
+    );
+
+    paintGapEdgeNext = false; // if it was set we clear it now
+    if (updateLastNode) lastNode = node; // needed to add next node
   }
 
-  /// Init tree with all relics and the relic's ancestors, parents, and kids.
-  addFamilyNodes(Graph graph, FamilyTree ft) {
-    Node? lastNode;
-    bool paintGapEdgeNext = false;
-
-    /// Embedded function so we can use this methods variables
-    addEdge(int idx, String dbgMsg, String name, {bool updateLastNode = true}) {
-      Node node = Node.Id(idx);
-
-      if (lastNode == null) {
-        lastNode = node; // lastNode inits to whoever calls addEdge() first
-        l.d('FAM_NODE:INIT:$dbgMsg: ${lastNode!.key}->$idx $name');
-        return;
-      }
-
-      l.d('FAM_NODE:$dbgMsg: ${lastNode!.key}->$idx $name');
-
-      graph.addEdge(
-        lastNode!,
-        node,
-        paint: Paint()
-          ..color = paintGapEdgeNext ? Colors.red : Colors.green
-          ..strokeWidth = 3,
-      );
-
-      paintGapEdgeNext = false; // if it was set we clear it now
-      if (updateLastNode) lastNode = node; // needed to add next node
+  // add predecessors, is [] on root and when Father->Son set previously
+  for (Enum e in ft.trValPredecessors) {
+    if (e.index == gapIdx) {
+      paintGapEdgeNext = true;
+      l.d('FAM_NODE:Predecessors:GAP: set flag paintGapEdgeNext=true');
+      continue; // don't add "Gap" edge, flag makes next edge red
     }
+    addEdge(e.index, 'Predecessors', e.name);
+  }
 
-    // add predecessors, is [] on root and when Father->Son set previously
-    for (Enum e in ft.trValPredecessors) {
-      if (e.index == gapIdx) {
-        paintGapEdgeNext = true;
-        l.d('FAM_NODE:Predecessors:GAP: set flag paintGapEdgeNext=true');
-        continue; // don't add "Gap" edge, flag makes next edge red
-      }
-      addEdge(e.index, 'Predecessors', e.name);
-    }
+  // add mother (Nothing for now, can handle on UI or special case init area)
 
-    // add mother (Nothing for now, can handle on UI or special case init area)
+  // add father, may already been created, e.g. Ibrahim->Ismail/Issac
+  if (ft.trValFather != null) {
+    addEdge(ft.trValFather!.index, 'Father', ft.trValFather!.name);
+  }
 
-    // add father, may already been created, e.g. Ibrahim->Ismail/Issac
-    if (ft.trValFather != null) {
-      addEdge(ft.trValFather!.index, 'Father', ft.trValFather!.name);
-    }
+  // Add Prophet (Handles case of Adam fine)
+  addEdge(ft.relicId, 'Prophet', ft.trKeyEndTagLabel);
 
-    // Add Prophet (Handles case of Adam fine)
-    addEdge(ft.relicId, 'Prophet', ft.trKeyEndTagLabel);
-
-    // add daughters to Prophet node
-    for (Enum e in ft.trValDaughters ?? []) {
-      addEdge(e.index, 'Daughters', e.name, updateLastNode: false);
-    }
-    // add sons to Prophet node
-    for (Enum e in ft.trValSons ?? []) {
-      addEdge(e.index, 'Sons', e.name, updateLastNode: false);
-    }
+  // add daughters to Prophet node
+  for (Enum e in ft.trValDaughters ?? []) {
+    addEdge(e.index, 'Daughters', e.name, updateLastNode: false);
+  }
+  // add sons to Prophet node
+  for (Enum e in ft.trValSons ?? []) {
+    addEdge(e.index, 'Sons', e.name, updateLastNode: false);
   }
 }
