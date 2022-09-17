@@ -7,49 +7,49 @@ import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 /// Controls NavPage bottom bars and loads/persists new tab selections.
 // ignore: must_be_immutable
 class BottomBarMenu extends StatelessWidget {
-  BottomBarMenu(this.navPage, this.bottomBarItems, this.aliveMainWidgets);
+  BottomBarMenu(this.navPage, this.bottomBarItems, this.aliveMainWidgets) {
+    _initPageControllerAndBottomBar(NavPageC.to.getLastIdx(navPage));
+  }
   final NavPage navPage;
   final List<BottomBarItem> bottomBarItems;
   final List<Widget> aliveMainWidgets;
 
-  late PageController _pageController;
-  bool initNeeded = true;
+  late final PageController _pageController;
+  late int curBottomBarHighlightIdx; // to briefly highlight bottom bar indexes
+
   int movingToIdx = -1;
-  int curBottomBarHighlightIdx = 0; // to briefly highlight bottom bar indexes
-
-  @override
-  Widget build(BuildContext context) {
-    return GetBuilder<NavPageC>(builder: (c) {
-      if (initNeeded) {
-        initNeeded = false;
-        _initPageControllerAndBottomBar(c.getLastIdx(navPage));
-      }
-
-      return Scaffold(
-        backgroundColor: Theme.of(context).backgroundColor,
-        body: PageView(
-          controller: _pageController,
-          children: aliveMainWidgets,
-          onPageChanged: (newIdx) => _onPageChanged(newIdx),
-        ),
-        bottomNavigationBar: BottomBar(
-          selectedIndex: curBottomBarHighlightIdx,
-          items: bottomBarItems,
-          height: bottomBarItems.length < 5 ? 35 : 65,
-          onTap: (newIdx) => _onBottomBarTabTapped(newIdx),
-          // Disable to turn off bottom bar view, so menu blends to page:
-          //backgroundColor: Theme.of(context).scaffoldBackgroundColor, null
-          //showActiveBackgroundColor: false,
-        ),
-      );
-    });
-  }
 
   /// Called at init only
   _initPageControllerAndBottomBar(int newIdx) {
     curBottomBarHighlightIdx = newIdx;
     _pageController = PageController(initialPage: newIdx);
     _handlePostFrameAnimation(newIdx); // needed for RTL<->LTR
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GetBuilder<NavPageC>(
+      // needed, or bar doesn't update
+      builder: (c) {
+        return Scaffold(
+          backgroundColor: Theme.of(context).backgroundColor,
+          body: PageView(
+            controller: _pageController,
+            children: aliveMainWidgets,
+            onPageChanged: (newIdx) => _onPageChanged(newIdx),
+          ),
+          bottomNavigationBar: BottomBar(
+            selectedIndex: curBottomBarHighlightIdx,
+            items: bottomBarItems,
+            height: bottomBarItems.length < 5 ? 35 : 65,
+            onTap: (newIdx) => _onBottomBarTabTapped(newIdx),
+            // Disable to turn off bottom bar view, so menu blends to page:
+            //backgroundColor: Theme.of(context).scaffoldBackgroundColor, null
+            //showActiveBackgroundColor: false,
+          ),
+        );
+      },
+    );
   }
 
   /// Called directly when swiping page or indirectly on bottom bar tab tap

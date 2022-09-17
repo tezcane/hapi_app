@@ -13,6 +13,7 @@ class RelicC extends GetxHapi {
   /// Perfect hash, access via [RELIC_TYPE.index]
   final List<RelicSet> _relicSets = [];
 
+  /// needed by relic tab bar
   bool initNeeded = true;
 
   @override
