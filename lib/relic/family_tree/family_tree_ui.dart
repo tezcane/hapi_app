@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:graphview/GraphView.dart' as graph_view;
 import 'package:hapi/main_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/relic/relic.dart';
@@ -30,6 +31,74 @@ class FamilyTreeUI extends StatelessWidget {
     ..subtreeSeparation = (10)
     ..orientation = (BuchheimWalkerConfiguration.ORIENTATION_TOP_BOTTOM);
 
+  Widget getLegend(BuildContext context) {
+    // final double w1 = w(context);
+    return Column(
+      children: [
+        Row(
+          children: [
+            const SizedBox(width: 30),
+            const Text(
+              '|',
+              style: TextStyle(
+                // dummy to align title
+                color: Colors.transparent,
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
+              ),
+            ),
+            const SizedBox(width: 20),
+            T(
+              'p.LEGEND',
+              tsNB,
+              alignment: LanguageC.to.centerLeft,
+            ),
+          ],
+        ),
+        const SizedBox(height: 5),
+        Row(
+          children: [
+            const SizedBox(width: 30),
+            const Text(
+              '|',
+              style: TextStyle(
+                color: AppThemes.COLOR_DIRECT_DESCENDANT,
+                fontWeight: FontWeight.bold,
+                fontSize: 25,
+              ),
+            ),
+            const SizedBox(width: 20),
+            T(
+              'p.Direct Descendants',
+              tsN,
+              alignment: LanguageC.to.centerLeft,
+            ),
+          ],
+        ),
+        const SizedBox(height: 5),
+        Row(
+          children: [
+            const SizedBox(width: 30),
+            const Text(
+              '|',
+              style: TextStyle(
+                color: AppThemes.COLOR_GENERATION_GAP,
+                fontWeight: FontWeight.normal,
+                fontSize: 25,
+              ),
+            ),
+            const SizedBox(width: 20),
+            T(
+              'p.Generation Gap',
+              tsN,
+              alignment: LanguageC.to.centerLeft,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return FabSubPage(
@@ -43,43 +112,51 @@ class FamilyTreeUI extends StatelessWidget {
               child: InteractiveViewer(
                 constrained: false,
                 boundaryMargin: const EdgeInsets.all(20),
-                // minScale: 0.01,
-                // maxScale: 5.6,
-                child: GraphView(
-                  graph: graph,
-                  algorithm: BuchheimWalkerAlgorithm(
-                    builder,
-                    TreeEdgeRenderer(builder),
-                  ),
-                  paint: Paint()
-                    ..color = Colors.green
-                    ..strokeWidth = 1
-                    ..style = PaintingStyle.stroke,
-                  builder: (graph_view.Node node) {
-                    int tpr = 5;
-                    final double wTile =
-                        w(context) / tpr - 4; // -4 for Wrap.spacing!
-                    final double hText =
-                        35 - (tpr.toDouble() * 2); // h size: 13-33
-                    final double hTile = wTile + hText;
+                minScale: .01,
+                maxScale: 3.5,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 30),
+                    getLegend(context),
+                    const SizedBox(height: 30),
+                    GraphView(
+                      graph: graph,
+                      algorithm: BuchheimWalkerAlgorithm(
+                        builder,
+                        TreeEdgeRenderer(builder),
+                      ),
+                      paint: Paint()
+                        ..color = AppThemes.COLOR_DIRECT_DESCENDANT
+                        ..strokeWidth = 3
+                        ..style = PaintingStyle.stroke,
+                      builder: (graph_view.Node node) {
+                        int tpr = 5;
+                        final double wTile =
+                            w(context) / tpr - 4; // -4 for Wrap.spacing!
+                        final double hText =
+                            35 - (tpr.toDouble() * 2); // h size: 13-33
+                        final double hTile = wTile + hText;
 
-                    int relicIdx = node.key!.value;
-                    return relicIdx > maxRelicIdx
-                        ? rectangleWidget(
-                            context,
-                            relicIdx,
-                            wTile,
-                            hTile,
-                            hText,
-                          )
-                        : _relicTileWithField(
-                            context,
-                            relics[relicIdx],
-                            wTile,
-                            hTile,
-                            hText,
-                          );
-                  },
+                        int relicIdx = node.key!.value;
+                        return relicIdx > maxRelicIdx
+                            ? rectangleWidget(
+                                context,
+                                relicIdx,
+                                wTile,
+                                hTile,
+                                hText,
+                              )
+                            : _relicTileWithField(
+                                context,
+                                relics[relicIdx],
+                                wTile,
+                                hTile,
+                                hText,
+                              );
+                      },
+                    ),
+                  ],
                 ),
               ),
             ),

@@ -89,6 +89,9 @@ class AppThemes {
       TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14);
   static const TextStyle textStyleBtn =
       TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14);
+
+  static const Color COLOR_DIRECT_DESCENDANT = Colors.green;
+  static const Color COLOR_GENERATION_GAP = Colors.red;
 }
 /*
 /// contains info related to our light and dark themes.
