@@ -5,7 +5,6 @@ import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/bottom_bar.dart';
 import 'package:hapi/menu/bottom_bar_menu.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/slide/menu_right/menu_right_ui.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/relic/Favorites/relics_favorites_ui.dart';
@@ -40,7 +39,6 @@ class RelicsUI extends StatelessWidget {
           'i.Favorites'.tr,
           at('at.{0} Favorites'.tr, [navPage.trKey]),
           Icons.favorite_border_outlined,
-          AppThemes.ajrXMissed,
           onPressed: hideKeyboard, // in case search is showing keyboard
         ),
         BottomBarItem(
@@ -49,7 +47,6 @@ class RelicsUI extends StatelessWidget {
           'i.Search'.tr,
           at('at.{0} Search'.tr, [navPage.trKey]),
           Icons.search_outlined,
-          AppThemes.ajr1Common,
         ),
         BottomBarItem(
           Center(child: T('i.Coming Soon', tsN, h: 50)),
@@ -57,7 +54,6 @@ class RelicsUI extends StatelessWidget {
           'a.Alathar'.tr, // Relics
           'i.Islamic relics'.tr,
           Icons.brightness_3_outlined, // Icons.wine_bar_sharp
-          AppThemes.ajr2Uncommon,
           onPressed: hideKeyboard,
         ),
         BottomBarItem(
@@ -66,7 +62,6 @@ class RelicsUI extends StatelessWidget {
           'i.Places'.tr,
           'i.Famous Muslim Places'.tr,
           Icons.map_outlined, // TODO Icons.mosque_outlined/.school_outlined
-          AppThemes.ajr3Rare,
           onPressed: hideKeyboard,
         ),
         BottomBarItem(
@@ -75,7 +70,6 @@ class RelicsUI extends StatelessWidget {
           'a.Delil'.tr,
           'i.Proofs of Islam'.tr,
           Icons.auto_stories,
-          AppThemes.ajr4Epic,
           onPressed: hideKeyboard,
         ),
         BottomBarItem(
@@ -91,7 +85,6 @@ class RelicsUI extends StatelessWidget {
           a('a.Ummah'),
           '              ' + 'i.Remarkable Muslims'.tr + '              ',
           Icons.connect_without_contact_outlined,
-          AppThemes.ajr5Legendary,
           onPressed: hideKeyboard,
         ),
         BottomBarItem(
@@ -102,7 +95,6 @@ class RelicsUI extends StatelessWidget {
               at('at.About {0} {1}', ['a.Allah', 'a.SWT']) +
               '              ',
           Icons.apps_outlined,
-          AppThemes.ajr6Mythic,
           onPressed: hideKeyboard,
         ),
       ];

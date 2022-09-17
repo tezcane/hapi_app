@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hapi/helper/keep_alive_page.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 
 /// Display a bar with multiple icons and titles to hold different UIs
 class BottomBar extends StatelessWidget {
@@ -214,8 +215,8 @@ class BottomBarItem {
     this.settingsWidget,
     this.trValTitle,
     this.trValTooltip,
-    this.iconData,
-    this.selectedColor, {
+    this.iconData, {
+    this.selectedColor = AppThemes.selected,
     this.onPressed,
   });
   final Widget mainWidget;

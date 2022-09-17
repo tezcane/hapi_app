@@ -4,7 +4,6 @@ import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/bottom_bar.dart';
 import 'package:hapi/menu/bottom_bar_menu.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/slide/menu_right/menu_right_ui.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/quest/active/active_quests_settings_ui.dart';
@@ -34,7 +33,6 @@ class QuestsUI extends StatelessWidget {
           a('a.hapi'),
           'i.Set long-term goals'.tr,
           Icons.brightness_3_outlined,
-          AppThemes.ajrXMissed,
         ),
         BottomBarItem(
           Container(),
@@ -42,7 +40,6 @@ class QuestsUI extends StatelessWidget {
           a('a.Zaman'),
           'i.Manage and prioritize your time'.tr,
           Icons.timer_outlined,
-          AppThemes.ajr4Epic,
         ),
         BottomBarItem(
           const DoListUI(),
@@ -50,7 +47,6 @@ class QuestsUI extends StatelessWidget {
           'i.Daily'.tr,
           'i.Build religious and healthy habits'.tr,
           Icons.brightness_high_outlined,
-          AppThemes.ajr5Legendary,
         ),
         BottomBarItem(
           const ActiveQuestsUI(),
@@ -58,7 +54,6 @@ class QuestsUI extends StatelessWidget {
           'i.Active'.tr,
           '                 ${'i.Pray like the Prophet (AS)'.tr}                 ', // FAB
           Icons.how_to_reg_outlined,
-          AppThemes.ajr6Mythic,
         ),
       ];
 
