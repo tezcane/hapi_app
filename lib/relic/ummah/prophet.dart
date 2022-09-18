@@ -1239,13 +1239,13 @@ enum PF {
     trKeyHebrewMeaning: 'p.region beyond',
     trValGreek: null,
     trValLatin: null,
-    possibly: true, //Possibly Eber or his son
+    trKeyNote: 'p.Possibly Eber or his son',
   )),
   Salih(Isim(
     trValHebrew: null, // TODO
     trValGreek: null,
     trValLatin: null,
-    possibly: true,
+    trKeyNote: 'p.Often attributed to biblical prophets',
   )),
   Ibrahim(Isim(
     trKeyLaqab: [
@@ -1301,18 +1301,19 @@ enum PF {
     trValLatin: 'Iob',
   )), // Eyyub
   DhulKifl(Isim(
+//  trKeyAr: 'حزقيال', //?
     trValHebrew: 'יְחֶזְקֵאל (Yechezkel)',
     trKeyHebrewMeaning: 'p.God will strengthen',
     trValGreek: 'Ἰεζεκιήλ (Iezekiel)',
     trValLatin: 'Ezechiel, Hiezecihel',
-    possibly: true,
+    trKeyNote: 'p.Possibly Ezekiel, Buddha, Joshua, Obadiah or Isaiah',
   )), // Zülkifl
   Shuayb(Isim(
     trValHebrew: 'יִתְרוֹ (Yitro)',
     trKeyHebrewMeaning: 'p.abundance',
     trValGreek: null,
     trValLatin: 'Jethro',
-    possibly: true,
+    trKeyNote: 'p.Often thought to be Jethro, but this is highly disputed.',
   )), //  Şuayb
   Musa(Isim(
     trValHebrew: 'מֹשֶׁה (Moshe)',
