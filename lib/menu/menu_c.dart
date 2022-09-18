@@ -8,6 +8,7 @@ import 'package:hapi/controller/getx_hapi.dart';
 import 'package:hapi/controller/nav_page_c.dart';
 import 'package:hapi/helper/loading.dart';
 import 'package:hapi/main_c.dart';
+import 'package:hapi/menu/bottom_bar_menu.dart';
 import 'package:hapi/menu/slide/menu_bottom/about/about_ui.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/profile/reset_password_ui.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/profile/update_profile_ui.dart';
@@ -392,6 +393,12 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
   bool get isMenuShowingSettings => _isMenuShowingSettings;
 
   void showMenu() {
+    // If bottom bar is hidden, we must show it now so it doesn't block menu UI:
+    if (!BottomBarMenu.isBottomBarVisible) {
+      BottomBarMenu.isBottomBarVisible = true;
+      NavPageC.to.updateOnThread1Ms();
+    }
+
     _isMenuShowing = true;
     _isMenuShowingNav = true;
     _isMenuShowingSettings = false;
