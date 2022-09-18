@@ -19,6 +19,7 @@ class Isim {
     this.trValGreek,
     this.trValLatin,
     this.possibly = false,
+//  this.male = true, TODO // true=Male, false=Female
   });
   final List<String>? trKeyLaqab; // Laqab = Nicknames
   final String? trValAramaic;
@@ -67,17 +68,17 @@ abstract class FamilyTree extends Relic {
     required String trKeySummary2,
     // Fam Required
     required this.e,
-    required this.trValPredecessors,
+    required this.predecessors,
     // Fam Optional
-    this.trValFather,
-    this.trValMother,
-    this.trValSpouses,
-    this.trValSons,
-    this.trValDaughters,
-    this.trValRelatives,
-    this.trValRelativesTypes,
-    this.trValSuccessors, // used in collapsed list
-    this.trValSuccessor, // TODO make use of this, order of prophethood?
+    this.dad,
+    this.mom,
+    this.spouses,
+    this.sons,
+    this.daughters,
+    this.relatives,
+    this.relativesTypes,
+    this.successors, // used in collapsed list
+    this.successor, // TODO make use of this, order of prophethood?
   }) : super(
           // TimelineEntry data:
           trValEra: trValEra,
@@ -93,17 +94,17 @@ abstract class FamilyTree extends Relic {
         );
   // Required Fam data:
   final Enum e;
-  final List<Enum> trValPredecessors;
+  final List<Enum> predecessors;
   // Optional Fam data:
-  final Enum? trValFather;
-  final Enum? trValMother;
-  final List<Enum>? trValSpouses;
-  final List<Enum>? trValDaughters;
-  final List<Enum>? trValSons;
-  final List<Enum>? trValRelatives;
-  final List<RELATIVE>? trValRelativesTypes;
-  final List<Enum>? trValSuccessors;
-  final Enum? trValSuccessor;
+  final Enum? dad;
+  final Enum? mom;
+  final List<Enum>? spouses;
+  final List<Enum>? daughters;
+  final List<Enum>? sons;
+  final List<Enum>? relatives;
+  final List<RELATIVE>? relativesTypes;
+  final List<Enum>? successors;
+  final Enum? successor;
 }
 
 Graph getGraphAllFamily(RELIC_TYPE relicType, int gapIdx) {
@@ -146,7 +147,7 @@ addEdgesAllFamily(Graph graph, FamilyTree ft, int gapIdx) {
   }
 
   // add predecessors, is [] on root and when Father->Son set previously
-  for (Enum e in ft.trValPredecessors) {
+  for (Enum e in ft.predecessors) {
     if (e.index == gapIdx) {
       paintGapEdgeNext = true;
       l.d('FAM_NODE:ALL:Predecessors:GAP: set flag paintGapEdgeNext=true');
@@ -156,24 +157,24 @@ addEdgesAllFamily(Graph graph, FamilyTree ft, int gapIdx) {
   }
 
   // add mother (e.g. this is where Maryam comes and is needed for Isa)
-  if (ft.trValFather == null && ft.trValMother != null) {
-    addEdge(ft.trValMother!.index, 'Mother', ft.trValMother!.name);
+  if (ft.dad == null && ft.mom != null) {
+    addEdge(ft.mom!.index, 'Mother', ft.mom!.name);
   }
 
   // add father, may already been created, e.g. Ibrahim->Ismail/Issac
-  if (ft.trValFather != null) {
-    addEdge(ft.trValFather!.index, 'Father', ft.trValFather!.name);
+  if (ft.dad != null) {
+    addEdge(ft.dad!.index, 'Father', ft.dad!.name);
   }
 
   // Add Prophet (Handles case of Adam fine)
   addEdge(ft.relicId, 'Prophet', ft.trKeyEndTagLabel);
 
   // add daughters to Prophet node
-  for (Enum e in ft.trValDaughters ?? []) {
+  for (Enum e in ft.daughters ?? []) {
     addEdge(e.index, 'Daughters', e.name, updateLastNode: false);
   }
   // add sons to Prophet node
-  for (Enum e in ft.trValSons ?? []) {
+  for (Enum e in ft.sons ?? []) {
     addEdge(e.index, 'Sons', e.name, updateLastNode: false);
   }
 }
@@ -211,12 +212,12 @@ Graph getGraphOnlyRelics(RELIC_TYPE relicType, int gapIdx) {
     Node parent = Node.Id(ft.relicId);
 
     // if has successor do work, otherwise do nothing
-    if (ft.trValSuccessors != null) {
-      for (Enum e in ft.trValSuccessors!) {
+    if (ft.successors != null) {
+      for (Enum e in ft.successors!) {
         FamilyTree successor = relics[e.index] as FamilyTree;
 
         // if successor's father is parent node, draw direct descendant edge
-        if (successor.trValFather?.index == relicIdx) {
+        if (successor.dad?.index == relicIdx) {
           addEdge(parent, e.index, paintGap: false);
         } else {
           // if successor's father is not parent, draw gap edge
