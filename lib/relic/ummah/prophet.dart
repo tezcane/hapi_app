@@ -1398,27 +1398,6 @@ enum PF {
   // special case area
   Gap(Isim()), // needed
 
-  // Wife of:
-  Hawwa(Isim()), //        Adam-Havva
-  Naamah(Isim()), //       Nuh // TODO find arabic name
-  Sarah(Isim()), //        Ibrahim 1-Sare
-  Hajar(Isim()), //        Ibrahim 2-Hacer
-  Rafeqa(Isim()), //       Ishaq, mother of Ishaq Rebekah-Refaka
-  Rahil_Bint_Leban(Isim()), //        Yaqub Rachel
-  Lia(Isim()), //          Yaqub Leah
-  Saffurah(Isim()), //     Musa  صفورة
-
-  // Mother of:
-  Mahalath(Isim()), // Ibrahim
-  DaughterOfLut(Isim()), // Ayyub and Shuayb's Mother
-  Yukabid(
-      Isim()), // Musa and Harun يوكابد  Latin: Jochebed // Other possible names are Ayaarkha or Ayaathakht (Ibn Katheer), Lawha (Al-Qurtubi) and Yoohaana (Ibn 'Atiyyah)
-  Asiya(Isim()), // Musa foster mother, wife of Firaun
-
-  // Sister of:
-  Miriam(
-      Isim()), // Musa and Harun // TODO Sister that followed Musa down river (Same name as Maryam?)
-
   // TODO Good resource for Arabic/Hebrew/Greek names: https://en.wikipedia.org/wiki/Family_tree_of_Muhammad
 //   Adam
   /* TODO has ~40-120 more kids! */
@@ -1509,21 +1488,13 @@ enum PF {
 //                           Dawud,
 //                           Suleyman,
 //                           UNKNOWN GAP? TODO Danyal, Uzeyir AND Bridge Isa + Zakariya/Yahya
-  /*                         */ Faqud(
-      Isim()), // TODO Mothers side of Isa, Zakariya, Yahya so not solid line?
-  /*                            */ Ishba(
-      Isim()), // Wife of Zakariya, Mother / of Yahya/Elizabeth', // TODO find arabic + Barren all her life until miracle birth of Yahya in her old age
-  //                               +
-//                                 Zakariya
-//                                    Yahya
-  /*                            */ Hanna(Isim()),
-  //                               +
-  /*                            */ ImranAbuMaryam(Isim()),
-  /*                                  */ Maryam(
-      Isim()), // Specia case,  prophethood through mom
-//                                          Isa
+//                              Zakariya
+//                                 Yahya
+  /*                         */ ImranAbuMaryam(Isim()),
+//                                 Maryam
+//                                    Isa
 
-// Muhammad's Lineage:
+// Muhammad's SAW Lineage:
   //Ismail
   //Gap, // TODO iktilaf here, find best one
   Adnan(Isim()),
@@ -1534,9 +1505,7 @@ enum PF {
   Mudrikah(Isim()),
   Khuzaimah(Isim()),
   Kinanah(Isim()),
-  An__Nadr(Isim(
-    trKeyLaqab: ['Quraysh'],
-  )),
+  An__Nadr(Isim(trKeyLaqab: ['Quraysh'])),
   Malik(Isim()),
   Fihr(Isim()),
   Ghalib(Isim()),
@@ -1551,34 +1520,68 @@ enum PF {
     trKeyLaqab: ['Shaybah'],
   )), // Abd al-Muttalib? Grandfather
   Abdullah_(Isim()), //       Father عَبْد ٱللَّٰه ٱبْن عَبْد ٱلْمُطَّلِب
-  //Muhammad
-  Mahdi(Isim()), // Future!
-//Mother
-  Amina_Bint_Wahb(Isim()), // Mother // آمِنَة ٱبْنَت وَهْب
-// Wives:
-  Khadijah(Isim()), //     Muhammad 1
-  Sawdah(Isim()), //       Muhammad 2
-  Aisha(Isim()), //        Muhammad 3
-  Hafsah(Isim()), //       Muhammad 4
-  UmmAlMasakin(Isim()), // Muhammad 5
-  UmmSalamah(Isim()), //   Muhammad 6
-  Zaynab(Isim()), //       Muhammad 7
-  Juwayriyah(Isim()), //   Muhammad 8
-  UmmHabibah(Isim()), //   Muhammad 9
-  Safiyyah(Isim()), //     Muhammad 10
-  Maymunah(Isim()), //     Muhammad 11
-  Rayhana(Isim()), //      Muhammad 12
-  Maria(Isim()), //        Muhammad 13
-// Daughters:
-  Zainab(Isim()),
-  Ruqayyah(Isim()),
-  Umm_Kulthum(Isim()),
-  Fatimah(Isim()),
+//Muhammad
 // Sons:
   Zayd_Ibn_Harithah(Isim()), // زَيْد ٱبْن حَارِثَة  (foster son)
   Qasim(Isim()),
   Abdullah_Ibn_Muhmmad(Isim()),
   Ibrahim_Ibn_Muhmmad(Isim()),
+//Mother
+  Amina_Bint_Wahb(Isim(fem: true)), // Mother // آمِنَة ٱبْنَت وَهْب
+// Wives:
+  Khadijah(Isim(fem: true)), //     Muhammad 1
+  Sawdah(Isim(fem: true)), //       Muhammad 2
+  Aisha(Isim(fem: true)), //        Muhammad 3
+  Hafsah(Isim(fem: true)), //       Muhammad 4
+  UmmAlMasakin(Isim(fem: true)), // Muhammad 5
+  UmmSalamah(Isim(fem: true)), //   Muhammad 6
+  Zaynab(Isim(fem: true)), //       Muhammad 7
+  Juwayriyah(Isim(fem: true)), //   Muhammad 8
+  UmmHabibah(Isim(fem: true)), //   Muhammad 9
+  Safiyyah(Isim(fem: true)), //     Muhammad 10
+  Maymunah(Isim(fem: true)), //     Muhammad 11
+  Rayhana(Isim(fem: true)), //      Muhammad 12
+  Maria(Isim(fem: true)), //        Muhammad 13
+// Daughters:
+  Zainab(Isim(fem: true)),
+  Ruqayyah(Isim(fem: true)),
+  Umm_Kulthum(Isim(fem: true)),
+  Fatimah(Isim(fem: true)),
+//FUTURE
+  Mahdi(Isim()),
+// End of Muhammad's SAW Lineage:
+
+// Father of:
+  Faqud(
+      Isim()), // Ishba (Wife of Zakaryia), Hanna (Wife of ImranAbuMaryam, grandmother of Isa)
+
+// Wife of:
+  Hawwa(Isim(fem: true)), //        Adam-Havva
+  Naamah(Isim(fem: true)), //       Nuh // TODO find arabic name
+  Sarah(Isim(fem: true)), //        Ibrahim 1-Sare
+  Hajar(Isim(fem: true)), //        Ibrahim 2-Hacer
+  Rafeqa(Isim(fem: true)), //       Ishaq, mother of Ishaq Rebekah-Refaka
+  Rahil_Bint_Leban(Isim(fem: true)), //        Yaqub Rachel
+  Lia(Isim(fem: true)), //          Yaqub Leah
+  Saffurah(Isim(fem: true)), //     Musa  صفورة
+  Hanna(Isim(fem: true)), //        ImranAbuMaryam
+  Ishba(
+    Isim(fem: true),
+  ), //        Zakariya, Mother / of Yahya/Elizabeth', // TODO Barren all her life until miracle birth of Yahya in her old age
+  Maryam(Isim(fem: true)), // EDGE CASE: prophethood through mom
+
+// Mother of:
+  Mahalath(Isim(fem: true)), // Ibrahim
+  DaughterOfLut(Isim(fem: true)), // Ayyub and Shuayb's Mother
+  Yukabid(Isim(
+      fem:
+          true)), // Musa and Harun يوكابد  Latin: Jochebed // Other possible names are Ayaarkha or Ayaathakht (Ibn Katheer), Lawha (Al-Qurtubi) and Yoohaana (Ibn 'Atiyyah)
+  Asiya(Isim(fem: true)), // Musa foster mother, wife of Firaun
+
+// Sister of:
+  Miriam(Isim(
+      fem:
+          true)), // Musa and Harun // TODO Sister that followed Musa down river (Same name as Maryam?)
   ;
 
   const PF(this.isim);

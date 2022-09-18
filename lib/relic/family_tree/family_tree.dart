@@ -19,7 +19,7 @@ class Isim {
     this.trValGreek,
     this.trValLatin,
     this.possibly = false,
-//  this.male = true, TODO // true=Male, false=Female
+    this.fem = false, // True=female, False=male
   });
   final List<String>? trKeyLaqab; // Laqab = Nicknames
   final String? trValAramaic;
@@ -29,6 +29,7 @@ class Isim {
   final String? trValLatin;
   // Something in data is unsure, e.g. Hud is Eber in Bible.
   final bool possibly; // TODO convert to string with why possibly
+  final bool fem;
 
   /// Add * to mark something as "Possibly" being true
   String addPossibly(String trVal) => trVal + (possibly ? '*' : '');
