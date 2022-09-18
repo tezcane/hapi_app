@@ -177,12 +177,12 @@ class VignetteRenderObject extends RenderBox {
       return;
     }
 
-    TimelineAsset? asset = _timelineEntry!.asset;
+    TimelineAsset asset = _timelineEntry!.asset;
 
-    /// Don't paint if not needed.
-    if (asset == null) {
-      return;
-    }
+    // /// Don't paint if not needed.
+    // if (asset == null) {
+    //   return;
+    // }
 
     canvas.save();
 
