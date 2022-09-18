@@ -92,8 +92,8 @@ class TimelineRenderObject extends RenderBox {
   static const double BubblePadding = 20.0;
 
   static const double fullMargin = 50.0;
-  static const double eventRadius = 26.0; //was 20
-  static const double padEvents = 20.0;
+  static const double eventRadius = 26.0; // was 20.0
+  static const double padEvents = 25.0; // was 20.0
 
   static final Paint accentPaint = Paint()
     ..color = AppThemes.eventsGutterAccent
@@ -761,10 +761,14 @@ class TimelineRenderObject extends RenderBox {
             ..style = PaintingStyle.fill,
         );
         canvas.drawCircle(Offset(x, y), eventRadius, accentPaint);
-        canvas.drawCircle(Offset(x, y), eventRadius - 4.0, whitePaint);
+        canvas.drawCircle(
+          Offset(x, y),
+          eventRadius - 1.0, // was -4.0
+          whitePaint,
+        );
 
         TimelineAsset asset = event.asset;
-        double assetSize = 40.0 - 8.0;
+        double assetSize = 50.0; // was 40.0 -8.0
         Size renderSize = Size(assetSize, assetSize);
         Offset renderOffset = Offset(x - assetSize / 2.0, y - assetSize / 2.0);
 
@@ -783,9 +787,10 @@ class TimelineRenderObject extends RenderBox {
                   (alignment.x * renderSize.width / 2.0),
               renderOffset.dy +
                   // renderSize.height / 2.0 +
-                  (alignment.y * renderSize.height / 2.0),
-              32,
-              32,
+                  (alignment.y * renderSize.height / 2.0) -
+                  .3, // added this, TODO find math solution instead of customizing for Adam.
+              51.5, // was 32
+              51.5, // was 32
             ),
             Paint()
               ..isAntiAlias = true

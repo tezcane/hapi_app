@@ -518,12 +518,15 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
             onTapUp: _tapUp,
             child: Stack(
               children: <Widget>[
-                TimelineRenderWidget(
-                  needsRepaint: true,
-                  topOverlap: TopOverlap + devicePadding.top,
-                  focusItem: widget.focusItem,
-                  touchBubble: onTouchBubble,
-                  touchEntry: onTouchEntry,
+                Hero(
+                  tag: widget.focusItem.trKeyEndTagLabel,
+                  child: TimelineRenderWidget(
+                    needsRepaint: true,
+                    topOverlap: TopOverlap + devicePadding.top,
+                    focusItem: widget.focusItem,
+                    touchBubble: onTouchBubble,
+                    touchEntry: onTouchEntry,
+                  ),
                 ),
                 Padding(
                   padding: EdgeInsets.only(

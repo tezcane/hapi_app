@@ -122,27 +122,33 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
                       GestureDetector(
-                          onPanStart: (DragStartDetails details) {
-                            setState(() {
-                              _interactOffset = details.globalPosition;
-                            });
-                          },
-                          onPanUpdate: (DragUpdateDetails details) {
-                            setState(() {
-                              _interactOffset = details.globalPosition;
-                            });
-                          },
-                          onPanEnd: (DragEndDetails details) {
-                            setState(() {
-                              _interactOffset = null;
-                            });
-                          },
+                        onPanStart: (DragStartDetails details) {
+                          setState(() {
+                            _interactOffset = details.globalPosition;
+                          });
+                        },
+                        onPanUpdate: (DragUpdateDetails details) {
+                          setState(() {
+                            _interactOffset = details.globalPosition;
+                          });
+                        },
+                        onPanEnd: (DragEndDetails details) {
+                          setState(() {
+                            _interactOffset = null;
+                          });
+                        },
+                        child: Hero(
+                          tag: widget.article.trKeyEndTagLabel,
                           child: SizedBox(
-                              height: 280,
-                              child: TimelineEntryWidget(
-                                  isActive: true,
-                                  timelineEntry: widget.article,
-                                  interactOffset: _interactOffset))),
+                            height: 280,
+                            child: TimelineEntryWidget(
+                              isActive: true,
+                              timelineEntry: widget.article,
+                              interactOffset: _interactOffset,
+                            ),
+                          ),
+                        ),
+                      ),
                       Padding(
                         padding: const EdgeInsets.only(top: 30.0),
                         child: Row(

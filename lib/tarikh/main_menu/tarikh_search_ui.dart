@@ -176,11 +176,16 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
                     return SizedBox(height: heightPadding);
                   } else {
                     return RepaintBoundary(
-                      child: ThumbnailDetailWidget(
-                        _searchResults[idx - 1],
-                        hasDivider: idx != 1,
-                        tapSearchResult: _tapSearchResult,
-                      ),
+                      // child: Hero(
+                      //   // TODO get this working
+                      //   //tag: 'asdf',
+                      //   tag: _searchResults[idx - 1].trKeyEndTagLabel + '2',
+                        child: ThumbnailDetailWidget(
+                          _searchResults[idx - 1],
+                          hasDivider: idx != 1,
+                          tapSearchResult: _tapSearchResult,
+                        ),
+                      // ),
                     );
                   }
                 },
