@@ -21,10 +21,17 @@ import 'package:nima/nima.dart' as nima;
 import 'package:nima/nima/animation/actor_animation.dart' as nima;
 import 'package:nima/nima/math/aabb.dart' as nima;
 
+/// Show states for Tarikh's Gutter (thin panel on left side of screen)
 enum GutterMode {
   OFF,
   FAV,
   ALL,
+}
+
+/// Tell certain UIs (Timeline/Relic views) what type(s) of events to use
+enum EventType {
+  TIMELINE, // All timeline events and relics that have a time
+  RELIC, // All relics (which can be Timeline events if their time is known)
 }
 
 /// Used for Timeline Up/Down Button data
@@ -182,9 +189,9 @@ class TarikhC extends GetxHapi {
     }
 
     /// Sort by starting time, so the favorites' list is always displayed in ascending order.
-    _eventFavorites.sort((TimelineEntry a, TimelineEntry b) {
-      return a.startMs.compareTo(b.startMs);
-    });
+    _eventFavorites.sort(
+      (TimelineEntry a, TimelineEntry b) => a.startMs.compareTo(b.startMs),
+    );
   }
 
   /// Persists the data to disk.
@@ -259,6 +266,15 @@ class TarikhC extends GetxHapi {
 
     timeBtn.entry = entry;
     updateTimeBtn(timeBtn, trValTitle, trValTimeUntil, trValPageScrolls);
+  }
+
+  Map<String, TimelineEntry> getEventMap(EventType eventType) {
+    switch (eventType) {
+      case EventType.TIMELINE:
+        return eventMap;
+      case EventType.RELIC:
+        return eventMap; // TODO asdf
+    }
   }
 }
 

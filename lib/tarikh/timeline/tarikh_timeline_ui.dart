@@ -157,17 +157,12 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
 
   /// The following two callbacks are passed down to the [TimelineRenderWidget] so
   /// that it can pass the information back to this widget.
-  onTouchBubble(TapTarget? bubble) {
-    _touchedBubble = bubble;
-  }
+  onTouchBubble(TapTarget? bubble) => _touchedBubble = bubble;
 
-  onTouchEntry(TimelineEntry? entry) {
-    _touchedEntry = entry;
-  }
+  onTouchEntry(TimelineEntry? entry) => _touchedEntry = entry;
 
-  void _tapDown(TapDownDetails details) {
-    t.setViewport(velocity: 0.0, animate: true);
-  }
+  void _tapDown(TapDownDetails details) =>
+      t.setViewport(velocity: 0.0, animate: true);
 
   void _navigateToTimeline(TimelineEntry entry, double devicePaddingTop) {
     // updates up/down buttons:
@@ -198,7 +193,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
         // stop rendering here, menu controller re-enables it
         TarikhC.to.isActiveTimeline = false;
         MenuC.to.pushSubPage(SubPage.Tarikh_Article, arguments: {
-          'article': _touchedBubble!.entry,
+          'eventType': EventType.TIMELINE,
+          'initEventTitle': _touchedBubble!.entry.trKeyEndTagLabel,
         });
 
         //t.isActive = true; // TODO working? was below:
@@ -286,11 +282,11 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
     t.devicePadding = devicePadding;
 
-    const double fabWidth = 56 + 15;
+    const double fabWidth = 71; // 56 + 15
     const double middleButtonsGap = 5;
-    double w2 = (w(context) - (fabWidth * 2) - middleButtonsGap) / 2;
-    double titleWidth = w(context) - fabWidth;
-    double height = 160;
+    final double w2 = (w(context) - (fabWidth * 2) - middleButtonsGap) / 2;
+    final double titleWidth = w(context) - fabWidth;
+    const double height = 160;
 
     // Color? color = _headerTextColor != null
     //     ? _headerTextColor
@@ -424,7 +420,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                       ),
                                       FloatingActionButton(
                                         tooltip: 'i.Navigate to past'.tr,
-                                        heroTag: null, // needed
+                                        heroTag: 'btnUp', // needed
                                         onPressed: () => _navigateToTimeline(
                                             btnUp.entry!, devicePadding.top),
                                         materialTapTargetSize:
@@ -478,7 +474,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                       ),
                                       FloatingActionButton(
                                         tooltip: 'i.Navigate to future'.tr,
-                                        heroTag: null, // needed
+                                        heroTag: 'btnDn', // needed
                                         onPressed: () => _navigateToTimeline(
                                             btnDn.entry!, devicePadding.top),
                                         materialTapTargetSize:
