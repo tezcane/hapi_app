@@ -20,7 +20,7 @@ import 'package:hapi/quest/active/active_quest_action_ui.dart';
 import 'package:hapi/quest/quests_ui.dart';
 import 'package:hapi/relic/family_tree/family_tree_ui.dart';
 import 'package:hapi/relic/relics_ui.dart';
-import 'package:hapi/tarikh/article/tarikh_article_ui.dart';
+import 'package:hapi/tarikh/event/event_ui.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/tarikh_ui.dart';
 import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
@@ -98,7 +98,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
 
     /// handle tarikh animated pages, set active/inactive
     if (getLastNavPage() == NavPage.Tarikh) {
-      // if timeline showing again (after article view), make timeline active
+      // if timeline showing again (after event view), make timeline active
       if (_subPageStack.isNotEmpty &&
           _subPageStack.last == SubPage.Tarikh_Timeline) {
         TarikhC.to.isActiveTimeline = true; // reactivate timeline
@@ -315,9 +315,9 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
           duration: Duration(milliseconds: transitionMs),
         );
         break;
-      case SubPage.Tarikh_Article:
+      case SubPage.Event_UI:
         Get.to(
-          () => TarikhArticleUI(),
+          () => EventUI(),
           arguments: arguments,
           transition: transition,
           duration: Duration(milliseconds: transitionMs),

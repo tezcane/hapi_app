@@ -5,36 +5,38 @@ import 'package:get/get.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/sub_page.dart';
-import 'package:hapi/tarikh/article/timeline_entry_widget.dart';
+import 'package:hapi/tarikh/event/event.dart';
+import 'package:hapi/tarikh/event/event_widget.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
-import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
-/// This widget will paint the article page.
-/// It stores a reference to the [TimelineEntry] that contains the relevant information.
-class TarikhArticleUI extends StatefulWidget {
-  TarikhArticleUI() {
+/// This widget will paint the event page.
+/// It stores a reference to the [Event] that contains the relevant information.
+class EventUI extends StatefulWidget {
+  EventUI() {
     eventType = Get.arguments['eventType'];
     initEventTitle = Get.arguments['initEventTitle'];
   }
-  late final EventType eventType;
+  late final EVENT_TYPE eventType;
   late final String initEventTitle;
 
   @override
-  _TarikhArticleUIState createState() => _TarikhArticleUIState();
+  _EventUIState createState() => _EventUIState();
 }
 
-/// The [State] for the [TarikhArticleUI] will change based on the [article]
+/// The [State] for the [EventUI] will change based on the [_event]
 /// parameter that's used to build it.
-/// It is stateful because we rely on some information like the title, subtitle, and the article
-/// contents to change when a new article is displayed. Moreover the [FlareWidget]s that are used
-/// on this page (i.e. the top [TimelineEntryWidget] the favorite button) rely on life-cycle parameters.
-class _TarikhArticleUIState extends State<TarikhArticleUI> {
-  late final Map<String, TimelineEntry> eventMap;
-  late TimelineEntry event;
-  late int entryIdx;
+/// It is stateful because we rely on some information like the title, subtitle, and the event
+/// contents to change when a new event is displayed. Moreover the [FlareWidget]s that are used
+/// on this page (i.e. the top [EventWidget] the favorite button) rely on life-cycle parameters.
+class _EventUIState extends State<EventUI> {
+  late final Map<String, Event> _eventMap;
+  late Event _event;
+  late int _eventIdx; // TODO asdf
 
-  late final TimeBtn btnUp;
-  late final TimeBtn btnDn;
+  late final TimeBtn _btnUp;
+  late final TimeBtn _btnDn;
+
+  late final List<Event> _favs = TarikhC.to.eventFavorites;
 
   /// The information for the current page.
   String _trValTitle = '';
@@ -58,23 +60,23 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
   initState() {
     super.initState();
 
-    eventMap = TarikhC.to.getEventMap(widget.eventType);
+    _eventMap = TarikhC.to.getEventMap(widget.eventType);
 
-    btnUp = TimeBtn(' ', ' ', ' ', null);
-    btnDn = TimeBtn(' ', ' ', ' ', null);
+    _btnUp = TimeBtn('', '', '', null);
+    _btnDn = TimeBtn('', '', '', null);
 
     initEvent(widget.initEventTitle);
   }
 
   initEvent(String eventTag) {
-    // entryIdx = newEntryIdx; TODO asdf
-    event = eventMap[eventTag]!;
+    // eventIdx = newEventIdx; TODO asdf
+    _event = _eventMap[eventTag]!;
 
-    TarikhC.to.updateTimeBtnEntry(btnUp, event.previous);
-    TarikhC.to.updateTimeBtnEntry(btnDn, event.next);
+    TarikhC.to.updateEventBtn(_btnUp, _event.previous);
+    TarikhC.to.updateEventBtn(_btnDn, _event.next);
 
-    _trValTitle = event.trValTitle;
-    _trValSubTitle = event.trValYearsAgo();
+    _trValTitle = _event.trValTitle;
+    _trValSubTitle = _event.trValYearsAgo();
 
     TextStyle h1 = Get.theme.textTheme.headline4!
         .copyWith(fontSize: 32.0, height: 1.625, fontWeight: FontWeight.bold);
@@ -110,22 +112,20 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
   /// Load the markdown file from the assets and set the contents of the page to its value.
   void loadMarkdown() async {
     String trValArticleMarkdown =
-        await LanguageC.to.trValTarikhArticle(event.trKeyEndTagLabel);
+        await LanguageC.to.trValTarikhArticle(_event.trKeyEndTagLabel);
     _trValArticleMarkdown = trValArticleMarkdown;
-    setState(() {}); // refresh UI with new entry data
+    setState(() {}); // refresh UI with new event data
   }
 
   /// This widget is wrapped in a [Scaffold] to have the classic Material Design visual layout structure.
   /// It uses the [BlocProvider] to find out if this element is part of the favorites, to have the icon properly set up.
-  /// A [SingleChildScrollView] contains a [Column] that lays out the [TimelineEntryWidget] on top, and the [MarkdownBody]
+  /// A [SingleChildScrollView] contains a [Column] that lays out the [EventWidget] on top, and the [MarkdownBody]
   /// right below it.
-  /// A [GestureDetector] is used to control the [TimelineEntryWidget], if it allows it (...try Newton!)
+  /// A [GestureDetector] is used to control the [EventWidget], if it allows it (...try Newton!)
   @override
   Widget build(BuildContext context) {
-    //EdgeInsets devicePadding = MediaQuery.of(context).padding;
-    List<TimelineEntry> favs = TarikhC.to.eventFavorites;
-    bool isFav = favs.any((TimelineEntry e) =>
-        e.trKeyEndTagLabel.toLowerCase() == event.trKeyEndTagLabel);
+    bool isFav =
+        _favs.any((Event e) => e.trKeyEndTagLabel == _event.trKeyEndTagLabel);
 
     const double fabWidth = 71; // 56 + 15
     const double middleButtonsGap = 5;
@@ -133,16 +133,13 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
     const double height = 160;
 
     return FabSubPage(
-      subPage: SubPage.Tarikh_Article,
+      subPage: SubPage.Event_UI,
       child: Scaffold(
         floatingActionButtonLocation:
             FloatingActionButtonLocation.miniCenterDocked,
         floatingActionButton: GetBuilder<TarikhC>(builder: (c) {
-          // TimeBtn btnUp = c.timeBtnUp;
-          // TimeBtn btnDn = c.timeBtnDn;
-
           String trValUpTitle1 = '';
-          String trValUpTitle2 = btnUp.trValTitle;
+          String trValUpTitle2 = _btnUp.trValTitle;
           List<String> btnUpList = trValUpTitle2.split('\n');
           if (btnUpList.length == 2) {
             trValUpTitle1 = btnUpList[0];
@@ -150,7 +147,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
           }
 
           String trValDnTitle1 = '';
-          String trValDnTitle2 = btnDn.trValTitle;
+          String trValDnTitle2 = _btnDn.trValTitle;
           List<String> btnDnList = trValDnTitle2.split('\n');
           if (btnDnList.length == 2) {
             trValDnTitle1 = btnDnList[0];
@@ -174,7 +171,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          if (widget.eventType == EventType.RELIC)
+                          if (widget.eventType == EVENT_TYPE.Relic)
                             FloatingActionButton(
                               tooltip: 'i.Upgrade Relic'.tr,
                               onPressed: () {
@@ -196,7 +193,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                     children: [
                       SizedBox(
                         width: w2,
-                        child: btnUp.entry == null
+                        child: _btnUp.event == null
                             ? Container()
                             : Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
@@ -217,12 +214,12 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                                   ),
                                   FloatingActionButton(
                                     tooltip:
-                                        widget.eventType == EventType.TIMELINE
-                                            ? 'i.Navigate to past'.tr
-                                            : 'i.See previous relic',
+                                        widget.eventType == EVENT_TYPE.Relic
+                                            ? 'i.See previous relic'.tr
+                                            : 'i.Navigate to past'.tr,
                                     heroTag: 'btnUp',
                                     onPressed: () => initEvent(
-                                        btnUp.entry!.trKeyEndTagLabel),
+                                        _btnUp.event!.trKeyEndTagLabel),
                                     materialTapTargetSize:
                                         MaterialTapTargetSize.padded,
                                     child: const Icon(
@@ -231,7 +228,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                                     ),
                                   ),
                                   T(
-                                    btnUp.trValTimeUntil,
+                                    _btnUp.trValTimeUntil,
                                     tsR,
                                     w: w2,
                                     h: 17,
@@ -244,7 +241,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                       const SizedBox(width: middleButtonsGap),
                       SizedBox(
                         width: w2,
-                        child: btnDn.entry == null
+                        child: _btnDn.event == null
                             ? Container()
                             : Column(
                                 mainAxisAlignment: MainAxisAlignment.end,
@@ -266,12 +263,12 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                                   ),
                                   FloatingActionButton(
                                     tooltip:
-                                        widget.eventType == EventType.TIMELINE
-                                            ? 'i.Navigate to future'.tr
-                                            : 'i.See next relic',
+                                        widget.eventType == EVENT_TYPE.Relic
+                                            ? 'i.See next relic'.tr
+                                            : 'i.Navigate to future'.tr,
                                     heroTag: 'btnDn',
                                     onPressed: () => initEvent(
-                                        btnDn.entry!.trKeyEndTagLabel),
+                                        _btnDn.event!.trKeyEndTagLabel),
                                     materialTapTargetSize:
                                         MaterialTapTargetSize.padded,
                                     child: const Icon(
@@ -280,7 +277,7 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                                     ),
                                   ),
                                   T(
-                                    btnDn.trValTimeUntil,
+                                    _btnDn.trValTimeUntil,
                                     tsR,
                                     w: w2,
                                     h: 17,
@@ -327,12 +324,12 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                             });
                           },
                           child: Hero(
-                            tag: event.trKeyEndTagLabel,
+                            tag: _event.trKeyEndTagLabel,
                             child: SizedBox(
                               height: 280,
-                              child: TimelineEntryWidget(
+                              child: EventWidget(
                                 isActive: true,
-                                timelineEntry: event,
+                                event: _event,
                                 interactOffset: _interactOffset,
                               ),
                             ),
@@ -389,9 +386,9 @@ class _TarikhArticleUIState extends State<TarikhArticleUI> {
                                     _isFavorite = !_isFavorite;
                                   });
                                   if (_isFavorite) {
-                                    TarikhC.to.addFavorite(event);
+                                    TarikhC.to.addFavorite(_event);
                                   } else {
-                                    TarikhC.to.removeFavorite(event);
+                                    TarikhC.to.removeFavorite(_event);
                                   }
                                 },
                               ),

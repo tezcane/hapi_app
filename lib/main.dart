@@ -154,7 +154,7 @@ class MyApp extends StatelessWidget {
 //     GetPage(name: '/quest', page: () => const QuestsUI()),
 //     GetPage(name: '/tarikh', page: () => const TarikhUI()),
 //     GetPage(name: '/tarikh/favorite', page: () => const TarikhFavoritesUI()),
-//     GetPage(name: '/tarikh/article', page: () => TarikhArticleUI()),
+//     GetPage(name: '/tarikh/event', page: () => TarikhArticleUI()),
 //     GetPage(name: '/tarikh/timeline', page: () => TarikhTimelineUI()),
 //     GetPage(name: '/about', page: () => AboutUI()),
 //     GetPage(name: '/about/up-prof', page: () => UpdateProfileUI()),

@@ -4,8 +4,9 @@ import 'dart:ui' as ui;
 import 'package:flare_dart/math/aabb.dart' as flare;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:hapi/tarikh/event/event.dart';
+import 'package:hapi/tarikh/event/event_asset.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
-import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 import 'package:nima/nima/math/aabb.dart' as nima;
 
 /// This controls the collapsable tarikh menu vinettes animations.
@@ -115,7 +116,7 @@ class MenuVignetteRenderObject extends RenderBox {
     updateRendering();
   }
 
-  TimelineEntry? get _timelineEntry => TarikhC.tih.getById(_assetId!);
+  Event? get _event => TarikhC.tih.getEventById(_assetId!);
 
   @override
   bool get sizedByParent => true;
@@ -145,12 +146,12 @@ class MenuVignetteRenderObject extends RenderBox {
     final Canvas canvas = context.canvas;
 
     /// Don't paint if not needed. TODO test
-    if (_timelineEntry == null || _timelineEntry?.asset == null) {
+    if (_event == null || _event?.asset == null) {
       opacity = 0.0;
       return;
     }
 
-    TimelineAsset asset = _timelineEntry!.asset;
+    EventAsset asset = _event!.asset;
 
     canvas.save();
 
@@ -158,7 +159,7 @@ class MenuVignetteRenderObject extends RenderBox {
     double h = asset.height;
 
     /// If the asset is just a static image, draw the image directly to [canvas].
-    if (asset is TimelineImage) {
+    if (asset is EventImage) {
       canvas.drawImageRect(
         asset.image,
         Rect.fromLTWH(0.0, 0.0, asset.width, asset.height),
@@ -168,7 +169,7 @@ class MenuVignetteRenderObject extends RenderBox {
           ..filterQuality = ui.FilterQuality.low
           ..color = Colors.white.withOpacity(asset.opacity),
       );
-    } else if (asset is TimelineNima) {
+    } else if (asset is NimaAsset) {
       Alignment alignment = Alignment.topRight;
       // BoxFit fit = BoxFit.cover;
 
@@ -271,7 +272,7 @@ class MenuVignetteRenderObject extends RenderBox {
         )
         ..style = ui.PaintingStyle.fill;
       canvas.drawRect(offset & size, paint);
-    } else if (asset is TimelineFlare) {
+    } else if (asset is FlareAsset) {
       Alignment alignment = Alignment.center;
       // BoxFit fit = BoxFit.cover;
 
@@ -397,10 +398,10 @@ class MenuVignetteRenderObject extends RenderBox {
     /// Calculate the elapsed time to [advance()] the animations.
     double elapsed = t - _lastFrameTime;
     _lastFrameTime = t;
-    TimelineEntry? entry = _timelineEntry;
-    if (entry != null) {
-      TimelineAsset asset = entry.asset;
-      if (asset is TimelineNima) {
+    Event? event = _event;
+    if (event != null) {
+      EventAsset asset = event.asset;
+      if (asset is NimaAsset) {
         /// Modulate the opacity value used by [gradientFade].
         if (opacity < 1.0) opacity = min(opacity + elapsed, 1.0);
         asset.animationTime += elapsed;
@@ -411,7 +412,7 @@ class MenuVignetteRenderObject extends RenderBox {
 
         /// Use the library function to update the actor's time.
         asset.actor.advance(elapsed);
-      } else if (asset is TimelineFlare) {
+      } else if (asset is FlareAsset) {
         if (opacity < 1.0) {
           /// Modulate the opacity value used by [gradientFade].
           opacity = min(opacity + elapsed, 1.0);

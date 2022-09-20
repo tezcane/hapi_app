@@ -1,132 +1,23 @@
 import 'dart:ui';
 
-import 'package:flare_dart/math/aabb.dart' as flare;
-import 'package:flare_flutter/flare.dart' as flare;
 import 'package:get/get.dart';
 import 'package:hapi/controller/time_c.dart';
 import 'package:hapi/main_c.dart';
-import 'package:nima/nima.dart' as nima;
-import 'package:nima/nima/animation/actor_animation.dart' as nima;
-import 'package:nima/nima/math/aabb.dart' as nima;
+import 'package:hapi/tarikh/event/event_asset.dart';
 
-/// An object representing the renderable assets loaded from `timeline.json`.
-///
-/// Each [TimelineAsset] encapsulates all the relevant properties for drawing,
-/// as well as maintaining a reference to its original [TimelineEntry].
-class TimelineAsset {
-  TimelineAsset(this.filename, this.width, this.height, this.scale);
-  final String filename;
-  final double width;
-  final double height;
-
-  /// Can be overwritten
-  double scale;
-
-  /// We create the asset before we create the timeline entry so init this ASAP
-  late final TimelineEntry entry;
-
-  double opacity = 0.0;
-  double scaleVelocity = 0.0;
-  double y = 0.0;
-  double velocity = 0.0;
-}
-
-/// A renderable image.
-class TimelineImage extends TimelineAsset {
-  TimelineImage(
-      String filename, double width, double height, double scale, this.image)
-      : super(filename, width, height, scale);
-  final Image image;
-}
-
-/// This asset also has information regarding its animations.
-class TimelineAnimatedAsset extends TimelineAsset {
-  TimelineAnimatedAsset(
-    String filename,
-    double width,
-    double height,
-    double scale,
-    this.loop,
-    this.offset,
-    this.gap,
-    this.animationTime,
-  ) : super(filename, width, height, scale);
-  final bool loop;
-  final double offset;
-  final double gap;
-
-  /// Can be overwritten
-  double animationTime;
-}
-
-/// A `Flare` Asset.
-class TimelineFlare extends TimelineAnimatedAsset {
-  TimelineFlare(
-    String filename,
-    double width,
-    double height,
-    double scale,
-    bool loop,
-    double offset,
-    double gap,
-    this.actorStatic,
-    this.actor,
-    this.setupAABB,
-    this.animation,
-  ) : super(filename, width, height, scale, loop, offset, gap, 0.0);
-  final flare.FlutterActorArtboard actorStatic;
-  final flare.FlutterActorArtboard actor;
-  final flare.AABB setupAABB;
-
-  /// Can be overwritten
-  flare.ActorAnimation animation;
-
-  /// Some Flare assets will have multiple idle animations (e.g. 'Humans'),
-  /// others will have an intro&idle animation (e.g. 'Sun is Born').
-  /// All this information is in `timeline.json` file, and it's de-serialized in the
-  /// [Timeline.loadFromBundle()] method, called during startup.
-  /// and custom-computed AABB bounds to properly position them in the timeline.
-  flare.ActorAnimation? intro;
-  flare.ActorAnimation? idle;
-  List<flare.ActorAnimation>? idleAnimations;
-}
-
-/// An `Nima` Asset.
-class TimelineNima extends TimelineAnimatedAsset {
-  TimelineNima(
-    String filename,
-    double width,
-    double height,
-    double scale,
-    bool loop,
-    double offset,
-    double gap,
-    this.actorStatic,
-    this.actor,
-    this.setupAABB,
-    this.animation,
-  ) : super(filename, width, height, scale, loop, offset, gap, 0.0);
-  final nima.FlutterActor actorStatic;
-  final nima.FlutterActor actor;
-  final nima.AABB setupAABB;
-  final nima.ActorAnimation animation;
-}
-
-enum TimelineEntryType {
+/// Tell certain UIs (Timeline/Relic views) what type(s) of events to use
+enum EVENT_TYPE {
   // from json data:
   Era,
-  Incident,
+  Incident, // All timeline events and relics that have a time
   // from hapi data:
-  Relic,
+  Relic, // All relics (which can be Timeline events if their time is known)
 }
 
-/// Each entry in the timeline is represented by an instance of this object.
-/// Each favorite, search result and detail page will grab the information from a reference
-/// to this object.
-///
-/// They are all initialized at startup time by the [BlocProvider] constructor.
-class TimelineEntry {
-  TimelineEntry({
+/// The timeline displays these objects, if their startMs is not 0. The
+/// Favorite, Search and Relics also use this object.
+class Event {
+  Event({
     required this.type,
     required this.trValEra,
     required this.trKeyEndTagLabel, // TODO make it trVal
@@ -138,12 +29,12 @@ class TimelineEntry {
     _handleLabelNewlineCount();
   }
 
-  final TimelineEntryType type;
+  final EVENT_TYPE type;
   final String trValEra;
   final String trKeyEndTagLabel; // trKey's end tag: i.<end tag> or a.<end tag>
   final double startMs;
   final double endMs;
-  final TimelineAsset asset;
+  final EventAsset asset;
 
   /// not always given in json input file, thus nullable:
   Color? accent;
@@ -151,22 +42,22 @@ class TimelineEntry {
   /// Used to calculate how many lines to draw for the bubble in the timeline.
   int lineCount = 1;
 
-  /// Each entry constitutes an element of a tree:
+  /// Each event constitutes an element of a tree:
   /// eras are grouped into spanning eras and events are placed into the eras
-  /// they belong to. If not null, this is the root entry, if null it's a child.
-  TimelineEntry? parent;
+  /// they belong to. If not null, this is the root event, if null it's a child.
+  Event? parent;
 
-  /// holds all entries under the parent/era. If a child will be null.
-  List<TimelineEntry>? children;
+  /// holds all events under the parent/era. If a child will be null.
+  List<Event>? children;
 
-  /// All the timeline entries are also linked together to easily access the next/previous event.
-  /// After a couple of seconds of inactivity on the timeline, a previous/next entry button will appear
+  /// All the timeline events are also linked together to easily access the next/previous event.
+  /// After a couple of seconds of inactivity on the timeline, a previous/next event button will appear
   /// to allow the user to navigate faster between adjacent events.
-  /// Should only be null when on the first or last entry.
-  TimelineEntry? next;
-  TimelineEntry? previous;
+  /// Should only be null when on the first or last event.
+  Event? next;
+  Event? previous;
 
-  /// All these parameters are used by the [Timeline] object to properly position the current entry.
+  /// All these parameters are used by the [Timeline] object to properly position the current event.
   double y = 0.0;
   double endY = 0.0;
   double length = 0.0;
@@ -186,9 +77,10 @@ class TimelineEntry {
 
   bool get isVisible => opacity > 0.0;
 
-  bool isTimeLineEntry() => startMs != 0 && endMs != 0;
+  // TODO asdf use this
+  bool isTimeLineEvent() => startMs != 0 && endMs != 0;
 
-  String get trValTitle => TimelineEntry.trValFromTrKeyEndTag(trKeyEndTagLabel);
+  String get trValTitle => Event.trValFromTrKeyEndTag(trKeyEndTagLabel);
 
   /// Attempts to translate 'i.<trKeyEndTag>' if fails, tries 'a.<trKeyEndTag>'.
   static String trValFromTrKeyEndTag(String trKeyEndTag) {
@@ -212,9 +104,9 @@ class TimelineEntry {
 
   // /// Debug information.
   // @override
-  // String toString() => 'TIMELINE ENTRY: $label -($startMs,$endMs)';
+  // String toString() => 'TIMELINE EVENT: $label -($startMs,$endMs)';
 
-  /// Pretty-printing for the entry date.
+  /// Pretty-printing for the event date.
   String trValYearsAgo({double? eventYear}) {
     eventYear ??= startMs;
 

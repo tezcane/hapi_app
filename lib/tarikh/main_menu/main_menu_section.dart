@@ -1,8 +1,8 @@
 import 'package:flare_flutter/flare_actor.dart' as flare;
 import 'package:flutter/material.dart';
+import 'package:hapi/tarikh/event/event.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/main_menu/menu_vignette.dart';
-import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
 typedef NavigateTo = Function(MenuItemData item);
 
@@ -32,8 +32,7 @@ class MenuSection extends StatefulWidget {
   final NavigateTo navigateTo;
   final bool isActive;
 
-  String get trValTitle =>
-      TimelineEntry.trValFromTrKeyEndTag(trKeyEndTagMenuTitle);
+  String get trValTitle => Event.trValFromTrKeyEndTag(trKeyEndTagMenuTitle);
 
   @override
   State<StatefulWidget> createState() => _SectionState();

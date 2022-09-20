@@ -5,12 +5,12 @@ import 'package:get/get.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/sub_page.dart';
+import 'package:hapi/tarikh/event/event.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
-import 'package:hapi/tarikh/main_menu/search_widget.dart';
 import 'package:hapi/tarikh/main_menu/thumbnail_detail_widget.dart';
-import 'package:hapi/tarikh/search_manager.dart';
+import 'package:hapi/tarikh/search/search_manager.dart';
+import 'package:hapi/tarikh/search/search_widget.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
-import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
 class TarikhSearchUI extends StatefulWidget {
   const TarikhSearchUI();
@@ -21,7 +21,7 @@ class TarikhSearchUI extends StatefulWidget {
 
 class _TarikhSearchUIState extends State<TarikhSearchUI> {
   /// The [List] of search results that is displayed when searching.
-  List<TimelineEntry> _searchResults = [];
+  List<Event> _searchResults = [];
 
   /// This is passed to the SearchWidget so we can handle text edits and display
   /// the search results on the main menu.
@@ -64,12 +64,12 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
   }
 
   /// If query is blank it returns all results
-  List<TimelineEntry> getSortedSearchResults(String query) {
-    List<TimelineEntry> searchResult =
+  List<Event> getSortedSearchResults(String query) {
+    List<Event> searchResult =
         SearchManager.init().performSearch(query).toList();
 
     /// Sort by starting time, so the search list is always displayed in ascending order.
-    searchResult.sort((TimelineEntry a, TimelineEntry b) {
+    searchResult.sort((Event a, Event b) {
       return a.startMs.compareTo(b.startMs);
     });
 
@@ -111,18 +111,18 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
     /// A [Timer] is used to prevent unnecessary searches while the user is typing.
     _searchTimer = Timer(Duration(milliseconds: query.isEmpty ? 0 : 350), () {
       s.wr('lastHistorySearch', _searchTextController.text);
-      List<TimelineEntry> searchResults = getSortedSearchResults(query);
+      List<Event> searchResults = getSortedSearchResults(query);
       setState(() {
         _searchResults = searchResults;
       });
     });
   }
 
-  void _tapSearchResult(TimelineEntry entry) {
-    MenuItemData item = MenuItemData.fromEntry(entry);
+  void _tapSearchResult(Event event) {
+    MenuItemData item = MenuItemData.fromEvent(event);
     MenuC.to.pushSubPage(
       SubPage.Tarikh_Timeline,
-      arguments: {'focusItem': item, 'entry': entry},
+      arguments: {'focusItem': item, 'event': event},
     );
   }
 
@@ -180,11 +180,11 @@ class _TarikhSearchUIState extends State<TarikhSearchUI> {
                       //   // TODO get this working
                       //   //tag: 'asdf',
                       //   tag: _searchResults[idx - 1].trKeyEndTagLabel + '2',
-                        child: ThumbnailDetailWidget(
-                          _searchResults[idx - 1],
-                          hasDivider: idx != 1,
-                          tapSearchResult: _tapSearchResult,
-                        ),
+                      child: ThumbnailDetailWidget(
+                        _searchResults[idx - 1],
+                        hasDivider: idx != 1,
+                        tapSearchResult: _tapSearchResult,
+                      ),
                       // ),
                     );
                   }

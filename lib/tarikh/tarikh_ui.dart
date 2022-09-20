@@ -7,9 +7,9 @@ import 'package:hapi/menu/bottom_bar_menu.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/slide/menu_right/menu_right_ui.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
-import 'package:hapi/tarikh/main_menu/tarikh_favorites_ui.dart';
+import 'package:hapi/tarikh/favorite/tarikh_favorites_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_menu_ui.dart';
-import 'package:hapi/tarikh/main_menu/tarikh_search_ui.dart';
+import 'package:hapi/tarikh/search/tarikh_search_ui.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 
 enum TARIKH_TAB {

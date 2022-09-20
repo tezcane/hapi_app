@@ -6,7 +6,7 @@ enum SubPage {
   Update_Profile,
   Reset_Password,
   Tarikh_Timeline,
-  Tarikh_Article,
+  Event_UI,
   Active_Quest_Action,
   Family_Tree,
 }

@@ -4,7 +4,7 @@ import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_c.dart';
-import 'package:hapi/tarikh/timeline/timeline_entry.dart';
+import 'package:hapi/tarikh/event/event_asset.dart';
 
 /// Isim=("Name" in Arabic). Used to identify a prophet/leader/person as they
 /// are known in scripture/history (Bible/Torah/Quran relations) in different
@@ -58,11 +58,11 @@ enum RELATIVE {
 ///   3. The root node must have trValPredecessors = []
 abstract class FamilyTree extends Relic {
   FamilyTree({
-    // TimelineEntry data:
+    // Event data:
     required String trValEra,
     required double startMs,
     required double endMs,
-    required TimelineAsset asset,
+    required EventAsset asset,
     // Relic data:
     required RELIC_TYPE relicType,
     required String trKeySummary,
@@ -81,7 +81,7 @@ abstract class FamilyTree extends Relic {
     this.successors, // used in collapsed list
     this.successor, // TODO make use of this, order of prophethood?
   }) : super(
-          // TimelineEntry data:
+          // Event data:
           trValEra: trValEra,
           trKeyEndTagLabel: e.name,
           startMs: startMs,

@@ -1,5 +1,6 @@
 import 'package:graphview/GraphView.dart';
-import 'package:hapi/tarikh/timeline/timeline_entry.dart';
+import 'package:hapi/tarikh/event/event.dart';
+import 'package:hapi/tarikh/event/event_asset.dart';
 
 /// Each relic subsection/RelicSet (e.g. Ummah->Prophet) needs to have a
 /// RELIC_TYPE so it can be easily filtered/found/accessed later.
@@ -53,23 +54,23 @@ enum RELIC_TYPE {
   Places_Cities, // mentioned in the Quran,Ruins,  Conquered or not, Istanbul, Rome
 }
 
-/// Abstract class that all relics need to extend. Also extends TimelineEntry so
-/// we can show Relics on the Timeline (if they have dates), you're welcome.
-abstract class Relic extends TimelineEntry {
+/// Abstract class that all relics need to extend. Also extends Events so we can
+/// Relics on the Timeline (if they have dates), you're welcome.
+abstract class Relic extends Event {
   Relic({
-    // TimelineEntry data:
+    // Event data:
     required String trValEra,
     required String trKeyEndTagLabel,
     required double startMs,
     required double endMs,
-    required TimelineAsset asset,
+    required EventAsset asset,
     // Relic data:
     required this.relicType,
     required this.relicId,
     required this.trKeySummary, // e.g. Prophet Summary (ps. keys)
     required this.trKeySummary2, // e.g. Prophet Quran Mentions (pq. keys)
   }) : super(
-          type: TimelineEntryType.Relic,
+          type: EVENT_TYPE.Relic,
           trValEra: trValEra,
           trKeyEndTagLabel: trKeyEndTagLabel,
           startMs: startMs,

@@ -2,9 +2,10 @@ import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:hapi/tarikh/event/event.dart';
+import 'package:hapi/tarikh/event/event_asset.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
-import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
 /// Data container loaded in [TarikhMenuInitHandler.loadFromBundle()].
 class MenuSectionData {
@@ -34,39 +35,37 @@ class MenuItemData {
   double padTop = 0.0;
 //double padBottom = 0.0; // not used, always 0
 
-  String get trValTitle => TimelineEntry.trValFromTrKeyEndTag(trKeyEndTagLabel);
+  String get trValTitle => Event.trValFromTrKeyEndTag(trKeyEndTagLabel);
 
-  /// When initializing this object from a [TimelineEntry], fill in the
-  /// fields according to the [entry] provided. The entry in fact specifies
+  /// When initializing this object from a [Event], fill in the
+  /// fields according to the [event] provided. The event in fact specifies
   /// a [trKeyEndTagLabel], a [startMs] and [endMs] times.
-  /// Padding is built depending on the type of the [entry] provided.
-  static MenuItemData fromEntry(TimelineEntry entry) {
+  /// Padding is built depending on the type of the [event] provided.
+  static MenuItemData fromEvent(Event event) {
     // put in timer so btns updates after navigation
     Timer(const Duration(milliseconds: 500), () {
-      TarikhC.to.updateTimeBtnEntry(TarikhC.to.timeBtnUp, entry.previous);
-      TarikhC.to.updateTimeBtnEntry(TarikhC.to.timeBtnDn, entry.next);
+      TarikhC.to.updateEventBtn(TarikhC.to.timeBtnUp, event.previous);
+      TarikhC.to.updateEventBtn(TarikhC.to.timeBtnDn, event.next);
     });
 
     /// Pad the edges of the screen.
     bool pad = true;
-    TimelineAsset asset = entry.asset;
+    EventAsset asset = event.asset;
 
     /// Extra padding for the top base don the asset size.
     double padTop = asset.height * Timeline.AssetScreenScale;
-    if (asset is TimelineAnimatedAsset) padTop += asset.gap;
+    if (asset is AnimatedEventAsset) padTop += asset.gap;
 
     double start = 0;
     double end = 0;
-    if (entry.type == TimelineEntryType.Era) {
-      start = entry.startMs;
-      end = entry.endMs;
+    if (event.type == EVENT_TYPE.Era) {
+      start = event.startMs;
+      end = event.endMs;
     } else {
       /// No need to pad here as we are centering on a single item.
       double rangeBefore = double.maxFinite;
-      for (TimelineEntry? prev = entry.previous;
-          prev != null;
-          prev = prev.previous) {
-        double diff = entry.startMs - prev.startMs;
+      for (Event? prev = event.previous; prev != null; prev = prev.previous) {
+        double diff = event.startMs - prev.startMs;
         if (diff > 0.0) {
           rangeBefore = diff;
           break;
@@ -74,19 +73,19 @@ class MenuItemData {
       }
 
       double rangeAfter = double.maxFinite;
-      for (TimelineEntry? next = entry.next; next != null; next = next.next!) {
-        double diff = next.startMs - entry.startMs;
+      for (Event? next = event.next; next != null; next = next.next!) {
+        double diff = next.startMs - event.startMs;
         if (diff > 0.0) {
           rangeAfter = diff;
           break;
         }
       }
       double range = min(rangeBefore, rangeAfter) / 2.0;
-      start = entry.startMs;
-      end = entry.endMs + range;
+      start = event.startMs;
+      end = event.endMs + range;
     }
 
-    var menuItemData = MenuItemData(entry.trKeyEndTagLabel, start, end);
+    var menuItemData = MenuItemData(event.trKeyEndTagLabel, start, end);
     menuItemData.pad = pad;
     menuItemData.padTop = padTop;
 

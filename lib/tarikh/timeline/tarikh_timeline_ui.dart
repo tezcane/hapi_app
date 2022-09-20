@@ -3,16 +3,16 @@ import 'package:get/get.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/sub_page.dart';
-import 'package:hapi/tarikh/article/tarikh_article_ui.dart';
+import 'package:hapi/tarikh/event/event.dart';
+import 'package:hapi/tarikh/event/event_ui.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
-import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 import 'package:hapi/tarikh/timeline/timeline_render_widget.dart';
 import 'package:hapi/tarikh/timeline/timeline_utils.dart';
 
 typedef ShowMenuCallback = Function();
-typedef SelectItemCallback = Function(TimelineEntry item);
+typedef SelectItemCallback = Function(Event item);
 
 /// This is the Stateful Widget associated with the Timeline object.
 /// It is built from a [focusItem], that is the event the [Timeline] should
@@ -21,15 +21,15 @@ typedef SelectItemCallback = Function(TimelineEntry item);
 class TarikhTimelineUI extends StatefulWidget {
   TarikhTimelineUI() {
     focusItem = Get.arguments['focusItem'];
-    entry = Get.arguments['entry'];
+    event = Get.arguments['event'];
   }
 
   /// focusItem may have a bigger time span (via menu.json) on the timeline
-  /// compared to loading just a single entry (from timeline.json).
+  /// compared to loading just a single event (from timeline.json).
   late final MenuItemData focusItem;
 
-  /// if null, we must lookup entry and then set up/dn btns manually
-  TimelineEntry? entry;
+  /// if null, we must lookup event and then set up/dn btns manually
+  Event? event;
 
   // TODO needed for widget update detect?:
   final Timeline timeline = TarikhC.t;
@@ -54,7 +54,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   /// When touching a bubble on the [Timeline] keep track of which
   /// element has been touched in order to move to the [article_widget].
   TapTarget? _touchedBubble;
-  TimelineEntry? _touchedEntry;
+  Event? _touchedEvent;
 
   /// Which era the Timeline is currently focused on.
   /// Defaults to [trKeyDefaultEraName].
@@ -72,14 +72,14 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
 
   @override
   initState() {
-    if (widget.entry == null) {
-      // lookup entry manually since not provided on init
-      widget.entry = TarikhC.to.eventMap[widget.focusItem.trKeyEndTagLabel];
+    if (widget.event == null) {
+      // lookup event manually since not provided on init
+      widget.event = TarikhC.to.eventMap[widget.focusItem.trKeyEndTagLabel];
 
-      // We need entry just to update down/up past/future btns. Since it wasn't
+      // We need event just to update down/up past/future btns. Since it wasn't
       // used/available/wanted? by the original caller to this class, we ignore
-      // the view/focusItem MenuItemData.fromEntry returns here:
-      MenuItemData.fromEntry(widget.entry!);
+      // the view/focusItem MenuItemData.fromEvent returns here:
+      MenuItemData.fromEvent(widget.event!);
     }
 
     TarikhC.to.isActiveTimeline = true;
@@ -96,10 +96,10 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     };
 
     /// Update the label for the [Timeline] object.
-    t.onEraChanged = (TimelineEntry? entry) {
+    t.onEraChanged = (Event? event) {
       setState(() {
         _trValEraName =
-            'i.Era'.tr + ': ' + (entry != null ? entry.trValTitle : '');
+            'i.Era'.tr + ': ' + (event != null ? event.trValTitle : '');
       });
     };
 
@@ -159,14 +159,14 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   /// that it can pass the information back to this widget.
   onTouchBubble(TapTarget? bubble) => _touchedBubble = bubble;
 
-  onTouchEntry(TimelineEntry? entry) => _touchedEntry = entry;
+  onTouchEvent(Event? event) => _touchedEvent = event;
 
   void _tapDown(TapDownDetails details) =>
       t.setViewport(velocity: 0.0, animate: true);
 
-  void _navigateToTimeline(TimelineEntry entry, double devicePaddingTop) {
+  void _navigateToTimeline(Event event, double devicePaddingTop) {
     // updates up/down buttons:
-    MenuItemData target = MenuItemData.fromEntry(entry);
+    MenuItemData target = MenuItemData.fromEvent(event);
 
     t.padding = EdgeInsets.only(
       top: MediaQuery.of(context).size.height, //TODO WHY DOES THIS CENTER EVENT
@@ -183,42 +183,42 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   ///
   /// If it is, adjust the layout accordingly.
   /// Otherwise trigger a [Navigator.push()] for the tapped bubble. This moves
-  /// the app into the [TarikhArticleUI].
+  /// the app into the [EventUI].
   void _tapUp(TapUpDetails details) {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
     if (_touchedBubble != null) {
       if (_touchedBubble!.zoom) {
-        _navigateToTimeline(_touchedBubble!.entry, devicePadding.top);
+        _navigateToTimeline(_touchedBubble!.event, devicePadding.top);
       } else {
         // stop rendering here, menu controller re-enables it
         TarikhC.to.isActiveTimeline = false;
-        MenuC.to.pushSubPage(SubPage.Tarikh_Article, arguments: {
-          'eventType': EventType.TIMELINE,
-          'initEventTitle': _touchedBubble!.entry.trKeyEndTagLabel,
+        MenuC.to.pushSubPage(SubPage.Event_UI, arguments: {
+          'eventType': EVENT_TYPE.Incident,
+          'initEventTitle': _touchedBubble!.event.trKeyEndTagLabel,
         });
 
         //t.isActive = true; // TODO working? was below:
         // Navigator.of(context)
         //     .push(MaterialPageRoute(
         //         builder: (BuildContext context) => TarikhArticleUI(
-        //               article: _touchedBubble!.entry!,
+        //               event: _touchedBubble!.event!,
         //               key: null,
         //             )))
         //     .then((v) => widget.t.isActive = true);
       }
-    } else if (_touchedEntry != null) {
-      _navigateToTimeline(_touchedEntry!, devicePadding.top);
+    } else if (_touchedEvent != null) {
+      _navigateToTimeline(_touchedEvent!, devicePadding.top);
     }
   }
 
   /// When performing a long-press operation, the viewport will be adjusted so that
-  /// the visible start and end times will be updated according to the [TimelineEntry]
+  /// the visible start and end times will be updated according to the [Event]
   /// information. The long-pressed bubble will float to the top of the viewport,
   /// and the viewport will be scaled appropriately.
   void _longPress() {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;
     if (_touchedBubble != null) {
-      _navigateToTimeline(_touchedBubble!.entry, devicePadding.top);
+      _navigateToTimeline(_touchedBubble!.event, devicePadding.top);
     }
   }
 
@@ -244,10 +244,10 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
           // _headerBackgroundColor = background;
         });
       };
-      t.onEraChanged = (TimelineEntry? entry) {
+      t.onEraChanged = (Event? event) {
         setState(() {
           _trValEraName =
-              entry != null ? entry.trValTitle : trKeyDefaultEraName.tr;
+              event != null ? event.trValTitle : trKeyDefaultEraName.tr;
         });
       };
       setState(() {
@@ -392,7 +392,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                         children: [
                           SizedBox(
                             width: w2,
-                            child: btnUp.entry == null
+                            child: btnUp.event == null
                                 ? Container()
                                 : Column(
                                     mainAxisAlignment: MainAxisAlignment.end,
@@ -422,7 +422,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                         tooltip: 'i.Navigate to past'.tr,
                                         heroTag: 'btnUp', // needed
                                         onPressed: () => _navigateToTimeline(
-                                            btnUp.entry!, devicePadding.top),
+                                            btnUp.event!, devicePadding.top),
                                         materialTapTargetSize:
                                             MaterialTapTargetSize.padded,
                                         child: const Icon(
@@ -444,7 +444,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                           const SizedBox(width: middleButtonsGap),
                           SizedBox(
                             width: w2,
-                            child: btnDn.entry == null
+                            child: btnDn.event == null
                                 ? Container()
                                 : Column(
                                     mainAxisAlignment: MainAxisAlignment.end,
@@ -476,7 +476,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                         tooltip: 'i.Navigate to future'.tr,
                                         heroTag: 'btnDn', // needed
                                         onPressed: () => _navigateToTimeline(
-                                            btnDn.entry!, devicePadding.top),
+                                            btnDn.event!, devicePadding.top),
                                         materialTapTargetSize:
                                             MaterialTapTargetSize.padded,
                                         child: const Icon(
@@ -521,7 +521,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                     topOverlap: TopOverlap + devicePadding.top,
                     focusItem: widget.focusItem,
                     touchBubble: onTouchBubble,
-                    touchEntry: onTouchEntry,
+                    touchEvent: onTouchEvent,
                   ),
                 ),
                 Padding(

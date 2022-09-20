@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/sub_page.dart';
+import 'package:hapi/tarikh/event/event.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/main_menu/thumbnail_detail_widget.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
-import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 
 /// This widget is displayed when tapping on the Favorites button in [RelicsUI].
 ///
@@ -20,7 +20,7 @@ class RelicsFavoritesUI extends StatelessWidget {
   /// This widget displays a [ListView] for all the elements in the favorites.
   @override
   Widget build(BuildContext context) {
-    /// If no entry has been added to the favorites yet, a placeholder is shown with a
+    /// If no event has been added to the favorites yet, a placeholder is shown with a
     /// a few lines of text and a [FlareActor] animation of a broken heart.
     return Container(
       color: Theme.of(context).backgroundColor,
@@ -71,15 +71,15 @@ class RelicsFavoritesUI extends StatelessWidget {
               : ListView.builder(
                   itemCount: c.eventFavorites.length,
                   itemBuilder: (BuildContext context, int idx) {
-                    TimelineEntry entry = c.eventFavorites[idx];
+                    Event event = c.eventFavorites[idx];
                     return ThumbnailDetailWidget(
-                      entry,
+                      event,
                       hasDivider: idx != 0,
-                      tapSearchResult: (TimelineEntry entry) {
-                        MenuItemData item = MenuItemData.fromEntry(entry);
+                      tapSearchResult: (Event event) {
+                        MenuItemData item = MenuItemData.fromEvent(event);
                         MenuC.to.pushSubPage(
                           SubPage.Tarikh_Timeline,
-                          arguments: {'focusItem': item, 'entry': entry},
+                          arguments: {'focusItem': item, 'event': event},
                         );
                       },
                     );

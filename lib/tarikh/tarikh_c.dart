@@ -11,15 +11,17 @@ import 'package:get/get.dart';
 import 'package:hapi/controller/getx_hapi.dart';
 import 'package:hapi/controller/time_c.dart';
 import 'package:hapi/main_c.dart';
+import 'package:hapi/tarikh/event/event.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
-import 'package:hapi/tarikh/search_manager.dart';
+import 'package:hapi/tarikh/search/search_manager.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
-import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 import 'package:hapi/tarikh/timeline/timeline_utils.dart';
 import 'package:intl/intl.dart';
 import 'package:nima/nima.dart' as nima;
 import 'package:nima/nima/animation/actor_animation.dart' as nima;
 import 'package:nima/nima/math/aabb.dart' as nima;
+
+import 'event/event_asset.dart';
 
 /// Show states for Tarikh's Gutter (thin panel on left side of screen)
 enum GutterMode {
@@ -28,24 +30,18 @@ enum GutterMode {
   ALL,
 }
 
-/// Tell certain UIs (Timeline/Relic views) what type(s) of events to use
-enum EventType {
-  TIMELINE, // All timeline events and relics that have a time
-  RELIC, // All relics (which can be Timeline events if their time is known)
-}
-
 /// Used for Timeline Up/Down Button data
 class TimeBtn {
   TimeBtn(
     this.trValTitle,
     this.trValTimeUntil,
     this.trValPageScrolls,
-    this.entry,
+    this.event,
   );
   String trValTitle;
   String trValTimeUntil;
   String trValPageScrolls;
-  TimelineEntry? entry; // will be null on first/last entries
+  Event? event; // will be null on first/last events
 }
 
 class TarikhC extends GetxHapi {
@@ -103,19 +99,19 @@ class TarikhC extends GetxHapi {
   get tarikhMenuData => _tarikhMenuData;
 
   /// List of favorite events shown on Tarikh_Favorites page and timeline gutter
-  final List<TimelineEntry> _eventFavorites = [];
-  List<TimelineEntry> get eventFavorites => _eventFavorites;
+  final List<Event> _eventFavorites = [];
+  List<Event> get eventFavorites => _eventFavorites;
 
   /// List of all history events for timeline gutter retrieval
-  final List<TimelineEntry> _events = [];
-  List<TimelineEntry> get events => _events;
+  final List<Event> _events = [];
+  List<Event> get events => _events;
 
   /// A [Map] is used to optimize retrieval times when checking if a favorite
   /// is already present - in fact the label's used as the key.
   /// Checking if an element is in the map is O(1), making this process O(n)
-  /// with n entries.
-  final Map<String, TimelineEntry> _eventMap = {};
-  Map<String, TimelineEntry> get eventMap => _eventMap;
+  /// with n events.
+  final Map<String, Event> _eventMap = {};
+  Map<String, Event> get eventMap => _eventMap;
 
   /// Turn timeline gutter off/show favorites/show all history:
   GutterMode _gutterMode = GutterMode.OFF;
@@ -150,7 +146,7 @@ class TarikhC extends GetxHapi {
     await tih.loadFromBundle();
     // then init static timeline object
     t = Timeline(
-      tih.rootEntries,
+      tih.rootEvents,
       tih.tickColors,
       tih._headerColors,
       tih._timeMin,
@@ -166,7 +162,7 @@ class TarikhC extends GetxHapi {
     /// Advance the timeline to its starting position. // TODO needed?
     t.advance(0.0, false);
 
-    /// All the entries are loaded, we can fill in the [favoritesBloc]...
+    /// All the events are loaded, we can fill in the [favoritesBloc]...
     _initFavorites();
 
     /// ...and initialize the [SearchManager].
@@ -177,7 +173,7 @@ class TarikhC extends GetxHapi {
     update();
   }
 
-  /// It receives as input the full list of [TimelineEntry], so that it can
+  /// It receives as input the full list of [Event], so that it can
   /// use those references to fill [_eventFavorites].
   _initFavorites() {
     List<dynamic>? favs = s.rd('TARIKH_FAVS');
@@ -190,34 +186,33 @@ class TarikhC extends GetxHapi {
 
     /// Sort by starting time, so the favorites' list is always displayed in ascending order.
     _eventFavorites.sort(
-      (TimelineEntry a, TimelineEntry b) => a.startMs.compareTo(b.startMs),
+      (Event a, Event b) => a.startMs.compareTo(b.startMs),
     );
   }
 
   /// Persists the data to disk.
   _saveFavorites() {
     // note saves in any order, must sort on reading in from disk
-    List<String> favsList = _eventFavorites
-        .map((TimelineEntry entry) => entry.trKeyEndTagLabel)
-        .toList();
+    List<String> favsList =
+        _eventFavorites.map((Event event) => event.trKeyEndTagLabel).toList();
     s.wr('TARIKH_FAVS', favsList);
     update(); // favorites changed so notify people using it
   }
 
   /// Save [e] into the list, re-sort it, and store to disk.
-  addFavorite(TimelineEntry e) {
+  addFavorite(Event e) {
     if (!_eventFavorites.contains(e)) {
       _eventFavorites.add(e);
       // sort for UI to still show in order
-      _eventFavorites.sort((TimelineEntry a, TimelineEntry b) {
+      _eventFavorites.sort((Event a, Event b) {
         return a.startMs.compareTo(b.startMs);
       });
       _saveFavorites();
     }
   }
 
-  /// Remove the entry and save to disk.
-  removeFavorite(TimelineEntry e) {
+  /// Remove the event and save to disk.
+  removeFavorite(Event e) {
     if (_eventFavorites.contains(e)) {
       _eventFavorites.remove(e);
       _saveFavorites();
@@ -228,7 +223,7 @@ class TarikhC extends GetxHapi {
   bool get isGutterModeFav => _gutterMode == GutterMode.FAV;
   bool get isGutterModeAll => _gutterMode == GutterMode.ALL;
 
-  /// Updates text around time button, no entry is set
+  /// Updates text around time button, no event is set
   void updateTimeBtn(
     TimeBtn timeBtn,
     String trValTitle,
@@ -241,18 +236,18 @@ class TarikhC extends GetxHapi {
     updateOnThread();
   }
 
-  void updateTimeBtnEntry(TimeBtn timeBtn, TimelineEntry? entry) {
+  void updateEventBtn(TimeBtn timeBtn, Event? event) {
     String trValTitle = '';
     String trValTimeUntil = '';
     String trValPageScrolls = '';
 
-    if (entry != null) {
-      trValTitle = entry.trValTitle;
+    if (event != null) {
+      trValTitle = event.trValTitle;
 
       //was t.renderEnd, had 'page away 0' at bottom page edge, now in middle:
       double pageReference = (t.renderStart + t.renderEnd) / 2.0;
-      double timeUntilDouble = entry.startMs - pageReference;
-      trValTimeUntil = entry.trValYears(timeUntilDouble).toLowerCase();
+      double timeUntilDouble = event.startMs - pageReference;
+      trValTimeUntil = event.trValYears(timeUntilDouble).toLowerCase();
 
       double pageSize = t.renderEnd - t.renderStart;
       double pages = timeUntilDouble / pageSize;
@@ -264,16 +259,17 @@ class TarikhC extends GetxHapi {
       }
     }
 
-    timeBtn.entry = entry;
+    timeBtn.event = event;
     updateTimeBtn(timeBtn, trValTitle, trValTimeUntil, trValPageScrolls);
   }
 
-  Map<String, TimelineEntry> getEventMap(EventType eventType) {
+  Map<String, Event> getEventMap(EVENT_TYPE eventType) {
     switch (eventType) {
-      case EventType.TIMELINE:
-        return eventMap;
-      case EventType.RELIC:
+      case EVENT_TYPE.Relic:
         return eventMap; // TODO asdf
+      case EVENT_TYPE.Era:
+      case EVENT_TYPE.Incident:
+        return eventMap;
     }
   }
 }
@@ -289,13 +285,13 @@ class TimelineInitHandler {
   late final Iterable<TickColors> _tickColorsReversed;
   final List<HeaderColors> _headerColors = [];
 
-  /// All the [TimelineEntry]s that are loaded from disk at boot (in [loadFromBundle()]).
-  /// List for "root" entries, i.e. entries with no parents.
-  final List<TimelineEntry> _rootEntries = [];
-  get rootEntries => _rootEntries;
+  /// All the [Event]s that are loaded from disk at boot (in [loadFromBundle()]).
+  /// List for "root" events, i.e. events with no parents.
+  final List<Event> _rootEvents = [];
+  get rootEvents => _rootEvents;
 
   /// This is a special feature to play a particular part of an animation
-  final Map<String, TimelineEntry> _entriesById = {};
+  final Map<String, Event> _eventsById = {};
 
   double _timeMin = 0.0;
   double _timeMax = 0.0;
@@ -303,50 +299,50 @@ class TimelineInitHandler {
   /// Load all the resources from the local bundle.
   ///
   /// This function will load and decode `timline.json` from disk,
-  /// decode the JSON file, and populate all the [TimelineEntry]s.
+  /// decode the JSON file, and populate all the [Event]s.
   loadFromBundle() async {
     final String jsonData =
         await rootBundle.loadString('assets/tarikh/timeline.json');
-    final List jsonEntries = json.decode(jsonData);
+    final List jsonEvents = json.decode(jsonData);
 
-    // TODO test add "era" field per entry and also auto generate it's start and end and zoom by looking at its incidents:
+    // TODO test add "era" field per event and also auto generate it's start and end and zoom by looking at its incidents:
     String era = '';
 
     /// The JSON decode doesn't provide strong typing, so we'll iterate
-    /// on the dynamic entries in the [jsonEntries] list.
-    for (Map map in jsonEntries) {
-      /// The label is a brief description for the current entry. It is used to
+    /// on the dynamic events in the [jsonEvents] list.
+    for (Map map in jsonEvents) {
+      /// The label is a brief description for the current event. It is used to
       /// create the i.<tag>/a.<tag> trKeyLabel and t.<tag> trKeyArticle.
       String label = map['label'];
 
-      /// Create the current entry and fill in the current date if it's
+      /// Create the current event and fill in the current date if it's
       /// an `Incident`, or look for the `start` property if it's an `Era` instead.
-      /// Some entries will have a `start` element, but not an `end` specified.
-      /// These entries specify a particular event such as the appearance of
+      /// Some events will have a `start` element, but not an `end` specified.
+      /// These events specify a particular event such as the appearance of
       /// "Humans" in history, which hasn't come to an end yet.
-      TimelineEntryType type;
+      EVENT_TYPE type;
       double startMs;
       if (map.containsKey('date')) {
-        type = TimelineEntryType.Incident;
+        type = EVENT_TYPE.Incident;
         dynamic date = map['date'];
         startMs = date is int ? date.toDouble() : date;
       } else {
-        type = TimelineEntryType.Era;
+        type = EVENT_TYPE.Era;
         dynamic startVal = map['start'];
         startMs = startVal is int ? startVal.toDouble() : startVal;
         era = label;
       }
 
       /// Some elements will have an `end` time specified.
-      /// If not `end` key is present in this entry, create the value based
+      /// If not `end` key is present in this event, create the value based
       /// on the type of the event:
       /// - Eras use the current year as an end time.
-      /// - Other entries are just single points in time (start == end).
+      /// - Other events are just single points in time (start == end).
       double endMs;
       if (map.containsKey('end')) {
         dynamic endVal = map['end'];
         endMs = endVal is int ? endVal.toDouble() : endVal;
-      } else if (type == TimelineEntryType.Era) {
+      } else if (type == EVENT_TYPE.Era) {
         // TODO where timeline eras stretch to future?
         endMs = (await TimeC.to.now()).year.toDouble() * 10.0;
       } else {
@@ -359,9 +355,9 @@ class TimelineInitHandler {
       if (map.containsKey('timelineColors')) {
         var timelineColors = map['timelineColors'];
 
-        /// If a custom background color for this [TimelineEntry] is specified,
+        /// If a custom background color for this [Event] is specified,
         /// extract its RGB values and save them for reference, along with the
-        /// starting date of the current entry.
+        /// starting date of the current event.
         _backgroundColors.add(
           TimelineBackgroundColor(
             colorFromList(timelineColors['background']),
@@ -395,18 +391,18 @@ class TimelineInitHandler {
       Color? accent;
       if (map.containsKey('accent')) accent = colorFromList(map['accent']);
 
-      /// OPTIONAL FIELD 2 of 2: Some entries will also have an id that is
+      /// OPTIONAL FIELD 2 of 2: Some events will also have an id that is
       /// looked up to find the menu animation.
       String? id;
       if (map.containsKey('id')) id = map['id'];
 
       /// Get flare/nima/image asset object
-      TimelineAsset asset = await getTimelineAsset(map['asset']);
+      EventAsset asset = await getEventAsset(map['asset']);
 
-      /// Finally create TimeLineEntry object
-      var timelineEntry = TimelineEntry(
+      /// Finally create Event object
+      var event = Event(
         type: type,
-        trValEra: TimelineEntry.trValFromTrKeyEndTag(era),
+        trValEra: Event.trValFromTrKeyEndTag(era),
         trKeyEndTagLabel: label,
         startMs: startMs,
         endMs: endMs,
@@ -414,20 +410,19 @@ class TimelineInitHandler {
         accent: accent,
       );
 
-      /// Add TimelineEntry reference 1 of 2:
-      asset.entry = timelineEntry; // can only do this once
+      /// Add event reference 1 of 2:
+      asset.event = event; // can only do this once
 
-      /// Add TimelineEntry reference 2 of 2:
-      if (map.containsKey('id')) _entriesById[id!] = timelineEntry;
+      /// Add event reference 2 of 2:
+      if (map.containsKey('id')) _eventsById[id!] = event;
 
-      /// Add this entry to the list.
-      TarikhC.to.eventMap
-          .putIfAbsent(timelineEntry.trKeyEndTagLabel, () => timelineEntry);
-      TarikhC.to.events.add(timelineEntry); // sort is probably needed
+      /// Add this event to the list.
+      TarikhC.to.eventMap.putIfAbsent(event.trKeyEndTagLabel, () => event);
+      TarikhC.to.events.add(event); // sort is probably needed
     }
 
     /// sort the full list so they are in order of oldest to newest
-    TarikhC.to.events.sort((TimelineEntry a, TimelineEntry b) {
+    TarikhC.to.events.sort((Event a, Event b) {
       return a.startMs.compareTo(b.startMs);
     });
 
@@ -445,35 +440,35 @@ class TimelineInitHandler {
     ///                 define where stuff belongs:
     /// Build up hierarchy (Eras are grouped into "Spanning Eras" and Events are
     /// placed into the Eras they belong to).
-    TimelineEntry? previous;
-    for (TimelineEntry entry in TarikhC.to.events) {
-      if (entry.startMs < _timeMin) _timeMin = entry.startMs;
-      if (entry.endMs > _timeMax) _timeMax = entry.endMs;
+    Event? previous;
+    for (Event event in TarikhC.to.events) {
+      if (event.startMs < _timeMin) _timeMin = event.startMs;
+      if (event.endMs > _timeMax) _timeMax = event.endMs;
 
-      if (previous != null) previous.next = entry;
-      entry.previous = previous;
-      previous = entry;
+      if (previous != null) previous.next = event;
+      event.previous = previous;
+      previous = event;
 
-      TimelineEntry? parent;
+      Event? parent;
       double minDistance = double.maxFinite;
-      for (TimelineEntry checkEntry in TarikhC.to.events) {
-        if (checkEntry.type == TimelineEntryType.Era) {
-          double distance = entry.startMs - checkEntry.startMs;
-          double distanceEnd = entry.startMs - checkEntry.endMs;
+      for (Event checkEvent in TarikhC.to.events) {
+        if (checkEvent.type == EVENT_TYPE.Era) {
+          double distance = event.startMs - checkEvent.startMs;
+          double distanceEnd = event.startMs - checkEvent.endMs;
           if (distance > 0 && distanceEnd < 0 && distance < minDistance) {
             minDistance = distance;
-            parent = checkEntry;
+            parent = checkEvent;
           }
         }
       }
-      // no parent, so this is a root entry.
+      // no parent, so this is a root event.
       if (parent == null) {
-        _rootEntries.add(entry); // note holds eras, not individual entries
+        _rootEvents.add(event); // note holds eras, not individual events
       } else {
         // otherwise add as child to parent node
-        entry.parent = parent;
+        event.parent = parent;
         parent.children ??= []; // parent node holds children
-        parent.children!.add(entry);
+        parent.children!.add(event);
       }
     }
   }
@@ -488,7 +483,7 @@ class TimelineInitHandler {
     return Color.fromARGB(bg3, bg[0], bg[1], bg[2]);
   }
 
-  /// The `asset` key in the current entry contains all the information for
+  /// The `asset` key in the current event contains all the information for
   /// the nima/flare animation file that'll be played on the timeline.
   ///
   /// `asset` is a JSON map with:
@@ -504,11 +499,11 @@ class TimelineInitHandler {
   ///            onto their idle animation. If that's the case, this flag is
   ///            raised.
   ///   - scale: a custom scale value.
-  Future<TimelineAsset> getTimelineAsset(Map assetMap) async {
+  Future<EventAsset> getEventAsset(Map assetMap) async {
     String source = assetMap['source'];
     String filename = 'assets/' + source;
 
-    TimelineAsset asset;
+    EventAsset asset;
 
     dynamic loopVal = assetMap['loop'];
     bool loop = loopVal is bool ? loopVal : true;
@@ -558,7 +553,7 @@ class TimelineInitHandler {
     return Future.value(asset);
   }
 
-  Future<TimelineAsset> loadFlareAsset(
+  Future<EventAsset> loadFlareAsset(
     String filename,
     double width,
     double height,
@@ -617,7 +612,7 @@ class TimelineInitHandler {
 
     dynamic bounds = assetMap['bounds'];
     if (bounds is List) {
-      /// Override the AABB for this entry with custom values.
+      /// Override the AABB for this event with custom values.
       setupAABB = flare.AABB.fromValues(
           bounds[0] is int ? bounds[0].toDouble() : bounds[0],
           bounds[1] is int ? bounds[1].toDouble() : bounds[1],
@@ -625,7 +620,7 @@ class TimelineInitHandler {
           bounds[3] is int ? bounds[3].toDouble() : bounds[3]);
     }
 
-    TimelineFlare flareAsset = TimelineFlare(
+    FlareAsset flareAsset = FlareAsset(
       filename,
       width,
       height,
@@ -647,7 +642,7 @@ class TimelineInitHandler {
     return flareAsset;
   }
 
-  Future<TimelineAsset> loadNimaAsset(
+  Future<EventAsset> loadNimaAsset(
     String filename,
     double width,
     double height,
@@ -687,7 +682,7 @@ class TimelineInitHandler {
           bounds[3] is int ? bounds[3].toDouble() : bounds[3]);
     }
 
-    TimelineNima nimaAsset = TimelineNima(
+    NimaAsset nimaAsset = NimaAsset(
       filename,
       width,
       height,
@@ -704,7 +699,7 @@ class TimelineInitHandler {
     return nimaAsset;
   }
 
-  Future<TimelineAsset> loadImageAsset(
+  Future<EventAsset> loadImageAsset(
     String filename,
     double width,
     double height,
@@ -715,13 +710,11 @@ class TimelineInitHandler {
     ui.Codec codec = await ui.instantiateImageCodec(list);
     ui.FrameInfo frame = await codec.getNextFrame();
 
-    return TimelineImage(filename, width, height, scale, frame.image);
+    return EventImage(filename, width, height, scale, frame.image);
   }
 
   /// Helper function for [MenuVignette].
-  TimelineEntry? getById(String id) {
-    return _entriesById[id];
-  }
+  Event? getEventById(String id) => _eventsById[id];
 
   TickColors? findTickColors(double screen) {
     for (TickColors color in _tickColorsReversed) {
@@ -747,10 +740,10 @@ class TimelineInitHandler {
 class TarikhMenuInitHandler {
   loadFromBundle(String filename) async {
     String jsonData = await rootBundle.loadString(filename);
-    List jsonEntries = json.decode(jsonData);
+    List jsonEvents = json.decode(jsonData);
 
     List<MenuItemData> menuItemList;
-    for (Map map in jsonEntries) {
+    for (Map map in jsonEvents) {
       menuItemList = [];
 
       String label = map['label'];

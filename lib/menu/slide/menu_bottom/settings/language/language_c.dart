@@ -261,7 +261,7 @@ class LanguageC extends GetxHapi {
     Get.addTranslations({newLangKey: trMap});
   }
 
-  /// The article trKey is made from appending label to 't.'. It is also
+  /// The event trKey is made from appending label to 't.'. It is also
   /// taken in real time from the i18n/tarikh_articles/ to not use up memory.
   Future<String> trValTarikhArticle(String label) async =>
       (await _getTrMap('tarikh_articles/', currLangKey))['t.$label']!;

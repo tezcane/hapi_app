@@ -1,7 +1,7 @@
 import 'dart:math';
 import 'dart:ui';
 
-import 'package:hapi/tarikh/timeline/timeline_entry.dart';
+import 'package:hapi/tarikh/event/event.dart';
 
 Color interpolateColor(Color from, Color to, double elapsed) {
   double r, g, b, a;
@@ -53,8 +53,8 @@ String getFileExtension(String filename) {
 //   return filename.substring(0, dot);
 // }
 
-// class TimelineEntryColors {
-//   TimelineEntryColors(
+// class EventColors {
+//   EventColors(
 //     this.timelineBackgroundColor,
 //     this.tickColors,
 //     this.headerColors,
@@ -92,8 +92,8 @@ class HeaderColors {
 }
 
 class TapTarget {
-  TapTarget(this.entry, this.rect, {this.zoom = false});
-  final TimelineEntry entry;
+  TapTarget(this.event, this.rect, {this.zoom = false});
+  final Event event;
   final Rect rect;
   final bool zoom;
 }

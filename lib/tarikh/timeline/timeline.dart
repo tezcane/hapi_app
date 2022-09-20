@@ -6,17 +6,18 @@ import 'package:flare_flutter/flare.dart' as flare;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
+import 'package:hapi/tarikh/event/event.dart';
+import 'package:hapi/tarikh/event/event_asset.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
-import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 import 'package:hapi/tarikh/timeline/timeline_utils.dart';
 
 typedef PaintCallback = Function();
-typedef ChangeEraCallback = Function(TimelineEntry? era);
+typedef ChangeEraCallback = Function(Event? era);
 typedef ChangeHeaderColorCallback = Function(/*Color background,*/ Color text);
 
 class Timeline {
   Timeline(
-    this._rootEntries,
+    this._rootEvents,
     this._tickColors,
     this._headerColors,
     this._timeMin,
@@ -26,9 +27,9 @@ class Timeline {
     setViewport(start: 1536.0, end: 3072.0); // TODO what is this?
   }
 
-  /// All the [TimelineEntry]s that are loaded from disk at boot (in [loadFromBundle()]).
-  /// List for "root" entries, i.e. entries with no parents.
-  final List<TimelineEntry> _rootEntries;
+  /// All the [Event]s that are loaded from disk at boot (in [loadFromBundle()]).
+  /// List for "root" events, i.e. events with no parents.
+  final List<Event> _rootEvents;
 
   /// [Ticks] also have custom colors so that they are always visible with the changing background.
   final List<TickColors> _tickColors;
@@ -38,8 +39,8 @@ class Timeline {
   final double _timeMin;
   final double _timeMax;
 
-  /// The list of [TimelineAsset], loaded from disk at boot and stored in entry.
-  List<TimelineAsset> _renderedAssets = [];
+  /// The list of [EventAsset], loaded from disk at boot and stored.
+  List<EventAsset> _renderedAssets = [];
 
   /// Some aptly named constants for properly aligning the Timeline view.
   static const double LineWidth = 2.0;
@@ -72,18 +73,18 @@ class Timeline {
   double _renderEnd = double.maxFinite;
   double _lastFrameTime = 0.0;
   double _height = 0.0;
-  double _firstOnScreenEntryY = 0.0;
-  double _lastEntryY = 0.0;
-  double _lastOnScreenEntryY = 0.0;
+  double _firstOnScreenEventY = 0.0;
+  double _lastEventY = 0.0;
+  double _lastOnScreenEventY = 0.0;
   double _offsetDepth = 0.0;
   double _renderOffsetDepth = 0.0;
   double _labelX = 0.0;
   double _renderLabelX = 0.0;
   double _lastAssetY = 0.0;
-  double _prevEntryOpacity = 0.0;
-  double _distanceToPrevEntry = 0.0;
-  double _nextEntryOpacity = 0.0;
-  double _distanceToNextEntry = 0.0;
+  double _prevEventOpacity = 0.0;
+  double _distanceToPrevEvent = 0.0;
+  double _nextEventOpacity = 0.0;
+  double _distanceToNextEvent = 0.0;
   double _simulationTime = 0.0;
   double _gutterWidth = GutterLeft;
 
@@ -112,17 +113,17 @@ class Timeline {
 
   /// Through these two references, the Timeline can access the era and update
   /// the top label accordingly.
-  TimelineEntry? _currentEra;
-  TimelineEntry? _lastEra;
+  Event? _currentEra;
+  Event? _lastEra;
 
   /// These references allow to maintain a reference to the next and previous elements
   /// of the Timeline, depending on which elements are currently in focus.
   /// When there's enough space on the top/bottom, the Timeline will render a round button
   /// with an arrow to link to the next/previous element.
-  TimelineEntry? _nextEntry;
-  TimelineEntry? _renderNextEntry;
-  TimelineEntry? _prevEntry;
-  TimelineEntry? _renderPrevEntry;
+  Event? _nextEvent;
+  Event? _renderNextEvent;
+  Event? _prevEvent;
+  Event? _renderPrevEvent;
 
   /// Callback set by [TimelineRenderWidget] when adding a reference to this object.
   /// It'll trigger [RenderBox.markNeedsPaint()].
@@ -133,9 +134,9 @@ class Timeline {
   ChangeEraCallback? onEraChanged;
   ChangeHeaderColorCallback? onHeaderColorsChanged;
 
-  TimelineEntry? get currentEra => _currentEra;
+  Event? get currentEra => _currentEra;
 
-  List<TimelineAsset> get renderedAssets => _renderedAssets;
+  List<EventAsset> get renderedAssets => _renderedAssets;
 
   double get renderOffsetDepth => _renderOffsetDepth;
   double get renderLabelX => _renderLabelX;
@@ -145,10 +146,10 @@ class Timeline {
   double get renderEnd => _renderEnd;
   double get gutterWidth => _gutterWidth;
 
-  TimelineEntry? get nextEntry => _renderNextEntry;
-  TimelineEntry? get prevEntry => _renderPrevEntry;
-  double get nextEntryOpacity => _nextEntryOpacity;
-  double get prevEntryOpacity => _prevEntryOpacity;
+  Event? get nextEvent => _renderNextEvent;
+  Event? get prevEvent => _renderPrevEvent;
+  double get nextEventOpacity => _nextEventOpacity;
+  double get prevEventOpacity => _prevEventOpacity;
 
   bool get isInteracting => _isInteracting;
 
@@ -494,69 +495,69 @@ class Timeline {
       }
     }
 
-    /// Check all the visible entries and use the helper function [advanceItems()]
+    /// Check all the visible events and use the helper function [advanceItems()]
     /// to align their state with the elapsed time.
     /// Set all the initial values to defaults so that everything's consistent.
-    _lastEntryY = -double.maxFinite;
-    _lastOnScreenEntryY = 0.0;
-    _firstOnScreenEntryY = double.maxFinite;
+    _lastEventY = -double.maxFinite;
+    _lastOnScreenEventY = 0.0;
+    _firstOnScreenEventY = double.maxFinite;
     _lastAssetY = -double.maxFinite;
     _labelX = 0.0;
     _offsetDepth = 0.0;
     _currentEra = null;
-    _nextEntry = null;
-    _prevEntry = null;
+    _nextEvent = null;
+    _prevEvent = null;
 
     /// Advance the items hierarchy one level at a time.
     if (_advanceItems(
-        _rootEntries, _gutterWidth + LineSpacing, scale, elapsed, animate, 0)) {
+        _rootEvents, _gutterWidth + LineSpacing, scale, elapsed, animate, 0)) {
       doneRendering = false;
     }
 
     /// Advance all the assets and add the rendered ones into [_renderAssets].
     _renderedAssets = []; // resets here, where all UI cleanup is done?
-    if (_advanceAssets(_rootEntries, elapsed, animate, _renderedAssets)) {
+    if (_advanceAssets(_rootEvents, elapsed, animate, _renderedAssets)) {
       doneRendering = false;
     }
 
-    if (_nextEntryOpacity == 0.0) {
-      _renderNextEntry = _nextEntry;
+    if (_nextEventOpacity == 0.0) {
+      _renderNextEvent = _nextEvent;
     }
 
-    /// Determine next entry's opacity and interpolate, if needed, towards that value.
-    double targetNextEntryOpacity = _lastOnScreenEntryY > _height / 1.7 ||
+    /// Determine next event's opacity and interpolate, if needed, towards that value.
+    double targetNextEventOpacity = _lastOnScreenEventY > _height / 1.7 ||
             !_isSteady ||
-            _distanceToNextEntry < 0.01 ||
-            _nextEntry != _renderNextEntry
+            _distanceToNextEvent < 0.01 ||
+            _nextEvent != _renderNextEvent
         ? 0.0
         : 1.0;
-    double dt = targetNextEntryOpacity - _nextEntryOpacity;
+    double dt = targetNextEventOpacity - _nextEventOpacity;
 
     if (!animate || dt.abs() < 0.01) {
-      _nextEntryOpacity = targetNextEntryOpacity;
+      _nextEventOpacity = targetNextEventOpacity;
     } else {
       doneRendering = false;
-      _nextEntryOpacity += dt * min(1.0, elapsed * 10.0);
+      _nextEventOpacity += dt * min(1.0, elapsed * 10.0);
     }
 
-    if (_prevEntryOpacity == 0.0) {
-      _renderPrevEntry = _prevEntry;
+    if (_prevEventOpacity == 0.0) {
+      _renderPrevEvent = _prevEvent;
     }
 
-    /// Determine previous entry's opacity and interpolate, if needed, towards that value.
-    double targetPrevEntryOpacity = _firstOnScreenEntryY < _height / 2.0 ||
+    /// Determine previous event's opacity and interpolate, if needed, towards that value.
+    double targetPrevEventOpacity = _firstOnScreenEventY < _height / 2.0 ||
             !_isSteady ||
-            _distanceToPrevEntry < 0.01 ||
-            _prevEntry != _renderPrevEntry
+            _distanceToPrevEvent < 0.01 ||
+            _prevEvent != _renderPrevEvent
         ? 0.0
         : 1.0;
-    dt = targetPrevEntryOpacity - _prevEntryOpacity;
+    dt = targetPrevEventOpacity - _prevEventOpacity;
 
     if (!animate || dt.abs() < 0.01) {
-      _prevEntryOpacity = targetPrevEntryOpacity;
+      _prevEventOpacity = targetPrevEventOpacity;
     } else {
       doneRendering = false;
-      _prevEntryOpacity += dt * min(1.0, elapsed * 10.0);
+      _prevEventOpacity += dt * min(1.0, elapsed * 10.0);
     }
 
     /// Interpolate the horizontal position of the label.
@@ -590,22 +591,21 @@ class Timeline {
     return doneRendering;
   }
 
-  double bubbleHeight(TimelineEntry entry) {
-    return (BubblePadding * 1.15) + (entry.lineCount * BubbleTextHeight);
+  double bubbleHeight(Event event) {
+    return (BubblePadding * 1.15) + (event.lineCount * BubbleTextHeight);
   }
 
-  /// Advance entry [assets] with the current [elapsed] time.
-  bool _advanceItems(List<TimelineEntry> items, double x, double scale,
-      double elapsed, bool animate, int depth) {
+  /// Advance event [assets] with the current [elapsed] time.
+  bool _advanceItems(List<Event> items, double x, double scale, double elapsed,
+      bool animate, int depth) {
     bool stillAnimating = false;
     double lastEnd = -double.maxFinite;
     for (int i = 0; i < items.length; i++) {
-      TimelineEntry item = items[i];
+      Event item = items[i];
 
       double start = item.startMs - _renderStart;
-      double end = item.type == TimelineEntryType.Era
-          ? item.endMs - _renderStart
-          : start;
+      double end =
+          item.type == EVENT_TYPE.Era ? item.endMs - _renderStart : start;
 
       /// Vertical position for this element.
       double y = start * scale; // +pad;
@@ -624,18 +624,18 @@ class Timeline {
       double targetLabelY = y;
       double itemBubbleHeight = bubbleHeight(item);
       double fadeAnimationStart = itemBubbleHeight + BubblePadding / 2.0;
-      if (targetLabelY - _lastEntryY < fadeAnimationStart
+      if (targetLabelY - _lastEventY < fadeAnimationStart
 
           /// The best location for our label is occluded, lets see if we can bump it forward...
           &&
-          item.type == TimelineEntryType.Era &&
-          _lastEntryY + fadeAnimationStart < endY) {
-        targetLabelY = _lastEntryY + fadeAnimationStart + 0.5;
+          item.type == EVENT_TYPE.Era &&
+          _lastEventY + fadeAnimationStart < endY) {
+        targetLabelY = _lastEventY + fadeAnimationStart + 0.5;
       }
 
       /// Determine if the label is in view.
       double targetLabelOpacity =
-          targetLabelY - _lastEntryY < fadeAnimationStart ? 0.0 : 1.0;
+          targetLabelY - _lastEventY < fadeAnimationStart ? 0.0 : 1.0;
 
       /// Debounce labels becoming visible.
       if (targetLabelOpacity > 0.0 && item.targetLabelOpacity != 1.0) {
@@ -704,16 +704,16 @@ class Timeline {
       }
 
       if (item.targetLabelOpacity > 0.0) {
-        _lastEntryY = targetLabelY;
-        if (_lastEntryY < _height && _lastEntryY > devicePadding.top) {
-          _lastOnScreenEntryY = _lastEntryY;
-          if (_firstOnScreenEntryY == double.maxFinite) {
-            _firstOnScreenEntryY = _lastEntryY;
+        _lastEventY = targetLabelY;
+        if (_lastEventY < _height && _lastEventY > devicePadding.top) {
+          _lastOnScreenEventY = _lastEventY;
+          if (_firstOnScreenEventY == double.maxFinite) {
+            _firstOnScreenEventY = _lastEventY;
           }
         }
       }
 
-      if (item.type == TimelineEntryType.Era &&
+      if (item.type == EVENT_TYPE.Era &&
           y < 0 &&
           endY > _height &&
           depth > _offsetDepth) {
@@ -721,7 +721,7 @@ class Timeline {
       }
 
       /// A new era is currently in view.
-      if (item.type == TimelineEntryType.Era && y < 0 && endY > _height / 2.0) {
+      if (item.type == EVENT_TYPE.Era && y < 0 && endY > _height / 2.0) {
         _currentEra = item;
       }
 
@@ -729,14 +729,14 @@ class Timeline {
       /// target one directly.
       if (y > _height + itemBubbleHeight) {
         item.labelY = y;
-        if (_nextEntry == null) {
+        if (_nextEvent == null) {
           // TODO asdf intercept up/dn btn here?
-          _nextEntry = item;
-          _distanceToNextEntry = (y - _height) / _height;
+          _nextEvent = item;
+          _distanceToNextEvent = (y - _height) / _height;
         }
       } else if (endY < devicePadding.top) {
-        _prevEntry = item;
-        _distanceToPrevEntry = ((y - _height) / _height).abs();
+        _prevEvent = item;
+        _distanceToPrevEvent = ((y - _height) / _height).abs();
       } else if (endY < -itemBubbleHeight) {
         item.labelY = y;
       }
@@ -759,17 +759,17 @@ class Timeline {
 
   /// Advance asset [items] with the [elapsed] time. Calls itself recursively
   /// to process all of a parent's root and its children.
-  bool _advanceAssets(List<TimelineEntry> items, double elapsed, bool animate,
-      List<TimelineAsset> renderedAssets) {
+  bool _advanceAssets(List<Event> items, double elapsed, bool animate,
+      List<EventAsset> renderedAssets) {
     bool stillAnimating = false;
-    for (TimelineEntry item in items) {
+    for (Event item in items) {
       double y = item.labelY;
       double halfHeight = _height / 2.0;
       double thresholdAssetY = y + ((y - halfHeight) / halfHeight) * Parallax;
       double targetAssetY =
           thresholdAssetY - item.asset.height * AssetScreenScale / 2.0;
 
-      /// Determine if the current entry is visible or not.
+      /// Determine if the current event is visible or not.
       double targetAssetOpacity =
           (thresholdAssetY - _lastAssetY < 0 ? 0.0 : 1.0) *
               item.opacity *
@@ -787,7 +787,7 @@ class Timeline {
         stillAnimating = true;
       }
 
-      /// Determine if the entry needs to be scaled.
+      /// Determine if the event needs to be scaled.
       double targetScale = targetAssetOpacity;
       double targetScaleVelocity = targetScale - item.asset.scale;
       if (!animate || targetScale == 0) {
@@ -804,7 +804,7 @@ class Timeline {
         stillAnimating = true;
       }
 
-      TimelineAsset asset = item.asset;
+      EventAsset asset = item.asset;
       if (asset.opacity == 0.0) {
         /// Item was invisible, just pop it to the right place and stop velocity.
         asset.y = targetAssetY;
@@ -840,21 +840,21 @@ class Timeline {
 
         _lastAssetY =
             targetAssetY + asset.height * AssetScreenScale + AssetPadding;
-        if (asset is TimelineNima) {
+        if (asset is NimaAsset) {
           _lastAssetY += asset.gap;
-        } else if (asset is TimelineFlare) {
+        } else if (asset is FlareAsset) {
           _lastAssetY += asset.gap;
         }
         if (asset.y > _height ||
             asset.y + asset.height * AssetScreenScale < 0.0) {
           /// It's not in view: cull it. Make sure we don't advance animations.
-          if (asset is TimelineNima) {
-            TimelineNima nimaAsset = asset;
+          if (asset is NimaAsset) {
+            NimaAsset nimaAsset = asset;
             if (!nimaAsset.loop) {
               nimaAsset.animationTime = -1.0;
             }
-          } else if (asset is TimelineFlare) {
-            TimelineFlare flareAsset = asset;
+          } else if (asset is FlareAsset) {
+            FlareAsset flareAsset = asset;
             if (!flareAsset.loop) {
               flareAsset.animationTime = -1.0;
             } else if (flareAsset.intro != null) {
@@ -866,7 +866,7 @@ class Timeline {
           bool isActive = TarikhC.to.isActiveTimeline;
 
           /// Item is in view, apply the new animation time and advance the actor.
-          if (asset is TimelineNima && isActive) {
+          if (asset is NimaAsset && isActive) {
             asset.animationTime += elapsed;
             if (asset.loop) {
               asset.animationTime %= asset.animation.duration;
@@ -874,7 +874,7 @@ class Timeline {
             asset.animation.apply(asset.animationTime, asset.actor, 1.0);
             asset.actor.advance(elapsed);
             stillAnimating = true;
-          } else if (asset is TimelineFlare && isActive) {
+          } else if (asset is FlareAsset && isActive) {
             asset.animationTime += elapsed;
 
             /// Flare animations can have idle animations, as well as intro animations.

@@ -1,31 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:hapi/tarikh/article/timeline_entry_widget.dart';
-import 'package:hapi/tarikh/timeline/timeline_entry.dart';
+import 'package:hapi/tarikh/event/event.dart';
+import 'package:hapi/tarikh/event/event_asset.dart';
+import 'package:hapi/tarikh/event/event_widget.dart';
 
 /// This widget is responsible for drawing the circular thumbnail within the [ThumbnailDetailWidget].
 ///
-/// It uses an inactive [TimelineEntryWidget] for the image, with a [CustomClipper] for the circular image.
+/// It uses an inactive [EventWidget] for the image, with a [CustomClipper] for the circular image.
 class ThumbnailWidget extends StatelessWidget {
-  const ThumbnailWidget(this.entry, {Key? key}) : super(key: key);
+  const ThumbnailWidget(this.event, {Key? key}) : super(key: key);
 
   static const double radius = 17;
 
-  /// Reference to the entry to get the thumbnail image information.
-  final TimelineEntry entry;
+  /// Reference to the event to get the thumbnail image information.
+  final Event event;
 
   @override
   Widget build(BuildContext context) {
-    TimelineAsset asset = entry.asset;
+    EventAsset asset = event.asset;
     Widget thumbnail;
 
-    /// Check if the [entry.asset] provided is already a [TimelineImage].
-    if (asset is TimelineImage) {
+    /// Check if the [event.asset] provided is already a [EventImage].
+    if (asset is EventImage) {
       thumbnail = RawImage(image: asset.image);
-    } else if (asset is TimelineNima || asset is TimelineFlare) {
-      /// If not, retrieve the image from the Nima/Flare [TimelineAsset], and
+    } else if (asset is NimaAsset || asset is FlareAsset) {
+      /// If not, retrieve the image from the Nima/Flare [EventAsset], and
       /// set it as inactive (i.e. a static image).
       /// TODO turn active on/off?
-      thumbnail = TimelineEntryWidget(isActive: false, timelineEntry: entry);
+      thumbnail = EventWidget(isActive: false, event: event);
     } else {
       thumbnail = Container(color: Colors.transparent);
     }

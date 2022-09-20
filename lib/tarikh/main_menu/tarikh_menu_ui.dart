@@ -25,7 +25,7 @@ class TarikhMenuUI extends StatelessWidget {
 
     MenuC.to.pushSubPage(
       SubPage.Tarikh_Timeline,
-      arguments: {'focusItem': item, 'entry': null}, // null= up/dn btns not set
+      arguments: {'focusItem': item, 'event': null}, // null= up/dn btns not set
     );
   }
 

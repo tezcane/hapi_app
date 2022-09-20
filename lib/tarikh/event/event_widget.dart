@@ -6,36 +6,36 @@ import 'package:flare_dart/math/vec2d.dart' as flare;
 import 'package:flare_flutter/flare.dart' as flare;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:hapi/tarikh/article/controller/flare_interaction_controller.dart';
-import 'package:hapi/tarikh/article/controller/newton_controller.dart';
-import 'package:hapi/tarikh/article/controller/nima_interaction_controller.dart';
-import 'package:hapi/tarikh/timeline/timeline_entry.dart';
+import 'package:hapi/tarikh/event/controller/flare_interaction_controller.dart';
+import 'package:hapi/tarikh/event/controller/newton_controller.dart';
+import 'package:hapi/tarikh/event/controller/nima_interaction_controller.dart';
+import 'package:hapi/tarikh/event/event.dart';
+import 'package:hapi/tarikh/event/event_asset.dart';
 import 'package:nima/nima.dart' as nima;
 import 'package:nima/nima/math/aabb.dart' as nima;
 import 'package:nima/nima/math/vec2d.dart' as nima;
 
-/// This widget renders a single [TimelineEntry]. It relies on a [LeafRenderObjectWidget]
+/// This widget renders a single [Event]. It relies on a [LeafRenderObjectWidget]
 /// so it can implement a custom [RenderObject] and update it accordingly.
-class TimelineEntryWidget extends LeafRenderObjectWidget {
+class EventWidget extends LeafRenderObjectWidget {
+  const EventWidget({
+    required this.isActive,
+    required this.event,
+    this.interactOffset,
+  });
+
   /// A flag is used to animate the widget only when needed.
   final bool isActive;
-  final TimelineEntry timelineEntry;
+  final Event event;
 
   /// If this widget also has a custom controller, the [interactOffset]
   /// parameter can be used to detect motion effects and alter the [FlareActor] accordingly.
   final Offset? interactOffset;
 
-  const TimelineEntryWidget(
-      {Key? key,
-      required this.isActive,
-      required this.timelineEntry,
-      this.interactOffset})
-      : super(key: key);
-
   @override
   RenderObject createRenderObject(BuildContext context) {
     return VignetteRenderObject()
-      ..timelineEntry = timelineEntry
+      ..event = event
       ..isActive = isActive
       ..interactOffset = interactOffset;
   }
@@ -44,7 +44,7 @@ class TimelineEntryWidget extends LeafRenderObjectWidget {
   void updateRenderObject(
       BuildContext context, covariant VignetteRenderObject renderObject) {
     renderObject
-      ..timelineEntry = timelineEntry
+      ..event = event
       ..isActive = isActive
       ..interactOffset = interactOffset;
   }
@@ -53,7 +53,7 @@ class TimelineEntryWidget extends LeafRenderObjectWidget {
   didUnmountRenderObject(covariant VignetteRenderObject renderObject) {
     renderObject
       ..isActive = false
-      ..timelineEntry = null;
+      ..event = null;
   }
 }
 
@@ -72,23 +72,23 @@ class VignetteRenderObject extends RenderBox {
   Offset? interactOffset;
   Offset? _renderOffset;
 
-  TimelineEntry? _timelineEntry;
+  Event? _event;
   nima.FlutterActor? _nimaActor;
   flare.FlutterActorArtboard? _flareActor;
   FlareInteractionController? _flareController;
   NimaInteractionController? _nimaController;
 
-  /// Called whenever a new [TimelineEntry] is being set.
+  /// Called whenever a new [Event] is being set.
   updateActor() {
-    if (_timelineEntry == null) {
-      /// If [_timelineEntry] is removed, free its resources.
+    if (_event == null) {
+      /// If [_event] is removed, free its resources.
       _nimaActor?.dispose();
       _flareActor?.dispose();
       _nimaActor = null;
       _flareActor = null;
     } else {
-      TimelineAsset asset = _timelineEntry!.asset;
-      if (asset is TimelineNima) {
+      EventAsset asset = _event!.asset;
+      if (asset is NimaAsset) {
         /// Instance [_nimaActor] through the actor reference in the asset
         /// and set the initial starting value for its animation.
         _nimaActor = asset.actor.makeInstance() as nima.FlutterActor;
@@ -99,7 +99,7 @@ class VignetteRenderObject extends RenderBox {
           _nimaController = NewtonController();
           _nimaController!.initialize(_nimaActor!);
         }
-      } else if (asset is TimelineFlare) {
+      } else if (asset is FlareAsset) {
         /// Instance [_flareActor] through the actor reference in the asset
         /// and set the initial starting value for its animation.
         _flareActor = asset.actor.makeInstance() as flare.FlutterActorArtboard;
@@ -112,7 +112,7 @@ class VignetteRenderObject extends RenderBox {
 
   /// Uses the [SchedulerBinding] to trigger a new paint for this widget.
   void updateRendering() {
-    if (_isActive && _timelineEntry != null) {
+    if (_isActive && _event != null) {
       markNeedsPaint();
       if (!_isFrameScheduled) {
         _isFrameScheduled = true;
@@ -122,12 +122,12 @@ class VignetteRenderObject extends RenderBox {
     markNeedsLayout();
   }
 
-  TimelineEntry? get timelineEntry => _timelineEntry;
-  set timelineEntry(TimelineEntry? value) {
-    if (_timelineEntry == value) {
+  Event? get event => _event;
+  set event(Event? value) {
+    if (_event == value) {
       return;
     }
-    _timelineEntry = value;
+    _event = value;
     _firstUpdate = true;
     updateActor();
     updateRendering();
@@ -149,11 +149,11 @@ class VignetteRenderObject extends RenderBox {
   /// Determine if this widget has been tapped. If that's the case, restart its animation.
   @override
   bool hitTestSelf(Offset screenOffset) {
-    if (_timelineEntry != null) {
-      TimelineAsset asset = _timelineEntry!.asset;
-      if (asset is TimelineNima) {
+    if (_event != null) {
+      EventAsset asset = _event!.asset;
+      if (asset is NimaAsset) {
         asset.animationTime = 0.0;
-      } else if (asset is TimelineFlare) {
+      } else if (asset is FlareAsset) {
         asset.animationTime = 0.0;
       }
     }
@@ -173,11 +173,9 @@ class VignetteRenderObject extends RenderBox {
     _renderOffset = offset;
 
     /// Don't paint if not needed.
-    if (_timelineEntry == null) {
-      return;
-    }
+    if (_event == null) return;
 
-    TimelineAsset asset = _timelineEntry!.asset;
+    EventAsset asset = _event!.asset;
 
     // /// Don't paint if not needed.
     // if (asset == null) {
@@ -190,7 +188,7 @@ class VignetteRenderObject extends RenderBox {
     double h = asset.height;
 
     /// If the asset is just a static image, draw the image directly to [canvas].
-    if (asset is TimelineImage) {
+    if (asset is EventImage) {
       canvas.drawImageRect(
           asset.image,
           Rect.fromLTWH(0.0, 0.0, asset.width, asset.height),
@@ -199,7 +197,7 @@ class VignetteRenderObject extends RenderBox {
             ..isAntiAlias = true
             ..filterQuality = ui.FilterQuality.low
             ..color = Colors.white.withOpacity(asset.opacity));
-    } else if (asset is TimelineNima && _nimaActor != null) {
+    } else if (asset is NimaAsset && _nimaActor != null) {
       /// If we have a [TimelineNima] asset, set it up properly and paint it.
       ///
       /// 1. Calculate the bounds for the current object.
@@ -279,7 +277,7 @@ class VignetteRenderObject extends RenderBox {
 
       /// 6. Restore the canvas' original transform state.
       canvas.restore();
-    } else if (asset is TimelineFlare && _flareActor != null) {
+    } else if (asset is FlareAsset && _flareActor != null) {
       /// If we have a [TimelineFlare] asset set it up properly and paint it.
       ///
       /// 1. Calculate the bounds for the current object.
@@ -380,9 +378,9 @@ class VignetteRenderObject extends RenderBox {
     /// Calculate the elapsed time to [advance()] the animations.
     double elapsed = t - _lastFrameTime;
     _lastFrameTime = t;
-    if (_timelineEntry != null) {
-      TimelineAsset asset = _timelineEntry!.asset;
-      if (asset is TimelineNima && _nimaActor != null) {
+    if (_event != null) {
+      EventAsset asset = _event!.asset;
+      if (asset is NimaAsset && _nimaActor != null) {
         asset.animationTime += elapsed;
 
         if (asset.loop) {
@@ -460,7 +458,7 @@ class VignetteRenderObject extends RenderBox {
           _nimaController!.advance(_nimaActor!, localTouchPosition, elapsed);
         }
         _nimaActor!.advance(elapsed);
-      } else if (asset is TimelineFlare && _flareActor != null) {
+      } else if (asset is FlareAsset && _flareActor != null) {
         /// Some [TimelineFlare] assets have a custom intro that's played
         /// when they're painted for the first time.
         if (_firstUpdate) {

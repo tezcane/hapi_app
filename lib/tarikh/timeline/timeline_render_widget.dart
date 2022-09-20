@@ -6,19 +6,21 @@ import 'package:flutter/material.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
+import 'package:hapi/tarikh/event/event.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/timeline/ticks.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
-import 'package:hapi/tarikh/timeline/timeline_entry.dart';
 import 'package:hapi/tarikh/timeline/timeline_utils.dart';
 import 'package:intl/intl.dart';
 import 'package:nima/nima/math/aabb.dart' as nima;
 
-/// These two callbacks are used to detect if a bubble or an entry have been tapped.
+import '../event/event_asset.dart';
+
+/// These two callbacks are used to detect if a bubble or an event have been tapped.
 /// If that's the case, [ArticlePage] will be pushed onto the [Navigator] stack.
 typedef TouchBubbleCallback = Function(TapTarget? bubble);
-typedef TouchEntryCallback = Function(TimelineEntry? entry);
+typedef TouchEventCallback = Function(Event? event);
 
 /// This couples with [TimelineRenderObject].
 ///
@@ -30,14 +32,14 @@ class TimelineRenderWidget extends LeafRenderObjectWidget {
     required this.topOverlap,
     required this.focusItem,
     required this.touchBubble,
-    required this.touchEntry,
+    required this.touchEvent,
     required this.needsRepaint,
   }) : super(key: key);
 
   final double topOverlap;
   final MenuItemData focusItem;
   final TouchBubbleCallback touchBubble;
-  final TouchEntryCallback touchEntry;
+  final TouchEventCallback touchEvent;
 
   /// Tez: Replaced old way of using timeline null checks
   final bool needsRepaint;
@@ -46,7 +48,7 @@ class TimelineRenderWidget extends LeafRenderObjectWidget {
   RenderObject createRenderObject(BuildContext context) {
     return TimelineRenderObject()
       ..touchBubble = touchBubble
-      ..touchEntry = touchEntry
+      ..touchEvent = touchEvent
       ..focusItem = focusItem
       ..topOverlap = topOverlap
       ..needsRepaint = needsRepaint;
@@ -59,7 +61,7 @@ class TimelineRenderWidget extends LeafRenderObjectWidget {
     renderObject
       ..focusItem = focusItem
       ..touchBubble = touchBubble
-      ..touchEntry = touchEntry
+      ..touchEvent = touchEvent
       ..topOverlap = topOverlap
       ..needsRepaint = needsRepaint;
   }
@@ -110,7 +112,7 @@ class TimelineRenderObject extends RenderBox {
   MenuItemData? _processedFocusItem;
   final List<TapTarget> _tapTargets = []; // was List<TapTarget>();
   TouchBubbleCallback? touchBubble;
-  TouchEntryCallback? touchEntry;
+  TouchEventCallback? touchEvent;
 
   bool _needsRepaint = false;
 
@@ -176,7 +178,7 @@ class TimelineRenderObject extends RenderBox {
   /// Check if the current tap on the screen has hit a bubble.
   @override
   bool hitTestSelf(Offset screenOffset) {
-    touchEntry!(null);
+    touchEvent!(null);
     for (TapTarget bubble in _tapTargets.reversed) {
       if (bubble.rect.contains(screenOffset)) {
         if (touchBubble != null) {
@@ -252,7 +254,7 @@ class TimelineRenderObject extends RenderBox {
     if (t.renderedAssets.isNotEmpty) {
       canvas.save();
       canvas.clipRect(offset & size);
-      for (TimelineAsset asset in t.renderedAssets) {
+      for (EventAsset asset in t.renderedAssets) {
         if (asset.opacity > 0) {
           double rs = 0.2 + asset.scale * 0.8;
 
@@ -260,7 +262,7 @@ class TimelineRenderObject extends RenderBox {
           double h = asset.height * Timeline.AssetScreenScale;
 
           /// Draw the correct asset.
-          if (asset is TimelineImage) {
+          if (asset is EventImage) {
             canvas.drawImageRect(
               asset.image,
               Rect.fromLTWH(0.0, 0.0, asset.width, asset.height),
@@ -271,7 +273,7 @@ class TimelineRenderObject extends RenderBox {
                 ..filterQuality = ui.FilterQuality.low
                 ..color = Colors.white.withOpacity(asset.opacity),
             );
-          } else if (asset is TimelineNima) {
+          } else if (asset is NimaAsset) {
             /// If we have a [TimelineNima] asset, set it up properly and paint it.
             ///
             /// 1. Calculate the bounds for the current object.
@@ -359,8 +361,8 @@ class TimelineRenderObject extends RenderBox {
 
             /// 7. This asset is also a *tappable* element, add it to the list
             /// so it can be processed.
-            _tapTargets.add(TapTarget(asset.entry, renderOffset & renderSize));
-          } else if (asset is TimelineFlare) {
+            _tapTargets.add(TapTarget(asset.event, renderOffset & renderSize));
+          } else if (asset is FlareAsset) {
             /// If we have a [TimelineFlare] asset set it up properly and paint it.
             ///
             /// 1. Calculate the bounds for the current object.
@@ -448,7 +450,7 @@ class TimelineRenderObject extends RenderBox {
 
             /// 7. This asset is also a *tappable* element, add it to the list
             /// so it can be processed.
-            _tapTargets.add(TapTarget(asset.entry, renderOffset & renderSize));
+            _tapTargets.add(TapTarget(asset.event, renderOffset & renderSize));
           }
         }
       }
@@ -469,7 +471,7 @@ class TimelineRenderObject extends RenderBox {
     drawItems(
         context,
         offset,
-        tih.rootEntries,
+        tih.rootEvents,
         t.gutterWidth +
             Timeline.LineSpacing -
             Timeline.DepthOffset * t.renderOffsetDepth,
@@ -478,9 +480,9 @@ class TimelineRenderObject extends RenderBox {
     canvas.restore();
 
     // Replace two commented out (very large) if statement logic with these two:
-    if (t.nextEntry != null) {
-      // && t.nextEntryOpacity > 0.0) {
-      cTrkh.updateTimeBtnEntry(cTrkh.timeBtnDn, t.nextEntry);
+    if (t.nextEvent != null) {
+      // && t.nextEventOpacity > 0.0) {
+      cTrkh.updateEventBtn(cTrkh.timeBtnDn, t.nextEvent);
     } else {
       TimeBtn timeBtn = cTrkh.timeBtnDn;
       String timeUntil = timeBtn.trValTimeUntil;
@@ -495,9 +497,9 @@ class TimelineRenderObject extends RenderBox {
       }
     }
 
-    if (t.prevEntry != null) {
-      // && t.prevEntryOpacity > 0.0) {
-      cTrkh.updateTimeBtnEntry(cTrkh.timeBtnUp, t.prevEntry);
+    if (t.prevEvent != null) {
+      // && t.prevEventOpacity > 0.0) {
+      cTrkh.updateEventBtn(cTrkh.timeBtnUp, t.prevEvent);
     } else {
       TimeBtn timeBtn = cTrkh.timeBtnUp;
       String timeUntil = timeBtn.trValTimeUntil;
@@ -512,18 +514,18 @@ class TimelineRenderObject extends RenderBox {
       }
     }
 
-    // Fixes bug where if we drag the timeline beyond first or last entry both
-    // up and down buttons show the first/last entry.
-    if (cTrkh.timeBtnUp.entry != null && cTrkh.timeBtnDn.entry != null) {
-      String upLabel = cTrkh.timeBtnUp.entry!.trKeyEndTagLabel;
-      if (upLabel == cTrkh.timeBtnDn.entry!.trKeyEndTagLabel) {
+    // Fixes bug where if we drag the timeline beyond first or last event both
+    // up and down buttons show the first/last event.
+    if (cTrkh.timeBtnUp.event != null && cTrkh.timeBtnDn.event != null) {
+      String upLabel = cTrkh.timeBtnUp.event!.trKeyEndTagLabel;
+      if (upLabel == cTrkh.timeBtnDn.event!.trKeyEndTagLabel) {
         if (upLabel == 'Big Bang') {
           // TODO asdf broken with new era Birth of Universe?
           l.d('***************** TOO HIGH FIXING ************************');
-          cTrkh.updateTimeBtnEntry(cTrkh.timeBtnUp, null);
+          cTrkh.updateEventBtn(cTrkh.timeBtnUp, null);
         } else {
           l.d('***************** TOO LOW FIXING ************************');
-          cTrkh.updateTimeBtnEntry(cTrkh.timeBtnDn, null);
+          cTrkh.updateEventBtn(cTrkh.timeBtnDn, null);
         }
       }
     }
@@ -531,9 +533,9 @@ class TimelineRenderObject extends RenderBox {
     /// After a few moments of inaction on the timeline, if there's enough space,
     /// an arrow pointing to the next event on the timeline will appear on the
     /// bottom of the screen. Draw it, and add it as another [TapTarget].
-    // if (t.nextEntry != null && t.nextEntryOpacity > 0.0) {
+    // if (t.nextEvent != null && t.nextEventOpacity > 0.0) {
     //   double x = offset.dx + t.gutterWidth - Timeline.GutterLeft;
-    //   double opacity = t.nextEntryOpacity;
+    //   double opacity = t.nextEventOpacity;
     //   Color color = Color.fromRGBO(69, 211, 197, opacity);
     //   double pageSize = (t.renderEnd - t.renderStart);
     //   double pageReference = t.renderEnd;
@@ -549,7 +551,7 @@ class TimelineRenderObject extends RenderBox {
     //       textAlign: TextAlign.start, fontFamily: 'Roboto', fontSize: 20.0))
     //     ..pushStyle(ui.TextStyle(color: color));
     //
-    //   builder.addText(t.nextEntry!.label!);
+    //   builder.addText(t.nextEvent!.label!);
     //   ui.Paragraph labelParagraph = builder.build();
     //   labelParagraph.layout(ui.ParagraphConstraints(width: MaxLabelWidth));
     //
@@ -560,7 +562,7 @@ class TimelineRenderObject extends RenderBox {
     //   y += labelParagraph.height;
     //
     //   /// Calculate the boundaries of the arrow icon.
-    //   Rect nextEntryRect = Rect.fromLTWH(labelX, y,
+    //   Rect nextEventRect = Rect.fromLTWH(labelX, y,
     //       labelParagraph.maxIntrinsicWidth, offset.dy + size.height - y);
     //
     //   const double radius = 25.0;
@@ -574,7 +576,7 @@ class TimelineRenderObject extends RenderBox {
     //       Paint()
     //         ..color = color
     //         ..style = PaintingStyle.fill);
-    //   nextEntryRect.expandToInclude(Rect.fromLTWH(
+    //   nextEventRect.expandToInclude(Rect.fromLTWH(
     //       labelX - radius, y - radius, radius * 2.0, radius * 2.0));
     //   Path path = Path();
     //   double arrowSize = 6.0;
@@ -601,12 +603,12 @@ class TimelineRenderObject extends RenderBox {
     //       height: 1.3))
     //     ..pushStyle(ui.TextStyle(color: color));
     //
-    //   double timeUntil = t.nextEntry!.start! - pageReference;
+    //   double timeUntil = t.nextEvent!.start! - pageReference;
     //   double pages = timeUntil / pageSize;
     //   NumberFormat formatter = NumberFormat.compact();
     //   String pagesFormatted = formatter.format(pages);
     //   String until = 'in ' +
-    //       TimelineEntry.formatYears(timeUntil).toLowerCase() +
+    //       Event.formatYears(timeUntil).toLowerCase() +
     //       '\n($pagesFormatted page scrolls)';
     //   builder.addText(until);
     //   labelParagraph = builder.build();
@@ -618,15 +620,15 @@ class TimelineRenderObject extends RenderBox {
     //
     //   /// Add this to the list of *tappable* elements.
     //   _tapTargets.add(TapTarget()
-    //     ..entry = t.nextEntry!
-    //     ..rect = nextEntryRect
+    //     ..event = t.nextEvent!
+    //     ..rect = nextEventRect
     //     ..zoom = true);
     // }
     //
     // /// Repeat the same procedure as above for the arrow pointing to the previous event on the timeline.
-    // if (t.prevEntry != null && t.prevEntryOpacity > 0.0) {
+    // if (t.prevEvent != null && t.prevEventOpacity > 0.0) {
     //   double x = offset.dx + t.gutterWidth - Timeline.GutterLeft;
-    //   double opacity = t.prevEntryOpacity;
+    //   double opacity = t.prevEventOpacity;
     //   Color color = Color.fromRGBO(69, 211, 197, opacity);
     //   double pageSize = (t.renderEnd - t.renderStart);
     //   double pageReference = t.renderEnd;
@@ -636,7 +638,7 @@ class TimelineRenderObject extends RenderBox {
     //       textAlign: TextAlign.start, fontFamily: 'Roboto', fontSize: 20.0))
     //     ..pushStyle(ui.TextStyle(color: color));
     //
-    //   builder.addText(t.prevEntry!.label!);
+    //   builder.addText(t.prevEvent!.label!);
     //   ui.Paragraph labelParagraph = builder.build();
     //   labelParagraph.layout(ui.ParagraphConstraints(width: MaxLabelWidth));
     //
@@ -646,7 +648,7 @@ class TimelineRenderObject extends RenderBox {
     //   canvas.drawParagraph(labelParagraph, Offset(labelX, y));
     //   y += labelParagraph.height;
     //
-    //   Rect prevEntryRect = Rect.fromLTWH(labelX, y,
+    //   Rect prevEventRect = Rect.fromLTWH(labelX, y,
     //       labelParagraph.maxIntrinsicWidth, offset.dy + size.height - y);
     //
     //   const double radius = 25.0;
@@ -658,7 +660,7 @@ class TimelineRenderObject extends RenderBox {
     //       Paint()
     //         ..color = color
     //         ..style = PaintingStyle.fill);
-    //   prevEntryRect.expandToInclude(Rect.fromLTWH(
+    //   prevEventRect.expandToInclude(Rect.fromLTWH(
     //       labelX - radius, y - radius, radius * 2.0, radius * 2.0));
     //   Path path = Path();
     //   double arrowSize = 6.0;
@@ -683,11 +685,11 @@ class TimelineRenderObject extends RenderBox {
     //       height: 1.3))
     //     ..pushStyle(ui.TextStyle(color: color));
     //
-    //   double timeUntil = t.prevEntry!.start! - pageReference;
+    //   double timeUntil = t.prevEvent!.start! - pageReference;
     //   double pages = timeUntil / pageSize;
     //   NumberFormat formatter = NumberFormat.compact();
     //   String pagesFormatted = formatter.format(pages.abs());
-    //   String until = TimelineEntry.formatYears(timeUntil).toLowerCase() +
+    //   String until = Event.formatYears(timeUntil).toLowerCase() +
     //       ' ago\n($pagesFormatted page scrolls)';
     //   builder.addText(until);
     //   labelParagraph = builder.build();
@@ -696,8 +698,8 @@ class TimelineRenderObject extends RenderBox {
     //   y += labelParagraph.height;
     //
     //   _tapTargets.add(TapTarget()
-    //     ..entry = t.prevEntry!
-    //     ..rect = prevEntryRect
+    //     ..event = t.prevEvent!
+    //     ..rect = prevEventRect
     //     ..zoom = true);
     // }
 
@@ -706,7 +708,7 @@ class TimelineRenderObject extends RenderBox {
     /// favorite or all history elements are quickly accessible.
     ///
     /// Here the gutter is drawn and elements are added as *tappable* targets.
-    List<TimelineEntry> events = cTrkh.eventFavorites;
+    List<Event> events = cTrkh.eventFavorites;
     if (cTrkh.isGutterModeAll) events = cTrkh.events;
 
     if (!cTrkh.isGutterModeOff && events.isNotEmpty) {
@@ -719,15 +721,15 @@ class TimelineRenderObject extends RenderBox {
               fullMarginOffset;
 
       /// Order events by distance from mid.
-      List<TimelineEntry> nearbyEvents = List<TimelineEntry>.from(events);
+      List<Event> nearbyEvents = List<Event>.from(events);
       double mid = t.renderStart + (t.renderEnd - t.renderStart) / 2.0;
-      nearbyEvents.sort((TimelineEntry a, TimelineEntry b) {
+      nearbyEvents.sort((Event a, Event b) {
         return (a.startMs - mid).abs().compareTo((b.startMs - mid).abs());
       });
 
       /// layout events.
       for (int i = 0; i < nearbyEvents.length; i++) {
-        TimelineEntry event = nearbyEvents[i];
+        Event event = nearbyEvents[i];
         double y = ((event.startMs - t.renderStart) * scale).clamp(
           offset.dy + eventRadius + padEvents + GutterPadTop, //had + topOverlap
           offset.dy + size.height - eventRadius - padEvents - GutterPadBottom,
@@ -738,7 +740,7 @@ class TimelineRenderObject extends RenderBox {
         /// closer one. Works because we sorted by distance.
         event.isGutterEventOccluded = false;
         for (int j = 0; j < i; j++) {
-          TimelineEntry closer = nearbyEvents[j];
+          Event closer = nearbyEvents[j];
           if ((event.gutterEventY - closer.gutterEventY).abs() <= 1.0) {
             event.isGutterEventOccluded = true;
             break;
@@ -747,7 +749,7 @@ class TimelineRenderObject extends RenderBox {
       }
 
       /// Iterate the list from the bottom.
-      for (TimelineEntry event in nearbyEvents.reversed) {
+      for (Event event in nearbyEvents.reversed) {
         if (event.isGutterEventOccluded) continue;
 
         double y = event.gutterEventY;
@@ -767,7 +769,7 @@ class TimelineRenderObject extends RenderBox {
           whitePaint,
         );
 
-        TimelineAsset asset = event.asset;
+        EventAsset asset = event.asset;
         double assetSize = 50.0; // was 40.0 -8.0
         Size renderSize = Size(assetSize, assetSize);
         Offset renderOffset = Offset(x - assetSize / 2.0, y - assetSize / 2.0);
@@ -777,7 +779,7 @@ class TimelineRenderObject extends RenderBox {
 
         /// Draw the assets statically within the circle.
         /// Calculations here are the same as seen in [paint()] for the assets.
-        if (asset is TimelineImage) {
+        if (asset is EventImage) {
           canvas.drawImageRect(
             asset.image,
             Rect.fromLTWH(0.0, 0.0, asset.width, asset.height),
@@ -798,9 +800,9 @@ class TimelineRenderObject extends RenderBox {
               ..color = Colors.white.withOpacity(asset.opacity),
           );
           _tapTargets.add(
-            TapTarget(asset.entry, renderOffset & renderSize, zoom: true),
+            TapTarget(asset.event, renderOffset & renderSize, zoom: true),
           );
-        } else if (asset is TimelineNima) {
+        } else if (asset is NimaAsset) {
           nima.AABB bounds = asset.setupAABB;
 
           double contentHeight = bounds[3] - bounds[1];
@@ -870,9 +872,9 @@ class TimelineRenderObject extends RenderBox {
           asset.actorStatic.draw(canvas);
           canvas.restore();
           _tapTargets.add(
-            TapTarget(asset.entry, renderOffset & renderSize, zoom: true),
+            TapTarget(asset.event, renderOffset & renderSize, zoom: true),
           );
-        } else if (asset is TimelineFlare) {
+        } else if (asset is FlareAsset) {
           flare.AABB bounds = asset.setupAABB;
           double contentWidth = bounds[2] - bounds[0];
           double contentHeight = bounds[3] - bounds[1];
@@ -943,7 +945,7 @@ class TimelineRenderObject extends RenderBox {
           asset.actorStatic.draw(canvas);
           canvas.restore();
           _tapTargets.add(
-            TapTarget(asset.entry, renderOffset & renderSize, zoom: true),
+            TapTarget(asset.event, renderOffset & renderSize, zoom: true),
           );
         }
       }
@@ -953,8 +955,8 @@ class TimelineRenderObject extends RenderBox {
       /// within a bubble.
       ///
       /// Uses same [ui.ParagraphBuilder] logic as seen above.
-      TimelineEntry? previous;
-      for (TimelineEntry event in events) {
+      Event? previous;
+      for (Event event in events) {
         if (event.isGutterEventOccluded) continue;
 
         if (previous != null) {
@@ -1020,7 +1022,7 @@ class TimelineRenderObject extends RenderBox {
     }
   }
 
-  /// Given a list of [entries], draw the label with its bubble beneath.
+  /// Given a list of [events], draw the label with its bubble beneath.
   /// Draw also the dots&lines on the left side of the timeline. These represent
   /// the starting/ending points for a given event and are meant to give the
   /// idea of the time span encompassing that event, as well as putting the vent
@@ -1028,25 +1030,25 @@ class TimelineRenderObject extends RenderBox {
   void drawItems(
     PaintingContext context,
     Offset offset,
-    List<TimelineEntry> entries,
+    List<Event> events,
     double x,
     double scale,
     int depth,
   ) {
     final Canvas canvas = context.canvas;
 
-    for (TimelineEntry item in entries) {
+    for (Event item in events) {
       /// Don't paint this item if:
       if (!item.isVisible ||
           item.y > size.height + Timeline.BubbleHeight ||
           item.endY < -Timeline.BubbleHeight) continue;
 
       double legOpacity = item.legOpacity * item.opacity;
-      Offset entryOffset = Offset(x + Timeline.LineWidth / 2.0, item.y);
+      Offset eventOffset = Offset(x + Timeline.LineWidth / 2.0, item.y);
 
       /// Draw the small circle on the left side of the timeline.
       canvas.drawCircle(
-          entryOffset,
+          eventOffset,
           Timeline.EdgeRadius,
           Paint()
             ..color = (item.accent != null
