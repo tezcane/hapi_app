@@ -126,33 +126,30 @@ class Ticks {
     Set<String> usedValues = {};
 
     /// Draw all the ticks.
-    for (int i = 0; i < numTicks; i++) {
+    for (int tickNum = 0; tickNum < numTicks; tickNum++) {
       tickOffset += scaledTickDistance;
 
       int tt = startingTickMarkValue.round();
       tt = -tt;
-      int o = tickOffset.floor();
-      TickColors? colors = tih.findTickColors(offset.dy + height - o);
+      int offsetFloor = tickOffset.floor();
+
+      TickColors colors = tih.findTickColors(offset.dy + height - offsetFloor);
       if (tt % textTickDistance == 0) {
         /// Every `textTickDistance`, draw a wider tick with the a label laid on top.
-        if (colors != null) {
-          canvas.drawRect(
-              Rect.fromLTWH(
-                offset.dx + gutterWidth - TickSize,
-                offset.dy + height - o,
-                TickSize,
-                1.0,
-              ),
-              Paint()..color = colors.long);
-        }
+        canvas.drawRect(
+          Rect.fromLTWH(
+            offset.dx + gutterWidth - TickSize,
+            offset.dy + height - offsetFloor,
+            TickSize,
+            1.0,
+          ),
+          Paint()..color = colors.long,
+        );
 
         /// Drawing text to [canvas] is done by using the [ParagraphBuilder] directly.
-        ui.ParagraphBuilder? builder;
-        if (colors != null) {
-          builder = ui.ParagraphBuilder(
-            ui.ParagraphStyle(textAlign: TextAlign.end, fontSize: 10.0),
-          )..pushStyle(ui.TextStyle(color: colors.text));
-        }
+        ui.ParagraphBuilder? builder = ui.ParagraphBuilder(
+          ui.ParagraphStyle(textAlign: TextAlign.end, fontSize: 10.0),
+        )..pushStyle(ui.TextStyle(color: colors.text));
 
         int value = tt.round().abs();
 
@@ -170,35 +167,32 @@ class Ticks {
           }
         }
         usedValues.add(label);
-        if (builder != null) {
-          builder.addText(cns(label));
-          ui.Paragraph tickParagraph = builder.build();
 
-          tickParagraph.layout(
-            ui.ParagraphConstraints(
-              width: gutterWidth - LabelPadLeft - LabelPadRight,
-            ),
-          );
-          canvas.drawParagraph(
-            tickParagraph,
-            Offset(
-              offset.dx + LabelPadLeft - LabelPadRight,
-              offset.dy + height - o - tickParagraph.height - 5,
-            ),
-          );
-        }
+        builder.addText(cns(label));
+        ui.Paragraph tickParagraph = builder.build();
+
+        tickParagraph.layout(
+          ui.ParagraphConstraints(
+            width: gutterWidth - LabelPadLeft - LabelPadRight,
+          ),
+        );
+        canvas.drawParagraph(
+          tickParagraph,
+          Offset(
+            offset.dx + LabelPadLeft - LabelPadRight,
+            offset.dy + height - offsetFloor - tickParagraph.height - 5,
+          ),
+        );
       } else {
         /// If we're within two text-ticks, just draw a smaller line.
-        if (colors != null) {
-          canvas.drawRect(
-              Rect.fromLTWH(
-                offset.dx + gutterWidth - SmallTickSize,
-                offset.dy + height - o,
-                SmallTickSize,
-                1.0,
-              ),
-              Paint()..color = colors.short);
-        }
+        canvas.drawRect(
+            Rect.fromLTWH(
+              offset.dx + gutterWidth - SmallTickSize,
+              offset.dy + height - offsetFloor,
+              SmallTickSize,
+              1.0,
+            ),
+            Paint()..color = colors.short);
       }
       startingTickMarkValue += tickDistance;
     }

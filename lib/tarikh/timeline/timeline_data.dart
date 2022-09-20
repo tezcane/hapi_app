@@ -87,7 +87,7 @@ List<TimelineData> getTimelineData() {
       trKeyTitle: TR_KEY_OLDEST,
       accent: Color.fromARGB(0xFF, 246, 76, 130),
       timelineColors: TimelineColors(
-        background: Color.fromARGB(255, 0, 38, 75),
+        background: Color.fromARGB(0xFF, 0, 38, 75),
         ticks: TickColors2(
           background: Color.fromARGB(20, 57, 92, 240),
           long: Color.fromARGB(255, 255, 255, 75),
@@ -164,7 +164,7 @@ List<TimelineData> getTimelineData() {
       start: -4000000000,
       trKeyTitle: 'i.Life on Earth',
       timelineColors: TimelineColors(
-        background: Color.fromARGB(255, 31, 89, 143),
+        background: Color.fromARGB(0xFF, 31, 89, 143),
         ticks: TickColors2(
           background: Color.fromARGB(27, 79, 128, 240),
           long: Color.fromARGB(255, 255, 255, 75),
@@ -206,9 +206,9 @@ List<TimelineData> getTimelineData() {
         offset: -100,
         bounds: [0.0, 0.0, 814.0, 664.0],
       ),
-      accent: Color.fromARGB(0xFF, 55, 134, 222),
+      accent: Color.fromARGB(55, 134, 222, 255),
       timelineColors: TimelineColors(
-        background: Color.fromARGB(255, 132, 175, 214),
+        background: Color.fromARGB(0xFF, 132, 175, 214),
         ticks: TickColors2(
           background: Color.fromARGB(113, 152, 188, 240),
           long: Color.fromARGB(255, 255, 255, 75),
@@ -324,29 +324,6 @@ List<TimelineData> getTimelineData() {
       ),
     ),
     const TimelineData(
-      start: -3400000,
-      trKeyTitle: 'a.Adam',
-      timelineColors: TimelineColors(
-        background: Color.fromARGB(255, 255, 255, 255),
-        ticks: TickColors2(
-          background: Color.fromARGB(245, 245, 245, 240),
-          long: Color.fromARGB(0, 0, 0, 60),
-          short: Color.fromARGB(0, 0, 0, 35),
-          text: Color.fromARGB(0, 0, 0, 110),
-        ),
-        header: HeaderColors2(
-          background: Color.fromARGB(245, 245, 245, 240),
-          text: Color.fromARGB(0, 0, 0, 110),
-        ),
-      ),
-      asset: Asset(
-        source: 'images/anbiya/Adam.png',
-        width: 200,
-        height: 200,
-        offset: 0,
-      ),
-    ),
-    const TimelineData(
       date: -3300000,
       trKeyTitle: 'i.Constructed Tools',
       asset: Asset(
@@ -357,7 +334,31 @@ List<TimelineData> getTimelineData() {
       ),
     ),
     const TimelineData(
-      date: -1500000,
+      start: -340000,
+      trKeyTitle: 'a.Adam',
+      accent: Color.fromARGB(202, 79, 63, 255),
+      timelineColors: TimelineColors(
+        background: Color.fromARGB(0xFF, 255, 255, 255),
+        ticks: TickColors2(
+          background: Color.fromARGB(255, 211, 211, 204),
+          long: Color.fromARGB(0xFF, 0, 0, 60),
+          short: Color.fromARGB(0xFF, 0, 0, 35),
+          text: Color.fromARGB(0xFF, 0, 0, 110),
+        ),
+        header: HeaderColors2(
+          background: Color.fromARGB(245, 245, 245, 240),
+          text: Color.fromARGB(0xFF, 0, 0, 110),
+        ),
+      ),
+      asset: Asset(
+        source: 'images/anbiya/Adam.png',
+        width: 200,
+        height: 200,
+        offset: 0,
+      ),
+    ),
+    const TimelineData(
+      date: -300000,
       trKeyTitle: 'i.Control Fire',
       asset: Asset(
         source: 'tarikh/nima/Fire.nma',

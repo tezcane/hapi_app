@@ -284,7 +284,7 @@ class TimelineInitHandler {
   /// [TickColors] also have custom colors so that they are always visible
   /// with the changing background.
   final List<TickColors> _tickColors = [];
-  get tickColors => _tickColors;
+  List<TickColors> get tickColors => _tickColors;
   late final Iterable<TickColors> _tickColorsReversed;
   final List<HeaderColors> _headerColors = [];
 
@@ -681,7 +681,7 @@ class TimelineInitHandler {
   /// Helper function for [MenuVignette].
   Event? getEventById(String id) => _eventsById[id];
 
-  TickColors? findTickColors(double screen) {
+  TickColors findTickColors(double screen) {
     for (TickColors color in _tickColorsReversed) {
       if (screen >= color.screenY) return color;
     }

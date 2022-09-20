@@ -68,7 +68,7 @@ String getFileExtension(String filename) {
 // }
 
 class TimelineBackgroundColor {
-  TimelineBackgroundColor(this.color, this.startMs);
+  const TimelineBackgroundColor(this.color, this.startMs);
   final Color color;
   final double startMs;
 }
@@ -92,7 +92,7 @@ class HeaderColors {
 }
 
 class TapTarget {
-  TapTarget(this.event, this.rect, {this.zoom = false});
+  const TapTarget(this.event, this.rect, {this.zoom = false});
   final Event event;
   final Rect rect;
   final bool zoom;
