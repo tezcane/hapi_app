@@ -19,8 +19,8 @@ enum EVENT_TYPE {
 class Event {
   Event({
     required this.type,
-    required this.trValEra,
-    required this.trKeyEndTagLabel, // TODO make it trVal
+    required this.trKeyEra,
+    required this.trKeyTitle,
     required this.startMs, // TODO are these ms or years?!
     required this.endMs,
     required this.asset,
@@ -30,8 +30,8 @@ class Event {
   }
 
   final EVENT_TYPE type;
-  final String trValEra;
-  final String trKeyEndTagLabel; // trKey's end tag: i.<end tag> or a.<end tag>
+  final String trKeyEra;
+  final String trKeyTitle;
   final double startMs;
   final double endMs;
   final EventAsset asset;
@@ -80,13 +80,13 @@ class Event {
   // TODO asdf use this
   bool isTimeLineEvent() => startMs != 0 && endMs != 0;
 
-  String get trValTitle => Event.trValFromTrKeyEndTag(trKeyEndTagLabel);
-
-  /// Attempts to translate 'i.<trKeyEndTag>' if fails, tries 'a.<trKeyEndTag>'.
-  static String trValFromTrKeyEndTag(String trKeyEndTag) {
-    String trVal = 'i.$trKeyEndTag'.tr;
-    return trVal.startsWith('i.') ? a('a.$trKeyEndTag') : trVal;
-  }
+  // String get trValTitle => Event.trValFromTrKeyEndTag(trKeyTitle);
+  //
+  // /// Attempts to translate 'i.<trKeyEndTag>' if fails, tries 'a.<trKeyEndTag>'.
+  // static String trValFromTrKeyEndTag(String trKeyEndTag) {
+  //   String trVal = 'i.$trKeyEndTag'.tr;
+  //   return trVal.startsWith('i.') ? a('a.$trKeyEndTag') : trVal;
+  // }
 
   /// Some labels have a newline characters to adjust their alignment.
   /// Detect the occurrence and add information regarding the line-count.
@@ -95,7 +95,7 @@ class Event {
 
     int startIdx = 0;
     while (true) {
-      startIdx = trValTitle.indexOf('\n', startIdx);
+      startIdx = a(trKeyTitle).indexOf('\n', startIdx);
       if (startIdx == -1) break;
       lineCount++; // found a new line, continue
       startIdx++; // to go past current new line

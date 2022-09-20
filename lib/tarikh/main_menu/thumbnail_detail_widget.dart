@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hapi/main_c.dart';
 import 'package:hapi/tarikh/event/event.dart';
 
 import 'thumbnail.dart';
@@ -65,7 +66,7 @@ class ThumbnailDetailWidget extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              event.trValTitle,
+                              a(event.trKeyTitle),
                               style: Theme.of(context).textTheme.titleLarge,
                             ),
                             const SizedBox(height: 5),

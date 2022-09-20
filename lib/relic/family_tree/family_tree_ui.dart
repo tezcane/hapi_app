@@ -191,7 +191,7 @@ class FamilyTreeUI extends StatelessWidget {
                 ),
               ),
             ),
-            T(relic.trValTitle, tsN, w: wTile, h: hText),
+            T(relic.trKeyTitle, tsN, w: wTile, h: hText),
           ],
         ),
       ),

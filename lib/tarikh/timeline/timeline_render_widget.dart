@@ -11,6 +11,8 @@ import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/timeline/ticks.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
+import 'package:hapi/tarikh/timeline/timeline_data.dart';
+//import 'package:hapi/tarikh/timeline/timeline_data.dart';
 import 'package:hapi/tarikh/timeline/timeline_utils.dart';
 import 'package:intl/intl.dart';
 import 'package:nima/nima/math/aabb.dart' as nima;
@@ -517,10 +519,9 @@ class TimelineRenderObject extends RenderBox {
     // Fixes bug where if we drag the timeline beyond first or last event both
     // up and down buttons show the first/last event.
     if (cTrkh.timeBtnUp.event != null && cTrkh.timeBtnDn.event != null) {
-      String upLabel = cTrkh.timeBtnUp.event!.trKeyEndTagLabel;
-      if (upLabel == cTrkh.timeBtnDn.event!.trKeyEndTagLabel) {
-        if (upLabel == 'Big Bang') {
-          // TODO asdf broken with new era Birth of Universe?
+      String upLabel = cTrkh.timeBtnUp.event!.trKeyTitle;
+      if (upLabel == cTrkh.timeBtnDn.event!.trKeyTitle) {
+        if (upLabel == TR_KEY_OLDEST) {
           l.d('***************** TOO HIGH FIXING ************************');
           cTrkh.updateEventBtn(cTrkh.timeBtnUp, null);
         } else {
@@ -1086,7 +1087,7 @@ class TimelineRenderObject extends RenderBox {
           ),
         );
 
-      builder.addText(item.trValTitle);
+      builder.addText(a(item.trKeyTitle));
       ui.Paragraph labelParagraph = builder.build();
       labelParagraph.layout(
         const ui.ParagraphConstraints(width: MaxLabelWidth),

@@ -10,14 +10,13 @@ import 'package:hapi/tarikh/timeline/timeline.dart';
 /// Data container loaded in [TarikhMenuInitHandler.loadFromBundle()].
 class MenuSectionData {
   MenuSectionData(
-    this.trKeyEndTagLabel,
+    this.trKeyTitle,
     this.textColor,
     this.backgroundColor,
     this.assetId,
     this.items,
   );
-
-  final String trKeyEndTagLabel;
+  final String trKeyTitle;
   final Color textColor;
   final Color backgroundColor;
   final String assetId;
@@ -26,8 +25,8 @@ class MenuSectionData {
 
 /// Data container for all the sub-elements of the [MenuSection].
 class MenuItemData {
-  MenuItemData(this.trKeyEndTagLabel, this.startMs, this.endMs);
-  final String trKeyEndTagLabel;
+  MenuItemData(this.trKeyTitle, this.startMs, this.endMs);
+  final String trKeyTitle;
   final double startMs;
   final double endMs;
 
@@ -35,11 +34,9 @@ class MenuItemData {
   double padTop = 0.0;
 //double padBottom = 0.0; // not used, always 0
 
-  String get trValTitle => Event.trValFromTrKeyEndTag(trKeyEndTagLabel);
-
   /// When initializing this object from a [Event], fill in the
   /// fields according to the [event] provided. The event in fact specifies
-  /// a [trKeyEndTagLabel], a [startMs] and [endMs] times.
+  /// a [trKeyTitle], a [startMs] and [endMs] times.
   /// Padding is built depending on the type of the [event] provided.
   static MenuItemData fromEvent(Event event) {
     // put in timer so btns updates after navigation
@@ -85,7 +82,7 @@ class MenuItemData {
       end = event.endMs + range;
     }
 
-    var menuItemData = MenuItemData(event.trKeyEndTagLabel, start, end);
+    var menuItemData = MenuItemData(event.trKeyTitle, start, end);
     menuItemData.pad = pad;
     menuItemData.padTop = padTop;
 

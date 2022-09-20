@@ -1202,8 +1202,8 @@ Future<List<Prophet>> initProphets() async {
 
 Future<EventAsset> _getImageEventAsset(
   PF prophet, {
-  double width = 192,
-  double height = 192,
+  double width = 200,
+  double height = 200,
   double scale = 0,
 }) async =>
     await TarikhC.tih.loadImageAsset(

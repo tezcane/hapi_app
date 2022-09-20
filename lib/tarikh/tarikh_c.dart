@@ -15,6 +15,7 @@ import 'package:hapi/tarikh/event/event.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/search/search_manager.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
+import 'package:hapi/tarikh/timeline/timeline_data.dart';
 import 'package:hapi/tarikh/timeline/timeline_utils.dart';
 import 'package:intl/intl.dart';
 import 'package:nima/nima.dart' as nima;
@@ -96,7 +97,7 @@ class TarikhC extends GetxHapi {
   /// It does not contain all event info, so the Tarikh Menu requires the
   /// timeline to load to be fully functional.
   final List<MenuSectionData> _tarikhMenuData = [];
-  get tarikhMenuData => _tarikhMenuData;
+  List<MenuSectionData> get tarikhMenuData => _tarikhMenuData;
 
   /// List of favorite events shown on Tarikh_Favorites page and timeline gutter
   final List<Event> _eventFavorites = [];
@@ -143,7 +144,7 @@ class TarikhC extends GetxHapi {
 
     // first handle json inputs
     tih = TimelineInitHandler();
-    await tih.loadFromBundle();
+    await tih.loadTimelineData();
     // then init static timeline object
     t = Timeline(
       tih.rootEvents,
@@ -194,7 +195,7 @@ class TarikhC extends GetxHapi {
   _saveFavorites() {
     // note saves in any order, must sort on reading in from disk
     List<String> favsList =
-        _eventFavorites.map((Event event) => event.trKeyEndTagLabel).toList();
+        _eventFavorites.map((Event event) => event.trKeyTitle).toList();
     s.wr('TARIKH_FAVS', favsList);
     update(); // favorites changed so notify people using it
   }
@@ -242,7 +243,7 @@ class TarikhC extends GetxHapi {
     String trValPageScrolls = '';
 
     if (event != null) {
-      trValTitle = event.trValTitle;
+      trValTitle = a(event.trKeyTitle);
 
       //was t.renderEnd, had 'page away 0' at bottom page edge, now in middle:
       double pageReference = (t.renderStart + t.renderEnd) / 2.0;
@@ -275,11 +276,13 @@ class TarikhC extends GetxHapi {
 }
 
 class TimelineInitHandler {
-  /// A gradient is shown on the background, depending on the [_currentEra] we're in.
+  /// A gradient is shown on the background, depending on the [_currentEra]
+  /// we're in.
   final List<TimelineBackgroundColor> _backgroundColors = [];
   get backgroundColors => _backgroundColors;
 
-  /// [Ticks] also have custom colors so that they are always visible with the changing background.
+  /// [TickColors] also have custom colors so that they are always visible
+  /// with the changing background.
   final List<TickColors> _tickColors = [];
   get tickColors => _tickColors;
   late final Iterable<TickColors> _tickColorsReversed;
@@ -298,22 +301,19 @@ class TimelineInitHandler {
 
   /// Load all the resources from the local bundle.
   ///
-  /// This function will load and decode `timline.json` from disk,
-  /// decode the JSON file, and populate all the [Event]s.
-  loadFromBundle() async {
-    final String jsonData =
-        await rootBundle.loadString('assets/tarikh/timeline.json');
-    final List jsonEvents = json.decode(jsonData);
+  /// This function used to load and decode `timline.json` from disk.  Now it
+  /// populates all the [Event]s through dart code.
+  loadTimelineData() async {
+    final List<TimelineData> timelineDatas = getTimelineData();
 
     // TODO test add "era" field per event and also auto generate it's start and end and zoom by looking at its incidents:
-    String era = '';
+    String trKeyEra = '';
 
     /// The JSON decode doesn't provide strong typing, so we'll iterate
     /// on the dynamic events in the [jsonEvents] list.
-    for (Map map in jsonEvents) {
-      /// The label is a brief description for the current event. It is used to
-      /// create the i.<tag>/a.<tag> trKeyLabel and t.<tag> trKeyArticle.
-      String label = map['label'];
+    for (TimelineData td in timelineDatas) {
+      /// The trKeyTitle is a brief description for the current event.
+      String trKeyTitle = td.trKeyTitle;
 
       /// Create the current event and fill in the current date if it's
       /// an `Incident`, or look for the `start` property if it's an `Era` instead.
@@ -322,15 +322,13 @@ class TimelineInitHandler {
       /// "Humans" in history, which hasn't come to an end yet.
       EVENT_TYPE type;
       double startMs;
-      if (map.containsKey('date')) {
+      if (td.date != null) {
         type = EVENT_TYPE.Incident;
-        dynamic date = map['date'];
-        startMs = date is int ? date.toDouble() : date;
+        startMs = td.date!;
       } else {
         type = EVENT_TYPE.Era;
-        dynamic startVal = map['start'];
-        startMs = startVal is int ? startVal.toDouble() : startVal;
-        era = label;
+        startMs = td.start!;
+        trKeyEra = trKeyTitle;
       }
 
       /// Some elements will have an `end` time specified.
@@ -339,9 +337,8 @@ class TimelineInitHandler {
       /// - Eras use the current year as an end time.
       /// - Other events are just single points in time (start == end).
       double endMs;
-      if (map.containsKey('end')) {
-        dynamic endVal = map['end'];
-        endMs = endVal is int ? endVal.toDouble() : endVal;
+      if (td.end != null) {
+        endMs = td.end!;
       } else if (type == EVENT_TYPE.Era) {
         // TODO where timeline eras stretch to future?
         endMs = (await TimeC.to.now()).year.toDouble() * 10.0;
@@ -352,15 +349,15 @@ class TimelineInitHandler {
       //l.d('lastEra=$era, label=$label'); TODO fix
 
       /// Get Timeline Color Setup:
-      if (map.containsKey('timelineColors')) {
-        var timelineColors = map['timelineColors'];
+      if (td.timelineColors != null) {
+        TimelineColors timelineColors = td.timelineColors!;
 
         /// If a custom background color for this [Event] is specified,
         /// extract its RGB values and save them for reference, along with the
         /// starting date of the current event.
         _backgroundColors.add(
           TimelineBackgroundColor(
-            colorFromList(timelineColors['background']),
+            timelineColors.background,
             startMs,
           ),
         );
@@ -369,10 +366,10 @@ class TimelineInitHandler {
         /// even with custom colored backgrounds.
         _tickColors.add(
           TickColors(
-            colorFromList(timelineColors['ticks'], key: 'background'),
-            colorFromList(timelineColors['ticks'], key: 'long'),
-            colorFromList(timelineColors['ticks'], key: 'short'),
-            colorFromList(timelineColors['ticks'], key: 'text'),
+            timelineColors.ticks.background,
+            timelineColors.ticks.long,
+            timelineColors.ticks.short,
+            timelineColors.ticks.text,
             startMs,
           ),
         );
@@ -380,44 +377,39 @@ class TimelineInitHandler {
         /// If a `header` element is present, de-serialize the colors for it too.
         _headerColors.add(
           HeaderColors(
-            colorFromList(timelineColors['header'], key: 'background'),
-            colorFromList(timelineColors['header'], key: 'text'),
+            timelineColors.header.background,
+            timelineColors.header.text,
             startMs,
           ),
         );
       }
 
-      /// OPTIONAL FIELD 1 of 2: An accent color is also specified at times.
-      Color? accent;
-      if (map.containsKey('accent')) accent = colorFromList(map['accent']);
-
-      /// OPTIONAL FIELD 2 of 2: Some events will also have an id that is
-      /// looked up to find the menu animation.
-      String? id;
-      if (map.containsKey('id')) id = map['id'];
+      /// An accent color is also specified at times.
+      Color? accent = td.accent;
 
       /// Get flare/nima/image asset object
-      EventAsset asset = await getEventAsset(map['asset']);
+      EventAsset asset = await getEventAsset(td.asset);
 
       /// Finally create Event object
       var event = Event(
         type: type,
-        trValEra: Event.trValFromTrKeyEndTag(era),
-        trKeyEndTagLabel: label,
+        trKeyEra: trKeyEra,
+        trKeyTitle: trKeyTitle,
         startMs: startMs,
         endMs: endMs,
         asset: asset,
         accent: accent,
       );
 
-      /// Add event reference 1 of 2:
+      /// Add event reference 1 of 2: TODO this is a hack, access via map?
       asset.event = event; // can only do this once
 
       /// Add event reference 2 of 2:
-      if (map.containsKey('id')) _eventsById[id!] = event;
+      /// Some events will have an id to find and play the menu animation
+      if (td.actorId != null) _eventsById[td.actorId!] = event;
 
       /// Add this event to the list.
-      TarikhC.to.eventMap.putIfAbsent(event.trKeyEndTagLabel, () => event);
+      TarikhC.to.eventMap.putIfAbsent(event.trKeyTitle, () => event);
       TarikhC.to.events.add(event); // sort is probably needed
     }
 
@@ -473,20 +465,20 @@ class TimelineInitHandler {
     }
   }
 
-  Color colorFromList(colorList, {String key = ''}) {
-    if (key != '') colorList = colorList[key];
-    List<int> bg = colorList.cast<int>();
-
-    int bg3 = 0xFF; // 255 (no opacity)
-    if (bg.length == 4) bg3 = bg[3];
-
-    return Color.fromARGB(bg3, bg[0], bg[1], bg[2]);
-  }
+  // Color colorFromList(colorList, {String key = ''}) {
+  //   if (key != '') colorList = colorList[key];
+  //   List<int> bg = colorList.cast<int>();
+  //
+  //   int bg3 = 0xFF; // 255 (no opacity)
+  //   if (bg.length == 4) bg3 = bg[3];
+  //
+  //   return Color.fromARGB(bg3, bg[0], bg[1], bg[2]);
+  // }
 
   /// The `asset` key in the current event contains all the information for
   /// the nima/flare animation file that'll be played on the timeline.
   ///
-  /// `asset` is a JSON map with:
+  /// `asset` is an object with:
   ///   - source: the name of the nima/flare/image file in the assets folder.
   ///   - width/height/offset/bounds/gap:
   ///            Sizes of the animation to properly align it in the timeline,
@@ -499,58 +491,35 @@ class TimelineInitHandler {
   ///            onto their idle animation. If that's the case, this flag is
   ///            raised.
   ///   - scale: a custom scale value.
-  Future<EventAsset> getEventAsset(Map assetMap) async {
-    String source = assetMap['source'];
-    String filename = 'assets/' + source;
+  Future<EventAsset> getEventAsset(Asset asset) async {
+    String filename = 'assets/' + asset.source;
 
-    EventAsset asset;
+    double width = asset.width;
+    double height = asset.height;
 
-    dynamic loopVal = assetMap['loop'];
-    bool loop = loopVal is bool ? loopVal : true;
-
-    dynamic offsetVal = assetMap['offset'];
-    double offset = offsetVal == null
-        ? 0.0
-        : offsetVal is int
-            ? offsetVal.toDouble()
-            : offsetVal;
-
-    dynamic gapVal = assetMap['gap'];
-    double gap = gapVal == null
-        ? 0.0
-        : gapVal is int
-            ? gapVal.toDouble()
-            : gapVal;
-
-    dynamic widthVal = assetMap['width'];
-    double width = widthVal is int ? widthVal.toDouble() : widthVal;
-
-    dynamic heightVal = assetMap['height'];
-    double height = heightVal is int ? heightVal.toDouble() : heightVal;
-
-    double scale = 1.0;
-    if (assetMap.containsKey('scale')) {
-      dynamic scaleVal = assetMap['scale'];
-      scale = scaleVal is int ? scaleVal.toDouble() : scaleVal;
-    }
+    bool loop = asset.loop;
+    double offset = asset.offset;
+    double gap = asset.gap;
+    double scale = asset.scale;
 
     /// Instantiate the correct object based on the file extension.
-    switch (getFileExtension(source)) {
+    EventAsset eventAsset;
+    switch (getFileExtension(asset.source)) {
       case 'flr':
-        asset = await loadFlareAsset(
-            filename, width, height, scale, loop, offset, gap, assetMap);
+        eventAsset = await loadFlareAsset(filename, width, height, scale, loop,
+            offset, gap, asset.idle, asset.intro, asset.bounds);
         break;
       case 'nma':
-        asset = await loadNimaAsset(
-            filename, width, height, scale, loop, offset, gap, assetMap);
+        eventAsset = await loadNimaAsset(filename, width, height, scale, loop,
+            offset, gap, asset.idle, asset.bounds);
         break;
       default:
         // Legacy fallback case: some elements just use images.
-        asset = await loadImageAsset(filename, width, height, scale);
+        eventAsset = await loadImageAsset(filename, width, height, scale);
         break;
     }
 
-    return Future.value(asset);
+    return Future.value(eventAsset);
   }
 
   Future<EventAsset> loadFlareAsset(
@@ -561,7 +530,9 @@ class TimelineInitHandler {
     bool loop,
     double offset,
     double gap,
-    Map assetMap,
+    String? flareIdle,
+    String? flareIntro,
+    List<double>? bounds,
   ) async {
     flare.FlutterActor flutterActor = flare.FlutterActor();
 
@@ -581,11 +552,10 @@ class TimelineInitHandler {
 
     flare.ActorAnimation? idle;
     List<flare.ActorAnimation>? idleAnimations;
-    dynamic name = assetMap['idle'];
-    if (name is String) {
-      if ((idle = actor.getAnimation(name)) != null) animation = idle;
-    } else if (name is List) {
-      for (String animationName in name) {
+    if (flareIdle is String) {
+      if ((idle = actor.getAnimation(flareIdle)) != null) animation = idle;
+    } else if (flareIdle is List) {
+      for (String animationName in flareIdle as List<String>) {
         flare.ActorAnimation? animation1 = actor.getAnimation(animationName);
         if (animation1 != null) {
           idleAnimations ??= [];
@@ -596,9 +566,8 @@ class TimelineInitHandler {
     }
 
     flare.ActorAnimation? intro;
-    name = assetMap['intro'];
-    if (name is String) {
-      if ((intro = actor.getAnimation(name)) != null) animation = intro;
+    if (flareIntro is String) {
+      if ((intro = actor.getAnimation(flareIntro)) != null) animation = intro;
     }
 
     /// Make sure that all the initial values are set for the actor and for the
@@ -610,14 +579,14 @@ class TimelineInitHandler {
     actor.advance(0.0);
     actorStatic.advance(0.0);
 
-    dynamic bounds = assetMap['bounds'];
     if (bounds is List) {
       /// Override the AABB for this event with custom values.
       setupAABB = flare.AABB.fromValues(
-          bounds[0] is int ? bounds[0].toDouble() : bounds[0],
-          bounds[1] is int ? bounds[1].toDouble() : bounds[1],
-          bounds[2] is int ? bounds[2].toDouble() : bounds[2],
-          bounds[3] is int ? bounds[3].toDouble() : bounds[3]);
+        bounds![0],
+        bounds[1],
+        bounds[2],
+        bounds[3],
+      );
     }
 
     FlareAsset flareAsset = FlareAsset(
@@ -650,7 +619,8 @@ class TimelineInitHandler {
     bool loop,
     double offset,
     double gap,
-    Map assetMap,
+    String? nimaIdle,
+    List<double>? bounds,
   ) async {
     nima.FlutterActor flutterActor = nima.FlutterActor();
     await flutterActor.loadFromBundle(filename);
@@ -659,9 +629,8 @@ class TimelineInitHandler {
     nima.FlutterActor actor = flutterActor.makeInstance() as nima.FlutterActor;
 
     nima.ActorAnimation animation;
-    dynamic name = assetMap['idle'];
-    if (name is String) {
-      animation = actor.getAnimation(name);
+    if (nimaIdle is String) {
+      animation = actor.getAnimation(nimaIdle);
     } else {
       animation = flutterActor.animations[0];
     }
@@ -673,13 +642,9 @@ class TimelineInitHandler {
     actor.advance(0.0);
     actorStatic.advance(0.0);
 
-    dynamic bounds = assetMap['bounds'];
     if (bounds is List) {
-      setupAABB = nima.AABB.fromValues(
-          bounds[0] is int ? bounds[0].toDouble() : bounds[0],
-          bounds[1] is int ? bounds[1].toDouble() : bounds[1],
-          bounds[2] is int ? bounds[2].toDouble() : bounds[2],
-          bounds[3] is int ? bounds[3].toDouble() : bounds[3]);
+      setupAABB =
+          nima.AABB.fromValues(bounds![0], bounds[1], bounds[2], bounds[3]);
     }
 
     NimaAsset nimaAsset = NimaAsset(
@@ -763,7 +728,8 @@ class TarikhMenuInitHandler {
         dynamic endVal = itemMap['end'];
         double end = endVal is int ? endVal.toDouble() : endVal;
 
-        menuItemList.add(MenuItemData(label, start, end));
+        menuItemList
+            .add(MenuItemData('i.' + label, start, end)); // TODO asdf i. hack
       }
 
       TarikhC.to._tarikhMenuData.add(MenuSectionData(

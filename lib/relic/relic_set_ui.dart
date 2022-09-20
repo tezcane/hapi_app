@@ -253,7 +253,7 @@ class RelicSetUI extends StatelessWidget {
               ),
             ),
           ),
-          if (showTileText) T(relic.trValTitle, tsN, w: wTile, h: hText),
+          if (showTileText) T(relic.trKeyTitle, tsN, w: wTile, h: hText),
         ],
       ),
     );
@@ -294,7 +294,7 @@ class RelicSetUI extends StatelessWidget {
             ),
           ),
           if (showTileText && hasField) T(field, tsN, w: wTile, h: hText),
-          if (showTileText) T(relic.trValTitle, tsN, w: wTile, h: hText),
+          if (showTileText) T(relic.trKeyTitle, tsN, w: wTile, h: hText),
         ],
       ),
     );

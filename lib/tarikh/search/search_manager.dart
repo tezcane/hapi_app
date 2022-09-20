@@ -1,5 +1,6 @@
 import 'dart:collection';
 
+import 'package:hapi/main_c.dart';
 import 'package:hapi/tarikh/event/event.dart';
 
 /// This object handles the search operation in the app. When it is initialized,
@@ -33,7 +34,7 @@ class SearchManager {
     /// Fill the map with all the possible searchable substrings.
     /// This operation is O(n^2), thus very slow, and performed only once upon initialization.
     for (Event event in events) {
-      String label = event.trValTitle;
+      String label = a(event.trKeyTitle);
       int len = label.length;
       for (int i = 0; i < len; i++) {
         for (int j = i + 1; j <= len; j++) {

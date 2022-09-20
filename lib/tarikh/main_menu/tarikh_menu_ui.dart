@@ -51,7 +51,7 @@ class TarikhMenuUI extends StatelessWidget {
                     margin: const EdgeInsets.only(top: 20.0),
                     child: GetBuilder<TarikhC>(builder: (c) {
                       return MenuSection(
-                        c.tarikhMenuData[index].trKeyEndTagLabel,
+                        c.tarikhMenuData[index].trKeyTitle,
                         c.tarikhMenuData[index].backgroundColor,
                         c.tarikhMenuData[index].textColor,
                         c.tarikhMenuData[index].items,

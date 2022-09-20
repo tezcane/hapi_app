@@ -9,6 +9,7 @@ import 'package:hapi/controller/time_c.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/settings_option.dart';
 import 'package:hapi/quest/active/active_quests_c.dart';
+import 'package:hapi/tarikh/event/event.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/intl.dart';
 
@@ -261,10 +262,27 @@ class LanguageC extends GetxHapi {
     Get.addTranslations({newLangKey: trMap});
   }
 
-  /// The event trKey is made from appending label to 't.'. It is also
-  /// taken in real time from the i18n/tarikh_articles/ to not use up memory.
-  Future<String> trValTarikhArticle(String label) async =>
-      (await _getTrMap('tarikh_articles/', currLangKey))['t.$label']!;
+  /// Load translations from disk to save memory. The trVal is returned from the
+  /// currLangKey lookup, e.g. if Timeline Event calls this and lang is Turkish
+  /// tarikh_articles/tr.json will be parsed and returned.
+  Future<String> trValArticle(EVENT_TYPE eventType, String trKey) async {
+    String trFilePath;
+    String trKeyLeadingTag;
+    if (eventType == EVENT_TYPE.Relic) {
+      trFilePath = 'relic/anbiya';
+      trKeyLeadingTag = 'pq.';
+    } else {
+      trFilePath = 'tarikh_articles/';
+      trKeyLeadingTag = 't.';
+    }
+
+    trKey = trKey.replaceFirst('i.', trKeyLeadingTag);
+    if (!trKey.startsWith(trKeyLeadingTag)) {
+      trKey = trKey.replaceFirst('a.', trKeyLeadingTag);
+    }
+
+    return (await _getTrMap(trFilePath, currLangKey))[trKey]!;
+  }
 
   /// Give "a.<transliteration> and get Arabic script translation back
   String ar(String trKey) => aMap[trKey]!;

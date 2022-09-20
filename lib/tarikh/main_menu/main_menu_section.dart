@@ -1,6 +1,6 @@
 import 'package:flare_flutter/flare_actor.dart' as flare;
 import 'package:flutter/material.dart';
-import 'package:hapi/tarikh/event/event.dart';
+import 'package:hapi/main_c.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/main_menu/menu_vignette.dart';
 
@@ -16,7 +16,7 @@ typedef NavigateTo = Function(MenuItemData item);
 /// Since this widget expands and contracts when tapped, it needs to maintain a [State].
 class MenuSection extends StatefulWidget {
   const MenuSection(
-    this.trKeyEndTagMenuTitle,
+    this.trKeyTitle,
     this.backgroundColor,
     this.accentColor,
     this.menuOptions,
@@ -24,15 +24,13 @@ class MenuSection extends StatefulWidget {
     this.isActive, {
     required this.assetId,
   });
-  final String trKeyEndTagMenuTitle;
+  final String trKeyTitle;
   final Color backgroundColor;
   final Color accentColor;
   final List<MenuItemData> menuOptions;
   final String assetId;
   final NavigateTo navigateTo;
   final bool isActive;
-
-  String get trValTitle => Event.trValFromTrKeyEndTag(trKeyEndTagMenuTitle);
 
   @override
   State<StatefulWidget> createState() => _SectionState();
@@ -159,7 +157,7 @@ class _SectionState extends State<MenuSection>
                           ),
                         ),
                         Text(
-                          widget.trValTitle,
+                          a(widget.trKeyTitle),
                           style: TextStyle(
                             fontSize: 20.0,
                             fontFamily: 'RobotoMedium',
@@ -188,7 +186,7 @@ class _SectionState extends State<MenuSection>
                                   child: Container(
                                     margin: const EdgeInsets.only(bottom: 20.0),
                                     child: Text(
-                                      item.trValTitle,
+                                      a(item.trKeyTitle),
                                       style: TextStyle(
                                         color: widget.accentColor,
                                         fontSize: 20.0,

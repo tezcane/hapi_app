@@ -168,7 +168,7 @@ addEdgesAllFamily(Graph graph, FamilyTree ft, int gapIdx) {
   }
 
   // Add Prophet (Handles case of Adam fine)
-  addEdge(ft.relicId, 'Prophet', ft.trKeyEndTagLabel);
+  addEdge(ft.relicId, 'Prophet', a(ft.trKeyTitle));
 
   // add daughters to Prophet node
   for (Enum e in ft.daughters ?? []) {

@@ -71,8 +71,8 @@ abstract class Relic extends Event {
     required this.trKeySummary2, // e.g. Prophet Quran Mentions (pq. keys)
   }) : super(
           type: EVENT_TYPE.Relic,
-          trValEra: trValEra,
-          trKeyEndTagLabel: trKeyEndTagLabel,
+          trKeyEra: trValEra,
+          trKeyTitle: trKeyEndTagLabel,
           startMs: startMs,
           endMs: endMs,
           asset: asset,

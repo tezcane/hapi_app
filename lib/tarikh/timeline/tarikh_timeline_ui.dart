@@ -74,7 +74,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   initState() {
     if (widget.event == null) {
       // lookup event manually since not provided on init
-      widget.event = TarikhC.to.eventMap[widget.focusItem.trKeyEndTagLabel];
+      widget.event = TarikhC.to.eventMap[widget.focusItem.trKeyTitle];
 
       // We need event just to update down/up past/future btns. Since it wasn't
       // used/available/wanted? by the original caller to this class, we ignore
@@ -86,8 +86,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     _trValEraName = 'i.Era'.tr +
         ': ' +
         (t.currentEra != null
-            ? t.currentEra!.trValTitle
-            : trKeyDefaultEraName.tr);
+            ? a(t.currentEra!.trKeyTitle)
+            : a(trKeyDefaultEraName));
     t.onHeaderColorsChanged = (/*Color background,*/ Color text) {
       setState(() {
         _headerTextColor = text;
@@ -99,7 +99,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     t.onEraChanged = (Event? event) {
       setState(() {
         _trValEraName =
-            'i.Era'.tr + ': ' + (event != null ? event.trValTitle : '');
+            'i.Era'.tr + ': ' + (event != null ? a(event.trKeyTitle) : '');
       });
     };
 
@@ -194,7 +194,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
         TarikhC.to.isActiveTimeline = false;
         MenuC.to.pushSubPage(SubPage.Event_UI, arguments: {
           'eventType': EVENT_TYPE.Incident,
-          'initEventTitle': _touchedBubble!.event.trKeyEndTagLabel,
+          'trKeyTitleAtInit': _touchedBubble!.event.trKeyTitle,
         });
 
         //t.isActive = true; // TODO working? was below:
@@ -247,13 +247,13 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
       t.onEraChanged = (Event? event) {
         setState(() {
           _trValEraName =
-              event != null ? event.trValTitle : trKeyDefaultEraName.tr;
+              event != null ? a(event.trKeyTitle) : a(trKeyDefaultEraName);
         });
       };
       setState(() {
         _trValEraName = t.currentEra != null
-            ? t.currentEra!.trValTitle
-            : trKeyDefaultEraName.tr;
+            ? a(t.currentEra!.trKeyTitle)
+            : a(trKeyDefaultEraName);
         //t.isActive = true;
       });
     } else {
@@ -515,7 +515,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
             child: Stack(
               children: <Widget>[
                 Hero(
-                  tag: widget.focusItem.trKeyEndTagLabel,
+                  tag: widget.focusItem.trKeyTitle,
                   child: TimelineRenderWidget(
                     needsRepaint: true,
                     topOverlap: TopOverlap + devicePadding.top,

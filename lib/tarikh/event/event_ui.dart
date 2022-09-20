@@ -14,10 +14,10 @@ import 'package:hapi/tarikh/tarikh_c.dart';
 class EventUI extends StatefulWidget {
   EventUI() {
     eventType = Get.arguments['eventType'];
-    initEventTitle = Get.arguments['initEventTitle'];
+    trKeyTitleAtInit = Get.arguments['trKeyTitleAtInit'];
   }
   late final EVENT_TYPE eventType;
-  late final String initEventTitle;
+  late final String trKeyTitleAtInit;
 
   @override
   _EventUIState createState() => _EventUIState();
@@ -65,17 +65,17 @@ class _EventUIState extends State<EventUI> {
     _btnUp = TimeBtn('', '', '', null);
     _btnDn = TimeBtn('', '', '', null);
 
-    initEvent(widget.initEventTitle);
+    initEvent(widget.trKeyTitleAtInit);
   }
 
-  initEvent(String eventTag) {
+  initEvent(String trKeyTitle) {
     // eventIdx = newEventIdx; TODO asdf
-    _event = _eventMap[eventTag]!;
+    _event = _eventMap[trKeyTitle]!;
 
     TarikhC.to.updateEventBtn(_btnUp, _event.previous);
     TarikhC.to.updateEventBtn(_btnDn, _event.next);
 
-    _trValTitle = _event.trValTitle;
+    _trValTitle = a(_event.trKeyTitle);
     _trValSubTitle = _event.trValYearsAgo();
 
     TextStyle h1 = Get.theme.textTheme.headline4!
@@ -112,9 +112,8 @@ class _EventUIState extends State<EventUI> {
   /// Load the markdown file from the assets and set the contents of the page to its value.
   void loadMarkdown() async {
     String trValArticleMarkdown =
-        await LanguageC.to.trValTarikhArticle(_event.trKeyEndTagLabel);
-    _trValArticleMarkdown = trValArticleMarkdown;
-    setState(() {}); // refresh UI with new event data
+        await LanguageC.to.trValArticle(_event.type, _event.trKeyTitle);
+    setState(() => _trValArticleMarkdown = trValArticleMarkdown); // refresh UI
   }
 
   /// This widget is wrapped in a [Scaffold] to have the classic Material Design visual layout structure.
@@ -124,8 +123,7 @@ class _EventUIState extends State<EventUI> {
   /// A [GestureDetector] is used to control the [EventWidget], if it allows it (...try Newton!)
   @override
   Widget build(BuildContext context) {
-    bool isFav =
-        _favs.any((Event e) => e.trKeyEndTagLabel == _event.trKeyEndTagLabel);
+    bool isFav = _favs.any((Event e) => e.trKeyTitle == _event.trKeyTitle);
 
     const double fabWidth = 71; // 56 + 15
     const double middleButtonsGap = 5;
@@ -218,8 +216,8 @@ class _EventUIState extends State<EventUI> {
                                             ? 'i.See previous relic'.tr
                                             : 'i.Navigate to past'.tr,
                                     heroTag: 'btnUp',
-                                    onPressed: () => initEvent(
-                                        _btnUp.event!.trKeyEndTagLabel),
+                                    onPressed: () =>
+                                        initEvent(_btnUp.event!.trKeyTitle),
                                     materialTapTargetSize:
                                         MaterialTapTargetSize.padded,
                                     child: const Icon(
@@ -267,8 +265,8 @@ class _EventUIState extends State<EventUI> {
                                             ? 'i.See next relic'.tr
                                             : 'i.Navigate to future'.tr,
                                     heroTag: 'btnDn',
-                                    onPressed: () => initEvent(
-                                        _btnDn.event!.trKeyEndTagLabel),
+                                    onPressed: () =>
+                                        initEvent(_btnDn.event!.trKeyTitle),
                                     materialTapTargetSize:
                                         MaterialTapTargetSize.padded,
                                     child: const Icon(
@@ -324,7 +322,7 @@ class _EventUIState extends State<EventUI> {
                             });
                           },
                           child: Hero(
-                            tag: _event.trKeyEndTagLabel,
+                            tag: _event.trKeyTitle,
                             child: SizedBox(
                               height: 280,
                               child: EventWidget(
