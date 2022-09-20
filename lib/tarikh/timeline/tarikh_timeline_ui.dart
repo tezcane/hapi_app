@@ -342,7 +342,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                   : c.isGutterModeFav
                                       ? 'i.Show all events'.tr
                                       : 'i.Hide events'.tr,
-                              heroTag: 'Tarikh_Favorite',
+                              heroTag: Icons.favorite_border_outlined,
                               onPressed: () {
                                 if (c.isGutterModeOff) {
                                   c.gutterMode = GutterMode.FAV;

@@ -321,17 +321,17 @@ class _EventUIState extends State<EventUI> {
                               _interactOffset = null;
                             });
                           },
-                          child: Hero(
-                            tag: _event.trKeyTitle,
-                            child: SizedBox(
-                              height: 280,
-                              child: EventWidget(
-                                isActive: true,
-                                event: _event,
-                                interactOffset: _interactOffset,
-                              ),
+                          // child: Hero( TODO
+                          //   tag: _event.trKeyTitle,
+                          child: SizedBox(
+                            height: 280,
+                            child: EventWidget(
+                              isActive: true,
+                              event: _event,
+                              interactOffset: _interactOffset,
                             ),
                           ),
+                          // ),
                         ),
                         Padding(
                           padding: const EdgeInsets.only(top: 30.0),
@@ -370,19 +370,20 @@ class _EventUIState extends State<EventUI> {
 
                                     /// Check out the widget at:
                                     /// https://www.2dimensions.com/a/pollux/files/flare/heart-simple/preview
-                                    child: FlareActor(
-                                      'assets/tarikh/flare/Favorite.flr',
-                                      animation:
-                                          isFav ? 'Favorite' : 'Unfavorite',
-                                      shouldClip: false,
-                                      color: Colors.pinkAccent,
+                                    child: Hero(
+                                      tag: Icons.favorite_border_outlined,
+                                      child: FlareActor(
+                                        'assets/tarikh/flare/Favorite.flr',
+                                        animation:
+                                            isFav ? 'Favorite' : 'Unfavorite',
+                                        shouldClip: false,
+                                        color: Colors.pinkAccent,
+                                      ),
                                     ),
                                   ),
                                 ),
                                 onTap: () {
-                                  setState(() {
-                                    _isFavorite = !_isFavorite;
-                                  });
+                                  setState(() => _isFavorite = !_isFavorite);
                                   if (_isFavorite) {
                                     TarikhC.to.addFavorite(_event);
                                   } else {

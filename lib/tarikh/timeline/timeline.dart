@@ -591,9 +591,8 @@ class Timeline {
     return doneRendering;
   }
 
-  double bubbleHeight(Event event) {
-    return (BubblePadding * 1.15) + (event.lineCount * BubbleTextHeight);
-  }
+  double bubbleHeight(Event event) =>
+      (BubblePadding * 1.15) + (event.titleLineCount * BubbleTextHeight);
 
   /// Advance event [assets] with the current [elapsed] time.
   bool _advanceItems(List<Event> items, double x, double scale, double elapsed,

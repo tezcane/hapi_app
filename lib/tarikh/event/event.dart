@@ -26,7 +26,13 @@ class Event {
     required this.asset,
     this.accent,
   }) {
-    _handleLabelNewlineCount();
+    // Some labels have a newline characters because they are too big
+    int startIdx = a(trKeyTitle).indexOf('\n', 3); // pass 'i.', 'a.', etc.
+    if (startIdx == -1) {
+      titleLineCount = 1;
+    } else {
+      titleLineCount = 2;
+    }
   }
 
   final EVENT_TYPE type;
@@ -40,7 +46,7 @@ class Event {
   Color? accent;
 
   /// Used to calculate how many lines to draw for the bubble in the timeline.
-  int lineCount = 1;
+  late final int titleLineCount;
 
   /// Each event constitutes an element of a tree:
   /// eras are grouped into spanning eras and events are placed into the eras
@@ -88,19 +94,19 @@ class Event {
   //   return trVal.startsWith('i.') ? a('a.$trKeyEndTag') : trVal;
   // }
 
-  /// Some labels have a newline characters to adjust their alignment.
-  /// Detect the occurrence and add information regarding the line-count.
-  _handleLabelNewlineCount() {
-    lineCount = 1;
-
-    int startIdx = 0;
-    while (true) {
-      startIdx = a(trKeyTitle).indexOf('\n', startIdx);
-      if (startIdx == -1) break;
-      lineCount++; // found a new line, continue
-      startIdx++; // to go past current new line
-    }
-  }
+  // /// Some labels have a newline characters to adjust their alignment.
+  // /// Detect the occurrence and add information regarding the line-count.
+  // _handleLabelNewlineCount() {
+  //   lineCount = 1;
+  //
+  //   int startIdx = 0;
+  //   while (true) {
+  //     startIdx = a(trKeyTitle).indexOf('\n', startIdx);
+  //     if (startIdx == -1) break;
+  //     lineCount++; // found a new line, continue
+  //     startIdx++; // to go past current new line
+  //   }
+  // }
 
   // /// Debug information.
   // @override

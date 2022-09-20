@@ -62,8 +62,8 @@ class Asset {
     this.loop = true,
     this.offset = 0.0,
     this.gap = 0.0,
-    this.bounds,
     this.scale = 1.0,
+    this.bounds,
     this.intro,
     this.idle,
   });
@@ -484,7 +484,7 @@ List<TimelineData> getTimelineData() {
     ),
     const TimelineData(
       date: 1859,
-      trKeyTitle: "a.Darwin's\nTheory of Evolution",
+      trKeyTitle: "i.Darwin's\nTheory of Evolution",
       asset: Asset(
         source: 'tarikh/nima/Darwin 2.nma',
         width: 1850,
