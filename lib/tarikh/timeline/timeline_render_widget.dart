@@ -264,7 +264,7 @@ class TimelineRenderObject extends RenderBox {
           double h = asset.height * Timeline.AssetScreenScale;
 
           /// Draw the correct asset.
-          if (asset is EventImage) {
+          if (asset is ImageAsset) {
             canvas.drawImageRect(
               asset.image,
               Rect.fromLTWH(0.0, 0.0, asset.width, asset.height),
@@ -780,7 +780,7 @@ class TimelineRenderObject extends RenderBox {
 
         /// Draw the assets statically within the circle.
         /// Calculations here are the same as seen in [paint()] for the assets.
-        if (asset is EventImage) {
+        if (asset is ImageAsset) {
           canvas.drawImageRect(
             asset.image,
             Rect.fromLTWH(0.0, 0.0, asset.width, asset.height),

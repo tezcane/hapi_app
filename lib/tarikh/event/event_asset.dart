@@ -30,8 +30,8 @@ class EventAsset {
 }
 
 /// A renderable image.
-class EventImage extends EventAsset {
-  EventImage(
+class ImageAsset extends EventAsset {
+  ImageAsset(
       String filename, double width, double height, double scale, this.image)
       : super(filename, width, height, scale);
   final Image image;

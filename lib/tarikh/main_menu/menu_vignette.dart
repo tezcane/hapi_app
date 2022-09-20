@@ -159,7 +159,7 @@ class MenuVignetteRenderObject extends RenderBox {
     double h = asset.height;
 
     /// If the asset is just a static image, draw the image directly to [canvas].
-    if (asset is EventImage) {
+    if (asset is ImageAsset) {
       canvas.drawImageRect(
         asset.image,
         Rect.fromLTWH(0.0, 0.0, asset.width, asset.height),

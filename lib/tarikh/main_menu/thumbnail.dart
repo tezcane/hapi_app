@@ -20,7 +20,7 @@ class ThumbnailWidget extends StatelessWidget {
     Widget thumbnail;
 
     /// Check if the [event.asset] provided is already a [EventImage].
-    if (asset is EventImage) {
+    if (asset is ImageAsset) {
       thumbnail = RawImage(image: asset.image);
     } else if (asset is NimaAsset || asset is FlareAsset) {
       /// If not, retrieve the image from the Nima/Flare [EventAsset], and

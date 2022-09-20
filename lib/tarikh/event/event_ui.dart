@@ -367,19 +367,22 @@ class _EventUIState extends State<EventUI> {
                                     height: 60.0,
                                     width: 60.0,
                                     padding: const EdgeInsets.all(15.0),
-
-                                    /// Check out the widget at:
-                                    /// https://www.2dimensions.com/a/pollux/files/flare/heart-simple/preview
                                     child: Hero(
-                                      tag: Icons.favorite_border_outlined,
-                                      child: FlareActor(
-                                        'assets/tarikh/flare/Favorite.flr',
-                                        animation:
-                                            isFav ? 'Favorite' : 'Unfavorite',
-                                        shouldClip: false,
-                                        color: Colors.pinkAccent,
-                                      ),
-                                    ),
+                                        tag: Icons.favorite_border_outlined,
+                                        child: isFav
+                                            ? const FlareActor(
+                                                'assets/tarikh/flare/Favorite.flr',
+                                                animation: 'Favorite',
+                                                shouldClip: false,
+                                                color: Colors.pinkAccent,
+                                              )
+                                            : const FlareActor(
+                                                'assets/tarikh/flare/Favorite.flr',
+                                                animation: 'Unfavorite',
+                                                shouldClip: false,
+                                                color: Colors.pinkAccent,
+                                                snapToEnd: true, //for bad state
+                                              )),
                                   ),
                                 ),
                                 onTap: () {

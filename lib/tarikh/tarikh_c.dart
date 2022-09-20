@@ -522,7 +522,7 @@ class TimelineInitHandler {
     return Future.value(eventAsset);
   }
 
-  Future<EventAsset> loadFlareAsset(
+  Future<FlareAsset> loadFlareAsset(
     String filename,
     double width,
     double height,
@@ -611,7 +611,7 @@ class TimelineInitHandler {
     return flareAsset;
   }
 
-  Future<EventAsset> loadNimaAsset(
+  Future<NimaAsset> loadNimaAsset(
     String filename,
     double width,
     double height,
@@ -664,7 +664,7 @@ class TimelineInitHandler {
     return nimaAsset;
   }
 
-  Future<EventAsset> loadImageAsset(
+  Future<ImageAsset> loadImageAsset(
     String filename,
     double width,
     double height,
@@ -675,7 +675,7 @@ class TimelineInitHandler {
     ui.Codec codec = await ui.instantiateImageCodec(list);
     ui.FrameInfo frame = await codec.getNextFrame();
 
-    return EventImage(filename, width, height, scale, frame.image);
+    return ImageAsset(filename, width, height, scale, frame.image);
   }
 
   /// Helper function for [MenuVignette].
