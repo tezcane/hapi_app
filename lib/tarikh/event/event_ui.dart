@@ -6,6 +6,7 @@ import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/tarikh/event/event.dart';
+import 'package:hapi/tarikh/event/event_asset.dart';
 import 'package:hapi/tarikh/event/event_widget.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 
@@ -14,9 +15,11 @@ import 'package:hapi/tarikh/tarikh_c.dart';
 class EventUI extends StatefulWidget {
   EventUI() {
     eventType = Get.arguments['eventType'];
+    eventMap = Get.arguments['eventMap'];
     trKeyTitleAtInit = Get.arguments['trKeyTitleAtInit'];
   }
   late final EVENT_TYPE eventType;
+  late final Map<String, Event> eventMap;
   late final String trKeyTitleAtInit;
 
   @override
@@ -29,9 +32,7 @@ class EventUI extends StatefulWidget {
 /// contents to change when a new event is displayed. Moreover the [FlareWidget]s that are used
 /// on this page (i.e. the top [EventWidget] the favorite button) rely on life-cycle parameters.
 class _EventUIState extends State<EventUI> {
-  late final Map<String, Event> _eventMap;
   late Event _event;
-  late int _eventIdx; // TODO asdf
 
   late final TimeBtn _btnUp;
   late final TimeBtn _btnDn;
@@ -60,8 +61,6 @@ class _EventUIState extends State<EventUI> {
   initState() {
     super.initState();
 
-    _eventMap = TarikhC.to.getEventMap(widget.eventType);
-
     _btnUp = TimeBtn('', '', '', null);
     _btnDn = TimeBtn('', '', '', null);
 
@@ -69,11 +68,13 @@ class _EventUIState extends State<EventUI> {
   }
 
   initEvent(String trKeyTitle) {
-    // eventIdx = newEventIdx; TODO asdf
-    _event = _eventMap[trKeyTitle]!;
+    _event = widget.eventMap[trKeyTitle]!;
 
-    TarikhC.to.updateEventBtn(_btnUp, _event.previous);
-    TarikhC.to.updateEventBtn(_btnDn, _event.next);
+    _btnUp.event = _event; //need to init here so first updateEventBtn() works
+    _btnDn.event = _event;
+
+    updateEventBtn(_btnUp, _event.previous);
+    updateEventBtn(_btnDn, _event.next);
 
     _trValTitle = a(_event.trKeyTitle);
     _trValSubTitle = _event.trValYearsAgo();
@@ -297,11 +298,10 @@ class _EventUIState extends State<EventUI> {
           children: <Widget>[
             Column(
               children: <Widget>[
-                //Container(height: devicePadding.top),
+                // Container(height: devicePadding.top),
                 Expanded(
                   child: SingleChildScrollView(
-                    padding:
-                        const EdgeInsets.only(left: 20, right: 20, bottom: 30),
+                    padding: const EdgeInsets.all(10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -323,12 +323,20 @@ class _EventUIState extends State<EventUI> {
                           },
                           // child: Hero( TODO
                           //   tag: _event.trKeyTitle,
-                          child: SizedBox(
-                            height: 280,
-                            child: EventWidget(
-                              isActive: true,
-                              event: _event,
-                              interactOffset: _interactOffset,
+                          child: Center(
+                            child: SizedBox(
+                              height: 280,
+                              width: 280,
+                              child: _event.asset is ImageAsset
+                                  ? Image(
+                                      image: AssetImage(_event.asset.filename),
+                                      fit: BoxFit.fill,
+                                    )
+                                  : EventWidget(
+                                      isActive: true,
+                                      event: _event,
+                                      interactOffset: _interactOffset,
+                                    ),
                             ),
                           ),
                           // ),
@@ -417,5 +425,22 @@ class _EventUIState extends State<EventUI> {
         ),
       ),
     );
+  }
+
+  void updateEventBtn(TimeBtn timeBtn, Event? event) {
+    String trValTitle = '';
+    String trValTimeUntil = '';
+
+    if (event != null) {
+      trValTitle = a(event.trKeyTitle);
+      if (event.isTimeLineEvent && timeBtn.event!.isTimeLineEvent) {
+        double timeUntilDouble = (event.startMs - timeBtn.event!.startMs).abs();
+        trValTimeUntil = event.trValYears(timeUntilDouble).toLowerCase();
+      }
+    }
+
+    timeBtn.event = event;
+    timeBtn.trValTitle = trValTitle;
+    timeBtn.trValTimeUntil = trValTimeUntil;
   }
 }

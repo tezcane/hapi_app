@@ -7,6 +7,7 @@ import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_c.dart';
 import 'package:hapi/relic/ummah/prophet.dart';
+import 'package:hapi/tarikh/event/event.dart';
 
 /// An entire tab (tab and tile labels, relics, filters, etc.). Uses the
 /// RelicSet object found in relic.dart.
@@ -236,25 +237,34 @@ class RelicSetUI extends StatelessWidget {
     final double hText = 35 - (tpr.toDouble() * 2); // h size: 13-33
     final double hTile = wTile + (showTileText ? hText : 0);
 
-    return SizedBox(
-      width: wTile,
-      height: hTile,
-      child: Column(
-        children: [
-          Container(
-            // color: AppThemes.ajrColorsByIdx[Random().nextInt(7)],
-            color: AppThemes.ajrColorsByIdx[relic.ajrLevel],
-            child: SizedBox(
-              width: wTile,
-              height: wTile,
-              child: Image(
-                image: AssetImage(relic.asset.filename),
-                fit: BoxFit.fill,
+    return InkWell(
+      onTap: () {
+        MenuC.to.pushSubPage(SubPage.Event_UI, arguments: {
+          'eventType': EVENT_TYPE.Relic,
+          'eventMap': getEventMap(),
+          'trKeyTitleAtInit': relic.trKeyTitle,
+        });
+      },
+      child: SizedBox(
+        width: wTile,
+        height: hTile,
+        child: Column(
+          children: [
+            Container(
+              // color: AppThemes.ajrColorsByIdx[Random().nextInt(7)],
+              color: AppThemes.ajrColorsByIdx[relic.ajrLevel],
+              child: SizedBox(
+                width: wTile,
+                height: wTile,
+                child: Image(
+                  image: AssetImage(relic.asset.filename),
+                  fit: BoxFit.fill,
+                ),
               ),
             ),
-          ),
-          if (showTileText) T(relic.trKeyTitle, tsN, w: wTile, h: hText),
-        ],
+            if (showTileText) T(relic.trKeyTitle, tsN, w: wTile, h: hText),
+          ],
+        ),
       ),
     );
   }
@@ -278,24 +288,35 @@ class RelicSetUI extends StatelessWidget {
     final double hText = 35 - (tpr.toDouble() * 2); // h size: 13-33
     final double hTile = wTile + (showTileText ? (hText * 2) : 0);
 
-    return SizedBox(
-      width: wTile,
-      height: hTile,
-      child: Column(
-        children: [
-          Container(
-            // color: AppThemes.ajrColorsByIdx[Random().nextInt(7)],
-            color: AppThemes.ajrColorsByIdx[relic.ajrLevel],
-            child: SizedBox(
-              width: wTile,
-              height: wTile,
-              child: Image(
-                  image: AssetImage(relic.asset.filename), fit: BoxFit.fill),
+    return InkWell(
+      onTap: () {
+        MenuC.to.pushSubPage(SubPage.Event_UI, arguments: {
+          'eventType': EVENT_TYPE.Relic,
+          'eventMap': getEventMap(),
+          'trKeyTitleAtInit': relic.trKeyTitle,
+        });
+      },
+      child: SizedBox(
+        width: wTile,
+        height: hTile,
+        child: Column(
+          children: [
+            Container(
+              // color: AppThemes.ajrColorsByIdx[Random().nextInt(7)],
+              color: AppThemes.ajrColorsByIdx[relic.ajrLevel],
+              child: SizedBox(
+                width: wTile,
+                height: wTile,
+                child: Image(
+                  image: AssetImage(relic.asset.filename),
+                  fit: BoxFit.fill,
+                ),
+              ),
             ),
-          ),
-          if (showTileText && hasField) T(field, tsN, w: wTile, h: hText),
-          if (showTileText) T(relic.trKeyTitle, tsN, w: wTile, h: hText),
-        ],
+            if (showTileText && hasField) T(field, tsN, w: wTile, h: hText),
+            if (showTileText) T(relic.trKeyTitle, tsN, w: wTile, h: hText),
+          ],
+        ),
       ),
     );
   }
@@ -308,5 +329,42 @@ class RelicSetUI extends StatelessWidget {
       runSpacing: showTileText ? 6 : 2.5, // gap under a row of tiles
       children: tileWidgets,
     );
+  }
+
+  /// To get the EventUI() UI working, with least amount of pain, we turn our
+  /// relic structures into a Map<String, String> that Tarikh code are already
+  /// using. This way we can reuse lots of logic and maps are efficient anyway.
+  Map<String, Event> getEventMap() {
+    List<int> idxList = [];
+    switch (filter.type) {
+      case FILTER_TYPE.Default:
+      case FILTER_TYPE.Tree:
+        for (Relic relic in relicSet.relics) {
+          idxList.add(relic.relicId);
+        }
+        break;
+      case FILTER_TYPE.IdxList:
+        idxList = filter.idxList!;
+        break;
+    }
+
+    // Create the map to be used for up/dn buttons
+    Map<String, Event> eventMap = {};
+    Event? prevEvent; // start null, parent/first event has no previous event
+    for (int idx = 0; idx < idxList.length; idx++) {
+      Event event = relicSet.relics[idxList[idx]];
+      event.previous = prevEvent;
+
+      if (idx == idxList.length - 1) {
+        event.next = null; // last idx
+      } else {
+        event.next = relicSet.relics[idxList[idx + 1]];
+      }
+
+      prevEvent = event; // prev event is this current event
+      eventMap[event.trKeyTitle] = event;
+    }
+
+    return eventMap;
   }
 }

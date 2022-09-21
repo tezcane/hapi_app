@@ -194,6 +194,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
         TarikhC.to.isActiveTimeline = false;
         MenuC.to.pushSubPage(SubPage.Event_UI, arguments: {
           'eventType': EVENT_TYPE.Incident,
+          'eventMap': TarikhC.to.eventMap,
           'trKeyTitleAtInit': _touchedBubble!.event.trKeyTitle,
         });
 

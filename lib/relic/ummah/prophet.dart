@@ -188,8 +188,8 @@ Future<List<Prophet>> initProphets() async {
   rv.add(Prophet(
     // Event data:
     trValEra: 'i.Birth of Humans'.tr,
-    startMs: -3400000,
-    endMs: -3399050,
+    startMs: -340000,
+    endMs: -339050,
     asset: await _getImageEventAsset(PF.Adam),
     // Fam data:
     pf: PF.Adam,

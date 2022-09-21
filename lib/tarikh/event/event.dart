@@ -83,8 +83,7 @@ class Event {
 
   bool get isVisible => opacity > 0.0;
 
-  // TODO asdf use this
-  bool isTimeLineEvent() => startMs != 0 && endMs != 0;
+  bool get isTimeLineEvent => startMs != 0 && endMs != 0; // TODO need both?
 
   // String get trValTitle => Event.trValFromTrKeyEndTag(trKeyTitle);
   //

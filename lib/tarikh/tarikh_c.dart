@@ -263,16 +263,6 @@ class TarikhC extends GetxHapi {
     timeBtn.event = event;
     updateTimeBtn(timeBtn, trValTitle, trValTimeUntil, trValPageScrolls);
   }
-
-  Map<String, Event> getEventMap(EVENT_TYPE eventType) {
-    switch (eventType) {
-      case EVENT_TYPE.Relic:
-        return eventMap; // TODO asdf
-      case EVENT_TYPE.Era:
-      case EVENT_TYPE.Incident:
-        return eventMap;
-    }
-  }
 }
 
 class TimelineInitHandler {
