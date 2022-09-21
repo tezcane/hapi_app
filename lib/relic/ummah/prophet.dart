@@ -1,5 +1,4 @@
 import 'package:get/utils.dart';
-import 'package:graphview/GraphView.dart';
 import 'package:hapi/controller/time_c.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/quran/quran.dart';
@@ -92,7 +91,7 @@ class Prophet extends FamilyTree {
     if (relicSetFiltersInit.isNotEmpty) return relicSetFiltersInit;
 
     // Add special cases here, if needed
-    Graph graph = getGraphAllFamily(RELIC_TYPE.Quran_AlAnbiya, PF.Gap.index);
+    // Graph graph = getGraphAllFamily(RELIC_TYPE.Quran_AlAnbiya, PF.Gap.index);
     // TODO add Isa<->Yahya connection/Lot Daugthers/etc. special logic here
 
     relicSetFiltersInit.addAll([
@@ -169,12 +168,8 @@ class Prophet extends FamilyTree {
       RelicSetFilter(
         type: FILTER_TYPE.Tree,
         trValLabel: 'i.Family Tree'.tr,
-        treeGraph: graph,
-      ),
-      RelicSetFilter(
-        type: FILTER_TYPE.Tree,
-        trValLabel: at('at.{0} Tree', ['a.Anbiya']),
-        treeGraph: getGraphOnlyRelics(RELIC_TYPE.Quran_AlAnbiya, PF.Gap.index),
+        treeGraph1: getGraphAllFamily(RELIC_TYPE.Quran_AlAnbiya, PF.Gap.index),
+        treeGraph2: getGraphOnlyRelics(RELIC_TYPE.Quran_AlAnbiya, PF.Gap.index),
       ),
     ]);
 

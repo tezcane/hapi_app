@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' as m;
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hapi/controller/getx_hapi.dart';
@@ -104,6 +105,9 @@ class LanguageC extends GetxHapi {
       _isRightToLeftLang ? MainAxisAlignment.end : MainAxisAlignment.start;
   MainAxisAlignment get axisEnd =>
       _isRightToLeftLang ? MainAxisAlignment.start : MainAxisAlignment.end;
+
+  m.TextDirection get textDirection =>
+      isLTR ? m.TextDirection.ltr : m.TextDirection.rtl;
 
   /// Use these prefect hash arrays to convert numeral systems (en->ar/ps/etc.).
   /// Note: labeled "en" but are Arabic Numerals (a.k.a. Hindi-Arabic Numerals).

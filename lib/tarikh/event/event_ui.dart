@@ -155,141 +155,144 @@ class _EventUIState extends State<EventUI> {
 
           return Align(
             alignment: Alignment.bottomLeft,
-            child: SizedBox(
-              height: height,
-              child: Row(
-                // mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  // Column dummy to easily vertical align up/down fabs:
-                  SizedBox(
-                    width: fabWidth,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 15),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          if (widget.eventType == EVENT_TYPE.Relic)
-                            FloatingActionButton(
-                              tooltip: 'i.Upgrade Relic'.tr,
-                              onPressed: () {
-                                // TODO asdf
-                              },
-                              materialTapTargetSize:
-                                  MaterialTapTargetSize.padded,
-                              child:
-                                  const Icon(Icons.start_outlined, size: 36.0),
-                            ),
-                          T('', tsR, w: w2, h: 17),
-                          const SizedBox(height: 1),
-                        ],
+            child: Directionality(
+              textDirection: TextDirection.ltr,
+              child: SizedBox(
+                height: height,
+                child: Row(
+                  // mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    // Column dummy to easily vertical align up/down fabs:
+                    SizedBox(
+                      width: fabWidth,
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 15),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            if (widget.eventType == EVENT_TYPE.Relic)
+                              FloatingActionButton(
+                                tooltip: 'i.Upgrade Relic'.tr,
+                                onPressed: () {
+                                  // TODO asdf
+                                },
+                                materialTapTargetSize:
+                                    MaterialTapTargetSize.padded,
+                                child: const Icon(Icons.start_outlined,
+                                    size: 36.0),
+                              ),
+                            T('', tsR, w: w2, h: 17),
+                            const SizedBox(height: 1),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
-                        width: w2,
-                        child: _btnUp.event == null
-                            ? Container()
-                            : Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                children: [
-                                  T(
-                                    trValUpTitle1,
-                                    tsR,
-                                    w: w2,
-                                    h: 18,
-                                    trVal: true,
-                                  ),
-                                  T(
-                                    trValUpTitle2,
-                                    tsR,
-                                    w: w2,
-                                    h: 18,
-                                    trVal: true,
-                                  ),
-                                  FloatingActionButton(
-                                    tooltip:
-                                        widget.eventType == EVENT_TYPE.Relic
-                                            ? 'i.See previous relic'.tr
-                                            : 'i.Navigate to past'.tr,
-                                    heroTag: 'btnUp',
-                                    onPressed: () =>
-                                        initEvent(_btnUp.event!.trKeyTitle),
-                                    materialTapTargetSize:
-                                        MaterialTapTargetSize.padded,
-                                    child: const Icon(
-                                      Icons.arrow_upward_outlined,
-                                      size: 30.0,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: w2,
+                          child: _btnUp.event == null
+                              ? Container()
+                              : Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    T(
+                                      trValUpTitle1,
+                                      tsR,
+                                      w: w2,
+                                      h: 18,
+                                      trVal: true,
                                     ),
-                                  ),
-                                  T(
-                                    _btnUp.trValTimeUntil,
-                                    tsR,
-                                    w: w2,
-                                    h: 17,
-                                    trVal: true,
-                                  ),
-                                  const SizedBox(height: 1),
-                                ],
-                              ),
-                      ),
-                      const SizedBox(width: middleButtonsGap),
-                      SizedBox(
-                        width: w2,
-                        child: _btnDn.event == null
-                            ? Container()
-                            : Column(
-                                mainAxisAlignment: MainAxisAlignment.end,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  T(
-                                    trValDnTitle1,
-                                    tsR,
-                                    w: w2,
-                                    h: 18,
-                                    trVal: true,
-                                  ),
-                                  T(
-                                    trValDnTitle2,
-                                    tsR,
-                                    w: w2,
-                                    h: 18,
-                                    trVal: true,
-                                  ),
-                                  FloatingActionButton(
-                                    tooltip:
-                                        widget.eventType == EVENT_TYPE.Relic
-                                            ? 'i.See next relic'.tr
-                                            : 'i.Navigate to future'.tr,
-                                    heroTag: 'btnDn',
-                                    onPressed: () =>
-                                        initEvent(_btnDn.event!.trKeyTitle),
-                                    materialTapTargetSize:
-                                        MaterialTapTargetSize.padded,
-                                    child: const Icon(
-                                      Icons.arrow_downward_outlined,
-                                      size: 30.0,
+                                    T(
+                                      trValUpTitle2,
+                                      tsR,
+                                      w: w2,
+                                      h: 18,
+                                      trVal: true,
                                     ),
-                                  ),
-                                  T(
-                                    _btnDn.trValTimeUntil,
-                                    tsR,
-                                    w: w2,
-                                    h: 17,
-                                    trVal: true,
-                                  ),
-                                  const SizedBox(height: 1),
-                                ],
-                              ),
-                      ),
-                    ],
-                  ),
-                  // const SizedBox(width: rightFabWidth), // menu fab
-                ],
+                                    FloatingActionButton(
+                                      tooltip:
+                                          widget.eventType == EVENT_TYPE.Relic
+                                              ? 'i.See previous relic'.tr
+                                              : 'i.Navigate to past'.tr,
+                                      heroTag: 'btnUp',
+                                      onPressed: () =>
+                                          initEvent(_btnUp.event!.trKeyTitle),
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.padded,
+                                      child: const Icon(
+                                        Icons.arrow_upward_outlined,
+                                        size: 30.0,
+                                      ),
+                                    ),
+                                    T(
+                                      _btnUp.trValTimeUntil,
+                                      tsR,
+                                      w: w2,
+                                      h: 17,
+                                      trVal: true,
+                                    ),
+                                    const SizedBox(height: 1),
+                                  ],
+                                ),
+                        ),
+                        const SizedBox(width: middleButtonsGap),
+                        SizedBox(
+                          width: w2,
+                          child: _btnDn.event == null
+                              ? Container()
+                              : Column(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    T(
+                                      trValDnTitle1,
+                                      tsR,
+                                      w: w2,
+                                      h: 18,
+                                      trVal: true,
+                                    ),
+                                    T(
+                                      trValDnTitle2,
+                                      tsR,
+                                      w: w2,
+                                      h: 18,
+                                      trVal: true,
+                                    ),
+                                    FloatingActionButton(
+                                      tooltip:
+                                          widget.eventType == EVENT_TYPE.Relic
+                                              ? 'i.See next relic'.tr
+                                              : 'i.Navigate to future'.tr,
+                                      heroTag: 'btnDn',
+                                      onPressed: () =>
+                                          initEvent(_btnDn.event!.trKeyTitle),
+                                      materialTapTargetSize:
+                                          MaterialTapTargetSize.padded,
+                                      child: const Icon(
+                                        Icons.arrow_downward_outlined,
+                                        size: 30.0,
+                                      ),
+                                    ),
+                                    T(
+                                      _btnDn.trValTimeUntil,
+                                      tsR,
+                                      w: w2,
+                                      h: 17,
+                                      trVal: true,
+                                    ),
+                                    const SizedBox(height: 1),
+                                  ],
+                                ),
+                        ),
+                      ],
+                    ),
+                    // const SizedBox(width: rightFabWidth), // menu fab
+                  ],
+                ),
               ),
             ),
           );
@@ -369,28 +372,28 @@ class _EventUIState extends State<EventUI> {
                                 ),
                               ),
                               GestureDetector(
-                                child: Transform.translate(
-                                  offset: const Offset(15.0, 0.0),
-                                  child: Container(
-                                    height: 60.0,
-                                    width: 60.0,
-                                    padding: const EdgeInsets.all(15.0),
-                                    child: Hero(
-                                        tag: Icons.favorite_border_outlined,
-                                        child: isFav
-                                            ? const FlareActor(
-                                                'assets/tarikh/flare/Favorite.flr',
-                                                animation: 'Favorite',
-                                                shouldClip: false,
-                                                color: Colors.pinkAccent,
-                                              )
-                                            : const FlareActor(
-                                                'assets/tarikh/flare/Favorite.flr',
-                                                animation: 'Unfavorite',
-                                                shouldClip: false,
-                                                color: Colors.pinkAccent,
-                                                snapToEnd: true, //for bad state
-                                              )),
+                                child: Container(
+                                  height: 55.0,
+                                  width: 55.0,
+                                  padding: LanguageC.to.isLTR
+                                      ? const EdgeInsets.only(right: 20.0)
+                                      : const EdgeInsets.only(left: 20.0),
+                                  child: Hero(
+                                    tag: Icons.favorite_border_outlined,
+                                    child: isFav
+                                        ? const FlareActor(
+                                            'assets/tarikh/flare/Favorite.flr',
+                                            animation: 'Favorite',
+                                            shouldClip: false,
+                                            color: Colors.pinkAccent,
+                                          )
+                                        : const FlareActor(
+                                            'assets/tarikh/flare/Favorite.flr',
+                                            animation: 'Unfavorite',
+                                            shouldClip: false,
+                                            color: Colors.pinkAccent,
+                                            snapToEnd: true, //for bad state
+                                          ),
                                   ),
                                 ),
                                 onTap: () {

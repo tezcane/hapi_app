@@ -40,7 +40,8 @@ class RelicSetUI extends StatelessWidget {
 
     if (filter.type == FILTER_TYPE.Tree) {
       MenuC.to.pushSubPage(SubPage.Family_Tree, arguments: {
-        'graph': filter.treeGraph,
+        'graph1': filter.treeGraph1,
+        'graph2': filter.treeGraph2,
         'relicType': relicSet.relicType,
       });
       return;
@@ -119,7 +120,7 @@ class RelicSetUI extends StatelessWidget {
                     showTileText
                         ? Icons.expand_less_outlined
                         : Icons.expand_more_outlined,
-                    size: 25,
+                    size: 45,
                   ),
                 ),
               ),
@@ -181,7 +182,7 @@ class RelicSetUI extends StatelessWidget {
             height: 45,
             child: Icon(
               Icons.remove,
-              size: 25,
+              size: 35,
               color: tpr == filter.tprMax ? AppThemes.unselected : null,
             ),
           ),
@@ -198,7 +199,7 @@ class RelicSetUI extends StatelessWidget {
             height: 45,
             child: Icon(
               Icons.add,
-              size: 25,
+              size: 35,
               color: tpr == filter.tprMin ? AppThemes.unselected : null,
             ),
           ),

@@ -133,7 +133,8 @@ class RelicSetFilter {
     this.tprMax = 12,
     this.field,
     this.idxList,
-    this.treeGraph,
+    this.treeGraph1,
+    this.treeGraph2,
   }) {
     isResizeable = tprMin != tprMax; // if tpr Min/Max different it's resizeable
   }
@@ -153,10 +154,11 @@ class RelicSetFilter {
   /// mentioned in the Quran count, i.e. [13, (136 Musa), 5, (69 Ibrahim)...]).
   final List<int>? idxList;
 
-  final Graph? treeGraph;
+  final Graph? treeGraph1;
+  final Graph? treeGraph2; // TODO may not use this for some Family Trees
 
   // Tells UI if it should show -/+ buttons:
-  late final bool isResizeable;
+  late final bool isResizeable; // TODO needed?
 }
 
 /*  Miracles of Quran:
