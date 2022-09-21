@@ -48,10 +48,6 @@ class _EventUIState extends State<EventUI> {
   /// with a custom objects. This is created in [initState()].
   late MarkdownStyleSheet _markdownStyleSheet;
 
-  /// Whether the [FlareActor] favorite button is active or not.
-  /// Triggers a Flare animation upon change.
-  bool _isFavorite = false;
-
   /// This parameter helps control the Newton animations.
   /// Test it out yourself! =)
   Offset? _interactOffset;
@@ -124,7 +120,7 @@ class _EventUIState extends State<EventUI> {
   /// A [GestureDetector] is used to control the [EventWidget], if it allows it (...try Newton!)
   @override
   Widget build(BuildContext context) {
-    bool isFav = _favs.any((Event e) => e.trKeyTitle == _event.trKeyTitle);
+    bool isFavorite = _favs.any((Event e) => e.trKeyTitle == _event.trKeyTitle);
 
     const double fabWidth = 71; // 56 + 15
     const double middleButtonsGap = 5;
@@ -380,7 +376,7 @@ class _EventUIState extends State<EventUI> {
                                       : const EdgeInsets.only(left: 20.0),
                                   child: Hero(
                                     tag: Icons.favorite_border_outlined,
-                                    child: isFav
+                                    child: isFavorite
                                         ? const FlareActor(
                                             'assets/tarikh/flare/Favorite.flr',
                                             animation: 'Favorite',
@@ -397,12 +393,12 @@ class _EventUIState extends State<EventUI> {
                                   ),
                                 ),
                                 onTap: () {
-                                  setState(() => _isFavorite = !_isFavorite);
-                                  if (_isFavorite) {
+                                  if (!isFavorite) {
                                     TarikhC.to.addFavorite(_event);
                                   } else {
                                     TarikhC.to.removeFavorite(_event);
                                   }
+                                  setState(() {});
                                 },
                               ),
                             ],
