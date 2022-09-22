@@ -158,6 +158,8 @@ class TarikhC extends GetxHapi {
   bool get isGutterModeOff => _gutterMode == GutterMode.OFF;
   bool get isGutterModeFav => _gutterMode == GutterMode.FAV;
   bool get isGutterModeAll => _gutterMode == GutterMode.ALL;
+  bool get isGutterFavEmpty =>
+      EventC.to.getEventListFav(EVENT_TYPE.Incident).isEmpty;
 
   /// Updates text around time button, no event is set
   void updateTimeBtn(

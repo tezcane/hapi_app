@@ -339,44 +339,12 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             FloatingActionButton(
-                              tooltip: c.isGutterModeOff
-                                  ? 'i.Show favorite events'.tr
-                                  : c.isGutterModeFav
-                                      ? 'i.Show all events'.tr
-                                      : 'i.Hide events'.tr,
+                              tooltip: _trKeyGutterTooltip(c).tr,
                               heroTag: Icons.favorite_border_outlined,
-                              onPressed: () {
-                                if (c.isGutterModeOff) {
-                                  c.gutterMode = GutterMode.FAV;
-                                  showSnackBar(
-                                    'i.Show favorite events',
-                                    '',
-                                    isRed: true, // so shows on white background
-                                  );
-                                } else if (c.isGutterModeFav) {
-                                  c.gutterMode = GutterMode.ALL;
-                                  showSnackBar(
-                                    'i.Show all events',
-                                    '',
-                                    isRed: true,
-                                  );
-                                } else /* if (c.isGutterModeAll) */ {
-                                  c.gutterMode = GutterMode.OFF;
-                                  if (Get.isSnackbarOpen) {
-                                    Get.closeCurrentSnackbar();
-                                  }
-                                }
-                              },
+                              onPressed: () => _handleGutterBtnHit(c),
                               materialTapTargetSize:
                                   MaterialTapTargetSize.padded,
-                              child: c.isGutterModeOff
-                                  ? const Icon(Icons.history_edu_outlined,
-                                      size: 36.0)
-                                  : c.isGutterModeFav
-                                      ? const Icon(
-                                          Icons.favorite_border_outlined,
-                                          size: 36.0)
-                                      : const Icon(Icons.close, size: 36.0),
+                              child: Icon(_getGutterIconData(c), size: 36),
                             ),
                             T('', tsR, w: w2, h: 17),
                             const SizedBox(height: 1),
@@ -545,5 +513,47 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
         ),
       ),
     );
+  }
+
+  String _trKeyGutterTooltip(TarikhC c) {
+    switch (c.gutterMode) {
+      case GutterMode.OFF:
+        return 'i.Show favorite events';
+      case GutterMode.FAV:
+        return 'i.Show all events';
+      case GutterMode.ALL:
+        return 'i.Hide events';
+    }
+  }
+
+  _handleGutterBtnHit(TarikhC c) {
+    switch (c.gutterMode) {
+      case GutterMode.OFF:
+        c.gutterMode = GutterMode.FAV;
+        if (Get.isSnackbarOpen) Get.closeCurrentSnackbar();
+        showSnackBar('i.Show favorite events', '', isRed: true); // for white bg
+        break;
+      case GutterMode.FAV:
+        c.gutterMode = GutterMode.ALL;
+        if (Get.isSnackbarOpen) Get.closeCurrentSnackbar();
+        showSnackBar('i.Show all events', '', isRed: true);
+        break;
+      case GutterMode.ALL:
+        c.gutterMode = GutterMode.OFF;
+        if (Get.isSnackbarOpen) Get.closeCurrentSnackbar();
+        break;
+    }
+  }
+
+  IconData _getGutterIconData(TarikhC c) {
+    switch (c.gutterMode) {
+      case GutterMode.OFF:
+        return Icons.favorite_border_outlined;
+      case GutterMode.FAV:
+        if (c.isGutterFavEmpty) return Icons.heart_broken_outlined;
+        return Icons.favorite_outlined;
+      case GutterMode.ALL:
+        return Icons.history_edu_outlined;
+    }
   }
 }
