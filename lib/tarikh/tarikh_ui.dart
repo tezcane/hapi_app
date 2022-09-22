@@ -8,7 +8,7 @@ import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/slide/menu_right/menu_right_ui.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/tarikh/event/event.dart';
-import 'package:hapi/tarikh/event/favorite/tarikh_favorites_ui.dart';
+import 'package:hapi/tarikh/event/favorite/event_favorite_ui.dart';
 import 'package:hapi/tarikh/event/search/event_search_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_menu_ui.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';

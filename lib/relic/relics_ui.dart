@@ -10,8 +10,7 @@ import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_tab_bar.dart';
 import 'package:hapi/tarikh/event/event.dart';
-import 'package:hapi/tarikh/event/favorite/tarikh_favorites_ui.dart';
-// import 'package:hapi/tarikh/event/favorite/event_favorite_ui.dart'; // TODO rename above to this
+import 'package:hapi/tarikh/event/favorite/event_favorite_ui.dart';
 import 'package:hapi/tarikh/event/search/event_search_ui.dart';
 
 enum RELIC_TAB {
