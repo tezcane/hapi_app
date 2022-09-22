@@ -28,6 +28,10 @@ class BottomBarMenu extends StatelessWidget {
   double position = 0.0; // Used to store +/- scroll direction position
 //final double sensitivityFactor = 0.0; // # pixels before up/dn state triggers (replace ">= 0.0" checks below to use)
 
+  /// Must be static or these re-init in middle of button page scrolls:
+  static int state = 7; // start in BUTTON_PRESSED due to weird re-init issue
+  static int cnt = 0; // counts scroll event to debug and understand logic
+
   /// Due to complexities of multiple widget's having different scroll
   /// directions, these variables are used to detect vertical (for Relic Lists)
   /// and horizontal (for PageView BottomBar) scrolling. These variables are
@@ -52,18 +56,17 @@ class BottomBarMenu extends StatelessWidget {
   ///     to do something on edge hits.
   /// 5. ScrollEndNotification
   ///   - Always comes in once scrolling stops, so scrolling is in idle.
-  final int UP = 0; // scroll up state and idx of scrolls array
-  final int DN = 1; // scroll up down state and idx of scrolls array
-  final int LF = 2; // scroll up left state and idx of scrolls array
-  final int RT = 3; // scroll up right state and idx of scrolls array
-  final int IDLE = 4; // IDLE state, no scrolling going on
-  final int FOUND_START = 5; // sets after ScrollStartNotification comes
-  final int DETECT = 6; // Ready to detect a user scroll direction
-  final int BUTTON_PRESSED = 7; // sets if UserScrollNotification didn't come in
-  int state = 4; // start in IDLE state
-  List<int> scrolls = [0, 0, 0, 0]; // counts a scroll direction events in a row
-  final int CHANGE_TO_DIRECTION_STATE_THRESHOLD = 4; // goes +1 times than this
-  int cnt = 0; //counts scroll events for debug and to understand scroll logic
+  static const int UP = 0; // scroll up state and idx of scrolls array
+  static const int DN = 1; // scroll up down state and idx of scrolls array
+  static const int LF = 2; // scroll up left state and idx of scrolls array
+  static const int RT = 3; // scroll up right state and idx of scrolls array
+  static const int IDLE = 4; // IDLE state, no scrolling going on
+  static const int FOUND_START = 5; // sets after ScrollStartNotification comes
+  static const int DETECT = 6; // Ready to detect a user scroll direction
+  static const int BUTTON_PRESSED = 7; // sets if User Scroll didn't come in
+
+  static final List<int> scrolls = [0, 0, 0, 0]; // counts scroll event in a row
+  static const int CHANGE_TO_DIRECTION_STATE_THRESHOLD = 4; // +1 times this
 
   _initPageControllerAndBottomBar(int newIdx) {
     curBottomBarHighlightIdx = newIdx;
@@ -102,31 +105,48 @@ class BottomBarMenu extends StatelessWidget {
               // }
 
               if (scrollInfo is ScrollUpdateNotification) {
-                if (state == DETECT) {
+                if (state >= UP && state <= RT) {
+                  //if (kDebugMode) l.v('$cnt $state SN: Update, UP/DN/LF/RT');
+                } else if (state == DETECT) {
                   if (kDebugMode) l.v('$cnt $state SN: Update, detect state');
                 } else if (state == FOUND_START || state == BUTTON_PRESSED) {
                   state = BUTTON_PRESSED;
                   if (kDebugMode) l.v('$cnt $state SN: Update, button pressed');
                   return true; // ignore scroll data from button presses
+                } else {
+                  scrolls[0] = 0; // reset all scroll in a row counts
+                  scrolls[1] = 0;
+                  scrolls[2] = 0;
+                  scrolls[3] = 0;
+                  if (kDebugMode) l.w('$cnt $state SN: Update, unknown state');
+                  return true;
                 }
                 // in state detect/up/dn/lf/rt, so go to scroll direction logic
               } else if (scrollInfo is ScrollStartNotification) {
                 cnt = 1; // so debug prints start from 1
-                scrolls = [0, 0, 0, 0]; // reset all scroll in a row counts
+                scrolls[0] = 0; // reset all scroll in a row counts
+                scrolls[1] = 0;
+                scrolls[2] = 0;
+                scrolls[3] = 0;
                 state = FOUND_START;
                 if (kDebugMode) l.v('$cnt $state SN: Start');
                 return true; // return, no scroll data comes with this
               } else if (scrollInfo is UserScrollNotification) {
-                if (state == FOUND_START) {
-                  state = DETECT;
-                  if (kDebugMode) l.v('$cnt $state SN: User, start detect');
-                  // scroll data sometimes came in with this, i think
-                } else {
-                  state = IDLE;
-                  if (kDebugMode) l.v('$cnt $state SN: User, End');
-                  return true; // return, at end of user scroll event
-                }
+                // if (state == FOUND_START) {
+                state = DETECT;
+                if (kDebugMode) l.v('$cnt $state SN: User, start detect');
+                // scroll data sometimes came in with this, i think
+                // } else {
+                //   state = IDLE;
+                //   if (kDebugMode) l.v('$cnt $state SN: User, End');
+                //   return true; // return, at end of user scroll event
+                // }
               } else if (scrollInfo is ScrollEndNotification) {
+                cnt = 1; // so debug prints start from 1
+                scrolls[0] = 0; // reset all scroll in a row counts
+                scrolls[1] = 0;
+                scrolls[2] = 0;
+                scrolls[3] = 0;
                 state = IDLE;
                 if (kDebugMode) l.v('$cnt $state SN: End');
                 return true; // return, nothing to do
@@ -147,7 +167,10 @@ class BottomBarMenu extends StatelessWidget {
                     if (kDebugMode) l.v('$cnt $state LEFT STATE SET');
                   }
                 } else {
-                  scrolls = [0, 0, 0, 0]; // reset
+                  scrolls[0] = 0; // reset all scroll in a row counts
+                  scrolls[1] = 0;
+                  scrolls[2] = 0;
+                  scrolls[3] = 0;
                   state = DETECT;
                   if (kDebugMode) l.v('$cnt $state LEFT DETECT');
                 }
@@ -161,7 +184,10 @@ class BottomBarMenu extends StatelessWidget {
                     if (kDebugMode) l.v('$cnt $state RIGHT STATE SET');
                   }
                 } else {
-                  scrolls = [0, 0, 0, 0]; // reset
+                  scrolls[0] = 0; // reset all scroll in a row counts
+                  scrolls[1] = 0;
+                  scrolls[2] = 0;
+                  scrolls[3] = 0;
                   state = DETECT;
                   if (kDebugMode) l.v('$cnt $state RIGHT DETECT');
                 }
@@ -180,7 +206,10 @@ class BottomBarMenu extends StatelessWidget {
                     }
                   }
                 } else {
-                  scrolls = [0, 0, 0, 0]; // reset
+                  scrolls[0] = 0; // reset all scroll in a row counts
+                  scrolls[1] = 0;
+                  scrolls[2] = 0;
+                  scrolls[3] = 0;
                   state = DETECT;
                   if (kDebugMode) l.v('$cnt $state UP DETECT');
                 }
@@ -199,7 +228,10 @@ class BottomBarMenu extends StatelessWidget {
                     }
                   }
                 } else {
-                  scrolls = [0, 0, 0, 0]; // reset
+                  scrolls[0] = 0; // reset all scroll in a row counts
+                  scrolls[1] = 0;
+                  scrolls[2] = 0;
+                  scrolls[3] = 0;
                   state = DETECT;
                   if (kDebugMode) l.v('$cnt $state DOWN DETECT');
                 }
@@ -238,8 +270,7 @@ class BottomBarMenu extends StatelessWidget {
 
   /// Called directly when swiping page or indirectly on bottom bar tab tap
   _onPageChanged(int newIdx, NavPageC c) {
-    isBottomBarVisible =
-        true; // if bottom bar hidden, force show on page view change
+    isBottomBarVisible = true; // if hidden, force show on page view change
 
     curBottomBarHighlightIdx = newIdx; // always highlight current page
 
