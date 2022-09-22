@@ -6,6 +6,7 @@ import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relics_ui.dart';
 import 'package:hapi/relic/ummah/prophet.dart';
 import 'package:hapi/service/db.dart';
+import 'package:hapi/tarikh/event/event.dart';
 
 class RelicC extends GetxHapi {
   static RelicC get to => Get.find();
@@ -30,6 +31,24 @@ class RelicC extends GetxHapi {
       default:
         return []; // TODO enable: return l.E('relicType=${relicType.name} init() not implemented yet');
     }
+  }
+
+  /// Merge relic events with a time into tarikh events so they show Timeline
+  /// and return all relic events in another list which is needed for further
+  /// app init.
+  List<Event> mergeRelicAndTarikhEvents(List<Event> events) {
+    List<Event> eventsRelics = [];
+    for (RELIC_TYPE relicType in RELIC_TYPE.values) {
+      RelicSet relicSet = getRelicSet(relicType);
+      for (Relic relic in relicSet.relics) {
+        if (relic.isTimeLineEvent) events.add(relic);
+        eventsRelics.add(relic);
+
+        /// Add event reference 1 of 2: TODO this is a hack, access via map?
+        relic.asset.event = relic; // can and must only do this once
+      }
+    }
+    return eventsRelics;
   }
 
   void _initRelicSets() async {
@@ -84,7 +103,7 @@ class RelicC extends GetxHapi {
   }
 
   RelicSet getRelicSet(RELIC_TYPE relicType) => _relicSets[relicType.index];
-  // List<Relic> getRelics(RELIC_TYPE relicType) => _relicSets[relicType.index].relics;
+//List<Relic> getRelics(RELIC_TYPE relicType) => _relicSets[relicType.index].relics;
 
   int getFilterIdx(RELIC_TYPE relicType) =>
       s.rd('filterIdx${relicType.index}') ?? 0;

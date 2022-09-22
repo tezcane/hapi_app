@@ -4,22 +4,24 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/menu_c.dart';
+import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/tarikh/event/event.dart';
+import 'package:hapi/tarikh/event/search/search_manager.dart';
+import 'package:hapi/tarikh/event/search/search_widget.dart';
+import 'package:hapi/tarikh/event/thumbnail_detail_widget.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
-import 'package:hapi/tarikh/main_menu/thumbnail_detail_widget.dart';
-import 'package:hapi/tarikh/search/search_manager.dart';
-import 'package:hapi/tarikh/search/search_widget.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 
-class RelicsSearchUI extends StatefulWidget {
-  const RelicsSearchUI();
+class EventSearchUI extends StatefulWidget {
+  const EventSearchUI(this.navPage);
+  final NavPage navPage;
 
   @override
-  _RelicsSearchUIState createState() => _RelicsSearchUIState();
+  _EventSearchUIState createState() => _EventSearchUIState();
 }
 
-class _RelicsSearchUIState extends State<RelicsSearchUI> {
+class _EventSearchUIState extends State<EventSearchUI> {
   /// The [List] of search results that is displayed when searching.
   List<Event> _searchResults = [];
 
@@ -38,8 +40,8 @@ class _RelicsSearchUIState extends State<RelicsSearchUI> {
   @override
   initState() {
     // init list search on page
-    String lastHistorySearch = s.rd('lastHistorySearch') ?? '';
-    _searchTextController.text = lastHistorySearch;
+    String lastSearch = s.rd('lastSearch${widget.navPage.name}') ?? '';
+    _searchTextController.text = lastSearch;
     _updateSearch();
 
     _searchTextController.addListener(() => _updateSearch());
@@ -56,7 +58,7 @@ class _RelicsSearchUIState extends State<RelicsSearchUI> {
     //SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
 
     //_searchResults = [];
-    cancelSearch();
+    _cancelSearch();
     _searchFocusNode.dispose();
     _scrollController.dispose();
 
@@ -64,9 +66,9 @@ class _RelicsSearchUIState extends State<RelicsSearchUI> {
   }
 
   /// If query is blank it returns all results
-  List<Event> getSortedSearchResults(String query) {
+  List<Event> _getSortedSearchResults(String query) {
     List<Event> searchResult =
-        SearchManager.init().performSearch(query).toList();
+        SearchManager.init().performSearch(widget.navPage, query).toList();
 
     /// Sort by starting time, so the search list is always displayed in ascending order.
     searchResult.sort((Event a, Event b) {
@@ -92,7 +94,7 @@ class _RelicsSearchUIState extends State<RelicsSearchUI> {
     }
   }
 
-  void cancelSearch() {
+  void _cancelSearch() {
     if (_searchTimer != null && _searchTimer!.isActive) {
       /// Remove old timer.
       _searchTimer!.cancel();
@@ -103,15 +105,15 @@ class _RelicsSearchUIState extends State<RelicsSearchUI> {
   /// Used by the [_searchTextController] to properly update the state of this widget,
   /// and consequently the layout of the current view.
   _updateSearch() {
-    cancelSearch();
+    _cancelSearch();
 
     String query = _searchTextController.text.trim().toLowerCase();
 
     /// Perform search.
     /// A [Timer] is used to prevent unnecessary searches while the user is typing.
     _searchTimer = Timer(Duration(milliseconds: query.isEmpty ? 0 : 350), () {
-      s.wr('lastHistorySearch', _searchTextController.text);
-      List<Event> searchResults = getSortedSearchResults(query);
+      s.wr('lastSearch${widget.navPage.name}', _searchTextController.text);
+      List<Event> searchResults = _getSortedSearchResults(query);
       setState(() {
         _searchResults = searchResults;
       });
@@ -160,8 +162,16 @@ class _RelicsSearchUIState extends State<RelicsSearchUI> {
         backgroundColor: Theme.of(context).backgroundColor,
         bottomNavigationBar: Container(
           padding: const EdgeInsets.only(
-              left: 20, top: 16.0, bottom: 16.0, right: 85),
-          child: SearchWidget(_searchFocusNode, _searchTextController),
+            left: 20,
+            top: 16.0,
+            bottom: 16.0,
+            right: 85,
+          ),
+          child: SearchWidget(
+            widget.navPage,
+            _searchFocusNode,
+            _searchTextController,
+          ),
         ),
         body: Flex(
           direction: Axis.vertical,
@@ -176,11 +186,16 @@ class _RelicsSearchUIState extends State<RelicsSearchUI> {
                     return SizedBox(height: heightPadding);
                   } else {
                     return RepaintBoundary(
+                      // child: Hero(
+                      //   // TODO get this working
+                      //   //tag: 'asdf',
+                      //   tag: _searchResults[idx - 1].trKeyEndTagLabel + '2',
                       child: ThumbnailDetailWidget(
                         _searchResults[idx - 1],
                         hasDivider: idx != 1,
                         tapSearchResult: _tapSearchResult,
                       ),
+                      // ),
                     );
                   }
                 },

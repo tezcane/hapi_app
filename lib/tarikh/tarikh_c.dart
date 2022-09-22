@@ -11,9 +11,10 @@ import 'package:get/get.dart';
 import 'package:hapi/controller/getx_hapi.dart';
 import 'package:hapi/controller/time_c.dart';
 import 'package:hapi/main_c.dart';
+import 'package:hapi/relic/relic_c.dart';
 import 'package:hapi/tarikh/event/event.dart';
+import 'package:hapi/tarikh/event/event_c.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
-import 'package:hapi/tarikh/search/search_manager.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
 import 'package:hapi/tarikh/timeline/timeline_data.dart';
 import 'package:hapi/tarikh/timeline/timeline_utils.dart';
@@ -99,21 +100,6 @@ class TarikhC extends GetxHapi {
   final List<MenuSectionData> _tarikhMenuData = [];
   List<MenuSectionData> get tarikhMenuData => _tarikhMenuData;
 
-  /// List of favorite events shown on Tarikh_Favorites page and timeline gutter
-  final List<Event> _eventFavorites = [];
-  List<Event> get eventFavorites => _eventFavorites;
-
-  /// List of all history events for timeline gutter retrieval
-  final List<Event> _events = [];
-  List<Event> get events => _events;
-
-  /// A [Map] is used to optimize retrieval times when checking if a favorite
-  /// is already present - in fact the label's used as the key.
-  /// Checking if an element is in the map is O(1), making this process O(n)
-  /// with n events.
-  final Map<String, Event> _eventMap = {};
-  Map<String, Event> get eventMap => _eventMap;
-
   /// Turn timeline gutter off/show favorites/show all history:
   GutterMode _gutterMode = GutterMode.OFF;
   GutterMode get gutterMode => _gutterMode;
@@ -136,8 +122,8 @@ class TarikhC extends GetxHapi {
   }
 
   initTimeline() async {
-    timeBtnUp = TimeBtn(' ', ' ', ' ', null);
-    timeBtnDn = TimeBtn(' ', ' ', ' ', null);
+    timeBtnUp = TimeBtn('', '', '', null);
+    timeBtnDn = TimeBtn('', '', '', null);
 
     int lastGutterModeIdx = s.rd('lastGutterModeIdx') ?? GutterMode.OFF.index;
     gutterMode = GutterMode.values[lastGutterModeIdx];
@@ -154,70 +140,19 @@ class TarikhC extends GetxHapi {
       tih._timeMax,
     );
 
+    Event event = EventC.to.getEventList(EVENT_TYPE.Incident).first;
     t.setViewport(
-      start: events.first.startMs * 2.0,
-      end: events.first.startMs,
+      start: event.startMs * 2.0,
+      end: event.startMs,
       animate: true,
     ); // TODO needed, what does it and other setViewport do?
 
-    /// Advance the timeline to its starting position. // TODO needed?
-    t.advance(0.0, false);
+    // /// Advance the timeline to its starting position.
+    t.advance(0.0, false); // TODO needed?
 
-    /// All the events are loaded, we can fill in the [favoritesBloc]...
-    _initFavorites();
-
-    /// ...and initialize the [SearchManager].
-    SearchManager.init(events);
-
-    l.i('********************* TIMELINE INIT DONE **********************');
     _isTimelineInitDone = true;
+    l.i('********************* TIMELINE INIT DONE **********************');
     update();
-  }
-
-  /// It receives as input the full list of [Event], so that it can
-  /// use those references to fill [_eventFavorites].
-  _initFavorites() {
-    List<dynamic>? favs = s.rd('TARIKH_FAVS');
-
-    if (favs != null) {
-      for (String fav in favs) {
-        if (eventMap.containsKey(fav)) _eventFavorites.add(eventMap[fav]!);
-      }
-    }
-
-    /// Sort by starting time, so the favorites' list is always displayed in ascending order.
-    _eventFavorites.sort(
-      (Event a, Event b) => a.startMs.compareTo(b.startMs),
-    );
-  }
-
-  /// Persists the data to disk.
-  _saveFavorites() {
-    // note saves in any order, must sort on reading in from disk
-    List<String> favsList =
-        _eventFavorites.map((Event event) => event.trKeyTitle).toList();
-    s.wr('TARIKH_FAVS', favsList);
-    update(); // favorites changed so notify people using it
-  }
-
-  /// Save [e] into the list, re-sort it, and store to disk.
-  addFavorite(Event e) {
-    if (!_eventFavorites.contains(e)) {
-      _eventFavorites.add(e);
-      // sort for UI to still show in order
-      _eventFavorites.sort((Event a, Event b) {
-        return a.startMs.compareTo(b.startMs);
-      });
-      _saveFavorites();
-    }
-  }
-
-  /// Remove the event and save to disk.
-  removeFavorite(Event e) {
-    if (_eventFavorites.contains(e)) {
-      _eventFavorites.remove(e);
-      _saveFavorites();
-    }
   }
 
   bool get isGutterModeOff => _gutterMode == GutterMode.OFF;
@@ -298,6 +233,8 @@ class TimelineInitHandler {
 
     // TODO test add "era" field per event and also auto generate it's start and end and zoom by looking at its incidents:
     String trKeyEra = '';
+
+    List<Event> eventsTarikh = [];
 
     /// The JSON decode doesn't provide strong typing, so we'll iterate
     /// on the dynamic events in the [jsonEvents] list.
@@ -392,21 +329,23 @@ class TimelineInitHandler {
       );
 
       /// Add event reference 1 of 2: TODO this is a hack, access via map?
-      asset.event = event; // can only do this once
+      asset.event = event; // can and must only do this once
 
       /// Add event reference 2 of 2:
       /// Some events will have an id to find and play the menu animation
       if (td.actorId != null) _eventsById[td.actorId!] = event;
 
       /// Add this event to the list.
-      TarikhC.to.eventMap.putIfAbsent(event.trKeyTitle, () => event);
-      TarikhC.to.events.add(event); // sort is probably needed
+      eventsTarikh.add(event); // sort is probably needed
     }
 
-    /// sort the full list so they are in order of oldest to newest
-    TarikhC.to.events.sort((Event a, Event b) {
-      return a.startMs.compareTo(b.startMs);
-    });
+    /// Major feature here, merge relics into Tarikh events so the relics can
+    /// also show up on the UI. With return value, we will init favorites below.
+    List<Event> eventsRelics =
+        RelicC.to.mergeRelicAndTarikhEvents(eventsTarikh); // add before sort
+
+    /// sort Tarikh the full list so they are in order of oldest to newest
+    eventsTarikh.sort((Event a, Event b) => a.startMs.compareTo(b.startMs));
 
     _backgroundColors
         .sort((TimelineBackgroundColor a, TimelineBackgroundColor b) {
@@ -423,7 +362,7 @@ class TimelineInitHandler {
     /// Build up hierarchy (Eras are grouped into "Spanning Eras" and Events are
     /// placed into the Eras they belong to).
     Event? previous;
-    for (Event event in TarikhC.to.events) {
+    for (Event event in eventsTarikh) {
       if (event.startMs < _timeMin) _timeMin = event.startMs;
       if (event.endMs > _timeMax) _timeMax = event.endMs;
 
@@ -433,7 +372,7 @@ class TimelineInitHandler {
 
       Event? parent;
       double minDistance = double.maxFinite;
-      for (Event checkEvent in TarikhC.to.events) {
+      for (Event checkEvent in eventsTarikh) {
         if (checkEvent.type == EVENT_TYPE.Era) {
           double distance = event.startMs - checkEvent.startMs;
           double distanceEnd = event.startMs - checkEvent.endMs;
@@ -453,6 +392,10 @@ class TimelineInitHandler {
         parent.children!.add(event);
       }
     }
+
+    /// All setup to this point is done, we need to now init the Tarikh and
+    /// Relic event maps and favorites.
+    EventC.to.initEvents(eventsTarikh, eventsRelics);
   }
 
   // Color colorFromList(colorList, {String key = ''}) {

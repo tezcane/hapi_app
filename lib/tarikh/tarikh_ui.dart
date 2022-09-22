@@ -7,9 +7,10 @@ import 'package:hapi/menu/bottom_bar_menu.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/slide/menu_right/menu_right_ui.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
-import 'package:hapi/tarikh/favorite/tarikh_favorites_ui.dart';
+import 'package:hapi/tarikh/event/event.dart';
+import 'package:hapi/tarikh/event/favorite/tarikh_favorites_ui.dart';
+import 'package:hapi/tarikh/event/search/event_search_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_menu_ui.dart';
-import 'package:hapi/tarikh/search/tarikh_search_ui.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 
 enum TARIKH_TAB {
@@ -31,18 +32,18 @@ class TarikhUI extends StatelessWidget {
         // do here to save memory:
         final List<BottomBarItem> bottomBarItems = [
           BottomBarItem(
-            const TarikhFavoritesUI(),
+            const EventFavoriteUI(EVENT_TYPE.Incident, navPage),
             null,
             'i.Favorites'.tr,
-            at('at.{0} Favorites'.tr, [navPage.trKey]),
+            at('at.{0} Favorites', [navPage.trKey]),
             Icons.favorite_border_outlined,
             onPressed: setTarikhMenuInactive,
           ),
           BottomBarItem(
-            const TarikhSearchUI(),
+            const EventSearchUI(navPage),
             null,
             'i.Search'.tr,
-            at('at.{0} Search'.tr, [navPage.trKey]),
+            at('at.{0} Search', [navPage.trKey]),
             Icons.search_outlined,
             onPressed: setTarikhMenuInactive,
           ),
@@ -51,7 +52,7 @@ class TarikhUI extends StatelessWidget {
             null,
             'i.Menu'.tr,
             '                 ' +
-                at('at.{0} Menu'.tr, [navPage.trKey]) +
+                at('at.{0} Menu', [navPage.trKey]) +
                 '                 ', // FAB padding
             Icons.menu_open_rounded,
             onPressed: setTarikhMenuActive,

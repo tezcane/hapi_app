@@ -240,7 +240,7 @@ class RelicSetUI extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        MenuC.to.pushSubPage(SubPage.Event_UI, arguments: {
+        MenuC.to.pushSubPage(SubPage.Event_Details, arguments: {
           'eventType': EVENT_TYPE.Relic,
           'eventMap': getEventMap(),
           'trKeyTitleAtInit': relic.trKeyTitle,
@@ -291,7 +291,7 @@ class RelicSetUI extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        MenuC.to.pushSubPage(SubPage.Event_UI, arguments: {
+        MenuC.to.pushSubPage(SubPage.Event_Details, arguments: {
           'eventType': EVENT_TYPE.Relic,
           'eventMap': getEventMap(),
           'trKeyTitleAtInit': relic.trKeyTitle,

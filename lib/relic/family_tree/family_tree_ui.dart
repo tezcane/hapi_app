@@ -11,6 +11,7 @@ import 'package:hapi/relic/relic_c.dart';
 import 'package:hapi/relic/ummah/prophet.dart'; // TODO remove need for this?
 
 /// Shows a Family Tree SubPage.
+// ignore: must_be_immutable
 class FamilyTreeUI extends StatelessWidget {
   FamilyTreeUI() {
     graph1 = Get.arguments['graph1']; // full

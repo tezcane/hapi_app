@@ -20,7 +20,7 @@ import 'package:hapi/quest/active/active_quest_action_ui.dart';
 import 'package:hapi/quest/quests_ui.dart';
 import 'package:hapi/relic/family_tree/family_tree_ui.dart';
 import 'package:hapi/relic/relics_ui.dart';
-import 'package:hapi/tarikh/event/event_ui.dart';
+import 'package:hapi/tarikh/event/event_details_ui.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/tarikh_ui.dart';
 import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
@@ -298,9 +298,9 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
     }
 
     switch (subPage) {
-      case SubPage.About:
+      case SubPage.Active_Quest_Action:
         Get.to(
-          () => AboutUI(),
+          () => ActiveQuestActionUI(),
           arguments: arguments,
           transition: transition,
           duration: Duration(milliseconds: transitionMs),
@@ -315,17 +315,25 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
           duration: Duration(milliseconds: transitionMs),
         );
         break;
-      case SubPage.Event_UI:
+      case SubPage.Event_Details:
         Get.to(
-          () => EventUI(),
+          () => EventDetailsUI(),
           arguments: arguments,
           transition: transition,
           duration: Duration(milliseconds: transitionMs),
         );
         break;
-      case SubPage.Active_Quest_Action:
+      case SubPage.Family_Tree:
         Get.to(
-          () => ActiveQuestActionUI(),
+          () => FamilyTreeUI(),
+          arguments: arguments,
+          transition: transition,
+          duration: Duration(milliseconds: transitionMs),
+        );
+        break;
+      case SubPage.Settings:
+        Get.to(
+          () => SettingsUI(),
           arguments: arguments,
           transition: transition,
           duration: Duration(milliseconds: transitionMs),
@@ -347,17 +355,9 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
           duration: Duration(milliseconds: transitionMs),
         );
         break;
-      case SubPage.Settings:
+      case SubPage.About:
         Get.to(
-          () => SettingsUI(),
-          arguments: arguments,
-          transition: transition,
-          duration: Duration(milliseconds: transitionMs),
-        );
-        break;
-      case SubPage.Family_Tree:
-        Get.to(
-          () => FamilyTreeUI(),
+          () => AboutUI(),
           arguments: arguments,
           transition: transition,
           duration: Duration(milliseconds: transitionMs),

@@ -7,12 +7,12 @@ import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/tarikh/event/event.dart';
+import 'package:hapi/tarikh/event/event_c.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/timeline/ticks.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
 import 'package:hapi/tarikh/timeline/timeline_data.dart';
-//import 'package:hapi/tarikh/timeline/timeline_data.dart';
 import 'package:hapi/tarikh/timeline/timeline_utils.dart';
 import 'package:intl/intl.dart';
 import 'package:nima/nima/math/aabb.dart' as nima;
@@ -709,8 +709,9 @@ class TimelineRenderObject extends RenderBox {
     /// favorite or all history elements are quickly accessible.
     ///
     /// Here the gutter is drawn and elements are added as *tappable* targets.
-    List<Event> events = cTrkh.eventFavorites;
-    if (cTrkh.isGutterModeAll) events = cTrkh.events;
+    List<Event> events = cTrkh.isGutterModeAll
+        ? EventC.to.getEventList(EVENT_TYPE.Incident)
+        : EventC.to.getEventListFav(EVENT_TYPE.Incident);
 
     if (!cTrkh.isGutterModeOff && events.isNotEmpty) {
       double scale = t.computeScale(t.renderStart, t.renderEnd);

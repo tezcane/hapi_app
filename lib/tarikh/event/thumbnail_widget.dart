@@ -7,7 +7,7 @@ import 'package:hapi/tarikh/event/event_widget.dart';
 ///
 /// It uses an inactive [EventWidget] for the image, with a [CustomClipper] for the circular image.
 class ThumbnailWidget extends StatelessWidget {
-  const ThumbnailWidget(this.event, {Key? key}) : super(key: key);
+  const ThumbnailWidget(this.event);
 
   static const double radius = 17;
 

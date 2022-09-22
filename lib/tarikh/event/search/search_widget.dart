@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 
 /// Draws the search bar on top of the menu.
 class SearchWidget extends StatelessWidget {
-  const SearchWidget(this._searchFocusNode, this._searchController, {Key? key})
-      : super(key: key);
+  const SearchWidget(
+    this.navPage,
+    this._searchFocusNode,
+    this._searchController,
+  );
+  final NavPage navPage;
 
-  /// These two fields are passed down from the [TarikhSearchUI] in order to control
-  /// the state of this widget depending on the users' inputs.
+  /// These two fields are passed down from the [EventSearchUI] in order to
+  /// control the state of this widget depending on the users' inputs.
   final FocusNode _searchFocusNode;
   final TextEditingController _searchController;
 
@@ -33,7 +36,7 @@ class SearchWidget extends StatelessWidget {
         focusNode: _searchFocusNode,
         textAlign: TextAlign.center, // align UI & better for arabic support
         decoration: InputDecoration(
-            hintText: at('at.{0} Search'.tr, [NavPage.Tarikh.trKey]),
+            hintText: at('at.{0} Search', [navPage.trKey]),
             prefixIcon: const Icon(Icons.search, size: 30),
             suffixIcon: _searchFocusNode.hasFocus
                 ? Visibility(

@@ -278,7 +278,7 @@ Future<List<Prophet>> initProphets() async {
   rv.add(Prophet(
     // Event data:
     trValEra: 'i.Unknown'.tr,
-    startMs: -2400,
+    startMs: 0,
     endMs: 0,
     asset: await _getImageEventAsset(PF.Hud),
     // Fam data:
@@ -558,8 +558,8 @@ Future<List<Prophet>> initProphets() async {
   rv.add(Prophet(
     // Event data:
     trValEra: 'i.Old Egyptian Kingdoms'.tr,
-    startMs: 0,
-    endMs: 0,
+    startMs: -2400,
+    endMs: -2400,
     asset: await _getImageEventAsset(PF.Yusuf),
     // Fam data:
     pf: PF.Yusuf,
@@ -914,7 +914,7 @@ Future<List<Prophet>> initProphets() async {
     trValEra: 'i.Unknown'.tr,
     startMs:
         -800, // uncertain (8th century BCE or post-exilic period) in Wikipedia
-    endMs: 0,
+    endMs: -800,
     asset: await _getImageEventAsset(PF.Yunus),
     // Fam data:
     pf: PF.Yunus,

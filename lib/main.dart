@@ -24,6 +24,7 @@ import 'package:hapi/quest/active/active_quests_c.dart';
 import 'package:hapi/quest/active/zaman_c.dart';
 import 'package:hapi/quest/daily/daily_quests_c.dart';
 import 'package:hapi/relic/relic_c.dart';
+import 'package:hapi/tarikh/event/event_c.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 //import 'package:timezone/data/latest.dart' as tz;
 //import 'package:timezone/data/latest_10y.dart' as tz;
@@ -47,20 +48,19 @@ void main() async {
   Get.put<MainC>(MainC(), permanent: permOn); // should do first
   Get.put<OnboardingC>(OnboardingC());
   Get.put<NavPageC>(NavPageC(), permanent: permOn);
-  Get.put<MenuC>(MenuC(), // requires NavPageC
-      permanent: permOn); //requires TarikhC
-  Get.put<AuthC>(AuthC()); // requires OnboardingC, MenuC
+  Get.put<MenuC>(MenuC(), permanent: permOn);
+  Get.put<AuthC>(AuthC(), permanent: permOn);
   Get.put<ConnectivityC>(ConnectivityC(), permanent: permOn);
   Get.put<TimeC>(TimeC(), permanent: permOn); // requires ConnectivityC
   Get.put<LocationC>(LocationC(), permanent: permOn); // requires TimeC
-  Get.put<TarikhC>(TarikhC());
+  Get.put<EventC>(EventC(), permanent: permOn); // requires Auth
+  Get.put<TarikhC>(TarikhC(), permanent: permOn); // requires EventC
   Get.put<DailyQuestsC>(DailyQuestsC(), permanent: permOn); // requires AuthC
   Get.put<NotificationC>(NotificationC(), permanent: permOn); // requires AuthC
   Get.put<ActiveQuestsC>(ActiveQuestsC(), permanent: permOn); // requires AuthC
   Get.put<RelicC>(RelicC(), permanent: permOn); // requires AuthC
-  Get.put<ZamanC>(ZamanC(), permanent: permOn); // requires ActiveQuestsC
-  Get.put<ActiveQuestsAjrC>(ActiveQuestsAjrC(),
-      permanent: permOn); // requires ActiveQuestsC, ZamanC
+  Get.put<ZamanC>(ZamanC(), permanent: permOn);
+  Get.put<ActiveQuestsAjrC>(ActiveQuestsAjrC(), permanent: permOn);
   Get.put<ThemeC>(ThemeC());
   Get.put<LanguageC>(LanguageC());
 

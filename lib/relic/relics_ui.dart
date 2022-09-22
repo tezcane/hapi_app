@@ -7,10 +7,12 @@ import 'package:hapi/menu/bottom_bar_menu.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/slide/menu_right/menu_right_ui.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
-import 'package:hapi/relic/Favorites/relics_favorites_ui.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_tab_bar.dart';
-import 'package:hapi/relic/search/relics_search_ui.dart';
+import 'package:hapi/tarikh/event/event.dart';
+import 'package:hapi/tarikh/event/favorite/tarikh_favorites_ui.dart';
+// import 'package:hapi/tarikh/event/favorite/event_favorite_ui.dart'; // TODO rename above to this
+import 'package:hapi/tarikh/event/search/event_search_ui.dart';
 
 enum RELIC_TAB {
   Favorites,
@@ -34,18 +36,18 @@ class RelicsUI extends StatelessWidget {
       // do here to save memory:
       final List<BottomBarItem> bottomBarItems = [
         BottomBarItem(
-          const RelicsFavoritesUI(),
+          const EventFavoriteUI(EVENT_TYPE.Relic, navPage),
           null,
           'i.Favorites'.tr,
-          at('at.{0} Favorites'.tr, [navPage.trKey]),
+          at('at.{0} Favorites', [navPage.trKey]),
           Icons.favorite_border_outlined,
           onPressed: hideKeyboard, // in case search is showing keyboard
         ),
         BottomBarItem(
-          const RelicsSearchUI(),
+          const EventSearchUI(navPage),
           null,
           'i.Search'.tr,
-          at('at.{0} Search'.tr, [navPage.trKey]),
+          at('at.{0} Search', [navPage.trKey]),
           Icons.search_outlined,
         ),
         BottomBarItem(

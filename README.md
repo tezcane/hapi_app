@@ -73,7 +73,8 @@ cs   - theme color scaffold
 ct   - theme color text  
 Cord - Coordinates
 curr - Current  
-db   - Database   
+db   - Database  
+del  - Delete
 dis  - Disabled  
 dn   - down (use with up: up/dn)  
 e    - exception/error  

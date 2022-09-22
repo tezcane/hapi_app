@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 enum SubPage {
-  About,
+  Active_Quest_Action,
+  Tarikh_Timeline,
+  Event_Details,
+  Family_Tree,
   Settings,
   Update_Profile,
   Reset_Password,
-  Tarikh_Timeline,
-  Event_UI,
-  Active_Quest_Action,
-  Family_Tree,
+  About,
 }
 
 /// FAB (Floating Action Button) Sub Page, used to track animations for FAB.

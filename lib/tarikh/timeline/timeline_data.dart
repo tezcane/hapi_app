@@ -332,11 +332,6 @@ List<TimelineData> getTimelineData() {
         height: 528,
         offset: -40,
       ),
-    ),
-    const TimelineData(
-      start: -340000,
-      trKeyTitle: 'a.Adam',
-      accent: Color.fromARGB(202, 79, 63, 255),
       timelineColors: TimelineColors(
         background: Color.fromARGB(0xFF, 255, 255, 255),
         ticks: TickColors2(
@@ -350,13 +345,31 @@ List<TimelineData> getTimelineData() {
           text: Color.fromARGB(0xFF, 0, 0, 110),
         ),
       ),
-      asset: Asset(
-        source: 'images/anbiya/Adam.png',
-        width: 200,
-        height: 200,
-        offset: 0,
-      ),
     ),
+    // const TimelineData(
+    //   start: -340000,
+    //   trKeyTitle: 'a.Adam',
+    //   accent: Color.fromARGB(202, 79, 63, 255),
+    //   asset: Asset(
+    //     source: 'images/anbiya/Adam.png',
+    //     width: 200,
+    //     height: 200,
+    //     offset: 0,
+    //   ),
+    //   timelineColors: TimelineColors(
+    //     background: Color.fromARGB(0xFF, 255, 255, 255),
+    //     ticks: TickColors2(
+    //       background: Color.fromARGB(255, 211, 211, 204),
+    //       long: Color.fromARGB(0xFF, 0, 0, 60),
+    //       short: Color.fromARGB(0xFF, 0, 0, 35),
+    //       text: Color.fromARGB(0xFF, 0, 0, 110),
+    //     ),
+    //     header: HeaderColors2(
+    //       background: Color.fromARGB(245, 245, 245, 240),
+    //       text: Color.fromARGB(0xFF, 0, 0, 110),
+    //     ),
+    //   ),
+    // ),
     const TimelineData(
       date: -300000,
       trKeyTitle: 'i.Control Fire',

@@ -7,13 +7,14 @@ import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/tarikh/event/event.dart';
 import 'package:hapi/tarikh/event/event_asset.dart';
+import 'package:hapi/tarikh/event/event_c.dart';
 import 'package:hapi/tarikh/event/event_widget.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 
-/// This widget will paint the event page.
-/// It stores a reference to the [Event] that contains the relevant information.
-class EventUI extends StatefulWidget {
-  EventUI() {
+/// Show detailed info about an Tarikh/Relic Event and allow it to be added or
+/// removed from Tarikh/Relic favorites. If Relics view, show upgrade button.
+class EventDetailsUI extends StatefulWidget {
+  EventDetailsUI() {
     eventType = Get.arguments['eventType'];
     eventMap = Get.arguments['eventMap'];
     trKeyTitleAtInit = Get.arguments['trKeyTitleAtInit'];
@@ -23,21 +24,21 @@ class EventUI extends StatefulWidget {
   late final String trKeyTitleAtInit;
 
   @override
-  _EventUIState createState() => _EventUIState();
+  _EventDetailsUIState createState() => _EventDetailsUIState();
 }
 
-/// The [State] for the [EventUI] will change based on the [_event]
+/// The [State] for the [EventDetailsUI] will change based on the [_event]
 /// parameter that's used to build it.
 /// It is stateful because we rely on some information like the title, subtitle, and the event
 /// contents to change when a new event is displayed. Moreover the [FlareWidget]s that are used
 /// on this page (i.e. the top [EventWidget] the favorite button) rely on life-cycle parameters.
-class _EventUIState extends State<EventUI> {
+class _EventDetailsUIState extends State<EventDetailsUI> {
   late Event _event;
 
   late final TimeBtn _btnUp;
   late final TimeBtn _btnDn;
 
-  late final List<Event> _favs = TarikhC.to.eventFavorites;
+  late final Map<String, Event> _eventMapFav;
 
   /// The information for the current page.
   String _trValTitle = '';
@@ -57,12 +58,15 @@ class _EventUIState extends State<EventUI> {
   initState() {
     super.initState();
 
+    _eventMapFav = EventC.to.getEventMapFav(widget.eventType);
+
     _btnUp = TimeBtn('', '', '', null);
     _btnDn = TimeBtn('', '', '', null);
 
     initEvent(widget.trKeyTitleAtInit);
   }
 
+  // TODO SCROLL TO THE TOP OF SCREEN ON NEW LOAD
   initEvent(String trKeyTitle) {
     _event = widget.eventMap[trKeyTitle]!;
 
@@ -120,7 +124,7 @@ class _EventUIState extends State<EventUI> {
   /// A [GestureDetector] is used to control the [EventWidget], if it allows it (...try Newton!)
   @override
   Widget build(BuildContext context) {
-    bool isFavorite = _favs.any((Event e) => e.trKeyTitle == _event.trKeyTitle);
+    bool isFavorite = _eventMapFav.containsKey(_event.trKeyTitle);
 
     const double fabWidth = 71; // 56 + 15
     const double middleButtonsGap = 5;
@@ -128,7 +132,7 @@ class _EventUIState extends State<EventUI> {
     const double height = 160;
 
     return FabSubPage(
-      subPage: SubPage.Event_UI,
+      subPage: SubPage.Event_Details,
       child: Scaffold(
         floatingActionButtonLocation:
             FloatingActionButtonLocation.miniCenterDocked,
@@ -394,9 +398,11 @@ class _EventUIState extends State<EventUI> {
                                 ),
                                 onTap: () {
                                   if (!isFavorite) {
-                                    TarikhC.to.addFavorite(_event);
+                                    EventC.to
+                                        .addFavorite(widget.eventType, _event);
                                   } else {
-                                    TarikhC.to.removeFavorite(_event);
+                                    EventC.to
+                                        .delFavorite(widget.eventType, _event);
                                   }
                                   setState(() {});
                                 },
