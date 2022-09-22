@@ -453,8 +453,8 @@ Future<List<Prophet>> initProphets() async {
   rv.add(Prophet(
     // Event data:
     trValEra: a('a.Ibrahim'),
-    startMs: -1800,
-    endMs: -1664,
+    startMs: 0, //-1800, TODO must be younger than Yusuf!
+    endMs: 0, //-1664,
     asset: await _getImageEventAsset(PF.Ismail),
     // Fam data:
     pf: PF.Ismail,
@@ -692,6 +692,42 @@ Future<List<Prophet>> initProphets() async {
   rv.add(Prophet(
     // Event data:
     trValEra: a('a.Firaun') + 'i._New_Kingdoms of_'.tr + a('a.Misr'), // Egypt
+    startMs: -1303,
+    endMs: -1200,
+    asset: await _getImageEventAsset(PF.Harun),
+    // Fam data:
+    pf: PF.Harun,
+    predecessors: [
+//    PF.Yaqub,
+      PF.Lawi,
+      PF.Kehath_Yashur,
+    ],
+    dad: PF.Imran,
+    mom: PF.Yukabid,
+    spouses: null,
+    daughters: null,
+    sons: null,
+    relatives: [PF.Musa, PF.Miriam],
+    relativesTypes: [RELATIVE.Brother, RELATIVE.Sister],
+    successors: [PF.Ilyas],
+    successor: PF.Dawud,
+    // Required prophet data:
+    trValSentTo: a('a.Firaun') + // Pharaoh فرعون
+        'p._and his establishment_' +
+        cns('(43:46)'),
+    quranMentionCount: 20,
+    qvNabi: QV(19, 53),
+    // Optional prophet data:
+    qvRasul: QV(20, 47),
+    trValKitab: null,
+    qvsUluAlAzm: null,
+    trValLocationBirth: null,
+    trValLocationDeath: null,
+    trValTomb: 'p.Possibly in Jabal Harun, Jordan or in Sinai'.tr,
+  ));
+  rv.add(Prophet(
+    // Event data:
+    trValEra: a('a.Firaun') + 'i._New_Kingdoms of_'.tr + a('a.Misr'), // Egypt
     startMs: -1300,
     endMs: -1200,
     asset: await _getImageEventAsset(PF.Musa),
@@ -699,7 +735,7 @@ Future<List<Prophet>> initProphets() async {
     pf: PF.Musa,
     predecessors: [
 //    PF.Yaqub,
-      PF.Lawi,
+//    PF.Lawi,
       PF.Kehath_Yashur,
     ],
     dad: PF.Imran,
@@ -728,42 +764,6 @@ Future<List<Prophet>> initProphets() async {
     trValLocationBirth: null,
     trValLocationDeath: null,
     trValTomb: 'p.An-Nabi Musa, Jericho'.tr, // ٱلنَّبِي مُوْسَى
-  ));
-  rv.add(Prophet(
-    // Event data:
-    trValEra: a('a.Firaun') + 'i._New_Kingdoms of_'.tr + a('a.Misr'), // Egypt
-    startMs: -1303,
-    endMs: -1200,
-    asset: await _getImageEventAsset(PF.Harun),
-    // Fam data:
-    pf: PF.Harun,
-    predecessors: [
-//    PF.Yaqub,
-//    PF.Lawi,
-      PF.Kehath_Yashur,
-    ],
-    dad: PF.Imran,
-    mom: PF.Yukabid,
-    spouses: null,
-    daughters: null,
-    sons: null,
-    relatives: [PF.Musa, PF.Miriam],
-    relativesTypes: [RELATIVE.Brother, RELATIVE.Sister],
-    successors: [PF.Ilyas],
-    successor: PF.Dawud,
-    // Required prophet data:
-    trValSentTo: a('a.Firaun') + // Pharaoh فرعون
-        'p._and his establishment_' +
-        cns('(43:46)'),
-    quranMentionCount: 20,
-    qvNabi: QV(19, 53),
-    // Optional prophet data:
-    qvRasul: QV(20, 47),
-    trValKitab: null,
-    qvsUluAlAzm: null,
-    trValLocationBirth: null,
-    trValLocationDeath: null,
-    trValTomb: 'p.Possibly in Jabal Harun, Jordan or in Sinai'.tr,
   ));
   rv.add(Prophet(
     // Event data:
@@ -1310,18 +1310,18 @@ enum PF {
     trValLatin: 'Jethro',
     trKeyNote: 'p.Often thought to be Jethro, but this is highly disputed.',
   )), //  Şuayb
-  Musa(Isim(
-    trValHebrew: 'מֹשֶׁה (Moshe)',
-    trKeyHebrewMeaning: 'p.Possibly from Egyptian "son" or Hebrew "deliver"',
-    trValGreek: 'Μωϋσῆς (Mouses)',
-    trValLatin: 'Moyses',
-  )),
   Harun(Isim(
     trValHebrew: 'אַהֲרֹן (Aharon)',
     trKeyHebrewMeaning:
         'p.Possibly of Egyptian origin or from hebrew "high mountain" or "exalted"',
     trValGreek: 'Ἀαρών (Aaron)',
     trValLatin: 'Aaron',
+  )),
+  Musa(Isim(
+    trValHebrew: 'מֹשֶׁה (Moshe)',
+    trKeyHebrewMeaning: 'p.Possibly from Egyptian "son" or Hebrew "deliver"',
+    trValGreek: 'Μωϋσῆς (Mouses)',
+    trValLatin: 'Moyses',
   )),
   Dawud(Isim(
     trValHebrew: 'דָּוִד (Dawid)',

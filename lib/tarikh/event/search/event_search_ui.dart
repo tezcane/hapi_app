@@ -3,14 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/main_c.dart';
-import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
-import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/tarikh/event/event.dart';
 import 'package:hapi/tarikh/event/search/search_manager.dart';
 import 'package:hapi/tarikh/event/search/search_widget.dart';
 import 'package:hapi/tarikh/event/thumbnail_detail_widget.dart';
-import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 
 class EventSearchUI extends StatefulWidget {
@@ -70,7 +67,7 @@ class _EventSearchUIState extends State<EventSearchUI> {
     List<Event> searchResult =
         SearchManager.init().performSearch(widget.navPage, query).toList();
 
-    /// Sort by starting time, so the search list is always displayed in ascending order.
+    // Sort by starting time, so results are displayed in ascending order
     searchResult.sort((Event a, Event b) {
       return a.startMs.compareTo(b.startMs);
     });
@@ -118,14 +115,6 @@ class _EventSearchUIState extends State<EventSearchUI> {
         _searchResults = searchResults;
       });
     });
-  }
-
-  void _tapSearchResult(Event event) {
-    MenuItemData item = MenuItemData.fromEvent(event);
-    MenuC.to.pushSubPage(
-      SubPage.Tarikh_Timeline,
-      arguments: {'focusItem': item, 'event': event},
-    );
   }
 
   void _onLayoutDone(_) {
@@ -186,16 +175,13 @@ class _EventSearchUIState extends State<EventSearchUI> {
                     return SizedBox(height: heightPadding);
                   } else {
                     return RepaintBoundary(
-                      // child: Hero(
-                      //   // TODO get this working
-                      //   //tag: 'asdf',
-                      //   tag: _searchResults[idx - 1].trKeyEndTagLabel + '2',
+                      // NOTE: Can't do hero animation from EventFavoriteUI and
+                      //       EventSearchUI as event can be on both.
                       child: ThumbnailDetailWidget(
+                        widget.navPage,
                         _searchResults[idx - 1],
                         hasDivider: idx != 1,
-                        tapSearchResult: _tapSearchResult,
                       ),
-                      // ),
                     );
                   }
                 },

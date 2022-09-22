@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:hapi/main_c.dart';
+import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
+import 'package:hapi/menu/slide/menu_right/nav_page.dart';
+import 'package:hapi/menu/sub_page.dart';
+import 'package:hapi/relic/relic.dart';
+import 'package:hapi/relic/relic_c.dart';
 import 'package:hapi/tarikh/event/event.dart';
+import 'package:hapi/tarikh/event/event_c.dart';
 import 'package:hapi/tarikh/event/thumbnail_widget.dart';
-
-/// This callback allows an [event] to display on the [TarikhTimelineUI] and
-/// position it to the right start/end time for the [event].
-typedef TapSearchResultCallback = Function(Event event);
+import 'package:hapi/tarikh/main_menu/menu_data.dart';
 
 /// This widget lays out nicely the [event] provided.
 ///
@@ -17,17 +20,15 @@ typedef TapSearchResultCallback = Function(Event event);
 /// [FavoritesPage] widget.
 class ThumbnailDetailWidget extends StatelessWidget {
   const ThumbnailDetailWidget(
+    this.navPage,
     this.event, {
     this.hasDivider = true,
-    this.tapSearchResult,
   });
+  final NavPage navPage;
   final Event event;
 
   /// Whether to show a divider line on the bottom of this widget. Defaults to `true`.
   final bool hasDivider;
-
-  /// Callback to navigate to the timeline (see [MainMenuWidget._tapSearchResult()]).
-  final TapSearchResultCallback? tapSearchResult;
 
   /// Use [Material] & [InkWell] to show a Material Design ripple effect on the row.
   /// [InkWell] provides also a callback for custom onTap behavior.
@@ -45,21 +46,22 @@ class ThumbnailDetailWidget extends StatelessWidget {
     }
 
     // TODO was return Material(color: Colors.transparent, child:
-    return InkWell(
-      onTap: () => tapSearchResult != null ? tapSearchResult!(event) : null,
-      child: Column(
-        children: <Widget>[
-          if (hasDivider)
-            Container(height: 1, color: Theme.of(context).dividerColor),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 14.0),
+    return Column(
+      children: <Widget>[
+        if (hasDivider)
+          Container(height: 1, color: Theme.of(context).dividerColor),
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 14.0),
+          child: InkWell(
+            onTap: () => _onTapThumbnailAndText(),
+            onLongPress: () => _onLongPressThumbnailAndText(),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 ThumbnailWidget(event),
                 Expanded(
                   child: Container(
-                    margin: const EdgeInsets.only(left: 17.0),
+                    margin: const EdgeInsets.only(left: 17, right: 17), // RTL
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -93,8 +95,60 @@ class ThumbnailDetailWidget extends StatelessWidget {
               ],
             ),
           ),
-        ],
-      ),
+        ),
+      ],
     );
+  }
+
+  _goToTimeline() {
+    MenuItemData item = MenuItemData.fromEvent(event);
+    MenuC.to.pushSubPage(
+      SubPage.Tarikh_Timeline,
+      arguments: {'focusItem': item, 'event': event},
+    );
+  }
+
+  _onTapThumbnailAndText() {
+    if (navPage == NavPage.Tarikh) {
+      _goToTimeline();
+    } else if (navPage == NavPage.Relics) {
+      if (event.isTimeLineEvent) {
+        _goToTimeline();
+      } else {
+        _goToEventDetailsOfRelics(); // doesn't have a time, just go to details
+      }
+    } else {
+      l.E('onTapThumbnailAndText: navPage=${navPage.name} not implemented yet');
+    }
+  }
+
+  _goToEventDetailsOfTarikh() {
+    MenuC.to.pushSubPage(SubPage.Event_Details, arguments: {
+      'eventType': EVENT_TYPE.Incident,
+      'eventMap': EventC.to.getEventMap(EVENT_TYPE.Incident),
+      'trKeyTitleAtInit': event.trKeyTitle,
+    });
+  }
+
+  _goToEventDetailsOfRelics() {
+    MenuC.to.pushSubPage(SubPage.Event_Details, arguments: {
+      'eventType': EVENT_TYPE.Relic,
+      'eventMap': RelicC.to.getEventMap(
+        (event as Relic).relicType,
+        FILTER_TYPE.Default,
+        null,
+      ),
+      'trKeyTitleAtInit': event.trKeyTitle,
+    });
+  }
+
+  _onLongPressThumbnailAndText() {
+    if (navPage == NavPage.Tarikh) {
+      _goToEventDetailsOfTarikh();
+    } else if (navPage == NavPage.Relics) {
+      _goToEventDetailsOfRelics();
+    } else {
+      l.E('onTapThumbnailAndText: navPage=${navPage.name} not implemented yet');
+    }
   }
 }

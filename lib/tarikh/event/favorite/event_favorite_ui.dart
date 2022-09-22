@@ -2,13 +2,10 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/main_c.dart';
-import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
-import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/tarikh/event/event.dart';
 import 'package:hapi/tarikh/event/event_c.dart';
 import 'package:hapi/tarikh/event/thumbnail_detail_widget.dart';
-import 'package:hapi/tarikh/main_menu/menu_data.dart';
 
 /// It displays the list of favorites kept by the [EventC], and moves into the
 /// timeline when tapping on one of them if event type is Tarikh, otherwise it
@@ -60,23 +57,12 @@ class EventFavoriteUI extends StatelessWidget {
                   itemCount: eventListFav.length,
                   itemBuilder: (BuildContext context, int idx) {
                     Event event = eventListFav[idx];
+                    // NOTE: Can't do hero animation from EventFavoriteUI and
+                    //       EventSearchUI as event can be on both.
                     return ThumbnailDetailWidget(
+                      navPage,
                       event,
                       hasDivider: idx != 0,
-                      tapSearchResult: (Event event) {
-                        switch (eventType) {
-                          case EVENT_TYPE.Incident:
-                          case EVENT_TYPE.Era:
-                            MenuItemData item = MenuItemData.fromEvent(event);
-                            MenuC.to.pushSubPage(
-                              SubPage.Tarikh_Timeline,
-                              arguments: {'focusItem': item, 'event': event},
-                            );
-                            break;
-                          case EVENT_TYPE.Relic:
-                            break;
-                        }
-                      },
                     );
                   },
                 ),

@@ -113,6 +113,8 @@ class Event {
 
   /// Pretty-printing for the event date.
   String trValYearsAgo({double? eventYear}) {
+    if (!isTimeLineEvent) return 'i.Coming Soon'; // Year is not known yet
+
     eventYear ??= startMs;
 
     if (eventYear <= -10000) return trValYears(startMs) + ' ' + 'i.Ago'.tr;
