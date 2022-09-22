@@ -1,10 +1,12 @@
-import 'package:flare_flutter/flare_actor.dart' show FlareActor;
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/sub_page.dart';
+import 'package:hapi/tarikh/event/animation_controller/heart_controller.dart';
 import 'package:hapi/tarikh/event/event.dart';
 import 'package:hapi/tarikh/event/event_asset.dart';
 import 'package:hapi/tarikh/event/event_c.dart';
@@ -39,6 +41,9 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
   late final TimeBtn _btnDn;
 
   late final Map<String, Event> _eventMapFav;
+
+  final heartControllerFav = HeartController('Favorite');
+  final heartControllerUnfav = HeartController('Unfavorite');
 
   /// The information for the current page.
   String _trValTitle = '';
@@ -125,6 +130,13 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
   @override
   Widget build(BuildContext context) {
     bool isFavorite = _eventMapFav.containsKey(_event.trKeyTitle);
+    if (isFavorite) {
+      heartControllerFav.showParticles(true);
+      heartControllerUnfav.showParticles(true);
+    } else {
+      heartControllerFav.showParticles(false);
+      heartControllerUnfav.showParticles(false);
+    }
 
     const double fabWidth = 71; // 56 + 15
     const double middleButtonsGap = 5;
@@ -381,18 +393,19 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                   child: Hero(
                                     tag: Icons.favorite_border_outlined,
                                     child: isFavorite
-                                        ? const FlareActor(
+                                        ? FlareActor(
                                             'assets/tarikh/flare/Favorite.flr',
-                                            animation: 'Favorite',
+                                            animation: 'Favorite', // needed
                                             shouldClip: false,
                                             color: Colors.pinkAccent,
+                                            controller: heartControllerFav,
                                           )
-                                        : const FlareActor(
+                                        : FlareActor(
                                             'assets/tarikh/flare/Favorite.flr',
-                                            animation: 'Unfavorite',
+                                            animation: 'Unfavorite', // needed
                                             shouldClip: false,
                                             color: Colors.pinkAccent,
-                                            snapToEnd: true, //for bad state
+                                            controller: heartControllerUnfav,
                                           ),
                                   ),
                                 ),
