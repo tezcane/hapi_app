@@ -77,7 +77,8 @@ class RelicsUI extends StatelessWidget {
           const RelicTabBar(
             relicTab: RELIC_TAB.Ummah,
             relicTypes: [
-              RELIC_TYPE.Quran_AlAnbiya,
+              RELIC_TYPE.Anbiya,
+              RELIC_TYPE.Surah,
               // RELIC_TYPE.Quran_AlAnbiya,
               // RELIC_TYPE.Quran_AlAnbiya,
             ],

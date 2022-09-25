@@ -24,6 +24,7 @@ class RelicTabBar extends StatefulWidget {
 class _RelicTabBarState extends State<RelicTabBar>
     with SingleTickerProviderStateMixin {
   final List<RelicSet> relicSets = [];
+  final List<Tab> tabs = [];
   late final TabController tabController;
   late final AutoScrollController autoScrollController;
 
@@ -59,7 +60,10 @@ class _RelicTabBarState extends State<RelicTabBar>
 
       if (initNeeded) {
         for (RELIC_TYPE relicType in widget.relicTypes) {
-          relicSets.add(RelicC.to.getRelicSet(relicType));
+          RelicSet relicSet = RelicC.to.getRelicSet(relicType);
+
+          relicSets.add(relicSet);
+          tabs.add(Tab(text: a(relicSet.tkTitle)));
         }
 
         // Needed to scroll down to last selected tab at init:
@@ -103,12 +107,8 @@ class _RelicTabBarState extends State<RelicTabBar>
                 labelColor: AppThemes.selected,
                 unselectedLabelColor: AppThemes.ldTextColor,
                 indicatorWeight: 3.0,
-                tabs: relicSets
-                    .map((relicSet) => Tab(text: relicSet.trValTitle))
-                    .toList(),
-                onTap: (index) {
-                  animateAndScrollTo(index);
-                },
+                tabs: tabs,
+                onTap: (index) => animateAndScrollTo(index),
               ),
             ),
           ],

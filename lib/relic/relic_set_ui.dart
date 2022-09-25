@@ -279,7 +279,7 @@ class RelicSetUI extends StatelessWidget {
     String field = '';
     if (hasField) {
       switch (filter.field) {
-        case (FILTER_FIELD.Prophet_quranMentionCount):
+        case (FILTER_FIELD.QuranMentionCount):
           field = cni((relic as Prophet).quranMentionCount);
           break;
         default:

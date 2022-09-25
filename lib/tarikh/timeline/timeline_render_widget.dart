@@ -1039,6 +1039,7 @@ class TimelineRenderObject extends RenderBox {
   ) {
     final Canvas canvas = context.canvas;
 
+    // TODO rename item->event
     for (Event item in events) {
       /// Don't paint this item if:
       if (!item.isVisible ||
@@ -1088,7 +1089,8 @@ class TimelineRenderObject extends RenderBox {
           ),
         );
 
-      builder.addText(a(item.trKeyTitle));
+      /// Write bubble text here:
+      builder.addText(item.tvBubbleText);
       ui.Paragraph labelParagraph = builder.build();
       labelParagraph.layout(
         const ui.ParagraphConstraints(width: MaxLabelWidth),

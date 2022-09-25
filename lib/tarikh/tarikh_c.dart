@@ -1,10 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:typed_data';
-import 'dart:ui' as ui;
 
-import 'package:flare_dart/math/aabb.dart' as flare;
-import 'package:flare_flutter/flare.dart' as flare;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:get/get.dart';
@@ -19,9 +15,6 @@ import 'package:hapi/tarikh/timeline/timeline.dart';
 import 'package:hapi/tarikh/timeline/timeline_data.dart';
 import 'package:hapi/tarikh/timeline/timeline_utils.dart';
 import 'package:intl/intl.dart';
-import 'package:nima/nima.dart' as nima;
-import 'package:nima/nima/animation/actor_animation.dart' as nima;
-import 'package:nima/nima/math/aabb.dart' as nima;
 
 import 'event/event_asset.dart';
 
@@ -206,11 +199,13 @@ class TimelineInitHandler {
   /// A gradient is shown on the background, depending on the [_currentEra]
   /// we're in.
   final List<TimelineBackgroundColor> _backgroundColors = [];
+
   get backgroundColors => _backgroundColors;
 
   /// [TickColors] also have custom colors so that they are always visible
   /// with the changing background.
   final List<TickColors> _tickColors = [];
+
   List<TickColors> get tickColors => _tickColors;
   late final Iterable<TickColors> _tickColorsReversed;
   final List<HeaderColors> _headerColors = [];
@@ -218,6 +213,7 @@ class TimelineInitHandler {
   /// All the [Event]s that are loaded from disk at boot (in [loadFromBundle()]).
   /// List for "root" events, i.e. events with no parents.
   final List<Event> _rootEvents = [];
+
   get rootEvents => _rootEvents;
 
   /// This is a special feature to play a particular part of an animation
@@ -320,15 +316,16 @@ class TimelineInitHandler {
       EventAsset asset = await getEventAsset(td.asset);
 
       /// Finally create Event object
-      var event = Event(
+      Event event = Event(
         type: type,
         trKeyEra: trKeyEra,
         trKeyTitle: trKeyTitle,
         startMs: startMs,
         endMs: endMs,
-        asset: asset,
         accent: accent,
       );
+      // used to pass asset in above, now here for easier/cleaner relic inits:
+      event.asset = asset;
 
       /// Add event reference 1 of 2: TODO this is a hack, access via map?
       asset.event = event; // can and must only do this once
@@ -343,8 +340,11 @@ class TimelineInitHandler {
 
     /// Major feature here, merge relics into Tarikh events so the relics can
     /// also show up on the UI. With return value, we will init favorites below.
-    List<Event> eventsRelics =
-        RelicC.to.mergeRelicAndTarikhEvents(eventsTarikh); // add before sort
+    ///
+    /// Note: We must spin wait for relic init completion, its data is need
+    /// needed first so it can merge with the timeline events initializing here.
+    List<Event> eventsRelics = await RelicC.to
+        .mergeRelicAndTarikhEvents(eventsTarikh); // add before sort
 
     /// sort Tarikh the full list so they are in order of oldest to newest
     eventsTarikh.sort((Event a, Event b) => a.startMs.compareTo(b.startMs));
@@ -455,162 +455,6 @@ class TimelineInitHandler {
     }
 
     return Future.value(eventAsset);
-  }
-
-  Future<FlareAsset> loadFlareAsset(
-    String filename,
-    double width,
-    double height,
-    double scale,
-    bool loop,
-    double offset,
-    double gap,
-    String? flareIdle,
-    String? flareIntro,
-    List<double>? bounds,
-  ) async {
-    flare.FlutterActor flutterActor = flare.FlutterActor();
-
-    /// Flare library function to load the [FlutterActor]
-    await flutterActor.loadFromBundle(rootBundle, filename);
-
-    /// Distinguish between the actual actor, and its instance.
-    flare.FlutterActorArtboard actorStatic =
-        flutterActor.artboard as flare.FlutterActorArtboard;
-    actorStatic.initializeGraphics();
-    flare.FlutterActorArtboard actor =
-        flutterActor.artboard.makeInstance() as flare.FlutterActorArtboard;
-    actor.initializeGraphics();
-
-    /// and the reference to their first animation is grabbed.
-    flare.ActorAnimation animation = flutterActor.artboard.animations[0];
-
-    flare.ActorAnimation? idle;
-    List<flare.ActorAnimation>? idleAnimations;
-    if (flareIdle is String) {
-      if ((idle = actor.getAnimation(flareIdle)) != null) animation = idle;
-    } else if (flareIdle is List) {
-      for (String animationName in flareIdle as List<String>) {
-        flare.ActorAnimation? animation1 = actor.getAnimation(animationName);
-        if (animation1 != null) {
-          idleAnimations ??= [];
-          idleAnimations.add(animation1);
-          animation = animation1;
-        }
-      }
-    }
-
-    flare.ActorAnimation? intro;
-    if (flareIntro is String) {
-      if ((intro = actor.getAnimation(flareIntro)) != null) animation = intro;
-    }
-
-    /// Make sure that all the initial values are set for the actor and for the
-    /// actor instance.
-    actor.advance(0.0);
-    flare.AABB setupAABB = actor.computeAABB();
-    animation.apply(0.0, actor, 1.0);
-    animation.apply(animation.duration, actorStatic, 1.0);
-    actor.advance(0.0);
-    actorStatic.advance(0.0);
-
-    if (bounds is List) {
-      /// Override the AABB for this event with custom values.
-      setupAABB = flare.AABB.fromValues(
-        bounds![0],
-        bounds[1],
-        bounds[2],
-        bounds[3],
-      );
-    }
-
-    FlareAsset flareAsset = FlareAsset(
-      filename,
-      width,
-      height,
-      scale,
-      loop,
-      offset,
-      gap,
-      actorStatic,
-      actor,
-      setupAABB,
-      animation,
-    );
-
-    // set optional fields, if they exist:
-    flareAsset.intro = intro;
-    flareAsset.idle = idle;
-    flareAsset.idleAnimations = idleAnimations;
-
-    return flareAsset;
-  }
-
-  Future<NimaAsset> loadNimaAsset(
-    String filename,
-    double width,
-    double height,
-    double scale,
-    bool loop,
-    double offset,
-    double gap,
-    String? nimaIdle,
-    List<double>? bounds,
-  ) async {
-    nima.FlutterActor flutterActor = nima.FlutterActor();
-    await flutterActor.loadFromBundle(filename);
-
-    nima.FlutterActor actorStatic = flutterActor;
-    nima.FlutterActor actor = flutterActor.makeInstance() as nima.FlutterActor;
-
-    nima.ActorAnimation animation;
-    if (nimaIdle is String) {
-      animation = actor.getAnimation(nimaIdle);
-    } else {
-      animation = flutterActor.animations[0];
-    }
-
-    actor.advance(0.0);
-    nima.AABB setupAABB = actor.computeAABB();
-    animation.apply(0.0, actor, 1.0);
-    animation.apply(animation.duration, actorStatic, 1.0);
-    actor.advance(0.0);
-    actorStatic.advance(0.0);
-
-    if (bounds is List) {
-      setupAABB =
-          nima.AABB.fromValues(bounds![0], bounds[1], bounds[2], bounds[3]);
-    }
-
-    NimaAsset nimaAsset = NimaAsset(
-      filename,
-      width,
-      height,
-      scale,
-      loop,
-      offset,
-      gap,
-      actorStatic,
-      actor,
-      setupAABB,
-      animation,
-    );
-
-    return nimaAsset;
-  }
-
-  Future<ImageAsset> loadImageAsset(
-    String filename,
-    double width,
-    double height,
-    double scale,
-  ) async {
-    ByteData data = await rootBundle.load(filename);
-    Uint8List list = Uint8List.view(data.buffer);
-    ui.Codec codec = await ui.instantiateImageCodec(list);
-    ui.FrameInfo frame = await codec.getNextFrame();
-
-    return ImageAsset(filename, width, height, scale, frame.image);
   }
 
   /// Helper function for [MenuVignette].

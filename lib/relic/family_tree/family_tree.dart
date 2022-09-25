@@ -4,14 +4,25 @@ import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_c.dart';
-import 'package:hapi/tarikh/event/event_asset.dart';
+
+/// For UI's that have option to show Arabic, Transliteration, and locale lang.
+/// All relic enums must implement/extend this. TODO asdf implement in many places
+class Arabic {
+  const Arabic({required this.tr, required this.ar, required this.en});
+  final String? tr;
+  final String? ar;
+  final String? en; // English is also the key to lookup other languages
+}
 
 /// Isim=("Name" in Arabic). Used to identify a prophet/leader/person as they
 /// are known in scripture/history (Bible/Torah/Quran relations) in different
 /// languages. Possibly is also used if the names are certain or not, so the
 /// user isn't presented possibly wrong information as truth.
-class Isim {
+class Isim extends Arabic {
   const Isim({
+    String? tr, // TODO
+    String? ar,
+    String? en,
     this.trKeyLaqab,
     this.trValAramaic,
     this.trValHebrew,
@@ -20,7 +31,7 @@ class Isim {
     this.trValLatin,
     this.trKeyNote, // note(s) on the identity or names for this person
     this.fem = false, // True=female, False=male
-  });
+  }) : super(tr: tr, ar: ar, en: en);
   final List<String>? trKeyLaqab; // Laqab = Nicknames
   final String? trValAramaic;
   final String? trValHebrew;
@@ -62,13 +73,10 @@ abstract class FamilyTree extends Relic {
     required String trValEra,
     required double startMs,
     required double endMs,
-    required EventAsset asset,
     // Relic data:
     required RELIC_TYPE relicType,
-    required String trKeySummary,
-    required String trKeySummary2,
+    required Enum e,
     // Fam Required
-    required this.e,
     required this.predecessors,
     // Fam Optional
     this.dad,
@@ -83,18 +91,13 @@ abstract class FamilyTree extends Relic {
   }) : super(
           // Event data:
           trValEra: trValEra,
-          trKeyEndTagLabel: e.name,
           startMs: startMs,
           endMs: endMs,
-          asset: asset,
           // Relic data:
           relicType: relicType,
-          relicId: e.index,
-          trKeySummary: trKeySummary,
-          trKeySummary2: trKeySummary2,
+          e: e,
         );
   // Required Fam data:
-  final Enum e;
   final List<Enum> predecessors;
   // Optional Fam data:
   final Enum? dad;
@@ -168,7 +171,7 @@ addEdgesAllFamily(Graph graph, FamilyTree ft, int gapIdx) {
   }
 
   // Add Prophet (Handles case of Adam fine)
-  addEdge(ft.relicId, 'Prophet', a(ft.trKeyTitle));
+  addEdge(ft.e.index, 'Prophet', a(ft.trKeyTitle));
 
   // add daughters to Prophet node
   for (Enum e in ft.daughters ?? []) {
@@ -210,7 +213,7 @@ Graph getGraphOnlyRelics(RELIC_TYPE relicType, int gapIdx) {
     l.d('FAM_NODE:ONLY: relic=${ft.e.name}');
 
     // init Prophet/Person parent node
-    Node parent = Node.Id(ft.relicId);
+    Node parent = Node.Id(ft.e.index);
 
     // if has successor do work, otherwise do nothing
     if (ft.successors != null) {

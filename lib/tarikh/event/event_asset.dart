@@ -1,7 +1,10 @@
+import 'dart:typed_data';
 import 'dart:ui';
+import 'dart:ui' as ui;
 
 import 'package:flare_dart/math/aabb.dart' as flare;
 import 'package:flare_flutter/flare.dart' as flare;
+import 'package:flutter/services.dart';
 import 'package:hapi/tarikh/event/event.dart';
 import 'package:nima/nima.dart' as nima;
 import 'package:nima/nima/animation/actor_animation.dart' as nima;
@@ -108,4 +111,177 @@ class NimaAsset extends AnimatedEventAsset {
   final nima.FlutterActor actor;
   final nima.AABB setupAABB;
   final nima.ActorAnimation animation;
+}
+
+Future<FlareAsset> loadFlareAsset(
+  String filename,
+  double width,
+  double height,
+  double scale,
+  bool loop,
+  double offset,
+  double gap,
+  String? flareIdle,
+  String? flareIntro,
+  List<double>? bounds,
+) async {
+  flare.FlutterActor flutterActor = flare.FlutterActor();
+
+  /// Flare library function to load the [FlutterActor]
+  await flutterActor.loadFromBundle(rootBundle, filename);
+
+  /// Distinguish between the actual actor, and its instance.
+  flare.FlutterActorArtboard actorStatic =
+      flutterActor.artboard as flare.FlutterActorArtboard;
+  actorStatic.initializeGraphics();
+  flare.FlutterActorArtboard actor =
+      flutterActor.artboard.makeInstance() as flare.FlutterActorArtboard;
+  actor.initializeGraphics();
+
+  /// and the reference to their first animation is grabbed.
+  flare.ActorAnimation animation = flutterActor.artboard.animations[0];
+
+  flare.ActorAnimation? idle;
+  List<flare.ActorAnimation>? idleAnimations;
+  if (flareIdle is String) {
+    if ((idle = actor.getAnimation(flareIdle)) != null) animation = idle;
+  } else if (flareIdle is List) {
+    for (String animationName in flareIdle as List<String>) {
+      flare.ActorAnimation? animation1 = actor.getAnimation(animationName);
+      if (animation1 != null) {
+        idleAnimations ??= [];
+        idleAnimations.add(animation1);
+        animation = animation1;
+      }
+    }
+  }
+
+  flare.ActorAnimation? intro;
+  if (flareIntro is String) {
+    if ((intro = actor.getAnimation(flareIntro)) != null) animation = intro;
+  }
+
+  /// Make sure that all the initial values are set for the actor and for the
+  /// actor instance.
+  actor.advance(0.0);
+  flare.AABB setupAABB = actor.computeAABB();
+  animation.apply(0.0, actor, 1.0);
+  animation.apply(animation.duration, actorStatic, 1.0);
+  actor.advance(0.0);
+  actorStatic.advance(0.0);
+
+  if (bounds is List) {
+    /// Override the AABB for this event with custom values.
+    setupAABB = flare.AABB.fromValues(
+      bounds![0],
+      bounds[1],
+      bounds[2],
+      bounds[3],
+    );
+  }
+
+  FlareAsset flareAsset = FlareAsset(
+    filename,
+    width,
+    height,
+    scale,
+    loop,
+    offset,
+    gap,
+    actorStatic,
+    actor,
+    setupAABB,
+    animation,
+  );
+
+  // set optional fields, if they exist:
+  flareAsset.intro = intro;
+  flareAsset.idle = idle;
+  flareAsset.idleAnimations = idleAnimations;
+
+  return flareAsset;
+}
+
+Future<NimaAsset> loadNimaAsset(
+  String filename,
+  double width,
+  double height,
+  double scale,
+  bool loop,
+  double offset,
+  double gap,
+  String? nimaIdle,
+  List<double>? bounds,
+) async {
+  nima.FlutterActor flutterActor = nima.FlutterActor();
+  await flutterActor.loadFromBundle(filename);
+
+  nima.FlutterActor actorStatic = flutterActor;
+  nima.FlutterActor actor = flutterActor.makeInstance() as nima.FlutterActor;
+
+  nima.ActorAnimation animation;
+  if (nimaIdle is String) {
+    animation = actor.getAnimation(nimaIdle);
+  } else {
+    animation = flutterActor.animations[0];
+  }
+
+  actor.advance(0.0);
+  nima.AABB setupAABB = actor.computeAABB();
+  animation.apply(0.0, actor, 1.0);
+  animation.apply(animation.duration, actorStatic, 1.0);
+  actor.advance(0.0);
+  actorStatic.advance(0.0);
+
+  if (bounds is List) {
+    setupAABB =
+        nima.AABB.fromValues(bounds![0], bounds[1], bounds[2], bounds[3]);
+  }
+
+  NimaAsset nimaAsset = NimaAsset(
+    filename,
+    width,
+    height,
+    scale,
+    loop,
+    offset,
+    gap,
+    actorStatic,
+    actor,
+    setupAABB,
+    animation,
+  );
+
+  return nimaAsset;
+}
+
+Future<ImageAsset> loadImageAsset(
+  String filename,
+  double width,
+  double height,
+  double scale,
+) async {
+  ByteData data = await rootBundle.load(filename);
+  Uint8List list = Uint8List.view(data.buffer);
+  ui.Codec codec = await ui.instantiateImageCodec(list);
+  ui.FrameInfo frame = await codec.getNextFrame();
+
+  return ImageAsset(filename, width, height, scale, frame.image);
+}
+
+/// To init relics easier we use this class as a helper.
+class RelicAsset {
+  const RelicAsset(
+    this.filename, {
+    this.width = 200.0,
+    this.height = 200.0,
+    this.scale = 1.0,
+  });
+  final String filename;
+  final double width;
+  final double height;
+  final double scale;
+
+  Future<EventAsset> toImageEventAsset() async =>
+      await loadImageAsset(filename, width, height, scale);
 }

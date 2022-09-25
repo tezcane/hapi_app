@@ -469,7 +469,7 @@ List<TimelineData> getTimelineData() {
     ),
     const TimelineData(
       date: 1453,
-      trKeyTitle: 'i.Constantinople/Istanbul',
+      trKeyTitle: 'i.Constantinople Istanbul',
       asset: Asset(
         source: 'tarikh/nima/Constantinople.nma',
         width: 500,
@@ -498,7 +498,7 @@ List<TimelineData> getTimelineData() {
     ),
     const TimelineData(
       date: 1859,
-      trKeyTitle: "i.Darwin's\nTheory of Evolution",
+      trKeyTitle: "i.Darwin's Theory of Evolution",
       asset: Asset(
         source: 'tarikh/nima/Darwin 2.nma',
         width: 1850,

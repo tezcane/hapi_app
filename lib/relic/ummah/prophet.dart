@@ -1,3 +1,4 @@
+import 'package:flutter/src/widgets/framework.dart';
 import 'package:get/utils.dart';
 import 'package:hapi/controller/time_c.dart';
 import 'package:hapi/main_c.dart';
@@ -5,7 +6,6 @@ import 'package:hapi/quran/quran.dart';
 import 'package:hapi/relic/family_tree/family_tree.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/tarikh/event/event_asset.dart';
-import 'package:hapi/tarikh/tarikh_c.dart';
 
 const String _ = ' '; // space/gap
 
@@ -16,14 +16,12 @@ class Prophet extends FamilyTree {
     required String trValEra,
     required double startMs,
     required double endMs,
-    required EventAsset asset,
 
     // Relic data not needed to pass in, it is auto-generated in super() call
+    required Enum e,
 
     // Required Fam data:
-    required PF pf,
     required List<PF> predecessors,
-    // Optional Fam data:
     PF? dad,
     PF? mom,
     List<PF>? spouses,
@@ -38,7 +36,6 @@ class Prophet extends FamilyTree {
     required this.trValSentTo,
     required this.quranMentionCount,
     required this.qvNabi,
-    // Optional prophet data:
     this.qvRasul,
     this.trValKitab,
     this.qvsUluAlAzm,
@@ -50,13 +47,10 @@ class Prophet extends FamilyTree {
           trValEra: trValEra,
           startMs: startMs,
           endMs: endMs,
-          asset: asset,
           // Relic data:
-          relicType: RELIC_TYPE.Quran_AlAnbiya,
-          trKeySummary: 'ps.${pf.name}', // ps=Prophet Summary
-          trKeySummary2: 'pq.${pf.name}', // pq=Prophet Quran
+          relicType: RELIC_TYPE.Anbiya,
+          e: e,
           // Required Fam data:
-          e: pf,
           predecessors: predecessors,
           // Optional Fam data:
           dad: dad,
@@ -85,109 +79,28 @@ class Prophet extends FamilyTree {
   bool isUluAlAzm() => qvsUluAlAzm != null && qvsUluAlAzm!.isNotEmpty;
 
   @override
-  String get trValRelicSetTitle => a('a.Anbiya');
+  RelicAsset getRelicAsset({width = 200.0, height = 200.0, scale = 1.0}) =>
+      RelicAsset(
+        'assets/images/anbiya/${e.name}.png',
+        width: width,
+        height: height,
+        scale: scale,
+      );
+
   @override
-  List<RelicSetFilter> get relicSetFilters {
-    if (relicSetFiltersInit.isNotEmpty) return relicSetFiltersInit;
-
-    // Add special cases here, if needed
-    // Graph graph = getGraphAllFamily(RELIC_TYPE.Quran_AlAnbiya, PF.Gap.index);
-    // TODO add Isa<->Yahya connection/Lot Daugthers/etc. special logic here
-
-    relicSetFiltersInit.addAll([
-      RelicSetFilter(
-        type: FILTER_TYPE.Default,
-        trValLabel: a('a.Nabi'),
-      ),
-      RelicSetFilter(
-        type: FILTER_TYPE.IdxList,
-        trValLabel: a('a.Rasul'),
-        idxList: [
-          PF.Adam.index,
-          PF.Nuh.index,
-          PF.Hud.index,
-          PF.Salih.index,
-          PF.Ibrahim.index,
-          PF.Lut.index,
-          PF.Ismail.index,
-          PF.Yusuf.index,
-          PF.Shuayb.index,
-          PF.Musa.index,
-          PF.Harun.index,
-          PF.Dawud.index,
-          PF.Ilyas.index,
-          PF.Yunus.index,
-          PF.Isa.index,
-          PF.Muhammad.index,
-        ],
-      ),
-      RelicSetFilter(
-        type: FILTER_TYPE.IdxList,
-        trValLabel: a('a.Ulu Al-Azm'),
-        tprMax: 5,
-        idxList: [
-          PF.Nuh.index,
-          PF.Ibrahim.index,
-          PF.Musa.index,
-          PF.Isa.index,
-          PF.Muhammad.index,
-        ],
-      ),
-      RelicSetFilter(
-        type: FILTER_TYPE.IdxList,
-        trValLabel: 'i.Quran Name Mentions'.tr,
-        field: FILTER_FIELD.Prophet_quranMentionCount,
-        idxList: [
-          PF.Musa.index, //    136 <-Mentions in Quran
-          PF.Ibrahim.index, //  69
-          PF.Nuh.index, //      43
-          PF.Lut.index, //      27
-          PF.Yusuf.index, //    27
-          PF.Adam.index, //     25
-          PF.Isa.index, //      25
-          PF.Harun.index, //    20
-          PF.Ishaq.index, //    17
-          PF.Suleyman.index, // 17
-          PF.Yaqub.index, //    16
-          PF.Dawud.index, //    16
-          PF.Ismail.index, //   12
-          PF.Salih.index, //     9
-          PF.Shuayb.index, //    9
-          PF.Hud.index, //       7
-          PF.Zakariya.index, //  7
-          PF.Yahya.index, //     5
-          PF.Ayyub.index, //     4
-          PF.Yunus.index, //     4
-          PF.Muhammad.index, //  4
-          PF.Idris.index, //     2
-          PF.DhulKifl.index, //  2 TODO other righteous men/women counts
-          PF.Ilyas.index, //     2
-          PF.Alyasa.index, //    2
-        ],
-      ),
-      RelicSetFilter(
-        type: FILTER_TYPE.Tree,
-        trValLabel: 'i.Family Tree'.tr,
-        treeGraph1: getGraphAllFamily(RELIC_TYPE.Quran_AlAnbiya, PF.Gap.index),
-        treeGraph2: getGraphOnlyRelics(RELIC_TYPE.Quran_AlAnbiya, PF.Gap.index),
-      ),
-    ]);
-
-    return relicSetFiltersInit;
-  }
+  // TODO: implement widget
+  Widget get widget => throw UnimplementedError();
 }
 
-Future<List<Prophet>> initProphets() async {
-  List<Prophet> rv = [];
-
-  rv.add(Prophet(
+final List<Prophet> relicsProphet = [
+  Prophet(
     // Event data:
     trValEra: 'i.Birth of Humans'.tr,
     startMs: -340000,
     endMs: -339050,
-    asset: await _getImageEventAsset(PF.Adam),
+    // Relic data:
+    e: PF.Adam,
     // Fam data:
-    pf: PF.Adam,
     predecessors: [], // must be blank, root of the tree
     dad: null, // must leave blank for tree logic
     mom: null, // must leave blank for tree logic
@@ -208,15 +121,15 @@ Future<List<Prophet>> initProphets() async {
     trValLocationBirth: a('a.Jennah'),
     trValLocationDeath: null,
     trValTomb: null,
-  ));
-  rv.add(Prophet(
+  ),
+  Prophet(
     // Event data:
     trValEra: 'i.Birth of Humans'.tr,
     startMs: 0,
     endMs: 0,
-    asset: await _getImageEventAsset(PF.Idris),
+    // Relic data:
+    e: PF.Idris,
     // Fam data:
-    pf: PF.Idris,
     predecessors: [
 //    PF.Adam,
       PF.Sheth,
@@ -242,15 +155,15 @@ Future<List<Prophet>> initProphets() async {
     trValLocationBirth: a('a.Babylon'),
     trValLocationDeath: 'p.Sixth Heaven'.tr,
     trValTomb: null,
-  ));
-  rv.add(Prophet(
+  ),
+  Prophet(
     // Event data:
     trValEra: 'i.Great Flood'.tr,
     startMs: 0,
     endMs: 0,
-    asset: await _getImageEventAsset(PF.Nuh),
+    // Relic data:
+    e: PF.Nuh,
     // Fam data:
-    pf: PF.Nuh,
     predecessors: [
 //    PF.Idris,
       PF.Matulshalkh,
@@ -274,15 +187,15 @@ Future<List<Prophet>> initProphets() async {
     trValLocationBirth: null,
     trValLocationDeath: null,
     trValTomb: null,
-  ));
-  rv.add(Prophet(
+  ),
+  Prophet(
     // Event data:
     trValEra: 'i.Unknown'.tr,
     startMs: 0,
     endMs: 0,
-    asset: await _getImageEventAsset(PF.Hud),
+    // Relic data:
+    e: PF.Hud,
     // Fam data:
-    pf: PF.Hud,
     predecessors: [
 //    PF.Nuh,
       PF.Sam,
@@ -313,15 +226,15 @@ Future<List<Prophet>> initProphets() async {
     trValTomb:
         'p.Possibly in Qabr Nabi Hud, Hadhramaut, Yemen; Near the Zamzam well; south wall of the Umayyad Mosque, Damascus, Syria.'
             .tr,
-  ));
-  rv.add(Prophet(
+  ),
+  Prophet(
     // Event data:
     trValEra: 'i.Unknown'.tr,
     startMs: 0,
     endMs: 0,
-    asset: await _getImageEventAsset(PF.Salih),
+    // Relic data:
+    e: PF.Salih,
     // Fam data:
-    pf: PF.Salih,
     predecessors: [
 //    PF.Nuh,
 //    PF.Sam,
@@ -353,15 +266,15 @@ Future<List<Prophet>> initProphets() async {
     trValLocationBirth: null,
     trValLocationDeath: null,
     trValTomb: "p.Possibly in Mada'in Salih or Hasik, Oman.".tr, // TODO
-  ));
-  rv.add(Prophet(
+  ),
+  Prophet(
     // Event data:
     trValEra: a('a.Ibrahim'),
     startMs: 0,
     endMs: 0,
-    asset: await _getImageEventAsset(PF.Ibrahim),
+    // Relic data:
+    e: PF.Ibrahim,
     // Fam data:
-    pf: PF.Ibrahim,
     predecessors: [
 //    PF.Nuh,
       PF.Sam,
@@ -402,15 +315,15 @@ Future<List<Prophet>> initProphets() async {
         'i.,_'.tr +
         a('a.Bilad al-Sham'), // Greater Syria لبِلَاد الشَّام
     trValTomb: 'p.Ibrahimi Mosque, Hebron'.tr,
-  ));
-  rv.add(Prophet(
+  ),
+  Prophet(
     // Event data:
     trValEra: a('a.Ibrahim'),
     startMs: 0,
     endMs: 0,
-    asset: await _getImageEventAsset(PF.Lut),
+    // Relic data:
+    e: PF.Lut,
     // Fam data:
-    pf: PF.Lut,
     predecessors: [
 //    PF.Nuh,
 //    PF.Sam,
@@ -449,15 +362,15 @@ Future<List<Prophet>> initProphets() async {
     trValLocationDeath: a(
         "a.Bani Na'im"), //  بني نعيم  Palestinian town in the southern West Bank located 8 kilometers (5.0 mi) east of Hebron.
     trValTomb: null,
-  ));
-  rv.add(Prophet(
+  ),
+  Prophet(
     // Event data:
     trValEra: a('a.Ibrahim'),
     startMs: 0, //-1800, TODO must be younger than Yusuf!
     endMs: 0, //-1664,
-    asset: await _getImageEventAsset(PF.Ismail),
+    // Relic data:
+    e: PF.Ismail,
     // Fam data:
-    pf: PF.Ismail,
     predecessors: [], // must be blank, Father->Son used to build tree
     dad: PF.Ibrahim,
     mom: PF.Hajar,
@@ -485,15 +398,15 @@ Future<List<Prophet>> initProphets() async {
     trValLocationDeath:
         a('a.Makkah al-Mukarramah'), // Mecca مكة المكرمة 'Makkah the Noble',
     trValTomb: null,
-  ));
-  rv.add(Prophet(
+  ),
+  Prophet(
     // Event data:
     trValEra: a('a.Ibrahim'),
     startMs: 0,
     endMs: 0,
-    asset: await _getImageEventAsset(PF.Ishaq),
+    // Relic data:
+    e: PF.Ishaq,
     // Fam data:
-    pf: PF.Ishaq,
     predecessors: [],
     dad: PF.Ibrahim,
     mom: PF.Sarah,
@@ -517,15 +430,15 @@ Future<List<Prophet>> initProphets() async {
     trValLocationBirth: null,
     trValLocationDeath: null,
     trValTomb: 'p.Cave of the Patriarchs, Hebron'.tr,
-  ));
-  rv.add(Prophet(
+  ),
+  Prophet(
     // Event data:
     trValEra: 'i.Old Egyptian Kingdom'.tr,
     startMs: 0,
     endMs: 0,
-    asset: await _getImageEventAsset(PF.Yaqub),
+    // Relic data:
+    e: PF.Yaqub,
     // Fam data:
-    pf: PF.Yaqub,
     predecessors: [],
     dad: PF.Ishaq,
     mom: PF.Rafeqa,
@@ -554,15 +467,15 @@ Future<List<Prophet>> initProphets() async {
     trValLocationBirth: null,
     trValLocationDeath: null,
     trValTomb: 'p.Cave of the Patriarchs, Hebron'.tr,
-  ));
-  rv.add(Prophet(
+  ),
+  Prophet(
     // Event data:
     trValEra: 'i.Old Egyptian Kingdoms'.tr,
     startMs: -2400,
     endMs: -2400,
-    asset: await _getImageEventAsset(PF.Yusuf),
+    // Relic data:
+    e: PF.Yusuf,
     // Fam data:
-    pf: PF.Yusuf,
     predecessors: [],
     dad: PF.Yaqub,
     mom: PF.Rahil_Bint_Leban,
@@ -584,15 +497,15 @@ Future<List<Prophet>> initProphets() async {
     trValLocationBirth: null,
     trValLocationDeath: null,
     trValTomb: null,
-  ));
-  rv.add(Prophet(
+  ),
+  Prophet(
     // Event data:
     trValEra: 'i.Unknown'.tr,
     startMs: 0,
     endMs: 0,
-    asset: await _getImageEventAsset(PF.Ayyub),
+    // Relic data:
+    e: PF.Ayyub,
     // Fam data:
-    pf: PF.Ayyub,
     predecessors: [
 //    PF.Ishaq,
       PF.Isu,
@@ -618,15 +531,15 @@ Future<List<Prophet>> initProphets() async {
     trValLocationBirth: null,
     trValLocationDeath: null,
     trValTomb: 'p.Possibly in Al-Qarah Mountains in southern Oman'.tr,
-  ));
-  rv.add(Prophet(
+  ),
+  Prophet(
     // Event data:
     trValEra: 'i.Unknown'.tr, // TODO
     startMs: 0, // TODO Buddha: 6th or 5th century BCE
     endMs: 0,
-    asset: await _getImageEventAsset(PF.DhulKifl),
+    // Relic data:
+    e: PF.DhulKifl,
     // Fam data:
-    pf: PF.DhulKifl,
     predecessors: [],
     dad: PF.Ayyub,
     mom: null,
@@ -650,15 +563,15 @@ Future<List<Prophet>> initProphets() async {
     trValTomb: 'p.Makam Dağı in Ergani province of Diyarbakir'.tr +
         'i.,_'.tr +
         a('a.Turkiye'),
-  ));
-  rv.add(Prophet(
+  ),
+  Prophet(
     // Event data:
     trValEra: 'i.Unknown'.tr,
     startMs: 0,
     endMs: 0,
-    asset: await _getImageEventAsset(PF.Shuayb),
+    // Relic data:
+    e: PF.Shuayb,
     // Fam data:
-    pf: PF.Shuayb,
     predecessors: [
 //    PF.Ibrahim,
       PF.Madyan,
@@ -688,15 +601,15 @@ Future<List<Prophet>> initProphets() async {
     trValTomb:
         'p.Possibly in Wadi Shuʿayb, Jordan, Guriyeh, Shushtar, Iran or Hittin in the Galilee'
             .tr,
-  ));
-  rv.add(Prophet(
+  ),
+  Prophet(
     // Event data:
     trValEra: a('a.Firaun') + 'i._New_Kingdoms of_'.tr + a('a.Misr'), // Egypt
     startMs: -1303,
     endMs: -1200,
-    asset: await _getImageEventAsset(PF.Harun),
+    // Relic data:
+    e: PF.Harun,
     // Fam data:
-    pf: PF.Harun,
     predecessors: [
 //    PF.Yaqub,
       PF.Lawi,
@@ -724,15 +637,15 @@ Future<List<Prophet>> initProphets() async {
     trValLocationBirth: null,
     trValLocationDeath: null,
     trValTomb: 'p.Possibly in Jabal Harun, Jordan or in Sinai'.tr,
-  ));
-  rv.add(Prophet(
+  ),
+  Prophet(
     // Event data:
     trValEra: a('a.Firaun') + 'i._New_Kingdoms of_'.tr + a('a.Misr'), // Egypt
     startMs: -1300,
     endMs: -1200,
-    asset: await _getImageEventAsset(PF.Musa),
+    // Relic data:
+    e: PF.Musa,
     // Fam data:
-    pf: PF.Musa,
     predecessors: [
 //    PF.Yaqub,
 //    PF.Lawi,
@@ -764,15 +677,15 @@ Future<List<Prophet>> initProphets() async {
     trValLocationBirth: null,
     trValLocationDeath: null,
     trValTomb: 'p.An-Nabi Musa, Jericho'.tr, // ٱلنَّبِي مُوْسَى
-  ));
-  rv.add(Prophet(
+  ),
+  Prophet(
     // Event data:
     trValEra: 'i.Kings of_'.tr + a('a.Israel'),
     startMs: -1000,
     endMs: -971,
-    asset: await _getImageEventAsset(PF.Dawud),
+    // Relic data:
+    e: PF.Dawud,
     // Fam data:
-    pf: PF.Dawud,
     predecessors: [
 //    PF.Dawud,
       PF.Yahudzha,
@@ -799,15 +712,15 @@ Future<List<Prophet>> initProphets() async {
     trValLocationBirth: a('a.Al-Quds'),
     trValLocationDeath: a('a.Al-Quds'),
     trValTomb: 'p.Tomb of Harun, Jabal HarUn in Petra, Jordan'.tr,
-  ));
-  rv.add(Prophet(
+  ),
+  Prophet(
     // Event data:
     trValEra: 'i.Kings of_'.tr + a('a.Israel'),
     startMs: -971,
     endMs: -931,
-    asset: await _getImageEventAsset(PF.Suleyman),
+    // Relic data:
+    e: PF.Suleyman,
     // Fam data:
-    pf: PF.Suleyman,
     predecessors: [],
     dad: PF.Dawud,
     mom: null,
@@ -829,15 +742,15 @@ Future<List<Prophet>> initProphets() async {
     trValLocationDeath:
         a('a.United') + _ + 'p.Kingdom of Israel in_'.tr + a('a.Al-Quds'),
     trValTomb: 'p.Al-Ḥaram ash-Sharīf, Jerusalem'.tr,
-  ));
-  rv.add(Prophet(
+  ),
+  Prophet(
     // Event data:
     trValEra: 'i.Kings of_'.tr + a('a.Israel'), // TODO unsure
     startMs: 0,
     endMs: 0,
-    asset: await _getImageEventAsset(PF.Ilyas),
+    // Relic data:
+    e: PF.Ilyas,
     // Fam data:
-    pf: PF.Ilyas,
     predecessors: [
       PF.Harun,
       PF.Izar,
@@ -867,15 +780,15 @@ Future<List<Prophet>> initProphets() async {
     trValLocationBirth: null,
     trValLocationDeath: null,
     trValTomb: 'p.Possibly in Baalbek, Lebanon'.tr,
-  ));
-  rv.add(Prophet(
+  ),
+  Prophet(
     // Event data:
     trValEra: 'i.Kings of_'.tr + a('a.Israel'), // TODO unsure
     startMs: 0,
     endMs: 0,
-    asset: await _getImageEventAsset(PF.Alyasa),
+    // Relic data:
+    e: PF.Alyasa,
     // Fam data:
-    pf: PF.Alyasa,
     predecessors: [
       PF.Yusuf,
       PF.Efraim,
@@ -908,16 +821,16 @@ Future<List<Prophet>> initProphets() async {
     trValTomb: 'p.Eğil district of Diyarbakir Province'.tr +
         'i.,_'.tr +
         a('a.Turkiye'), //' or Al-Awjam, Saudi Arabia.'
-  ));
-  rv.add(Prophet(
+  ),
+  Prophet(
     // Event data:
     trValEra: 'i.Unknown'.tr,
     startMs:
         -800, // uncertain (8th century BCE or post-exilic period) in Wikipedia
     endMs: -800,
-    asset: await _getImageEventAsset(PF.Yunus),
+    // Relic data:
+    e: PF.Yunus,
     // Fam data:
-    pf: PF.Yunus,
     predecessors: [
       PF.Bunyamin,
       PF.Gap,
@@ -949,15 +862,15 @@ Future<List<Prophet>> initProphets() async {
                 .tr +
             'i.,_'.tr +
             a('a.Turkiye'),
-  ));
-  rv.add(Prophet(
+  ),
+  Prophet(
     // Event data:
     trValEra: a('a.Masih'),
     startMs: 0,
     endMs: 0,
-    asset: await _getImageEventAsset(PF.Zakariya),
+    // Relic data:
+    e: PF.Zakariya,
     // Fam data:
-    pf: PF.Zakariya,
     predecessors: [
 //    PF.Yaqub,
 //    PF.Yahudzha,
@@ -984,15 +897,15 @@ Future<List<Prophet>> initProphets() async {
     trValLocationBirth: null,
     trValLocationDeath: null,
     trValTomb: 'p.Great Mosque of Aleppo, Syria'.tr,
-  ));
-  rv.add(Prophet(
+  ),
+  Prophet(
     // Event data:
     trValEra: a('a.Masih'),
     startMs: -100,
     endMs: 28, // AD 28–36
-    asset: await _getImageEventAsset(PF.Yahya),
+    // Relic data:
+    e: PF.Yahya,
     // Fam data:
-    pf: PF.Yahya,
     predecessors: [],
     dad: PF.Zakariya,
     mom: PF.Ishba,
@@ -1015,15 +928,15 @@ Future<List<Prophet>> initProphets() async {
     trValLocationBirth: null,
     trValLocationDeath: 'p.Decapitated by the ruler Herod Antipas'.tr,
     trValTomb: 'p.His head is possibly at the Umayyad Mosque in Damascus'.tr,
-  ));
-  rv.add(Prophet(
+  ),
+  Prophet(
     // Event data:
     trValEra: a('a.Masih'),
     startMs: -4,
     endMs: 30,
-    asset: await _getImageEventAsset(PF.Isa),
+    // Relic data:
+    e: PF.Isa,
     // Fam data:
-    pf: PF.Isa,
     predecessors: [
       PF.Suleyman,
       PF.Gap,
@@ -1059,15 +972,15 @@ Future<List<Prophet>> initProphets() async {
     trValLocationDeath:
         'p.Still alive, was raised to Heaven from_'.tr + a('a.Falastin'),
     trValTomb: 'p.None yet'.tr,
-  ));
-  rv.add(Prophet(
+  ),
+  Prophet(
     // Event data:
     trValEra: a('a.Muhammad'), // Muhammad
     startMs: 570,
     endMs: 632,
-    asset: await _getImageEventAsset(PF.Muhammad),
+    // Relic data:
+    e: PF.Muhammad,
     // Fam data:
-    pf: PF.Muhammad,
     predecessors: [
       PF.Ismail,
       PF.Gap, // TODO iktilaf here, find best one
@@ -1190,25 +1103,89 @@ Future<List<Prophet>> initProphets() async {
         a('a.Al-Arabiyyah'), // Arabia - الْعَرَبِيَّة
     trValTomb: at('p.Green Dome in {0}, {1}',
         ['a.Al-Masjid an-Nabawi', 'a.Al-Madinah']), //المسجد النبوي
-  ));
+  ),
+];
 
-  return rv;
-}
+final List<RelicSetFilter> relicSetFiltersProphet = [
+  RelicSetFilter(
+    type: FILTER_TYPE.Default,
+    trValLabel: a('a.Nabi'),
+  ),
+  RelicSetFilter(
+    type: FILTER_TYPE.IdxList,
+    trValLabel: a('a.Rasul'),
+    idxList: [
+      PF.Adam.index,
+      PF.Nuh.index,
+      PF.Hud.index,
+      PF.Salih.index,
+      PF.Ibrahim.index,
+      PF.Lut.index,
+      PF.Ismail.index,
+      PF.Yusuf.index,
+      PF.Shuayb.index,
+      PF.Musa.index,
+      PF.Harun.index,
+      PF.Dawud.index,
+      PF.Ilyas.index,
+      PF.Yunus.index,
+      PF.Isa.index,
+      PF.Muhammad.index,
+    ],
+  ),
+  RelicSetFilter(
+    type: FILTER_TYPE.IdxList,
+    trValLabel: a('a.Ulu Al-Azm'),
+    tprMax: 5,
+    idxList: [
+      PF.Nuh.index,
+      PF.Ibrahim.index,
+      PF.Musa.index,
+      PF.Isa.index,
+      PF.Muhammad.index,
+    ],
+  ),
+  RelicSetFilter(
+    type: FILTER_TYPE.IdxList,
+    trValLabel: 'i.Quran Name Mentions'.tr,
+    field: FILTER_FIELD.QuranMentionCount,
+    idxList: [
+      PF.Musa.index, //    136 <-Mentions in Quran
+      PF.Ibrahim.index, //  69
+      PF.Nuh.index, //      43
+      PF.Lut.index, //      27
+      PF.Yusuf.index, //    27
+      PF.Adam.index, //     25
+      PF.Isa.index, //      25
+      PF.Harun.index, //    20
+      PF.Ishaq.index, //    17
+      PF.Suleyman.index, // 17
+      PF.Yaqub.index, //    16
+      PF.Dawud.index, //    16
+      PF.Ismail.index, //   12
+      PF.Salih.index, //     9
+      PF.Shuayb.index, //    9
+      PF.Hud.index, //       7
+      PF.Zakariya.index, //  7
+      PF.Yahya.index, //     5
+      PF.Ayyub.index, //     4
+      PF.Yunus.index, //     4
+      PF.Muhammad.index, //  4
+      PF.Idris.index, //     2
+      PF.DhulKifl.index, //  2 TODO other righteous men/women counts
+      PF.Ilyas.index, //     2
+      PF.Alyasa.index, //    2
+    ],
+  ),
+  RelicSetFilter(
+    type: FILTER_TYPE.Tree,
+    trValLabel: 'i.Family Tree'.tr,
+    treeGraph1: getGraphAllFamily(RELIC_TYPE.Anbiya, PF.Gap.index),
+    treeGraph2: getGraphOnlyRelics(RELIC_TYPE.Anbiya, PF.Gap.index),
+  ),
+];
 
-Future<EventAsset> _getImageEventAsset(
-  PF prophet, {
-  double width = 200,
-  double height = 200,
-  double scale = 0,
-}) async =>
-    await TarikhC.tih.loadImageAsset(
-      'assets/images/anbiya/${prophet.name}.png',
-      width,
-      height,
-      scale,
-    );
-
-// PROPHET FAMILY (TODO Turkish Words: Hızır, Lukman, Yuşa, Kâlib b. Yüfena, Hızkıl, Şemûyel, Şâ'yâ
+/// PROPHET FAMILY (TODO Turkish Words: Hızır, Lukman, Yuşa, Kâlib b. Yüfena, Hızkıl, Şemûyel, Şâ'yâ
 enum PF {
   /* TODO rename to AS (Aleyhi Salam) */
   Adam(Isim(

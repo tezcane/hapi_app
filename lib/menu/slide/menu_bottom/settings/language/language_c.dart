@@ -275,6 +275,7 @@ class LanguageC extends GetxHapi {
     if (eventType == EVENT_TYPE.Relic) {
       trFilePath = 'relic/anbiya';
       trKeyLeadingTag = 'pq.';
+      return Future.value('i.Coming Soon'); // TODO asdf
     } else {
       trFilePath = 'tarikh_articles/';
       trKeyLeadingTag = 't.';

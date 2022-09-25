@@ -4,7 +4,6 @@ import 'package:hapi/main_c.dart';
 import 'package:hapi/onboard/auth/auth_c.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relics_ui.dart';
-import 'package:hapi/relic/ummah/prophet.dart';
 import 'package:hapi/service/db.dart';
 import 'package:hapi/tarikh/event/event.dart';
 
@@ -14,34 +13,40 @@ class RelicC extends GetxHapi {
   /// Perfect hash, access via [RELIC_TYPE.index]
   final List<RelicSet> _relicSets = [];
 
+  /// perfect hash ajrLevel[RELIC_TYPE.index] = Map<relicId, int ajrLevel>
+  final List<Map<int, int>> _ajrLevels = [];
+
   /// needed by relic tab bar
   bool initNeeded = true;
 
   @override
   void onInit() {
-    _initRelicSets();
+    _initAllRelicData();
     super.onInit();
-  }
-
-  // TODO get working via something like Relic.init() abstract method...
-  Future<List<Relic>> _initRelics(RELIC_TYPE relicType) async {
-    switch (relicType) {
-      case (RELIC_TYPE.Quran_AlAnbiya):
-        return await initProphets();
-      default:
-        return []; // TODO enable: return l.E('relicType=${relicType.name} init() not implemented yet');
-    }
   }
 
   /// Merge relic events with a time into tarikh events so they show Timeline
   /// and return all relic events in another list which is needed for further
   /// app init.
-  List<Event> mergeRelicAndTarikhEvents(List<Event> events) {
+  ///
+  /// Note: TarikhC calls this while Relic's are still initializing so we must
+  /// spin wait for Relic's to initialize so TarikhC can get Relic events.
+  Future<List<Event>> mergeRelicAndTarikhEvents(List<Event> events) async {
+    if (initNeeded) {
+      int sleepBackoffMs = 250;
+      // No internet needed if already initialized
+      while (initNeeded) {
+        l.d('mergeRelicAndTarikhEvents: Relics not ready, try again after sleeping $sleepBackoffMs ms...');
+        await Future.delayed(Duration(milliseconds: sleepBackoffMs));
+        if (sleepBackoffMs < 1000) sleepBackoffMs += 250;
+      }
+    }
+
     List<Event> eventsRelics = [];
     for (RELIC_TYPE relicType in RELIC_TYPE.values) {
       RelicSet relicSet = getRelicSet(relicType);
       for (Relic relic in relicSet.relics) {
-        if (relic.isTimeLineEvent) events.add(relic);
+        if (relic.isTimeLineEvent) events.add(relic); // add only if has date
         eventsRelics.add(relic);
 
         /// Add event reference 1 of 2: TODO this is a hack, access via map?
@@ -51,37 +56,47 @@ class RelicC extends GetxHapi {
     return eventsRelics;
   }
 
-  void _initRelicSets() async {
+  _initAllRelicData() async {
     // No internet needed to init, but we put a back off just in case:
     await AuthC.to.waitForFirebaseLogin('RelicC._initRelics');
 
-    /// perfect hash ajrLevel[RELIC_TYPE.index] = Map<relicId, int ajrLevel>
-    final List<Map<int, int>> ajrLevels = [];
+    await _initRelicSets();
 
+    /// merge DB ajrLevels into default 0 values that (already added _ajrLevels)
+    await Db.getRelicAjrLevels(_ajrLevels);
+
+    initNeeded = false; // Relic UI/Tarikh init can now initialize
+
+    update(); // we better repaint for all those waiting UIs!
+  }
+
+  _initRelicSets() async {
     // init relics and ajrLevels with empty Maps structures
     for (RELIC_TYPE relicType in RELIC_TYPE.values) {
+      List<Relic> relics = relicType.initRelics();
+
+      /// we manually set relic assets here, done here to make relic objects
+      /// closer to const (future upgrade?).
+      for (Relic relic in relics) {
+        relic.asset = await relic.getRelicAsset().toImageEventAsset();
+      }
+
       RelicSet relicSet = RelicSet(
         relicType: relicType,
-        relics: await _initRelics(relicType),
+        relics: relics,
+        tkTitle: relicType.tkRelicSetTitle,
       );
-      _relicSets.add(relicSet);
+      _relicSets.add(relicSet); // must come before next line
+      relicSet.filterList = relicType.initRelicSetFilters();
+
+      print('asdf got here 2');
 
       // init ajrLevels to be used in DB access
       Map<int, int> relicIdMap = {};
       for (int relicId = 0; relicId < relicSet.relics.length; relicId++) {
         relicIdMap[relicId] = 0; // set all relicId's for given RELIC_TYPE
       }
-      ajrLevels.add(relicIdMap);
-    }
-
-    await Db.getRelicAjrLevels(ajrLevels); // merge DB ajrLevels into default 0
-
-    // RelicSets.relics initialized and DB ajrLevels returned, set ajrLevels:
-    for (RELIC_TYPE relicType in RELIC_TYPE.values) {
-      int relicId = 0;
-      for (Relic relic in _relicSets[relicType.index].relics) {
-        relic.ajrLevel = ajrLevels[relicType.index][relicId++]!;
-      }
+      _ajrLevels.add(relicIdMap); // call DB to merge ajrLevels with this next
     }
 
     // // Playground to find sort order data or dump defaults:
@@ -96,14 +111,11 @@ class RelicC extends GetxHapi {
     //   idx++;
     // }
     // print('********* RELIC INIT DONE *********');
-
-    initNeeded = false; // Relic UIs can now initialize
-
-    update(); // we better repaint for all those waiting UIs!
   }
 
   RelicSet getRelicSet(RELIC_TYPE relicType) => _relicSets[relicType.index];
-//List<Relic> getRelics(RELIC_TYPE relicType) => _relicSets[relicType.index].relics;
+
+  int getAjrLevel(RELIC_TYPE rt, int relicId) => _ajrLevels[rt.index][relicId]!;
 
   /// To get the EventUI() UI working, with least amount of pain, we turn our
   /// relic structures into a Map<String, String> that Tarikh code are already
@@ -123,7 +135,7 @@ class RelicC extends GetxHapi {
       case FILTER_TYPE.Default:
       case FILTER_TYPE.Tree:
         for (Relic relic in relicSet.relics) {
-          idxList.add(relic.relicId);
+          idxList.add(relic.e.index); // relicId
         }
         break;
       case FILTER_TYPE.IdxList:

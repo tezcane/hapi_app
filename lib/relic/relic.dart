@@ -1,57 +1,75 @@
+import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
+import 'package:hapi/relic/relic_c.dart';
+import 'package:hapi/relic/surah/surah.dart';
+import 'package:hapi/relic/ummah/prophet.dart';
 import 'package:hapi/tarikh/event/event.dart';
 import 'package:hapi/tarikh/event/event_asset.dart';
 
 /// Each relic subsection/RelicSet (e.g. Ummah->Prophet) needs to have a
 /// RELIC_TYPE so it can be easily filtered/found/accessed later.
+///
+/// NOTE: After adding relic type, you must update the [EnumUtil] extension.
 enum RELIC_TYPE {
-  Heaven_Allah, // AsmaUlHusna - 99 names of allah
-  Heaven_Books, // Books revealed Zabur, Torah, Injil, Scrolls of X, Quran
-  Heaven_Angels,
-  Heaven_DoorsOfJannah,
-  Heaven_LevelsOfJannah,
-  Heaven_LevelsOfHell,
+//   // LEADERS
+//   Al_Asma_ul_Husna, // اَلاسْمَاءُ الْحُسناى TODO all names mentioned in Quran? AsmaUlHusna - 99 names of allah
+  Anbiya, // Prophets TODO non-Quran mentioned prophets
+//   Muhammad, // Laqab, Family Tree here?
+//   Righteous, // People: Mentioned in Quran/possible prophets/Sahabah/Promised Jannah
+//
+//   //ISLAM
+//   Delil, //Quran,Sunnah,Nature,Ruins // See "Miracles of Quran" at bottom of file
+//   Tenets, // Islam_5Pillars/6ArticlesOfFaith
+//   Jannah, // Doors/Levels/Beings(Insan,Angels,Jinn,Hurlieen,Servants,Burak)
+// //Heaven_LevelsOfHell,
+//
+//   //ACADEMIC
+//   Scriptures, //  Hadith Books/Quran/Injil/Torah/Zabur/Scrolls of X/Talmud?
+  Surah, // Mecca/Medina/Revelation Date/Ayat Length/Quran Order
+//   Scholars, // Tabieen, TabiTabieen, Ulama (ImamAzam,Madhab+ Tirmidihi, Ibn Taymiyah), Dai (Givers of Dawah),
+//   Relics, // Kaba, black stone, Prophets Bow, Musa Staff, Yusuf Turban, etc. Coins?
+//   Quran_Mentions, // Tribes, Animals, Foods, People (disbelievers)
+//   Arabic, // Alphabet (Muqattaʿat letters 14 of 28: ʾalif أ, hā هـ, ḥā ح, ṭā ط, yā ي, kāf ك, lām ل, mīm م, nūn ن, sīn س, ʿain ع, ṣād ص, qāf ق, rā ر.)
+//
+//   // Ummah
+//   Amir, // Khalif/Generals
+//   Muslims, // alive/dead, AlBayt (Zojah, Children), Famous (Malcom X, Mike Tyson, Shaqeel Oneil), // Amirs/Khalif not in Dynasties, Athletes,
+//   Places, // HolyPlaces, Mosques, Schools, Cities  (old or new), mentioned in the Quran,Ruins, Conquered or not, Istanbul, Rome
+//
+//   // Dynasties (Leaders/Historical Events/Battles)
+//   Dynasties, // Muhammad, Rashidun, Ummayad, Andalus, Abbasid, Seljuk, Ayyubi, Mamluk, Ottoman,
+//   Rasulallah, //Muhammad Battles (Badr, Uhud, etc.)
+//   Rashidun,
+//   Ummayad,
+//   Andalus,
+//   Abbasid,
+//   Seljuk,
+//   Ayyubi,
+//   Mamluk,
+//   Ottoman,
+}
 
-  Quran_AlAnbiya, // Prophets
-  Quran_Surahs,
-  Quran_Saliheen, // righteous people
-  Quran_Disbelievers, // bad people mentioned in the quran
-  Quran_Tribes,
-  Quran_Animals,
-  Quran_Foods,
+extension EnumUtil on RELIC_TYPE {
+  String get trDirectoryTag => name.toLowerCase();
+  String get tkRelicSetTitle => 'a.$name';
 
-  Delil_Quran, // See "Miracles of Quran" at bottom of file
-  Delil_Sunnah,
-  Delil_Prophecies,
-  Delil_Nature,
-  Delil_Ruins,
+  List<Relic> initRelics() {
+    switch (this) {
+      case RELIC_TYPE.Anbiya:
+        return relicsProphet;
+      case RELIC_TYPE.Surah:
+        return relicsSurah;
+    }
+  }
 
-  Islam_5Pillars, // Shahadah details
-  Islam_6ArticlesOfFaith,
-  Islam_HadithBooks, // Sahih Bukhari, Sahih Muslim, Muwatta Imam Malik, Sunan Ibn Majah, Musnad Imam Ahmad, Jami Tirmidhi, Sunan Nisaa'i, Sunan Abi Dawud
-  Islam_HolyPlaces,
-  Islam_Relics, // Kaba, black stone, Prophets Bow, etc. Coins?
-
-  Ummah_Muhammad_Laqab,
-  Ummah_Muhammad_AlBayt, //Zojah, Children,
-  Ummah_Sahabah,
-  Ummah_Ulama, // Madhab+, alive/dead
-  Ummah_Dai, // Givers of Dawah
-  Ummah_Famous, // Amirs/Khalif not in Dynasties, Athletes,
-  Ummah_Battles, // Badr, Uhud, etc. Battles
-
-  Dynasty_Rashidun,
-  Dynasty_Ummayad,
-  Dynasty_Andalus,
-  Dynasty_Abbasid,
-  Dynasty_Selcuk,
-  Dynasty_Ayyubi,
-  Dynasty_Mamluk,
-  Dynasty_Ottoman,
-
-  Places_Mosques,
-  Places_Schools, // Still functioning or not
-  Places_Cities, // mentioned in the Quran,Ruins,  Conquered or not, Istanbul, Rome
+  List<RelicSetFilter> initRelicSetFilters() {
+    switch (this) {
+      case RELIC_TYPE.Anbiya:
+        return relicSetFiltersProphet;
+      case RELIC_TYPE.Surah:
+        return relicSetFiltersSurah;
+    }
+  }
 }
 
 /// Abstract class that all relics need to extend. Also extends Events so we can
@@ -60,62 +78,55 @@ abstract class Relic extends Event {
   Relic({
     // Event data:
     required String trValEra,
-    required String trKeyEndTagLabel,
     required double startMs,
     required double endMs,
-    required EventAsset asset,
     // Relic data:
     required this.relicType,
-    required this.relicId,
-    required this.trKeySummary, // e.g. Prophet Summary (ps. keys)
-    required this.trKeySummary2, // e.g. Prophet Quran Mentions (pq. keys)
+    required this.e,
   }) : super(
           type: EVENT_TYPE.Relic,
           trKeyEra: trValEra,
-          trKeyTitle: trKeyEndTagLabel,
+          trKeyTitle: e.name,
           startMs: startMs,
           endMs: endMs,
-          asset: asset,
-          accent: null,
+          accent: null, // TODO
         );
   // DB stores Map<'int relicType.index', Map<'int relicId', int ajrLevel>>.
   // Using '' quotes above since firestore only allows string keys, not ints.
   final RELIC_TYPE relicType;
-  final int relicId;
-  final String trKeySummary;
-  final String trKeySummary2;
+  final Enum e; // Unique relicId for this RELIC_TYPE
 
-  /// NOTE 1: Uses 'late' to force external/db init before UI can use it.
-  /// NOTE 2: Not final so we can update UI to reflect relic upgrades.
-  late int ajrLevel;
+  int get ajrLevel => RelicC.to.getAjrLevel(relicType, e.index);
 
-  // Abstract classes subclasses must implement:
-  String get trValRelicSetTitle;
-  List<RelicSetFilter> get relicSetFilters;
-
-  /// Used to prevent UI from constantly rebuilding
-  final List<RelicSetFilter> relicSetFiltersInit = [];
+  /// Abstract methods:
+  RelicAsset getRelicAsset({width = 200.0, height = 200.0, scale = 1.0});
+  Widget get widget; // widget with all relic info
 }
 
 /// Stores all information needed to show a RelicSet, see RelicSetUI().
 class RelicSet {
-  const RelicSet({required this.relicType, required this.relics});
+  RelicSet({
+    required this.relicType,
+    required this.relics,
+    required this.tkTitle,
+  });
   final RELIC_TYPE relicType;
   final List<Relic> relics;
+  final String tkTitle;
 
-  String get trValTitle => relics[0].trValRelicSetTitle;
-  List<RelicSetFilter> get filterList => relics[0].relicSetFilters;
+  /// Must init after relics are entered into this class or Tree filters fail.
+  late final List<RelicSetFilter> filterList; // TODO cleaner way to init?
 }
 
 /// Used to tell RelicSetUI() what filter view to build and show.
 enum FILTER_TYPE {
-  Default,
+  Default, // TODO needed? Can just use IdxList
   IdxList,
   Tree,
 }
 
 enum FILTER_FIELD {
-  Prophet_quranMentionCount,
+  QuranMentionCount,
 }
 
 /// Used to be able to change Relic's view/information as a way for the user to
@@ -139,7 +150,8 @@ class RelicSetFilter {
     isResizeable = tprMin != tprMax; // if tpr Min/Max different it's resizeable
   }
   final FILTER_TYPE type; // used to build UI around this filter
-  final String trValLabel; // filter label/Subtitle of filter options menu
+  final String
+      trValLabel; // TODO make tkKey filter label/Subtitle of filter options menu
   /// Work with "tpr" variable found and initialized in RelicSetUI (Sorry...)
   final int tprMin;
   final int tprMax;

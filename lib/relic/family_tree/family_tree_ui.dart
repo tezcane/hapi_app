@@ -15,14 +15,14 @@ import 'package:hapi/relic/ummah/prophet.dart'; // TODO remove need for this?
 class FamilyTreeUI extends StatelessWidget {
   FamilyTreeUI() {
     graph1 = Get.arguments['graph1']; // full
-    graph2 = Get.arguments['graph2']; // condensed
+    graph2 = Get.arguments['graph2']; // OPTIONAL: condensed version of graph1
     relicType = Get.arguments['relicType'];
     relicSet = RelicC.to.getRelicSet(relicType);
     relics = relicSet.relics;
     maxRelicIdx = relics.length - 1;
   }
   late final Graph graph1;
-  late final Graph graph2;
+  late final Graph? graph2;
   late final RELIC_TYPE relicType;
   late final RelicSet relicSet;
   late final List<Relic> relics;
@@ -115,22 +115,23 @@ class FamilyTreeUI extends StatelessWidget {
               ],
             ),
           ),
-          GestureDetector(
-            onTap: () {
-              showGraph1 = !showGraph1;
-              RelicC.to.update();
-            },
-            child: SizedBox(
-              width: 80,
-              height: 50,
-              child: Icon(
-                showGraph1
-                    ? Icons.expand_less_outlined
-                    : Icons.expand_more_outlined,
-                size: 50,
+          if (graph2 != null) // don't show condense button if graph2 is null
+            GestureDetector(
+              onTap: () {
+                showGraph1 = !showGraph1;
+                RelicC.to.update();
+              },
+              child: SizedBox(
+                width: 80,
+                height: 50,
+                child: Icon(
+                  showGraph1
+                      ? Icons.expand_less_outlined
+                      : Icons.expand_more_outlined,
+                  size: 50,
+                ),
               ),
             ),
-          ),
         ],
       ),
     );
@@ -161,7 +162,7 @@ class FamilyTreeUI extends StatelessWidget {
                         getLegend(context),
                         const SizedBox(height: 30),
                         GraphView(
-                          graph: showGraph1 ? graph1 : graph2,
+                          graph: showGraph1 ? graph1 : graph2!,
                           algorithm: BuchheimWalkerAlgorithm(
                             builder,
                             TreeEdgeRenderer(builder),
@@ -222,14 +223,18 @@ class FamilyTreeUI extends StatelessWidget {
         height: hTile,
         child: Column(
           children: [
-            Container(
-              color: AppThemes.ajrColorsByIdx[relic.ajrLevel],
-              child: SizedBox(
-                width: wTile,
-                height: wTile,
-                child: Image(
-                  image: AssetImage(relic.asset.filename),
-                  fit: BoxFit.fill,
+            Hero(
+              tag: relic.trKeyTitle,
+              // TODO modularize chip
+              child: Container(
+                color: AppThemes.ajrColorsByIdx[relic.ajrLevel],
+                child: SizedBox(
+                  width: wTile,
+                  height: wTile,
+                  child: Image(
+                    image: AssetImage(relic.asset.filename),
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ),
             ),

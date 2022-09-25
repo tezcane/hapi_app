@@ -592,7 +592,8 @@ class Timeline {
   }
 
   double bubbleHeight(Event event) =>
-      (BubblePadding * 1.15) + (event.titleLineCount * BubbleTextHeight);
+      (BubblePadding * 1.15) +
+      ((event.isBubbleThick ? 2 : 1) * BubbleTextHeight);
 
   /// Advance event [assets] with the current [elapsed] time.
   bool _advanceItems(List<Event> items, double x, double scale, double elapsed,
@@ -624,8 +625,8 @@ class Timeline {
       double itemBubbleHeight = bubbleHeight(item);
       double fadeAnimationStart = itemBubbleHeight + BubblePadding / 2.0;
       if (targetLabelY - _lastEventY < fadeAnimationStart
-
-          /// The best location for our label is occluded, lets see if we can bump it forward...
+          // The best location for our label is occluded, lets see if we can
+          // bump it forward...
           &&
           item.type == EVENT_TYPE.Era &&
           _lastEventY + fadeAnimationStart < endY) {
@@ -729,7 +730,6 @@ class Timeline {
       if (y > _height + itemBubbleHeight) {
         item.labelY = y;
         if (_nextEvent == null) {
-          // TODO asdf intercept up/dn btn here?
           _nextEvent = item;
           _distanceToNextEvent = (y - _height) / _height;
         }
