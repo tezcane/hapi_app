@@ -27,11 +27,7 @@ class Event {
     required this.endMs,
     required this.accent,
   }) {
-    List<String> lines = tvGetTitleLines();
-    String tvLine1 = lines[0];
-    String tvLine2 = lines[1];
-    isBubbleThick = tvLine2 == '' ? false : true;
-    tvBubbleText = isBubbleThick ? tvLine1 + '\n' + tvLine2 : tvLine1;
+    reinitBubbleText();
   }
   final EVENT_TYPE type;
   final String trKeyEra;
@@ -42,9 +38,21 @@ class Event {
   /// not always given in json input file, thus nullable:
   Color? accent;
 
-  /// Used to calculate how many lines to draw for the bubble in the timeline.
-  late final bool isBubbleThick;
-  late final String tvBubbleText;
+  /// Used to calculate how many lines to draw for the bubble in the timeline:
+  late String tvEventTitleLine1;
+  late String tvEventTitleLine2;
+  late bool isBubbleThick;
+  late String tvBubbleText;
+
+  /// Only update bubble text on init or if orientation changes.  If we are in
+  /// landscape mode there is no need to put the text on two lines (hopefully).
+  reinitBubbleText() {
+    List<String> lines = tvGetTitleLines(); // expensive so call less on paints
+    tvEventTitleLine1 = lines[0];
+    tvEventTitleLine2 = lines[1];
+    isBubbleThick = lines[1] == '' ? false : true;
+    tvBubbleText = isBubbleThick ? lines[0] + '\n' + lines[1] : lines[0];
+  }
 
   /// So relics can init at compile time easier, we set this later since it
   /// requires async and we don't want complex code during Relic init. Ideally
@@ -55,7 +63,7 @@ class Event {
 
   /// Pretty-printing for the event date.
   String trValYearsAgo({double? eventYear}) {
-    if (!isTimeLineEvent) return 'i.Coming Soon'; // Year is not known yet
+    if (!isTimeLineEvent) return 'i.Coming Soon'; // TODO Year is not known yet
 
     eventYear ??= startMs;
 
@@ -130,11 +138,12 @@ class Event {
     return cns(label) + ' ' + 'i.Years'.tr;
   }
 
+  /// TODO Should call this on language changes
   List<String> tvGetTitleLines() {
-    String tvLine1 = a(trKeyTitle); // convert to translation string
+    String tvLine1 = a(trKeyTitle); // translated here, why we must force update
     String tvLine2 = '';
 
-    const int maxCharsOnLine1 = 22;
+    final int maxCharsOnLine1 = MainC.to.isPortrait ? 22 : 44;
 
     // split line if it is passed X characters.
     if (tvLine1.length > maxCharsOnLine1) {

@@ -8,6 +8,7 @@ import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/onboard/auth/auth_c.dart';
+import 'package:hapi/tarikh/event/event_c.dart';
 
 // // TODO we can make use of this for naming conventions:
 // /// POWER: All enums inside the Project will get this functionality!
@@ -20,8 +21,8 @@ class MainC extends GetxHapi {
   static MainC get to => Get.find();
 
   bool isAppInitDone = false;
-
   bool isPortrait = true; // MUST LEAVE TRUE FOR APP TO START
+  // bool _isOrientationChanged = false;
 
   @override
   void onInit() {
@@ -72,6 +73,11 @@ class MainC extends GetxHapi {
     }
 
     this.isPortrait = isPortrait;
+    // _isOrientationChanged = true;
+
+    // this is expensive on orientation change but realistically we don't do it
+    // much, we optimizing common case of accessing event text often instead.
+    EventC.to.reinitAllEventsTexts();
 
     if (MenuC.to.isAnySubPageShowing()) {
       update(); // notify watchers
@@ -81,6 +87,13 @@ class MainC extends GetxHapi {
       MenuC.to.navigateToNavPage(MenuC.to.getLastNavPage());
     }
   }
+  //
+  // /// Used to tell a UI that orientation changed
+  // bool get isOrientationChanged {
+  //   bool isOrientationChanged = _isOrientationChanged;
+  //   _isOrientationChanged = false; // clear if it was set
+  //   return isOrientationChanged;
+  // }
 }
 
 /// Golden Ratio

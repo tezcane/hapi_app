@@ -1040,45 +1040,45 @@ class TimelineRenderObject extends RenderBox {
     final Canvas canvas = context.canvas;
 
     // TODO rename item->event
-    for (Event item in events) {
+    for (Event event in events) {
       /// Don't paint this item if:
-      if (!item.isVisible ||
-          item.y > size.height + Timeline.BubbleHeight ||
-          item.endY < -Timeline.BubbleHeight) continue;
+      if (!event.isVisible ||
+          event.y > size.height + Timeline.BubbleHeight ||
+          event.endY < -Timeline.BubbleHeight) continue;
 
-      double legOpacity = item.legOpacity * item.opacity;
-      Offset eventOffset = Offset(x + Timeline.LineWidth / 2.0, item.y);
+      double legOpacity = event.legOpacity * event.opacity;
+      Offset eventOffset = Offset(x + Timeline.LineWidth / 2.0, event.y);
 
       /// Draw the small circle on the left side of the timeline.
       canvas.drawCircle(
           eventOffset,
           Timeline.EdgeRadius,
           Paint()
-            ..color = (item.accent != null
-                    ? item.accent!
+            ..color = (event.accent != null
+                    ? event.accent!
                     : LineColors[depth % LineColors.length])
-                .withOpacity(item.opacity));
+                .withOpacity(event.opacity));
       if (legOpacity > 0.0) {
         Paint legPaint = Paint()
-          ..color = (item.accent != null
-                  ? item.accent!
+          ..color = (event.accent != null
+                  ? event.accent!
                   : LineColors[depth % LineColors.length])
               .withOpacity(legOpacity);
 
         /// Draw the line connecting the start&point of this item on the timeline.
         canvas.drawRect(
-          Offset(x, item.y) & Size(Timeline.LineWidth, item.length),
+          Offset(x, event.y) & Size(Timeline.LineWidth, event.length),
           legPaint,
         );
         canvas.drawCircle(
-          Offset(x + Timeline.LineWidth / 2.0, item.y + item.length),
+          Offset(x + Timeline.LineWidth / 2.0, event.y + event.length),
           Timeline.EdgeRadius,
           legPaint,
         );
       }
 
       /// Let the timeline calculate the height for the current item's bubble.
-      double bubbleHeight = t.bubbleHeight(item);
+      double bubbleHeight = t.bubbleHeight(event);
 
       /// Use [ui.ParagraphBuilder] to construct the label for canvas.
       ui.ParagraphBuilder builder = ui.ParagraphBuilder(
@@ -1089,18 +1089,22 @@ class TimelineRenderObject extends RenderBox {
           ),
         );
 
+      // if (MainC.to.isOrientationChangedOrForceUIRefreshes) {
+      //   event.reinitBubbleText();
+      // }
+
       /// Write bubble text here:
-      builder.addText(item.tvBubbleText);
+      builder.addText(event.tvBubbleText);
       ui.Paragraph labelParagraph = builder.build();
       labelParagraph.layout(
         const ui.ParagraphConstraints(width: MaxLabelWidth),
       );
 
       double textWidth =
-          labelParagraph.maxIntrinsicWidth * item.opacity * item.labelOpacity;
+          labelParagraph.maxIntrinsicWidth * event.opacity * event.labelOpacity;
       double bubbleX =
           t.renderLabelX - Timeline.DepthOffset * t.renderOffsetDepth;
-      double bubbleY = item.labelY - bubbleHeight / 2.0;
+      double bubbleY = event.labelY - bubbleHeight / 2.0;
 
       canvas.save();
       canvas.translate(bubbleX, bubbleY);
@@ -1112,17 +1116,17 @@ class TimelineRenderObject extends RenderBox {
       canvas.drawPath(
         bubble,
         Paint()
-          ..color = (item.accent != null
-                  ? item.accent!
+          ..color = (event.accent != null
+                  ? event.accent!
                   : LineColors[depth % LineColors.length])
-              .withOpacity(item.opacity * item.labelOpacity),
+              .withOpacity(event.opacity * event.labelOpacity),
       );
       canvas.clipRect(
         Rect.fromLTWH(BubblePadding, 0.0, textWidth, bubbleHeight),
       );
       _tapTargets.add(
         TapTarget(
-          item,
+          event,
           Rect.fromLTWH(
             bubbleX,
             bubbleY,
@@ -1137,12 +1141,12 @@ class TimelineRenderObject extends RenderBox {
         Offset(BubblePadding, bubbleHeight / 2.0 - labelParagraph.height / 2.0),
       );
       canvas.restore();
-      if (item.children != null) {
+      if (event.children != null) {
         /// Draw the other elements in the hierarchy.
         drawItems(
           context,
           offset,
-          item.children!,
+          event.children!,
           x + Timeline.DepthOffset,
           scale,
           depth + 1,

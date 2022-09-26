@@ -37,10 +37,6 @@ class ThumbnailDetailWidget extends StatelessWidget {
   /// and a [Row], which contains the [ThumbnailWidget], and the event information.
   @override
   Widget build(BuildContext context) {
-    List<String> lines = event.tvGetTitleLines();
-    String tvLine1 = lines[0];
-    String tvLine2 = lines[1];
-
     // TODO was return Material(color: Colors.transparent, child:
     return Column(
       children: <Widget>[
@@ -62,15 +58,15 @@ class ThumbnailDetailWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         T(
-                          tvLine1,
+                          event.tvEventTitleLine1,
                           ts,
                           h: 27,
                           alignment: LanguageC.to.centerLeft,
                           trVal: true,
                         ),
-                        if (tvLine2 != '')
+                        if (event.tvEventTitleLine2 != '')
                           T(
-                            tvLine2,
+                            event.tvEventTitleLine2,
                             ts,
                             h: 27,
                             alignment: LanguageC.to.centerLeft,

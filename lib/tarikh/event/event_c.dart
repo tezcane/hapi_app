@@ -162,4 +162,17 @@ class EventC extends GetxHapi {
       _saveFavorites(eventType);
     }
   }
+
+  /// Force static translations to update, i.e. Tarikh Bubble/Fav/Search text.
+  /// Do async so we don't slow app
+  reinitAllEventsTexts() async {
+    //MainC.to.isOrientationChangedOrForceUIRefreshes = true;
+    for (Event event in getEventList(EVENT_TYPE.Incident)) {
+      event.reinitBubbleText();
+    }
+    for (Event event in getEventList(EVENT_TYPE.Relic)) {
+      if (event.isTimeLineEvent) continue; // already updated in first loop
+      event.reinitBubbleText();
+    }
+  }
 }

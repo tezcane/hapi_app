@@ -11,6 +11,7 @@ import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/settings_option.dart';
 import 'package:hapi/quest/active/active_quests_c.dart';
 import 'package:hapi/tarikh/event/event.dart';
+import 'package:hapi/tarikh/event/event_c.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/intl.dart';
 
@@ -136,6 +137,8 @@ class LanguageC extends GetxHapi {
   String _pm = ' PM';
   String get pm => _pm;
 
+  bool initNeeded = true;
+
   @override
   void onInit() async {
     super.onInit();
@@ -234,6 +237,7 @@ class LanguageC extends GetxHapi {
     try {
       numCompactFormatter = NumberFormat.compact(locale: newLangKey);
     } catch (e) {
+      // TODO improve this catch (e)?
       l.e('$newLangKey is not supported by NumberFormat, default to use "en"');
       numCompactFormatter = NumberFormat.compact(locale: 'en');
     }
@@ -249,6 +253,12 @@ class LanguageC extends GetxHapi {
     _pm = ' ' + 'i.PM'.tr; // tr ok
 
     TimeC.to.updateDaysOfWeek(); // needed to convert SunRing dates
+
+    if (initNeeded == false) {
+      // call only if user changes lang, not at init
+      EventC.to.reinitAllEventsTexts();
+    }
+    initNeeded = false;
   }
 
   /// Get translation map.
