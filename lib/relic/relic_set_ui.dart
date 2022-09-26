@@ -247,7 +247,7 @@ class RelicSetUI extends StatelessWidget {
             filter.type,
             filter,
           ),
-          'trKeyTitleAtInit': relic.trKeyTitle,
+          'saveTag': relic.saveTag,
         });
       },
       child: SizedBox(
@@ -302,7 +302,7 @@ class RelicSetUI extends StatelessWidget {
             filter.type,
             filter,
           ),
-          'trKeyTitleAtInit': relic.trKeyTitle,
+          'saveTag': relic.saveTag,
         });
       },
       child: SizedBox(

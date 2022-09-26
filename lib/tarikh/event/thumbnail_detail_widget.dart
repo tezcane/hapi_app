@@ -118,7 +118,7 @@ class ThumbnailDetailWidget extends StatelessWidget {
     MenuC.to.pushSubPage(SubPage.Event_Details, arguments: {
       'eventType': EVENT_TYPE.Incident,
       'eventMap': EventC.to.getEventMap(EVENT_TYPE.Incident),
-      'trKeyTitleAtInit': event.trKeyTitle,
+      'saveTag': event.saveTag,
     });
   }
 
@@ -130,7 +130,7 @@ class ThumbnailDetailWidget extends StatelessWidget {
         FILTER_TYPE.Default,
         null,
       ),
-      'trKeyTitleAtInit': event.trKeyTitle,
+      'saveTag': event.saveTag,
     });
   }
 

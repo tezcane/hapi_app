@@ -27,6 +27,7 @@ class Event {
     required this.endMs,
     required this.accent,
   }) {
+    saveTag = '${trKeyTitle}_$trKeyEra';
     reinitBubbleText();
   }
   final EVENT_TYPE type;
@@ -37,6 +38,11 @@ class Event {
 
   /// not always given in json input file, thus nullable:
   Color? accent;
+
+  /// Favorites may have same name (e.g. Muhammad in Prophets and Surah name) so
+  /// we must give a more unique name for each event so we can save favorites or
+  /// make sure we are accessing the right event in EventC.getMap/Fav() lookups.
+  late final String saveTag;
 
   /// Used to calculate how many lines to draw for the bubble in the timeline:
   late String tvEventTitleLine1;

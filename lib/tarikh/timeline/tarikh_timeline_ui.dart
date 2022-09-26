@@ -74,8 +74,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   initState() {
     if (widget.event == null) {
       // lookup event manually since not provided on init
-      widget.event = EventC.to
-          .getEventMap(EVENT_TYPE.Incident)[widget.focusItem.trKeyTitle];
+      widget.event =
+          EventC.to.getEventMap(EVENT_TYPE.Incident)[widget.focusItem.saveTag];
 
       // We need event just to update down/up past/future btns. Since it wasn't
       // used/available/wanted? by the original caller to this class, we ignore
@@ -196,7 +196,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
         MenuC.to.pushSubPage(SubPage.Event_Details, arguments: {
           'eventType': EVENT_TYPE.Incident,
           'eventMap': EventC.to.getEventMap(EVENT_TYPE.Incident),
-          'trKeyTitleAtInit': _touchedBubble!.event.trKeyTitle,
+          'saveTag': _touchedBubble!.event.saveTag,
         });
 
         //t.isActive = true; // TODO working? was below:
@@ -485,7 +485,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
             child: Stack(
               children: <Widget>[
                 Hero(
-                  tag: widget.focusItem.trKeyTitle,
+                  tag: widget.focusItem.saveTag, // TODO use it or remove...
                   child: TimelineRenderWidget(
                     needsRepaint: true,
                     topOverlap: TopOverlap + devicePadding.top,

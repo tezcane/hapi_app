@@ -157,7 +157,7 @@ class RelicC extends GetxHapi {
       }
 
       prevEvent = event; // prev event is this current event
-      eventMap[event.trKeyTitle] = event;
+      eventMap[event.saveTag] = event;
     }
 
     return eventMap;

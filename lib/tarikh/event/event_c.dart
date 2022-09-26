@@ -29,10 +29,10 @@ class EventC extends GetxHapi {
 
     // add all list items into an event map
     for (Event event in _eventListTarikh) {
-      _eventMapTarikh[event.trKeyTitle] = event;
+      _eventMapTarikh[event.saveTag] = event;
     }
     for (Event event in _eventListRelics) {
-      _eventMapRelics[event.trKeyTitle] = event;
+      _eventMapRelics[event.saveTag] = event;
     }
 
     // events initialized so we can init favorites now
@@ -89,7 +89,7 @@ class EventC extends GetxHapi {
   }
 
   _initFavorites(EVENT_TYPE eventType) {
-    final List<dynamic>? rdFavList = s.rd(getFavoriteTag(eventType));
+    final List<dynamic>? rdFavList = s.rd(getSaveTagFavList(eventType));
 
     final Map<String, Event> eventMap = getEventMap(eventType);
     final Map<String, Event> eventMapFav = getEventMapFav(eventType);
@@ -98,7 +98,7 @@ class EventC extends GetxHapi {
       for (String fav in rdFavList) {
         if (eventMap.containsKey(fav)) {
           favList.add(eventMap[fav]!);
-          eventMapFav[eventMap[fav]!.trKeyTitle] = eventMap[fav]!;
+          eventMapFav[eventMap[fav]!.saveTag] = eventMap[fav]!;
         }
       }
     }
@@ -107,22 +107,21 @@ class EventC extends GetxHapi {
     //_sortTarikhFavorites(eventType, favList);
   }
 
-  String getFavoriteTag(EVENT_TYPE eventType) {
+  String getSaveTagFavList(EVENT_TYPE eventType) {
     switch (eventType) {
       case EVENT_TYPE.Era:
       case EVENT_TYPE.Incident:
-        return 'TARIKH_FAVS';
+        return 'favListTarikh';
       case EVENT_TYPE.Relic:
-        return 'RELIC_FAVS';
+        return 'favListRelics';
     }
   }
 
   /// Persist favorite data to disk, must convert to List<Event> to List<String>
   _saveFavorites(EVENT_TYPE eventType) {
-    List<String> favStringList = getEventListFav(eventType)
-        .map((Event event) => event.trKeyTitle)
-        .toList();
-    s.wr(getFavoriteTag(eventType), favStringList);
+    List<String> favStringList =
+        getEventListFav(eventType).map((Event event) => event.saveTag).toList();
+    s.wr(getSaveTagFavList(eventType), favStringList);
 
     update(); // favorites changed so notify people using it
   }
@@ -131,8 +130,6 @@ class EventC extends GetxHapi {
   _sortTarikhFavorites(EVENT_TYPE eventType, List<Event> favList) {
     if (eventType == EVENT_TYPE.Incident || eventType == EVENT_TYPE.Era) {
       favList.sort((Event a, Event b) => a.startMs.compareTo(b.startMs));
-      // favList.sort((String a, String b) =>
-      //     favMap[a]!.startMs.compareTo(favMap[b]!.startMs));
     }
   }
 
@@ -140,10 +137,11 @@ class EventC extends GetxHapi {
   addFavorite(EVENT_TYPE eventType, Event event) {
     final Map<String, Event> favMap = getEventMapFav(eventType);
 
-    if (!favMap.containsKey(event.trKeyTitle)) {
+    String saveTag = event.saveTag;
+    if (!favMap.containsKey(saveTag)) {
       final List<Event> favList = getEventListFav(eventType);
       favList.add(event);
-      favMap[event.trKeyTitle] = event;
+      favMap[saveTag] = event;
 
       _sortTarikhFavorites(eventType, favList); // does eventType check inside
 
@@ -155,10 +153,11 @@ class EventC extends GetxHapi {
   delFavorite(EVENT_TYPE eventType, Event event) {
     final Map<String, Event> favMap = getEventMapFav(eventType);
 
-    if (favMap.containsKey(event.trKeyTitle)) {
+    String saveTag = event.saveTag;
+    if (favMap.containsKey(saveTag)) {
       final List<Event> favList = getEventListFav(eventType);
       favList.remove(event);
-      favMap.remove(event.trKeyTitle);
+      favMap.remove(saveTag);
       _saveFavorites(eventType);
     }
   }
@@ -166,7 +165,6 @@ class EventC extends GetxHapi {
   /// Force static translations to update, i.e. Tarikh Bubble/Fav/Search text.
   /// Do async so we don't slow app
   reinitAllEventsTexts() async {
-    //MainC.to.isOrientationChangedOrForceUIRefreshes = true;
     for (Event event in getEventList(EVENT_TYPE.Incident)) {
       event.reinitBubbleText();
     }

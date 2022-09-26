@@ -25,8 +25,9 @@ class MenuSectionData {
 
 /// Data container for all the sub-elements of the [MenuSection].
 class MenuItemData {
-  MenuItemData(this.trKeyTitle, this.startMs, this.endMs);
+  MenuItemData(this.trKeyTitle, this.saveTag, this.startMs, this.endMs);
   final String trKeyTitle;
+  final String saveTag;
   final double startMs;
   final double endMs;
 
@@ -82,7 +83,8 @@ class MenuItemData {
       end = event.endMs + range;
     }
 
-    var menuItemData = MenuItemData(event.trKeyTitle, start, end);
+    var menuItemData =
+        MenuItemData(event.trKeyTitle, event.saveTag, start, end);
     menuItemData.pad = pad;
     menuItemData.padTop = padTop;
 

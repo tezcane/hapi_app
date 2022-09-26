@@ -507,8 +507,14 @@ class TarikhMenuInitHandler {
         dynamic endVal = itemMap['end'];
         double end = endVal is int ? endVal.toDouble() : endVal;
 
-        menuItemList
-            .add(MenuItemData('i.' + label, start, end)); // TODO asdf i. hack
+        menuItemList.add(
+          MenuItemData(
+            'i.' + label,
+            'i.' + label + '_' + 'TODO era',
+            start,
+            end,
+          ),
+        ); // TODO asdf i. hack
       }
 
       TarikhC.to._tarikhMenuData.add(MenuSectionData(

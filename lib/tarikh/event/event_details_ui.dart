@@ -19,11 +19,11 @@ class EventDetailsUI extends StatefulWidget {
   EventDetailsUI() {
     eventType = Get.arguments['eventType'];
     eventMap = Get.arguments['eventMap'];
-    trKeyTitleAtInit = Get.arguments['trKeyTitleAtInit'];
+    saveTag = Get.arguments['saveTag'];
   }
   late final EVENT_TYPE eventType;
   late final Map<String, Event> eventMap;
-  late final String trKeyTitleAtInit;
+  late final String saveTag;
 
   @override
   _EventDetailsUIState createState() => _EventDetailsUIState();
@@ -68,12 +68,12 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
     _btnUp = TimeBtn('', '', '', null);
     _btnDn = TimeBtn('', '', '', null);
 
-    initEvent(widget.trKeyTitleAtInit);
+    _initEvent(widget.saveTag);
   }
 
   // TODO SCROLL TO THE TOP OF SCREEN ON NEW LOAD
-  initEvent(String trKeyTitle) {
-    _event = widget.eventMap[trKeyTitle]!;
+  _initEvent(String saveTag) {
+    _event = widget.eventMap[saveTag]!;
 
     _btnUp.event = _event; //need to init here so first updateEventBtn() works
     _btnDn.event = _event;
@@ -129,7 +129,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
   /// A [GestureDetector] is used to control the [EventWidget], if it allows it (...try Newton!)
   @override
   Widget build(BuildContext context) {
-    bool isFavorite = _eventMapFav.containsKey(_event.trKeyTitle);
+    bool isFavorite = _eventMapFav.containsKey(_event.saveTag);
     if (isFavorite) {
       heartControllerFav.showParticles(true);
       heartControllerUnfav.showParticles(true);
@@ -232,7 +232,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                               : 'i.Navigate to past'.tr,
                                       heroTag: 'btnUp',
                                       onPressed: () =>
-                                          initEvent(_btnUp.event!.trKeyTitle),
+                                          _initEvent(_btnUp.event!.saveTag),
                                       materialTapTargetSize:
                                           MaterialTapTargetSize.padded,
                                       child: const Icon(
@@ -281,7 +281,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                               : 'i.Navigate to future'.tr,
                                       heroTag: 'btnDn',
                                       onPressed: () =>
-                                          initEvent(_btnDn.event!.trKeyTitle),
+                                          _initEvent(_btnDn.event!.saveTag),
                                       materialTapTargetSize:
                                           MaterialTapTargetSize.padded,
                                       child: const Icon(

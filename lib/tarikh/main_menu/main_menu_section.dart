@@ -19,7 +19,7 @@ class MenuSection extends StatefulWidget {
     this.trKeyTitle,
     this.backgroundColor,
     this.accentColor,
-    this.menuOptions,
+    this.menuItems,
     this.navigateTo,
     this.isActive, {
     required this.assetId,
@@ -27,7 +27,7 @@ class MenuSection extends StatefulWidget {
   final String trKeyTitle;
   final Color backgroundColor;
   final Color accentColor;
-  final List<MenuItemData> menuOptions;
+  final List<MenuItemData> menuItems;
   final String assetId;
   final NavigateTo navigateTo;
   final bool isActive;
@@ -175,7 +175,7 @@ class _SectionState extends State<MenuSection>
                       padding: const EdgeInsets.only(
                           left: 56.0, right: 20.0, top: 10.0),
                       child: Column(
-                        children: widget.menuOptions.map((item) {
+                        children: widget.menuItems.map((item) {
                           return GestureDetector(
                             behavior: HitTestBehavior.opaque,
                             onTap: () => widget.navigateTo(item),
