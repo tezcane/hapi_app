@@ -64,23 +64,24 @@ void main() async {
   Get.put<ThemeC>(ThemeC());
   Get.put<LanguageC>(LanguageC());
 
-  runApp(const MyApp());
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+    DeviceOrientation.landscapeRight,
+    DeviceOrientation.landscapeLeft,
+  ]);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
+
+  ThemeC.to.getThemeModeFromStore();
+
+  runApp(const HapiApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class HapiApp extends StatelessWidget {
+  const HapiApp();
 
   @override
   Widget build(BuildContext context) {
-    ThemeC.to.getThemeModeFromStore();
-
-    // Must be in portrait at init, for splash, onboarding and orientation init
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-    ]);
-    //SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
-
     return OrientationBuilder(
       builder: (context, orientation) {
         MainC.to.setOrientation(orientation == Orientation.portrait);
@@ -91,7 +92,7 @@ class MyApp extends StatelessWidget {
                 resizeToAvoidBottomInset: false, // fixes keyboard pushing UI up
                 floatingActionButton: GetBuilder<MenuC>(builder: (mc) {
                   return Visibility(
-                    visible: MainC.to.isAppInitDone,
+                    visible: MainC.to.showMainMenuFab,
                     child: FloatingActionButton(
                       tooltip: mc.trValMenuTooltip(),
                       backgroundColor:

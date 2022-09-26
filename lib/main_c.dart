@@ -20,7 +20,8 @@ import 'package:hapi/tarikh/event/event_c.dart';
 class MainC extends GetxHapi {
   static MainC get to => Get.find();
 
-  bool isAppInitDone = false;
+  bool showMainMenuFab = false;
+  bool initNeeded = true;
   bool isPortrait = true; // MUST LEAVE TRUE FOR APP TO START
   // bool _isOrientationChanged = false;
 
@@ -31,38 +32,23 @@ class MainC extends GetxHapi {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
   }
 
-  setAppInitDone() {
-    // Splash animations done, now allow screen rotations for the rest of time:
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.portraitUp,
-      DeviceOrientation.portraitDown,
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
-    ]);
-
-    // Disable all OS overlay bars (e.g. top status and bottom navigation bar):
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
-
-    isAppInitDone = true;
-    MenuC.to.update(); // Make FAB button visible
-  }
-
   signIn() {
-    setAppInitDone();
+    showMainMenuFab = true;
+    MenuC.to.update(); // needed to make FAB visible
     MenuC.to.initAppsFirstPage();
   }
 
   signOut() {
     MenuC.to.hideMenu(); // reset FAB (for sign back in)
     MenuC.to.clearSubPageStack(); // reset FAB (for sign back in)
-    isAppInitDone = false; // Make FAB button invisible
+    showMainMenuFab = false; // Make FAB button invisible
     MenuC.to.update(); // Make FAB button invisible
     AuthC.to.signOut(); // Sign out of Auth
   }
 
   setOrientation(bool isPortrait) {
     // don't proceed with any auto-orientation yet
-    if (!isAppInitDone) return l.w('ORIENTATION: App is not initialized yet.');
+    if (!showMainMenuFab) return l.w('ORIENTATION: App not initialized yet.');
     if (this.isPortrait && isPortrait) return l.d('Still in portrait');
     if (!this.isPortrait && !isPortrait) return l.d('Still in landscape');
 
@@ -77,7 +63,10 @@ class MainC extends GetxHapi {
 
     // this is expensive on orientation change but realistically we don't do it
     // much, we optimizing common case of accessing event text often instead.
-    EventC.to.reinitAllEventsTexts();
+    if (initNeeded == false) {
+      EventC.to.reinitAllEventsTexts(); // don't call on app init
+    }
+    initNeeded = false;
 
     if (MenuC.to.isAnySubPageShowing()) {
       update(); // notify watchers
