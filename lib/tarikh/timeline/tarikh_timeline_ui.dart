@@ -333,6 +333,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                     SizedBox(
                       width: fabWidth,
                       child: Padding(
+                        //TODO RTL ok?
                         padding: const EdgeInsets.only(left: 15),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
@@ -353,6 +354,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                       ),
                     ),
                     Padding(
+                      //TODO RTL ok?
                       padding: EdgeInsets.only(
                         left:
                             !c.isGutterModeOff && MainC.to.isPortrait ? 25 : 0,
@@ -495,6 +497,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                   ),
                 ),
                 Padding(
+                  //TODO RTL ok?
                   padding: EdgeInsets.only(
                     top: 20,
                     left: MainC.to.isPortrait ? 60 : 20,

@@ -150,6 +150,7 @@ class _EventSearchUIState extends State<EventSearchUI> {
       return Scaffold(
         backgroundColor: Theme.of(context).backgroundColor,
         bottomNavigationBar: Container(
+          //TODO RTL ok?
           padding: const EdgeInsets.only(
             left: 20,
             top: 16.0,
@@ -169,7 +170,6 @@ class _EventSearchUIState extends State<EventSearchUI> {
               child: ListView.builder(
                 controller: _scrollController,
                 itemCount: _searchResults.length + 1,
-                padding: const EdgeInsets.only(left: 20, right: 20, bottom: 0),
                 itemBuilder: (BuildContext context, int idx) {
                   if (idx == 0) {
                     return SizedBox(height: heightPadding);

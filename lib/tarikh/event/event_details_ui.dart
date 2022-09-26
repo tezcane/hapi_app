@@ -179,6 +179,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                     SizedBox(
                       width: fabWidth,
                       child: Padding(
+                        //TODO RTL ok?
                         padding: const EdgeInsets.only(left: 15),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,

@@ -172,6 +172,7 @@ class _SectionState extends State<MenuSection>
                     axis: Axis.vertical,
                     sizeFactor: _sizeAnimation!,
                     child: Padding(
+                      //TODO RTL ok?
                       padding: const EdgeInsets.only(
                           left: 56.0, right: 20.0, top: 10.0),
                       child: Column(

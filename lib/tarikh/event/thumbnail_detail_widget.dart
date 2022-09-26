@@ -38,57 +38,60 @@ class ThumbnailDetailWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // TODO was return Material(color: Colors.transparent, child:
-    return Column(
-      children: <Widget>[
-        if (hasDivider)
-          Container(height: 1, color: Theme.of(context).dividerColor),
-        Padding(
-          padding: const EdgeInsets.symmetric(vertical: 14.0),
-          child: InkWell(
-            onTap: () => _onTapThumbnailAndText(),
-            onLongPress: () => _onLongPressThumbnailAndText(),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                ThumbnailWidget(event),
-                Expanded(
-                  child: Container(
-                    margin: const EdgeInsets.only(left: 17, right: 17), // RTL
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        T(
-                          event.tvEventTitleLine1,
-                          ts,
-                          h: 27,
-                          alignment: LanguageC.to.centerLeft,
-                          trVal: true,
-                        ),
-                        if (event.tvEventTitleLine2 != '')
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        children: <Widget>[
+          if (hasDivider)
+            Container(height: 1, color: Theme.of(context).dividerColor),
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 8),
+            child: InkWell(
+              onTap: () => _onTapThumbnailAndText(),
+              onLongPress: () => _onLongPressThumbnailAndText(),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  ThumbnailWidget(event),
+                  Expanded(
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 8), // RTL
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           T(
-                            event.tvEventTitleLine2,
+                            event.tvEventTitleLine1,
                             ts,
                             h: 27,
                             alignment: LanguageC.to.centerLeft,
                             trVal: true,
                           ),
-                        const SizedBox(height: 5),
-                        T(
-                          event.trValYearsAgo(),
-                          ts,
-                          alignment: LanguageC.to.centerLeft,
-                          h: 17,
-                          trVal: true,
-                        ),
-                      ],
+                          if (event.tvEventTitleLine2 != '')
+                            T(
+                              event.tvEventTitleLine2,
+                              ts,
+                              h: 27,
+                              alignment: LanguageC.to.centerLeft,
+                              trVal: true,
+                            ),
+                          const SizedBox(height: 5),
+                          T(
+                            event.trValYearsAgo(),
+                            ts,
+                            alignment: LanguageC.to.centerLeft,
+                            h: 17,
+                            trVal: true,
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 

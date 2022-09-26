@@ -23,50 +23,47 @@ class EventFavoriteUI extends StatelessWidget {
     /// with a [FlareActor] animation of a broken heart and two lines of text.
     return Container(
       color: Theme.of(context).backgroundColor,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: GetBuilder<EventC>(
-          builder: (c) => eventListFav.isEmpty
-              ? Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 128.0,
-                      height: 114.0,
-                      margin: const EdgeInsets.only(bottom: 30),
-                      child: const FlareActor(
-                        'assets/tarikh/flare/Broken Heart.flr',
-                        animation: 'Heart Break',
-                        shouldClip: false,
-                      ),
+      child: GetBuilder<EventC>(
+        builder: (c) => eventListFav.isEmpty
+            ? Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    width: 128.0,
+                    height: 114.0,
+                    margin: const EdgeInsets.only(bottom: 30),
+                    child: const FlareActor(
+                      'assets/tarikh/flare/Broken Heart.flr',
+                      animation: 'Heart Break',
+                      shouldClip: false,
                     ),
-                    T('i.No Favorites', ts, h: 40),
-                    const SizedBox(height: 20),
-                    T(
-                      at(
-                        'at.Add favorites in {0} detail pages',
-                        [navPage.trKey],
-                      ),
-                      ts,
-                      h: 25,
-                      trVal: true,
+                  ),
+                  T('i.No Favorites', ts, h: 40),
+                  const SizedBox(height: 20),
+                  T(
+                    at(
+                      'at.Add favorites in {0} detail pages',
+                      [navPage.trKey],
                     ),
-                  ],
-                )
-              : ListView.builder(
-                  itemCount: eventListFav.length,
-                  itemBuilder: (BuildContext context, int idx) {
-                    Event event = eventListFav[idx];
-                    // NOTE: Can't do hero animation from EventFavoriteUI and
-                    //       EventSearchUI as event can be on both.
-                    return ThumbnailDetailWidget(
-                      navPage,
-                      event,
-                      hasDivider: idx != 0,
-                    );
-                  },
-                ),
-        ),
+                    ts,
+                    h: 25,
+                    trVal: true,
+                  ),
+                ],
+              )
+            : ListView.builder(
+                itemCount: eventListFav.length,
+                itemBuilder: (BuildContext context, int idx) {
+                  Event event = eventListFav[idx];
+                  // NOTE: Can't do hero animation from EventFavoriteUI and
+                  //       EventSearchUI as event can be on both.
+                  return ThumbnailDetailWidget(
+                    navPage,
+                    event,
+                    hasDivider: idx != 0,
+                  );
+                },
+              ),
       ),
     );
   }

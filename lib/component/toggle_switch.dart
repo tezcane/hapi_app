@@ -160,7 +160,7 @@ class _ToggleSwitchState extends State<ToggleSwitch>
                 child: GestureDetector(
                   onTap: () => _handleOnTap(index ~/ 2),
                   child: Container(
-                    padding: const EdgeInsets.only(left: 10.0, right: 10.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
                     constraints: BoxConstraints(
                         maxWidth: _calculateWidth(widget.minWidth)),
                     alignment: Alignment.center,
@@ -189,7 +189,8 @@ class _ToggleSwitchState extends State<ToggleSwitch>
                               ),
                               Flexible(
                                 child: Container(
-                                  padding: const EdgeInsets.only(left: 5.0),
+                                  //TODO RTL ok?
+                                  padding: const EdgeInsets.only(left: 5),
                                   child: T(
                                     widget.trValLabels[index ~/ 2],
                                     TextStyle(
