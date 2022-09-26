@@ -225,7 +225,7 @@ class SalahRow extends StatelessWidget {
 
   static const TS tsFard = TS(AppThemes.ajr2Uncommon);
   static const TS tsMuak = TS(AppThemes.ajr4Epic);
-  static const TS tsNafl = TS(AppThemes.ajr5Legendary);
+  static const TS tsNafl = TS(AppThemes.ajr6Mythic);
 
   @override
   Widget build(BuildContext context) {
