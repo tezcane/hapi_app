@@ -824,12 +824,10 @@ class _SlivSunRings extends StatelessWidget {
 
   @override
   SliverPersistentHeader build(BuildContext context) {
-    const double strokeWidth = 14;
-    final double diameter = w(context) / GR;
-    final double uiWidth = diameter + strokeWidth;
-
-    /// due to paint weirdness, we must massage circle values
-    final double baseDiameter = diameter - (strokeWidth / 2);
+    const double strokeWidth = 20;
+    final double diameter1 = (w(context) * .715) + (strokeWidth / 2);
+    final double diameter2 = diameter1 + strokeWidth;
+    final double uiWidth = diameter2 + strokeWidth;
 
     Map<Z, ColorSlice> colorSlice = {};
     return SliverPersistentHeader(
@@ -838,10 +836,20 @@ class _SlivSunRings extends StatelessWidget {
       delegate: _SliverAppBarDelegate(
         minHeight: uiWidth,
         maxHeight: uiWidth,
-        child: Stack(
+        child: Column(
           children: [
-            SunRing(baseDiameter + 4, strokeWidth, colorSlice),
-            QuestRing(baseDiameter, strokeWidth / 6, colorSlice),
+            const SizedBox(height: 20),
+            Stack(
+              children: [
+                Column(
+                  children: [
+                    const SizedBox(height: (strokeWidth / 2)),
+                    SunRing(diameter1, strokeWidth, colorSlice),
+                  ],
+                ),
+                QuestRing(diameter2, strokeWidth, colorSlice),
+              ],
+            ),
           ],
         ),
       ),

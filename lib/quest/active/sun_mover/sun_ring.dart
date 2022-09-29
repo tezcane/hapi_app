@@ -116,10 +116,10 @@ class SunRing extends StatelessWidget {
     setupSunAnimationToRun(fajrStartPercentCorrection); // runs on init
 
     // calculate sunrise on the horizon, so we can set horizon right for gumbi and me
-    DateTime currZTime = athan.getZamanTime(Z.Fajr)[0] as DateTime;
-    DateTime nextZTime = athan.sunrise;
-    double elapsedSecs =
-        nextZTime.difference(currZTime).inMilliseconds / 1000; // TODO unused
+    // DateTime currZTime = athan.getZamanTime(Z.Fajr)[0] as DateTime;
+    // DateTime nextZTime = athan.sunrise;
+    // double elapsedSecs =
+    //     nextZTime.difference(currZTime).inMilliseconds / 1000; // TODO unused
 
     // Sunrise is constant at very right of circle, (no turn)
     // double sunrisePercentCorrection =
@@ -167,7 +167,7 @@ class SunRing extends StatelessWidget {
 
     // RepaintBoundary prevents the ALWAYS repaint on ANY page update
     return Center(
-      child: InkWell(
+      child: GestureDetector(
         onTap: () {
           isSunAnimationAllowed = true;
           setupSunAnimationToRun(fajrStartPercentCorrection);
@@ -322,15 +322,22 @@ class _HijriAndGregoDate extends StatelessWidget {
 
       return Column(
         children: [
-          const SizedBox(height: 42),
+          const SizedBox(height: 48),
           // placeholder
           if (addDayOfWeekWithDate)
-            const T(' ', ts, w: 160, h: 19, trVal: true),
-          if (!addDayOfWeekWithDate) T(hijriDay.trKey, ts, w: 160, h: 19),
+            const T(' ', ts, w: 180, h: 25, trVal: true),
+          if (!addDayOfWeekWithDate)
+            T(
+              a(hijriDay.trKey),
+              ts,
+              w: 160,
+              h: 25,
+              trVal: true,
+            ),
           T(c.trValDateHijri(addDayOfWeekWithDate), ts,
-              w: 160, h: 19, trVal: true),
+              w: 180, h: 25, trVal: true),
           T(cns(c.trValDateGrego(addDayOfWeekWithDate)), ts,
-              w: 160, h: 19, trVal: true),
+              w: 180, h: 25, trVal: true),
         ],
       );
     });

@@ -317,13 +317,11 @@ class TimeC extends GetxHapi {
     update();
   }
 
-  _updateDayOfWeekHijri() async {
-    _dayOfWeekHijri = _getDayOfWeekHijri(await now());
-  }
+  _updateDayOfWeekHijri() async =>
+      _dayOfWeekHijri = _getDayOfWeekHijri(await now());
 
-  _updateDayOfWeekGrego() async {
-    _dayOfWeekGrego = _getDayOfWeekGrego(await now());
-  }
+  _updateDayOfWeekGrego() async =>
+      _dayOfWeekGrego = _getDayOfWeekGrego(await now());
 
   /// Hijri calendar day starts at maghrib
   DAY_OF_WEEK _getDayOfWeekHijri(DateTime time) {
@@ -371,7 +369,7 @@ class TimeC extends GetxHapi {
     DateTime dT = now2(); // TODO use now()?
     if (iterateHijriDateByOne(dT)) dT = dateToTomorrow(dT);
     String dayOfWeek = '';
-    if (addDayOfWeek) dayOfWeek = '${_dayOfWeekHijri.name} ';
+    if (addDayOfWeek) dayOfWeek = '${a(_dayOfWeekHijri.trKey)} ';
 
     HijriCalendar hijriCalendar = HijriCalendar.fromDate(dT);
     _hijriMonth = hijriCalendar.hMonth;
@@ -393,7 +391,7 @@ class TimeC extends GetxHapi {
     }
 
     String dayOfWeek = '';
-    if (addDayOfWeek) dayOfWeek = '${_dayOfWeekGrego.name} ';
+    if (addDayOfWeek) dayOfWeek = '${a(_dayOfWeekGrego.trKey)} ';
 
     return '$dayOfWeek$date';
   }
