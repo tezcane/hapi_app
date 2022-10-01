@@ -79,7 +79,8 @@ class TarikhC extends GetxHapi {
     if (nv != _isActiveTarikhMenu) {
       _isActiveTarikhMenu = nv;
     }
-    updateOnThread1Ms(); // needed for bottom bar init
+    // Causes stutter on bottom bar: (TODO may not be needed)
+    // updateOnThread1Ms(); // needed for bottom bar init
   }
 
   /// Loaded from JSON input that's stored in the assets folder which provides

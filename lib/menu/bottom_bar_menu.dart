@@ -303,7 +303,7 @@ class BottomBarMenu extends StatelessWidget {
       _pageController.animateToPage(
         newIdx,
         curve: Curves.easeInOut,
-        duration: const Duration(milliseconds: 750),
+        duration: const Duration(milliseconds: 500),
       ); // this animates to the page on tab press
       // jumpToPage/animateToPage triggers onPageChanged, so don't need:
       //NavPageC.to.setLastIdx(widget.navPage, newIdx);
