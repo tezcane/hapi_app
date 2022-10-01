@@ -33,7 +33,7 @@ class ThemeListUI extends StatelessWidget {
             width: (w / 4) * 3, // needed
             child: SegmentedSelector(
               selectedOption: c.currentTheme,
-              trValMenuOptions: [
+              tvMenuOptions: [
                 SettingsOption(
                   'light',
                   'i.Light'.tr,

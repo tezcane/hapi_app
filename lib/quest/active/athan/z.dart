@@ -31,13 +31,13 @@ extension EnumUtil on Z {
       } // else returns a.Dhuhr
     } else if (this == Z.Middle_of_Night) {
       if (ActiveQuestsC.to.showLayl2) {
-        return a('a.Layl{}') + '/' + cni(2); // UGLY but works, returns a trVal
+        return a('a.Layl{}') + '/' + cni(2); // UGLY but works, returns a tv
       } else {
         return 'a.Muntasaf Allayl';
       }
     } else if (this == Z.Last_3rd_of_Night) {
       if (ActiveQuestsC.to.showLayl3) {
-        return a('a.Layl{}') + '/' + cni(3); // UGLY but works, returns a trVal
+        return a('a.Layl{}') + '/' + cni(3); // UGLY but works, returns a tv
       } else {
         return 'a.Althuluth Al\'Akhir Min Allayl';
       }

@@ -29,7 +29,7 @@ class DropdownPickerWithIcon extends StatelessWidget {
                     children: <Widget>[
                       Icon(data.icon),
                       const SizedBox(width: 10),
-                      Text(data.trVal), // tr ok
+                      Text(data.tv), // tr ok
                     ],
                   ),
                   value: data.key,

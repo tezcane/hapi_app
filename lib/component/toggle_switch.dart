@@ -17,8 +17,8 @@ class ToggleSwitch extends StatefulWidget {
   /// Inactive foreground color
   final Color? inactiveFgColor;
 
-  /// List of labels that are trVal labels (should come in already translated)
-  final List<String> trValLabels;
+  /// List of labels that are tv labels (should come in already translated)
+  final List<String> tvLabels;
 
   /// List of icons
   final List<IconData>? icons;
@@ -55,7 +55,7 @@ class ToggleSwitch extends StatefulWidget {
 
   ToggleSwitch({
     Key? key,
-    required this.trValLabels,
+    required this.tvLabels,
     this.activeBgColor,
     this.activeFgColor,
     this.inactiveBgColor,
@@ -121,7 +121,7 @@ class _ToggleSwitchState extends State<ToggleSwitch>
         child: Column(
           //mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(widget.trValLabels.length * 2 - 1, (index) {
+          children: List.generate(widget.tvLabels.length * 2 - 1, (index) {
             /// Active if index matches current
             final active = index ~/ 2 == widget.initialLabelIndex;
 
@@ -167,14 +167,14 @@ class _ToggleSwitchState extends State<ToggleSwitch>
                     color: bgColor,
                     child: widget.icons == null
                         ? T(
-                            widget.trValLabels[index ~/ 2],
+                            widget.tvLabels[index ~/ 2],
                             TextStyle(
                               color: fgColor,
                               fontSize: widget.fontSize,
                               fontWeight: widget.fontWeight,
                             ),
                             h: 16,
-                            trVal: true,
+                            tv: true,
                           )
                         : Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -192,14 +192,14 @@ class _ToggleSwitchState extends State<ToggleSwitch>
                                   //TODO RTL ok?
                                   padding: const EdgeInsets.only(left: 5),
                                   child: T(
-                                    widget.trValLabels[index ~/ 2],
+                                    widget.tvLabels[index ~/ 2],
                                     TextStyle(
                                       color: fgColor,
                                       fontSize: widget.fontSize,
                                       fontWeight: widget.fontWeight,
                                     ),
                                     h: 16,
-                                    trVal: true,
+                                    tv: true,
                                   ),
                                 ),
                               ),
@@ -228,7 +228,7 @@ class _ToggleSwitchState extends State<ToggleSwitch>
   /// Calculates width to prevent overflow by taking screen width into account.
   double _calculateWidth(double minWidth) {
     /// Total number of labels/switches
-    int totalLabels = widget.trValLabels.length;
+    int totalLabels = widget.tvLabels.length;
 
     /// Extra width to prevent overflow and add padding
     double extraWidth = 0.10 * totalLabels;

@@ -58,7 +58,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
 
   /// Which era the Timeline is currently focused on.
   /// Defaults to [tkDefaultEraName].
-  String _trValEraName = '';
+  String _tvEraName = '';
 
   Color? _headerTextColor;
   //Color? _headerBackgroundColor; // CAN DO: cleanup/reuse for other coloring
@@ -84,11 +84,9 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     }
 
     TarikhC.to.isActiveTimeline = true;
-    _trValEraName = 'i.Era'.tr +
+    _tvEraName = 'i.Era'.tr +
         ': ' +
-        (t.currentEra != null
-            ? a(t.currentEra!.tkTitle)
-            : a(tkDefaultEraName));
+        (t.currentEra != null ? a(t.currentEra!.tkTitle) : a(tkDefaultEraName));
     t.onHeaderColorsChanged = (/*Color background,*/ Color text) {
       setState(() {
         _headerTextColor = text;
@@ -99,7 +97,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     /// Update the label for the [Timeline] object.
     t.onEraChanged = (Event? event) {
       setState(() {
-        _trValEraName =
+        _tvEraName =
             'i.Era'.tr + ': ' + (event != null ? a(event.tkTitle) : '');
       });
     };
@@ -248,12 +246,11 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
       };
       t.onEraChanged = (Event? event) {
         setState(() {
-          _trValEraName =
-              event != null ? a(event.tkTitle) : a(tkDefaultEraName);
+          _tvEraName = event != null ? a(event.tkTitle) : a(tkDefaultEraName);
         });
       };
       setState(() {
-        _trValEraName = t.currentEra != null
+        _tvEraName = t.currentEra != null
             ? a(t.currentEra!.tkTitle)
             : a(tkDefaultEraName);
         //t.isActive = true;
@@ -358,7 +355,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                         tsR,
                                         w: w2,
                                         h: 18,
-                                        trVal: true,
+                                        tv: true,
                                       ),
                                       if (btnUp.tvTitleLine2 != '')
                                         T(
@@ -366,14 +363,14 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                           tsR,
                                           w: w2,
                                           h: 18,
-                                          trVal: true,
+                                          tv: true,
                                         ),
                                       T(
                                         btnUp.tvPageScrolls,
                                         tsR,
                                         w: w2,
                                         h: 17,
-                                        trVal: true,
+                                        tv: true,
                                       ),
                                       FloatingActionButton(
                                         tooltip: 'i.Navigate to past'.tr,
@@ -392,7 +389,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                         tsR,
                                         w: w2,
                                         h: 17,
-                                        trVal: true,
+                                        tv: true,
                                       ),
                                       const SizedBox(height: 1),
                                     ],
@@ -413,7 +410,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                         tsR,
                                         w: w2,
                                         h: 18,
-                                        trVal: true,
+                                        tv: true,
                                       ),
                                       if (btnDn.tvTitleLine2 != '')
                                         T(
@@ -421,14 +418,14 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                           tsR,
                                           w: w2,
                                           h: 18,
-                                          trVal: true,
+                                          tv: true,
                                         ),
                                       T(
                                         btnDn.tvPageScrolls,
                                         tsR,
                                         w: w2,
                                         h: 17,
-                                        trVal: true,
+                                        tv: true,
                                       ),
                                       FloatingActionButton(
                                         tooltip: 'i.Navigate to future'.tr,
@@ -447,7 +444,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                         tsR,
                                         w: w2,
                                         h: 17,
-                                        trVal: true,
+                                        tv: true,
                                       ),
                                       const SizedBox(height: 1),
                                     ],
@@ -489,11 +486,11 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                     left: MainC.to.isPortrait ? 60 : 20,
                   ),
                   child: T(
-                    _trValEraName,
+                    _tvEraName,
                     tsR,
                     w: titleWidth,
                     h: 25,
-                    trVal: true,
+                    tv: true,
                   ),
                 ),
               ],

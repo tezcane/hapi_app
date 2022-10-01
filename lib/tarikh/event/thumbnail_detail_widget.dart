@@ -64,7 +64,7 @@ class ThumbnailDetailWidget extends StatelessWidget {
                             ts,
                             h: 27,
                             alignment: LanguageC.to.centerLeft,
-                            trVal: true,
+                            tv: true,
                           ),
                           if (event.tvTitleLine2 != '')
                             T(
@@ -72,15 +72,15 @@ class ThumbnailDetailWidget extends StatelessWidget {
                               ts,
                               h: 27,
                               alignment: LanguageC.to.centerLeft,
-                              trVal: true,
+                              tv: true,
                             ),
                           const SizedBox(height: 5),
                           T(
-                            event.trValYearsAgo(),
+                            event.tvYearsAgo(),
                             ts,
                             alignment: LanguageC.to.centerLeft,
                             h: 17,
-                            trVal: true,
+                            tv: true,
                           ),
                         ],
                       ),

@@ -55,7 +55,7 @@ class _RelicTabBarState extends State<RelicTabBar>
   Widget build(BuildContext context) {
     return GetBuilder<RelicC>(builder: (c) {
       if (RelicC.to.initNeeded) {
-        return const Center(child: T('بِسْمِ ٱللَّٰهِ', tsN, trVal: true));
+        return const Center(child: T('بِسْمِ ٱللَّٰهِ', tsN, tv: true));
       }
 
       if (initNeeded) {

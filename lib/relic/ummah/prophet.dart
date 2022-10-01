@@ -13,7 +13,7 @@ const String _ = ' '; // space/gap
 class Prophet extends FamilyTree {
   Prophet({
     // Event data:
-    required String trValEra,
+    required String tvEra,
     required double startMs,
     required double endMs,
 
@@ -33,18 +33,18 @@ class Prophet extends FamilyTree {
     PF? successor, // Next Prophet in prophethood timeline
 
     // Required prophet data:
-    required this.trValSentTo,
+    required this.tvSentTo,
     required this.quranMentionCount,
     required this.qvNabi,
     this.qvRasul,
-    this.trValKitab,
+    this.tvKitab,
     this.qvsUluAlAzm,
-    this.trValLocationBirth,
-    this.trValLocationDeath,
-    this.trValTomb,
+    this.tvLocationBirth,
+    this.tvLocationDeath,
+    this.tvTomb,
   }) : super(
           // Event data:
-          trValEra: trValEra,
+          tvEra: tvEra,
           startMs: startMs,
           endMs: endMs,
           // Relic data:
@@ -64,16 +64,16 @@ class Prophet extends FamilyTree {
           successor: successor,
         );
   // Required prophet data:
-  final String trValSentTo; // nation the prophet was sent to:
+  final String tvSentTo; // nation the prophet was sent to:
   final int quranMentionCount;
   final QV qvNabi; // Prophet (nabī) نَبِيّ
   // Optional prophet data:
   final QV? qvRasul; // Messenger (rasūl) رَسُول
-  final String? trValKitab;
+  final String? tvKitab;
   final List<QV>? qvsUluAlAzm; // Archprophet (ʾUlu Al-'Azm)
-  final String? trValLocationBirth;
-  final String? trValLocationDeath;
-  final String? trValTomb;
+  final String? tvLocationBirth;
+  final String? tvLocationDeath;
+  final String? tvTomb;
 
   bool isRasul() => qvRasul != null;
   bool isUluAlAzm() => qvsUluAlAzm != null && qvsUluAlAzm!.isNotEmpty;
@@ -95,7 +95,7 @@ class Prophet extends FamilyTree {
 final List<Prophet> relicsProphet = [
   Prophet(
     // Event data:
-    trValEra: 'Intelligent Life'.tr,
+    tvEra: 'Intelligent Life'.tr,
     startMs: -340000,
     endMs: -339050,
     // Relic data:
@@ -111,20 +111,20 @@ final List<Prophet> relicsProphet = [
     successors: [PF.Idris],
     successor: PF.Sheth,
     // Required prophet data:
-    trValSentTo: 'p.Earth from Heaven'.tr + _ + cns('(4:1)'),
+    tvSentTo: 'p.Earth from Heaven'.tr + _ + cns('(4:1)'),
     quranMentionCount: 25,
     qvNabi: QV(2, 31),
     // Optional prophet data:
     qvRasul: QV(2, 31),
-    trValKitab: null,
+    tvKitab: null,
     qvsUluAlAzm: null,
-    trValLocationBirth: a('a.Jennah'),
-    trValLocationDeath: null,
-    trValTomb: null,
+    tvLocationBirth: a('a.Jennah'),
+    tvLocationDeath: null,
+    tvTomb: null,
   ),
   Prophet(
     // Event data:
-    trValEra: 'i.Birth of Humans'.tr,
+    tvEra: 'i.Birth of Humans'.tr,
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -145,20 +145,20 @@ final List<Prophet> relicsProphet = [
     successors: [PF.Nuh],
     successor: PF.Nuh,
     // Required prophet data:
-    trValSentTo: a('a.Babylon'),
+    tvSentTo: a('a.Babylon'),
     quranMentionCount: 2,
     qvNabi: QV(19, 56),
     // Optional prophet data:
     qvRasul: null,
-    trValKitab: null,
+    tvKitab: null,
     qvsUluAlAzm: null,
-    trValLocationBirth: a('a.Babylon'),
-    trValLocationDeath: 'p.Sixth Heaven'.tr,
-    trValTomb: null,
+    tvLocationBirth: a('a.Babylon'),
+    tvLocationDeath: 'p.Sixth Heaven'.tr,
+    tvTomb: null,
   ),
   Prophet(
     // Event data:
-    trValEra: 'i.Great Flood'.tr,
+    tvEra: 'i.Great Flood'.tr,
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -177,20 +177,20 @@ final List<Prophet> relicsProphet = [
     successors: [PF.Hud, PF.Salih, PF.Ibrahim, PF.Lut],
     successor: PF.Hud,
     // Required prophet data:
-    trValSentTo: 'p.The people of_'.tr + a('a.Nuh') + _ + cns('(26:105)'),
+    tvSentTo: 'p.The people of_'.tr + a('a.Nuh') + _ + cns('(26:105)'),
     quranMentionCount: 43,
     qvNabi: QV(6, 89),
     // Optional prophet data:
     qvRasul: QV(25, 107),
-    trValKitab: null,
+    tvKitab: null,
     qvsUluAlAzm: [QV(46, 35), QV(33, 7)],
-    trValLocationBirth: null,
-    trValLocationDeath: null,
-    trValTomb: null,
+    tvLocationBirth: null,
+    tvLocationDeath: null,
+    tvTomb: null,
   ),
   Prophet(
     // Event data:
-    trValEra: 'i.Unknown'.tr,
+    tvEra: 'i.Unknown'.tr,
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -214,22 +214,22 @@ final List<Prophet> relicsProphet = [
     successors: null,
     successor: PF.Salih,
     // Required prophet data:
-    trValSentTo: a('a.Ad') + _ + a('a.Tribe') + _ + cns('(7:65)'),
+    tvSentTo: a('a.Ad') + _ + a('a.Tribe') + _ + cns('(7:65)'),
     quranMentionCount: 7,
     qvNabi: QV(26, 125),
     // Optional prophet data:
     qvRasul: QV(26, 125),
-    trValKitab: null,
+    tvKitab: null,
     qvsUluAlAzm: null,
-    trValLocationBirth: null,
-    trValLocationDeath: null,
-    trValTomb:
+    tvLocationBirth: null,
+    tvLocationDeath: null,
+    tvTomb:
         'p.Possibly in Qabr Nabi Hud, Hadhramaut, Yemen; Near the Zamzam well; south wall of the Umayyad Mosque, Damascus, Syria.'
             .tr,
   ),
   Prophet(
     // Event data:
-    trValEra: 'i.Unknown'.tr,
+    tvEra: 'i.Unknown'.tr,
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -256,20 +256,20 @@ final List<Prophet> relicsProphet = [
     successors: null,
     successor: PF.Lut,
     // Required prophet data:
-    trValSentTo: a('a.Thamud') + _ + a('a.Tribe') + _ + cns('(7:73)'),
+    tvSentTo: a('a.Thamud') + _ + a('a.Tribe') + _ + cns('(7:73)'),
     quranMentionCount: 9,
     qvNabi: QV(26, 143),
     // Optional prophet data:
     qvRasul: QV(26, 143),
-    trValKitab: null,
+    tvKitab: null,
     qvsUluAlAzm: null,
-    trValLocationBirth: null,
-    trValLocationDeath: null,
-    trValTomb: "p.Possibly in Mada'in Salih or Hasik, Oman.".tr, // TODO
+    tvLocationBirth: null,
+    tvLocationDeath: null,
+    tvTomb: "p.Possibly in Mada'in Salih or Hasik, Oman.".tr, // TODO
   ),
   Prophet(
     // Event data:
-    trValEra: a('a.Ibrahim'),
+    tvEra: a('a.Ibrahim'),
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -296,7 +296,7 @@ final List<Prophet> relicsProphet = [
     successors: [PF.Shuayb, PF.Ismail, PF.Ishaq],
     successor: PF.Ismail,
     // Required prophet data:
-    trValSentTo: a('a.Babylon') +
+    tvSentTo: a('a.Babylon') +
         'i.,_'.tr +
         'i.The people of_'.tr +
         a('a.Al-Eiraq') + // Iraq العراق
@@ -308,17 +308,17 @@ final List<Prophet> relicsProphet = [
     qvNabi: QV(19, 41),
     // Optional prophet data:
     qvRasul: QV(9, 70),
-    trValKitab: 'p.Scrolls of_'.tr + a('a.Ibrahim') + _ + cns('(87:19)'),
+    tvKitab: 'p.Scrolls of_'.tr + a('a.Ibrahim') + _ + cns('(87:19)'),
     qvsUluAlAzm: [QV(2, 124)],
-    trValLocationBirth: 'p.Ur al-Chaldees, Bilād ar-Rāfidayn'.tr,
-    trValLocationDeath: 'a.Al-Khalil'.tr + // Hebron الخليل
+    tvLocationBirth: 'p.Ur al-Chaldees, Bilād ar-Rāfidayn'.tr,
+    tvLocationDeath: 'a.Al-Khalil'.tr + // Hebron الخليل
         'i.,_'.tr +
         a('a.Bilad al-Sham'), // Greater Syria لبِلَاد الشَّام
-    trValTomb: 'p.Ibrahimi Mosque, Hebron'.tr,
+    tvTomb: 'p.Ibrahimi Mosque, Hebron'.tr,
   ),
   Prophet(
     // Event data:
-    trValEra: a('a.Ibrahim'),
+    tvEra: a('a.Ibrahim'),
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -347,7 +347,7 @@ final List<Prophet> relicsProphet = [
     successors: null,
     successor: PF.Ibrahim,
     // Required prophet data:
-    trValSentTo: a('a.Saddoom') + // سدوم Sodom
+    tvSentTo: a('a.Saddoom') + // سدوم Sodom
         'i._and_'.tr +
         a("a.'Amoorah") + //  عمورة Gomorrah
         _ +
@@ -356,16 +356,16 @@ final List<Prophet> relicsProphet = [
     qvNabi: QV(6, 86),
     // Optional prophet data:
     qvRasul: QV(37, 133),
-    trValKitab: null,
+    tvKitab: null,
     qvsUluAlAzm: null,
-    trValLocationBirth: null,
-    trValLocationDeath: a(
+    tvLocationBirth: null,
+    tvLocationDeath: a(
         "a.Bani Na'im"), //  بني نعيم  Palestinian town in the southern West Bank located 8 kilometers (5.0 mi) east of Hebron.
-    trValTomb: null,
+    tvTomb: null,
   ),
   Prophet(
     // Event data:
-    trValEra: a('a.Ibrahim'),
+    tvEra: a('a.Ibrahim'),
     startMs: 0, //-1800, TODO must be younger than Yusuf!
     endMs: 0, //-1664,
     // Relic data:
@@ -382,7 +382,7 @@ final List<Prophet> relicsProphet = [
     successors: [PF.Muhammad],
     successor: PF.Ishaq,
     // Required prophet data:
-    trValSentTo: 'p.Pre-Islamic_' +
+    tvSentTo: 'p.Pre-Islamic_' +
         a('a.Al-Arabiyyah') +
         'i.,_'.tr +
         a('a.Makkah al-Mukarramah'),
@@ -390,18 +390,18 @@ final List<Prophet> relicsProphet = [
     qvNabi: QV(19, 54),
     // Optional prophet data:
     qvRasul: QV(19, 54),
-    trValKitab: null,
+    tvKitab: null,
     qvsUluAlAzm: null,
-    trValLocationBirth: a('a.Falastin') + // فلسطين Palestine
+    tvLocationBirth: a('a.Falastin') + // فلسطين Palestine
         '/' +
         'i.Canaan'.tr,
-    trValLocationDeath:
+    tvLocationDeath:
         a('a.Makkah al-Mukarramah'), // Mecca مكة المكرمة 'Makkah the Noble',
-    trValTomb: null,
+    tvTomb: null,
   ),
   Prophet(
     // Event data:
-    trValEra: a('a.Ibrahim'),
+    tvEra: a('a.Ibrahim'),
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -418,22 +418,22 @@ final List<Prophet> relicsProphet = [
     successors: [PF.Yaqub, PF.Ayyub],
     successor: PF.Yaqub,
     // Required prophet data:
-    trValSentTo: a('a.Falastin') + // فلسطين Palestine
+    tvSentTo: a('a.Falastin') + // فلسطين Palestine
         '/' +
         'i.Canaan'.tr,
     quranMentionCount: 17,
     qvNabi: QV(19, 49),
     // Optional prophet data:
     qvRasul: null,
-    trValKitab: null,
+    tvKitab: null,
     qvsUluAlAzm: null,
-    trValLocationBirth: null,
-    trValLocationDeath: null,
-    trValTomb: 'p.Cave of the Patriarchs, Hebron'.tr,
+    tvLocationBirth: null,
+    tvLocationDeath: null,
+    tvTomb: 'p.Cave of the Patriarchs, Hebron'.tr,
   ),
   Prophet(
     // Event data:
-    trValEra: 'i.Old Egyptian Kingdom'.tr,
+    tvEra: 'i.Old Egyptian Kingdom'.tr,
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -455,22 +455,22 @@ final List<Prophet> relicsProphet = [
     successors: [PF.Yusuf, PF.Yunus, PF.Musa, PF.Harun, PF.Dawud],
     successor: PF.Yusuf,
     // Required prophet data:
-    trValSentTo: a('a.Falastin') + // فلسطين Palestine
+    tvSentTo: a('a.Falastin') + // فلسطين Palestine
         '/' +
         'i.Canaan'.tr,
     quranMentionCount: 16,
     qvNabi: QV(19, 49),
     // Optional prophet data:
     qvRasul: null,
-    trValKitab: null,
+    tvKitab: null,
     qvsUluAlAzm: null,
-    trValLocationBirth: null,
-    trValLocationDeath: null,
-    trValTomb: 'p.Cave of the Patriarchs, Hebron'.tr,
+    tvLocationBirth: null,
+    tvLocationDeath: null,
+    tvTomb: 'p.Cave of the Patriarchs, Hebron'.tr,
   ),
   Prophet(
     // Event data:
-    trValEra: 'Ancient Egypt',
+    tvEra: 'Ancient Egypt',
     startMs: -2400,
     endMs: -2400,
     // Relic data:
@@ -487,20 +487,20 @@ final List<Prophet> relicsProphet = [
     successors: [PF.Alyasa],
     successor: null, // TODO
     // Required prophet data:
-    trValSentTo: 'p.Ancient Kingdom of_'.tr + a('a.Misr'), // Egypt
+    tvSentTo: 'p.Ancient Kingdom of_'.tr + a('a.Misr'), // Egypt
     quranMentionCount: 27,
     qvNabi: QV(4, 89),
     // Optional prophet data:
     qvRasul: QV(40, 34),
-    trValKitab: null,
+    tvKitab: null,
     qvsUluAlAzm: null,
-    trValLocationBirth: null,
-    trValLocationDeath: null,
-    trValTomb: null,
+    tvLocationBirth: null,
+    tvLocationDeath: null,
+    tvTomb: null,
   ),
   Prophet(
     // Event data:
-    trValEra: 'i.Unknown'.tr,
+    tvEra: 'i.Unknown'.tr,
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -521,20 +521,20 @@ final List<Prophet> relicsProphet = [
     successors: [PF.DhulKifl],
     successor: PF.DhulKifl,
     // Required prophet data:
-    trValSentTo: a('a.Edom'), // TODO Arabee version
+    tvSentTo: a('a.Edom'), // TODO Arabee version
     quranMentionCount: 4,
     qvNabi: QV(4, 89),
     // Optional prophet data:
     qvRasul: null,
-    trValKitab: null,
+    tvKitab: null,
     qvsUluAlAzm: null,
-    trValLocationBirth: null,
-    trValLocationDeath: null,
-    trValTomb: 'p.Possibly in Al-Qarah Mountains in southern Oman'.tr,
+    tvLocationBirth: null,
+    tvLocationDeath: null,
+    tvTomb: 'p.Possibly in Al-Qarah Mountains in southern Oman'.tr,
   ),
   Prophet(
     // Event data:
-    trValEra: 'i.Unknown'.tr, // TODO
+    tvEra: 'i.Unknown'.tr, // TODO
     startMs: 0, // TODO Buddha: 6th or 5th century BCE
     endMs: 0,
     // Relic data:
@@ -551,22 +551,22 @@ final List<Prophet> relicsProphet = [
     successor: null,
     // Required prophet data:
     // TODO Kifl or Kapilavastu in the northern Indian subcontinent:
-    trValSentTo: 'p.Possibly Babylon or Indain subcontinent'.tr,
+    tvSentTo: 'p.Possibly Babylon or Indain subcontinent'.tr,
     quranMentionCount: 2,
     qvNabi: QV(21, 85, ayaEnd: 86),
     // Optional prophet data:
     qvRasul: null,
-    trValKitab: null,
+    tvKitab: null,
     qvsUluAlAzm: null,
-    trValLocationBirth: null,
-    trValLocationDeath: null,
-    trValTomb: 'p.Makam Dağı in Ergani province of Diyarbakir'.tr +
+    tvLocationBirth: null,
+    tvLocationDeath: null,
+    tvTomb: 'p.Makam Dağı in Ergani province of Diyarbakir'.tr +
         'i.,_'.tr +
         a('a.Turkiye'),
   ),
   Prophet(
     // Event data:
-    trValEra: 'i.Unknown'.tr,
+    tvEra: 'i.Unknown'.tr,
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -587,24 +587,24 @@ final List<Prophet> relicsProphet = [
     successors: null,
     successor: PF.Musa,
     // Required prophet data:
-    trValSentTo: a('a.Madyan') + // Midian
+    tvSentTo: a('a.Madyan') + // Midian
         _ +
         cns('(7:85)'),
     quranMentionCount: 9,
     qvNabi: QV(26, 178),
     // Optional prophet data:
     qvRasul: QV(26, 178),
-    trValKitab: null,
+    tvKitab: null,
     qvsUluAlAzm: null,
-    trValLocationBirth: null,
-    trValLocationDeath: null,
-    trValTomb:
+    tvLocationBirth: null,
+    tvLocationDeath: null,
+    tvTomb:
         'p.Possibly in Wadi Shuʿayb, Jordan, Guriyeh, Shushtar, Iran or Hittin in the Galilee'
             .tr,
   ),
   Prophet(
     // Event data:
-    trValEra: 'Ancient Egypt',
+    tvEra: 'Ancient Egypt',
     startMs: -1303,
     endMs: -1200,
     // Relic data:
@@ -625,22 +625,22 @@ final List<Prophet> relicsProphet = [
     successors: [PF.Ilyas],
     successor: PF.Dawud,
     // Required prophet data:
-    trValSentTo: a('a.Firaun') + // Pharaoh فرعون
+    tvSentTo: a('a.Firaun') + // Pharaoh فرعون
         'p._and his establishment_' +
         cns('(43:46)'),
     quranMentionCount: 20,
     qvNabi: QV(19, 53),
     // Optional prophet data:
     qvRasul: QV(20, 47),
-    trValKitab: null,
+    tvKitab: null,
     qvsUluAlAzm: null,
-    trValLocationBirth: null,
-    trValLocationDeath: null,
-    trValTomb: 'p.Possibly in Jabal Harun, Jordan or in Sinai'.tr,
+    tvLocationBirth: null,
+    tvLocationDeath: null,
+    tvTomb: 'p.Possibly in Jabal Harun, Jordan or in Sinai'.tr,
   ),
   Prophet(
     // Event data:
-    trValEra: 'Ancient Egypt',
+    tvEra: 'Ancient Egypt',
     startMs: -1300,
     endMs: -1200,
     // Relic data:
@@ -665,22 +665,22 @@ final List<Prophet> relicsProphet = [
     successors: null,
     successor: PF.Harun,
     // Required prophet data:
-    trValSentTo: a('a.Firaun') + // Pharaoh فرعون
+    tvSentTo: a('a.Firaun') + // Pharaoh فرعون
         'p._and his establishment_' +
         cns('(43:46)'),
     quranMentionCount: 136,
     qvNabi: QV(20, 47),
     // Optional prophet data:
     qvRasul: QV(20, 47),
-    trValKitab: 'p.Ten Commandments, Tawrah (Torah); Scrolls of Moses (53:36)',
+    tvKitab: 'p.Ten Commandments, Tawrah (Torah); Scrolls of Moses (53:36)',
     qvsUluAlAzm: [QV(46, 35), QV(33, 7)],
-    trValLocationBirth: null,
-    trValLocationDeath: null,
-    trValTomb: 'p.An-Nabi Musa, Jericho'.tr, // ٱلنَّبِي مُوْسَى
+    tvLocationBirth: null,
+    tvLocationDeath: null,
+    tvTomb: 'p.An-Nabi Musa, Jericho'.tr, // ٱلنَّبِي مُوْسَى
   ),
   Prophet(
     // Event data:
-    trValEra: 'i.Kings of_'.tr + a('a.Israel'),
+    tvEra: 'i.Kings of_'.tr + a('a.Israel'),
     startMs: -1000,
     endMs: -971,
     // Relic data:
@@ -700,22 +700,22 @@ final List<Prophet> relicsProphet = [
     successors: [PF.Suleyman],
     successor: PF.Suleyman,
     // Required prophet data:
-    trValSentTo: a('a.Al-Quds'), // Jerusalem - القدس
+    tvSentTo: a('a.Al-Quds'), // Jerusalem - القدس
     quranMentionCount: 16,
     qvNabi: QV(6, 89),
     // Optional prophet data:
     qvRasul: QV(6, 89),
-    trValKitab: a('a.Zabur') + // Psalms
+    tvKitab: a('a.Zabur') + // Psalms
         _ +
         cns('(17:55, 4:163, 17:55, 21:105)'),
     qvsUluAlAzm: null,
-    trValLocationBirth: a('a.Al-Quds'),
-    trValLocationDeath: a('a.Al-Quds'),
-    trValTomb: 'p.Tomb of Harun, Jabal HarUn in Petra, Jordan'.tr,
+    tvLocationBirth: a('a.Al-Quds'),
+    tvLocationDeath: a('a.Al-Quds'),
+    tvTomb: 'p.Tomb of Harun, Jabal HarUn in Petra, Jordan'.tr,
   ),
   Prophet(
     // Event data:
-    trValEra: 'i.Kings of_'.tr + a('a.Israel'),
+    tvEra: 'i.Kings of_'.tr + a('a.Israel'),
     startMs: -971,
     endMs: -931,
     // Relic data:
@@ -731,21 +731,21 @@ final List<Prophet> relicsProphet = [
     successors: [PF.Zakariya, PF.Isa],
     successor: PF.Ilyas,
     // Required prophet data:
-    trValSentTo: a('a.Al-Quds'),
+    tvSentTo: a('a.Al-Quds'),
     quranMentionCount: 17,
     qvNabi: QV(6, 89),
     // Optional prophet data:
     qvRasul: null,
-    trValKitab: null,
+    tvKitab: null,
     qvsUluAlAzm: null,
-    trValLocationBirth: 'p.Kingdom of Israel in_'.tr + a('a.Al-Quds'),
-    trValLocationDeath:
+    tvLocationBirth: 'p.Kingdom of Israel in_'.tr + a('a.Al-Quds'),
+    tvLocationDeath:
         a('a.United') + _ + 'p.Kingdom of Israel in_'.tr + a('a.Al-Quds'),
-    trValTomb: 'p.Al-Ḥaram ash-Sharīf, Jerusalem'.tr,
+    tvTomb: 'p.Al-Ḥaram ash-Sharīf, Jerusalem'.tr,
   ),
   Prophet(
     // Event data:
-    trValEra: 'i.Kings of_'.tr + a('a.Israel'), // TODO unsure
+    tvEra: 'i.Kings of_'.tr + a('a.Israel'), // TODO unsure
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -765,7 +765,7 @@ final List<Prophet> relicsProphet = [
     successors: null,
     successor: PF.Alyasa,
     // Required prophet data:
-    trValSentTo: a('a.Samaria') + //  TODO
+    tvSentTo: a('a.Samaria') + //  TODO
         'i.,_'.tr +
         'i.The people of_'.tr +
         a('a.Ilyas') +
@@ -775,15 +775,15 @@ final List<Prophet> relicsProphet = [
     qvNabi: QV(6, 89),
     // Optional prophet data:
     qvRasul: QV(37, 123),
-    trValKitab: null,
+    tvKitab: null,
     qvsUluAlAzm: null,
-    trValLocationBirth: null,
-    trValLocationDeath: null,
-    trValTomb: 'p.Possibly in Baalbek, Lebanon'.tr,
+    tvLocationBirth: null,
+    tvLocationDeath: null,
+    tvTomb: 'p.Possibly in Baalbek, Lebanon'.tr,
   ),
   Prophet(
     // Event data:
-    trValEra: 'i.Kings of_'.tr + a('a.Israel'), // TODO unsure
+    tvEra: 'i.Kings of_'.tr + a('a.Israel'), // TODO unsure
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -803,7 +803,7 @@ final List<Prophet> relicsProphet = [
     successors: null,
     successor: PF.Yunus,
     // Required prophet data:
-    trValSentTo: a('a.Samaria') + //  TODO
+    tvSentTo: a('a.Samaria') + //  TODO
         'i.,_'.tr +
         a('a.East') +
         _ +
@@ -814,17 +814,17 @@ final List<Prophet> relicsProphet = [
     qvNabi: QV(6, 89),
     // Optional prophet data:
     qvRasul: null,
-    trValKitab: null,
+    tvKitab: null,
     qvsUluAlAzm: null,
-    trValLocationBirth: null,
-    trValLocationDeath: null,
-    trValTomb: 'p.Eğil district of Diyarbakir Province'.tr +
+    tvLocationBirth: null,
+    tvLocationDeath: null,
+    tvTomb: 'p.Eğil district of Diyarbakir Province'.tr +
         'i.,_'.tr +
         a('a.Turkiye'), //' or Al-Awjam, Saudi Arabia.'
   ),
   Prophet(
     // Event data:
-    trValEra: 'i.Unknown'.tr,
+    tvEra: 'i.Unknown'.tr,
     startMs:
         -800, // uncertain (8th century BCE or post-exilic period) in Wikipedia
     endMs: -800,
@@ -844,7 +844,7 @@ final List<Prophet> relicsProphet = [
     successors: null,
     successor: PF.Zakariya,
     // Required prophet data:
-    trValSentTo: a('a.Nineveh') + // TODO Ninevah? arabee?
+    tvSentTo: a('a.Nineveh') + // TODO Ninevah? arabee?
         'i.,_'.tr +
         'i.The people of_'.tr +
         a('a.Yunus') +
@@ -853,11 +853,11 @@ final List<Prophet> relicsProphet = [
     qvNabi: QV(6, 89),
     // Optional prophet data:
     qvRasul: QV(37, 139),
-    trValKitab: null,
+    tvKitab: null,
     qvsUluAlAzm: null,
-    trValLocationBirth: null,
-    trValLocationDeath: null,
-    trValTomb:
+    tvLocationBirth: null,
+    tvLocationDeath: null,
+    tvTomb:
         "p.Possibly at the Mosque of Yunus, Mosul, Iraq, Mashhad Village Gath-hepher, Israel; Halhul, Palestinian West Bank; Sarafand, Lebanon; Giv'at Yonah (Jonah's Hill) in Ashdod, Israel, near Fatih Pasha Mosque in Diyarbakir"
                 .tr +
             'i.,_'.tr +
@@ -865,7 +865,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    trValEra: a('a.Masih'),
+    tvEra: a('a.Masih'),
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -887,20 +887,20 @@ final List<Prophet> relicsProphet = [
     successors: [PF.Yahya],
     successor: PF.Yahya,
     // Required prophet data:
-    trValSentTo: a('a.Al-Quds'),
+    tvSentTo: a('a.Al-Quds'),
     quranMentionCount: 7,
     qvNabi: QV(6, 89),
     // Optional prophet data:
     qvRasul: null,
-    trValKitab: null,
+    tvKitab: null,
     qvsUluAlAzm: null,
-    trValLocationBirth: null,
-    trValLocationDeath: null,
-    trValTomb: 'p.Great Mosque of Aleppo, Syria'.tr,
+    tvLocationBirth: null,
+    tvLocationDeath: null,
+    tvTomb: 'p.Great Mosque of Aleppo, Syria'.tr,
   ),
   Prophet(
     // Event data:
-    trValEra: a('a.Masih'),
+    tvEra: a('a.Masih'),
     startMs: -100,
     endMs: 28, // AD 28–36
     // Relic data:
@@ -917,21 +917,21 @@ final List<Prophet> relicsProphet = [
     successors: null,
     successor: PF.Isa,
     // Required prophet data:
-    trValSentTo:
+    tvSentTo:
         at('p.{0} of {1} in {2}', ['a.Children', 'a.Israel', 'a.Al-Quds']),
     quranMentionCount: 5,
     qvNabi: QV(3, 39),
     // Optional prophet data:
     qvRasul: null,
-    trValKitab: null,
+    tvKitab: null,
     qvsUluAlAzm: null,
-    trValLocationBirth: null,
-    trValLocationDeath: 'p.Decapitated by the ruler Herod Antipas'.tr,
-    trValTomb: 'p.His head is possibly at the Umayyad Mosque in Damascus'.tr,
+    tvLocationBirth: null,
+    tvLocationDeath: 'p.Decapitated by the ruler Herod Antipas'.tr,
+    tvTomb: 'p.His head is possibly at the Umayyad Mosque in Damascus'.tr,
   ),
   Prophet(
     // Event data:
-    trValEra: a('a.Masih'),
+    tvEra: a('a.Masih'),
     startMs: -4,
     endMs: 30,
     // Relic data:
@@ -952,7 +952,7 @@ final List<Prophet> relicsProphet = [
     successors: null,
     successor: PF.Muhammad,
     // Required prophet data:
-    trValSentTo:
+    tvSentTo:
         at('p.{0} of {1} in {2}', ['a.Children', 'a.Israel', 'a.Al-Quds']) +
             'p._as written in the_' +
             a('a.Quran') +
@@ -964,18 +964,18 @@ final List<Prophet> relicsProphet = [
     qvNabi: QV(19, 30),
     // Optional prophet data:
     qvRasul: QV(4, 171),
-    trValKitab: a('a.Injil') + // Gospel
+    tvKitab: a('a.Injil') + // Gospel
         _ +
         cns('(57:27)'),
     qvsUluAlAzm: [QV(42, 13)],
-    trValLocationBirth: 'p.Judea, Roman Empire'.tr,
-    trValLocationDeath:
+    tvLocationBirth: 'p.Judea, Roman Empire'.tr,
+    tvLocationDeath:
         'p.Still alive, was raised to Heaven from_'.tr + a('a.Falastin'),
-    trValTomb: 'p.None yet'.tr,
+    tvTomb: 'p.None yet'.tr,
   ),
   Prophet(
     // Event data:
-    trValEra: a('a.Muhammad'), // Muhammad
+    tvEra: a('a.Muhammad'), // Muhammad
     startMs: 570,
     endMs: 632,
     // Relic data:
@@ -1028,14 +1028,14 @@ final List<Prophet> relicsProphet = [
     ],
     // TODO Link to RELIC_TYPE.Bayt:
     daughters: null,
-    // trValDaughters: [ // TODO Disable for now since UI gets too big
+    // tvDaughters: [ // TODO Disable for now since UI gets too big
     //   PF.Zainab, //       cns('599–629 ') + a('a.Zainab'),
     //   PF.Ruqayyah, //     cns('601–624 ') + a('a.Ruqayyah'),
     //   PF.Umm_Kulthum, //  cns('603–630 ') + a('a.Umm Kulthum'),
     //   PF.Fatimah, //      cns('605–632 ') + a('a.Fatimah'),
     // ],
     sons: null,
-    // trValSons: [
+    // tvSons: [
     //   // https://en.wikipedia.org/wiki/Muhammad%27s_children
     //   PF.Zayd_Ibn_Harithah, //    cns('581-629 ') + a('a.Zayd ibn Harithah'),
     //   PF.Qasim, //                cns('598–601 ') + a('a.Al-Qasim'),
@@ -1044,7 +1044,7 @@ final List<Prophet> relicsProphet = [
     // ],
     relatives: null,
     // Required prophet data:
-    trValSentTo: 'p.All the worlds'.tr +
+    tvSentTo: 'p.All the worlds'.tr +
         'i.,_'.tr +
         a('a.Nas') + // mankind
         'i._and_'.tr +
@@ -1055,7 +1055,7 @@ final List<Prophet> relicsProphet = [
     qvNabi: QV(33, 40),
     // Optional prophet data:
     qvRasul: QV(33, 40),
-    trValKitab: a('a.Quran') +
+    tvKitab: a('a.Quran') +
         _ +
         cns('(42:7)') +
         'i._and_'.tr +
@@ -1063,7 +1063,7 @@ final List<Prophet> relicsProphet = [
         _ +
         cns('(3:31, 3:164, 4:59, 4:115, 59:7)'),
     qvsUluAlAzm: [QV(2, 124)],
-    trValLocationBirth: a(DAY_OF_WEEK.Monday.tk) +
+    tvLocationBirth: a(DAY_OF_WEEK.Monday.tk) +
         'i.,_'.tr +
         cni(12) +
         _ +
@@ -1082,7 +1082,7 @@ final List<Prophet> relicsProphet = [
         a('a.Al-Hejaz') +
         'i.,_'.tr +
         a('a.Al-Arabiyyah'),
-    trValLocationDeath: a(DAY_OF_WEEK.Monday.tk) +
+    tvLocationDeath: a(DAY_OF_WEEK.Monday.tk) +
         'i.,_'.tr +
         cni(12) +
         _ +
@@ -1101,7 +1101,7 @@ final List<Prophet> relicsProphet = [
         a('a.Al-Hejaz') + // ٱلْحِجَاز al-Ḥijaz
         'i.,_'.tr +
         a('a.Al-Arabiyyah'), // Arabia - الْعَرَبِيَّة
-    trValTomb: at('p.Green Dome in {0}, {1}',
+    tvTomb: at('p.Green Dome in {0}, {1}',
         ['a.Al-Masjid an-Nabawi', 'a.Al-Madinah']), //المسجد النبوي
   ),
 ];
@@ -1109,11 +1109,11 @@ final List<Prophet> relicsProphet = [
 final List<RelicSetFilter> relicSetFiltersProphet = [
   RelicSetFilter(
     type: FILTER_TYPE.Default,
-    trValLabel: a('a.Nabi'),
+    tvLabel: a('a.Nabi'),
   ),
   RelicSetFilter(
     type: FILTER_TYPE.IdxList,
-    trValLabel: a('a.Rasul'),
+    tvLabel: a('a.Rasul'),
     idxList: [
       PF.Adam.index,
       PF.Nuh.index,
@@ -1135,7 +1135,7 @@ final List<RelicSetFilter> relicSetFiltersProphet = [
   ),
   RelicSetFilter(
     type: FILTER_TYPE.IdxList,
-    trValLabel: a('a.Ulu Al-Azm'),
+    tvLabel: a('a.Ulu Al-Azm'),
     tprMax: 5,
     idxList: [
       PF.Nuh.index,
@@ -1147,7 +1147,7 @@ final List<RelicSetFilter> relicSetFiltersProphet = [
   ),
   RelicSetFilter(
     type: FILTER_TYPE.IdxList,
-    trValLabel: 'i.Quran Name Mentions'.tr,
+    tvLabel: 'i.Quran Name Mentions'.tr,
     field: FILTER_FIELD.QuranMentionCount,
     idxList: [
       PF.Musa.index, //    136 <-Mentions in Quran
@@ -1179,7 +1179,7 @@ final List<RelicSetFilter> relicSetFiltersProphet = [
   ),
   RelicSetFilter(
     type: FILTER_TYPE.Tree,
-    trValLabel: 'i.Family Tree'.tr,
+    tvLabel: 'i.Family Tree'.tr,
     treeGraph1: getGraphAllFamily(RELIC_TYPE.Anbiya, PF.Gap.index),
     treeGraph2: getGraphOnlyRelics(RELIC_TYPE.Anbiya, PF.Gap.index),
   ),
@@ -1189,34 +1189,34 @@ final List<RelicSetFilter> relicSetFiltersProphet = [
 enum PF {
   /* TODO rename to AS (Aleyhi Salam) */
   Adam(Isim(
-    trValHebrew: 'אדם (Adam)',
+    tvHebrew: 'אדם (Adam)',
     tkHebrewMeaning: 'p.man',
-    trValGreek: 'Αδάμ (Adam)',
-    trValLatin: 'Adam',
+    tvGreek: 'Αδάμ (Adam)',
+    tvLatin: 'Adam',
   )),
   Idris(Isim(
-    trValHebrew: 'חֲנוֹך (Hanokh)',
+    tvHebrew: 'חֲנוֹך (Hanokh)',
     tkHebrewMeaning: 'p.dedicated',
-    trValGreek: 'Ἐνώχ (Enoch)',
-    trValLatin: 'Enoch',
+    tvGreek: 'Ἐνώχ (Enoch)',
+    tvLatin: 'Enoch',
   )),
   Nuh(Isim(
-    trValHebrew: 'נֹחַ (Noach)',
+    tvHebrew: 'נֹחַ (Noach)',
     tkHebrewMeaning: 'p.rest, repose',
-    trValGreek: 'Νῶε (Noe)',
-    trValLatin: null,
+    tvGreek: 'Νῶε (Noe)',
+    tvLatin: null,
   )),
   Hud(Isim(
-    trValHebrew: 'עבר (Eber)',
+    tvHebrew: 'עבר (Eber)',
     tkHebrewMeaning: 'p.region beyond',
-    trValGreek: null,
-    trValLatin: null,
+    tvGreek: null,
+    tvLatin: null,
     tkNote: 'p.Possibly Eber or his son',
   )),
   Salih(Isim(
-    trValHebrew: null, // TODO
-    trValGreek: null,
-    trValLatin: null,
+    tvHebrew: null, // TODO
+    tvGreek: null,
+    tvLatin: null,
     tkNote: 'p.Often attributed to biblical prophets',
   )),
   Ibrahim(Isim(
@@ -1224,131 +1224,131 @@ enum PF {
       'a.Khalilullah', // Friend of Allah
       'p.Father of Abrahimic faiths', // TODO
     ],
-    trValHebrew: 'אַבְרָהָם (Abraham)',
+    tvHebrew: 'אַבְרָהָם (Abraham)',
     tkHebrewMeaning: 'p.many, multitude',
-    trValGreek: 'Ἀβραάμ (Abraam)',
-    trValLatin: 'Abraham',
+    tvGreek: 'Ἀβραάμ (Abraam)',
+    tvLatin: 'Abraham',
   )), // İbrahim
   Lut(Isim(
-    trValHebrew: 'לוֹט (Lot)',
+    tvHebrew: 'לוֹט (Lot)',
     tkHebrewMeaning: 'p.covering, veil',
-    trValGreek: null,
-    trValLatin: null,
+    tvGreek: null,
+    tvLatin: null,
   )), // İsmail
   Ismail(Isim(
     tkLaqab: ['p.Father of the Arabs'], // TODO
-    trValHebrew: 'יִשְׁמָעֵאל (Yishmael)',
+    tvHebrew: 'יִשְׁמָעֵאל (Yishmael)',
     tkHebrewMeaning: 'p.God will hear',
-    trValGreek: 'Ἰσμαήλ (Ismael)',
-    trValLatin: 'Ismahel',
+    tvGreek: 'Ἰσμαήλ (Ismael)',
+    tvLatin: 'Ismahel',
   )), // İshak
   Ishaq(Isim(
     tkLaqab: ['p.Father of the Hebrews/Jews'], // TODO
-    trValHebrew: 'יִצְחָק (Yitzhaq)',
+    tvHebrew: 'יִצְחָק (Yitzhaq)',
     tkHebrewMeaning: 'p.he will laugh, he will rejoice',
-    trValGreek: 'Ισαάκ ()',
-    trValLatin: 'Isaac',
+    tvGreek: 'Ισαάκ ()',
+    tvLatin: 'Isaac',
   )),
   Yaqub(Isim(
     tkLaqab: [
       'a.Israel', //  إِسْرَآءِيل
       'p.Father of the 12 tribes of Israel',
     ],
-    trValHebrew: 'יַעֲקֹב (Yaaqov)',
+    tvHebrew: 'יַעֲקֹב (Yaaqov)',
     tkHebrewMeaning:
         'p.Possibly "holder of the heel" or derived from "may God protect"',
-    trValGreek: 'Ἰακώβ (Iakob)',
-    trValLatin: 'Iacob',
+    tvGreek: 'Ἰακώβ (Iakob)',
+    tvLatin: 'Iacob',
   )), //  Yakub
   Yusuf(Isim(
-    trValHebrew: 'יוֹסֵף (Yosef)',
+    tvHebrew: 'יוֹסֵף (Yosef)',
     tkHebrewMeaning: 'p.he will add',
-    trValGreek: 'Ἰωσήφ (Ioseph)',
-    trValLatin: 'Ioseph',
+    tvGreek: 'Ἰωσήφ (Ioseph)',
+    tvLatin: 'Ioseph',
   )),
   Ayyub(Isim(
-    trValHebrew: 'אִיּוֹב (Iyyov)',
+    tvHebrew: 'אִיּוֹב (Iyyov)',
     tkHebrewMeaning: 'p.persecuted, hated',
-    trValGreek: 'Ἰώβ (Iob)',
-    trValLatin: 'Iob',
+    tvGreek: 'Ἰώβ (Iob)',
+    tvLatin: 'Iob',
   )), // Eyyub
   DhulKifl(Isim(
 //  tkAr: 'حزقيال', //?
-    trValHebrew: 'יְחֶזְקֵאל (Yechezkel)',
+    tvHebrew: 'יְחֶזְקֵאל (Yechezkel)',
     tkHebrewMeaning: 'p.God will strengthen',
-    trValGreek: 'Ἰεζεκιήλ (Iezekiel)',
-    trValLatin: 'Ezechiel, Hiezecihel',
+    tvGreek: 'Ἰεζεκιήλ (Iezekiel)',
+    tvLatin: 'Ezechiel, Hiezecihel',
     tkNote: 'p.Possibly Ezekiel, Buddha, Joshua, Obadiah or Isaiah',
   )), // Zülkifl
   Shuayb(Isim(
-    trValHebrew: 'יִתְרוֹ (Yitro)',
+    tvHebrew: 'יִתְרוֹ (Yitro)',
     tkHebrewMeaning: 'p.abundance',
-    trValGreek: null,
-    trValLatin: 'Jethro',
+    tvGreek: null,
+    tvLatin: 'Jethro',
     tkNote: 'p.Often thought to be Jethro, but this is highly disputed.',
   )), //  Şuayb
   Harun(Isim(
-    trValHebrew: 'אַהֲרֹן (Aharon)',
+    tvHebrew: 'אַהֲרֹן (Aharon)',
     tkHebrewMeaning:
         'p.Possibly of Egyptian origin or from hebrew "high mountain" or "exalted"',
-    trValGreek: 'Ἀαρών (Aaron)',
-    trValLatin: 'Aaron',
+    tvGreek: 'Ἀαρών (Aaron)',
+    tvLatin: 'Aaron',
   )),
   Musa(Isim(
-    trValHebrew: 'מֹשֶׁה (Moshe)',
+    tvHebrew: 'מֹשֶׁה (Moshe)',
     tkHebrewMeaning: 'p.Possibly from Egyptian "son" or Hebrew "deliver"',
-    trValGreek: 'Μωϋσῆς (Mouses)',
-    trValLatin: 'Moyses',
+    tvGreek: 'Μωϋσῆς (Mouses)',
+    tvLatin: 'Moyses',
   )),
   Dawud(Isim(
-    trValHebrew: 'דָּוִד (Dawid)',
+    tvHebrew: 'דָּוִד (Dawid)',
     tkHebrewMeaning: 'p.beloved',
-    trValGreek: 'Δαυίδ (Dauid)',
-    trValLatin: 'David',
+    tvGreek: 'Δαυίδ (Dauid)',
+    tvLatin: 'David',
   )), // Davud
   Suleyman(Isim(
-    trValHebrew: 'שְׁלֹמֹה (Shelomoh)',
+    tvHebrew: 'שְׁלֹמֹה (Shelomoh)',
     tkHebrewMeaning: 'p.Derived from "peace" (שָׁלוֹם shalom)',
-    trValGreek: 'Σαλωμών (Salomon)',
-    trValLatin: 'Solomon',
+    tvGreek: 'Σαλωμών (Salomon)',
+    tvLatin: 'Solomon',
   )), // Süleyman
   Ilyas(Isim(
-    trValHebrew: 'אֱלִיָּהוּ (Eliyyahu), אֵלִיָה (Eliya)',
+    tvHebrew: 'אֱלִיָּהוּ (Eliyyahu), אֵלִיָה (Eliya)',
     tkHebrewMeaning: 'p.my God is Yahweh',
-    trValGreek: 'Ηλίας (Ilias)',
-    trValLatin: 'Elias',
+    tvGreek: 'Ηλίας (Ilias)',
+    tvLatin: 'Elias',
   )), // İlyas
   Alyasa(Isim(
-    trValHebrew: 'אֱלִישַׁע (Alysha\'e/Elisha)',
+    tvHebrew: 'אֱלִישַׁע (Alysha\'e/Elisha)',
     tkHebrewMeaning: 'p.my God is salvation',
-    trValGreek: 'Ἐλισαιέ (Elisaie)',
-    trValLatin: 'Eliseus',
+    tvGreek: 'Ἐλισαιέ (Elisaie)',
+    tvLatin: 'Eliseus',
   )), // Elyesa
   Yunus(Isim(
     tkLaqab: ['a.Dhul-Nun'], // ذُو ٱلنُّوْن - The One of the Fish
-    trValHebrew: 'יוֹנָה (Yonah)',
+    tvHebrew: 'יוֹנָה (Yonah)',
     tkHebrewMeaning: 'p.dove',
-    trValGreek: 'Ἰωνᾶς (Ionas)',
-    trValLatin: 'Ionas',
+    tvGreek: 'Ἰωνᾶς (Ionas)',
+    tvLatin: 'Ionas',
   )),
   Zakariya(Isim(
-    trValHebrew: 'זְכַרְיָה (Zekharyah)',
+    tvHebrew: 'זְכַרְיָה (Zekharyah)',
     tkHebrewMeaning: 'p.God remembers',
-    trValGreek: 'Ζαχαρίας (Zacharias)',
-    trValLatin: 'Zaccharias',
+    tvGreek: 'Ζαχαρίας (Zacharias)',
+    tvLatin: 'Zaccharias',
   )),
   Yahya(Isim(
     tkLaqab: ['p.Christians call him "John the Babtist"'],
-    trValHebrew: 'יוֹחָנָן (Yochanan)',
+    tvHebrew: 'יוֹחָנָן (Yochanan)',
     tkHebrewMeaning: 'p.God is gracious',
-    trValGreek: 'Ἰωάννης (Ioannes)',
-    trValLatin: 'Iohannes',
+    tvGreek: 'Ἰωάννης (Ioannes)',
+    tvLatin: 'Iohannes',
   )),
   Isa(Isim(
     tkLaqab: ['a.Masih'], // Messiah
-    trValAramaic: 'יֵשׁוּעַ (Ishoʿ)',
-    trValGreek: 'Ιησους (Iesous)',
-    trValLatin: 'Iesus',
+    tvAramaic: 'יֵשׁוּעַ (Ishoʿ)',
+    tvGreek: 'Ιησους (Iesous)',
+    tvLatin: 'Iesus',
   )),
   Muhammad(Isim(
     tkLaqab: [

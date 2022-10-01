@@ -94,7 +94,7 @@ class HapiApp extends StatelessWidget {
                   return Visibility(
                     visible: MainC.to.showMainMenuFab,
                     child: FloatingActionButton(
-                      tooltip: mc.trValMenuTooltip(),
+                      tooltip: mc.tvMenuTooltip(),
                       backgroundColor:
                           AppThemes.floatingActionButtonTheme.backgroundColor,
                       foregroundColor:

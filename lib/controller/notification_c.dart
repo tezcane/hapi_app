@@ -94,18 +94,18 @@ class NotificationC extends GetxHapi {
     });
   }
 
-  String get trValNotificationTitle => at('at.{0} Updated', ['a.Isharet']);
+  String get tvNotificationTitle => at('at.{0} Updated', ['a.Isharet']);
 
   togglePlayAthan(Z z) async {
     _playAthan[z] = !_playAthan[z]!;
     s.wr('playAthan${z.name}', _playAthan[z]);
 
     if (_playAthan[z]!) {
-      showSnackBar(trValNotificationTitle, at('at.{0} on', ['a.Athan']));
+      showSnackBar(tvNotificationTitle, at('at.{0} on', ['a.Athan']));
       _playBeep[z] = false; // both can't be true
       s.wr('playBeep${z.name}', _playBeep[z]);
     } else {
-      showSnackBar(trValNotificationTitle, at('at.{0} off', ['a.Athan']));
+      showSnackBar(tvNotificationTitle, at('at.{0} off', ['a.Athan']));
     }
     resetNotifications();
     updateOnThread1Ms();
@@ -115,11 +115,11 @@ class NotificationC extends GetxHapi {
     _playBeep[z] = !_playBeep[z]!;
     s.wr('playBeep${z.name}', _playBeep[z]);
     if (_playBeep[z]!) {
-      showSnackBar(trValNotificationTitle, 'i.Default sound on');
+      showSnackBar(tvNotificationTitle, 'i.Default sound on');
       _playAthan[z] = false; // both can't be true
       s.wr('playAthan${z.name}', _playAthan[z]);
     } else {
-      showSnackBar(trValNotificationTitle, 'i.Default sound off');
+      showSnackBar(tvNotificationTitle, 'i.Default sound off');
     }
     resetNotifications();
     updateOnThread1Ms();
@@ -129,9 +129,9 @@ class NotificationC extends GetxHapi {
     _vibrate[z] = !_vibrate[z]!;
     s.wr('vibrate${z.name}', _vibrate[z]);
     if (_vibrate[z]!) {
-      showSnackBar(trValNotificationTitle, 'i.Vibration on');
+      showSnackBar(tvNotificationTitle, 'i.Vibration on');
     } else {
-      showSnackBar(trValNotificationTitle, 'i.Vibration off');
+      showSnackBar(tvNotificationTitle, 'i.Vibration off');
     }
     resetNotifications();
     updateOnThread1Ms();

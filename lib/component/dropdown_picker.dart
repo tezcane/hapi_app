@@ -12,14 +12,14 @@ import 'package:hapi/menu/slide/menu_bottom/settings/settings_option.dart';
 /// ),
 class DropdownPicker extends StatelessWidget {
   const DropdownPicker({
-    required this.trValMenuOptions,
+    required this.tvMenuOptions,
     required this.selectedOption,
     required this.onChanged,
     required this.width,
   });
 
   /// Must use already translated text in here (e.g. uses GetX's .tr)
-  final List<SettingsOption> trValMenuOptions;
+  final List<SettingsOption> tvMenuOptions;
   final String selectedOption;
   final void Function(String?) onChanged;
   final double width;
@@ -27,15 +27,15 @@ class DropdownPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButton<String>(
-      items: trValMenuOptions
+      items: tvMenuOptions
           .map(
             (data) => DropdownMenuItem<String>(
               child: T(
-                data.trVal,
+                data.tv,
                 tsN,
                 w: width,
                 alignment: LanguageC.to.centerRight,
-                trVal: true,
+                tv: true,
               ),
               value: data.key,
             ),

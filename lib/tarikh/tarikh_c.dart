@@ -166,8 +166,8 @@ class TarikhC extends GetxHapi {
   void updateEventBtn(TimeBtn timeBtn, Event? event) {
     String tvTitleLine1 = '';
     String tvTitleLine2 = '';
-    String trValTimeUntil = '';
-    String trValPageScrolls = '';
+    String tvTimeUntil = '';
+    String tvPageScrolls = '';
 
     if (event != null) {
       tvTitleLine1 = event.tvTitleLine1;
@@ -176,15 +176,15 @@ class TarikhC extends GetxHapi {
       //was t.renderEnd, had 'page away 0' at bottom page edge, now in middle:
       double pageReference = (t.renderStart + t.renderEnd) / 2.0;
       double timeUntilDouble = event.startMs - pageReference;
-      trValTimeUntil = event.trValYears(timeUntilDouble).toLowerCase();
+      tvTimeUntil = event.tvYears(timeUntilDouble).toLowerCase();
 
       double pageSize = t.renderEnd - t.renderStart;
       double pages = timeUntilDouble / pageSize;
       String pagesAwayNum = formatter.format(pages.abs());
       if (pagesAwayNum == '1') {
-        trValPageScrolls = cni(1) + ' ' + 'i.page away'.tr;
+        tvPageScrolls = cni(1) + ' ' + 'i.page away'.tr;
       } else {
-        trValPageScrolls = cns(pagesAwayNum) + ' ' + 'i.pages away'.tr;
+        tvPageScrolls = cns(pagesAwayNum) + ' ' + 'i.pages away'.tr;
       }
     }
 
@@ -193,8 +193,8 @@ class TarikhC extends GetxHapi {
       timeBtn,
       tvTitleLine1,
       tvTitleLine2,
-      trValTimeUntil,
-      trValPageScrolls,
+      tvTimeUntil,
+      tvPageScrolls,
     );
   }
 }

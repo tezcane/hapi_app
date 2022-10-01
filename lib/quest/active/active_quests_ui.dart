@@ -30,7 +30,7 @@ class ActiveQuestsUI extends StatelessWidget {
     return GetBuilder<ActiveQuestsC>(builder: (c) {
       // if not initialized yet, wait for UI before building
       if (ZamanC.to.athan == null) {
-        return const Center(child: T('بِسْمِ ٱللَّٰهِ', tsN, trVal: true));
+        return const Center(child: T('بِسْمِ ٱللَّٰهِ', tsN, tv: true));
       }
 
       // can make const, but we need to refresh all UIs on updates here
@@ -97,14 +97,14 @@ class _SlidingAppBar extends StatelessWidget {
           // triggers ActiveQuestsC.update() so this is safe and better
           // to keep here (ZamanC refreshes every second so don't do
           // extra work if we don't have to:
-          message: ZamanC.to.trValTimeToNextZamanTooltip,
+          message: ZamanC.to.tvTimeToNextZamanTooltip,
           // Here is the ActiveQuest countdown timer
           child: GetBuilder<ZamanC>(builder: (zc) {
-            String trValTime = zc.trValTimeToNextZaman;
+            String tvTime = zc.tvTimeToNextZaman;
             return Stack(
               children: [
-                Text(trValTime, style: ts1), // text border
-                Text(trValTime, style: ts2), // text inside
+                Text(tvTime, style: ts1), // text border
+                Text(tvTime, style: ts2), // text inside
               ],
             );
           }),
@@ -439,7 +439,7 @@ class SalahRow extends StatelessWidget {
               child: Center(
                 // Center needed to make fit height work
                 child: T(
-                  TimeC.trValTime(
+                  TimeC.tvTime(
                     ZamanC.to.athan!.getZamanRowTime(z),
                     ActiveQuestsC.to.show12HourClock,
                     ActiveQuestsC.to.showSecPrecision,
@@ -451,7 +451,7 @@ class SalahRow extends StatelessWidget {
                   alignment: LanguageC.to.centerLeft,
                   w: w2,
                   h: 25, //_Sliv.slivH, // tuned to find best value in all cases
-                  trVal: true,
+                  tv: true,
                 ),
               ),
             ),
@@ -501,8 +501,8 @@ class SalahRow extends StatelessWidget {
     double w2 = w1 * 2;
     return Row(
       children: [
-        _Cell(T(cni(2), tsMuak, w: 25, trVal: true), z, QUEST.FAJR_MUAKB),
-        _Cell(T(cni(2), tsFard, w: 25, trVal: true), z, QUEST.FAJR_FARD),
+        _Cell(T(cni(2), tsMuak, w: 25, tv: true), z, QUEST.FAJR_MUAKB),
+        _Cell(T(cni(2), tsFard, w: 25, tv: true), z, QUEST.FAJR_FARD),
         _Cell(T('a.Adhkar As-Sabah', tsN, w: w2), z, QUEST.MORNING_ADHKAR,
             flex: 2),
         _Cell(const _IconThikr(), z, QUEST.FAJR_THIKR),
@@ -570,10 +570,10 @@ class SalahRow extends StatelessWidget {
 
     return Row(
       children: [
-        _Cell(T(cni(4), tsMuak, w: 25, trVal: true), z, QUEST.DHUHR_MUAKB),
-        _Cell(T(fardRk, tsFard, w: 25, trVal: true), z, QUEST.DHUHR_FARD),
-        _Cell(T(muakAf, tsMuak, w: 25, trVal: true), z, QUEST.DHUHR_MUAKA),
-        _Cell(T(cni(2), tsNafl, w: 25, trVal: true), z, QUEST.DHUHR_NAFLA),
+        _Cell(T(cni(4), tsMuak, w: 25, tv: true), z, QUEST.DHUHR_MUAKB),
+        _Cell(T(fardRk, tsFard, w: 25, tv: true), z, QUEST.DHUHR_FARD),
+        _Cell(T(muakAf, tsMuak, w: 25, tv: true), z, QUEST.DHUHR_MUAKA),
+        _Cell(T(cni(2), tsNafl, w: 25, tv: true), z, QUEST.DHUHR_NAFLA),
         _Cell(const _IconThikr(), z, QUEST.DHUHR_THIKR),
         _Cell(const _IconDua(), z, QUEST.DHUHR_DUA),
       ],
@@ -584,8 +584,8 @@ class SalahRow extends StatelessWidget {
     double w2 = w1 * 2;
     return Row(
       children: [
-        _Cell(T(cni(4), tsNafl, w: 25, trVal: true), z, QUEST.ASR_NAFLB),
-        _Cell(T(cni(4), tsFard, w: 25, trVal: true), z, QUEST.ASR_FARD),
+        _Cell(T(cni(4), tsNafl, w: 25, tv: true), z, QUEST.ASR_NAFLB),
+        _Cell(T(cni(4), tsFard, w: 25, tv: true), z, QUEST.ASR_FARD),
         _Cell(T('a.Adhkar Al-Masaa', tsN, w: w2), z, QUEST.EVENING_ADHKAR,
             flex: 2),
         _Cell(const _IconThikr(), z, QUEST.ASR_THIKR),
@@ -606,9 +606,9 @@ class SalahRow extends StatelessWidget {
           z,
           QUEST.KARAHAT_SUNSET,
         ),
-        _Cell(T(cni(3), tsFard, w: 25, trVal: true), z, QUEST.MAGHRIB_FARD),
-        _Cell(T(cni(2), tsMuak, w: 25, trVal: true), z, QUEST.MAGHRIB_MUAKA),
-        _Cell(T(cni(2), tsNafl, w: 25, trVal: true), z, QUEST.MAGHRIB_NAFLA),
+        _Cell(T(cni(3), tsFard, w: 25, tv: true), z, QUEST.MAGHRIB_FARD),
+        _Cell(T(cni(2), tsMuak, w: 25, tv: true), z, QUEST.MAGHRIB_MUAKA),
+        _Cell(T(cni(2), tsNafl, w: 25, tv: true), z, QUEST.MAGHRIB_NAFLA),
         _Cell(const _IconThikr(), z, QUEST.MAGHRIB_THIKR),
         _Cell(const _IconDua(), z, QUEST.MAGHRIB_DUA),
       ],
@@ -618,10 +618,10 @@ class SalahRow extends StatelessWidget {
   Widget _actionsIsha() {
     return Row(
       children: [
-        _Cell(T(cni(4), tsNafl, w: 25, trVal: true), z, QUEST.ISHA_NAFLB),
-        _Cell(T(cni(4), tsFard, w: 25, trVal: true), z, QUEST.ISHA_FARD),
-        _Cell(T(cni(2), tsMuak, w: 25, trVal: true), z, QUEST.ISHA_MUAKA),
-        _Cell(T(cni(2), tsNafl, w: 25, trVal: true), z, QUEST.ISHA_NAFLA),
+        _Cell(T(cni(4), tsNafl, w: 25, tv: true), z, QUEST.ISHA_NAFLB),
+        _Cell(T(cni(4), tsFard, w: 25, tv: true), z, QUEST.ISHA_FARD),
+        _Cell(T(cni(2), tsMuak, w: 25, tv: true), z, QUEST.ISHA_MUAKA),
+        _Cell(T(cni(2), tsNafl, w: 25, tv: true), z, QUEST.ISHA_NAFLA),
         _Cell(const _IconThikr(), z, QUEST.ISHA_THIKR),
         _Cell(const _IconDua(), z, QUEST.ISHA_DUA),
       ],
@@ -945,12 +945,12 @@ class _SideTime extends StatelessWidget {
 
     // Special case for Fajr Tomorrow to make text bigger and fix missing space
     // since it is only SideTime with icon size of  "_Sliv.slivH / 2".
-    String trValFajr = '';
-    String trValTomorrow = '';
+    String tvFajr = '';
+    String tvTomorrow = '';
     if (z == Z.Fajr_Tomorrow) {
-      List<String> trVal = at(Z.Fajr_Tomorrow.tk, [Z.Fajr.tk]).split(' ');
-      trValFajr = trVal[0];
-      trValTomorrow = trVal[1];
+      List<String> tv = at(Z.Fajr_Tomorrow.tk, [Z.Fajr.tk]).split(' ');
+      tvFajr = tv[0];
+      tvTomorrow = tv[1];
     }
 
     return OverflowBox(
@@ -961,14 +961,13 @@ class _SideTime extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end, // nice 2 have, not needed now
         children: [
           if (z == Z.Fajr_Tomorrow)
-            T(trValFajr, isBold ? tsB : tsN, w: w1, h: h_2, trVal: true),
+            T(tvFajr, isBold ? tsB : tsN, w: w1, h: h_2, tv: true),
           if (z == Z.Fajr_Tomorrow)
-            T(trValTomorrow, isBold ? tsB : tsN, w: w1, h: h_2, trVal: true),
-          if (z != Z.Fajr_Tomorrow)
-            T(z.tk, isBold ? tsB : tsN, w: w1, h: h_2),
+            T(tvTomorrow, isBold ? tsB : tsN, w: w1, h: h_2, tv: true),
+          if (z != Z.Fajr_Tomorrow) T(z.tk, isBold ? tsB : tsN, w: w1, h: h_2),
           sunIcon,
           T(
-            TimeC.trValTime(
+            TimeC.tvTime(
               time,
               ActiveQuestsC.to.show12HourClock,
               ActiveQuestsC.to.showSecPrecision,
@@ -976,7 +975,7 @@ class _SideTime extends StatelessWidget {
             isBold ? tsB : tsN,
             w: w1,
             h: h_2,
-            trVal: true,
+            tv: true,
           ),
         ],
       ),

@@ -193,7 +193,7 @@ const TS tsN = TS(AppThemes.ldTextColor);
 const TS tsR = TS(Colors.red);
 const TS tsW = TS(Colors.white);
 
-// TODO change to TK - Translate tk, and TV - Translate trValue
+// TODO change to TK - Translate tk, and TV - Translate tvue
 /// "T"/"t" short for Text, use to translate or fit text in UI.
 ///
 /// NOTE 1: When wrapped in Center this broke Swiper UI
@@ -207,7 +207,7 @@ class T extends StatelessWidget {
     this.w,
     this.h = 25,
     this.boxFit = BoxFit.contain, // BoxFit.fitHeight, BoxFit.fitWidth
-    this.trVal = false,
+    this.tv = false,
   });
   final String tkOrVal;
   final TextStyle? style;
@@ -215,7 +215,7 @@ class T extends StatelessWidget {
   final double? w;
   final double h;
   final BoxFit boxFit;
-  final bool trVal; // set to true if tkOrVal comes in already translated
+  final bool tv; // set to true if tkOrVal comes in already translated
 
   @override
   Widget build(BuildContext context) {
@@ -229,7 +229,7 @@ class T extends StatelessWidget {
       child: FittedBox(
         fit: boxFit,
         alignment: alignment,
-        child: Text(trVal ? tkOrVal : a(tkOrVal), style: style),
+        child: Text(tv ? tkOrVal : a(tkOrVal), style: style),
       ),
     );
   }

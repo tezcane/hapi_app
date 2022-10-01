@@ -49,7 +49,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
   String _tvTitle1 = '';
   String _tvTitle2 = '';
   String _tvYearsAgo = '';
-  String _trValArticleMarkdown = '';
+  String _tvArticleMarkdown = '';
 
   /// This page uses the `flutter_markdown` package, and thus needs its styles to be defined
   /// with a custom objects. This is created in [initState()].
@@ -84,7 +84,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
 
     _tvTitle1 = _event.tvTitleLine1;
     _tvTitle2 = _event.tvTitleLine2;
-    _tvYearsAgo = _event.trValYearsAgo();
+    _tvYearsAgo = _event.tvYearsAgo();
 
     TextStyle h1 = Get.theme.textTheme.headline4!
         .copyWith(fontSize: 32.0, height: 1.625, fontWeight: FontWeight.bold);
@@ -119,9 +119,9 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
 
   /// Load the markdown file from the assets and set the contents of the page to its value.
   void loadMarkdown() async {
-    String trValArticleMarkdown =
-        await LanguageC.to.trValArticle(_event.type, _event.tkTitle);
-    setState(() => _trValArticleMarkdown = trValArticleMarkdown); // refresh UI
+    String tvArticleMarkdown =
+        await LanguageC.to.tvArticle(_event.type, _event.tkTitle);
+    setState(() => _tvArticleMarkdown = tvArticleMarkdown); // refresh UI
   }
 
   /// This widget is wrapped in a [Scaffold] to have the classic Material Design visual layout structure.
@@ -203,7 +203,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                       tsR,
                                       w: w2,
                                       h: 18,
-                                      trVal: true,
+                                      tv: true,
                                     ),
                                     if (_btnUp.tvTitleLine2 != '')
                                       T(
@@ -211,7 +211,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                         tsR,
                                         w: w2,
                                         h: 18,
-                                        trVal: true,
+                                        tv: true,
                                       ),
                                     FloatingActionButton(
                                       tooltip:
@@ -233,7 +233,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                       tsR,
                                       w: w2,
                                       h: 17,
-                                      trVal: true,
+                                      tv: true,
                                     ),
                                     const SizedBox(height: 1),
                                   ],
@@ -253,7 +253,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                       tsR,
                                       w: w2,
                                       h: 18,
-                                      trVal: true,
+                                      tv: true,
                                     ),
                                     if (_btnDn.tvTitleLine2 != '')
                                       T(
@@ -261,7 +261,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                         tsR,
                                         w: w2,
                                         h: 18,
-                                        trVal: true,
+                                        tv: true,
                                       ),
                                     FloatingActionButton(
                                       tooltip:
@@ -283,7 +283,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                       tsR,
                                       w: w2,
                                       h: 17,
-                                      trVal: true,
+                                      tv: true,
                                     ),
                                     const SizedBox(height: 1),
                                   ],
@@ -426,7 +426,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                           color: Theme.of(context).dividerColor,
                         ),
                         MarkdownBody(
-                          data: _trValArticleMarkdown,
+                          data: _tvArticleMarkdown,
                           styleSheet: _markdownStyleSheet,
                         ),
                         const SizedBox(height: 100),
@@ -452,7 +452,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
       tvTitle2 = event.tvTitleLine2;
       if (event.isTimeLineEvent && timeBtn.event!.isTimeLineEvent) {
         double timeUntilDouble = (event.startMs - timeBtn.event!.startMs).abs();
-        tvTimeUntil = event.trValYears(timeUntilDouble).toLowerCase();
+        tvTimeUntil = event.tvYears(timeUntilDouble).toLowerCase();
       }
     }
 

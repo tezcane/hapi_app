@@ -132,7 +132,7 @@ class _EventSearchUIState extends State<EventSearchUI> {
       }
 
       if (initNeeded) {
-        return const Center(child: T('بِسْمِ ٱللَّٰهِ', tsN, trVal: true));
+        return const Center(child: T('بِسْمِ ٱللَّٰهِ', tsN, tv: true));
       }
 
       double heightPadding = 0;

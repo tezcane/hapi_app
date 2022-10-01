@@ -116,7 +116,7 @@ class _BottomBarItemWidget extends StatelessWidget {
               : Colors.transparent,
           shape: const RoundedRectangleBorder(),
           child: Tooltip(
-            message: bottomBarItem.trValTooltip,
+            message: bottomBarItem.tvTooltip,
             child: InkWell(
               onTap: onTap,
               customBorder: const StadiumBorder(),
@@ -176,10 +176,10 @@ class _BottomBarItemWidget extends StatelessWidget {
                                     ),
                                   ),
                                   child: T(
-                                    bottomBarItem.trValTitle,
+                                    bottomBarItem.tvTitle,
                                     textStyle,
                                     w: w * 4,
-                                    trVal: true,
+                                    tv: true,
                                   ),
                                 ),
                             ],
@@ -196,10 +196,10 @@ class _BottomBarItemWidget extends StatelessWidget {
                         ),
                       ),
                       child: T(
-                        bottomBarItem.trValTitle,
+                        bottomBarItem.tvTitle,
                         textStyle,
                         w: w,
-                        trVal: true,
+                        tv: true,
                       ),
                     ),
                 ],
@@ -216,16 +216,16 @@ class BottomBarItem {
   const BottomBarItem(
     this.mainWidget,
     this.settingsWidget,
-    this.trValTitle,
-    this.trValTooltip,
+    this.tvTitle,
+    this.tvTooltip,
     this.iconData, {
     this.selectedColor = AppThemes.selected,
     this.onPressed,
   });
   final Widget mainWidget;
   final Widget? settingsWidget;
-  final String trValTitle;
-  final String trValTooltip;
+  final String tvTitle;
+  final String tvTooltip;
   final IconData iconData;
   final Color selectedColor;
   final VoidCallback? onPressed;

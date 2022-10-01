@@ -72,25 +72,25 @@ class Event {
   bool get isTimeLineEvent => startMs != 0 && endMs != 0; // TODO need both?
 
   /// Pretty-printing for the event date.
-  String trValYearsAgo({double? eventYear}) {
+  String tvYearsAgo({double? eventYear}) {
     if (!isTimeLineEvent) return 'i.Coming Soon'; // TODO Year is not known yet
 
     eventYear ??= startMs;
 
-    if (eventYear <= -10000) return trValYears(startMs) + ' ' + 'i.Ago'.tr;
+    if (eventYear <= -10000) return tvYears(startMs) + ' ' + 'i.Ago'.tr;
 
-    double trValYearsAgo;
+    double tvYearsAgo;
     String adBc = ' ${'i.AD'.tr} (';
 
     if (eventYear <= 0) {
       adBc = ' ${'i.BC'.tr} (';
-      trValYearsAgo = eventYear.abs() + TimeC.thisYear;
+      tvYearsAgo = eventYear.abs() + TimeC.thisYear;
     } else {
-      trValYearsAgo = TimeC.thisYear - eventYear;
+      tvYearsAgo = TimeC.thisYear - eventYear;
     }
     return cns(eventYear.abs().toStringAsFixed(0)) +
         adBc +
-        cns(trValYearsAgo.toStringAsFixed(0)) +
+        cns(tvYearsAgo.toStringAsFixed(0)) +
         ' ' +
         'i.Years Ago'.tr +
         ')';
@@ -98,7 +98,7 @@ class Event {
 
   /// Shortens large numbers, e.g. 10,000,000 returns "10 million years"
   /// Dart int supports -9223372036854775808 - 9223372036854775807
-  String trValYears(double eventYear) {
+  String tvYears(double eventYear) {
     String label;
     int valueAbs = eventYear.round().abs();
     if (valueAbs >= 1000000000000000000) {
@@ -241,12 +241,12 @@ class Event {
 
   bool get isVisible => opacity > 0.0;
 
-  // String get trValTitle => Event.trValFromTkEndTag(tkTitle);
+  // String get tvTitle => Event.tvFromTkEndTag(tkTitle);
   //
   // /// Attempts to translate 'i.<tkEndTag>' if fails, tries 'a.<tkEndTag>'.
-  // static String trValFromTkEndTag(String tkEndTag) {
-  //   String trVal = 'i.$tkEndTag'.tr;
-  //   return trVal.startsWith('i.') ? a('a.$tkEndTag') : trVal;
+  // static String tvFromTkEndTag(String tkEndTag) {
+  //   String tv = 'i.$tkEndTag'.tr;
+  //   return tv.startsWith('i.') ? a('a.$tkEndTag') : tv;
   // }
 
   // /// Some labels have a newline characters to adjust their alignment.

@@ -61,7 +61,7 @@ extension EnumUtil on NavPage {
     return 'a.$transliteration';
   }
 
-  String get trValTooltip {
+  String get tvTooltip {
     switch (this) {
       case (NavPage.Ajr):
         return 'i.View your rewards'.tr;
@@ -80,7 +80,7 @@ extension EnumUtil on NavPage {
       case (NavPage.Quests):
         return 'i.Earn rewards for this life and the next'.tr;
       default:
-        return l.E('Quests.trValTooltip: Unknown Quest "$this"');
+        return l.E('Quests.tvTooltip: Unknown Quest "$this"');
     }
   }
 

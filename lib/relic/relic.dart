@@ -77,7 +77,7 @@ extension EnumUtil on RELIC_TYPE {
 abstract class Relic extends Event {
   Relic({
     // Event data:
-    required String trValEra,
+    required String tvEra,
     required double startMs,
     required double endMs,
     // Relic data:
@@ -85,7 +85,7 @@ abstract class Relic extends Event {
     required this.e,
   }) : super(
           type: EVENT_TYPE.Relic,
-          tkEra: trValEra,
+          tkEra: tvEra,
           tkTitle: e.name,
           startMs: startMs,
           endMs: endMs,
@@ -139,7 +139,7 @@ class RelicSetFilter {
 
   RelicSetFilter({
     required this.type,
-    required this.trValLabel,
+    required this.tvLabel,
     this.tprMin = 1,
     this.tprMax = 12,
     this.field,
@@ -151,7 +151,7 @@ class RelicSetFilter {
   }
   final FILTER_TYPE type; // used to build UI around this filter
   final String
-      trValLabel; // TODO make tkKey filter label/Subtitle of filter options menu
+      tvLabel; // TODO make tkKey filter label/Subtitle of filter options menu
   /// Work with "tpr" variable found and initialized in RelicSetUI (Sorry...)
   final int tprMin;
   final int tprMax;

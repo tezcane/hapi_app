@@ -97,7 +97,7 @@ class MenuRightUI extends StatelessWidget {
                   // resize menu icons/text if keyboard shows
                   (nav) => SingleChildScrollView(
                     child: Tooltip(
-                      message: nav.navPage.trValTooltip,
+                      message: nav.navPage.tvTooltip,
                       child: Stack(
                         children: [
                           Center(

@@ -276,10 +276,10 @@ class LanguageC extends GetxHapi {
     Get.addTranslations({newLangKey: trMap});
   }
 
-  /// Load translations from disk to save memory. The trVal is returned from the
+  /// Load translations from disk to save memory. The tv is returned from the
   /// currLangKey lookup, e.g. if Timeline Event calls this and lang is Turkish
   /// tarikh_articles/tr.json will be parsed and returned.
-  Future<String> trValArticle(EVENT_TYPE eventType, String tk) async {
+  Future<String> tvArticle(EVENT_TYPE eventType, String tk) async {
     String trFilePath;
     String tkLeadingTag;
     if (eventType == EVENT_TYPE.Relic) {

@@ -22,7 +22,7 @@ class Surah extends Relic {
     required this.mainThemes,
   }) : super(
           // Event data:
-          trValEra: 'i.Quran Revelation',
+          tvEra: 'i.Quran Revelation',
           startMs: 0, // TODO put in quran revelation dates!
           endMs: 0,
           // Relic data:
@@ -2327,7 +2327,7 @@ final List<Surah> relicsSurah = [
 final List<RelicSetFilter> relicSetFiltersSurah = [
   RelicSetFilter(
     type: FILTER_TYPE.Default,
-    trValLabel: 'a.Surah', // TODO asdf
+    tvLabel: 'a.Surah', // TODO asdf
   ),
 ];
 

@@ -12,12 +12,12 @@ import 'package:hapi/menu/slide/menu_bottom/settings/settings_option.dart';
 ///               ),
 class SegmentedSelector extends StatelessWidget {
   const SegmentedSelector({
-    required this.trValMenuOptions,
+    required this.tvMenuOptions,
     required this.selectedOption,
     required this.onValueChanged,
     required this.width,
   });
-  final List<SettingsOption> trValMenuOptions;
+  final List<SettingsOption> tvMenuOptions;
   final String selectedOption;
   final void Function(String?) onValueChanged;
   final double width;
@@ -25,21 +25,21 @@ class SegmentedSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double iconSize = 32;
-    double w = width - (iconSize * trValMenuOptions.length) - 8;
+    double w = width - (iconSize * tvMenuOptions.length) - 8;
     return CupertinoSlidingSegmentedControl(
       //thumbColor: AppThemes.selected,
       groupValue: selectedOption,
       children: {
-        for (var option in trValMenuOptions)
+        for (var option in tvMenuOptions)
           option.key: Row(
             children: [
               Icon(option.icon, size: iconSize),
               T(
-                option.trVal,
+                option.tv,
                 tsN,
-                w: w / trValMenuOptions.length,
+                w: w / tvMenuOptions.length,
                 alignment: LanguageC.to.centerLeft,
-                trVal: true,
+                tv: true,
               ),
             ],
           )

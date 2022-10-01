@@ -365,7 +365,7 @@ class TimeC extends GetxHapi {
   /// are not always desired to show the day of the week.
   bool isFriday() => currDayOfWeek == DAY_OF_WEEK.Friday;
 
-  String trValDateHijri(bool addDayOfWeek) {
+  String tvDateHijri(bool addDayOfWeek) {
     DateTime dT = now2(); // TODO use now()?
     if (iterateHijriDateByOne(dT)) dT = dateToTomorrow(dT);
     String dayOfWeek = '';
@@ -376,7 +376,7 @@ class TimeC extends GetxHapi {
     return '$dayOfWeek${hijriCalendar.toFormat('MMMM dd, yyyy')}';
   }
 
-  String trValDateGrego(bool addDayOfWeek) {
+  String tvDateGrego(bool addDayOfWeek) {
     String date = DateFormat('MMMM d, yyyy').format(now2());
     bool foundMonth = false;
     for (MONTH month in MONTH.values) {
@@ -387,7 +387,7 @@ class TimeC extends GetxHapi {
       }
     }
     if (!foundMonth) {
-      l.e('trValDateGrego: Did not find month in "$date"');
+      l.e('tvDateGrego: Did not find month in "$date"');
     }
 
     String dayOfWeek = '';
@@ -397,7 +397,7 @@ class TimeC extends GetxHapi {
   }
 
   /// Translate Duration() to a nice format in any language's numeral set.
-  static String trValDurationToTime(Duration duration) {
+  static String tvDurationToTime(Duration duration) {
     int hours = duration.inHours;
     int minutes = duration.inMinutes;
     int seconds = duration.inSeconds;
@@ -423,12 +423,12 @@ class TimeC extends GetxHapi {
   }
 
   /// Translate DateTime to a nice format in any language's numeral set.
-  static String trValTime(
+  static String tvTime(
           DateTime? time, bool show12HourClock, bool showSecPrecision) =>
-      trValTimeRange(time, null, show12HourClock, showSecPrecision);
+      tvTimeRange(time, null, show12HourClock, showSecPrecision);
 
   /// Translate DateTime (or DateTime Range) to a nice format in any lang.
-  static String trValTimeRange(
+  static String tvTimeRange(
     DateTime? startTime,
     DateTime? endTime,
     bool show12HourClock,

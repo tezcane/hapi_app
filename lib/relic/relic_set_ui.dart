@@ -95,10 +95,10 @@ class RelicSetUI extends StatelessWidget {
               width: wText,
               child: filters.length == 1
                   ? T(
-                      filter.trValLabel,
+                      filter.tvLabel,
                       tsNB,
                       w: wText,
-                      trVal: true,
+                      tv: true,
                       alignment: LanguageC.to.centerLeft,
                     ) // only one item, no drop menu needed
                   : _filterDropMenu(context), // to match big/small labels
@@ -157,7 +157,7 @@ class RelicSetUI extends StatelessWidget {
           return DropdownMenuItem<int>(
             value: value,
             child: T(
-              relicSet.filterList[value].trValLabel,
+              relicSet.filterList[value].tvLabel,
               RelicC.to.getFilterIdx(relicSet.relicType) == value ? ts : tsN,
               alignment: LanguageC.to.centerLeft,
             ),

@@ -11,25 +11,25 @@ typedef OnToggle = void Function(int index);
 
 class ActiveQuestsSettingsUI extends StatelessWidget {
   Widget addSetting({
-    required String trValTitle,
-    required String trValTooltip,
-    required List<String> trValLabels,
+    required String tvTitle,
+    required String tvTooltip,
+    required List<String> tvLabels,
     required int initialLabelIndex,
     required OnToggle onToggle,
   }) {
     return Tooltip(
-      message: trValTooltip,
+      message: tvTooltip,
       child: Column(
         children: [
           const SizedBox(height: 10),
           Center(
             child: T(
-              trValTitle,
+              tvTitle,
               AppThemes.tsTitle,
               w: 150,
               h: 16,
               boxFit: BoxFit.contain,
-              trVal: true,
+              tv: true,
             ),
           ),
           const SizedBox(height: 3),
@@ -38,7 +38,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
             minHeight: 45.0,
             fontSize: 14,
             initialLabelIndex: initialLabelIndex,
-            trValLabels: trValLabels,
+            tvLabels: tvLabels,
             cornerRadius: AppThemes.cornerRadius,
             activeBgColor: AppThemes.selected,
             activeFgColor: Colors.white,
@@ -110,9 +110,9 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
               ),
             ),
             addSetting(
-              trValTitle: a(Z.Asr.tk) + ' ' + a('a.Zaman'), // TODO hard tr
-              trValTooltip: at('at.asrStartTime', ['a.Sabqan', 'a.Lahiqan']),
-              trValLabels: [a('a.Sabqan'), a('a.Lahiqan')], // Earlier/Later
+              tvTitle: a(Z.Asr.tk) + ' ' + a('a.Zaman'), // TODO hard tr
+              tvTooltip: at('at.asrStartTime', ['a.Sabqan', 'a.Lahiqan']),
+              tvLabels: [a('a.Sabqan'), a('a.Lahiqan')], // Earlier/Later
               initialLabelIndex: c.salahAsrEarlier ? 0 : 1,
               onToggle: (index) {
                 if (index == 0) {
@@ -123,9 +123,9 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
               },
             ),
             addSetting(
-              trValTitle: 'i.Round Time To'.tr,
-              trValTooltip: 'tt.roundTimeTo'.tr,
-              trValLabels: [a('a.Daqayiq'), a('a.Thawani')], // Minutes/Seconds
+              tvTitle: 'i.Round Time To'.tr,
+              tvTooltip: 'tt.roundTimeTo'.tr,
+              tvLabels: [a('a.Daqayiq'), a('a.Thawani')], // Minutes/Seconds
               initialLabelIndex: c.showSecPrecision ? 1 : 0,
               onToggle: (index) {
                 if (index == 0) {
@@ -136,12 +136,12 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
               },
             ),
 //          addSetting(
-//            trValTitle: at('at.{0} Default', [a('a.Jumah')]),
-//            trValTooltip: at('at.showJumah', [
+//            tvTitle: at('at.{0} Default', [a('a.Jumah')]),
+//            tvTooltip: at('at.showJumah', [
 //              a('a.Jumah'),
 //              a('a.${Z.Dhuhr.name}'),
 //            ]),
-//            trValLabels: [
+//            tvLabels: [
 //              a('a.Jumah'),
 //              a('a.${Z.Dhuhr.name}'),
 //            ],
@@ -155,9 +155,9 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
 //            },
 //          ),
             addSetting(
-              trValTitle: a('a.Saat Hayit'), // Clock
-              trValTooltip: 'tt.clockType'.tr,
-              trValLabels: [
+              tvTitle: a('a.Saat Hayit'), // Clock
+              tvTooltip: 'tt.clockType'.tr,
+              tvLabels: [
                 cns('12') + ' ' + a('a.Saat'), // 12 Hour, TODO hard tr
                 cns('24') + ' ' + a('a.Saat'), // 24 Hour
               ],

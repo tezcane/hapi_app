@@ -47,7 +47,7 @@ class EventFavoriteUI extends StatelessWidget {
                     ),
                     ts,
                     h: 25,
-                    trVal: true,
+                    tv: true,
                   ),
                 ],
               )

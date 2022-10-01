@@ -24,28 +24,28 @@ class Isim extends Arabic {
     String? ar,
     String? en,
     this.tkLaqab,
-    this.trValAramaic,
-    this.trValHebrew,
+    this.tvAramaic,
+    this.tvHebrew,
     this.tkHebrewMeaning,
-    this.trValGreek,
-    this.trValLatin,
+    this.tvGreek,
+    this.tvLatin,
     this.tkNote, // note(s) on the identity or names for this person
     this.fem = false, // True=female, False=male
   }) : super(tr: tr, ar: ar, en: en);
   final List<String>? tkLaqab; // Laqab = Nicknames
-  final String? trValAramaic;
-  final String? trValHebrew;
+  final String? tvAramaic;
+  final String? tvHebrew;
   final String? tkHebrewMeaning;
-  final String? trValGreek;
-  final String? trValLatin;
+  final String? tvGreek;
+  final String? tvLatin;
   // Something in data is unsure, e.g. Hud is Eber in Bible.
   final String? tkNote;
   final bool fem;
 
   // /// Add * to mark something as "Possibly" being true
-  // String addPossibly(String trVal) => trVal + (tkPossibly != null ? '*' : '');
+  // String addPossibly(String tv) => tv + (tkPossibly != null ? '*' : '');
 
-  // String get trValArabic => LanguageC.to.ar('a.${e.name}');
+  // String get tvArabic => LanguageC.to.ar('a.${e.name}');
 }
 
 enum RELATIVE {
@@ -64,13 +64,13 @@ enum RELATIVE {
 
 /// Used to save all we can about a Prophet's/Leader's/Person's family lineauge
 /// so we use to build a family tree or nice UI about this relic.  A few rules:
-///   1. If Father->Son are both relics, Father must declare son in trValSons.
-///   2. If Father->Son are both relics, Son must have trValPredecessors = []
-///   3. The root node must have trValPredecessors = []
+///   1. If Father->Son are both relics, Father must declare son in tvSons.
+///   2. If Father->Son are both relics, Son must have tvPredecessors = []
+///   3. The root node must have tvPredecessors = []
 abstract class FamilyTree extends Relic {
   FamilyTree({
     // Event data:
-    required String trValEra,
+    required String tvEra,
     required double startMs,
     required double endMs,
     // Relic data:
@@ -90,7 +90,7 @@ abstract class FamilyTree extends Relic {
     this.successor, // TODO make use of this, order of prophethood?
   }) : super(
           // Event data:
-          trValEra: trValEra,
+          tvEra: tvEra,
           startMs: startMs,
           endMs: endMs,
           // Relic data:
@@ -183,7 +183,7 @@ addEdgesAllFamily(Graph graph, FamilyTree ft, int gapIdx) {
   }
 }
 
-/// TODO we should be able to build this without trValSuccessors[] data simialr
+/// TODO we should be able to build this without tvSuccessors[] data simialr
 /// to how we build the "ALL" graph above.
 Graph getGraphOnlyRelics(RELIC_TYPE relicType, int gapIdx) {
   final Graph graph = Graph()..isTree = true;

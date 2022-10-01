@@ -120,7 +120,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
 
   /// Handle the fab button hint, required update() to be called on page
   /// insertion and deletion.
-  String trValMenuTooltip() {
+  String tvMenuTooltip() {
     if (_subPageStack.isNotEmpty) {
       if (_subPageStack.length > 1) {
         return 'i.Go back to previous page'.tr;

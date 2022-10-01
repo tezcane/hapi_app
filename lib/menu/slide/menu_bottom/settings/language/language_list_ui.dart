@@ -29,7 +29,7 @@ class LanguageListUI extends StatelessWidget {
             ],
           ),
           DropdownPicker(
-            trValMenuOptions: languageOptions,
+            tvMenuOptions: languageOptions,
             selectedOption: c.currLangKey,
             onChanged: (langKey) => c.updateLanguage(langKey!),
             width: (w / 4) * 3 - 24,

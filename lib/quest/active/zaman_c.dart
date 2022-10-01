@@ -27,8 +27,8 @@ class ZamanC extends GetxHapi {
 
   /// nextZ or nextZTooltip Timestamp used to calculate countdown timer on UI.
   DateTime _nextZTime = DUMMY_TIME1;
-  String trValTimeToNextZaman = '-';
-  String trValTimeToNextZamanTooltip = '-';
+  String tvTimeToNextZaman = '-';
+  String tvTimeToNextZamanTooltip = '-';
   Z? currZTooltip = Z.Dhuhr; // may be null if in edge case
   Z nextZTooltip = Z.Asr;
   DateTime nextZTooltipTime = DUMMY_TIME1;
@@ -185,7 +185,7 @@ class ZamanC extends GetxHapi {
         }
 
         // Displayed in Active Quest UI within ZamanC builder:
-        trValTimeToNextZaman = TimeC.trValDurationToTime(timeToNextZaman);
+        tvTimeToNextZaman = TimeC.tvDurationToTime(timeToNextZaman);
 
         update(); // only time ZamanC is updated
       }
@@ -228,7 +228,7 @@ class ZamanC extends GetxHapi {
       if (nextZ.index != currZ.index + 1) {
         l.w('_updateTooltip: potential logic issue: (nextZ($nextZ)!=currZ($currZ)+1 when updating tooltip - currZTooltip=$currZTooltip, nextZTooltip=$nextZTooltip, nextZTooltipTime=$nextZTooltipTime');
       }
-      trValTimeToNextZamanTooltip = at(
+      tvTimeToNextZamanTooltip = at(
         // {0}:{1}:{2} until "{3}" ends and "{4}" begins
         'at.aqCountdownTimer',
         ['a.Saat', 'a.Daqayiq', 'a.Thawani', cTooltip.tk, tkOrVal],
@@ -237,7 +237,7 @@ class ZamanC extends GetxHapi {
       if (nextZ.index == currZ.index + 1) {
         l.w('_updateTooltip: potential logic issue: (nextZ($nextZ)==currZ($currZ)+1 when updating tooltip - currZTooltip=$currZTooltip, nextZTooltip=$nextZTooltip, nextZTooltipTime=$nextZTooltipTime');
       }
-      trValTimeToNextZamanTooltip = at(
+      tvTimeToNextZamanTooltip = at(
         // {0}:{1}:{2} until "{3}" begins
         'at.aqCountdownTimerLayl',
         ['a.Saat', 'a.Daqayiq', 'a.Thawani', tkOrVal],

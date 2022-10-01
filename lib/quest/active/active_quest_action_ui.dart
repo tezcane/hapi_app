@@ -100,7 +100,7 @@ class ActiveQuestActionUI extends StatelessWidget {
                         ['a.Ajr'],
                       ),
                       child: TextButton.icon(
-                        label: T('i.Skip'.tr, tsB, w: w2, trVal: true),
+                        label: T('i.Skip'.tr, tsB, w: w2, tv: true),
                         icon: const Icon(Icons.redo_outlined, size: iconSize),
                         onPressed: () {
                           // if (cAjrA.isDone(quest) || cAjrA.isMiss(quest)) {
@@ -123,7 +123,7 @@ class ActiveQuestActionUI extends StatelessWidget {
                   Tooltip(
                     message: 'i.Tap to complete quest'.tr,
                     child: TextButton.icon(
-                      label: T('i.Done'.tr, tsB, w: w2, trVal: true),
+                      label: T('i.Done'.tr, tsB, w: w2, tv: true),
                       icon: const Icon(Icons.check_outlined, size: iconSize),
                       onPressed: () {
                         // if (cAjrA.isSkip(q) || cAjrA.isMiss(q)) {

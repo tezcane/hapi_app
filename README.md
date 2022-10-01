@@ -110,7 +110,7 @@ thjd - Tahajjud
 tpr  - Tiles Per Row  
 tz   - time zone  
 trkh - Tarikh  
-val  - Value (like trVal)  
+val  - Value  
 w    - width (use with height/h)  
 z    - Zaman (an Islamic point of a day, e.g. fajr, sunrise, karahat times, etc.)  
 
