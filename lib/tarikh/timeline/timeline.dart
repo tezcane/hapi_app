@@ -472,8 +472,11 @@ class Timeline {
       //_headerBackgroundColor = _currentHeaderColors!.background;
     } else {
       bool stillColoring = false;
-      Color headerTextColor = interpolateColor(
-          _headerTextColor!, _currentHeaderColors!.text, elapsed);
+      Color headerTextColor = _interpolateColor(
+        _headerTextColor!,
+        _currentHeaderColors!.text,
+        elapsed,
+      );
 
       if (headerTextColor != _headerTextColor) {
         _headerTextColor = headerTextColor;
@@ -624,10 +627,9 @@ class Timeline {
       double targetLabelY = y;
       double itemBubbleHeight = bubbleHeight(item);
       double fadeAnimationStart = itemBubbleHeight + BubblePadding / 2.0;
-      if (targetLabelY - _lastEventY < fadeAnimationStart
+      if (targetLabelY - _lastEventY < fadeAnimationStart &&
           // The best location for our label is occluded, lets see if we can
           // bump it forward...
-          &&
           item.type == EVENT_TYPE.Era &&
           _lastEventY + fadeAnimationStart < endY) {
         targetLabelY = _lastEventY + fadeAnimationStart + 0.5;
@@ -754,6 +756,40 @@ class Timeline {
       }
     }
     return stillAnimating;
+  }
+
+  Color _interpolateColor(Color from, Color to, double elapsed) {
+    double r, g, b, a;
+    double speed = min(1.0, elapsed * 5.0);
+    double c = to.alpha.toDouble() - from.alpha.toDouble();
+    if (c.abs() < 1.0) {
+      a = to.alpha.toDouble();
+    } else {
+      a = from.alpha + c * speed;
+    }
+
+    c = to.red.toDouble() - from.red.toDouble();
+    if (c.abs() < 1.0) {
+      r = to.red.toDouble();
+    } else {
+      r = from.red + c * speed;
+    }
+
+    c = to.green.toDouble() - from.green.toDouble();
+    if (c.abs() < 1.0) {
+      g = to.green.toDouble();
+    } else {
+      g = from.green + c * speed;
+    }
+
+    c = to.blue.toDouble() - from.blue.toDouble();
+    if (c.abs() < 1.0) {
+      b = to.blue.toDouble();
+    } else {
+      b = from.blue + c * speed;
+    }
+
+    return Color.fromARGB(a.round(), r.round(), g.round(), b.round());
   }
 
   /// Advance asset [items] with the [elapsed] time. Calls itself recursively

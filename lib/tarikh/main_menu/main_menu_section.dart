@@ -1,6 +1,7 @@
 import 'package:flare_flutter/flare_actor.dart' as flare;
 import 'package:flutter/material.dart';
 import 'package:hapi/main_c.dart';
+import 'package:hapi/tarikh/event/event.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/main_menu/menu_vignette.dart';
 
@@ -21,16 +22,16 @@ class MenuSection extends StatefulWidget {
     this.accentColor,
     this.menuItems,
     this.navigateTo,
-    this.isActive, {
-    required this.assetId,
-  });
+    this.isActive,
+    this.event,
+  );
   final String trKeyTitle;
   final Color backgroundColor;
   final Color accentColor;
   final List<MenuItemData> menuItems;
-  final String assetId;
   final NavigateTo navigateTo;
   final bool isActive;
+  final Event event;
 
   @override
   State<StatefulWidget> createState() => _SectionState();
@@ -132,7 +133,7 @@ class _SectionState extends State<MenuSection>
                   needsRepaint: true,
                   gradientColor: widget.backgroundColor,
                   isActive: widget.isActive,
-                  assetId: widget.assetId,
+                  event: widget.event,
                 ),
               ),
               Column(

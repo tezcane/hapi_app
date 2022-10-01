@@ -21,20 +21,24 @@ enum EVENT_TYPE {
 class Event {
   Event({
     required this.type,
-    required this.trKeyEra,
+    required this.tkEra,
     required this.trKeyTitle,
     required this.startMs, // TODO are these ms or years?!
     required this.endMs,
+    this.startMenu,
+    this.endMenu,
     required this.accent,
   }) {
-    saveTag = '${trKeyTitle}_$trKeyEra';
+    saveTag = '${trKeyTitle}_$tkEra';
     reinitBubbleText();
   }
   final EVENT_TYPE type;
-  final String trKeyEra;
+  final String tkEra;
   final String trKeyTitle;
   final double startMs;
   final double endMs;
+  final double? startMenu; // use these when menu doesn't show well
+  final double? endMenu;
 
   /// not always given in json input file, thus nullable:
   Color? accent;
@@ -45,8 +49,8 @@ class Event {
   late final String saveTag;
 
   /// Used to calculate how many lines to draw for the bubble in the timeline:
-  late String tvEventTitleLine1;
-  late String tvEventTitleLine2;
+  late String tvTitleLine1;
+  late String tvTitleLine2;
   late bool isBubbleThick;
   late String tvBubbleText;
 
@@ -54,8 +58,8 @@ class Event {
   /// landscape mode there is no need to put the text on two lines (hopefully).
   reinitBubbleText() {
     List<String> lines = tvGetTitleLines(); // expensive so call less on paints
-    tvEventTitleLine1 = lines[0];
-    tvEventTitleLine2 = lines[1];
+    tvTitleLine1 = lines[0];
+    tvTitleLine2 = lines[1];
     isBubbleThick = lines[1] == '' ? false : true;
     tvBubbleText = isBubbleThick ? lines[0] + '\n' + lines[1] : lines[0];
   }

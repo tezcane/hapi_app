@@ -1,8 +1,4 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:get/get.dart';
 import 'package:hapi/controller/getx_hapi.dart';
 import 'package:hapi/controller/time_c.dart';
@@ -28,14 +24,16 @@ enum GutterMode {
 /// Used for Timeline Up/Down Button data
 class TimeBtn {
   TimeBtn(
-    this.trValTitle,
-    this.trValTimeUntil,
-    this.trValPageScrolls,
+    this.tvTitleLine1,
+    this.tvTitleLine2,
+    this.tvTimeUntil,
+    this.tvPageScrolls,
     this.event,
   );
-  String trValTitle;
-  String trValTimeUntil;
-  String trValPageScrolls;
+  String tvTitleLine1;
+  String tvTitleLine2;
+  String tvTimeUntil;
+  String tvPageScrolls;
   Event? event; // will be null on first/last events
 }
 
@@ -103,20 +101,15 @@ class TarikhC extends GetxHapi {
   }
 
   @override
-  void onInit() async {
+  void onInit() {
     super.onInit();
 
-    await initTarikhMenu(); // init first to show UI fast
-    await initTimeline(); // slow init, takes time to load
+    _initTimelineRelicsAndTarikhMenu(); // slow init, takes time to load
   }
 
-  initTarikhMenu() async {
-    await TarikhMenuInitHandler().loadFromBundle('assets/tarikh/menu.json');
-  }
-
-  initTimeline() async {
-    timeBtnUp = TimeBtn('', '', '', null);
-    timeBtnDn = TimeBtn('', '', '', null);
+  _initTimelineRelicsAndTarikhMenu() async {
+    timeBtnUp = TimeBtn('', '', '', '', null);
+    timeBtnDn = TimeBtn('', '', '', '', null);
 
     int lastGutterModeIdx = s.rd('lastGutterModeIdx') ?? GutterMode.OFF.index;
     gutterMode = GutterMode.values[lastGutterModeIdx];
@@ -157,23 +150,27 @@ class TarikhC extends GetxHapi {
   /// Updates text around time button, no event is set
   void updateTimeBtn(
     TimeBtn timeBtn,
-    String trValTitle,
-    String trValTimeUntil,
-    String trValPageScrolls,
+    String tvTitleLine1,
+    String tvTitleLine2,
+    String tvTimeUntil,
+    String tvPageScrolls,
   ) {
-    timeBtn.trValTitle = trValTitle;
-    timeBtn.trValTimeUntil = trValTimeUntil;
-    timeBtn.trValPageScrolls = trValPageScrolls;
+    timeBtn.tvTitleLine1 = tvTitleLine1;
+    timeBtn.tvTitleLine2 = tvTitleLine2;
+    timeBtn.tvTimeUntil = tvTimeUntil;
+    timeBtn.tvPageScrolls = tvPageScrolls;
     updateOnThread();
   }
 
   void updateEventBtn(TimeBtn timeBtn, Event? event) {
-    String trValTitle = '';
+    String tvTitleLine1 = '';
+    String tvTitleLine2 = '';
     String trValTimeUntil = '';
     String trValPageScrolls = '';
 
     if (event != null) {
-      trValTitle = a(event.trKeyTitle);
+      tvTitleLine1 = event.tvTitleLine1;
+      tvTitleLine2 = event.tvTitleLine2;
 
       //was t.renderEnd, had 'page away 0' at bottom page edge, now in middle:
       double pageReference = (t.renderStart + t.renderEnd) / 2.0;
@@ -191,7 +188,13 @@ class TarikhC extends GetxHapi {
     }
 
     timeBtn.event = event;
-    updateTimeBtn(timeBtn, trValTitle, trValTimeUntil, trValPageScrolls);
+    updateTimeBtn(
+      timeBtn,
+      tvTitleLine1,
+      tvTitleLine2,
+      trValTimeUntil,
+      trValPageScrolls,
+    );
   }
 }
 
@@ -216,9 +219,6 @@ class TimelineInitHandler {
 
   get rootEvents => _rootEvents;
 
-  /// This is a special feature to play a particular part of an animation
-  final Map<String, Event> _eventsById = {};
-
   double _timeMin = 0.0;
   double _timeMax = 0.0;
 
@@ -229,17 +229,11 @@ class TimelineInitHandler {
   loadTimelineData() async {
     final List<TimelineData> timelineDatas = getTimelineData();
 
-    // TODO test add "era" field per event and also auto generate it's start and end and zoom by looking at its incidents:
-    String trKeyEra = '';
-
     List<Event> eventsTarikh = [];
 
     /// The JSON decode doesn't provide strong typing, so we'll iterate
     /// on the dynamic events in the [jsonEvents] list.
     for (TimelineData td in timelineDatas) {
-      /// The trKeyTitle is a brief description for the current event.
-      String trKeyTitle = td.trKeyTitle;
-
       /// Create the current event and fill in the current date if it's
       /// an `Incident`, or look for the `start` property if it's an `Era` instead.
       /// Some events will have a `start` element, but not an `end` specified.
@@ -253,7 +247,6 @@ class TimelineInitHandler {
       } else {
         type = EVENT_TYPE.Era;
         startMs = td.start!;
-        trKeyEra = trKeyTitle;
       }
 
       /// Some elements will have an `end` time specified.
@@ -270,8 +263,6 @@ class TimelineInitHandler {
       } else {
         endMs = startMs;
       }
-
-      //l.d('lastEra=$era, label=$label'); TODO fix
 
       /// Get Timeline Color Setup:
       if (td.timelineColors != null) {
@@ -309,33 +300,29 @@ class TimelineInitHandler {
         );
       }
 
-      /// An accent color is also specified at times.
-      Color? accent = td.accent;
+      /// Finally create Event object
+      Event event = Event(
+        type: type,
+        tkEra: td.tkEra ?? '',
+        trKeyTitle: td.tkTitle,
+        startMs: startMs,
+        endMs: endMs,
+        startMenu: td.startMenu,
+        endMenu: td.endMenu,
+        accent: td.accent, // accent color specified sometimes
+      );
 
       /// Get flare/nima/image asset object
       EventAsset asset = await getEventAsset(td.asset);
 
-      /// Finally create Event object
-      Event event = Event(
-        type: type,
-        trKeyEra: trKeyEra,
-        trKeyTitle: trKeyTitle,
-        startMs: startMs,
-        endMs: endMs,
-        accent: accent,
-      );
-      // used to pass asset in above, now here for easier/cleaner relic inits:
-      event.asset = asset;
-
-      /// Add event reference 1 of 2: TODO this is a hack, access via map?
+      /// Add event reference:
       asset.event = event; // can and must only do this once
 
-      /// Add event reference 2 of 2:
-      /// Some events will have an id to find and play the menu animation
-      if (td.actorId != null) _eventsById[td.actorId!] = event;
+      // used to pass asset in Event(), here for easier/cleaner relic inits:
+      event.asset = asset;
 
       /// Add this event to the list.
-      eventsTarikh.add(event); // sort is probably needed
+      eventsTarikh.add(event);
     }
 
     /// Major feature here, merge relics into Tarikh events so the relics can
@@ -344,7 +331,7 @@ class TimelineInitHandler {
     /// Note: We must spin wait for relic init completion, its data is need
     /// needed first so it can merge with the timeline events initializing here.
     List<Event> eventsRelics = await RelicC.to
-        .mergeRelicAndTarikhEvents(eventsTarikh); // add before sort
+        .mergeRelicAndTarikhEvents(eventsTarikh); // add Relics before sort
 
     /// sort Tarikh the full list so they are in order of oldest to newest
     eventsTarikh.sort((Event a, Event b) => a.startMs.compareTo(b.startMs));
@@ -359,12 +346,29 @@ class TimelineInitHandler {
     _timeMin = double.maxFinite;
     _timeMax = -double.maxFinite;
 
-    /// IMPORTANT NOTE: Do we want to enhance this to allow json file input to
-    ///                 define where stuff belongs:
-    /// Build up hierarchy (Eras are grouped into "Spanning Eras" and Events are
-    /// placed into the Eras they belong to).
+    /// Enhanced menu.json to below. Now we auto build menu sections off eras:
+    Map<String, EraMenuSection> eraMenuSectionMap = {};
+
     Event? previous;
     for (Event event in eventsTarikh) {
+      /// Step 1 of 2: Build Era map of all menu items belonging to that era:
+      if (event.tkEra != '') {
+        EraMenuSection eraMenuSection;
+        if (eraMenuSectionMap.containsKey(event.tkEra)) {
+          eraMenuSection = eraMenuSectionMap[event.tkEra]!;
+        } else {
+          eraMenuSection = EraMenuSection(
+            textColor: Colors.white,
+            backgroundColor: Colors.black,
+            event: event,
+          );
+          eraMenuSectionMap[event.tkEra] = eraMenuSection; // first time init
+        }
+        eraMenuSection.addEraEvent(event);
+      }
+
+      /// Build up hierarchy (Eras are grouped into "Spanning Eras" and Events
+      ///  are placed into the Eras they belong to). TODO do we need this?
       if (event.startMs < _timeMin) _timeMin = event.startMs;
       if (event.endMs > _timeMax) _timeMax = event.endMs;
 
@@ -395,70 +399,41 @@ class TimelineInitHandler {
       }
     }
 
+    /// Step 2 of 2: Build menu section data off eraMenuSectionMap:
+    for (String tkEra in eraMenuSectionMap.keys) {
+      List<MenuItemData> menuItemList = [];
+      EraMenuSection eraMenuSection = eraMenuSectionMap[tkEra]!;
+
+      for (Event event in eraMenuSection.events) {
+        menuItemList.add(
+          MenuItemData(
+            event.trKeyTitle,
+            event.saveTag,
+            event.startMenu != null
+                ? event.startMenu!
+                : eraMenuSection.getTimeMin(event),
+            event.endMenu != null
+                ? event.endMenu!
+                : eraMenuSection.getTimeMax(event),
+          ),
+        );
+      }
+
+      TarikhC.to._tarikhMenuData.add(
+        MenuSectionData(
+          eraMenuSection.events[0].tkEra,
+          eraMenuSection.textColor,
+          eraMenuSection.backgroundColor,
+          eraMenuSection.events[0],
+          menuItemList,
+        ),
+      );
+    }
+
     /// All setup to this point is done, we need to now init the Tarikh and
     /// Relic event maps and favorites.
     EventC.to.initEvents(eventsTarikh, eventsRelics);
   }
-
-  // Color colorFromList(colorList, {String key = ''}) {
-  //   if (key != '') colorList = colorList[key];
-  //   List<int> bg = colorList.cast<int>();
-  //
-  //   int bg3 = 0xFF; // 255 (no opacity)
-  //   if (bg.length == 4) bg3 = bg[3];
-  //
-  //   return Color.fromARGB(bg3, bg[0], bg[1], bg[2]);
-  // }
-
-  /// The `asset` key in the current event contains all the information for
-  /// the nima/flare animation file that'll be played on the timeline.
-  ///
-  /// `asset` is an object with:
-  ///   - source: the name of the nima/flare/image file in the assets folder.
-  ///   - width/height/offset/bounds/gap:
-  ///            Sizes of the animation to properly align it in the timeline,
-  ///            together with its Axis-Aligned Bounding Box container.
-  ///   - intro: Some files have an 'intro' animation, to be played before
-  ///            idling.
-  ///   - idle:  Some files have one or more idle animations, and these are
-  ///            their names.
-  ///   - loop:  Some animations shouldn't loop (e.g. Big Bang) but just settle
-  ///            onto their idle animation. If that's the case, this flag is
-  ///            raised.
-  ///   - scale: a custom scale value.
-  Future<EventAsset> getEventAsset(Asset asset) async {
-    String filename = 'assets/' + asset.source;
-
-    double width = asset.width;
-    double height = asset.height;
-
-    bool loop = asset.loop;
-    double offset = asset.offset;
-    double gap = asset.gap;
-    double scale = asset.scale;
-
-    /// Instantiate the correct object based on the file extension.
-    EventAsset eventAsset;
-    switch (getFileExtension(asset.source)) {
-      case 'flr':
-        eventAsset = await loadFlareAsset(filename, width, height, scale, loop,
-            offset, gap, asset.idle, asset.intro, asset.bounds);
-        break;
-      case 'nma':
-        eventAsset = await loadNimaAsset(filename, width, height, scale, loop,
-            offset, gap, asset.idle, asset.bounds);
-        break;
-      default:
-        // Legacy fallback case: some elements just use images.
-        eventAsset = await loadImageAsset(filename, width, height, scale);
-        break;
-    }
-
-    return Future.value(eventAsset);
-  }
-
-  /// Helper function for [MenuVignette].
-  Event? getEventById(String id) => _eventsById[id];
 
   TickColors findTickColors(double screen) {
     for (TickColors color in _tickColorsReversed) {
@@ -471,55 +446,29 @@ class TimelineInitHandler {
   }
 }
 
-/// This class has the sole purpose of loading the resources from storage and
-/// de-serializing the JSON file appropriately.
-///
-/// `menu.json` contains an array of objects, each with:
-/// * label - the title for the section
-/// * background - the color on the section background
-/// * color - the accent color for the menu section
-/// * asset - the background Flare/Nima asset id that will play the section background
-/// * items - an array of elements providing each the start and end times for that link
-/// as well as the label to display in the [MenuSection].
-class TarikhMenuInitHandler {
-  loadFromBundle(String filename) async {
-    String jsonData = await rootBundle.loadString(filename);
-    List jsonEvents = json.decode(jsonData);
+class EraMenuSection {
+  EraMenuSection({
+    required this.textColor,
+    required this.backgroundColor,
+    required this.event,
+  });
+  final Color textColor;
+  final Color backgroundColor;
+  final Event? event;
 
-    List<MenuItemData> menuItemList;
-    for (Map map in jsonEvents) {
-      menuItemList = [];
+  final List<Event> events = [];
+  // double timeMin = -1;
+  // double timeMax = -1;
 
-      String label = map['label'];
-      Color textColor = Color(
-          int.parse((map['color']).substring(1, 7), radix: 16) + 0xFF000000);
-      Color backgroundColor = Color(
-          int.parse((map['background']).substring(1, 7), radix: 16) +
-              0xFF000000);
-      String assetId = map['asset'];
+  // TODO we can also set this based off close next/previous to zoom in more
+  double getTimeMin(Event event) =>
+      event.startMs < 0 ? event.startMs * 1.2 : event.startMs * .8;
+  double getTimeMax(Event event) =>
+      event.startMs < 0 ? event.endMs * .8 : event.endMs * 1.2;
 
-      for (Map itemMap in map['items']) {
-        String label = itemMap['label'];
-
-        dynamic startVal = itemMap['start'];
-        double start = startVal is int ? startVal.toDouble() : startVal;
-
-        dynamic endVal = itemMap['end'];
-        double end = endVal is int ? endVal.toDouble() : endVal;
-
-        menuItemList.add(
-          MenuItemData(
-            'i.' + label,
-            'i.' + label + '_' + 'TODO era',
-            start,
-            end,
-          ),
-        ); // TODO asdf i. hack
-      }
-
-      TarikhC.to._tarikhMenuData.add(MenuSectionData(
-          label, textColor, backgroundColor, assetId, menuItemList));
-      TarikhC.to.update();
-    }
+  addEraEvent(Event event) {
+    // if (timeMin == -1 || event.startMs < timeMin) timeMin = event.startMs;
+    // if (timeMax == -1 || event.endMs > timeMax) timeMax = event.endMs;
+    events.add(event);
   }
 }

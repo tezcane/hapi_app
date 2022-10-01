@@ -305,22 +305,6 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
             TimeBtn btnUp = c.timeBtnUp;
             TimeBtn btnDn = c.timeBtnDn;
 
-            String trValUpTitle1 = '';
-            String trValUpTitle2 = btnUp.trValTitle;
-            List<String> btnUpList = trValUpTitle2.split('\n');
-            if (btnUpList.length == 2) {
-              trValUpTitle1 = btnUpList[0];
-              trValUpTitle2 = btnUpList[1];
-            }
-
-            String trValDnTitle1 = '';
-            String trValDnTitle2 = btnDn.trValTitle;
-            List<String> btnDnList = trValDnTitle2.split('\n');
-            if (btnDnList.length == 2) {
-              trValDnTitle1 = btnDnList[0];
-              trValDnTitle2 = btnDnList[1];
-            }
-
             return Align(
               alignment: Alignment.bottomLeft,
               child: SizedBox(
@@ -370,21 +354,22 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                     mainAxisAlignment: MainAxisAlignment.end,
                                     children: [
                                       T(
-                                        trValUpTitle1,
+                                        btnUp.tvTitleLine1,
                                         tsR,
                                         w: w2,
                                         h: 18,
                                         trVal: true,
                                       ),
+                                      if (btnUp.tvTitleLine2 != '')
+                                        T(
+                                          btnUp.tvTitleLine2,
+                                          tsR,
+                                          w: w2,
+                                          h: 18,
+                                          trVal: true,
+                                        ),
                                       T(
-                                        trValUpTitle2,
-                                        tsR,
-                                        w: w2,
-                                        h: 18,
-                                        trVal: true,
-                                      ),
-                                      T(
-                                        btnUp.trValTimeUntil,
+                                        btnUp.tvPageScrolls,
                                         tsR,
                                         w: w2,
                                         h: 17,
@@ -403,7 +388,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                         ),
                                       ),
                                       T(
-                                        btnUp.trValPageScrolls,
+                                        btnUp.tvTimeUntil,
                                         tsR,
                                         w: w2,
                                         h: 17,
@@ -424,21 +409,22 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                         CrossAxisAlignment.center,
                                     children: [
                                       T(
-                                        trValDnTitle1,
+                                        btnDn.tvTitleLine1,
                                         tsR,
                                         w: w2,
                                         h: 18,
                                         trVal: true,
                                       ),
+                                      if (btnDn.tvTitleLine2 != '')
+                                        T(
+                                          btnDn.tvTitleLine2,
+                                          tsR,
+                                          w: w2,
+                                          h: 18,
+                                          trVal: true,
+                                        ),
                                       T(
-                                        trValDnTitle2,
-                                        tsR,
-                                        w: w2,
-                                        h: 18,
-                                        trVal: true,
-                                      ),
-                                      T(
-                                        btnDn.trValTimeUntil,
+                                        btnDn.tvPageScrolls,
                                         tsR,
                                         w: w2,
                                         h: 17,
@@ -457,7 +443,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                         ),
                                       ),
                                       T(
-                                        btnDn.trValPageScrolls,
+                                        btnDn.tvTimeUntil,
                                         tsR,
                                         w: w2,
                                         h: 17,

@@ -46,8 +46,9 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
   final heartControllerUnfav = HeartController('Unfavorite');
 
   /// The information for the current page.
-  String _trValTitle = '';
-  String _trValSubTitle = '';
+  String _tvTitle1 = '';
+  String _tvTitle2 = '';
+  String _tvYearsAgo = '';
   String _trValArticleMarkdown = '';
 
   /// This page uses the `flutter_markdown` package, and thus needs its styles to be defined
@@ -65,8 +66,8 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
 
     _eventMapFav = EventC.to.getEventMapFav(widget.eventType);
 
-    _btnUp = TimeBtn('', '', '', null);
-    _btnDn = TimeBtn('', '', '', null);
+    _btnUp = TimeBtn('', '', '', '', null);
+    _btnDn = TimeBtn('', '', '', '', null);
 
     _initEvent(widget.saveTag);
   }
@@ -78,11 +79,12 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
     _btnUp.event = _event; //need to init here so first updateEventBtn() works
     _btnDn.event = _event;
 
-    updateEventBtn(_btnUp, _event.previous);
-    updateEventBtn(_btnDn, _event.next);
+    _updateEventBtn(_btnUp, _event.previous);
+    _updateEventBtn(_btnDn, _event.next);
 
-    _trValTitle = a(_event.trKeyTitle);
-    _trValSubTitle = _event.trValYearsAgo();
+    _tvTitle1 = _event.tvTitleLine1;
+    _tvTitle2 = _event.tvTitleLine2;
+    _tvYearsAgo = _event.trValYearsAgo();
 
     TextStyle h1 = Get.theme.textTheme.headline4!
         .copyWith(fontSize: 32.0, height: 1.625, fontWeight: FontWeight.bold);
@@ -149,22 +151,6 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
         floatingActionButtonLocation:
             FloatingActionButtonLocation.miniCenterDocked,
         floatingActionButton: GetBuilder<TarikhC>(builder: (c) {
-          String trValUpTitle1 = '';
-          String trValUpTitle2 = _btnUp.trValTitle;
-          List<String> btnUpList = trValUpTitle2.split('\n');
-          if (btnUpList.length == 2) {
-            trValUpTitle1 = btnUpList[0];
-            trValUpTitle2 = btnUpList[1];
-          }
-
-          String trValDnTitle1 = '';
-          String trValDnTitle2 = _btnDn.trValTitle;
-          List<String> btnDnList = trValDnTitle2.split('\n');
-          if (btnDnList.length == 2) {
-            trValDnTitle1 = btnDnList[0];
-            trValDnTitle2 = btnDnList[1];
-          }
-
           return Align(
             alignment: Alignment.bottomLeft,
             child: Directionality(
@@ -213,19 +199,20 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     T(
-                                      trValUpTitle1,
+                                      _btnUp.tvTitleLine1,
                                       tsR,
                                       w: w2,
                                       h: 18,
                                       trVal: true,
                                     ),
-                                    T(
-                                      trValUpTitle2,
-                                      tsR,
-                                      w: w2,
-                                      h: 18,
-                                      trVal: true,
-                                    ),
+                                    if (_btnUp.tvTitleLine2 != '')
+                                      T(
+                                        _btnUp.tvTitleLine2,
+                                        tsR,
+                                        w: w2,
+                                        h: 18,
+                                        trVal: true,
+                                      ),
                                     FloatingActionButton(
                                       tooltip:
                                           widget.eventType == EVENT_TYPE.Relic
@@ -242,7 +229,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                       ),
                                     ),
                                     T(
-                                      _btnUp.trValTimeUntil,
+                                      _btnUp.tvTimeUntil,
                                       tsR,
                                       w: w2,
                                       h: 17,
@@ -262,19 +249,20 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     T(
-                                      trValDnTitle1,
+                                      _btnDn.tvTitleLine1,
                                       tsR,
                                       w: w2,
                                       h: 18,
                                       trVal: true,
                                     ),
-                                    T(
-                                      trValDnTitle2,
-                                      tsR,
-                                      w: w2,
-                                      h: 18,
-                                      trVal: true,
-                                    ),
+                                    if (_btnDn.tvTitleLine2 != '')
+                                      T(
+                                        _btnDn.tvTitleLine2,
+                                        tsR,
+                                        w: w2,
+                                        h: 18,
+                                        trVal: true,
+                                      ),
                                     FloatingActionButton(
                                       tooltip:
                                           widget.eventType == EVENT_TYPE.Relic
@@ -291,7 +279,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                       ),
                                     ),
                                     T(
-                                      _btnDn.trValTimeUntil,
+                                      _btnDn.tvTimeUntil,
                                       tsR,
                                       w: w2,
                                       h: 17,
@@ -303,7 +291,6 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                         ),
                       ],
                     ),
-                    // const SizedBox(width: rightFabWidth), // menu fab
                   ],
                 ),
               ),
@@ -365,21 +352,30 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                      _trValTitle,
-                                      textAlign: TextAlign.left,
-                                      style: const TextStyle(
+                                    T(
+                                      _tvTitle1,
+                                      const TextStyle(
                                         fontSize: 25.0,
                                         height: 1.1,
                                       ),
+                                      alignment: LanguageC.to.centerLeft,
                                     ),
-                                    Text(
-                                      _trValSubTitle,
-                                      textAlign: TextAlign.left,
-                                      style: const TextStyle(
+                                    if (_tvTitle2 != '')
+                                      T(
+                                        _tvTitle2,
+                                        const TextStyle(
+                                          fontSize: 25.0,
+                                          height: 1.1,
+                                        ),
+                                        alignment: LanguageC.to.centerLeft,
+                                      ),
+                                    T(
+                                      _tvYearsAgo,
+                                      const TextStyle(
                                         fontSize: 17.0,
                                         height: 1.5,
                                       ),
+                                      alignment: LanguageC.to.centerLeft,
                                     ),
                                   ],
                                 ),
@@ -446,20 +442,23 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
     );
   }
 
-  void updateEventBtn(TimeBtn timeBtn, Event? event) {
-    String trValTitle = '';
-    String trValTimeUntil = '';
+  void _updateEventBtn(TimeBtn timeBtn, Event? event) {
+    String tvTitle1 = '';
+    String tvTitle2 = '';
+    String tvTimeUntil = '';
 
     if (event != null) {
-      trValTitle = a(event.trKeyTitle);
+      tvTitle1 = event.tvTitleLine1;
+      tvTitle2 = event.tvTitleLine2;
       if (event.isTimeLineEvent && timeBtn.event!.isTimeLineEvent) {
         double timeUntilDouble = (event.startMs - timeBtn.event!.startMs).abs();
-        trValTimeUntil = event.trValYears(timeUntilDouble).toLowerCase();
+        tvTimeUntil = event.trValYears(timeUntilDouble).toLowerCase();
       }
     }
 
     timeBtn.event = event;
-    timeBtn.trValTitle = trValTitle;
-    timeBtn.trValTimeUntil = trValTimeUntil;
+    timeBtn.tvTitleLine1 = tvTitle1;
+    timeBtn.tvTitleLine2 = tvTitle2;
+    timeBtn.tvTimeUntil = tvTimeUntil;
   }
 }

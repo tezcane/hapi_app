@@ -13,13 +13,13 @@ class MenuSectionData {
     this.trKeyTitle,
     this.textColor,
     this.backgroundColor,
-    this.assetId,
+    this.event,
     this.items,
   );
   final String trKeyTitle;
   final Color textColor;
   final Color backgroundColor;
-  final String assetId;
+  final Event event;
   final List<MenuItemData> items;
 }
 

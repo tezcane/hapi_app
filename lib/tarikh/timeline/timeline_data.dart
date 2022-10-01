@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
 
-const String TR_KEY_OLDEST = 'i.Big Bang';
+const String TR_KEY_OLDEST = 'Big Bang';
 
 /// This files data used to be in timeline.json.
 class TimelineData {
   const TimelineData({
-    required this.trKeyTitle,
+    required this.tkTitle,
     required this.asset,
+    this.tkEra,
     this.start,
     this.end,
+    this.startMenu,
+    this.endMenu,
     this.date,
-    this.actorId,
     this.accent,
     this.timelineColors,
   });
-  final String trKeyTitle;
+  final String tkTitle;
   final Asset asset;
+  final String? tkEra;
   final double? start;
   final double? end;
+  final double? startMenu;
+  final double? endMenu;
   final double? date;
-  final String? actorId;
   final Color? accent;
   final TimelineColors? timelineColors;
 }
@@ -80,11 +84,22 @@ class Asset {
 }
 
 List<TimelineData> getTimelineData() {
-  List<TimelineData> rv = [];
-  rv.addAll([
-    const TimelineData(
+  return const [
+    TimelineData(
       date: -13800000000,
-      trKeyTitle: TR_KEY_OLDEST,
+      tkTitle: TR_KEY_OLDEST,
+      asset: Asset(
+        source: 'tarikh/flare/Big_Bang.flr',
+        width: 3628,
+        height: 3620,
+        offset: 1500,
+        gap: -1000,
+        loop: false,
+        bounds: [-1814, -1810, 1814, 1810],
+      ),
+      tkEra: 'Universe Begins',
+      startMenu: -16000000000, // custom timeline locations navigated from menu
+      endMenu: -11000000000,
       accent: Color.fromARGB(0xFF, 246, 76, 130),
       timelineColors: TimelineColors(
         background: Color.fromARGB(0xFF, 0, 38, 75),
@@ -99,20 +114,10 @@ List<TimelineData> getTimelineData() {
           text: Color.fromARGB(255, 255, 255, 157),
         ),
       ),
-      asset: Asset(
-        source: 'tarikh/flare/Big_Bang.flr',
-        width: 3628,
-        height: 3620,
-        offset: 1500,
-        gap: -1000,
-        loop: false,
-        bounds: [-1814, -1810, 1814, 1810],
-      ),
     ),
-    const TimelineData(
+    TimelineData(
       date: -13000000000,
-      trKeyTitle: 'i.Milky Way is Born',
-      actorId: 'milky',
+      tkTitle: 'Milky Way is Born',
       asset: Asset(
         source: 'tarikh/flare/Milky Way.flr',
         width: 1293,
@@ -120,11 +125,11 @@ List<TimelineData> getTimelineData() {
         scale: 0.5,
         bounds: [-1616.5, -115.0, -323.5, 1095.0],
       ),
+      tkEra: 'Universe Begins',
     ),
-    const TimelineData(
+    TimelineData(
       date: -4600000000,
-      trKeyTitle: 'i.Sun is Born',
-      accent: Color.fromARGB(0xFF, 255, 166, 20),
+      tkTitle: 'Sun is Born',
       asset: Asset(
         source: 'tarikh/flare/Sun.flr',
         width: 800,
@@ -134,10 +139,12 @@ List<TimelineData> getTimelineData() {
         idle: 'Sun_idle',
         bounds: [-400.0, -400.0, 400.0, 400.0],
       ),
+      tkEra: 'Universe Begins',
+      accent: Color.fromARGB(0xFF, 255, 166, 20),
     ),
-    const TimelineData(
+    TimelineData(
       date: -4505000000,
-      trKeyTitle: 'i.Earth is Born',
+      tkTitle: 'Earth is Born',
       asset: Asset(
         source: 'tarikh/flare/HeavyBombardment.flr',
         width: 1210,
@@ -146,11 +153,11 @@ List<TimelineData> getTimelineData() {
         idle: 'Earth_is_born',
         bounds: [-581, -633, 629, 577],
       ),
+      tkEra: 'Early Earth',
     ),
-    const TimelineData(
+    TimelineData(
       date: -4100000000,
-      trKeyTitle: 'i.Heavy Bombardment',
-      accent: Color.fromARGB(0xFF, 255, 63, 0),
+      tkTitle: 'Heavy Bombardment',
       asset: Asset(
         source: 'tarikh/flare/HeavyBombardment.flr',
         width: 1210,
@@ -159,10 +166,23 @@ List<TimelineData> getTimelineData() {
         idle: 'Bombardmnet',
         bounds: [-598.0, -2075.5, 3176, 599.5],
       ),
+      accent: Color.fromARGB(0xFF, 255, 63, 0),
+      tkEra: 'Early Earth',
     ),
-    const TimelineData(
-      start: -4000000000,
-      trKeyTitle: 'i.Life on Earth',
+    TimelineData(
+      date: -4000000000,
+      tkTitle: 'Life on Earth',
+      asset: Asset(
+        source: 'tarikh/flare/HeavyBombardment.flr',
+        width: 1210,
+        height: 1210,
+        intro: 'Transformation',
+        idle: 'Life on Earth',
+        scale: 0.5,
+        offset: 500,
+        bounds: [-581, -633, 629, 577],
+      ),
+      tkEra: 'Early Earth',
       timelineColors: TimelineColors(
         background: Color.fromARGB(0xFF, 31, 89, 143),
         ticks: TickColors2(
@@ -176,29 +196,20 @@ List<TimelineData> getTimelineData() {
           text: Color.fromARGB(255, 255, 255, 157),
         ),
       ),
-      asset: Asset(
-        source: 'tarikh/flare/HeavyBombardment.flr',
-        width: 1210,
-        height: 1210,
-        intro: 'Transformation',
-        idle: 'Life on Earth',
-        scale: 0.5,
-        offset: 500,
-        bounds: [-581, -633, 629, 577],
-      ),
     ),
-    const TimelineData(
+    TimelineData(
       date: -3800000000,
-      trKeyTitle: 'i.Single Celled Organisms',
+      tkTitle: 'Single Celled Organisms',
       asset: Asset(
         source: 'tarikh/nima/Cells.nma',
         width: 800,
         height: 400,
       ),
+      tkEra: 'Early Earth',
     ),
-    const TimelineData(
-      start: -600000000,
-      trKeyTitle: 'i.Animals',
+    TimelineData(
+      date: -600000000,
+      tkTitle: 'Animals',
       asset: Asset(
         source: 'tarikh/flare/Animals.flr',
         width: 814,
@@ -206,6 +217,7 @@ List<TimelineData> getTimelineData() {
         offset: -100,
         bounds: [0.0, 0.0, 814.0, 664.0],
       ),
+      tkEra: 'Life on Earth',
       accent: Color.fromARGB(55, 134, 222, 255),
       timelineColors: TimelineColors(
         background: Color.fromARGB(0xFF, 132, 175, 214),
@@ -221,11 +233,9 @@ List<TimelineData> getTimelineData() {
         ),
       ),
     ),
-    const TimelineData(
+    TimelineData(
       date: -530000000,
-      trKeyTitle: 'i.Fish',
-      actorId: 'fish',
-      accent: Color.fromARGB(0xFF, 55, 134, 222),
+      tkTitle: 'Fish',
       asset: Asset(
         source: 'tarikh/nima/Fish_and_Stuff.nma',
         width: 1290,
@@ -233,32 +243,35 @@ List<TimelineData> getTimelineData() {
         scale: 0.65,
         bounds: [-549, -5, 741, 645],
       ),
-    ),
-    const TimelineData(
-      date: -396000000,
-      trKeyTitle: 'i.Insects',
+      tkEra: 'Life on Earth',
       accent: Color.fromARGB(0xFF, 55, 134, 222),
+    ),
+    TimelineData(
+      date: -396000000,
+      tkTitle: 'Insects',
       asset: Asset(
         source: 'tarikh/nima/Insects.nma',
         width: 800,
         height: 528,
       ),
-    ),
-    const TimelineData(
-      date: -312000000,
-      trKeyTitle: 'i.Reptiles',
+      tkEra: 'Life on Earth',
       accent: Color.fromARGB(0xFF, 55, 134, 222),
+    ),
+    TimelineData(
+      date: -312000000,
+      tkTitle: 'Reptiles',
       asset: Asset(
         source: 'tarikh/nima/Reptiles.nma',
         width: 400,
         height: 600,
       ),
+      tkEra: 'Life on Earth',
+      accent: Color.fromARGB(0xFF, 55, 134, 222),
     ),
-    const TimelineData(
+    TimelineData(
       start: -230000000,
       end: -65000000,
-      trKeyTitle: 'i.Dinosaur Age',
-      actorId: 'dinosaur',
+      tkTitle: 'Dinosaur Age',
       asset: Asset(
         source: 'tarikh/flare/Dinosaurs.flr',
         width: 800,
@@ -266,22 +279,22 @@ List<TimelineData> getTimelineData() {
         offset: 0,
         gap: 0,
       ),
+      tkEra: 'Prehistoric Times',
     ),
-    const TimelineData(
+    TimelineData(
       date: -200000000,
-      trKeyTitle: 'i.Mammals',
-      actorId: 'mammal',
+      tkTitle: 'Mammals',
       asset: Asset(
         source: 'tarikh/nima/Mammals.nma',
         offset: -200,
         width: 400,
         height: 400,
       ),
+      tkEra: 'Prehistoric Times',
     ),
-    const TimelineData(
+    TimelineData(
       date: -150000000,
-      trKeyTitle: 'i.Stegosaurus',
-      accent: Color.fromARGB(0xFF, 235, 155, 75),
+      tkTitle: 'Stegosaurus',
       asset: Asset(
         source: 'tarikh/nima/Dinosaurs.nma',
         width: 800,
@@ -289,49 +302,55 @@ List<TimelineData> getTimelineData() {
         offset: -200,
         gap: 0,
       ),
-    ),
-    const TimelineData(
-      date: -68000000,
-      trKeyTitle: 'i.Tyrannosaurus',
+      tkEra: 'Prehistoric Times',
       accent: Color.fromARGB(0xFF, 235, 155, 75),
+    ),
+    TimelineData(
+      date: -68000000,
+      tkTitle: 'Tyrannosaurus',
       asset: Asset(
         source: 'tarikh/flare/Trex.flr',
         width: 800,
         height: 570,
         offset: -200,
       ),
-    ),
-    const TimelineData(
-      date: -65000001,
-      trKeyTitle: 'i.Dinosaur Extinction',
+      tkEra: 'Prehistoric Times',
       accent: Color.fromARGB(0xFF, 235, 155, 75),
+    ),
+    TimelineData(
+      date: -65000001,
+      tkTitle: 'Dinosaur Extinction',
       asset: Asset(
         source: 'tarikh/nima/Dinosaur_Demise.nma',
         width: 700,
         height: 500,
         offset: -100,
       ),
+      tkEra: 'Prehistoric Times',
+      accent: Color.fromARGB(0xFF, 235, 155, 75),
     ),
-    const TimelineData(
+    TimelineData(
       date: -6000000,
-      trKeyTitle: 'i.Primate Bipedalism',
-      accent: Color.fromARGB(0xFF, 202, 79, 63),
+      tkTitle: 'Primate Bipedalism',
       asset: Asset(
         source: 'tarikh/nima/Apes.nma',
         width: 528,
         height: 528,
         offset: -40,
       ),
+      tkEra: 'Intelligent Life',
+      accent: Color.fromARGB(0xFF, 202, 79, 63),
     ),
-    const TimelineData(
+    TimelineData(
       date: -3300000,
-      trKeyTitle: 'i.Constructed Tools',
+      tkTitle: 'Constructed Tools',
       asset: Asset(
         source: 'tarikh/nima/Constructive_Tools.nma',
         width: 528,
         height: 528,
         offset: -40,
       ),
+      tkEra: 'Intelligent Life',
       timelineColors: TimelineColors(
         background: Color.fromARGB(0xFF, 255, 255, 255),
         ticks: TickColors2(
@@ -346,53 +365,31 @@ List<TimelineData> getTimelineData() {
         ),
       ),
     ),
-    // const TimelineData(
-    //   start: -340000,
-    //   trKeyTitle: 'a.Adam',
-    //   accent: Color.fromARGB(202, 79, 63, 255),
-    //   asset: Asset(
-    //     source: 'images/anbiya/Adam.png',
-    //     width: 200,
-    //     height: 200,
-    //     offset: 0,
-    //   ),
-    //   timelineColors: TimelineColors(
-    //     background: Color.fromARGB(0xFF, 255, 255, 255),
-    //     ticks: TickColors2(
-    //       background: Color.fromARGB(255, 211, 211, 204),
-    //       long: Color.fromARGB(0xFF, 0, 0, 60),
-    //       short: Color.fromARGB(0xFF, 0, 0, 35),
-    //       text: Color.fromARGB(0xFF, 0, 0, 110),
-    //     ),
-    //     header: HeaderColors2(
-    //       background: Color.fromARGB(245, 245, 245, 240),
-    //       text: Color.fromARGB(0xFF, 0, 0, 110),
-    //     ),
-    //   ),
-    // ),
-    const TimelineData(
+    TimelineData(
       date: -300000,
-      trKeyTitle: 'i.Control Fire',
+      tkTitle: 'Control Fire',
       asset: Asset(
         source: 'tarikh/nima/Fire.nma',
         width: 528,
         height: 528,
         offset: -50,
       ),
+      tkEra: 'Intelligent Life',
     ),
-    const TimelineData(
+    TimelineData(
       date: -12000,
-      trKeyTitle: 'i.First Temple',
+      tkTitle: 'First Temple',
       asset: Asset(
         source: 'tarikh/nima/First_Temple.nma',
         width: 340,
         height: 340,
         offset: -200,
       ),
+      tkEra: 'Ancient Archaeology',
     ),
-    const TimelineData(
+    TimelineData(
       date: -10000,
-      trKeyTitle: 'i.Agricultural Revolution',
+      tkTitle: 'Agricultural Revolution',
       asset: Asset(
         source: 'tarikh/nima/Agricultural_evolution.nma',
         width: 528,
@@ -401,9 +398,9 @@ List<TimelineData> getTimelineData() {
         loop: false,
       ),
     ),
-    const TimelineData(
+    TimelineData(
       date: -5000,
-      trKeyTitle: 'i.Writing',
+      tkTitle: 'Writing',
       asset: Asset(
         source: 'tarikh/nima/Writing.nma',
         width: 900,
@@ -412,30 +409,33 @@ List<TimelineData> getTimelineData() {
         offset: -40,
         bounds: [-459, 4, 441, 1204],
       ),
+      tkEra: 'Ancient Archaeology',
     ),
-    const TimelineData(
-      start: -3500,
-      trKeyTitle: 'i.Recorded History',
+    TimelineData(
+      date: -3500,
+      tkTitle: 'Recorded History',
       asset: Asset(
         source: 'tarikh/nima/Recorded_history.nma',
         width: 400,
         height: 400,
         offset: -200,
       ),
+      tkEra: 'Ancient Archaeology',
     ),
-    const TimelineData(
+    TimelineData(
       date: -2630,
-      trKeyTitle: 'i.First Pyramid Built',
+      tkTitle: 'First Pyramid Built',
       asset: Asset(
         source: 'tarikh/nima/Pyramid.nma',
         width: 400,
         height: 430,
         offset: -350,
       ),
+      tkEra: 'Ancient Egypt',
     ),
-    const TimelineData(
-      date: -27,
-      trKeyTitle: 'i.Roman Empire',
+    TimelineData(
+      date: -27, // TODO need empire length here
+      tkTitle: 'Roman Empire',
       asset: Asset(
         source: 'tarikh/nima/Roma.nma',
         width: 2100,
@@ -444,11 +444,12 @@ List<TimelineData> getTimelineData() {
         offset: 0,
         bounds: [-1030, -7.5, 1070, 1367.5],
       ),
+      tkEra: 'Romans',
     ),
-    const TimelineData(
+    TimelineData(
       start: 1095,
       end: 1291,
-      trKeyTitle: 'i.Crusades',
+      tkTitle: 'Crusades',
       accent: Color.fromARGB(0xFF, 227, 21, 55),
       asset: Asset(
         source: 'tarikh/nima/Crusades.nma',
@@ -457,28 +458,28 @@ List<TimelineData> getTimelineData() {
         offset: -60,
       ),
     ),
-    const TimelineData(
+    TimelineData(
       start: 1347,
       end: 1351,
-      trKeyTitle: 'i.Black Plague',
+      tkTitle: 'Black Plague',
       asset: Asset(
         source: 'tarikh/nima/BlackPlague.nma',
         width: 800,
         height: 400,
       ),
     ),
-    const TimelineData(
+    TimelineData(
       date: 1453,
-      trKeyTitle: 'i.Constantinople Istanbul',
+      tkTitle: 'Constantinople Istanbul',
       asset: Asset(
         source: 'tarikh/nima/Constantinople.nma',
         width: 500,
         height: 500,
       ),
     ),
-    const TimelineData(
+    TimelineData(
       date: 1687,
-      trKeyTitle: 'i.Newton and Gravity',
+      tkTitle: 'Newton and Gravity',
       asset: Asset(
         source: 'tarikh/nima/Newton_v2.nma',
         width: 500,
@@ -486,9 +487,9 @@ List<TimelineData> getTimelineData() {
         idle: 'apple_falls',
       ),
     ),
-    const TimelineData(
+    TimelineData(
       date: 1760,
-      trKeyTitle: 'i.Industrialization',
+      tkTitle: 'Industrialization',
       asset: Asset(
         source: 'tarikh/nima/Industrialization.nma',
         width: 500,
@@ -496,9 +497,9 @@ List<TimelineData> getTimelineData() {
         offset: -100,
       ),
     ),
-    const TimelineData(
+    TimelineData(
       date: 1859,
-      trKeyTitle: "i.Darwin's Theory of Evolution",
+      tkTitle: "Darwin's Theory of Evolution",
       asset: Asset(
         source: 'tarikh/nima/Darwin 2.nma',
         width: 1850,
@@ -508,64 +509,62 @@ List<TimelineData> getTimelineData() {
         bounds: [-934, -859, 916, 1241],
       ),
     ),
-    const TimelineData(
+    TimelineData(
       start: 1914,
       end: 1918,
-      trKeyTitle: 'i.World War 1',
-      accent: Color.fromARGB(0xFF, 227, 21, 55),
+      tkTitle: 'World War 1',
       asset: Asset(
         source: 'tarikh/nima/World_War_I.nma',
         width: 528,
         height: 528,
       ),
+      accent: Color.fromARGB(0xFF, 227, 21, 55),
     ),
-    const TimelineData(
+    TimelineData(
       start: 1939,
       end: 1945,
-      trKeyTitle: 'i.World War 2',
-      accent: Color.fromARGB(0xFF, 227, 21, 55),
+      tkTitle: 'World War 2',
       asset: Asset(
         source: 'tarikh/nima/World_War_II.nma',
         width: 528,
         height: 528,
         offset: -140,
       ),
+      accent: Color.fromARGB(0xFF, 227, 21, 55),
     ),
-    const TimelineData(
+    TimelineData(
       start: 1947,
       end: 1991,
-      trKeyTitle: 'i.Cold War',
-      accent: Color.fromARGB(0xFF, 227, 21, 55),
+      tkTitle: 'Cold War',
       asset: Asset(
         source: 'tarikh/nima/Cold_war.nma',
         width: 528,
         height: 528,
         offset: -80,
       ),
+      accent: Color.fromARGB(0xFF, 227, 21, 55),
     ),
-    const TimelineData(
+    TimelineData(
       date: 1969,
-      trKeyTitle: 'i.Moon Landing',
-      accent: Color.fromARGB(0xFF, 115, 132, 205),
+      tkTitle: 'Moon Landing',
       asset: Asset(
         source: 'tarikh/nima/Moon.nma',
         width: 528,
         height: 528,
         offset: -100,
       ),
-    ),
-    const TimelineData(
-      date: 1990,
-      trKeyTitle: 'i.World Wide Web',
       accent: Color.fromARGB(0xFF, 115, 132, 205),
+    ),
+    TimelineData(
+      date: 1990,
+      tkTitle: 'World Wide Web',
       asset: Asset(
         source: 'tarikh/nima/Internet.nma',
         width: 528,
         height: 528,
         offset: -140,
       ),
+      accent: Color.fromARGB(0xFF, 115, 132, 205),
     ),
-  ]);
-
-  return rv;
+  ];
 }

@@ -85,7 +85,7 @@ abstract class Relic extends Event {
     required this.e,
   }) : super(
           type: EVENT_TYPE.Relic,
-          trKeyEra: trValEra,
+          tkEra: trValEra,
           trKeyTitle: e.name,
           startMs: startMs,
           endMs: endMs,

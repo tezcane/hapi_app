@@ -57,7 +57,7 @@ class TarikhMenuUI extends StatelessWidget {
                         c.tarikhMenuData[index].items,
                         navigateToTimeline,
                         c.isActiveTarikhMenu,
-                        assetId: c.tarikhMenuData[index].assetId,
+                        c.tarikhMenuData[index].event,
                       );
                     }),
                   );

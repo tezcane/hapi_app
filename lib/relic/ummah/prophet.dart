@@ -95,7 +95,7 @@ class Prophet extends FamilyTree {
 final List<Prophet> relicsProphet = [
   Prophet(
     // Event data:
-    trValEra: 'i.Birth of Humans'.tr,
+    trValEra: 'Intelligent Life'.tr,
     startMs: -340000,
     endMs: -339050,
     // Relic data:
@@ -470,7 +470,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    trValEra: 'i.Old Egyptian Kingdoms'.tr,
+    trValEra: 'Ancient Egypt',
     startMs: -2400,
     endMs: -2400,
     // Relic data:
@@ -604,7 +604,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    trValEra: a('a.Firaun') + 'i._New_Kingdoms of_'.tr + a('a.Misr'), // Egypt
+    trValEra: 'Ancient Egypt',
     startMs: -1303,
     endMs: -1200,
     // Relic data:
@@ -640,7 +640,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    trValEra: a('a.Firaun') + 'i._New_Kingdoms of_'.tr + a('a.Misr'), // Egypt
+    trValEra: 'Ancient Egypt',
     startMs: -1300,
     endMs: -1200,
     // Relic data:

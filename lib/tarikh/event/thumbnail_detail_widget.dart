@@ -60,15 +60,15 @@ class ThumbnailDetailWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           T(
-                            event.tvEventTitleLine1,
+                            event.tvTitleLine1,
                             ts,
                             h: 27,
                             alignment: LanguageC.to.centerLeft,
                             trVal: true,
                           ),
-                          if (event.tvEventTitleLine2 != '')
+                          if (event.tvTitleLine2 != '')
                             T(
-                              event.tvEventTitleLine2,
+                              event.tvTitleLine2,
                               ts,
                               h: 27,
                               alignment: LanguageC.to.centerLeft,

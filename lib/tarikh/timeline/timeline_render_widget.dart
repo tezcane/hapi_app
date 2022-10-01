@@ -485,35 +485,11 @@ class TimelineRenderObject extends RenderBox {
     if (t.nextEvent != null) {
       // && t.nextEventOpacity > 0.0) {
       cTrkh.updateEventBtn(cTrkh.timeBtnDn, t.nextEvent);
-    } else {
-      TimeBtn timeBtn = cTrkh.timeBtnDn;
-      String timeUntil = timeBtn.trValTimeUntil;
-      String pageScrolls = timeBtn.trValPageScrolls;
-      String title = timeBtn.trValTitle;
-
-      // don't update unless we have a new value
-      if (timeBtn.trValTimeUntil != timeUntil ||
-          timeBtn.trValPageScrolls != pageScrolls ||
-          timeBtn.trValTitle != title) {
-        cTrkh.updateTimeBtn(timeBtn, title, timeUntil, pageScrolls);
-      }
     }
 
     if (t.prevEvent != null) {
       // && t.prevEventOpacity > 0.0) {
       cTrkh.updateEventBtn(cTrkh.timeBtnUp, t.prevEvent);
-    } else {
-      TimeBtn timeBtn = cTrkh.timeBtnUp;
-      String timeUntil = timeBtn.trValTimeUntil;
-      String pageScrolls = timeBtn.trValPageScrolls;
-      String title = timeBtn.trValTitle;
-
-      // don't update unless we have a new value
-      if (timeBtn.trValTimeUntil != timeUntil ||
-          timeBtn.trValPageScrolls != pageScrolls ||
-          timeBtn.trValTitle != title) {
-        cTrkh.updateTimeBtn(timeBtn, title, timeUntil, pageScrolls);
-      }
     }
 
     // Fixes bug where if we drag the timeline beyond first or last event both
