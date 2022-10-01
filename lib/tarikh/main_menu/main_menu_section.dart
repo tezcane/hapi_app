@@ -74,9 +74,7 @@ class _SectionState extends State<MenuSection>
 
     /// [_sizeAnimation] will interpolate using this curve - [Curves.fastOutSlowIn].
     _sizeAnimation = _sizeTween.animate(curve);
-    _controller!.addListener(() {
-      setState(() {});
-    });
+    _controller!.addListener(() => setState(() {}));
   }
 
   @override
