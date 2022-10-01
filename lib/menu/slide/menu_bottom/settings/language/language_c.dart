@@ -296,7 +296,11 @@ class LanguageC extends GetxHapi {
       trKey = trKey.replaceFirst('a.', trKeyLeadingTag);
     }
 
-    return (await _getTrMap(trFilePath, currLangKey))[trKey]!;
+    try {
+      return (await _getTrMap(trFilePath, currLangKey))[trKey]!;
+    } catch (e) {
+      return 'Coming Soon';
+    }
   }
 
   /// Give "a.<transliteration> and get Arabic script translation back
