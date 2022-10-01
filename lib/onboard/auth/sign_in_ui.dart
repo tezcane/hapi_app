@@ -35,7 +35,7 @@ class SignInUI extends StatelessWidget {
                   FormInputFieldWithIcon(
                     controller: AuthC.to.emailController,
                     iconPrefix: Icons.email,
-                    tk: 'auth.emailFormField',
+                    tk: 'Email',
                     validator: Validator().email,
                     keyboardType: TextInputType.emailAddress,
                     onChanged: (value) {},
@@ -45,7 +45,7 @@ class SignInUI extends StatelessWidget {
                   FormInputFieldWithIcon(
                     controller: AuthC.to.passwordController,
                     iconPrefix: Icons.lock,
-                    tk: 'auth.passwordFormField',
+                    tk: 'Password',
                     validator: Validator().password,
                     obscureText: true,
                     onChanged: (value) {},
@@ -55,7 +55,7 @@ class SignInUI extends StatelessWidget {
                   ),
                   const FormVerticalSpace(),
                   PrimaryButton(
-                      tk: 'auth.signInButton',
+                      tk: 'Sign In',
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           AuthC.to.signInWithEmailAndPassword(context);
@@ -63,11 +63,11 @@ class SignInUI extends StatelessWidget {
                       }),
                   const FormVerticalSpace(),
                   LabelButton(
-                    tk: 'auth.resetPasswordLabelButton',
+                    tk: 'Forgot password?',
                     onPressed: () => Get.to(() => ResetPasswordUI()),
                   ),
                   LabelButton(
-                    tk: 'auth.signUpLabelButton',
+                    tk: 'Create an account',
                     onPressed: () => Get.to(() => SignUpUI()),
                   ),
                 ],

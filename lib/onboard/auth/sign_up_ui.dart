@@ -33,7 +33,7 @@ class SignUpUI extends StatelessWidget {
                   FormInputFieldWithIcon(
                     controller: AuthC.to.nameController,
                     iconPrefix: Icons.person,
-                    tk: 'auth.nameFormField',
+                    tk: 'Name',
                     validator: Validator().name,
                     onChanged: (value) {},
                     onSaved: (value) => AuthC.to.nameController.text = value!,
@@ -42,7 +42,7 @@ class SignUpUI extends StatelessWidget {
                   FormInputFieldWithIcon(
                     controller: AuthC.to.emailController,
                     iconPrefix: Icons.email,
-                    tk: 'auth.emailFormField',
+                    tk: 'Email',
                     validator: Validator().email,
                     keyboardType: TextInputType.emailAddress,
                     onChanged: (value) {},
@@ -52,7 +52,7 @@ class SignUpUI extends StatelessWidget {
                   FormInputFieldWithIcon(
                     controller: AuthC.to.passwordController,
                     iconPrefix: Icons.lock,
-                    tk: 'auth.passwordFormField',
+                    tk: 'Password',
                     validator: Validator().password,
                     obscureText: true,
                     onChanged: (value) {},
@@ -62,7 +62,7 @@ class SignUpUI extends StatelessWidget {
                   ),
                   const FormVerticalSpace(),
                   PrimaryButton(
-                      tk: 'auth.signUpButton',
+                      tk: 'Sign Up',
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           SystemChannels.textInput.invokeMethod(
@@ -72,7 +72,7 @@ class SignUpUI extends StatelessWidget {
                       }),
                   const FormVerticalSpace(),
                   LabelButton(
-                    tk: 'auth.signInLabelButton',
+                    tk: 'Have an account? Sign in to your account.',
                     onPressed: () => Get.to(() => SignInUI()),
                   ),
                 ],

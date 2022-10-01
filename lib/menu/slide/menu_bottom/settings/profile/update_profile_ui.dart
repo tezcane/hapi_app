@@ -43,7 +43,7 @@ class UpdateProfileUI extends StatelessWidget {
                         FormInputFieldWithIcon(
                           controller: c.nameController,
                           iconPrefix: Icons.person,
-                          tk: 'auth.nameFormField',
+                          tk: 'Name',
                           validator: Validator().name,
                           onChanged: (value) => tu.handleTextUpdate(
                             [
@@ -61,7 +61,7 @@ class UpdateProfileUI extends StatelessWidget {
                         FormInputFieldWithIcon(
                           controller: c.emailController,
                           iconPrefix: Icons.email,
-                          tk: 'auth.emailFormField',
+                          tk: 'Email',
                           validator: Validator().email,
                           keyboardType: TextInputType.emailAddress,
                           onChanged: (value) => tu.handleTextUpdate(
@@ -117,7 +117,7 @@ class UpdateProfileUI extends StatelessWidget {
                         ),
                         const FormVerticalSpace(),
                         LabelButton(
-                            tk: 'auth.resetPasswordLabelButton',
+                            tk: 'Send a password reset email',
                             onPressed: () =>
                                 MenuC.to.pushSubPage(SubPage.Reset_Password)),
                         const SizedBox(height: 400), //hide sign out down page
@@ -151,13 +151,13 @@ class UpdateProfileUI extends StatelessWidget {
           return AlertDialog(
             shape: const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(8.0))),
-            title: T('auth.enterPasswordTitle', null, w: wm(context)),
+            title: T('Enter Your Password', null, w: wm(context)),
             content: Form(
               key: _formKey2,
               child: FormInputFieldWithIcon(
                 controller: _password,
                 iconPrefix: Icons.lock,
-                tk: 'auth.passwordFormField',
+                tk: 'Password',
                 validator: Validator().password,
                 obscureText: true,
                 onChanged: (value) {},
@@ -167,7 +167,7 @@ class UpdateProfileUI extends StatelessWidget {
             ),
             actions: <Widget>[
               TextButton(
-                child: T('auth.cancel', null, w: wm(context)),
+                child: T('Cancel', null, w: wm(context)),
                 onPressed: () {
                   // revert text back
                   c.nameController.text = c.firestoreUser.value!.name;
@@ -177,7 +177,7 @@ class UpdateProfileUI extends StatelessWidget {
                 },
               ),
               TextButton(
-                child: T('auth.submit', null, w: wm(context)),
+                child: T('Submit', null, w: wm(context)),
                 onPressed: () async {
                   if (_formKey2.currentState!.validate()) {
                     bool failed = await c.updateUser(

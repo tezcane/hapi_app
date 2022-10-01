@@ -170,8 +170,8 @@ class AuthC extends GetxHapi {
     } catch (error) {
       hideLoadingIndicator();
       showSnackBar(
-        'auth.signInErrorTitle',
-        'auth.signInError',
+        'Error Signing In',
+        'Email or password is incorrect',
         durationSec: 7,
         isRed: true,
       );
@@ -216,7 +216,7 @@ class AuthC extends GetxHapi {
     } on FirebaseAuthException catch (error) {
       hideLoadingIndicator();
       showSnackBar(
-        'auth.signUpErrorTitle',
+        'Sign Up Failed',
         error.message!,
         durationSec: 10,
         isRed: true,
@@ -246,8 +246,8 @@ class AuthC extends GetxHapi {
       storeLastSignedInEmail();
 
       showSnackBar(
-        'auth.updateUserSuccessNoticeTitle',
-        'auth.updateUserSuccessNotice',
+        'User Updated',
+        'User information successfully updated.',
       );
       return Future.value(false);
     } catch (error) {
@@ -262,7 +262,7 @@ class AuthC extends GetxHapi {
       // getLastSignedInEmail();
 
       showSnackBar(
-        'auth.updateUserFailNotice',
+        'Failed to update user',
         tkForFirestoreAuthFailure(error.toString()),
         durationSec: 10,
         isRed: true,
@@ -280,27 +280,29 @@ class AuthC extends GetxHapi {
     if (error.contains('invalid-email')) {
       return 'validator.email';
     } else if (error.contains('email-already-in-use')) {
-      return 'auth.updateUserEmailInUse';
+      return 'This email address already has an account. Sign in?';
     } else if (error.contains('wrong-password')) {
-      return 'auth.wrongPasswordNotice';
+      return 'The password does not match our records.';
     } else if (error.contains('weak-password')) {
       return 'validator.password';
     } else if (error.contains('user-disabled')) {
-      return 'auth.userIsAdminDisabled';
+      return 'This account was disabled by the admin.';
     }
 
     // I don't expect to see these
     l.e('Strange/unexpected error: $authError');
     if (error.contains('user-not-found')) {
-      return 'auth.signInError';
+      return 'Email or password is incorrect';
     } else if (error.contains('too-many-requests')) {
-      return 'auth.tooManyRequests';
+      return 'Too many requests were made.';
     } else if (error.contains('operation-not-allowed')) {
-      return 'auth.operationNotAllowed';
+      return 'This operation is not allowed.';
     } else if (error.contains('requires-recent-login')) {
-      return 'auth.requiresRecentLogin';
+      return 'This operation requires a recent login.';
     } else {
-      return 'auth.unknownErrorTitle'.tr + ': ' + authError; // tr ok, not tk
+      return 'Unknown Error'.tr +
+          ': ' +
+          authError; // tr ok, unknown translation, shows en
     }
   }
 
@@ -324,14 +326,14 @@ class AuthC extends GetxHapi {
       await _auth.sendPasswordResetEmail(email: newEmail);
       hideLoadingIndicator();
       showSnackBar(
-        'auth.resetPasswordNoticeTitle',
-        'auth.resetPasswordNotice',
+        'Password Reset Email Sent',
+        'To reset your password, follow the emailed instructions.',
         durationSec: 10,
       );
     } on FirebaseAuthException catch (error) {
       hideLoadingIndicator();
       showSnackBar(
-        'auth.resetPasswordFailed',
+        'Failed to send password reset email.',
         error.message!,
         durationSec: 10,
         isRed: true,
