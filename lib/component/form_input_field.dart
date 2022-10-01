@@ -11,15 +11,16 @@ import 'package:flutter/material.dart';
 ///                 onSaved: (value) => print('implement me'),
 ///               ),
 class FormInputField extends StatelessWidget {
-  const FormInputField(
-      {required this.controller,
-      required this.labelText,
-      required this.validator,
-      this.keyboardType = TextInputType.text,
-      this.obscureText = false,
-      this.minLines = 1,
-      required this.onChanged,
-      required this.onSaved});
+  const FormInputField({
+    required this.controller,
+    required this.labelText,
+    required this.validator,
+    this.keyboardType = TextInputType.text,
+    this.obscureText = false,
+    this.minLines = 1,
+    required this.onChanged,
+    required this.onSaved,
+  });
 
   final TextEditingController controller;
   final String labelText;
