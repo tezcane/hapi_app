@@ -38,7 +38,7 @@ class SearchManager {
 
     for (Event event in events) {
       // remove new lines so we can search titles that have \n:
-      String label = a(event.trKeyTitle).replaceFirst('\n', ' ');
+      String label = a(event.tkTitle).replaceFirst('\n', ' ');
       // TODO we can also search for en/ar here.
       int len = label.length;
       for (int i = 0; i < len; i++) {

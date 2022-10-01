@@ -16,7 +16,7 @@ class FormInputFieldWithIcon extends StatelessWidget {
   const FormInputFieldWithIcon(
       {required this.controller,
       required this.iconPrefix,
-      required this.trKey,
+      required this.tk,
       required this.validator,
       this.keyboardType = TextInputType.text,
       this.obscureText = false,
@@ -27,7 +27,7 @@ class FormInputFieldWithIcon extends StatelessWidget {
 
   final TextEditingController controller;
   final IconData iconPrefix;
-  final String trKey;
+  final String tk;
   final String? Function(String?)? validator;
   final TextInputType keyboardType;
   final bool obscureText;
@@ -42,7 +42,7 @@ class FormInputFieldWithIcon extends StatelessWidget {
       decoration: InputDecoration(
         filled: true,
         prefixIcon: Icon(iconPrefix),
-        labelText: trKey.tr,
+        labelText: tk.tr,
       ),
       controller: controller,
       onSaved: onSaved,

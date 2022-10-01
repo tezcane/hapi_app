@@ -22,8 +22,8 @@ enum Z {
 }
 
 extension EnumUtil on Z {
-  /// Returns a trKey which can then be translated by calling Get's ".tr" on it.
-  String get trKey {
+  /// Returns a tk which can then be translated by calling Get's ".tr" on it.
+  String get tk {
     String transliteration = name;
     if (this == Z.Dhuhr) {
       if (TimeC.to.isFriday() && ActiveQuestsC.to.showJumahOnFriday) {

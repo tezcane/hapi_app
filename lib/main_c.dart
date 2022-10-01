@@ -193,7 +193,7 @@ const TS tsN = TS(AppThemes.ldTextColor);
 const TS tsR = TS(Colors.red);
 const TS tsW = TS(Colors.white);
 
-// TODO change to TK - Translate trKey, and TV - Translate trValue
+// TODO change to TK - Translate tk, and TV - Translate trValue
 /// "T"/"t" short for Text, use to translate or fit text in UI.
 ///
 /// NOTE 1: When wrapped in Center this broke Swiper UI
@@ -201,7 +201,7 @@ const TS tsW = TS(Colors.white);
 ///         in a Center() too. So if you want to constraint on height do that.
 class T extends StatelessWidget {
   const T(
-    this.trKeyOrVal,
+    this.tkOrVal,
     this.style, {
     this.alignment = Alignment.center,
     this.w,
@@ -209,13 +209,13 @@ class T extends StatelessWidget {
     this.boxFit = BoxFit.contain, // BoxFit.fitHeight, BoxFit.fitWidth
     this.trVal = false,
   });
-  final String trKeyOrVal;
+  final String tkOrVal;
   final TextStyle? style;
   final Alignment alignment;
   final double? w;
   final double h;
   final BoxFit boxFit;
-  final bool trVal; // set to true if trKeyOrVal comes in already translated
+  final bool trVal; // set to true if tkOrVal comes in already translated
 
   @override
   Widget build(BuildContext context) {
@@ -229,7 +229,7 @@ class T extends StatelessWidget {
       child: FittedBox(
         fit: boxFit,
         alignment: alignment,
-        child: Text(trVal ? trKeyOrVal : a(trKeyOrVal), style: style),
+        child: Text(trVal ? tkOrVal : a(tkOrVal), style: style),
       ),
     );
   }
@@ -255,50 +255,50 @@ Map<String, String?> aMap = {
 ///
 /// So eventually their app will look of a mix of their native language and
 /// Arabic script.
-String a(String trKey) {
-  if (!trKey.startsWith('a.')) return trKey.tr; // no "a" key, tr and return
-  // if (kDebugMode && !trKey.startsWith('a.')) {
-  //   return l.E('a(): must pass in "a.", key got "$trKey"');
+String a(String tk) {
+  if (!tk.startsWith('a.')) return tk.tr; // no "a" key, tr and return
+  // if (kDebugMode && !tk.startsWith('a.')) {
+  //   return l.E('a(): must pass in "a.", key got "$tk"');
   // }
   //
-  // List<String> keySplit = trKey.split('.');
-  // if (keySplit.length == 1) return trKey.tr;
+  // List<String> keySplit = tk.split('.');
+  // if (keySplit.length == 1) return tk.tr;
 
-  String transliteration = trKey.split('.')[1]; // transliteration is aMap's key
+  String transliteration = tk.split('.')[1]; // transliteration is aMap's key
   bool containsKey = aMap.containsKey(transliteration);
   if (containsKey) {
     String? rv = aMap[transliteration];
     if (rv == null) return transliteration; // user wants transliteration only
     return rv; // user wants Arabic alphabet
   }
-  return trKey.tr; // not found in aMap, translate to en/tr/etc.
+  return tk.tr; // not found in aMap, translate to en/tr/etc.
 }
 
-/// at = Arabic Translate/Template. Use "at." template trKey to insert other
-///   trKeys (Can also be tagged like "p." or "a." if need to a() those too),
+/// at = Arabic Translate/Template. Use "at." template tk to insert other
+///   tks (Can also be tagged like "p." or "a." if need to a() those too),
 ///   e.g.:
-///     From this trKey template, replace {x}'s:
+///     From this tk template, replace {x}'s:
 ///       'Time until "{0}" ends and "{1}" begins'
-///     With trKeysToInsert list's values [zc.currZ.trKey, zc.nextZ.trKey], so:
+///     With tksToInsert list's values [zc.currZ.tk, zc.nextZ.tk], so:
 ///       'Time until "Dhuhr" ends and "Asr" begins'
 ///
-/// Note: trKeysToInsert should have only "a." trKeys passed in.
-String at(String trKeyTemplate, List<String> trKeysToInsert) {
-  String rv = a(trKeyTemplate); // does normal tr or "a." a() tr
+/// Note: tksToInsert should have only "a." tks passed in.
+String at(String tkTemplate, List<String> tksToInsert) {
+  String rv = a(tkTemplate); // does normal tr or "a." a() tr
   // String rv =
-  //     trKeyTemplate.startsWith('a.') ? a(trKeyTemplate) : trKeyTemplate.tr;
+  //     tkTemplate.startsWith('a.') ? a(tkTemplate) : tkTemplate.tr;
 
   // loop through translated text and add arabic/transliteration text:
-  for (int idx = 0; idx < trKeysToInsert.length; idx++) {
-    rv = rv.replaceFirst('{$idx}', a(trKeysToInsert[idx]));
+  for (int idx = 0; idx < tksToInsert.length; idx++) {
+    rv = rv.replaceFirst('{$idx}', a(tksToInsert[idx]));
   }
 
   return rv;
 }
 
 showSnackBar(
-  String trKeyTitle,
-  String trKeyMsg, {
+  String tkTitle,
+  String tkMsg, {
   int durationSec = 3,
   bool isRed = false,
 }) {
@@ -309,8 +309,8 @@ showSnackBar(
   if (Get.isSnackbarOpen) Get.closeCurrentSnackbar();
 
   Get.snackbar(
-    trKeyTitle.tr,
-    trKeyMsg.tr,
+    tkTitle.tr,
+    tkMsg.tr,
     snackPosition: SnackPosition.TOP,
     duration: Duration(seconds: durationSec),
     backgroundColor: Get.theme.snackBarTheme.backgroundColor,

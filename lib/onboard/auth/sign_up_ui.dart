@@ -33,7 +33,7 @@ class SignUpUI extends StatelessWidget {
                   FormInputFieldWithIcon(
                     controller: AuthC.to.nameController,
                     iconPrefix: Icons.person,
-                    trKey: 'auth.nameFormField',
+                    tk: 'auth.nameFormField',
                     validator: Validator().name,
                     onChanged: (value) {},
                     onSaved: (value) => AuthC.to.nameController.text = value!,
@@ -42,7 +42,7 @@ class SignUpUI extends StatelessWidget {
                   FormInputFieldWithIcon(
                     controller: AuthC.to.emailController,
                     iconPrefix: Icons.email,
-                    trKey: 'auth.emailFormField',
+                    tk: 'auth.emailFormField',
                     validator: Validator().email,
                     keyboardType: TextInputType.emailAddress,
                     onChanged: (value) {},
@@ -52,7 +52,7 @@ class SignUpUI extends StatelessWidget {
                   FormInputFieldWithIcon(
                     controller: AuthC.to.passwordController,
                     iconPrefix: Icons.lock,
-                    trKey: 'auth.passwordFormField',
+                    tk: 'auth.passwordFormField',
                     validator: Validator().password,
                     obscureText: true,
                     onChanged: (value) {},
@@ -62,7 +62,7 @@ class SignUpUI extends StatelessWidget {
                   ),
                   const FormVerticalSpace(),
                   PrimaryButton(
-                      trKey: 'auth.signUpButton',
+                      tk: 'auth.signUpButton',
                       onPressed: () async {
                         if (_formKey.currentState!.validate()) {
                           SystemChannels.textInput.invokeMethod(
@@ -72,7 +72,7 @@ class SignUpUI extends StatelessWidget {
                       }),
                   const FormVerticalSpace(),
                   LabelButton(
-                    trKey: 'auth.signInLabelButton',
+                    tk: 'auth.signInLabelButton',
                     onPressed: () => Get.to(() => SignInUI()),
                   ),
                 ],

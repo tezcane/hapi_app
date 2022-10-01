@@ -279,30 +279,30 @@ class LanguageC extends GetxHapi {
   /// Load translations from disk to save memory. The trVal is returned from the
   /// currLangKey lookup, e.g. if Timeline Event calls this and lang is Turkish
   /// tarikh_articles/tr.json will be parsed and returned.
-  Future<String> trValArticle(EVENT_TYPE eventType, String trKey) async {
+  Future<String> trValArticle(EVENT_TYPE eventType, String tk) async {
     String trFilePath;
-    String trKeyLeadingTag;
+    String tkLeadingTag;
     if (eventType == EVENT_TYPE.Relic) {
       trFilePath = 'relic/anbiya';
-      trKeyLeadingTag = 'pq.';
+      tkLeadingTag = 'pq.';
       return Future.value('i.Coming Soon'); // TODO asdf
     } else {
       trFilePath = 'tarikh_articles/';
-      trKeyLeadingTag = 't.';
+      tkLeadingTag = 't.';
     }
 
-    trKey = trKey.replaceFirst('i.', trKeyLeadingTag);
-    if (!trKey.startsWith(trKeyLeadingTag)) {
-      trKey = trKey.replaceFirst('a.', trKeyLeadingTag);
+    tk = tk.replaceFirst('i.', tkLeadingTag);
+    if (!tk.startsWith(tkLeadingTag)) {
+      tk = tk.replaceFirst('a.', tkLeadingTag);
     }
 
     try {
-      return (await _getTrMap(trFilePath, currLangKey))[trKey]!;
+      return (await _getTrMap(trFilePath, currLangKey))[tk]!;
     } catch (e) {
       return 'Coming Soon';
     }
   }
 
   /// Give "a.<transliteration> and get Arabic script translation back
-  String ar(String trKey) => aMap[trKey]!;
+  String ar(String tk) => aMap[tk]!;
 }

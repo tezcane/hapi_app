@@ -1063,7 +1063,7 @@ final List<Prophet> relicsProphet = [
         _ +
         cns('(3:31, 3:164, 4:59, 4:115, 59:7)'),
     qvsUluAlAzm: [QV(2, 124)],
-    trValLocationBirth: a(DAY_OF_WEEK.Monday.trKey) +
+    trValLocationBirth: a(DAY_OF_WEEK.Monday.tk) +
         'i.,_'.tr +
         cni(12) +
         _ +
@@ -1082,7 +1082,7 @@ final List<Prophet> relicsProphet = [
         a('a.Al-Hejaz') +
         'i.,_'.tr +
         a('a.Al-Arabiyyah'),
-    trValLocationDeath: a(DAY_OF_WEEK.Monday.trKey) +
+    trValLocationDeath: a(DAY_OF_WEEK.Monday.tk) +
         'i.,_'.tr +
         cni(12) +
         _ +
@@ -1190,168 +1190,168 @@ enum PF {
   /* TODO rename to AS (Aleyhi Salam) */
   Adam(Isim(
     trValHebrew: 'אדם (Adam)',
-    trKeyHebrewMeaning: 'p.man',
+    tkHebrewMeaning: 'p.man',
     trValGreek: 'Αδάμ (Adam)',
     trValLatin: 'Adam',
   )),
   Idris(Isim(
     trValHebrew: 'חֲנוֹך (Hanokh)',
-    trKeyHebrewMeaning: 'p.dedicated',
+    tkHebrewMeaning: 'p.dedicated',
     trValGreek: 'Ἐνώχ (Enoch)',
     trValLatin: 'Enoch',
   )),
   Nuh(Isim(
     trValHebrew: 'נֹחַ (Noach)',
-    trKeyHebrewMeaning: 'p.rest, repose',
+    tkHebrewMeaning: 'p.rest, repose',
     trValGreek: 'Νῶε (Noe)',
     trValLatin: null,
   )),
   Hud(Isim(
     trValHebrew: 'עבר (Eber)',
-    trKeyHebrewMeaning: 'p.region beyond',
+    tkHebrewMeaning: 'p.region beyond',
     trValGreek: null,
     trValLatin: null,
-    trKeyNote: 'p.Possibly Eber or his son',
+    tkNote: 'p.Possibly Eber or his son',
   )),
   Salih(Isim(
     trValHebrew: null, // TODO
     trValGreek: null,
     trValLatin: null,
-    trKeyNote: 'p.Often attributed to biblical prophets',
+    tkNote: 'p.Often attributed to biblical prophets',
   )),
   Ibrahim(Isim(
-    trKeyLaqab: [
+    tkLaqab: [
       'a.Khalilullah', // Friend of Allah
       'p.Father of Abrahimic faiths', // TODO
     ],
     trValHebrew: 'אַבְרָהָם (Abraham)',
-    trKeyHebrewMeaning: 'p.many, multitude',
+    tkHebrewMeaning: 'p.many, multitude',
     trValGreek: 'Ἀβραάμ (Abraam)',
     trValLatin: 'Abraham',
   )), // İbrahim
   Lut(Isim(
     trValHebrew: 'לוֹט (Lot)',
-    trKeyHebrewMeaning: 'p.covering, veil',
+    tkHebrewMeaning: 'p.covering, veil',
     trValGreek: null,
     trValLatin: null,
   )), // İsmail
   Ismail(Isim(
-    trKeyLaqab: ['p.Father of the Arabs'], // TODO
+    tkLaqab: ['p.Father of the Arabs'], // TODO
     trValHebrew: 'יִשְׁמָעֵאל (Yishmael)',
-    trKeyHebrewMeaning: 'p.God will hear',
+    tkHebrewMeaning: 'p.God will hear',
     trValGreek: 'Ἰσμαήλ (Ismael)',
     trValLatin: 'Ismahel',
   )), // İshak
   Ishaq(Isim(
-    trKeyLaqab: ['p.Father of the Hebrews/Jews'], // TODO
+    tkLaqab: ['p.Father of the Hebrews/Jews'], // TODO
     trValHebrew: 'יִצְחָק (Yitzhaq)',
-    trKeyHebrewMeaning: 'p.he will laugh, he will rejoice',
+    tkHebrewMeaning: 'p.he will laugh, he will rejoice',
     trValGreek: 'Ισαάκ ()',
     trValLatin: 'Isaac',
   )),
   Yaqub(Isim(
-    trKeyLaqab: [
+    tkLaqab: [
       'a.Israel', //  إِسْرَآءِيل
       'p.Father of the 12 tribes of Israel',
     ],
     trValHebrew: 'יַעֲקֹב (Yaaqov)',
-    trKeyHebrewMeaning:
+    tkHebrewMeaning:
         'p.Possibly "holder of the heel" or derived from "may God protect"',
     trValGreek: 'Ἰακώβ (Iakob)',
     trValLatin: 'Iacob',
   )), //  Yakub
   Yusuf(Isim(
     trValHebrew: 'יוֹסֵף (Yosef)',
-    trKeyHebrewMeaning: 'p.he will add',
+    tkHebrewMeaning: 'p.he will add',
     trValGreek: 'Ἰωσήφ (Ioseph)',
     trValLatin: 'Ioseph',
   )),
   Ayyub(Isim(
     trValHebrew: 'אִיּוֹב (Iyyov)',
-    trKeyHebrewMeaning: 'p.persecuted, hated',
+    tkHebrewMeaning: 'p.persecuted, hated',
     trValGreek: 'Ἰώβ (Iob)',
     trValLatin: 'Iob',
   )), // Eyyub
   DhulKifl(Isim(
-//  trKeyAr: 'حزقيال', //?
+//  tkAr: 'حزقيال', //?
     trValHebrew: 'יְחֶזְקֵאל (Yechezkel)',
-    trKeyHebrewMeaning: 'p.God will strengthen',
+    tkHebrewMeaning: 'p.God will strengthen',
     trValGreek: 'Ἰεζεκιήλ (Iezekiel)',
     trValLatin: 'Ezechiel, Hiezecihel',
-    trKeyNote: 'p.Possibly Ezekiel, Buddha, Joshua, Obadiah or Isaiah',
+    tkNote: 'p.Possibly Ezekiel, Buddha, Joshua, Obadiah or Isaiah',
   )), // Zülkifl
   Shuayb(Isim(
     trValHebrew: 'יִתְרוֹ (Yitro)',
-    trKeyHebrewMeaning: 'p.abundance',
+    tkHebrewMeaning: 'p.abundance',
     trValGreek: null,
     trValLatin: 'Jethro',
-    trKeyNote: 'p.Often thought to be Jethro, but this is highly disputed.',
+    tkNote: 'p.Often thought to be Jethro, but this is highly disputed.',
   )), //  Şuayb
   Harun(Isim(
     trValHebrew: 'אַהֲרֹן (Aharon)',
-    trKeyHebrewMeaning:
+    tkHebrewMeaning:
         'p.Possibly of Egyptian origin or from hebrew "high mountain" or "exalted"',
     trValGreek: 'Ἀαρών (Aaron)',
     trValLatin: 'Aaron',
   )),
   Musa(Isim(
     trValHebrew: 'מֹשֶׁה (Moshe)',
-    trKeyHebrewMeaning: 'p.Possibly from Egyptian "son" or Hebrew "deliver"',
+    tkHebrewMeaning: 'p.Possibly from Egyptian "son" or Hebrew "deliver"',
     trValGreek: 'Μωϋσῆς (Mouses)',
     trValLatin: 'Moyses',
   )),
   Dawud(Isim(
     trValHebrew: 'דָּוִד (Dawid)',
-    trKeyHebrewMeaning: 'p.beloved',
+    tkHebrewMeaning: 'p.beloved',
     trValGreek: 'Δαυίδ (Dauid)',
     trValLatin: 'David',
   )), // Davud
   Suleyman(Isim(
     trValHebrew: 'שְׁלֹמֹה (Shelomoh)',
-    trKeyHebrewMeaning: 'p.Derived from "peace" (שָׁלוֹם shalom)',
+    tkHebrewMeaning: 'p.Derived from "peace" (שָׁלוֹם shalom)',
     trValGreek: 'Σαλωμών (Salomon)',
     trValLatin: 'Solomon',
   )), // Süleyman
   Ilyas(Isim(
     trValHebrew: 'אֱלִיָּהוּ (Eliyyahu), אֵלִיָה (Eliya)',
-    trKeyHebrewMeaning: 'p.my God is Yahweh',
+    tkHebrewMeaning: 'p.my God is Yahweh',
     trValGreek: 'Ηλίας (Ilias)',
     trValLatin: 'Elias',
   )), // İlyas
   Alyasa(Isim(
     trValHebrew: 'אֱלִישַׁע (Alysha\'e/Elisha)',
-    trKeyHebrewMeaning: 'p.my God is salvation',
+    tkHebrewMeaning: 'p.my God is salvation',
     trValGreek: 'Ἐλισαιέ (Elisaie)',
     trValLatin: 'Eliseus',
   )), // Elyesa
   Yunus(Isim(
-    trKeyLaqab: ['a.Dhul-Nun'], // ذُو ٱلنُّوْن - The One of the Fish
+    tkLaqab: ['a.Dhul-Nun'], // ذُو ٱلنُّوْن - The One of the Fish
     trValHebrew: 'יוֹנָה (Yonah)',
-    trKeyHebrewMeaning: 'p.dove',
+    tkHebrewMeaning: 'p.dove',
     trValGreek: 'Ἰωνᾶς (Ionas)',
     trValLatin: 'Ionas',
   )),
   Zakariya(Isim(
     trValHebrew: 'זְכַרְיָה (Zekharyah)',
-    trKeyHebrewMeaning: 'p.God remembers',
+    tkHebrewMeaning: 'p.God remembers',
     trValGreek: 'Ζαχαρίας (Zacharias)',
     trValLatin: 'Zaccharias',
   )),
   Yahya(Isim(
-    trKeyLaqab: ['p.Christians call him "John the Babtist"'],
+    tkLaqab: ['p.Christians call him "John the Babtist"'],
     trValHebrew: 'יוֹחָנָן (Yochanan)',
-    trKeyHebrewMeaning: 'p.God is gracious',
+    tkHebrewMeaning: 'p.God is gracious',
     trValGreek: 'Ἰωάννης (Ioannes)',
     trValLatin: 'Iohannes',
   )),
   Isa(Isim(
-    trKeyLaqab: ['a.Masih'], // Messiah
+    tkLaqab: ['a.Masih'], // Messiah
     trValAramaic: 'יֵשׁוּעַ (Ishoʿ)',
     trValGreek: 'Ιησους (Iesous)',
     trValLatin: 'Iesus',
   )),
   Muhammad(Isim(
-    trKeyLaqab: [
+    tkLaqab: [
       'a.Khātam al-Nabiyyīn',
       'a.Abu al-Qasim',
       'a.Ahmad',
@@ -1478,7 +1478,7 @@ enum PF {
   Mudrikah(Isim()),
   Khuzaimah(Isim()),
   Kinanah(Isim()),
-  An__Nadr(Isim(trKeyLaqab: ['Quraysh'])),
+  An__Nadr(Isim(tkLaqab: ['Quraysh'])),
   Malik(Isim()),
   Fihr(Isim()),
   Ghalib(Isim()),
@@ -1490,7 +1490,7 @@ enum PF {
   Abd_Manaf(Isim()),
   Hashim(Isim()),
   Abdull_Muttalib(Isim(
-    trKeyLaqab: ['Shaybah'],
+    tkLaqab: ['Shaybah'],
   )), // Abd al-Muttalib? Grandfather
   Abdullah_(Isim()), //       Father عَبْد ٱللَّٰه ٱبْن عَبْد ٱلْمُطَّلِب
 //Muhammad

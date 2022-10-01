@@ -43,7 +43,7 @@ class UpdateProfileUI extends StatelessWidget {
                         FormInputFieldWithIcon(
                           controller: c.nameController,
                           iconPrefix: Icons.person,
-                          trKey: 'auth.nameFormField',
+                          tk: 'auth.nameFormField',
                           validator: Validator().name,
                           onChanged: (value) => tu.handleTextUpdate(
                             [
@@ -61,7 +61,7 @@ class UpdateProfileUI extends StatelessWidget {
                         FormInputFieldWithIcon(
                           controller: c.emailController,
                           iconPrefix: Icons.email,
-                          trKey: 'auth.emailFormField',
+                          tk: 'auth.emailFormField',
                           validator: Validator().email,
                           keyboardType: TextInputType.emailAddress,
                           onChanged: (value) => tu.handleTextUpdate(
@@ -80,7 +80,7 @@ class UpdateProfileUI extends StatelessWidget {
                         Hero(
                           tag: 'UPDATE PROFILE',
                           child: PrimaryButton(
-                            trKey: 'i.Update Profile',
+                            tk: 'i.Update Profile',
                             onPressed: tu.isTextSame
                                 ? () {} // disable button
                                 : () async {
@@ -117,7 +117,7 @@ class UpdateProfileUI extends StatelessWidget {
                         ),
                         const FormVerticalSpace(),
                         LabelButton(
-                            trKey: 'auth.resetPasswordLabelButton',
+                            tk: 'auth.resetPasswordLabelButton',
                             onPressed: () =>
                                 MenuC.to.pushSubPage(SubPage.Reset_Password)),
                         const SizedBox(height: 400), //hide sign out down page
@@ -157,7 +157,7 @@ class UpdateProfileUI extends StatelessWidget {
               child: FormInputFieldWithIcon(
                 controller: _password,
                 iconPrefix: Icons.lock,
-                trKey: 'auth.passwordFormField',
+                tk: 'auth.passwordFormField',
                 validator: Validator().password,
                 obscureText: true,
                 onChanged: (value) {},

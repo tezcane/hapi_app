@@ -137,7 +137,7 @@ class MenuRightUI extends StatelessWidget {
                                   ],
                                 ),
                                 T(
-                                  nav.navPage.trKey,
+                                  nav.navPage.tk,
                                   const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,

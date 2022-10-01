@@ -305,7 +305,7 @@ class TimelineInitHandler {
       Event event = Event(
         type: type,
         tkEra: td.tkEra ?? '',
-        trKeyTitle: td.tkTitle,
+        tkTitle: td.tkTitle,
         startMs: startMs,
         endMs: endMs,
         startMenu: td.startMenu,
@@ -408,7 +408,7 @@ class TimelineInitHandler {
       for (Event event in eraMenuSection.events) {
         menuItemList.add(
           MenuItemData(
-            event.trKeyTitle,
+            event.tkTitle,
             event.saveTag,
             event.startMenu != null
                 ? event.startMenu!

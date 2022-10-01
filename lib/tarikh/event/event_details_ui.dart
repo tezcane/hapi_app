@@ -120,7 +120,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
   /// Load the markdown file from the assets and set the contents of the page to its value.
   void loadMarkdown() async {
     String trValArticleMarkdown =
-        await LanguageC.to.trValArticle(_event.type, _event.trKeyTitle);
+        await LanguageC.to.trValArticle(_event.type, _event.tkTitle);
     setState(() => _trValArticleMarkdown = trValArticleMarkdown); // refresh UI
   }
 
@@ -325,7 +325,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                             });
                           },
                           // child: Hero( TODO
-                          //   tag: _event.trKeyTitle,
+                          //   tag: _event.tkTitle,
                           child: Center(
                             child: SizedBox(
                               height: 280,

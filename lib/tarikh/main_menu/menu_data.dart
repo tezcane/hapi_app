@@ -10,13 +10,13 @@ import 'package:hapi/tarikh/timeline/timeline.dart';
 /// Data container loaded in [TarikhMenuInitHandler.loadFromBundle()].
 class MenuSectionData {
   MenuSectionData(
-    this.trKeyTitle,
+    this.tkTitle,
     this.textColor,
     this.backgroundColor,
     this.event,
     this.items,
   );
-  final String trKeyTitle;
+  final String tkTitle;
   final Color textColor;
   final Color backgroundColor;
   final Event event;
@@ -25,8 +25,8 @@ class MenuSectionData {
 
 /// Data container for all the sub-elements of the [MenuSection].
 class MenuItemData {
-  MenuItemData(this.trKeyTitle, this.saveTag, this.startMs, this.endMs);
-  final String trKeyTitle;
+  MenuItemData(this.tkTitle, this.saveTag, this.startMs, this.endMs);
+  final String tkTitle;
   final String saveTag;
   final double startMs;
   final double endMs;
@@ -37,7 +37,7 @@ class MenuItemData {
 
   /// When initializing this object from a [Event], fill in the
   /// fields according to the [event] provided. The event in fact specifies
-  /// a [trKeyTitle], a [startMs] and [endMs] times.
+  /// a [tkTitle], a [startMs] and [endMs] times.
   /// Padding is built depending on the type of the [event] provided.
   static MenuItemData fromEvent(Event event) {
     // put in timer so btns updates after navigation
@@ -83,8 +83,7 @@ class MenuItemData {
       end = event.endMs + range;
     }
 
-    var menuItemData =
-        MenuItemData(event.trKeyTitle, event.saveTag, start, end);
+    var menuItemData = MenuItemData(event.tkTitle, event.saveTag, start, end);
     menuItemData.pad = pad;
     menuItemData.padTop = padTop;
 

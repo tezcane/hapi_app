@@ -42,7 +42,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   static final Timeline t = TarikhC.t; // used a lot so shorten it.
 
   // TODO fix shows anytime no era on timeline, should be blank or something like "Unnamed Era"
-  static const String trKeyDefaultEraName = ''; //i.Birth of the Universe';
+  static const String tkDefaultEraName = ''; //i.Birth of the Universe';
   static const double TopOverlap = 0.0; //56.0;
 
   /// These variables are used to calculate the correct viewport for the timeline
@@ -57,7 +57,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   Event? _touchedEvent;
 
   /// Which era the Timeline is currently focused on.
-  /// Defaults to [trKeyDefaultEraName].
+  /// Defaults to [tkDefaultEraName].
   String _trValEraName = '';
 
   Color? _headerTextColor;
@@ -87,8 +87,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     _trValEraName = 'i.Era'.tr +
         ': ' +
         (t.currentEra != null
-            ? a(t.currentEra!.trKeyTitle)
-            : a(trKeyDefaultEraName));
+            ? a(t.currentEra!.tkTitle)
+            : a(tkDefaultEraName));
     t.onHeaderColorsChanged = (/*Color background,*/ Color text) {
       setState(() {
         _headerTextColor = text;
@@ -100,7 +100,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     t.onEraChanged = (Event? event) {
       setState(() {
         _trValEraName =
-            'i.Era'.tr + ': ' + (event != null ? a(event.trKeyTitle) : '');
+            'i.Era'.tr + ': ' + (event != null ? a(event.tkTitle) : '');
       });
     };
 
@@ -249,13 +249,13 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
       t.onEraChanged = (Event? event) {
         setState(() {
           _trValEraName =
-              event != null ? a(event.trKeyTitle) : a(trKeyDefaultEraName);
+              event != null ? a(event.tkTitle) : a(tkDefaultEraName);
         });
       };
       setState(() {
         _trValEraName = t.currentEra != null
-            ? a(t.currentEra!.trKeyTitle)
-            : a(trKeyDefaultEraName);
+            ? a(t.currentEra!.tkTitle)
+            : a(tkDefaultEraName);
         //t.isActive = true;
       });
     } else {
@@ -324,7 +324,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             FloatingActionButton(
-                              tooltip: _trKeyGutterTooltip(c).tr,
+                              tooltip: _tkGutterTooltip(c).tr,
                               heroTag: Icons.favorite_border_outlined,
                               onPressed: () => _handleGutterBtnHit(c),
                               materialTapTargetSize:
@@ -504,7 +504,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     );
   }
 
-  String _trKeyGutterTooltip(TarikhC c) {
+  String _tkGutterTooltip(TarikhC c) {
     switch (c.gutterMode) {
       case GutterMode.OFF:
         return 'i.Show favorite events';

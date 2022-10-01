@@ -263,7 +263,7 @@ class AuthC extends GetxHapi {
 
       showSnackBar(
         'auth.updateUserFailNotice',
-        getTrKeyForFirestoreAuthFailure(error.toString()),
+        tkForFirestoreAuthFailure(error.toString()),
         durationSec: 10,
         isRed: true,
       );
@@ -272,7 +272,7 @@ class AuthC extends GetxHapi {
   }
 
   /// Convert auth error to translated nice user output.
-  String getTrKeyForFirestoreAuthFailure(String authError) {
+  String tkForFirestoreAuthFailure(String authError) {
     // Note: leaves brackets around unknown errors. i.e. "[unknown-err] err msg"
     authError = authError.replaceFirst('firebase_auth/', '');
 
@@ -300,7 +300,7 @@ class AuthC extends GetxHapi {
     } else if (error.contains('requires-recent-login')) {
       return 'auth.requiresRecentLogin';
     } else {
-      return 'auth.unknownErrorTitle'.tr + ': ' + authError; // tr ok, not trKey
+      return 'auth.unknownErrorTitle'.tr + ': ' + authError; // tr ok, not tk
     }
   }
 

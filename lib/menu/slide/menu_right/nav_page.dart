@@ -39,7 +39,7 @@ enum NavPage {
 }
 
 extension EnumUtil on NavPage {
-  String get trKey {
+  String get tk {
     String transliteration = name;
     switch (this) {
       case (NavPage.Ajr):

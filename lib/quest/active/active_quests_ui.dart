@@ -292,7 +292,7 @@ class SalahRow extends StatelessWidget {
               backgroundColor: bg,
               foregroundColor: AppThemes.ldTextColor,
               label: // rare, does both "a." and "at" work TODO convention this
-                  at('a.{0} Isharet', [z == Z.Duha ? Z.Ishraq.trKey : z.trKey]),
+                  at('a.{0} Isharet', [z == Z.Duha ? Z.Ishraq.tk : z.tk]),
               autoClose: false,
             ),
             SlidableAction(
@@ -421,7 +421,7 @@ class SalahRow extends StatelessWidget {
               child: Center(
                 // Center needed to make fit height work
                 child: T(
-                  z.trKey,
+                  z.tk,
                   textStyle.copyWith(
                     color: isBold ? textStyle.color : AppThemes.ldTextColor,
                     fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
@@ -526,7 +526,7 @@ class SalahRow extends StatelessWidget {
         ),
         _Cell(
           T(
-            Z.Ishraq.trKey,
+            Z.Ishraq.tk,
             ZamanC.to.currZ == Z.Ishraq ? tsB : tsN,
             w: w2,
           ),
@@ -536,7 +536,7 @@ class SalahRow extends StatelessWidget {
         ),
         _Cell(
           T(
-            Z.Duha.trKey,
+            Z.Duha.tk,
             // Duha salah is enabled with Ishraq
             ZamanC.to.currZ == Z.Ishraq || ZamanC.to.currZ == Z.Duha
                 ? tsB
@@ -631,11 +631,11 @@ class SalahRow extends StatelessWidget {
   Widget _actionsMiddleOfNight(double w1) {
     double w4 = w1 * 4;
 
-    String trKeyQiyam = TimeC.to.isMonthRamadan ? 'a.Taraweeh' : 'a.Qiyam';
+    String tkQiyam = TimeC.to.isMonthRamadan ? 'a.Taraweeh' : 'a.Qiyam';
 
     return Row(
       children: [
-        _Cell(T(trKeyQiyam, tsN, w: w4), z, QUEST.LAYL_QIYAM, flex: 4),
+        _Cell(T(tkQiyam, tsN, w: w4), z, QUEST.LAYL_QIYAM, flex: 4),
         _Cell(const _IconThikr(), z, QUEST.LAYL_THIKR),
         _Cell(const _IconDua(), z, QUEST.LAYL_DUA),
       ],
@@ -948,7 +948,7 @@ class _SideTime extends StatelessWidget {
     String trValFajr = '';
     String trValTomorrow = '';
     if (z == Z.Fajr_Tomorrow) {
-      List<String> trVal = at(Z.Fajr_Tomorrow.trKey, [Z.Fajr.trKey]).split(' ');
+      List<String> trVal = at(Z.Fajr_Tomorrow.tk, [Z.Fajr.tk]).split(' ');
       trValFajr = trVal[0];
       trValTomorrow = trVal[1];
     }
@@ -965,7 +965,7 @@ class _SideTime extends StatelessWidget {
           if (z == Z.Fajr_Tomorrow)
             T(trValTomorrow, isBold ? tsB : tsN, w: w1, h: h_2, trVal: true),
           if (z != Z.Fajr_Tomorrow)
-            T(z.trKey, isBold ? tsB : tsN, w: w1, h: h_2),
+            T(z.tk, isBold ? tsB : tsN, w: w1, h: h_2),
           sunIcon,
           T(
             TimeC.trValTime(

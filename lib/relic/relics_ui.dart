@@ -38,7 +38,7 @@ class RelicsUI extends StatelessWidget {
           const EventFavoriteUI(EVENT_TYPE.Relic, navPage),
           null,
           'i.Favorites'.tr,
-          at('at.{0} Favorites', [navPage.trKey]),
+          at('at.{0} Favorites', [navPage.tk]),
           Icons.favorite_border_outlined,
           onPressed: hideKeyboard, // in case search is showing keyboard
         ),
@@ -46,7 +46,7 @@ class RelicsUI extends StatelessWidget {
           const EventSearchUI(navPage),
           null,
           'i.Search'.tr,
-          at('at.{0} Search', [navPage.trKey]),
+          at('at.{0} Search', [navPage.tk]),
           Icons.search_outlined,
         ),
         BottomBarItem(

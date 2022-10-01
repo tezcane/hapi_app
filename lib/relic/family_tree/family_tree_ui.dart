@@ -224,7 +224,7 @@ class FamilyTreeUI extends StatelessWidget {
         child: Column(
           children: [
             Hero(
-              tag: relic.trKeyTitle,
+              tag: relic.tkTitle,
               // TODO modularize chip
               child: Container(
                 color: AppThemes.ajrColorsByIdx[relic.ajrLevel],
@@ -238,7 +238,7 @@ class FamilyTreeUI extends StatelessWidget {
                 ),
               ),
             ),
-            T(relic.trKeyTitle, tsN, w: wTile, h: hText),
+            T(relic.tkTitle, tsN, w: wTile, h: hText),
           ],
         ),
       ),

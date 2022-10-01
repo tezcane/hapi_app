@@ -54,19 +54,19 @@ class ActiveQuestActionUI extends StatelessWidget {
             GetBuilder<ActiveQuestsC>(builder: (c) {
           QUEST_STATE questState = q.getActionState();
 
-          String? trKey;
+          String? tk;
           if (questState == QUEST_STATE.DONE) {
-            trKey = 'i.Quest was already completed';
+            tk = 'i.Quest was already completed';
           } else if (questState == QUEST_STATE.SKIP) {
-            trKey = 'i.Quest skipped, try again tomorrow';
+            tk = 'i.Quest skipped, try again tomorrow';
           } else if (questState == QUEST_STATE.MISS) {
-            trKey = 'i.Quest expired, try again tomorrow';
+            tk = 'i.Quest expired, try again tomorrow';
           } else if (questState == QUEST_STATE.NOT_ACTIVE_YET) {
-            trKey = 'i.Quest is not active yet';
+            tk = 'i.Quest is not active yet';
           } // else if (questState == QUEST_STATE.ACTIVE_CURR_QUEST) {
           // } else if (questState == QUEST_STATE.ACTIVE) {}
 
-          if (trKey != null) {
+          if (tk != null) {
             return Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -74,7 +74,7 @@ class ActiveQuestActionUI extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     const SizedBox(width: fabGap),
-                    T(trKey, tsR, w: w1),
+                    T(tk, tsR, w: w1),
                     const SizedBox(width: fabGap),
                   ],
                 ),

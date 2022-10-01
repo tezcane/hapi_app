@@ -328,7 +328,7 @@ class _HijriAndGregoDate extends StatelessWidget {
             const T(' ', ts, w: 180, h: 25, trVal: true),
           if (!addDayOfWeekWithDate)
             T(
-              a(hijriDay.trKey),
+              a(hijriDay.tk),
               ts,
               w: 160,
               h: 25,

@@ -35,7 +35,7 @@ class TarikhUI extends StatelessWidget {
             const EventFavoriteUI(EVENT_TYPE.Incident, navPage),
             null,
             'i.Favorites'.tr,
-            at('at.{0} Favorites', [navPage.trKey]),
+            at('at.{0} Favorites', [navPage.tk]),
             Icons.favorite_border_outlined,
             onPressed: setTarikhMenuInactive,
           ),
@@ -43,7 +43,7 @@ class TarikhUI extends StatelessWidget {
             const EventSearchUI(navPage),
             null,
             'i.Search'.tr,
-            at('at.{0} Search', [navPage.trKey]),
+            at('at.{0} Search', [navPage.tk]),
             Icons.search_outlined,
             onPressed: setTarikhMenuInactive,
           ),
@@ -52,7 +52,7 @@ class TarikhUI extends StatelessWidget {
             null,
             'i.Menu'.tr,
             '                 ' +
-                at('at.{0} Menu', [navPage.trKey]) +
+                at('at.{0} Menu', [navPage.tk]) +
                 '                 ', // FAB padding
             Icons.menu_open_rounded,
             onPressed: setTarikhMenuActive,

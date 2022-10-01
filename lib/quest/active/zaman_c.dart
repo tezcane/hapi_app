@@ -219,9 +219,9 @@ class ZamanC extends GetxHapi {
     l.d('_updateTooltip: updating to currZT=$currZTooltip, nextZT=$nextZTooltip, nextZTTime=$nextZTooltipTime');
 
     // special case to support "at" of Fajr tomorrow ('a.{0} Tomorrow').
-    String trKeyOrVal = nTooltip.trKey;
+    String tkOrVal = nTooltip.tk;
     if (nextZTooltip == Z.Fajr_Tomorrow) {
-      trKeyOrVal = at(trKeyOrVal, [Z.Fajr.trKey]);
+      tkOrVal = at(tkOrVal, [Z.Fajr.tk]);
     }
 
     if (cTooltip != null) {
@@ -231,7 +231,7 @@ class ZamanC extends GetxHapi {
       trValTimeToNextZamanTooltip = at(
         // {0}:{1}:{2} until "{3}" ends and "{4}" begins
         'at.aqCountdownTimer',
-        ['a.Saat', 'a.Daqayiq', 'a.Thawani', cTooltip.trKey, trKeyOrVal],
+        ['a.Saat', 'a.Daqayiq', 'a.Thawani', cTooltip.tk, tkOrVal],
       );
     } else {
       if (nextZ.index == currZ.index + 1) {
@@ -240,7 +240,7 @@ class ZamanC extends GetxHapi {
       trValTimeToNextZamanTooltip = at(
         // {0}:{1}:{2} until "{3}" begins
         'at.aqCountdownTimerLayl',
-        ['a.Saat', 'a.Daqayiq', 'a.Thawani', trKeyOrVal],
+        ['a.Saat', 'a.Daqayiq', 'a.Thawani', tkOrVal],
       );
     }
   }

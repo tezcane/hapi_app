@@ -22,19 +22,19 @@ class Event {
   Event({
     required this.type,
     required this.tkEra,
-    required this.trKeyTitle,
+    required this.tkTitle,
     required this.startMs, // TODO are these ms or years?!
     required this.endMs,
     this.startMenu,
     this.endMenu,
     required this.accent,
   }) {
-    saveTag = '${trKeyTitle}_$tkEra';
+    saveTag = '${tkTitle}_$tkEra';
     reinitBubbleText();
   }
   final EVENT_TYPE type;
   final String tkEra;
-  final String trKeyTitle;
+  final String tkTitle;
   final double startMs;
   final double endMs;
   final double? startMenu; // use these when menu doesn't show well
@@ -150,7 +150,7 @@ class Event {
 
   /// TODO Should call this on language changes
   List<String> tvGetTitleLines() {
-    String tvLine1 = a(trKeyTitle); // translated here, why we must force update
+    String tvLine1 = a(tkTitle); // translated here, why we must force update
     String tvLine2 = '';
 
     final int maxCharsOnLine1 = MainC.to.isPortrait ? 22 : 44;
@@ -241,12 +241,12 @@ class Event {
 
   bool get isVisible => opacity > 0.0;
 
-  // String get trValTitle => Event.trValFromTrKeyEndTag(trKeyTitle);
+  // String get trValTitle => Event.trValFromTkEndTag(tkTitle);
   //
-  // /// Attempts to translate 'i.<trKeyEndTag>' if fails, tries 'a.<trKeyEndTag>'.
-  // static String trValFromTrKeyEndTag(String trKeyEndTag) {
-  //   String trVal = 'i.$trKeyEndTag'.tr;
-  //   return trVal.startsWith('i.') ? a('a.$trKeyEndTag') : trVal;
+  // /// Attempts to translate 'i.<tkEndTag>' if fails, tries 'a.<tkEndTag>'.
+  // static String trValFromTkEndTag(String tkEndTag) {
+  //   String trVal = 'i.$tkEndTag'.tr;
+  //   return trVal.startsWith('i.') ? a('a.$tkEndTag') : trVal;
   // }
 
   // /// Some labels have a newline characters to adjust their alignment.
@@ -256,7 +256,7 @@ class Event {
   //
   //   int startIdx = 0;
   //   while (true) {
-  //     startIdx = a(trKeyTitle).indexOf('\n', startIdx);
+  //     startIdx = a(tkTitle).indexOf('\n', startIdx);
   //     if (startIdx == -1) break;
   //     lineCount++; // found a new line, continue
   //     startIdx++; // to go past current new line

@@ -495,8 +495,8 @@ class TimelineRenderObject extends RenderBox {
     // Fixes bug where if we drag the timeline beyond first or last event both
     // up and down buttons show the first/last event.
     if (cTrkh.timeBtnUp.event != null && cTrkh.timeBtnDn.event != null) {
-      String upLabel = cTrkh.timeBtnUp.event!.trKeyTitle;
-      if (upLabel == cTrkh.timeBtnDn.event!.trKeyTitle) {
+      String upLabel = cTrkh.timeBtnUp.event!.tkTitle;
+      if (upLabel == cTrkh.timeBtnDn.event!.tkTitle) {
         if (upLabel == TR_KEY_OLDEST) {
           l.d('***************** TOO HIGH FIXING ************************');
           cTrkh.updateEventBtn(cTrkh.timeBtnUp, null);

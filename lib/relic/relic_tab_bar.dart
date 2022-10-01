@@ -93,7 +93,7 @@ class _RelicTabBarState extends State<RelicTabBar>
               // TODO get this working with pics of all RelicSets?
               // expandedHeight: 250.0,
               // flexibleSpace: FlexibleSpaceBar(
-              //   title: T(widget.trKeyTitle, tsN),
+              //   title: T(widget.tkTitle, tsN),
               //   titlePadding: const EdgeInsets.only(bottom: 50),
               //   centerTitle: true,
               //   collapseMode: CollapseMode.pin,

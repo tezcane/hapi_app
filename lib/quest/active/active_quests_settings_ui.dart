@@ -110,7 +110,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
               ),
             ),
             addSetting(
-              trValTitle: a(Z.Asr.trKey) + ' ' + a('a.Zaman'), // TODO hard tr
+              trValTitle: a(Z.Asr.tk) + ' ' + a('a.Zaman'), // TODO hard tr
               trValTooltip: at('at.asrStartTime', ['a.Sabqan', 'a.Lahiqan']),
               trValLabels: [a('a.Sabqan'), a('a.Lahiqan')], // Earlier/Later
               initialLabelIndex: c.salahAsrEarlier ? 0 : 1,

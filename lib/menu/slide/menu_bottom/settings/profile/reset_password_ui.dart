@@ -33,7 +33,7 @@ class ResetPasswordUI extends StatelessWidget {
                   FormInputFieldWithIcon(
                     controller: emailController,
                     iconPrefix: Icons.email,
-                    trKey: 'auth.emailFormField',
+                    tk: 'auth.emailFormField',
                     validator: Validator().email,
                     keyboardType: TextInputType.emailAddress,
                     onChanged: (value) {},
@@ -41,7 +41,7 @@ class ResetPasswordUI extends StatelessWidget {
                   ),
                   const FormVerticalSpace(),
                   PrimaryButton(
-                    trKey: 'auth.resetPasswordButton',
+                    tk: 'auth.resetPasswordButton',
                     onPressed: () async {
                       if (_formKey.currentState!.validate()) {
                         await AuthC.to.sendPasswordResetEmail(

@@ -106,7 +106,7 @@ class RelicC extends GetxHapi {
     // for (Relic relic in relicSet.relics) {
     //   if ((relic as Prophet).isUluAlAzm() /* isRasul()) { */) {
     //     print(
-    //         '$idx, // ${(relic as Prophet).quranMentionCount} ${relic.trKeyEndTagLabel}');
+    //         '$idx, // ${(relic as Prophet).quranMentionCount} ${relic.tkEndTagLabel}');
     //   }
     //   idx++;
     // }

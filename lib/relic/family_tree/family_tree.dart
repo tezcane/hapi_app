@@ -23,27 +23,27 @@ class Isim extends Arabic {
     String? tr, // TODO
     String? ar,
     String? en,
-    this.trKeyLaqab,
+    this.tkLaqab,
     this.trValAramaic,
     this.trValHebrew,
-    this.trKeyHebrewMeaning,
+    this.tkHebrewMeaning,
     this.trValGreek,
     this.trValLatin,
-    this.trKeyNote, // note(s) on the identity or names for this person
+    this.tkNote, // note(s) on the identity or names for this person
     this.fem = false, // True=female, False=male
   }) : super(tr: tr, ar: ar, en: en);
-  final List<String>? trKeyLaqab; // Laqab = Nicknames
+  final List<String>? tkLaqab; // Laqab = Nicknames
   final String? trValAramaic;
   final String? trValHebrew;
-  final String? trKeyHebrewMeaning;
+  final String? tkHebrewMeaning;
   final String? trValGreek;
   final String? trValLatin;
   // Something in data is unsure, e.g. Hud is Eber in Bible.
-  final String? trKeyNote;
+  final String? tkNote;
   final bool fem;
 
   // /// Add * to mark something as "Possibly" being true
-  // String addPossibly(String trVal) => trVal + (trKeyPossibly != null ? '*' : '');
+  // String addPossibly(String trVal) => trVal + (tkPossibly != null ? '*' : '');
 
   // String get trValArabic => LanguageC.to.ar('a.${e.name}');
 }
@@ -171,7 +171,7 @@ addEdgesAllFamily(Graph graph, FamilyTree ft, int gapIdx) {
   }
 
   // Add Prophet (Handles case of Adam fine)
-  addEdge(ft.e.index, 'Prophet', a(ft.trKeyTitle));
+  addEdge(ft.e.index, 'Prophet', a(ft.tkTitle));
 
   // add daughters to Prophet node
   for (Enum e in ft.daughters ?? []) {

@@ -33,7 +33,7 @@ enum DAY_OF_WEEK {
 }
 
 extension EnumUtil on DAY_OF_WEEK {
-  String get trKey {
+  String get tk {
     String transliteration = name;
     switch (this) {
       case (DAY_OF_WEEK.Monday):
@@ -78,7 +78,7 @@ enum MONTH {
 }
 
 extension EnumUtil2 on MONTH {
-  String get trKey {
+  String get tk {
     String transliteration = name;
     switch (this) {
       case (MONTH.January):
@@ -369,7 +369,7 @@ class TimeC extends GetxHapi {
     DateTime dT = now2(); // TODO use now()?
     if (iterateHijriDateByOne(dT)) dT = dateToTomorrow(dT);
     String dayOfWeek = '';
-    if (addDayOfWeek) dayOfWeek = '${a(_dayOfWeekHijri.trKey)} ';
+    if (addDayOfWeek) dayOfWeek = '${a(_dayOfWeekHijri.tk)} ';
 
     HijriCalendar hijriCalendar = HijriCalendar.fromDate(dT);
     _hijriMonth = hijriCalendar.hMonth;
@@ -381,7 +381,7 @@ class TimeC extends GetxHapi {
     bool foundMonth = false;
     for (MONTH month in MONTH.values) {
       if (date.contains(month.name)) {
-        date = date.replaceFirst(month.name, a(month.trKey));
+        date = date.replaceFirst(month.name, a(month.tk));
         foundMonth = true;
         break;
       }
@@ -391,7 +391,7 @@ class TimeC extends GetxHapi {
     }
 
     String dayOfWeek = '';
-    if (addDayOfWeek) dayOfWeek = '${a(_dayOfWeekGrego.trKey)} ';
+    if (addDayOfWeek) dayOfWeek = '${a(_dayOfWeekGrego.tk)} ';
 
     return '$dayOfWeek$date';
   }

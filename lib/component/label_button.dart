@@ -8,14 +8,14 @@ import 'package:hapi/main_c.dart';
 ///                 onPressed: () => print('implement me'),
 ///               ),
 class LabelButton extends StatelessWidget {
-  const LabelButton({required this.trKey, required this.onPressed});
-  final String trKey;
+  const LabelButton({required this.tk, required this.onPressed});
+  final String tk;
   final void Function() onPressed;
 
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      child: T(trKey, null, w: wm(context)),
+      child: T(tk, null, w: wm(context)),
       onPressed: onPressed,
     );
   }
