@@ -278,13 +278,13 @@ class AuthC extends GetxHapi {
 
     String error = authError.toLowerCase(); // to match below
     if (error.contains('invalid-email')) {
-      return 'validator.email';
+      return 'Must be a valid email address';
     } else if (error.contains('email-already-in-use')) {
       return 'This email address already has an account. Sign in?';
     } else if (error.contains('wrong-password')) {
       return 'The password does not match our records.';
     } else if (error.contains('weak-password')) {
-      return 'validator.password';
+      return 'Password must be at least 6 characters';
     } else if (error.contains('user-disabled')) {
       return 'This account was disabled by the admin.';
     }
