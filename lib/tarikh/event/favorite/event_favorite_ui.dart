@@ -38,7 +38,7 @@ class EventFavoriteUI extends StatelessWidget {
                       shouldClip: false,
                     ),
                   ),
-                  T('i.No Favorites', ts, h: 40),
+                  T('No Favorites', ts, h: 40),
                   const SizedBox(height: 20),
                   T(
                     at(

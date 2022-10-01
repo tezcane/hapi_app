@@ -49,7 +49,7 @@ class SettingsUI extends StatelessWidget {
                       onPressed: () =>
                           MenuC.to.pushSubPage(SubPage.Update_Profile),
                       icon: const Icon(Icons.perm_identity_outlined),
-                      label: T('i.Update Profile', null, w: wm(context)),
+                      label: T('Update Profile', null, w: wm(context)),
                     ),
                   ),
                 ),

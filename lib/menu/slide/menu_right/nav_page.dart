@@ -64,21 +64,21 @@ extension EnumUtil on NavPage {
   String get tvTooltip {
     switch (this) {
       case (NavPage.Ajr):
-        return 'i.View your rewards'.tr;
+        return 'View your rewards'.tr;
       case (NavPage.Dua):
-        return 'i.Find prayers'.tr;
+        return 'Find prayers'.tr;
       case (NavPage.Hadith):
-        return 'i.Read from Books of Hadith'.tr;
+        return 'Read from Books of Hadith'.tr;
       case (NavPage.Quran):
-        return 'i.Read the Quran'.tr;
+        return 'Read the Quran'.tr;
       case (NavPage.Tarikh):
-        return 'i.View the history of Islam and our Universe'.tr;
+        return 'View the history of Islam and our Universe'.tr;
       case (NavPage.Tools):
-        return 'i.Use tools like the Qiblah Finder and Islamic Dictionary'.tr;
+        return 'Use tools like the Qiblah Finder and Islamic Dictionary'.tr;
       case (NavPage.Relics):
-        return 'i.Collect, upgrade and learn from Relics'.tr;
+        return 'Collect, upgrade and learn from Relics'.tr;
       case (NavPage.Quests):
-        return 'i.Earn rewards for this life and the next'.tr;
+        return 'Earn rewards for this life and the next'.tr;
       default:
         return l.E('Quests.tvTooltip: Unknown Quest "$this"');
     }

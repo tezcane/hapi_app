@@ -249,8 +249,8 @@ class LanguageC extends GetxHapi {
     } else {
       _curNumerals = _nonEnNumeralLangs[newLangKey]!;
     }
-    _am = ' ' + 'i.AM'.tr; // tr ok
-    _pm = ' ' + 'i.PM'.tr; // tr ok
+    _am = ' ' + 'AM'.tr; // tr ok
+    _pm = ' ' + 'PM'.tr; // tr ok
 
     TimeC.to.updateDaysOfWeek(); // needed to convert SunRing dates
 
@@ -285,16 +285,12 @@ class LanguageC extends GetxHapi {
     if (eventType == EVENT_TYPE.Relic) {
       trFilePath = 'relic/anbiya';
       tkLeadingTag = 'pq.';
-      return Future.value('i.Coming Soon'); // TODO asdf
     } else {
       trFilePath = 'tarikh_articles/';
       tkLeadingTag = 't.';
     }
 
-    tk = tk.replaceFirst('i.', tkLeadingTag);
-    if (!tk.startsWith(tkLeadingTag)) {
-      tk = tk.replaceFirst('a.', tkLeadingTag);
-    }
+    tk = tk.startsWith('a.') ? tk.replaceFirst('a.', tkLeadingTag) : tk;
 
     try {
       return (await _getTrMap(trFilePath, currLangKey))[tk]!;

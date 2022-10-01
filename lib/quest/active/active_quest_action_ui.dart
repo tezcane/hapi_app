@@ -56,13 +56,13 @@ class ActiveQuestActionUI extends StatelessWidget {
 
           String? tk;
           if (questState == QUEST_STATE.DONE) {
-            tk = 'i.Quest was already completed';
+            tk = 'Quest was already completed';
           } else if (questState == QUEST_STATE.SKIP) {
-            tk = 'i.Quest skipped, try again tomorrow';
+            tk = 'Quest skipped, try again tomorrow';
           } else if (questState == QUEST_STATE.MISS) {
-            tk = 'i.Quest expired, try again tomorrow';
+            tk = 'Quest expired, try again tomorrow';
           } else if (questState == QUEST_STATE.NOT_ACTIVE_YET) {
-            tk = 'i.Quest is not active yet';
+            tk = 'Quest is not active yet';
           } // else if (questState == QUEST_STATE.ACTIVE_CURR_QUEST) {
           // } else if (questState == QUEST_STATE.ACTIVE) {}
 
@@ -100,7 +100,7 @@ class ActiveQuestActionUI extends StatelessWidget {
                         ['a.Ajr'],
                       ),
                       child: TextButton.icon(
-                        label: T('i.Skip'.tr, tsB, w: w2, tv: true),
+                        label: T('Skip'.tr, tsB, w: w2, tv: true),
                         icon: const Icon(Icons.redo_outlined, size: iconSize),
                         onPressed: () {
                           // if (cAjrA.isDone(quest) || cAjrA.isMiss(quest)) {
@@ -121,9 +121,9 @@ class ActiveQuestActionUI extends StatelessWidget {
                     ),
                   if (skipEnabled) const SizedBox(width: buttonGap),
                   Tooltip(
-                    message: 'i.Tap to complete quest'.tr,
+                    message: 'Tap to complete quest'.tr,
                     child: TextButton.icon(
-                      label: T('i.Done'.tr, tsB, w: w2, tv: true),
+                      label: T('Done'.tr, tsB, w: w2, tv: true),
                       icon: const Icon(Icons.check_outlined, size: iconSize),
                       onPressed: () {
                         // if (cAjrA.isSkip(q) || cAjrA.isMiss(q)) {

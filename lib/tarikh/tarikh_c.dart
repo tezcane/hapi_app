@@ -182,9 +182,9 @@ class TarikhC extends GetxHapi {
       double pages = timeUntilDouble / pageSize;
       String pagesAwayNum = formatter.format(pages.abs());
       if (pagesAwayNum == '1') {
-        tvPageScrolls = cni(1) + ' ' + 'i.page away'.tr;
+        tvPageScrolls = cni(1) + ' ' + 'page away'.tr;
       } else {
-        tvPageScrolls = cns(pagesAwayNum) + ' ' + 'i.pages away'.tr;
+        tvPageScrolls = cns(pagesAwayNum) + ' ' + 'pages away'.tr;
       }
     }
 

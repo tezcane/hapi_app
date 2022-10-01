@@ -31,28 +31,28 @@ class QuestsUI extends StatelessWidget {
           Container(),
           null,
           a('a.hapi'),
-          'i.Set long-term goals'.tr,
+          'Set long-term goals'.tr,
           Icons.brightness_3_outlined,
         ),
         BottomBarItem(
           Container(),
           null,
           a('a.Zaman'),
-          'i.Manage and prioritize your time'.tr,
+          'Manage and prioritize your time'.tr,
           Icons.timer_outlined,
         ),
         BottomBarItem(
           const DoListUI(),
           null,
-          'i.Daily'.tr,
-          'i.Build religious and healthy habits'.tr,
+          'Daily'.tr,
+          'Build religious and healthy habits'.tr,
           Icons.brightness_high_outlined,
         ),
         BottomBarItem(
           const ActiveQuestsUI(),
           ActiveQuestsSettingsUI(),
-          'i.Active'.tr,
-          '                 ${'i.Pray like the Prophet (AS)'.tr}                 ', // FAB
+          'Active'.tr,
+          '                 ${'Pray like the Prophet (AS)'.tr}                 ', // FAB
           Icons.how_to_reg_outlined,
         ),
       ];

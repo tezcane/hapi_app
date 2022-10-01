@@ -34,7 +34,7 @@ class TarikhUI extends StatelessWidget {
           BottomBarItem(
             const EventFavoriteUI(EVENT_TYPE.Incident, navPage),
             null,
-            'i.Favorites'.tr,
+            'Favorites'.tr,
             at('at.{0} Favorites', [navPage.tk]),
             Icons.favorite_border_outlined,
             onPressed: setTarikhMenuInactive,
@@ -42,7 +42,7 @@ class TarikhUI extends StatelessWidget {
           BottomBarItem(
             const EventSearchUI(navPage),
             null,
-            'i.Search'.tr,
+            'Search'.tr,
             at('at.{0} Search', [navPage.tk]),
             Icons.search_outlined,
             onPressed: setTarikhMenuInactive,
@@ -50,7 +50,7 @@ class TarikhUI extends StatelessWidget {
           BottomBarItem(
             const TarikhMenuUI(),
             null,
-            'i.Menu'.tr,
+            'Menu'.tr,
             '                 ' +
                 at('at.{0} Menu', [navPage.tk]) +
                 '                 ', // FAB padding

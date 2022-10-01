@@ -123,14 +123,14 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
   String tvMenuTooltip() {
     if (_subPageStack.isNotEmpty) {
       if (_subPageStack.length > 1) {
-        return 'i.Go back to previous page'.tr;
+        return 'Go back to previous page'.tr;
       } else {
         return at('at.Go back to {0} home page', [getLastNavPage().tk]);
       }
     } else if (_isMenuShowing) {
-      return 'i.Hide menu'.tr;
+      return 'Hide menu'.tr;
     } else {
-      return 'i.Show menu'.tr;
+      return 'Show menu'.tr;
     }
   }
 

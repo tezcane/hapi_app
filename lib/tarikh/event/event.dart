@@ -73,17 +73,17 @@ class Event {
 
   /// Pretty-printing for the event date.
   String tvYearsAgo({double? eventYear}) {
-    if (!isTimeLineEvent) return 'i.Coming Soon'; // TODO Year is not known yet
+    if (!isTimeLineEvent) return 'Coming Soon'; // TODO Year is not known yet
 
     eventYear ??= startMs;
 
-    if (eventYear <= -10000) return tvYears(startMs) + ' ' + 'i.Ago'.tr;
+    if (eventYear <= -10000) return tvYears(startMs) + ' ' + 'Ago'.tr;
 
     double tvYearsAgo;
-    String adBc = ' ${'i.AD'.tr} (';
+    String adBc = ' ${'AD'.tr} (';
 
     if (eventYear <= 0) {
-      adBc = ' ${'i.BC'.tr} (';
+      adBc = ' ${'BC'.tr} (';
       tvYearsAgo = eventYear.abs() + TimeC.thisYear;
     } else {
       tvYearsAgo = TimeC.thisYear - eventYear;
@@ -92,7 +92,7 @@ class Event {
         adBc +
         cns(tvYearsAgo.toStringAsFixed(0)) +
         ' ' +
-        'i.Years Ago'.tr +
+        'Years Ago'.tr +
         ')';
   }
 
@@ -107,45 +107,45 @@ class Event {
       label = (valueAbs / 1000000000000000000)
               .toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
           ' ' +
-          'i.Quintillion'.tr;
+          'Quintillion'.tr;
     } else if (valueAbs >= 1000000000000000) {
       double v = (valueAbs / 100000000000000.0).floorToDouble() / 10.0;
 
       label = (valueAbs / 1000000000000000)
               .toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
           ' ' +
-          'i.Quadrillion'.tr;
+          'Quadrillion'.tr;
     } else if (valueAbs >= 1000000000000) {
       double v = (valueAbs / 100000000000.0).floorToDouble() / 10.0;
 
       label = (valueAbs / 1000000000000)
               .toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
           ' ' +
-          'i.Trillion'.tr;
+          'Trillion'.tr;
     } else if (valueAbs >= 1000000000) {
       double v = (valueAbs / 100000000.0).floorToDouble() / 10.0;
 
       label = (valueAbs / 1000000000)
               .toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
           ' ' +
-          'i.Billion'.tr;
+          'Billion'.tr;
     } else if (valueAbs >= 1000000) {
       double v = (valueAbs / 100000.0).floorToDouble() / 10.0;
       label =
           (valueAbs / 1000000).toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
               ' ' +
-              'i.Million'.tr;
+              'Million'.tr;
     } else if (valueAbs >= 10000) {
       double v = (valueAbs / 100.0).floorToDouble() / 10.0;
       label =
           (valueAbs / 1000).toStringAsFixed(v == v.floorToDouble() ? 0 : 1) +
               ' ' +
-              'i.Thousand'.tr;
+              'Thousand'.tr;
     } else {
       label = cns(valueAbs.toStringAsFixed(0));
-      return label + ' ' + (label == '1' ? 'i.Year'.tr : 'i.Years'.tr);
+      return label + ' ' + (label == '1' ? 'Year'.tr : 'Years'.tr);
     }
-    return cns(label) + ' ' + 'i.Years'.tr;
+    return cns(label) + ' ' + 'Years'.tr;
   }
 
   /// TODO Should call this on language changes
@@ -243,10 +243,10 @@ class Event {
 
   // String get tvTitle => Event.tvFromTkEndTag(tkTitle);
   //
-  // /// Attempts to translate 'i.<tkEndTag>' if fails, tries 'a.<tkEndTag>'.
+  // /// Attempts to translate '<tkEndTag>' if fails, tries 'a.<tkEndTag>'.
   // static String tvFromTkEndTag(String tkEndTag) {
-  //   String tv = 'i.$tkEndTag'.tr;
-  //   return tv.startsWith('i.') ? a('a.$tkEndTag') : tv;
+  //   String tv = '$tkEndTag'.tr;
+  //   return tv.startsWith('') ? a('a.$tkEndTag') : tv;
   // }
 
   // /// Some labels have a newline characters to adjust their alignment.

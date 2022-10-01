@@ -124,7 +124,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'i.Birth of Humans'.tr,
+    tvEra: 'Birth of Humans'.tr,
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -158,7 +158,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'i.Great Flood'.tr,
+    tvEra: 'Great Flood'.tr,
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -190,7 +190,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'i.Unknown'.tr,
+    tvEra: 'Unknown'.tr,
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -229,7 +229,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'i.Unknown'.tr,
+    tvEra: 'Unknown'.tr,
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -297,10 +297,10 @@ final List<Prophet> relicsProphet = [
     successor: PF.Ismail,
     // Required prophet data:
     tvSentTo: a('a.Babylon') +
-        'i.,_'.tr +
-        'i.The people of_'.tr +
+        ',_'.tr +
+        'The people of_'.tr +
         a('a.Al-Eiraq') + // Iraq العراق
-        'i._and_'.tr +
+        '_and_'.tr +
         a('a.Suria') + // Syria سوريا
         _ +
         cns('(22:43)'),
@@ -312,7 +312,7 @@ final List<Prophet> relicsProphet = [
     qvsUluAlAzm: [QV(2, 124)],
     tvLocationBirth: 'p.Ur al-Chaldees, Bilād ar-Rāfidayn'.tr,
     tvLocationDeath: 'a.Al-Khalil'.tr + // Hebron الخليل
-        'i.,_'.tr +
+        ',_'.tr +
         a('a.Bilad al-Sham'), // Greater Syria لبِلَاد الشَّام
     tvTomb: 'p.Ibrahimi Mosque, Hebron'.tr,
   ),
@@ -348,7 +348,7 @@ final List<Prophet> relicsProphet = [
     successor: PF.Ibrahim,
     // Required prophet data:
     tvSentTo: a('a.Saddoom') + // سدوم Sodom
-        'i._and_'.tr +
+        '_and_'.tr +
         a("a.'Amoorah") + //  عمورة Gomorrah
         _ +
         cns('(7:80)'), // TODO arabee
@@ -384,7 +384,7 @@ final List<Prophet> relicsProphet = [
     // Required prophet data:
     tvSentTo: 'p.Pre-Islamic_' +
         a('a.Al-Arabiyyah') +
-        'i.,_'.tr +
+        ',_'.tr +
         a('a.Makkah al-Mukarramah'),
     quranMentionCount: 12,
     qvNabi: QV(19, 54),
@@ -394,7 +394,7 @@ final List<Prophet> relicsProphet = [
     qvsUluAlAzm: null,
     tvLocationBirth: a('a.Falastin') + // فلسطين Palestine
         '/' +
-        'i.Canaan'.tr,
+        'Canaan'.tr,
     tvLocationDeath:
         a('a.Makkah al-Mukarramah'), // Mecca مكة المكرمة 'Makkah the Noble',
     tvTomb: null,
@@ -420,7 +420,7 @@ final List<Prophet> relicsProphet = [
     // Required prophet data:
     tvSentTo: a('a.Falastin') + // فلسطين Palestine
         '/' +
-        'i.Canaan'.tr,
+        'Canaan'.tr,
     quranMentionCount: 17,
     qvNabi: QV(19, 49),
     // Optional prophet data:
@@ -433,7 +433,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'i.Old Egyptian Kingdom'.tr,
+    tvEra: 'Old Egyptian Kingdom'.tr,
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -457,7 +457,7 @@ final List<Prophet> relicsProphet = [
     // Required prophet data:
     tvSentTo: a('a.Falastin') + // فلسطين Palestine
         '/' +
-        'i.Canaan'.tr,
+        'Canaan'.tr,
     quranMentionCount: 16,
     qvNabi: QV(19, 49),
     // Optional prophet data:
@@ -500,7 +500,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'i.Unknown'.tr,
+    tvEra: 'Unknown'.tr,
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -534,7 +534,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'i.Unknown'.tr, // TODO
+    tvEra: 'Unknown'.tr, // TODO
     startMs: 0, // TODO Buddha: 6th or 5th century BCE
     endMs: 0,
     // Relic data:
@@ -561,12 +561,12 @@ final List<Prophet> relicsProphet = [
     tvLocationBirth: null,
     tvLocationDeath: null,
     tvTomb: 'p.Makam Dağı in Ergani province of Diyarbakir'.tr +
-        'i.,_'.tr +
+        ',_'.tr +
         a('a.Turkiye'),
   ),
   Prophet(
     // Event data:
-    tvEra: 'i.Unknown'.tr,
+    tvEra: 'Unknown'.tr,
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -680,7 +680,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'i.Kings of_'.tr + a('a.Israel'),
+    tvEra: 'Kings of_'.tr + a('a.Israel'),
     startMs: -1000,
     endMs: -971,
     // Relic data:
@@ -715,7 +715,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'i.Kings of_'.tr + a('a.Israel'),
+    tvEra: 'Kings of_'.tr + a('a.Israel'),
     startMs: -971,
     endMs: -931,
     // Relic data:
@@ -745,7 +745,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'i.Kings of_'.tr + a('a.Israel'), // TODO unsure
+    tvEra: 'Kings of_'.tr + a('a.Israel'), // TODO unsure
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -766,8 +766,8 @@ final List<Prophet> relicsProphet = [
     successor: PF.Alyasa,
     // Required prophet data:
     tvSentTo: a('a.Samaria') + //  TODO
-        'i.,_'.tr +
-        'i.The people of_'.tr +
+        ',_'.tr +
+        'The people of_'.tr +
         a('a.Ilyas') +
         _ +
         cns('(37:124)'),
@@ -783,7 +783,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'i.Kings of_'.tr + a('a.Israel'), // TODO unsure
+    tvEra: 'Kings of_'.tr + a('a.Israel'), // TODO unsure
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -804,11 +804,11 @@ final List<Prophet> relicsProphet = [
     successor: PF.Yunus,
     // Required prophet data:
     tvSentTo: a('a.Samaria') + //  TODO
-        'i.,_'.tr +
+        ',_'.tr +
         a('a.East') +
         _ +
         a('a.Al-Arabiyyah') +
-        'i._and_' +
+        '_and_' +
         a('a.Fars'), //Fars? Persia
     quranMentionCount: 2,
     qvNabi: QV(6, 89),
@@ -819,12 +819,12 @@ final List<Prophet> relicsProphet = [
     tvLocationBirth: null,
     tvLocationDeath: null,
     tvTomb: 'p.Eğil district of Diyarbakir Province'.tr +
-        'i.,_'.tr +
+        ',_'.tr +
         a('a.Turkiye'), //' or Al-Awjam, Saudi Arabia.'
   ),
   Prophet(
     // Event data:
-    tvEra: 'i.Unknown'.tr,
+    tvEra: 'Unknown'.tr,
     startMs:
         -800, // uncertain (8th century BCE or post-exilic period) in Wikipedia
     endMs: -800,
@@ -845,8 +845,8 @@ final List<Prophet> relicsProphet = [
     successor: PF.Zakariya,
     // Required prophet data:
     tvSentTo: a('a.Nineveh') + // TODO Ninevah? arabee?
-        'i.,_'.tr +
-        'i.The people of_'.tr +
+        ',_'.tr +
+        'The people of_'.tr +
         a('a.Yunus') +
         cns('(10:98)'),
     quranMentionCount: 4,
@@ -860,7 +860,7 @@ final List<Prophet> relicsProphet = [
     tvTomb:
         "p.Possibly at the Mosque of Yunus, Mosul, Iraq, Mashhad Village Gath-hepher, Israel; Halhul, Palestinian West Bank; Sarafand, Lebanon; Giv'at Yonah (Jonah's Hill) in Ashdod, Israel, near Fatih Pasha Mosque in Diyarbakir"
                 .tr +
-            'i.,_'.tr +
+            ',_'.tr +
             a('a.Turkiye'),
   ),
   Prophet(
@@ -1045,9 +1045,9 @@ final List<Prophet> relicsProphet = [
     relatives: null,
     // Required prophet data:
     tvSentTo: 'p.All the worlds'.tr +
-        'i.,_'.tr +
+        ',_'.tr +
         a('a.Nas') + // mankind
-        'i._and_'.tr +
+        '_and_'.tr +
         a('a.Jinn') +
         _ +
         cns('(21:107)'),
@@ -1058,48 +1058,48 @@ final List<Prophet> relicsProphet = [
     tvKitab: a('a.Quran') +
         _ +
         cns('(42:7)') +
-        'i._and_'.tr +
+        '_and_'.tr +
         a('a.Sunnah') +
         _ +
         cns('(3:31, 3:164, 4:59, 4:115, 59:7)'),
     qvsUluAlAzm: [QV(2, 124)],
     tvLocationBirth: a(DAY_OF_WEEK.Monday.tk) +
-        'i.,_'.tr +
+        ',_'.tr +
         cni(12) +
         _ +
         a("a.Rabi' Al-Thani") +
         _ +
         cni(53) +
-        'i.BH'.tr +
+        'BH'.tr +
         '/' +
         cni(570) +
-        'i.AD'.tr +
-        'i.,_'.tr +
+        'AD'.tr +
+        ',_'.tr +
         a('a.Aliathnayn') +
-        'i.,_'.tr +
+        ',_'.tr +
         a('a.Al-Madinah') + // Al Madinah Al Munawwarah المدينة المنورة,
-        'i.,_'.tr +
+        ',_'.tr +
         a('a.Al-Hejaz') +
-        'i.,_'.tr +
+        ',_'.tr +
         a('a.Al-Arabiyyah'),
     tvLocationDeath: a(DAY_OF_WEEK.Monday.tk) +
-        'i.,_'.tr +
+        ',_'.tr +
         cni(12) +
         _ +
         a("a.Rabi' Al-Thani") +
         _ +
         cni(11) +
-        'i.AH'.tr +
+        'AH'.tr +
         '/' +
         cni(632) +
-        'i.AD'.tr +
-        'i.,_'.tr +
+        'AD'.tr +
+        ',_'.tr +
         a('a.Aliathnayn') + // Monday
-        'i.,_'.tr +
+        ',_'.tr +
         a('a.Al-Madinah') +
-        'i.,_'.tr +
+        ',_'.tr +
         a('a.Al-Hejaz') + // ٱلْحِجَاز al-Ḥijaz
-        'i.,_'.tr +
+        ',_'.tr +
         a('a.Al-Arabiyyah'), // Arabia - الْعَرَبِيَّة
     tvTomb: at('p.Green Dome in {0}, {1}',
         ['a.Al-Masjid an-Nabawi', 'a.Al-Madinah']), //المسجد النبوي
@@ -1147,7 +1147,7 @@ final List<RelicSetFilter> relicSetFiltersProphet = [
   ),
   RelicSetFilter(
     type: FILTER_TYPE.IdxList,
-    tvLabel: 'i.Quran Name Mentions'.tr,
+    tvLabel: 'Quran Name Mentions'.tr,
     field: FILTER_FIELD.QuranMentionCount,
     idxList: [
       PF.Musa.index, //    136 <-Mentions in Quran
@@ -1179,7 +1179,7 @@ final List<RelicSetFilter> relicSetFiltersProphet = [
   ),
   RelicSetFilter(
     type: FILTER_TYPE.Tree,
-    tvLabel: 'i.Family Tree'.tr,
+    tvLabel: 'Family Tree'.tr,
     treeGraph1: getGraphAllFamily(RELIC_TYPE.Anbiya, PF.Gap.index),
     treeGraph2: getGraphOnlyRelics(RELIC_TYPE.Anbiya, PF.Gap.index),
   ),

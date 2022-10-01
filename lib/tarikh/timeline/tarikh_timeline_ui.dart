@@ -84,7 +84,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     }
 
     TarikhC.to.isActiveTimeline = true;
-    _tvEraName = 'i.Era'.tr +
+    _tvEraName = 'Era'.tr +
         ': ' +
         (t.currentEra != null ? a(t.currentEra!.tkTitle) : a(tkDefaultEraName));
     t.onHeaderColorsChanged = (/*Color background,*/ Color text) {
@@ -97,8 +97,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     /// Update the label for the [Timeline] object.
     t.onEraChanged = (Event? event) {
       setState(() {
-        _tvEraName =
-            'i.Era'.tr + ': ' + (event != null ? a(event.tkTitle) : '');
+        _tvEraName = 'Era'.tr + ': ' + (event != null ? a(event.tkTitle) : '');
       });
     };
 
@@ -373,7 +372,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                         tv: true,
                                       ),
                                       FloatingActionButton(
-                                        tooltip: 'i.Navigate to past'.tr,
+                                        tooltip: 'Navigate to past'.tr,
                                         heroTag: 'btnUp', // needed
                                         onPressed: () => _navigateToTimeline(
                                             btnUp.event!, devicePadding.top),
@@ -428,7 +427,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                         tv: true,
                                       ),
                                       FloatingActionButton(
-                                        tooltip: 'i.Navigate to future'.tr,
+                                        tooltip: 'Navigate to future'.tr,
                                         heroTag: 'btnDn', // needed
                                         onPressed: () => _navigateToTimeline(
                                             btnDn.event!, devicePadding.top),
@@ -504,11 +503,11 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   String _tkGutterTooltip(TarikhC c) {
     switch (c.gutterMode) {
       case GutterMode.OFF:
-        return 'i.Show favorite events';
+        return 'Show favorite events';
       case GutterMode.FAV:
-        return 'i.Show all events';
+        return 'Show all events';
       case GutterMode.ALL:
-        return 'i.Hide events';
+        return 'Hide events';
     }
   }
 
@@ -517,12 +516,12 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
       case GutterMode.OFF:
         c.gutterMode = GutterMode.FAV;
         if (Get.isSnackbarOpen) Get.closeCurrentSnackbar();
-        showSnackBar('i.Show favorite events', '', isRed: true); // for white bg
+        showSnackBar('Show favorite events', '', isRed: true); // for white bg
         break;
       case GutterMode.FAV:
         c.gutterMode = GutterMode.ALL;
         if (Get.isSnackbarOpen) Get.closeCurrentSnackbar();
-        showSnackBar('i.Show all events', '', isRed: true);
+        showSnackBar('Show all events', '', isRed: true);
         break;
       case GutterMode.ALL:
         c.gutterMode = GutterMode.OFF;

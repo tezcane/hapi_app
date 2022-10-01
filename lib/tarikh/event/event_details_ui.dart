@@ -173,7 +173,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                           children: [
                             if (widget.eventType == EVENT_TYPE.Relic)
                               FloatingActionButton(
-                                tooltip: 'i.Upgrade Relic'.tr,
+                                tooltip: 'Upgrade Relic'.tr,
                                 onPressed: () {
                                   // TODO asdf
                                 },
@@ -216,8 +216,8 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                     FloatingActionButton(
                                       tooltip:
                                           widget.eventType == EVENT_TYPE.Relic
-                                              ? 'i.See previous relic'.tr
-                                              : 'i.Navigate to past'.tr,
+                                              ? 'See previous relic'.tr
+                                              : 'Navigate to past'.tr,
                                       heroTag: 'btnUp',
                                       onPressed: () =>
                                           _initEvent(_btnUp.event!.saveTag),
@@ -266,8 +266,8 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                     FloatingActionButton(
                                       tooltip:
                                           widget.eventType == EVENT_TYPE.Relic
-                                              ? 'i.See next relic'.tr
-                                              : 'i.Navigate to future'.tr,
+                                              ? 'See next relic'.tr
+                                              : 'Navigate to future'.tr,
                                       heroTag: 'btnDn',
                                       onPressed: () =>
                                           _initEvent(_btnDn.event!.saveTag),

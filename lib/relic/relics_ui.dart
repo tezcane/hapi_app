@@ -37,7 +37,7 @@ class RelicsUI extends StatelessWidget {
         BottomBarItem(
           const EventFavoriteUI(EVENT_TYPE.Relic, navPage),
           null,
-          'i.Favorites'.tr,
+          'Favorites'.tr,
           at('at.{0} Favorites', [navPage.tk]),
           Icons.favorite_border_outlined,
           onPressed: hideKeyboard, // in case search is showing keyboard
@@ -45,31 +45,31 @@ class RelicsUI extends StatelessWidget {
         BottomBarItem(
           const EventSearchUI(navPage),
           null,
-          'i.Search'.tr,
+          'Search'.tr,
           at('at.{0} Search', [navPage.tk]),
           Icons.search_outlined,
         ),
         BottomBarItem(
-          Center(child: T('i.Coming Soon', tsN, h: 50)),
+          Center(child: T('Coming Soon', tsN, h: 50)),
           null,
           'a.Alathar'.tr, // Relics
-          'i.Islamic relics'.tr,
+          'Islamic relics'.tr,
           Icons.brightness_3_outlined, // Icons.wine_bar_sharp
           onPressed: hideKeyboard,
         ),
         BottomBarItem(
-          Center(child: T('i.Coming Soon', tsN, h: 50)),
+          Center(child: T('Coming Soon', tsN, h: 50)),
           null,
-          'i.Places'.tr,
-          'i.Famous Muslim Places'.tr,
+          'Places'.tr,
+          'Famous Muslim Places'.tr,
           Icons.map_outlined, // TODO Icons.mosque_outlined/.school_outlined
           onPressed: hideKeyboard,
         ),
         BottomBarItem(
-          Center(child: T('i.Coming Soon', tsN, h: 50)),
+          Center(child: T('Coming Soon', tsN, h: 50)),
           null,
           'a.Delil'.tr,
-          'i.Proofs of Islam'.tr,
+          'Proofs of Islam'.tr,
           Icons.auto_stories,
           onPressed: hideKeyboard,
         ),
@@ -85,14 +85,14 @@ class RelicsUI extends StatelessWidget {
           ),
           null,
           a('a.Ummah'),
-          '              ' + 'i.Remarkable Muslims'.tr + '              ',
+          '              ' + 'Remarkable Muslims'.tr + '              ',
           Icons.connect_without_contact_outlined,
           onPressed: hideKeyboard,
         ),
         BottomBarItem(
-          const Center(child: T('i.Coming Soon', tsN, h: 50)),
+          const Center(child: T('Coming Soon', tsN, h: 50)),
           null,
-          a('a.Allah'), //a('i.Asma-ul-Husna'),
+          a('a.Allah'), //a('Asma-ul-Husna'),
           '              ' +
               at('at.About {0} {1}', ['a.Allah', 'a.SWT']) +
               '              ',

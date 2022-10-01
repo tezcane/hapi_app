@@ -63,7 +63,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
                 children: [
                   const Center(
                     child: T(
-                      'i.Calculation Method',
+                      'Calculation Method',
                       AppThemes.tsTitle,
                       w: 150, // TODO get from slide out menu width
                       h: 16,
@@ -123,7 +123,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
               },
             ),
             addSetting(
-              tvTitle: 'i.Round Time To'.tr,
+              tvTitle: 'Round Time To'.tr,
               tvTooltip: 'tt.roundTimeTo'.tr,
               tvLabels: [a('a.Daqayiq'), a('a.Thawani')], // Minutes/Seconds
               initialLabelIndex: c.showSecPrecision ? 1 : 0,

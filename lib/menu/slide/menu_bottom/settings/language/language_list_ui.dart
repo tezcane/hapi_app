@@ -21,7 +21,7 @@ class LanguageListUI extends StatelessWidget {
             children: [
               Icon(Icons.language_rounded, size: iconSize),
               T(
-                'i.Language',
+                'Language',
                 tsN,
                 w: w / 4,
                 alignment: LanguageC.to.centerLeft,

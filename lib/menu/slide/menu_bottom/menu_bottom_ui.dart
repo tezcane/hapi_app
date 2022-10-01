@@ -49,7 +49,7 @@ class MenuBottomUI extends StatelessWidget {
               ),
             ),
             Tooltip(
-              message: 'i.Settings'.tr,
+              message: 'Settings'.tr,
               child: InkWell(
                 onTap: () {
                   MenuC.to.pushSubPage(SubPage.Settings);
@@ -68,9 +68,9 @@ class MenuBottomUI extends StatelessWidget {
               child: InkWell(
                 onTap: () => Share.share(
                   a('a.Assalamu Alaykum') +
-                      'i.,'.tr + // translate the comma
+                      ','.tr + // translate the comma
                       '\n' +
-                      'i.Check out this really useful and fun Muslim app!'.tr +
+                      'Check out this really useful and fun Muslim app!'.tr +
                       ' https://hapi.net',
                 ),
                 child: const Icon(

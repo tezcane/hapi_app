@@ -69,7 +69,7 @@ class AboutUI extends StatelessWidget {
                                   'a.SWT'
                                 ]) +
                             '\n\n' +
-                            'i.We hope it greatly improves your happiness in this life and the next.'
+                            'We hope it greatly improves your happiness in this life and the next.'
                                 .tr +
                             '\n\n' +
                             at('at.{0} will never track or sell your data and will remain free.',
@@ -78,7 +78,7 @@ class AboutUI extends StatelessWidget {
                             at('at.You can support {0} with your {1}, sharing {2} and donating towards server costs, further developments and social outreach programs.',
                                 ['a.hapi', 'a.dua', 'a.hapi']) +
                             '\n\n' +
-                            'i.Learn more at'.tr +
+                            'Learn more at'.tr +
                             ' ',
                       ),
                       TextSpan(

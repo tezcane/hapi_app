@@ -22,7 +22,7 @@ class Surah extends Relic {
     required this.mainThemes,
   }) : super(
           // Event data:
-          tvEra: 'i.Quran Revelation',
+          tvEra: 'Quran Revelation',
           startMs: 0, // TODO put in quran revelation dates!
           endMs: 0,
           // Relic data:

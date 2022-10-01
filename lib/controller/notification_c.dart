@@ -115,11 +115,11 @@ class NotificationC extends GetxHapi {
     _playBeep[z] = !_playBeep[z]!;
     s.wr('playBeep${z.name}', _playBeep[z]);
     if (_playBeep[z]!) {
-      showSnackBar(tvNotificationTitle, 'i.Default sound on');
+      showSnackBar(tvNotificationTitle, 'Default sound on');
       _playAthan[z] = false; // both can't be true
       s.wr('playAthan${z.name}', _playAthan[z]);
     } else {
-      showSnackBar(tvNotificationTitle, 'i.Default sound off');
+      showSnackBar(tvNotificationTitle, 'Default sound off');
     }
     resetNotifications();
     updateOnThread1Ms();
@@ -129,9 +129,9 @@ class NotificationC extends GetxHapi {
     _vibrate[z] = !_vibrate[z]!;
     s.wr('vibrate${z.name}', _vibrate[z]);
     if (_vibrate[z]!) {
-      showSnackBar(tvNotificationTitle, 'i.Vibration on');
+      showSnackBar(tvNotificationTitle, 'Vibration on');
     } else {
-      showSnackBar(tvNotificationTitle, 'i.Vibration off');
+      showSnackBar(tvNotificationTitle, 'Vibration off');
     }
     resetNotifications();
     updateOnThread1Ms();

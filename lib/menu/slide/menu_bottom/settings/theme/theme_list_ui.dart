@@ -23,7 +23,7 @@ class ThemeListUI extends StatelessWidget {
           Row(children: [
             Icon(Icons.palette_outlined, size: iconSize),
             T(
-              'i.Theme',
+              'Theme',
               tsN,
               w: w / 4,
               alignment: LanguageC.to.centerLeft,
@@ -36,12 +36,12 @@ class ThemeListUI extends StatelessWidget {
               tvMenuOptions: [
                 SettingsOption(
                   'light',
-                  'i.Light'.tr,
+                  'Light'.tr,
                   icon: Icons.brightness_low,
                 ),
                 SettingsOption(
                   'dark',
-                  'i.Dark'.tr,
+                  'Dark'.tr,
                   icon: Icons.brightness_3,
                 )
               ],
