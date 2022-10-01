@@ -58,7 +58,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
         return Column(
           children: [
             Tooltip(
-              message: 'tt.calculationMethod'.tr,
+              message: 'Select the salah time calculation method'.tr,
               child: Column(
                 children: [
                   const Center(
@@ -124,7 +124,8 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
             ),
             addSetting(
               tvTitle: 'Round Time To'.tr,
-              tvTooltip: 'tt.roundTimeTo'.tr,
+              tvTooltip:
+                  'Round prayer times to the closest minutes or seconds'.tr,
               tvLabels: [a('a.Daqayiq'), a('a.Thawani')], // Minutes/Seconds
               initialLabelIndex: c.showSecPrecision ? 1 : 0,
               onToggle: (index) {
@@ -156,7 +157,7 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
 //          ),
             addSetting(
               tvTitle: a('a.Saat Hayit'), // Clock
-              tvTooltip: 'tt.clockType'.tr,
+              tvTooltip: 'Should the clock show 12 hour or 24 hour times'.tr,
               tvLabels: [
                 cns('12') + ' ' + a('a.Saat'), // 12 Hour, TODO hard tr
                 cns('24') + ' ' + a('a.Saat'), // 24 Hour
