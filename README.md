@@ -104,7 +104,6 @@ sliv - sliver
 t    - timeline  
 tk   - Translation Key (Previously trKey) - key to lookup translations  
 tv   - Translation Value (Previously trVal) - a tk that's been translated  
-tt   - tooltip (used in translation keys)  
 ts   - text style  
 thjd - Tahajjud  
 tpr  - Tiles Per Row  
