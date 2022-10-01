@@ -124,7 +124,7 @@ class UpdateProfileUI extends StatelessWidget {
                         Center(
                           child: ElevatedButton(
                             onPressed: () => MainC.to.signOut(),
-                            child: T('settings.signOut', null, w: wm(context)),
+                            child: T('Sign Out', null, w: wm(context)),
                           ),
                         ),
                         const SizedBox(height: 48),
