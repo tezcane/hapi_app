@@ -21,7 +21,6 @@ class FormInputField extends StatelessWidget {
     required this.onChanged,
     required this.onSaved,
   });
-
   final TextEditingController controller;
   final String labelText;
   final String? Function(String?)? validator;
