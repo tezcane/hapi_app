@@ -29,9 +29,9 @@ abstract class Aya {
   String get tvGetAyaText; // TODO probably want to return a widget too:
 }
 
-/// AQ = Aya Quran (TODO rename to AQ)
-class QV extends Aya {
-  QV(
+/// AQ = Aya Quran
+class AQ extends Aya {
+  AQ(
     this.surah,
     this.start, {
     this.end,
