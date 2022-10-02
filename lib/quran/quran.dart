@@ -33,8 +33,8 @@ abstract class Aya {
 class QV extends Aya {
   QV(
     this.surah,
-    this.ayaStart, {
-    this.ayaEnd,
+    this.start, {
+    this.end,
     String? tkNoteBefore,
     String? tkNoteAfter,
   }) : super(
@@ -42,11 +42,11 @@ class QV extends Aya {
           tkNoteAfter: tkNoteAfter,
         );
   final int surah;
-  final int ayaStart;
-  int? ayaEnd; // use to specify a range of verses, e.g. Surah 1, verse 1-3
+  final int start;
+  int? end; // use to specify end of range, e.g. Surah 1, verse 2-3 (the 3 here)
 
-  bool get isOneVerse => ayaEnd == null;
-  bool get isMultiVerse => ayaEnd != null; // grow up...
+  bool get isOneVerse => end == null;
+  bool get isMultiVerse => end != null; // grow up...
 
   @override
   // TODO: implement getAyaText
