@@ -70,7 +70,7 @@ enum RELATIVE {
 abstract class FamilyTree extends Relic {
   FamilyTree({
     // Event data:
-    required String tvEra,
+    required String tkEra,
     required double startMs,
     required double endMs,
     // Relic data:
@@ -90,7 +90,7 @@ abstract class FamilyTree extends Relic {
     this.successor, // TODO make use of this, order of prophethood?
   }) : super(
           // Event data:
-          tvEra: tvEra,
+          tkEra: tkEra,
           startMs: startMs,
           endMs: endMs,
           // Relic data:

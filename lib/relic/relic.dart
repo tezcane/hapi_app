@@ -77,7 +77,7 @@ extension EnumUtil on RELIC_TYPE {
 abstract class Relic extends Event {
   Relic({
     // Event data:
-    required String tvEra,
+    required String tkEra,
     required double startMs,
     required double endMs,
     // Relic data:
@@ -85,7 +85,7 @@ abstract class Relic extends Event {
     required this.e,
   }) : super(
           type: EVENT_TYPE.Relic,
-          tkEra: tvEra,
+          tkEra: tkEra,
           tkTitle: e.name,
           startMs: startMs,
           endMs: endMs,

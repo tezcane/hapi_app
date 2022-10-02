@@ -13,7 +13,7 @@ const String _ = ' '; // space/gap
 class Prophet extends FamilyTree {
   Prophet({
     // Event data:
-    required String tvEra,
+    required String tkEra,
     required double startMs,
     required double endMs,
 
@@ -45,7 +45,7 @@ class Prophet extends FamilyTree {
     this.tvTomb,
   }) : super(
           // Event data:
-          tvEra: tvEra,
+          tkEra: tkEra,
           startMs: startMs,
           endMs: endMs,
           // Relic data:
@@ -98,7 +98,7 @@ class Prophet extends FamilyTree {
 final List<Prophet> relicsProphet = [
   Prophet(
     // Event data:
-    tvEra: 'Intelligent Life'.tr,
+    tkEra: 'Intelligent Life',
     startMs: -340000,
     endMs: -339050,
     // Relic data:
@@ -128,7 +128,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'Birth of Humans'.tr,
+    tkEra: 'Birth of Humans',
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -165,7 +165,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'Great Flood'.tr,
+    tkEra: 'Great Flood',
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -291,7 +291,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'Unknown'.tr,
+    tkEra: 'Unknown',
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -331,7 +331,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'Unknown'.tr,
+    tkEra: 'Unknown',
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -390,7 +390,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: a('a.Ibrahim'),
+    tkEra: 'a.Ibrahim',
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -597,7 +597,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: a('a.Ibrahim'),
+    tkEra: 'a.Ibrahim',
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -645,7 +645,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: a('a.Ibrahim'),
+    tkEra: 'a.Ibrahim',
     startMs: 0, //-1800, TODO must be younger than Yusuf!
     endMs: 0, //-1664,
     // Relic data:
@@ -682,7 +682,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: a('a.Ibrahim'),
+    tkEra: 'a.Ibrahim',
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -715,7 +715,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'Old Egyptian Kingdom'.tr,
+    tkEra: 'Old Egyptian Kingdom',
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -753,7 +753,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'Ancient Egypt',
+    tkEra: 'Ancient Egypt',
     startMs: -2400,
     endMs: -2400,
     // Relic data:
@@ -784,7 +784,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'Unknown'.tr,
+    tkEra: 'Unknown',
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -819,7 +819,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'Unknown'.tr, // TODO
+    tkEra: 'Unknown', // TODO
     startMs: 0, // TODO Buddha: 6th or 5th century BCE
     endMs: 0,
     // Relic data:
@@ -852,7 +852,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'Unknown'.tr,
+    tkEra: 'Unknown',
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -902,7 +902,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'Ancient Egypt',
+    tkEra: 'Ancient Egypt',
     startMs: -1303,
     endMs: -1200,
     // Relic data:
@@ -939,7 +939,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'Ancient Egypt',
+    tkEra: 'Ancient Egypt',
     startMs: -1300,
     endMs: -1200,
     // Relic data:
@@ -1368,7 +1368,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'Kings of_'.tr + a('a.Israel'),
+    tkEra: 'Kings of_'.tr + a('a.Israel'),
     startMs: -1000,
     endMs: -971,
     // Relic data:
@@ -1404,7 +1404,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'Kings of_'.tr + a('a.Israel'),
+    tkEra: 'Kings of Israel',
     startMs: -971,
     endMs: -931,
     // Relic data:
@@ -1472,7 +1472,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'Kings of_'.tr + a('a.Israel'), // TODO unsure
+    tkEra: 'Kings of Israel',
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -1511,7 +1511,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'Kings of_'.tr + a('a.Israel'), // TODO unsure
+    tkEra: 'Kings of_'.tr + a('a.Israel'), // TODO unsure
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -1555,7 +1555,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: 'Unknown'.tr,
+    tkEra: 'Unknown',
     startMs:
         -800, // uncertain (8th century BCE or post-exilic period) in Wikipedia
     endMs: -800,
@@ -1597,7 +1597,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: a('a.Masih'),
+    tkEra: 'a.Masih',
     startMs: 0,
     endMs: 0,
     // Relic data:
@@ -1633,7 +1633,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: a('a.Masih'),
+    tkEra: 'a.Masih',
     startMs: -100,
     endMs: 28, // AD 28–36
     // Relic data:
@@ -1665,7 +1665,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: a('a.Masih'),
+    tkEra: 'a.Masih',
     startMs: -4,
     endMs: 30,
     // Relic data:
@@ -1710,7 +1710,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tvEra: a('a.Muhammad'), // Muhammad
+    tkEra: 'a.Muhammad',
     startMs: 570,
     endMs: 632,
     // Relic data:
