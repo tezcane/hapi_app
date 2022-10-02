@@ -167,6 +167,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                       child: Padding(
                         //TODO RTL ok?
                         padding: const EdgeInsets.only(left: 15),
+//                      padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -179,8 +180,10 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                 },
                                 materialTapTargetSize:
                                     MaterialTapTargetSize.padded,
-                                child: const Icon(Icons.start_outlined,
-                                    size: 36.0),
+                                child: const Icon(
+                                  Icons.start_outlined,
+                                  size: 36.0,
+                                ),
                               ),
                             T('', tsR, w: w2, h: 17),
                             const SizedBox(height: 1),

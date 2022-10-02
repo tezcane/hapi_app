@@ -73,7 +73,7 @@ class LanguageC extends GetxHapi {
 
   /// Holds all a.json Arabic "transileration"->"Arabic" variables that the app
   /// uses to teach Arabic to the user.
-  late final Map<String, String> aMap;
+  late final Map<String, String> _aMap;
 
   final Map<String, bool> _arabicScriptLangs = {
     'ar': true, // Arabic
@@ -142,7 +142,7 @@ class LanguageC extends GetxHapi {
   @override
   void onInit() async {
     super.onInit();
-    aMap = await _getTrMap('', 'a');
+    _aMap = await _getTrMap('', 'a');
     await updateLanguage(_findLanguage());
   }
 
@@ -278,27 +278,16 @@ class LanguageC extends GetxHapi {
 
   /// Load translations from disk to save memory. The tv is returned from the
   /// currLangKey lookup, e.g. if Timeline Event calls this and lang is Turkish
-  /// tarikh_articles/tr.json will be parsed and returned.
+  /// t/tr.json will be parsed and returned.
   Future<String> tvArticle(EVENT_TYPE eventType, String tk) async {
-    String trFilePath;
-    String tkLeadingTag;
-    if (eventType == EVENT_TYPE.Relic) {
-      trFilePath = 'relic/anbiya';
-      tkLeadingTag = 'pq.';
-    } else {
-      trFilePath = 'tarikh_articles/';
-      tkLeadingTag = 't.';
-    }
-
-    tk = tk.startsWith('a.') ? tk.replaceFirst('a.', tkLeadingTag) : tk;
-
+    String trFolder = eventType == EVENT_TYPE.Relic ? 'r/' : 't/';
     try {
-      return (await _getTrMap(trFilePath, currLangKey))[tk]!;
+      return (await _getTrMap(trFolder, currLangKey))[tk]!;
     } catch (e) {
       return 'Coming Soon';
     }
   }
 
   /// Give "a.<transliteration> and get Arabic script translation back
-  String ar(String tk) => aMap[tk]!;
+  String ar(String tk) => _aMap[tk]!;
 }

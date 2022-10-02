@@ -86,7 +86,7 @@ abstract class Relic extends Event {
   }) : super(
           type: EVENT_TYPE.Relic,
           tkEra: tkEra,
-          tkTitle: e.name,
+          tkTitle: 'a.${e.name}', // TODO want to improve this
           startMs: startMs,
           endMs: endMs,
           accent: null, // TODO
