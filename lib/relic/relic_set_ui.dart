@@ -107,7 +107,7 @@ class RelicSetUI extends StatelessWidget {
           ]),
           Row(
             children: [
-              if (filter.isResizeable) _btnGroupRemoveAdd(),
+              if (filter.isResizeable) _growShrinkBtns(),
               InkWell(
                 onTap: () {
                   showTileText = !showTileText;
@@ -167,7 +167,7 @@ class RelicSetUI extends StatelessWidget {
     );
   }
 
-  Widget _btnGroupRemoveAdd() {
+  Widget _growShrinkBtns() {
     return Row(
       children: [
         InkWell(
