@@ -1368,7 +1368,7 @@ final List<Prophet> relicsProphet = [
   ),
   Prophet(
     // Event data:
-    tkEra: 'Kings of_'.tr + a('a.Israel'),
+    tkEra: 'Kings of Israel',
     startMs: -1000,
     endMs: -971,
     // Relic data:

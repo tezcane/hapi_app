@@ -137,7 +137,7 @@ Future _updateTranslationFiles(
 
     String path = filterTarikhArticles ? '' : 'tarikh_articles/';
     String filePrefix = !createArabicFile ? localization.language : 'a';
-    String filename = '../../../assets/i18n/$path$filePrefix.json';
+    String filename = '../../../../../../assets/i18n/$path$filePrefix.json';
     stdout.writeln('Saving $filename');
     final file = File(filename);
     await file.writeAsString(text);
