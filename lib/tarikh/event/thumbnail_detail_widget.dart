@@ -119,17 +119,17 @@ class ThumbnailDetailWidget extends StatelessWidget {
 
   _goToEventDetailsOfTarikh() {
     MenuC.to.pushSubPage(SubPage.Event_Details, arguments: {
-      'eventType': EVENT_TYPE.Incident,
-      'eventMap': EventC.to.getEventMap(EVENT_TYPE.Incident),
+      'eventType': EVENT.Incident,
+      'eventMap': EventC.to.getEventMap(EVENT.Incident),
       'saveTag': event.saveTag,
     });
   }
 
   _goToEventDetailsOfRelics() {
     MenuC.to.pushSubPage(SubPage.Event_Details, arguments: {
-      'eventType': EVENT_TYPE.Relic,
+      'eventType': event.eventType,
       'eventMap': RelicC.to.getEventMap(
-        (event as Relic).relicType,
+        event.eventType,
         FILTER_TYPE.Default,
         null,
       ),

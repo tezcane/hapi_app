@@ -1,102 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:hapi/relic/relic_c.dart';
-import 'package:hapi/relic/surah/surah.dart';
-import 'package:hapi/relic/ummah/prophet.dart';
 import 'package:hapi/tarikh/event/event.dart';
 import 'package:hapi/tarikh/event/event_asset.dart';
-
-/// Each relic subsection/RelicSet (e.g. Ummah->Prophet) needs to have a
-/// RELIC_TYPE so it can be easily filtered/found/accessed later.
-///
-/// NOTE: After adding relic type, you must update the [EnumUtil] extension.
-enum RELIC_TYPE {
-//   // LEADERS
-//   Al_Asma_ul_Husna, // اَلاسْمَاءُ الْحُسناى TODO all names mentioned in Quran? AsmaUlHusna - 99 names of allah
-  Anbiya, // Prophets TODO non-Quran mentioned prophets
-//   Muhammad, // Laqab, Family Tree here?
-//   Righteous, // People: Mentioned in Quran/possible prophets/Sahabah/Promised Jannah
-//
-//   //ISLAM
-//   Delil, //Quran,Sunnah,Nature,Ruins // See "Miracles of Quran" at bottom of file
-//   Tenets, // Islam_5Pillars/6ArticlesOfFaith
-//   Jannah, // Doors/Levels/Beings(Insan,Angels,Jinn,Hurlieen,Servants,Burak)
-// //Heaven_LevelsOfHell,
-//
-//   //ACADEMIC
-//   Scriptures, //  Hadith Books/Quran/Injil/Torah/Zabur/Scrolls of X/Talmud?
-  Surah, // Mecca/Medina/Revelation Date/Ayat Length/Quran Order
-//   Scholars, // Tabieen, TabiTabieen, Ulama (ImamAzam,Madhab+ Tirmidihi, Ibn Taymiyah), Dai (Givers of Dawah),
-//   Relics, // Kaba, black stone, Prophets Bow, Musa Staff, Yusuf Turban, etc. Coins?
-//   Quran_Mentions, // Tribes, Animals, Foods, People (disbelievers)
-//   Arabic, // Alphabet (Muqattaʿat letters 14 of 28: ʾalif أ, hā هـ, ḥā ح, ṭā ط, yā ي, kāf ك, lām ل, mīm م, nūn ن, sīn س, ʿain ع, ṣād ص, qāf ق, rā ر.)
-//
-//   // Ummah
-//   Amir, // Khalif/Generals
-//   Muslims, // alive/dead, AlBayt (Zojah, Children), Famous (Malcom X, Mike Tyson, Shaqeel Oneil), // Amirs/Khalif not in Dynasties, Athletes,
-//   Places, // HolyPlaces, Mosques, Schools, Cities  (old or new), mentioned in the Quran,Ruins, Conquered or not, Istanbul, Rome
-//
-//   // Dynasties (Leaders/Historical Events/Battles)
-//   Dynasties, // Muhammad, Rashidun, Ummayad, Andalus, Abbasid, Seljuk, Ayyubi, Mamluk, Ottoman,
-//   Rasulallah, //Muhammad Battles (Badr, Uhud, etc.)
-//   Rashidun,
-//   Ummayad,
-//   Andalus,
-//   Abbasid,
-//   Seljuk,
-//   Ayyubi,
-//   Mamluk,
-//   Ottoman,
-}
-
-extension EnumUtil on RELIC_TYPE {
-  String get trDirectoryTag => name.toLowerCase();
-  String get tkRelicSetTitle => 'a.$name';
-
-  List<Relic> initRelics() {
-    switch (this) {
-      case RELIC_TYPE.Anbiya:
-        return relicsProphet;
-      case RELIC_TYPE.Surah:
-        return relicsSurah;
-    }
-  }
-
-  List<RelicSetFilter> initRelicSetFilters() {
-    switch (this) {
-      case RELIC_TYPE.Anbiya:
-        return relicSetFiltersProphet;
-      case RELIC_TYPE.Surah:
-        return relicSetFiltersSurah;
-    }
-  }
-}
 
 /// Abstract class that all relics need to extend. Also extends Events so we can
 /// Relics on the Timeline (if they have dates), you're welcome.
 abstract class Relic extends Event {
   Relic({
     // Event data:
+    required EVENT eventType,
     required String tkEra,
+    required String tkTitle,
     required double startMs,
     required double endMs,
     // Relic data:
-    required this.relicType,
     required this.e,
   }) : super(
-          type: EVENT_TYPE.Relic,
+          eventType: eventType,
           tkEra: tkEra,
-          tkTitle: 'a.${e.name}', // TODO want to improve this
+          tkTitle: tkTitle,
           startMs: startMs,
           endMs: endMs,
           accent: null, // TODO
         );
-  // DB stores Map<'int relicType.index', Map<'int relicId', int ajrLevel>>.
-  // Using '' quotes above since firestore only allows string keys, not ints.
-  final RELIC_TYPE relicType;
   final Enum e; // Unique relicId for this RELIC_TYPE
 
-  int get ajrLevel => RelicC.to.getAjrLevel(relicType, e.index);
+  int get ajrLevel => RelicC.to.getAjrLevel(eventType, e.index);
 
   /// Abstract methods:
   RelicAsset getRelicAsset({width = 200.0, height = 200.0, scale = 1.0});
@@ -106,11 +36,11 @@ abstract class Relic extends Event {
 /// Stores all information needed to show a RelicSet, see RelicSetUI().
 class RelicSet {
   RelicSet({
-    required this.relicType,
+    required this.eventType,
     required this.relics,
     required this.tkTitle,
   });
-  final RELIC_TYPE relicType;
+  final EVENT eventType;
   final List<Relic> relics;
   final String tkTitle;
 
@@ -125,6 +55,7 @@ enum FILTER_TYPE {
   Tree,
 }
 
+/// Used to tell RelicSetUI() to show a special field under the relic.
 enum FILTER_FIELD {
   QuranMentionCount,
 }

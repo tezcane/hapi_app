@@ -60,7 +60,7 @@ final List<SettingsOption> languageOptions = [
   SettingsOption('uz', 'Uzbek - O\'zbek tili'), // Uzbek
 ];
 
-/// saves and loads our selected language.
+/// Saves and loads our selected language.
 class LanguageC extends GetxHapi {
   static LanguageC get to => Get.find();
 
@@ -142,7 +142,7 @@ class LanguageC extends GetxHapi {
   @override
   void onInit() async {
     super.onInit();
-    _aMap = await _getTrMap('', 'a');
+    _aMap = await _getTrMap('a/', 'a');
     await updateLanguage(_findLanguage());
   }
 
@@ -277,17 +277,20 @@ class LanguageC extends GetxHapi {
   }
 
   /// Load translations from disk to save memory. The tv is returned from the
-  /// currLangKey lookup, e.g. if Timeline Event calls this and lang is Turkish
-  /// t/tr.json will be parsed and returned.
-  Future<String> tvArticle(EVENT_TYPE eventType, String tk) async {
-    String trFolder = eventType == EVENT_TYPE.Relic ? 'r/' : 't/';
+  /// currLangKey lookup, e.g. if Timeline Event calls this and lang is English
+  /// t/en.json will be parsed and returned.
+  ///
+  /// Note: tk must not have any "t.", "r.", "a.", etc. tags on it.
+  Future<String> tvArticle(EVENT eventType, String tk) async {
     try {
-      return (await _getTrMap(trFolder, currLangKey))[tk]!;
+      return (await _getTrMap(eventType.trPath, currLangKey))[
+          tk.startsWith('a.') ? tk.replaceFirst('a.', '') : tk]!;
     } catch (e) {
-      return 'Coming Soon';
+      return 'Coming Soon'.tr;
     }
   }
 
   /// Give "a.<transliteration> and get Arabic script translation back
-  String ar(String tk) => _aMap[tk]!;
+  String ar(String tk) =>
+      _aMap[tk.startsWith('a.') ? tk.replaceFirst('a.', '') : tk]!;
 }

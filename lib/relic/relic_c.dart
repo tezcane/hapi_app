@@ -10,10 +10,10 @@ import 'package:hapi/tarikh/event/event.dart';
 class RelicC extends GetxHapi {
   static RelicC get to => Get.find();
 
-  /// Perfect hash, access via [RELIC_TYPE.index]
+  /// Perfect hash, access via _relicSets[EVENT.index]
   final List<RelicSet> _relicSets = [];
 
-  /// perfect hash ajrLevel[RELIC_TYPE.index] = Map<relicId, int ajrLevel>
+  /// Perfect hash, access via _ajrLevels[EVENT.index]=Map<relicId, int ajrLevel>
   final List<Map<int, int>> _ajrLevels = [];
 
   /// needed by relic tab bar
@@ -31,7 +31,7 @@ class RelicC extends GetxHapi {
   ///
   /// Note: TarikhC calls this while Relic's are still initializing so we must
   /// spin wait for Relic's to initialize so TarikhC can get Relic events.
-  Future<List<Event>> mergeRelicAndTarikhEvents(List<Event> events) async {
+  Future<List<Event>> mergeRelicAndTarikhEvents(List<Event> trkhEvents) async {
     if (initNeeded) {
       int sleepBackoffMs = 250;
       // No internet needed if already initialized
@@ -42,18 +42,20 @@ class RelicC extends GetxHapi {
       }
     }
 
-    List<Event> eventsRelics = [];
-    for (RELIC_TYPE relicType in RELIC_TYPE.values) {
-      RelicSet relicSet = getRelicSet(relicType);
-      for (Relic relic in relicSet.relics) {
-        if (relic.isTimeLineEvent) events.add(relic); // add only if has date
-        eventsRelics.add(relic);
+    List<Event> relicEvents = [];
+    for (EVENT eventType in EVENT.values) {
+      if (!eventType.isRelic) continue; // skip Incident/Era
+
+      for (Relic relic in getRelicSet(eventType).relics) {
+        if (relic.isTimeLineEvent) trkhEvents.add(relic); // add if has date
+
+        relicEvents.add(relic);
 
         /// Add event reference 1 of 2: TODO this is a hack, access via map?
         relic.asset.event = relic; // can and must only do this once
       }
     }
-    return eventsRelics;
+    return relicEvents;
   }
 
   _initAllRelicData() async {
@@ -72,8 +74,10 @@ class RelicC extends GetxHapi {
 
   _initRelicSets() async {
     // init relics and ajrLevels with empty Maps structures
-    for (RELIC_TYPE relicType in RELIC_TYPE.values) {
-      List<Relic> relics = relicType.initRelics();
+    for (EVENT eventType in EVENT.values) {
+      if (!eventType.isRelic) continue; // skip Incident/Era
+
+      List<Relic> relics = eventType.initRelics();
 
       /// we manually set relic assets here, done here to make relic objects
       /// closer to const (future upgrade?).
@@ -82,12 +86,12 @@ class RelicC extends GetxHapi {
       }
 
       RelicSet relicSet = RelicSet(
-        relicType: relicType,
+        eventType: eventType,
         relics: relics,
-        tkTitle: relicType.tkRelicSetTitle,
+        tkTitle: eventType.tkRelicSetTitle,
       );
       _relicSets.add(relicSet); // must come before next line
-      relicSet.filterList = relicType.initRelicSetFilters();
+      relicSet.filterList = eventType.initRelicSetFilters();
 
       print('asdf got here 2');
 
@@ -113,9 +117,10 @@ class RelicC extends GetxHapi {
     // print('********* RELIC INIT DONE *********');
   }
 
-  RelicSet getRelicSet(RELIC_TYPE relicType) => _relicSets[relicType.index];
+  RelicSet getRelicSet(EVENT eventType) => _relicSets[eventType.index];
 
-  int getAjrLevel(RELIC_TYPE rt, int relicId) => _ajrLevels[rt.index][relicId]!;
+  int getAjrLevel(EVENT eventType, int relicId) =>
+      _ajrLevels[eventType.index][relicId]!;
 
   /// To get the EventUI() UI working, with least amount of pain, we turn our
   /// relic structures into a Map<String, String> that Tarikh code are already
@@ -124,11 +129,11 @@ class RelicC extends GetxHapi {
   /// This is also used by Relic's Favorites and Search UI's to be able to jump
   /// to the Relics Details view.
   Map<String, Event> getEventMap(
-    RELIC_TYPE relicType,
+    EVENT eventType,
     FILTER_TYPE filterType,
     RelicSetFilter? relicSetFilter, // Favorites and Search doesn't have or care
   ) {
-    RelicSet relicSet = RelicC.to.getRelicSet(relicType);
+    RelicSet relicSet = RelicC.to.getRelicSet(eventType);
 
     List<int> idxList = [];
     switch (filterType) {
@@ -163,25 +168,24 @@ class RelicC extends GetxHapi {
     return eventMap;
   }
 
-  int getFilterIdx(RELIC_TYPE relicType) =>
-      s.rd('filterIdx${relicType.index}') ?? 0;
-  setFilterIdx(RELIC_TYPE relicType, int newVal) {
-    s.wr('filterIdx${relicType.index}', newVal);
+  int getFilterIdx(EVENT eventType) => s.rd('filterIdx${eventType.index}') ?? 0;
+  setFilterIdx(EVENT eventType, int newVal) {
+    s.wr('filterIdx${eventType.index}', newVal);
     updateOnThread1Ms(); // NOTE: Used to lock UI so used addPostFrameCallback()
   }
 
-  int getTilesPerRow(RELIC_TYPE relicType, int relicSetFilterIdx) =>
-      s.rd('tilesPerRow${relicType.index}_$relicSetFilterIdx') ??
+  int getTilesPerRow(EVENT eventType, int relicSetFilterIdx) =>
+      s.rd('tilesPerRow${eventType.index}_$relicSetFilterIdx') ??
       RelicSetFilter.DEFAULT_TPR;
-  setTilesPerRow(RELIC_TYPE relicType, int relicSetFilterIdx, int newVal) {
-    s.wr('tilesPerRow${relicType.index}_$relicSetFilterIdx', newVal);
+  setTilesPerRow(EVENT eventType, int relicSetFilterIdx, int newVal) {
+    s.wr('tilesPerRow${eventType.index}_$relicSetFilterIdx', newVal);
     updateOnThread1Ms(); // update() worked, but this is safer.
   }
 
-  bool getShowTileText(RELIC_TYPE relicType) =>
-      s.rd('showTileText${relicType.index}') ?? true;
-  setShowTileText(RELIC_TYPE relicType, bool newVal) {
-    s.wr('showTileText${relicType.index}', newVal);
+  bool getShowTileText(EVENT eventType) =>
+      s.rd('showTileText${eventType.index}') ?? true;
+  setShowTileText(EVENT eventType, bool newVal) {
+    s.wr('showTileText${eventType.index}', newVal);
     updateOnThread1Ms();
   }
 

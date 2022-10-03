@@ -7,7 +7,6 @@ import 'package:hapi/menu/bottom_bar_menu.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/slide/menu_right/menu_right_ui.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
-import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_tab_bar.dart';
 import 'package:hapi/tarikh/event/event.dart';
 import 'package:hapi/tarikh/event/favorite/event_favorite_ui.dart';
@@ -35,7 +34,7 @@ class RelicsUI extends StatelessWidget {
       // do here to save memory:
       final List<BottomBarItem> bottomBarItems = [
         BottomBarItem(
-          const EventFavoriteUI(EVENT_TYPE.Relic, navPage),
+          const EventFavoriteUI(EVENT.Anbiya, navPage),
           null,
           'Favorites'.tr,
           at('at.{0} Favorites', [navPage.tk]),
@@ -76,9 +75,9 @@ class RelicsUI extends StatelessWidget {
         BottomBarItem(
           const RelicTabBar(
             relicTab: RELIC_TAB.Ummah,
-            relicTypes: [
-              RELIC_TYPE.Anbiya,
-              RELIC_TYPE.Surah,
+            eventTypes: [
+              EVENT.Anbiya,
+              EVENT.Surah,
               // RELIC_TYPE.Quran_AlAnbiya,
               // RELIC_TYPE.Quran_AlAnbiya,
             ],

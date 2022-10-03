@@ -686,8 +686,8 @@ class TimelineRenderObject extends RenderBox {
     ///
     /// Here the gutter is drawn and elements are added as *tappable* targets.
     List<Event> events = cTrkh.isGutterModeAll
-        ? EventC.to.getEventList(EVENT_TYPE.Incident)
-        : EventC.to.getEventListFav(EVENT_TYPE.Incident);
+        ? EventC.to.getEventList(EVENT.Incident)
+        : EventC.to.getEventListFav(EVENT.Incident);
 
     if (!cTrkh.isGutterModeOff && events.isNotEmpty) {
       double scale = t.computeScale(t.renderStart, t.renderEnd);

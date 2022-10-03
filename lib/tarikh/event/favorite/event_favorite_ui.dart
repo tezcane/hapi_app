@@ -12,7 +12,7 @@ import 'package:hapi/tarikh/event/thumbnail_detail_widget.dart';
 /// shows the relic view.
 class EventFavoriteUI extends StatelessWidget {
   const EventFavoriteUI(this.eventType, this.navPage);
-  final EVENT_TYPE eventType;
+  final EVENT eventType;
   final NavPage navPage;
 
   @override

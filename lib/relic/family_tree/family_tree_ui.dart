@@ -8,7 +8,8 @@ import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_c.dart';
-import 'package:hapi/relic/ummah/prophet.dart'; // TODO remove need for this?
+import 'package:hapi/relic/ummah/prophet.dart';
+import 'package:hapi/tarikh/event/event.dart';
 
 /// Shows a Family Tree SubPage.
 // ignore: must_be_immutable
@@ -16,14 +17,14 @@ class FamilyTreeUI extends StatelessWidget {
   FamilyTreeUI() {
     graph1 = Get.arguments['graph1']; // full
     graph2 = Get.arguments['graph2']; // OPTIONAL: condensed version of graph1
-    relicType = Get.arguments['relicType'];
-    relicSet = RelicC.to.getRelicSet(relicType);
+    eventType = Get.arguments['eventType'];
+    relicSet = RelicC.to.getRelicSet(eventType);
     relics = relicSet.relics;
     maxRelicIdx = relics.length - 1;
   }
   late final Graph graph1;
   late final Graph? graph2;
-  late final RELIC_TYPE relicType;
+  late final EVENT eventType;
   late final RelicSet relicSet;
   late final List<Relic> relics;
   late final int maxRelicIdx;

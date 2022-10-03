@@ -312,8 +312,8 @@ class ZamanC extends GetxHapi {
     switch (z) {
       case Z.Fajr:
         break;
-      case Z.Duha:
-        zs.addAll({Z.Shuruq: '', Z.Ishraq: '', Z.Duha: '', Z.Istiwa: ''});
+      case Z.Dhuha:
+        zs.addAll({Z.Shuruq: '', Z.Ishraq: '', Z.Dhuha: '', Z.Istiwa: ''});
         break;
       case Z.Dhuhr:
         break;

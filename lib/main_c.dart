@@ -10,13 +10,28 @@ import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/onboard/auth/auth_c.dart';
 import 'package:hapi/tarikh/event/event_c.dart';
 
-// // TODO we can make use of this for naming conventions:
-// /// POWER: All enums inside the Project will get this functionality!
-// extension on Enum {
-//   int get idx => index;
-//   String get isim => name.replaceFirst('___', '/')..replaceFirst('__', '-').replaceFirst('_', ' ');
-// }
+/// NOTE ABOUT WHAT'S IN THIS FILE:
+/// We put common code across multiple app functionality in this Controller,
+///   e.g.:
+///     - Orientation control (Portrait/Landscape mode)
+///     - L -> Logging
+///     - S -> Storage (Persisting variables to disk between app instances)
+///     - UI text: Translations, Number Conversions, Formatting, etc.
 
+/// DART POWER/MAGIC: All enums inside the Project will get this functionality!
+/// To use, import in same file your Enums live:
+///   import 'package:hapi/main_c.dart';
+extension GlobalEnumUtil on Enum {
+  String get isim => name
+      .replaceFirst('_a_', "'") // _a_ -> ' (Typically Arabic Ayn Symbol)
+      .replaceFirst('__', '-') //  __  -> -
+      .replaceFirst('_', ' '); //  _   -> " "
+
+  /// Get an Arabic tk key from isim.
+  String get tkArabeeIsim => 'a.$isim';
+}
+
+/// Handles Sign In/Out, Screen orientation/rotation
 class MainC extends GetxHapi {
   static MainC get to => Get.find();
 
@@ -76,7 +91,7 @@ class MainC extends GetxHapi {
       MenuC.to.navigateToNavPage(MenuC.to.getLastNavPage());
     }
   }
-  //
+
   // /// Used to tell a UI that orientation changed
   // bool get isOrientationChanged {
   //   bool isOrientationChanged = _isOrientationChanged;

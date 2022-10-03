@@ -9,7 +9,7 @@ enum Z {
   Fajr, // usually, when sun is 18 degrees below horizon before sunrise
   Shuruq, // Sunrise Karahat 1 - as soon as sun peaks over horizon
   Ishraq, // When sun rises 5 degrees over horizon (spear length)
-  Duha, // Time after Ishraq to before Istiwa
+  Dhuha, // Time after Ishraq to before Istiwa
   Istiwa, // Noon Karahat 2 - (sun at zenith/peak->istiwa
   Dhuhr, // Zawal - when sun passes zenith and shadow begin to grow
   Asr, // Sun casts a shadow of objects length (also has option for length x2)
@@ -61,8 +61,8 @@ extension EnumUtil on Z {
       case (Z.Shuruq):
       case (Z.Ishraq):
         return QUEST.KARAHAT_SUNRISE;
-      case (Z.Duha):
-        return QUEST.DUHA_DUHA;
+      case (Z.Dhuha):
+        return QUEST.DHUHA_DHUHA;
       case (Z.Istiwa):
         return QUEST.KARAHAT_ISTIWA;
       case (Z.Ghurub):
@@ -80,7 +80,7 @@ extension EnumUtil on Z {
     switch (this) {
       case (Z.Shuruq):
       case (Z.Ishraq):
-      case (Z.Duha):
+      case (Z.Dhuha):
       case (Z.Istiwa):
       case (Z.Dhuhr):
       case (Z.Asr):
@@ -108,11 +108,11 @@ extension EnumUtil on Z {
           QUEST.FAJR_THIKR,
           QUEST.FAJR_DUA,
         ];
-      case (Z.Duha):
+      case (Z.Dhuha):
         return [
           QUEST.KARAHAT_SUNRISE,
-          QUEST.DUHA_ISHRAQ,
-          QUEST.DUHA_DUHA,
+          QUEST.DHUHA_ISHRAQ,
+          QUEST.DHUHA_DHUHA,
           QUEST.KARAHAT_ISTIWA,
         ];
       case (Z.Dhuhr):
@@ -171,7 +171,7 @@ extension EnumUtil on Z {
 /// Zaman Row, used for Salah Row operations.
 final List<Z> zRows = [
   Z.Fajr,
-  Z.Duha,
+  Z.Dhuha,
   Z.Dhuhr,
   Z.Asr,
   Z.Maghrib,

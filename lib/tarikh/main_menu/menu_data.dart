@@ -56,7 +56,7 @@ class MenuItemData {
 
     double start = 0;
     double end = 0;
-    if (event.type == EVENT_TYPE.Era) {
+    if (event.eventType == EVENT.Era) {
       start = event.startMs;
       end = event.endMs;
     } else {

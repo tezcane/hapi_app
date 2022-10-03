@@ -57,10 +57,10 @@ class QuestRing extends StatelessWidget {
     color = AppThemes.ajrColorsByIdxForQuestRing[questRingColors[z]!];
     questRingSlices[z] = ColorSlice(elapsedSecs, color);
 
-    z = Z.Duha;
+    z = Z.Dhuha;
     elapsedSecs = 0;
     elapsedSecs += colorSlices[Z.Istiwa]!.elapsedSecs;
-    elapsedSecs += colorSlices[Z.Duha]!.elapsedSecs;
+    elapsedSecs += colorSlices[Z.Dhuha]!.elapsedSecs;
     elapsedSecs += colorSlices[Z.Ishraq]!.elapsedSecs;
     elapsedSecs += colorSlices[Z.Shuruq]!.elapsedSecs;
     color = AppThemes.ajrColorsByIdxForQuestRing[questRingColors[z]!];

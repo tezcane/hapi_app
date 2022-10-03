@@ -7,7 +7,6 @@ import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_c.dart';
 import 'package:hapi/relic/ummah/prophet.dart';
-import 'package:hapi/tarikh/event/event.dart';
 
 /// An entire tab (tab and tile labels, relics, filters, etc.). Uses the
 /// RelicSet object found in relic.dart.
@@ -16,7 +15,7 @@ class RelicSetUI extends StatelessWidget {
   RelicSetUI(this.relicSet) {
     filters = relicSet.filterList; // needs init separately
 
-    _updateFilter(RelicC.to.getFilterIdx(relicSet.relicType));
+    _updateFilter(RelicC.to.getFilterIdx(relicSet.eventType));
   }
   final RelicSet relicSet;
 
@@ -34,20 +33,20 @@ class RelicSetUI extends StatelessWidget {
   _updateFilter(int newIdx) {
     if (newIdx == filterIdx) return; // no need to do work, return
     filter = filters[newIdx];
-    tpr = RelicC.to.getTilesPerRow(relicSet.relicType, newIdx);
+    tpr = RelicC.to.getTilesPerRow(relicSet.eventType, newIdx);
 
-    showTileText = RelicC.to.getShowTileText(relicSet.relicType);
+    showTileText = RelicC.to.getShowTileText(relicSet.eventType);
 
     if (filter.type == FILTER_TYPE.Tree) {
       MenuC.to.pushSubPage(SubPage.Family_Tree, arguments: {
         'graph1': filter.treeGraph1,
         'graph2': filter.treeGraph2,
-        'relicType': relicSet.relicType,
+        'eventType': relicSet.eventType,
       });
       return;
     }
 
-    if (filterIdx != -1) RelicC.to.setFilterIdx(relicSet.relicType, newIdx);
+    if (filterIdx != -1) RelicC.to.setFilterIdx(relicSet.eventType, newIdx);
     filterIdx = newIdx;
   }
 
@@ -111,7 +110,7 @@ class RelicSetUI extends StatelessWidget {
               InkWell(
                 onTap: () {
                   showTileText = !showTileText;
-                  RelicC.to.setShowTileText(relicSet.relicType, showTileText);
+                  RelicC.to.setShowTileText(relicSet.eventType, showTileText);
                 },
                 child: SizedBox(
                   width: 45,
@@ -135,7 +134,7 @@ class RelicSetUI extends StatelessWidget {
     return DropdownButton<int>(
       isExpanded: true,
       isDense: false,
-      value: RelicC.to.getFilterIdx(relicSet.relicType),
+      value: RelicC.to.getFilterIdx(relicSet.eventType),
       iconEnabledColor: Colors.white,
       iconSize: 25,
       style: AppThemes.textStyleBtn,
@@ -158,7 +157,7 @@ class RelicSetUI extends StatelessWidget {
             value: value,
             child: T(
               relicSet.filterList[value].tvLabel,
-              RelicC.to.getFilterIdx(relicSet.relicType) == value ? ts : tsN,
+              RelicC.to.getFilterIdx(relicSet.eventType) == value ? ts : tsN,
               alignment: LanguageC.to.centerLeft,
             ),
           );
@@ -174,7 +173,7 @@ class RelicSetUI extends StatelessWidget {
           onTap: () {
             if (tpr < filter.tprMax) {
               tpr += 1;
-              RelicC.to.setTilesPerRow(relicSet.relicType, filterIdx, tpr);
+              RelicC.to.setTilesPerRow(relicSet.eventType, filterIdx, tpr);
             }
           },
           child: SizedBox(
@@ -191,7 +190,7 @@ class RelicSetUI extends StatelessWidget {
           onTap: () {
             if (tpr > filter.tprMin) {
               tpr -= 1;
-              RelicC.to.setTilesPerRow(relicSet.relicType, filterIdx, tpr);
+              RelicC.to.setTilesPerRow(relicSet.eventType, filterIdx, tpr);
             }
           },
           child: SizedBox(
@@ -241,9 +240,9 @@ class RelicSetUI extends StatelessWidget {
     return InkWell(
       onTap: () {
         MenuC.to.pushSubPage(SubPage.Event_Details, arguments: {
-          'eventType': EVENT_TYPE.Relic,
+          'eventType': relicSet.eventType,
           'eventMap': RelicC.to.getEventMap(
-            relic.relicType,
+            relicSet.eventType,
             filter.type,
             filter,
           ),
@@ -296,9 +295,9 @@ class RelicSetUI extends StatelessWidget {
     return InkWell(
       onTap: () {
         MenuC.to.pushSubPage(SubPage.Event_Details, arguments: {
-          'eventType': EVENT_TYPE.Relic,
+          'eventType': relicSet.eventType,
           'eventMap': RelicC.to.getEventMap(
-            relic.relicType,
+            relicSet.eventType,
             filter.type,
             filter,
           ),

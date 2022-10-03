@@ -39,7 +39,7 @@ class ActiveQuestsUI extends StatelessWidget {
           _SlidingAppBar(c),
 
           SalahRow(c, Z.Fajr),
-          SalahRow(c, Z.Duha),
+          SalahRow(c, Z.Dhuha),
           SalahRow(c, Z.Dhuhr),
           SalahRow(c, Z.Asr),
           SalahRow(c, Z.Maghrib),
@@ -292,7 +292,7 @@ class SalahRow extends StatelessWidget {
               backgroundColor: bg,
               foregroundColor: AppThemes.ldTextColor,
               label: // rare, does both "a." and "at" work TODO convention this
-                  at('a.{0} Isharet', [z == Z.Duha ? Z.Ishraq.tk : z.tk]),
+                  at('a.{0} Isharet', [z == Z.Dhuha ? Z.Ishraq.tk : z.tk]),
               autoClose: false,
             ),
             SlidableAction(
@@ -393,9 +393,9 @@ class SalahRow extends StatelessWidget {
     // However, for Duha and Maghrib they have multiple Z times (SideTimes),
     // that will be bold/un-bold as their times come in and out. The SideTimes
     // bold/un-bold is not handled here, but the center header text is:
-    if (z == Z.Duha) {
+    if (z == Z.Dhuha) {
       // Duha is bold during Ishraq and Duha salah times:
-      isBold = Z.Ishraq == ZamanC.to.currZ || Z.Duha == ZamanC.to.currZ;
+      isBold = Z.Ishraq == ZamanC.to.currZ || Z.Dhuha == ZamanC.to.currZ;
     } else if (z == Z.Maghrib) {
       isBold = Z.Maghrib == ZamanC.to.currZ; // only if Z's time is in
     }
@@ -411,7 +411,7 @@ class SalahRow extends StatelessWidget {
           children: [
             Container(
               // left of duha and maghrib headers transparent for SideTimes
-              color: z == Z.Duha || z == Z.Maghrib ? Colors.transparent : bg,
+              color: z == Z.Dhuha || z == Z.Maghrib ? Colors.transparent : bg,
               width: w1,
               height: _Sliv.slivH, // fills gaps
             ),
@@ -457,7 +457,7 @@ class SalahRow extends StatelessWidget {
             ),
             Container(
               // right of duha and Last 1/3 headers transparent for SideTimes
-              color: z == Z.Duha || z == Z.Last_3rd_of_Night
+              color: z == Z.Dhuha || z == Z.Last_3rd_of_Night
                   ? Colors.transparent
                   : bg,
               width: w1,
@@ -478,8 +478,8 @@ class SalahRow extends StatelessWidget {
     switch (z) {
       case (Z.Fajr):
         return _actionsFajr(w1);
-      case (Z.Duha):
-        return _actionsDuha(w1);
+      case (Z.Dhuha):
+        return _actionsDhuha(w1);
       case (Z.Dhuhr):
         return _actionsDhuhr(aqC.showJumahOnFriday);
       case (Z.Asr):
@@ -511,7 +511,7 @@ class SalahRow extends StatelessWidget {
     );
   }
 
-  Widget _actionsDuha(double w1) {
+  Widget _actionsDhuha(double w1) {
     double w2 = w1 * 2;
     return Row(
       children: [
@@ -531,20 +531,20 @@ class SalahRow extends StatelessWidget {
             w: w2,
           ),
           z,
-          QUEST.DUHA_ISHRAQ,
+          QUEST.DHUHA_ISHRAQ,
           flex: 2,
         ),
         _Cell(
           T(
-            Z.Duha.tk,
+            Z.Dhuha.tk,
             // Duha salah is enabled with Ishraq
-            ZamanC.to.currZ == Z.Ishraq || ZamanC.to.currZ == Z.Duha
+            ZamanC.to.currZ == Z.Ishraq || ZamanC.to.currZ == Z.Dhuha
                 ? tsB
                 : tsN,
             w: w2,
           ),
           z,
-          QUEST.DUHA_DUHA,
+          QUEST.DHUHA_DHUHA,
           flex: 2,
         ),
         _Cell(
@@ -681,8 +681,8 @@ class SalahRow extends StatelessWidget {
     switch (z) {
       case (Z.Fajr):
         return _resultsFajr();
-      case (Z.Duha):
-        return _resultsDuha();
+      case (Z.Dhuha):
+        return _resultsDhuha();
       case (Z.Dhuhr):
         return _resultsDhuhr();
       case (Z.Asr):
@@ -712,12 +712,12 @@ class SalahRow extends StatelessWidget {
     );
   }
 
-  Widget _resultsDuha() {
+  Widget _resultsDhuha() {
     return Row(
       children: [
         _getResult(QUEST.KARAHAT_SUNRISE),
-        _getResult(QUEST.DUHA_ISHRAQ, flex: 2),
-        _getResult(QUEST.DUHA_DUHA, flex: 2),
+        _getResult(QUEST.DHUHA_ISHRAQ, flex: 2),
+        _getResult(QUEST.DHUHA_DHUHA, flex: 2),
         _getResult(QUEST.KARAHAT_ISTIWA),
       ],
     );

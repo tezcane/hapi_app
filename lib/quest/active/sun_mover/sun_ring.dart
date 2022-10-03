@@ -150,7 +150,7 @@ class SunRing extends StatelessWidget {
 
     Color horizonBottomColor = colorSlices[currZ]!.color;
     if (currZ == Z.Ishraq ||
-        currZ == Z.Duha ||
+        currZ == Z.Dhuha ||
         currZ == Z.Dhuhr ||
         currZ == Z.Asr) {
       horizonBottomColor = Colors.blueAccent;

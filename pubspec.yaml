@@ -115,6 +115,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/i18n/
+    - assets/i18n/a/
     - assets/i18n/r/
     - assets/i18n/t/
     - assets/images/

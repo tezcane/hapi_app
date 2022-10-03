@@ -608,7 +608,7 @@ class Timeline {
 
       double start = item.startMs - _renderStart;
       double end =
-          item.type == EVENT_TYPE.Era ? item.endMs - _renderStart : start;
+          item.eventType == EVENT.Era ? item.endMs - _renderStart : start;
 
       /// Vertical position for this element.
       double y = start * scale; // +pad;
@@ -630,7 +630,7 @@ class Timeline {
       if (targetLabelY - _lastEventY < fadeAnimationStart &&
           // The best location for our label is occluded, lets see if we can
           // bump it forward...
-          item.type == EVENT_TYPE.Era &&
+          item.eventType == EVENT.Era &&
           _lastEventY + fadeAnimationStart < endY) {
         targetLabelY = _lastEventY + fadeAnimationStart + 0.5;
       }
@@ -715,7 +715,7 @@ class Timeline {
         }
       }
 
-      if (item.type == EVENT_TYPE.Era &&
+      if (item.eventType == EVENT.Era &&
           y < 0 &&
           endY > _height &&
           depth > _offsetDepth) {
@@ -723,7 +723,7 @@ class Timeline {
       }
 
       /// A new era is currently in view.
-      if (item.type == EVENT_TYPE.Era && y < 0 && endY > _height / 2.0) {
+      if (item.eventType == EVENT.Era && y < 0 && endY > _height / 2.0) {
         _currentEra = item;
       }
 

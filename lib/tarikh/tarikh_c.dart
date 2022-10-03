@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hapi/controller/getx_hapi.dart';
 import 'package:hapi/controller/time_c.dart';
 import 'package:hapi/main_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/relic/relic_c.dart';
 import 'package:hapi/tarikh/event/event.dart';
 import 'package:hapi/tarikh/event/event_c.dart';
@@ -109,6 +110,18 @@ class TarikhC extends GetxHapi {
   }
 
   _initTimelineRelicsAndTarikhMenu() async {
+    /// If we don't wait for LangC to init, then several of the first
+    /// translations fail (always English) on the Timeline and Tarikh Menu.
+    if (LanguageC.to.initNeeded) {
+      int sleepBackoffMs = 250;
+      // No internet needed if already initialized
+      while (LanguageC.to.initNeeded) {
+        l.d('_initTimelineRelicsAndTarikhMenu: Language translations not ready, try again after sleeping $sleepBackoffMs ms...');
+        await Future.delayed(Duration(milliseconds: sleepBackoffMs));
+        if (sleepBackoffMs < 1000) sleepBackoffMs += 250;
+      }
+    }
+
     timeBtnUp = TimeBtn('', '', '', '', null);
     timeBtnDn = TimeBtn('', '', '', '', null);
 
@@ -117,7 +130,7 @@ class TarikhC extends GetxHapi {
 
     // first handle json inputs
     tih = TimelineInitHandler();
-    await tih.loadTimelineData();
+    await tih._loadTimelineData();
     // then init static timeline object
     t = Timeline(
       tih.rootEvents,
@@ -127,7 +140,7 @@ class TarikhC extends GetxHapi {
       tih._timeMax,
     );
 
-    Event event = EventC.to.getEventList(EVENT_TYPE.Incident).first;
+    Event event = EventC.to.getEventList(EVENT.Incident).first;
     t.setViewport(
       start: event.startMs * 2.0,
       end: event.startMs,
@@ -146,7 +159,7 @@ class TarikhC extends GetxHapi {
   bool get isGutterModeFav => _gutterMode == GutterMode.FAV;
   bool get isGutterModeAll => _gutterMode == GutterMode.ALL;
   bool get isGutterFavEmpty =>
-      EventC.to.getEventListFav(EVENT_TYPE.Incident).isEmpty;
+      EventC.to.getEventListFav(EVENT.Incident).isEmpty;
 
   /// Updates text around time button, no event is set
   void updateTimeBtn(
@@ -227,7 +240,7 @@ class TimelineInitHandler {
   ///
   /// This function used to load and decode `timline.json` from disk.  Now it
   /// populates all the [Event]s through dart code.
-  loadTimelineData() async {
+  _loadTimelineData() async {
     final List<TimelineData> timelineDatas = getTimelineData();
 
     List<Event> eventsTarikh = [];
@@ -240,13 +253,13 @@ class TimelineInitHandler {
       /// Some events will have a `start` element, but not an `end` specified.
       /// These events specify a particular event such as the appearance of
       /// "Humans" in history, which hasn't come to an end yet.
-      EVENT_TYPE type;
+      EVENT eventType;
       double startMs;
       if (td.date != null) {
-        type = EVENT_TYPE.Incident;
+        eventType = EVENT.Incident;
         startMs = td.date!;
       } else {
-        type = EVENT_TYPE.Era;
+        eventType = EVENT.Era;
         startMs = td.start!;
       }
 
@@ -258,7 +271,7 @@ class TimelineInitHandler {
       double endMs;
       if (td.end != null) {
         endMs = td.end!;
-      } else if (type == EVENT_TYPE.Era) {
+      } else if (eventType == EVENT.Era) {
         // TODO where timeline eras stretch to future?
         endMs = (await TimeC.to.now()).year.toDouble() * 10.0;
       } else {
@@ -303,7 +316,7 @@ class TimelineInitHandler {
 
       /// Finally create Event object
       Event event = Event(
-        type: type,
+        eventType: eventType,
         tkEra: td.tkEra ?? '',
         tkTitle: td.tkTitle,
         startMs: startMs,
@@ -380,7 +393,7 @@ class TimelineInitHandler {
       Event? parent;
       double minDistance = double.maxFinite;
       for (Event checkEvent in eventsTarikh) {
-        if (checkEvent.type == EVENT_TYPE.Era) {
+        if (checkEvent.eventType == EVENT.Era) {
           double distance = event.startMs - checkEvent.startMs;
           double distanceEnd = event.startMs - checkEvent.endMs;
           if (distance > 0 && distanceEnd < 0 && distance < minDistance) {

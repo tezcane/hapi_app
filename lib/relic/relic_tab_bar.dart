@@ -8,14 +8,15 @@ import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_c.dart';
 import 'package:hapi/relic/relic_set_ui.dart';
 import 'package:hapi/relic/relics_ui.dart';
+import 'package:hapi/tarikh/event/event.dart';
 
 /// A single RELIC_TAB bar which holds one or more RelicSets that are accessible
 /// via an AutoScrollTabView, meaning when the user scrolls vertically the
 /// Tab Bar's selection of the current RelicSet in view gets highlighted.
 class RelicTabBar extends StatefulWidget {
-  const RelicTabBar({required this.relicTab, required this.relicTypes});
+  const RelicTabBar({required this.relicTab, required this.eventTypes});
   final RELIC_TAB relicTab;
-  final List<RELIC_TYPE> relicTypes;
+  final List<EVENT> eventTypes;
 
   @override
   _RelicTabBarState createState() => _RelicTabBarState();
@@ -35,7 +36,7 @@ class _RelicTabBarState extends State<RelicTabBar>
   void initState() {
     tabController = TabController(
       initialIndex: RelicC.to.getSelectedTabIdx(widget.relicTab),
-      length: widget.relicTypes.length,
+      length: widget.eventTypes.length,
       vsync: this,
     );
 
@@ -59,8 +60,8 @@ class _RelicTabBarState extends State<RelicTabBar>
       }
 
       if (initNeeded) {
-        for (RELIC_TYPE relicType in widget.relicTypes) {
-          RelicSet relicSet = RelicC.to.getRelicSet(relicType);
+        for (EVENT eventType in widget.eventTypes) {
+          RelicSet relicSet = RelicC.to.getRelicSet(eventType);
 
           relicSets.add(relicSet);
           tabs.add(Tab(text: a(relicSet.tkTitle)));

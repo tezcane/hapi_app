@@ -4,6 +4,7 @@ import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_c.dart';
+import 'package:hapi/tarikh/event/event.dart';
 
 /// For UI's that have option to show Arabic, Transliteration, and locale lang.
 /// All relic enums must implement/extend this. TODO asdf implement in many places
@@ -70,11 +71,12 @@ enum RELATIVE {
 abstract class FamilyTree extends Relic {
   FamilyTree({
     // Event data:
+    required EVENT eventType,
     required String tkEra,
+    required String tkTitle,
     required double startMs,
     required double endMs,
     // Relic data:
-    required RELIC_TYPE relicType,
     required Enum e,
     // Fam Required
     required this.predecessors,
@@ -90,11 +92,12 @@ abstract class FamilyTree extends Relic {
     this.successor, // TODO make use of this, order of prophethood?
   }) : super(
           // Event data:
+          eventType: eventType,
           tkEra: tkEra,
+          tkTitle: tkTitle,
           startMs: startMs,
           endMs: endMs,
           // Relic data:
-          relicType: relicType,
           e: e,
         );
   // Required Fam data:
@@ -111,9 +114,9 @@ abstract class FamilyTree extends Relic {
   final Enum? successor;
 }
 
-Graph getGraphAllFamily(RELIC_TYPE relicType, int gapIdx) {
+Graph getGraphAllFamily(EVENT eventType, int gapIdx) {
   final Graph graph = Graph()..isTree = true;
-  for (Relic relic in RelicC.to.getRelicSet(relicType).relics) {
+  for (Relic relic in RelicC.to.getRelicSet(eventType).relics) {
     addEdgesAllFamily(graph, relic as FamilyTree, gapIdx);
   }
   return graph;
@@ -185,7 +188,7 @@ addEdgesAllFamily(Graph graph, FamilyTree ft, int gapIdx) {
 
 /// TODO we should be able to build this without tvSuccessors[] data simialr
 /// to how we build the "ALL" graph above.
-Graph getGraphOnlyRelics(RELIC_TYPE relicType, int gapIdx) {
+Graph getGraphOnlyRelics(EVENT eventType, int gapIdx) {
   final Graph graph = Graph()..isTree = true;
 
   /// Embedded function so we can use this methods variables
@@ -205,7 +208,7 @@ Graph getGraphOnlyRelics(RELIC_TYPE relicType, int gapIdx) {
     );
   }
 
-  List<Relic> relics = RelicC.to.getRelicSet(relicType).relics;
+  List<Relic> relics = RelicC.to.getRelicSet(eventType).relics;
 
   // for each relic
   for (int relicIdx = 0; relicIdx < relics.length - 1; relicIdx++) {

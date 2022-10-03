@@ -36,8 +36,8 @@ class EventC extends GetxHapi {
     }
 
     // events initialized so we can init favorites now
-    _initFavorites(EVENT_TYPE.Incident);
-    _initFavorites(EVENT_TYPE.Relic);
+    _initFavorites(EVENT.Incident);
+    _initFavorites(EVENT.Anbiya);
 
     // initialize the SearchManager
     SearchManager.init(NavPage.Tarikh, _eventListTarikh);
@@ -48,47 +48,17 @@ class EventC extends GetxHapi {
     update(); // notify UI's they have data now
   }
 
-  List<Event> getEventList(EVENT_TYPE eventType) {
-    switch (eventType) {
-      case EVENT_TYPE.Era:
-      case EVENT_TYPE.Incident:
-        return _eventListTarikh;
-      case EVENT_TYPE.Relic:
-        return _eventListRelics;
-    }
-  }
+  List<Event> getEventList(EVENT eventType) =>
+      eventType.isRelic ? _eventListRelics : _eventListTarikh;
+  List<Event> getEventListFav(EVENT eventType) =>
+      eventType.isRelic ? _eventListFavRelics : _eventListFavTarikh;
 
-  List<Event> getEventListFav(EVENT_TYPE eventType) {
-    switch (eventType) {
-      case EVENT_TYPE.Era:
-      case EVENT_TYPE.Incident:
-        return _eventListFavTarikh;
-      case EVENT_TYPE.Relic:
-        return _eventListFavRelics;
-    }
-  }
+  Map<String, Event> getEventMap(EVENT eventType) =>
+      eventType.isRelic ? _eventMapRelics : _eventMapTarikh;
+  Map<String, Event> getEventMapFav(EVENT eventType) =>
+      eventType.isRelic ? _eventMapFavRelics : _eventMapFavTarikh;
 
-  Map<String, Event> getEventMap(EVENT_TYPE eventType) {
-    switch (eventType) {
-      case EVENT_TYPE.Era:
-      case EVENT_TYPE.Incident:
-        return _eventMapTarikh;
-      case EVENT_TYPE.Relic:
-        return _eventMapRelics;
-    }
-  }
-
-  Map<String, Event> getEventMapFav(EVENT_TYPE eventType) {
-    switch (eventType) {
-      case EVENT_TYPE.Era:
-      case EVENT_TYPE.Incident:
-        return _eventMapFavTarikh;
-      case EVENT_TYPE.Relic:
-        return _eventMapFavRelics;
-    }
-  }
-
-  _initFavorites(EVENT_TYPE eventType) {
+  _initFavorites(EVENT eventType) {
     final List<dynamic>? rdFavList = s.rd(getSaveTagFavList(eventType));
 
     final Map<String, Event> eventMap = getEventMap(eventType);
@@ -107,34 +77,30 @@ class EventC extends GetxHapi {
     //_sortTarikhFavorites(eventType, favList);
   }
 
-  String getSaveTagFavList(EVENT_TYPE eventType) {
-    switch (eventType) {
-      case EVENT_TYPE.Era:
-      case EVENT_TYPE.Incident:
-        return 'favListTarikh';
-      case EVENT_TYPE.Relic:
-        return 'favListRelics';
-    }
-  }
+  String getSaveTagFavList(EVENT eventType) =>
+      eventType.isRelic ? 'favListRelics' : 'favListTarikh';
 
   /// Persist favorite data to disk, must convert to List<Event> to List<String>
-  _saveFavorites(EVENT_TYPE eventType) {
-    List<String> favStringList =
-        getEventListFav(eventType).map((Event event) => event.saveTag).toList();
+  _saveFavorites(EVENT eventType) {
+    List<String> favStringList = getEventListFav(eventType)
+        .map(
+          (Event event) => event.saveTag,
+        )
+        .toList();
     s.wr(getSaveTagFavList(eventType), favStringList);
 
     update(); // favorites changed so notify people using it
   }
 
-  /// Sort so Tarikh UIs as gutter needs to show favorites in order
-  _sortTarikhFavorites(EVENT_TYPE eventType, List<Event> favList) {
-    if (eventType == EVENT_TYPE.Incident || eventType == EVENT_TYPE.Era) {
+  /// Sort so Tarikh UI's gutter show favorites in order
+  _sortTarikhFavorites(EVENT eventType, List<Event> favList) {
+    if (eventType == EVENT.Incident || eventType == EVENT.Era) {
       favList.sort((Event a, Event b) => a.startMs.compareTo(b.startMs));
     }
   }
 
   /// Save [e] into the list, re-sort it, and store to disk.
-  addFavorite(EVENT_TYPE eventType, Event event) {
+  addFavorite(EVENT eventType, Event event) {
     final Map<String, Event> favMap = getEventMapFav(eventType);
 
     String saveTag = event.saveTag;
@@ -150,7 +116,7 @@ class EventC extends GetxHapi {
   }
 
   /// Remove the event and save to disk.
-  delFavorite(EVENT_TYPE eventType, Event event) {
+  delFavorite(EVENT eventType, Event event) {
     final Map<String, Event> favMap = getEventMapFav(eventType);
 
     String saveTag = event.saveTag;
@@ -165,10 +131,10 @@ class EventC extends GetxHapi {
   /// Force static translations to update, i.e. Tarikh Bubble/Fav/Search text.
   /// Do async so we don't slow app
   reinitAllEventsTexts() async {
-    for (Event event in getEventList(EVENT_TYPE.Incident)) {
+    for (Event event in getEventList(EVENT.Incident)) {
       event.reinitBubbleText();
     }
-    for (Event event in getEventList(EVENT_TYPE.Relic)) {
+    for (Event event in getEventList(EVENT.Anbiya)) {
       if (event.isTimeLineEvent) continue; // already updated in first loop
       event.reinitBubbleText();
     }

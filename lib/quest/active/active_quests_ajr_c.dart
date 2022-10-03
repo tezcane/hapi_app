@@ -26,8 +26,8 @@ enum QUEST {
   FAJR_DUA,
 
   KARAHAT_SUNRISE,
-  DUHA_ISHRAQ,
-  DUHA_DUHA,
+  DHUHA_ISHRAQ,
+  DHUHA_DHUHA,
   KARAHAT_ISTIWA,
 
   DHUHR_MUAKB,
@@ -107,10 +107,10 @@ extension EnumUtil on QUEST {
       case (QUEST.FAJR_DUA):
         return Z.Fajr;
       case (QUEST.KARAHAT_SUNRISE):
-      case (QUEST.DUHA_ISHRAQ):
-      case (QUEST.DUHA_DUHA):
+      case (QUEST.DHUHA_ISHRAQ):
+      case (QUEST.DHUHA_DHUHA):
       case (QUEST.KARAHAT_ISTIWA):
-        return Z.Duha;
+        return Z.Dhuha;
       case (QUEST.DHUHR_MUAKB):
       case (QUEST.DHUHR_FARD):
       case (QUEST.DHUHR_MUAKA):
@@ -250,14 +250,14 @@ extension EnumUtil on QUEST {
         return QUEST_STATE.NOT_ACTIVE_YET;
 
       // ishraq only active during ishraq time
-      case (QUEST.DUHA_ISHRAQ):
+      case (QUEST.DHUHA_ISHRAQ):
         // Karahat sunrise not complete
         if (currZ == Z.Ishraq) return QUEST_STATE.ACTIVE;
         return QUEST_STATE.NOT_ACTIVE_YET;
       // Duha active anytime during ishraq and duha only
-      case (QUEST.DUHA_DUHA):
+      case (QUEST.DHUHA_DHUHA):
         // Karahat sunrise not complete
-        if (currZ == Z.Ishraq || currZ == Z.Duha) return QUEST_STATE.ACTIVE;
+        if (currZ == Z.Ishraq || currZ == Z.Dhuha) return QUEST_STATE.ACTIVE;
         return QUEST_STATE.NOT_ACTIVE_YET;
 
       default:

@@ -50,19 +50,19 @@ void main() async {
   Get.put<NavPageC>(NavPageC(), permanent: permOn);
   Get.put<MenuC>(MenuC(), permanent: permOn);
   Get.put<AuthC>(AuthC(), permanent: permOn);
+  Get.put<ThemeC>(ThemeC());
+  Get.put<LanguageC>(LanguageC()); // Must be before TarikhC
   Get.put<ConnectivityC>(ConnectivityC(), permanent: permOn);
   Get.put<TimeC>(TimeC(), permanent: permOn); // requires ConnectivityC
   Get.put<LocationC>(LocationC(), permanent: permOn); // requires TimeC
   Get.put<EventC>(EventC(), permanent: permOn); // requires Auth
-  Get.put<TarikhC>(TarikhC(), permanent: permOn); // requires EventC
+  Get.put<RelicC>(RelicC(), permanent: permOn); // requires LangC, EventC, AuthC
+  Get.put<TarikhC>(TarikhC(), permanent: permOn); // requires LangC, RelC, EvtC
   Get.put<DailyQuestsC>(DailyQuestsC(), permanent: permOn); // requires AuthC
   Get.put<NotificationC>(NotificationC(), permanent: permOn); // requires AuthC
   Get.put<ActiveQuestsC>(ActiveQuestsC(), permanent: permOn); // requires AuthC
-  Get.put<RelicC>(RelicC(), permanent: permOn); // requires AuthC
   Get.put<ZamanC>(ZamanC(), permanent: permOn);
   Get.put<ActiveQuestsAjrC>(ActiveQuestsAjrC(), permanent: permOn);
-  Get.put<ThemeC>(ThemeC());
-  Get.put<LanguageC>(LanguageC());
 
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,

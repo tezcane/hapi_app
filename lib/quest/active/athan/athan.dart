@@ -26,7 +26,7 @@ class Athan {
   late final DateTime _fajr_01;
   late final DateTime _karahatAdkharSunrise_02; // sunrise - karahat 1
   late final DateTime _ishraqPrayer_03;
-  late final DateTime _duhaPrayer_04;
+  late final DateTime _dhuhaPrayer_04;
   late final DateTime _karahatAdkharIstiwa_05; // sun zenith/peak - karahat 2
   late final DateTime _highNoon; // used for radian correction
   late final DateTime _dhuhr_06;
@@ -42,7 +42,7 @@ class Athan {
   DateTime get fajr => _fajr_01;
   DateTime get sunrise => _karahatAdkharSunrise_02;
   DateTime get ishraq => _ishraqPrayer_03;
-  DateTime get duha => _duhaPrayer_04;
+  DateTime get dhuha => _dhuhaPrayer_04;
   DateTime get istiwa => _karahatAdkharIstiwa_05;
   DateTime get highNoon => _highNoon;
   DateTime get dhuhr => _dhuhr_06;
@@ -189,7 +189,7 @@ class Athan {
       _karahatAdkharSunrise_02,
       params.karahatSunRisingSecs,
     );
-    _duhaPrayer_04 = _addSecsRoundUpAndGetTZ(
+    _dhuhaPrayer_04 = _addSecsRoundUpAndGetTZ(
       _ishraqPrayer_03,
       900, // 15 mins (15 * 60 = 900), TODO 15 minutes good?
     );
@@ -254,7 +254,7 @@ class Athan {
     l.d('fajr:             $_fajr_01');
     l.d('sunrise:          $_karahatAdkharSunrise_02');
     l.d('ishrak:           $_ishraqPrayer_03');
-    l.d('duha:             $_duhaPrayer_04');
+    l.d('dhuha:            $_dhuhaPrayer_04');
     l.d('istiwa:           $_karahatAdkharIstiwa_05');
     l.d('dhuhr:            $_dhuhr_06');
     l.d('asr earlier:      $_asrEarly_07');
@@ -364,7 +364,7 @@ class Athan {
     switch (z) {
       case (Z.Fajr):
         return _fajr_01;
-      case (Z.Duha):
+      case (Z.Dhuha):
         // NOTE1: It's not _karahatAdkharSunrise_02;
         // NOTE2: return ishraq for notification time, but technically I believe
         //        Duha begins at Sunrise (which is on the Duha Salah Row anyway)
@@ -394,8 +394,8 @@ class Athan {
       return [_karahatAdkharSunrise_02, Colors.red]; // karahat sunrise
     } else if (z == Z.Ishraq) {
       return [_ishraqPrayer_03, Colors.green];
-    } else if (z == Z.Duha) {
-      return [_duhaPrayer_04, Colors.yellow.shade800];
+    } else if (z == Z.Dhuha) {
+      return [_dhuhaPrayer_04, Colors.yellow.shade800];
     } else if (z == Z.Istiwa) {
       return [_karahatAdkharIstiwa_05, Colors.red]; // karahat zawal/zenith
     } else if (z == Z.Dhuhr) {
@@ -444,8 +444,8 @@ class Athan {
       return Z.Dhuhr;
     } else if (date.isAfter(_karahatAdkharIstiwa_05)) {
       return Z.Istiwa;
-    } else if (date.isAfter(_duhaPrayer_04)) {
-      return Z.Duha;
+    } else if (date.isAfter(_dhuhaPrayer_04)) {
+      return Z.Dhuha;
     } else if (date.isAfter(_ishraqPrayer_03)) {
       return Z.Ishraq;
     } else if (date.isAfter(_karahatAdkharSunrise_02)) {

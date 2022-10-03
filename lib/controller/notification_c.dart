@@ -40,7 +40,7 @@ class NotificationC extends GetxHapi {
 
     for (Z z in zRows) {
       bool defaultVal = true;
-      if (z == Z.Duha || z == Z.Middle_of_Night || z == Z.Last_3rd_of_Night) {
+      if (z == Z.Dhuha || z == Z.Middle_of_Night || z == Z.Last_3rd_of_Night) {
         defaultVal = false;
       }
       _playAthan[z] = s.rd('playAthan${z.name}') ?? defaultVal;

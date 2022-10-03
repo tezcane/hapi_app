@@ -172,7 +172,7 @@ Future _updateArabicOnlyFile(List<Locale> localizations) async {
     text = text.substring(0, text.length - 1); // Remove last comma
     text += '\n}\n';
 
-    String filename = '../../../../../../assets/i18n/a.json';
+    String filename = '../../../../../../assets/i18n/a/a.json';
     stdout.writeln('Saving $filename');
     final file = File(filename);
     await file.writeAsString(text);

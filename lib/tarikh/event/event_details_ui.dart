@@ -21,7 +21,7 @@ class EventDetailsUI extends StatefulWidget {
     eventMap = Get.arguments['eventMap'];
     saveTag = Get.arguments['saveTag'];
   }
-  late final EVENT_TYPE eventType;
+  late final EVENT eventType;
   late final Map<String, Event> eventMap;
   late final String saveTag;
 
@@ -120,7 +120,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
   /// Load the markdown file from the assets and set the contents of the page to its value.
   void loadMarkdown() async {
     String tvArticleMarkdown =
-        await LanguageC.to.tvArticle(_event.type, _event.tkTitle);
+        await LanguageC.to.tvArticle(_event.eventType, _event.tkTitle);
     setState(() => _tvArticleMarkdown = tvArticleMarkdown); // refresh UI
   }
 
@@ -172,7 +172,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            if (widget.eventType == EVENT_TYPE.Relic)
+                            if (widget.eventType.isRelic)
                               FloatingActionButton(
                                 tooltip: 'Upgrade Relic'.tr,
                                 onPressed: () {
@@ -217,10 +217,9 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                         tv: true,
                                       ),
                                     FloatingActionButton(
-                                      tooltip:
-                                          widget.eventType == EVENT_TYPE.Relic
-                                              ? 'See previous relic'.tr
-                                              : 'Navigate to past'.tr,
+                                      tooltip: widget.eventType.isRelic
+                                          ? 'See previous relic'.tr
+                                          : 'Navigate to past'.tr,
                                       heroTag: 'btnUp',
                                       onPressed: () =>
                                           _initEvent(_btnUp.event!.saveTag),
@@ -267,10 +266,9 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                         tv: true,
                                       ),
                                     FloatingActionButton(
-                                      tooltip:
-                                          widget.eventType == EVENT_TYPE.Relic
-                                              ? 'See next relic'.tr
-                                              : 'Navigate to future'.tr,
+                                      tooltip: widget.eventType.isRelic
+                                          ? 'See next relic'.tr
+                                          : 'Navigate to future'.tr,
                                       heroTag: 'btnDn',
                                       onPressed: () =>
                                           _initEvent(_btnDn.event!.saveTag),

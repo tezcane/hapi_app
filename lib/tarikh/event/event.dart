@@ -4,15 +4,92 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/controller/time_c.dart';
 import 'package:hapi/main_c.dart';
+import 'package:hapi/relic/relic.dart';
+import 'package:hapi/relic/surah/surah.dart';
+import 'package:hapi/relic/ummah/prophet.dart';
 import 'package:hapi/tarikh/event/event_asset.dart';
 
-/// Tell certain UIs (Timeline/Relic views) what type(s) of events to use
-enum EVENT_TYPE {
-  // from json data:
-  Era,
-  Incident, // All timeline events and relics that have a time
-  // from hapi data:
-  Relic, // All relics (which can be Timeline events if their time is known)
+/// Tell certain UIs (Timeline/Relic views) what type(s) of events to use. This
+/// Name is used to init relics, get tk keys to translate, used to index
+/// the database maps storing ajrLevels, etc.
+///
+/// NOTE: After adding an EVENT, you must update the [EnumUtil] extension.
+enum EVENT {
+  /// From here on are Relics:
+  /// Each relic subsection/RelicSet (e.g. Ummah->Prophet) needs to have a
+  /// EVENT so it can be easily filtered/found/accessed later. TODO
+
+//   // LEADERS
+//   Al_Asma_ul_Husna, // اَلاسْمَاءُ الْحُسناى TODO all names mentioned in Quran? AsmaUlHusna - 99 names of allah
+  Anbiya, // Prophets TODO non-Quran mentioned prophets
+//   Muhammad, // Laqab, Family Tree here?
+//   Righteous, // People: Mentioned in Quran/possible prophets/Sahabah/Promised Jannah
+//
+//   //ISLAM
+//   Delil, //Quran,Sunnah,Nature,Ruins // See "Miracles of Quran" at bottom of file
+//   Tenets, // Islam_5Pillars/6ArticlesOfFaith
+//   Jannah, // Doors/Levels/Beings(Insan,Angels,Jinn,Hurlieen,Servants,Burak)
+// //Heaven_LevelsOfHell,
+//
+//   //ACADEMIC
+//   Scriptures, //  Hadith Books/Quran/Injil/Torah/Zabur/Scrolls of X/Talmud?
+  Surah, // Mecca/Medina/Revelation Date/Ayat Length/Quran Order
+//   Scholars, // Tabieen, TabiTabieen, Ulama (ImamAzam,Madhab+ Tirmidihi, Ibn Taymiyah), Dai (Givers of Dawah),
+//   Relics, // Kaba, black stone, Prophets Bow, Musa Staff, Yusuf Turban, etc. Coins?
+//   Quran_Mentions, // Tribes, Animals, Foods, People (disbelievers)
+//   Arabic, // Alphabet (Muqattaʿat letters 14 of 28: ʾalif أ, hā هـ, ḥā ح, ṭā ط, yā ي, kāf ك, lām ل, mīm م, nūn ن, sīn س, ʿain ع, ṣād ص, qāf ق, rā ر.)
+//
+//   // Ummah
+//   Amir, // Khalif/Generals
+//   Muslims, // alive/dead, AlBayt (Zojah, Children), Famous (Malcom X, Mike Tyson, Shaqeel Oneil), // Amirs/Khalif not in Dynasties, Athletes,
+//   Places, // HolyPlaces, Mosques, Schools, Cities  (old or new), mentioned in the Quran,Ruins, Conquered or not, Istanbul, Rome
+//
+//   // Dynasties (Leaders/Historical Events/Battles)
+//   Dynasties, // Muhammad, Rashidun, Ummayad, Andalus, Abbasid, Seljuk, Ayyubi, Mamluk, Ottoman,
+//   Rasulallah, //Muhammad Battles (Badr, Uhud, etc.)
+//   Rashidun,
+//   Ummayad,
+//   Andalus,
+//   Abbasid,
+//   Seljuk,
+//   Ayyubi,
+//   Mamluk,
+//   Ottoman,
+
+  /// Originally from timeline.json data, put last to not throw off DB indexes
+  Era, // spans a time-span (uses start and end in input)
+  Incident, // Single event/incident in history (uses "date" in input)
+}
+
+extension EnumUtil on EVENT {
+  String get tkRelicSetTitle => tkArabeeIsim; // name of EVENT is "a." title
+  String get trPath => isRelic ? 'r/' : 't/';
+
+  bool get isRelic => index < EVENT.Era.index;
+
+  List<Relic> initRelics() {
+    switch (this) {
+      case EVENT.Anbiya:
+        return relicsProphet;
+      case EVENT.Surah:
+        return relicsSurah;
+      case EVENT.Era:
+      case EVENT.Incident:
+        return l.E('$name is not a relic');
+    }
+  }
+
+  List<RelicSetFilter> initRelicSetFilters() {
+    switch (this) {
+      case EVENT.Anbiya:
+        return relicSetFiltersProphet;
+      case EVENT.Surah:
+        return relicSetFiltersSurah;
+      case EVENT.Era:
+      case EVENT.Incident:
+        return l.E('$name is not a relic');
+    }
+  }
 }
 
 /// The timeline displays these objects, if their startMs is not 0. The
@@ -20,7 +97,7 @@ enum EVENT_TYPE {
 /// NOTE: It is a const so all Relics/subclasses can also be const.
 class Event {
   Event({
-    required this.type,
+    required this.eventType,
     required this.tkEra,
     required this.tkTitle,
     required this.startMs, // TODO are these ms or years?!
@@ -29,19 +106,17 @@ class Event {
     this.endMenu,
     required this.accent,
   }) {
-    saveTag = '${tkTitle}_$tkEra';
+    saveTag = '${tkTitle}_${eventType.index}'; // Some relics share names -> Hud
     reinitBubbleText();
   }
-  final EVENT_TYPE type;
+  final EVENT eventType;
   final String tkEra;
   final String tkTitle;
   final double startMs;
   final double endMs;
-  final double? startMenu; // use these when menu doesn't show well
+  final double? startMenu; // use these when menu->timeline doesn't show well
   final double? endMenu;
-
-  /// not always given in json input file, thus nullable:
-  Color? accent;
+  final Color? accent; // not always given in json input file, thus nullable
 
   /// Favorites may have same name (e.g. Muhammad in Prophets and Surah name) so
   /// we must give a more unique name for each event so we can save favorites or
@@ -54,8 +129,10 @@ class Event {
   late bool isBubbleThick;
   late String tvBubbleText;
 
-  /// Only update bubble text on init or if orientation changes.  If we are in
-  /// landscape mode there is no need to put the text on two lines (hopefully).
+  /// Only update bubble text on init, language change, or screen orientation
+  /// changes.
+  ///
+  /// NOTE: If in landscape mode, no need to put the text on two lines (I hope).
   reinitBubbleText() {
     List<String> lines = tvGetTitleLines(); // expensive so call less on paints
     tvTitleLine1 = lines[0];
@@ -73,7 +150,7 @@ class Event {
 
   /// Pretty-printing for the event date.
   String tvYearsAgo({double? eventYear}) {
-    if (!isTimeLineEvent) return 'Coming Soon'; // TODO Year is not known yet
+    if (!isTimeLineEvent) return 'Coming Soon'.tr; // TODO Year is not known yet
 
     eventYear ??= startMs;
 
@@ -221,11 +298,12 @@ class Event {
   Event? next;
   Event? previous;
 
-  /// All these parameters are used by the [Timeline] object to properly position the current event.
+  /// All these parameters are used by the [Timeline] object to properly
+  /// position the current event. TODO prune/tune these?
   double y = 0.0;
   double endY = 0.0;
   double length = 0.0;
-  double opacity = 0.0;
+  double opacity = 0.0; // used to show/hide/dim an asset?
   double labelOpacity = 0.0;
   double targetLabelOpacity = 0.0;
   double delayLabel = 0.0;
@@ -239,31 +317,5 @@ class Event {
   /// I think it is true when one gutter event hides another
   bool isGutterEventOccluded = false;
 
-  bool get isVisible => opacity > 0.0;
-
-  // String get tvTitle => Event.tvFromTkEndTag(tkTitle);
-  //
-  // /// Attempts to translate '<tkEndTag>' if fails, tries 'a.<tkEndTag>'.
-  // static String tvFromTkEndTag(String tkEndTag) {
-  //   String tv = '$tkEndTag'.tr;
-  //   return tv.startsWith('') ? a('a.$tkEndTag') : tv;
-  // }
-
-  // /// Some labels have a newline characters to adjust their alignment.
-  // /// Detect the occurrence and add information regarding the line-count.
-  // _handleLabelNewlineCount() {
-  //   lineCount = 1;
-  //
-  //   int startIdx = 0;
-  //   while (true) {
-  //     startIdx = a(tkTitle).indexOf('\n', startIdx);
-  //     if (startIdx == -1) break;
-  //     lineCount++; // found a new line, continue
-  //     startIdx++; // to go past current new line
-  //   }
-  // }
-
-  // /// Debug information.
-  // @override
-  // String toString() => 'TIMELINE EVENT: $label -($startMs,$endMs)';
+  bool get isVisible => opacity > 0.0; // TODO Pics hidden too long, tune this?
 }
