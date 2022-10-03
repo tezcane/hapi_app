@@ -1,12 +1,11 @@
 import 'dart:collection';
 
-import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/tarikh/event/event.dart';
 
-/// This object handles the search operation in the app. When it is initialized,
-/// receiving the full list of events as input, the object fills in a
-/// [SplayTreeMap], i.e. a self-balancing binary tree.
+/// This Singlton object handles the search operation in the app. When it is
+/// initialized, receiving the full list of events as input, the object fills in
+/// a [SplayTreeMap], i.e. a self-balancing binary tree.
 class SearchManager {
   /// Constructor definition.
   SearchManager._internal();
@@ -34,12 +33,11 @@ class SearchManager {
     final SplayTreeMap<String, Set<Event>> queryMap =
         navPage == NavPage.Tarikh ? _queryMapTarikh : _queryMapRelics;
 
-    queryMap.clear(); // Sanity check
+    queryMap.clear(); // Sanity check, but needed for re-init on lang change
 
     for (Event event in events) {
-      // remove new lines so we can search titles that have \n:
-      String label = a(event.tkTitle).replaceFirst('\n', ' ');
-      // TODO we can also search for en/ar here.
+      String label = event.tvTitle;
+      // TODO we can also search for en/ar/other relic/filter types here
       int len = label.length;
       for (int i = 0; i < len; i++) {
         for (int j = i + 1; j <= len; j++) {

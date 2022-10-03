@@ -41,8 +41,6 @@ class TarikhTimelineUI extends StatefulWidget {
 class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   static final Timeline t = TarikhC.t; // used a lot so shorten it.
 
-  // TODO fix shows anytime no era on timeline, should be blank or something like "Unnamed Era"
-  static const String tkDefaultEraName = ''; //i.Birth of the Universe';
   static const double TopOverlap = 0.0; //56.0;
 
   /// These variables are used to calculate the correct viewport for the timeline
@@ -84,21 +82,21 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     }
 
     TarikhC.to.isActiveTimeline = true;
-    _tvEraName = 'Era'.tr +
-        ': ' +
-        (t.currentEra != null ? a(t.currentEra!.tkTitle) : a(tkDefaultEraName));
+
+    _tvEraName =
+        t.currentEra != null ? 'Era'.tr + ': ' + a(t.currentEra!.tkTitle) : '';
+
     t.onHeaderColorsChanged = (/*Color background,*/ Color text) {
       setState(() {
         _headerTextColor = text;
-        //_headerBackgroundColor = background;
+//      _headerBackgroundColor = background;
       });
     };
 
     /// Update the label for the [Timeline] object.
     t.onEraChanged = (Event? event) {
-      setState(() {
-        _tvEraName = 'Era'.tr + ': ' + (event != null ? a(event.tkTitle) : '');
-      });
+      setState(() => _tvEraName =
+          'Era'.tr + ': ' + (event != null ? a(event.tkTitle) : ''));
     };
 
     if (t.headerTextColor != null) {
@@ -234,26 +232,20 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
       l.w('Timeline: didUpdateWidget true');
       setState(() {
         _headerTextColor = t.headerTextColor;
-        // _headerBackgroundColor = t.headerBackgroundColor;
+//      _headerBackgroundColor = t.headerBackgroundColor;
       });
 
       t.onHeaderColorsChanged = (/*Color background,*/ Color text) {
         setState(() {
           _headerTextColor = text;
-          // _headerBackgroundColor = background;
+//        _headerBackgroundColor = background;
         });
       };
       t.onEraChanged = (Event? event) {
-        setState(() {
-          _tvEraName = event != null ? a(event.tkTitle) : a(tkDefaultEraName);
-        });
+        setState(() => _tvEraName = event != null ? a(event.tkTitle) : '');
       };
-      setState(() {
-        _tvEraName = t.currentEra != null
-            ? a(t.currentEra!.tkTitle)
-            : a(tkDefaultEraName);
-        //t.isActive = true;
-      });
+      setState(() =>
+          _tvEraName = t.currentEra != null ? a(t.currentEra!.tkTitle) : '');
     } else {
       l.w('Timeline: didUpdateWidget false');
     }

@@ -9,9 +9,11 @@ import 'package:hapi/controller/getx_hapi.dart';
 import 'package:hapi/controller/time_c.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/settings_option.dart';
+import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/quest/active/active_quests_c.dart';
 import 'package:hapi/tarikh/event/event.dart';
 import 'package:hapi/tarikh/event/event_c.dart';
+import 'package:hapi/tarikh/event/search/search_manager.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/intl.dart';
 
@@ -257,6 +259,10 @@ class LanguageC extends GetxHapi {
     if (initNeeded == false) {
       // call only if user changes lang, not at init
       EventC.to.reinitAllEventsTexts();
+
+      // language changed so we must change filter language too
+      SearchManager.init(NavPage.Tarikh, EventC.to.getEventList(EVENT.Era));
+      SearchManager.init(NavPage.Relics, EventC.to.getEventList(EVENT.Anbiya));
     }
     initNeeded = false;
   }

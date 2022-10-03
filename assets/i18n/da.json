@@ -119,7 +119,7 @@
 "Should the clock show 12 hour or 24 hour times": "Skal uret vise 12 timer eller 24 timer",
 "a.Adhkar As-Sabah": "Morgen Adhkar",
 "a.Adhkar Al-Masaa": "Aften Adhkar",
-"at.aqCountdownTimer": "{0}: {1}: {2} Indtil \"{3}\" slutter og \"{4}\" begynder",
+"at.aqCountdownTimer": "{0}: {1}: {2} indtil \"{3}\" slutter og \"{4}\" begynder",
 "at.aqCountdownTimerLayl": "{0}: {1}: {2} indtil \"{3}\" begynder",
 "a.Muharram": "Muharram",
 "a.Safar": "Safar",

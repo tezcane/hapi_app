@@ -106,7 +106,7 @@ class Event {
     this.endMenu,
     required this.accent,
   }) {
-    saveTag = '${tkTitle}_${eventType.index}'; // Some relics share names -> Hud
+    saveTag = '${tkTitle}_${eventType.index}'; // Relics names not unique->Hud
     reinitBubbleText();
   }
   final EVENT eventType;
@@ -124,21 +124,32 @@ class Event {
   late final String saveTag;
 
   /// Used to calculate how many lines to draw for the bubble in the timeline:
+  late String tvTitle; // holds translation
   late String tvTitleLine1;
   late String tvTitleLine2;
   late bool isBubbleThick;
   late String tvBubbleText;
+
+  late String tvRelicTitleLine1;
+  late String tvRelicTitleLine2;
+  late bool isRelicThick;
 
   /// Only update bubble text on init, language change, or screen orientation
   /// changes.
   ///
   /// NOTE: If in landscape mode, no need to put the text on two lines (I hope).
   reinitBubbleText() {
-    List<String> lines = tvGetTitleLines(); // expensive so call less on paints
+    List<String> lines = tvGetTitleLines(22, 44);
     tvTitleLine1 = lines[0];
     tvTitleLine2 = lines[1];
     isBubbleThick = lines[1] == '' ? false : true;
     tvBubbleText = isBubbleThick ? lines[0] + '\n' + lines[1] : lines[0];
+
+    // Relic Chip Views are smaller so char limits are less
+    lines = tvGetTitleLines(9, 18); // TODO test/implement
+    tvRelicTitleLine1 = lines[0];
+    tvRelicTitleLine2 = lines[1];
+    isRelicThick = lines[1] == '' ? false : true;
   }
 
   /// So relics can init at compile time easier, we set this later since it
@@ -225,12 +236,13 @@ class Event {
     return cns(label) + ' ' + 'Years'.tr;
   }
 
-  /// TODO Should call this on language changes
-  List<String> tvGetTitleLines() {
-    String tvLine1 = a(tkTitle); // translated here, why we must force update
+  /// Expensive, doing so many translations so we call this only when needed
+  List<String> tvGetTitleLines(int portrait, int landscape) {
+    tvTitle = a(tkTitle); // lang/orientation update so new tr needed
+    String tvLine1 = tvTitle;
     String tvLine2 = '';
 
-    final int maxCharsOnLine1 = MainC.to.isPortrait ? 22 : 44;
+    final int maxCharsOnLine1 = MainC.to.isPortrait ? portrait : landscape;
 
     // split line if it is passed X characters.
     if (tvLine1.length > maxCharsOnLine1) {
@@ -253,19 +265,16 @@ class Event {
           tvLine2 = words[1] + ' ' + words[2];
         }
       } else if (words.length > 3) {
-        // TODO better optimize?
+        int halfOfChars = (tvTitle.length ~/ 2) + 1;
+
         tvLine1 = words.removeAt(0);
         bool buildLine1 = true;
         while (words.isNotEmpty) {
           String nextWord = words.removeAt(0);
           if (buildLine1) {
-            if (words.length == 2 &&
-                words[0].length + words[1].length < maxCharsOnLine1) {
-              tvLine1 += ' ' + nextWord;
-              buildLine1 = false;
-              continue;
-            }
-            if (tvLine1.length + nextWord.length < maxCharsOnLine1) {
+            int ifWordAddedToLine1Length = tvLine1.length + nextWord.length;
+            if (ifWordAddedToLine1Length < maxCharsOnLine1 &&
+                ifWordAddedToLine1Length <= halfOfChars) {
               tvLine1 += ' ' + nextWord;
             } else {
               buildLine1 = false;

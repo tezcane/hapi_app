@@ -66,7 +66,7 @@ class ThumbnailDetailWidget extends StatelessWidget {
                             alignment: LanguageC.to.centerLeft,
                             tv: true,
                           ),
-                          if (event.tvTitleLine2 != '')
+                          if (event.isBubbleThick)
                             T(
                               event.tvTitleLine2,
                               ts,
