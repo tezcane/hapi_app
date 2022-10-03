@@ -243,18 +243,14 @@ class BottomBarMenu extends StatelessWidget {
           // AnimatedContainer animates the showing/hiding of bottom bar
           bottomNavigationBar: AnimatedContainer(
             duration: const Duration(milliseconds: 200),
-            height: isBottomBarVisible
-                ? bottomBarItems.length < 5
-                    ? 35
-                    : 65
-                : 0, // here is the magic that hides the bar
+            height: isBottomBarVisible ? 72 : 0, // magic that hides bottom bar
             // Wrap needed or get overflow errors
             child: Wrap(
               children: [
                 BottomBar(
                   selectedIndex: curBottomBarHighlightIdx,
                   items: bottomBarItems,
-                  height: bottomBarItems.length < 5 ? 35 : 65,
+                  tabHeight: 72,
                   onTap: (newIdx) => _onBottomBarTabTapped(newIdx),
                   // Disable to turn off bottom bar view, so menu blends to page:
                   //backgroundColor: Theme.of(context).scaffoldBackgroundColor, null

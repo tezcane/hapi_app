@@ -11,7 +11,7 @@ class BottomBar extends StatelessWidget {
   const BottomBar({
     required this.selectedIndex,
     required this.items,
-    required this.height,
+    required this.tabHeight,
     required this.onTap,
     this.backgroundColor,
     this.showActiveBackgroundColor = false,
@@ -20,7 +20,7 @@ class BottomBar extends StatelessWidget {
   });
   final int selectedIndex;
   final List<BottomBarItem> items;
-  final double height;
+  final double tabHeight;
   final ValueChanged<int> onTap;
   final Color? backgroundColor;
   final bool showActiveBackgroundColor;
@@ -30,29 +30,32 @@ class BottomBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int itemCount = items.length;
-    final double width = (w(context) - 80) / itemCount; // -80 for FAB space
+    final double tabWidth = (w(context) - 90) / itemCount; // -80 FAB, -10 pad
 
     return Container(
-      height: height,
+      height: tabHeight,
       color: backgroundColor,
       child: Row(
-        mainAxisAlignment: LanguageC.to.axisStart,
-        children: List<Widget>.generate(
-          itemCount,
-          (int index) {
-            return _BottomBarItemWidget(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(width: LanguageC.to.isLTR ? 10 : 80),
+          ...List<Widget>.generate(
+            itemCount,
+            (int index) => _BottomBarItemWidget(
               itemCount: itemCount,
               bottomBarItem: items.elementAt(index),
-              width: width,
+              tabWidth: tabWidth,
+              tabHeight: tabHeight,
               index: index,
               isSelected: index == selectedIndex,
               onTap: () => onTap(index),
               showActiveBackgroundColor: showActiveBackgroundColor,
               curve: curve,
               duration: duration,
-            );
-          },
-        ),
+            ),
+          ),
+          SizedBox(width: LanguageC.to.isLTR ? 80 : 10),
+        ],
       ),
     );
   }
@@ -62,7 +65,8 @@ class _BottomBarItemWidget extends StatelessWidget {
   const _BottomBarItemWidget({
     required this.itemCount,
     required this.bottomBarItem,
-    required this.width,
+    required this.tabWidth,
+    required this.tabHeight,
     required this.index,
     required this.isSelected,
     required this.onTap,
@@ -73,7 +77,8 @@ class _BottomBarItemWidget extends StatelessWidget {
   });
   final int itemCount;
   final BottomBarItem bottomBarItem;
-  final double width;
+  final double tabWidth;
+  final double tabHeight;
   final int index;
   final bool isSelected;
   final Function() onTap; // callback to update `selectedIndex`
@@ -92,122 +97,90 @@ class _BottomBarItemWidget extends StatelessWidget {
         ? const TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Lobster')
         : tsB;
 
-    final bool rowMode = itemCount < 5; // false means column mode
-
-    double iconSize = 30;
-    final double w = width - iconSize;
-    if (!rowMode && isSelected) iconSize = 40;
+    double iconSize = isSelected ? 45 : 35;
+    double textHeight = tabHeight - iconSize - 4; // - 4 for some padding
 
     Color selectedColor = bottomBarItem.selectedColor;
     Color selectedColorWithOpacity = selectedColor.withOpacity(0.1);
 
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0, end: isSelected ? 1 : 0),
-      curve: curve,
-      duration: duration,
-      builder: (BuildContext context, double value, Widget? child) {
-        return Material(
-          color: showActiveBackgroundColor
-              ? Color.lerp(
-                  selectedColor.withOpacity(0),
-                  selectedColorWithOpacity,
-                  value,
-                )
-              : Colors.transparent,
-          shape: const RoundedRectangleBorder(),
-          child: Tooltip(
-            message: bottomBarItem.tvTooltip,
-            child: InkWell(
-              onTap: onTap,
-              customBorder: const StadiumBorder(),
-              highlightColor: selectedColorWithOpacity,
-              focusColor: selectedColorWithOpacity,
-              splashColor: selectedColorWithOpacity,
-              hoverColor: selectedColorWithOpacity,
-              child: Row(
-                children: [
-                  if (index == 0)
-                    SizedBox(width: rowMode ? w / 4 : w), // give space on left
-                  if (!isSelected) SizedBox(width: w / 2.5),
-                  Hero(
-                    tag: bottomBarItem.iconData,
-                    child: rowMode
-                        ? IconTheme(
-                            data: IconThemeData(
-                              color: Color.lerp(
-                                  _inactiveColor, selectedColor, value),
-                              size: iconSize,
-                            ),
-                            child: bottomBarItem.iconData ==
-                                    Icons.brightness_3_outlined
-                                ? Transform.rotate(
-                                    angle: 2.8, // Rotates crescent
-                                    child: Icon(bottomBarItem.iconData,
-                                        size: iconSize),
-                                  )
-                                : Icon(bottomBarItem.iconData, size: iconSize),
-                          )
-                        : Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              IconTheme(
-                                data: IconThemeData(
-                                  color: Color.lerp(
-                                      _inactiveColor, selectedColor, value),
+    return SizedBox(
+      width: tabWidth,
+      height: tabHeight,
+      child: TweenAnimationBuilder<double>(
+        tween: Tween(begin: 0, end: isSelected ? 1 : 0),
+        curve: curve,
+        duration: duration,
+        builder: (BuildContext context, double value, Widget? child) {
+          return Material(
+            color: showActiveBackgroundColor
+                ? Color.lerp(
+                    selectedColor.withOpacity(0),
+                    selectedColorWithOpacity,
+                    value,
+                  )
+                : Colors.transparent,
+            shape: const RoundedRectangleBorder(),
+            child: Tooltip(
+              message: bottomBarItem.tvTooltip,
+              child: InkWell(
+                onTap: onTap,
+                customBorder: const StadiumBorder(),
+                highlightColor: selectedColorWithOpacity,
+                focusColor: selectedColorWithOpacity,
+                splashColor: selectedColorWithOpacity,
+                hoverColor: selectedColorWithOpacity,
+                child: Hero(
+                  tag: bottomBarItem.iconData,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconTheme(
+                        data: IconThemeData(
+                          color: Color.lerp(
+                            _inactiveColor,
+                            selectedColor,
+                            value,
+                          ),
+                          size: iconSize,
+                        ),
+                        child: bottomBarItem.iconData ==
+                                Icons.brightness_3_outlined
+                            ? Transform.rotate(
+                                angle: 2.8, // Rotates crescent
+                                child: Icon(
+                                  bottomBarItem.iconData,
                                   size: iconSize,
                                 ),
-                                child: bottomBarItem.iconData ==
-                                        Icons.brightness_3_outlined
-                                    ? Transform.rotate(
-                                        angle: 2.8, // Rotates crescent
-                                        child: Icon(bottomBarItem.iconData,
-                                            size: iconSize),
-                                      )
-                                    : Icon(bottomBarItem.iconData,
-                                        size: iconSize),
-                              ),
-                              if (isSelected)
-                                DefaultTextStyle(
-                                  style: textStyle.copyWith(
-                                    color: Color.lerp(
-                                      Colors.transparent,
-                                      selectedColor,
-                                      value,
-                                    ),
-                                  ),
-                                  child: T(
-                                    bottomBarItem.tvTitle,
-                                    textStyle,
-                                    w: w * 4,
-                                    tv: true,
-                                  ),
-                                ),
-                            ],
+                              )
+                            : Icon(bottomBarItem.iconData, size: iconSize),
+                      ),
+                      if (isSelected)
+                        DefaultTextStyle(
+                          style: textStyle.copyWith(
+                            color: Color.lerp(
+                              Colors.transparent,
+                              selectedColor,
+                              value,
+                            ),
                           ),
-                  ),
-                  if (!isSelected) SizedBox(width: w / 2.5),
-                  if (isSelected && rowMode)
-                    DefaultTextStyle(
-                      style: textStyle.copyWith(
-                        color: Color.lerp(
-                          Colors.transparent,
-                          selectedColor,
-                          value,
+                          child: T(
+                            bottomBarItem.tvTitle,
+                            textStyle,
+                            w: tabWidth,
+                            h: textHeight,
+                            alignment: Alignment.topCenter,
+                            tv: true,
+                          ),
                         ),
-                      ),
-                      child: T(
-                        bottomBarItem.tvTitle,
-                        textStyle,
-                        w: w,
-                        tv: true,
-                      ),
-                    ),
-                ],
+                    ],
+                  ),
+                ),
               ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 }
