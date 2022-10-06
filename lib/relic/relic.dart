@@ -50,7 +50,6 @@ class RelicSet {
 
 /// Used to tell RelicSetUI() what filter view to build and show.
 enum FILTER_TYPE {
-  Default, // TODO needed? Can just use IdxList
   IdxList,
   Tree,
 }
@@ -68,40 +67,39 @@ class RelicSetFilter {
   /// We must ensure tprMin/tprMax for all filters can support this value:
   static const DEFAULT_TPR = 5; // TODO
 
-  RelicSetFilter({
+  const RelicSetFilter({
     required this.type,
-    required this.tvLabel,
+    required this.tkLabel,
+    required this.idxList,
+    required this.tprMax,
     this.tprMin = 1,
-    this.tprMax = 12,
     this.field,
-    this.idxList,
     this.treeGraph1,
     this.treeGraph2,
-  }) {
-    isResizeable = tprMin != tprMax; // if tpr Min/Max different it's resizeable
-  }
+  });
   final FILTER_TYPE type; // used to build UI around this filter
-  final String
-      tvLabel; // TODO make tkKey filter label/Subtitle of filter options menu
-  /// Work with "tpr" variable found and initialized in RelicSetUI (Sorry...)
-  final int tprMin;
-  final int tprMax;
+  final String tkLabel;
 
-  // Optional Parameters
-  /// OPTIONAL: You can add a string/int/object? and we will have a switch in
-  /// the UI to detect this and then display it appropriately.
-  final FILTER_FIELD? field;
-
-  /// OPTIONAL: List of indexes to original relic list to display a full or
+  /// List of indexes to original relic list to display a full or
   /// subset of that list. For example, you can send in order of Prophets
   /// mentioned in the Quran count, i.e. [13, (136 Musa), 5, (69 Ibrahim)...]).
-  final List<int>? idxList;
+  final List<int> idxList;
 
+  /// Work with "tpr" variable found and initialized in [RelicSetUI] (Sorry...)
+  final int tprMax;
+  final int tprMin;
+
+  /// You can add a string/int/object? and we will have a switch in the UI to
+  /// detect this field and then we hard code to display the fields value under
+  /// the relics, e.g. Prophet names mentioned in the Quran count.
+  final FILTER_FIELD? field;
+
+  /// If [FILTER_TYPE.Tree], must specify treeGraph1 and optionally treeGraph2.
   final Graph? treeGraph1;
-  final Graph? treeGraph2; // TODO may not use this for some Family Trees
+  final Graph? treeGraph2;
 
-  // Tells UI if it should show -/+ buttons:
-  late final bool isResizeable; // TODO needed?
+  /// Tells if [RelicSetUI] should show -/+ buttons:
+  bool get isResizeable => tprMin != tprMax; // TODO needed?
 }
 
 /*  Miracles of Quran:

@@ -8,6 +8,7 @@ import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_c.dart';
+import 'package:hapi/relic/relic_set_ui.dart';
 import 'package:hapi/relic/ummah/prophet.dart';
 import 'package:hapi/tarikh/event/event.dart';
 
@@ -21,6 +22,7 @@ class FamilyTreeUI extends StatelessWidget {
     relicSet = RelicC.to.getRelicSet(eventType);
     relics = relicSet.relics;
     maxRelicIdx = relics.length - 1;
+    filterIdx = relicSet.filterList.length - 1; // Tree is at the last idx
   }
   late final Graph graph1;
   late final Graph? graph2;
@@ -28,6 +30,7 @@ class FamilyTreeUI extends StatelessWidget {
   late final RelicSet relicSet;
   late final List<Relic> relics;
   late final int maxRelicIdx;
+  late final int filterIdx;
 
   final BuchheimWalkerConfiguration builder = BuchheimWalkerConfiguration()
     ..siblingSeparation = (10)
@@ -189,12 +192,13 @@ class FamilyTreeUI extends StatelessWidget {
                                     hTile,
                                     hText,
                                   )
-                                : _relicTileWithField(
+                                : RelicSetUI.getRelicTile(
                                     context,
                                     relics[relicIdx],
-                                    wTile,
-                                    hTile,
-                                    hText,
+                                    tpr,
+                                    relicSet,
+                                    filterIdx,
+                                    true,
                                   );
                           },
                         ),
@@ -205,42 +209,6 @@ class FamilyTreeUI extends StatelessWidget {
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _relicTileWithField(
-    BuildContext context,
-    Relic relic,
-    double wTile,
-    double hTile,
-    double hText,
-  ) {
-    return InkWell(
-      onTap: () => print('TODO clicked 2'), // TODO
-      child: SizedBox(
-        width: wTile,
-        height: hTile,
-        child: Column(
-          children: [
-            Hero(
-              tag: relic.tkTitle,
-              // TODO modularize chip
-              child: Container(
-                color: AppThemes.ajrColorsByIdx[relic.ajrLevel],
-                child: SizedBox(
-                  width: wTile,
-                  height: wTile,
-                  child: Image(
-                    image: AssetImage(relic.asset.filename),
-                    fit: BoxFit.fill,
-                  ),
-                ),
-              ),
-            ),
-            T(relic.tkTitle, tsN, w: wTile, h: hText),
-          ],
         ),
       ),
     );

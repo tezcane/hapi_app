@@ -21,21 +21,17 @@ class RelicSetUI extends StatelessWidget {
 
   late final List<RelicSetFilter> filters;
   late RelicSetFilter filter;
-  late int filterIdx = -1; // -1 forces update/rd/wr on next access (init)
+  int filterIdx = -1; // -1 forces update/rd/wr on next access (init)
 
   /// tpr (Tiles Per Row) valid range is RelicSetFilter.tprMin-RelicSetFilter.
   /// Variable is used to tell UI how many relic tiles to draw per row, thus
   /// controlling the size of the relic tiles on the screen.
   late int tpr;
 
-  late bool showTileText;
-
   _updateFilter(int newIdx) {
     if (newIdx == filterIdx) return; // no need to do work, return
     filter = filters[newIdx];
     tpr = RelicC.to.getTilesPerRow(relicSet.eventType, newIdx);
-
-    showTileText = RelicC.to.getShowTileText(relicSet.eventType);
 
     if (filter.type == FILTER_TYPE.Tree) {
       MenuC.to.pushSubPage(SubPage.Family_Tree, arguments: {
@@ -52,34 +48,27 @@ class RelicSetUI extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget tileView;
-    switch (filter.type) {
-      case FILTER_TYPE.Default:
-        tileView = _tileList(context, _getTileListDefault(context));
-        break;
-      case FILTER_TYPE.IdxList:
-        tileView = _tileList(context, _getTileIdxList(context));
-        break;
-      case FILTER_TYPE.Tree:
-        l.e('FILTER_TYPE.${FILTER_TYPE.Tree.name} has its on UI');
-        return Container();
-    }
+    bool showTileText = RelicC.to.getShowTileText(relicSet.eventType);
 
     return Container(
       color: Theme.of(context).backgroundColor,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _tileHeader(context),
+          _tileHeader(context, showTileText),
           const SizedBox(height: 8),
-          tileView,
+          _tileListView(
+            context,
+            _getTileWidgets(context, filter.idxList, tpr, showTileText),
+            showTileText,
+          ),
           const SizedBox(height: 9),
         ],
       ),
     );
   }
 
-  Widget _tileHeader(BuildContext context) {
+  Widget _tileHeader(BuildContext context, bool showTileText) {
     // width of extra spaces between 65-155: 65 (10+10+45) + 90 (45+45)
     final double wText = w(context) - 65 - (filter.isResizeable ? 90 : 0);
 
@@ -94,10 +83,9 @@ class RelicSetUI extends StatelessWidget {
               width: wText,
               child: filters.length == 1
                   ? T(
-                      filter.tvLabel,
+                      filter.tkLabel,
                       tsNB,
                       w: wText,
-                      tv: true,
                       alignment: LanguageC.to.centerLeft,
                     ) // only one item, no drop menu needed
                   : _filterDropMenu(context), // to match big/small labels
@@ -156,7 +144,7 @@ class RelicSetUI extends StatelessWidget {
           return DropdownMenuItem<int>(
             value: value,
             child: T(
-              relicSet.filterList[value].tvLabel,
+              relicSet.filterList[value].tkLabel,
               RelicC.to.getFilterIdx(relicSet.eventType) == value ? ts : tsN,
               alignment: LanguageC.to.centerLeft,
             ),
@@ -207,135 +195,136 @@ class RelicSetUI extends StatelessWidget {
     );
   }
 
-  List<Widget> _getTileListDefault(BuildContext context) {
-    final List<Widget> tileWidgets = []; // TODO can cache for UI speed up
-    for (Relic relic in relicSet.relics) {
-      tileWidgets.add(_relicTile(context, relic));
-    }
-    // Acts same as above:
-    /* List.generate(
-        relicSet.relics.length,
-        (index) {
-          return _relicTile(context, relicSet.relics[index]);
-        },
-      ) */
-    return tileWidgets;
-  }
-
-  List<Widget> _getTileIdxList(BuildContext context) {
-    final List<Widget> tileWidgets = []; // TODO can cache for UI speed up
-    for (int index in filter.idxList!) {
-      tileWidgets.add(_relicTileWithField(context, relicSet.relics[index]));
-    }
-    return tileWidgets;
-  }
-
-  Widget _relicTile(BuildContext context, Relic relic) {
-    final double wTile = w(context) / tpr - 4; // -4 for Wrap.spacing!
-
-    // when tiles get tiny we force huge height to take up all width
-    final double hText = 35 - (tpr.toDouble() * 2); // h size: 13-33
-    final double hTile = wTile + (showTileText ? hText : 0);
-
-    return InkWell(
-      onTap: () {
-        MenuC.to.pushSubPage(SubPage.Event_Details, arguments: {
-          'eventType': relicSet.eventType,
-          'eventMap': RelicC.to.getEventMap(
-            relicSet.eventType,
-            filter.type,
-            filter,
-          ),
-          'saveTag': relic.saveTag,
-        });
-      },
-      child: SizedBox(
-        width: wTile,
-        height: hTile,
-        child: Column(
-          children: [
-            Container(
-              // color: AppThemes.ajrColorsByIdx[Random().nextInt(7)],
-              color: AppThemes.ajrColorsByIdx[relic.ajrLevel],
-              child: SizedBox(
-                width: wTile,
-                height: wTile,
-                child: Image(
-                  image: AssetImage(relic.asset.filename),
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-            if (showTileText) T(relic.tkTitle, tsN, w: wTile, h: hText),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _relicTileWithField(BuildContext context, Relic relic) {
-    bool hasField = filter.field != null;
-    String field = '';
-    if (hasField) {
-      switch (filter.field) {
-        case (FILTER_FIELD.QuranMentionCount):
-          field = cni((relic as Prophet).quranMentionCount);
-          break;
-        default:
-          return l.E('filter.field ${filter.field!.name} not implemented yet');
-      }
-    }
-
-    final double wTile = w(context) / tpr - 4; // -4 for Wrap.spacing!
-
-    // when tiles get tiny we force huge height to take up all width
-    final double hText = 35 - (tpr.toDouble() * 2); // h size: 13-33
-    final double hTile = wTile + (showTileText ? (hText * 2) : 0);
-
-    return InkWell(
-      onTap: () {
-        MenuC.to.pushSubPage(SubPage.Event_Details, arguments: {
-          'eventType': relicSet.eventType,
-          'eventMap': RelicC.to.getEventMap(
-            relicSet.eventType,
-            filter.type,
-            filter,
-          ),
-          'saveTag': relic.saveTag,
-        });
-      },
-      child: SizedBox(
-        width: wTile,
-        height: hTile,
-        child: Column(
-          children: [
-            Container(
-              // color: AppThemes.ajrColorsByIdx[Random().nextInt(7)],
-              color: AppThemes.ajrColorsByIdx[relic.ajrLevel],
-              child: SizedBox(
-                width: wTile,
-                height: wTile,
-                child: Image(
-                  image: AssetImage(relic.asset.filename),
-                  fit: BoxFit.fill,
-                ),
-              ),
-            ),
-            if (showTileText && hasField) T(field, tsN, w: wTile, h: hText),
-            if (showTileText) T(relic.tkTitle, tsN, w: wTile, h: hText),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _tileList(BuildContext context, List<Widget> tileWidgets) {
+  Widget _tileListView(
+    BuildContext context,
+    List<Widget> tileWidgets,
+    bool showTileText,
+  ) {
     return Wrap(
       // direction: Axis.horizontal <-- TODO use this for landscape/portrait mode?
       alignment: WrapAlignment.center, // TY!, centers modules remainders
       spacing: 4, // NOTE: must subtract this from _relicTile() or overflows
       runSpacing: showTileText ? 6 : 2.5, // gap under a row of tiles
       children: tileWidgets,
+    );
+  }
+
+  List<Widget> _getTileWidgets(
+    BuildContext context,
+    List<int> filterIdxList,
+    int tprSize,
+    bool showTileText,
+  ) {
+    final List<Widget> tileWidgets = []; // TODO can cache for UI speed up
+    for (int index in filterIdxList) {
+      tileWidgets.add(
+        getRelicTile(
+          context,
+          relicSet.relics[index],
+          tprSize,
+          relicSet,
+          filterIdx,
+          showTileText,
+        ),
+      );
+    }
+    return tileWidgets;
+  }
+
+  /// Public method so all Relic UI's can share the same Relic Tile view.
+  static Widget getRelicTile(
+    BuildContext context,
+    Relic relic,
+    int tprSize,
+    RelicSet relicSet,
+    int filterIdx,
+    bool showTileText,
+  ) {
+    FILTER_FIELD? filterField = relicSet.filterList[filterIdx].field;
+    bool hasField = filterField != null;
+    String field = '';
+    if (hasField) {
+      switch (filterField) {
+        case FILTER_FIELD.QuranMentionCount:
+          field = cni((relic as Prophet).quranMentionCount);
+          break;
+        default:
+          return l.E('${filterField.name} not implemented yet');
+      }
+    }
+
+    final double wTile = w(context) / tprSize - 4; // -4 for Wrap.spacing!
+
+    String tvRelicTitleLine1Or2 = relic.tvRelicTitleLine1;
+    bool isRelicTextThick = relic.isRelicTextThick && tprSize > 1;
+    if (relic.isRelicTextThick && !isRelicTextThick) {
+      // if tprSize is maxed, we show tvRelicTitleLine1 and 2 on the same line
+      tvRelicTitleLine1Or2 = relic.tvTitle;
+    }
+
+    // when tiles get tiny we force huge height to take up all width
+    double hText = 35 - (tprSize.toDouble() * 3); // h size: 13-33
+    if (hText < 4) hText = 4;
+
+    final double hTile = wTile +
+        (showTileText
+            ? hText + // +hText for relic line1 label
+                (hasField ? hText : 0) + // +hText for field text
+                (isRelicTextThick ? hText : 0) // +hText for relic line2 label
+            : 0);
+
+    return InkWell(
+      onTap: () {
+        MenuC.to.pushSubPage(SubPage.Event_Details, arguments: {
+          'eventType': relicSet.eventType,
+          'eventMap': RelicC.to.getEventMap(relicSet.eventType, filterIdx),
+          'saveTag': relic.saveTag,
+        });
+      },
+      child: SizedBox(
+        width: wTile,
+        height: hTile,
+        child: Column(
+          children: [
+            Container(
+              // color: AppThemes.ajrColorsByIdx[Random().nextInt(7)],
+              color: AppThemes.ajrColorsByIdx[relic.ajrLevel],
+              child: SizedBox(
+                width: wTile,
+                height: wTile,
+                child: Image(
+                  image: AssetImage(relic.asset.filename),
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
+            if (showTileText)
+              T(
+                tvRelicTitleLine1Or2,
+                tsN,
+                w: wTile,
+                h: hText,
+                alignment: Alignment.topCenter,
+              ),
+            if (showTileText && isRelicTextThick)
+              T(
+                relic.tvRelicTitleLine2,
+                tsN,
+                w: wTile,
+                h: hText,
+                alignment: Alignment.topCenter,
+              ),
+            if (showTileText && hasField)
+              T(
+                field,
+                tsN,
+                w: wTile,
+                h: hText,
+                alignment: Alignment.topCenter,
+              ),
+          ],
+        ),
+      ),
     );
   }
 }

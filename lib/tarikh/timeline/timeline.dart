@@ -596,7 +596,7 @@ class Timeline {
 
   double bubbleHeight(Event event) =>
       (BubblePadding * 1.15) +
-      ((event.isBubbleThick ? 2 : 1) * BubbleTextHeight);
+      ((event.isBubbleTextThick ? 2 : 1) * BubbleTextHeight);
 
   /// Advance event [assets] with the current [elapsed] time.
   bool _advanceItems(List<Event> items, double x, double scale, double elapsed,

@@ -4,7 +4,6 @@ import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/menu/sub_page.dart';
-import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_c.dart';
 import 'package:hapi/tarikh/event/event.dart';
 import 'package:hapi/tarikh/event/event_c.dart';
@@ -66,7 +65,7 @@ class ThumbnailDetailWidget extends StatelessWidget {
                             alignment: LanguageC.to.centerLeft,
                             tv: true,
                           ),
-                          if (event.isBubbleThick)
+                          if (event.isBubbleTextThick)
                             T(
                               event.tvTitleLine2,
                               ts,
@@ -128,11 +127,7 @@ class ThumbnailDetailWidget extends StatelessWidget {
   _goToEventDetailsOfRelics() {
     MenuC.to.pushSubPage(SubPage.Event_Details, arguments: {
       'eventType': event.eventType,
-      'eventMap': RelicC.to.getEventMap(
-        event.eventType,
-        FILTER_TYPE.Default,
-        null,
-      ),
+      'eventMap': RelicC.to.getEventMap(event.eventType, 0), // 0 = Default Idx
       'saveTag': event.saveTag,
     });
   }

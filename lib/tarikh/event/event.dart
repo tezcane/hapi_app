@@ -127,29 +127,29 @@ class Event {
   late String tvTitle; // holds translation
   late String tvTitleLine1;
   late String tvTitleLine2;
-  late bool isBubbleThick;
+  late bool isBubbleTextThick;
   late String tvBubbleText;
 
   late String tvRelicTitleLine1;
   late String tvRelicTitleLine2;
-  late bool isRelicThick;
+  late bool isRelicTextThick;
 
   /// Only update bubble text on init, language change, or screen orientation
   /// changes.
   ///
   /// NOTE: If in landscape mode, no need to put the text on two lines (I hope).
   reinitBubbleText() {
-    List<String> lines = tvGetTitleLines(22, 44);
+    List<String> lines = tvGetTitleLines(22, 44, false, null); // null=force tr
     tvTitleLine1 = lines[0];
     tvTitleLine2 = lines[1];
-    isBubbleThick = lines[1] == '' ? false : true;
-    tvBubbleText = isBubbleThick ? lines[0] + '\n' + lines[1] : lines[0];
+    isBubbleTextThick = lines[1] == '' ? false : true;
+    tvBubbleText = isBubbleTextThick ? lines[0] + '\n' + lines[1] : lines[0];
 
     // Relic Chip Views are smaller so char limits are less
-    lines = tvGetTitleLines(9, 18); // TODO test/implement
+    lines = tvGetTitleLines(10, 18, true, tvTitle); // just tr'd, don't do again
     tvRelicTitleLine1 = lines[0];
     tvRelicTitleLine2 = lines[1];
-    isRelicThick = lines[1] == '' ? false : true;
+    isRelicTextThick = lines[1] == '' ? false : true;
   }
 
   /// So relics can init at compile time easier, we set this later since it
@@ -236,55 +236,106 @@ class Event {
     return cns(label) + ' ' + 'Years'.tr;
   }
 
+  /// This is tricky to do, convert list of words into 2 similar sized strings.
+  static List<String> splitWordsEvenlyToTwoLines(List<String> words) {
+    List<String> line1Words = [];
+    List<String> line2Words = [];
+    int line1Chars = 0;
+    int line2Chars = 0;
+
+    int size = words.length;
+    for (int idx = 0; idx < size; idx++) {
+      if (idx < size / 2) {
+        line1Words.add(words[idx]);
+        line1Chars += words[idx].length;
+      } else {
+        line2Words.add(words[idx]);
+        line2Chars += words[idx].length;
+      }
+    }
+
+    /// Return true if nothing left to move, false otherwise
+    bool moveWordToNewLine(bool moveFromLine1, int charDiffAbs) {
+      if (moveFromLine1) {
+        if (line2Words[0].length > charDiffAbs) return true;
+        String moveToEndOfLine1 = line2Words.removeAt(0);
+        line1Chars += moveToEndOfLine1.length;
+        line2Chars -= moveToEndOfLine1.length;
+        line1Words.add(moveToEndOfLine1);
+      } else {
+        if (line1Words[line1Words.length - 1].length > charDiffAbs) return true;
+        String moveToStartOfLine2 = line1Words.removeAt(line1Words.length - 1);
+        line1Chars -= moveToStartOfLine2.length;
+        line2Chars += moveToStartOfLine2.length;
+        line2Words.insert(0, moveToStartOfLine2);
+      }
+
+      return false; // possible move words remain
+    }
+
+    int moveCount = 0;
+    int charDiff = line1Chars - line2Chars;
+    while (charDiff.abs() > 2) {
+      moveCount++;
+      bool moveFromLine1 = charDiff < 0; // true=line 1, false=line 2
+
+      if (moveWordToNewLine(moveFromLine1, charDiff.abs())) {
+        break;
+      }
+
+      // after swapping, we now check if polarity switched to know to stop
+      charDiff = line1Chars - line2Chars;
+      if (moveFromLine1) {
+        if (charDiff >= 0) break;
+      } else {
+        if (charDiff <= 0) break;
+      }
+
+      // TODO test more to remove this hacky edge case protection:
+      if (moveCount > 5) {
+        l.w('moveWordToNewLine: moveCount > 5 for $line1Words and $line2Words');
+        break;
+      }
+    }
+
+    String line1 = line1Words[0];
+    for (int idx = 1; idx < line1Words.length; idx++) {
+      line1 += ' ' + line1Words[idx];
+    }
+    String line2 = line2Words[0];
+    for (int idx = 1; idx < line2Words.length; idx++) {
+      line2 += ' ' + line2Words[idx];
+    }
+    return [line1, line2];
+  }
+
   /// Expensive, doing so many translations so we call this only when needed
-  List<String> tvGetTitleLines(int portrait, int landscape) {
-    tvTitle = a(tkTitle); // lang/orientation update so new tr needed
+  List<String> tvGetTitleLines(
+    int portrait, // portrait orientation max chars per line
+    int landscape, // landscape orientation max chars per line
+    bool forceTwoLines,
+    String? tvTitleToNotReinit,
+  ) {
+    if (tvTitleToNotReinit == null) {
+      tvTitle = a(tkTitle); // lang/orientation update so new tr needed
+    }
     String tvLine1 = tvTitle;
     String tvLine2 = '';
 
     final int maxCharsOnLine1 = MainC.to.isPortrait ? portrait : landscape;
 
     // split line if it is passed X characters.
-    if (tvLine1.length > maxCharsOnLine1) {
+    if (tvLine1.length > maxCharsOnLine1 || forceTwoLines) {
       List<String> words = tvLine1.split(' '); // may just be a long word...
-      if (words.length == 2) {
+      if (words.length == 1) {
+        // do nothing (forceTwoLines used but only one word is inputted)
+      } else if (words.length == 2) {
         tvLine1 = words[0];
         tvLine2 = words[1];
-      } else if (words.length == 3) {
-        String word1 = words[0];
-        String word2 = words[1];
-        String word3 = words[2];
-
-        int line1WordsDiff = (word1.length + word2.length - word3.length).abs();
-        int line2WordsDiff = (word1.length - word2.length + word3.length).abs();
-        if (line1WordsDiff <= line2WordsDiff) {
-          tvLine1 = words[0] + ' ' + words[1];
-          tvLine2 = words[2];
-        } else {
-          tvLine1 = words[0];
-          tvLine2 = words[1] + ' ' + words[2];
-        }
-      } else if (words.length > 3) {
-        int halfOfChars = (tvTitle.length ~/ 2) + 1;
-
-        tvLine1 = words.removeAt(0);
-        bool buildLine1 = true;
-        while (words.isNotEmpty) {
-          String nextWord = words.removeAt(0);
-          if (buildLine1) {
-            int ifWordAddedToLine1Length = tvLine1.length + nextWord.length;
-            if (ifWordAddedToLine1Length < maxCharsOnLine1 &&
-                ifWordAddedToLine1Length <= halfOfChars) {
-              tvLine1 += ' ' + nextWord;
-            } else {
-              buildLine1 = false;
-              tvLine2 += nextWord;
-              continue;
-            }
-          } else {
-            tvLine2 += ' ' + nextWord;
-          }
-        }
+      } else if (words.length > 2) {
+        List<String> lines = splitWordsEvenlyToTwoLines(words);
+        tvLine1 = lines[0];
+        tvLine2 = lines[1];
       }
     }
     return [tvLine1, tvLine2];

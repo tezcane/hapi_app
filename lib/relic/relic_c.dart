@@ -123,30 +123,17 @@ class RelicC extends GetxHapi {
       _ajrLevels[eventType.index][relicId]!;
 
   /// To get the EventUI() UI working, with least amount of pain, we turn our
-  /// relic structures into a Map<String, String> that Tarikh code are already
+  /// relic structures into a Map<String, Event> that Tarikh code are already
   /// using. This way we can reuse lots of logic and maps are efficient anyway.
   ///
   /// This is also used by Relic's Favorites and Search UI's to be able to jump
   /// to the Relics Details view.
-  Map<String, Event> getEventMap(
-    EVENT eventType,
-    FILTER_TYPE filterType,
-    RelicSetFilter? relicSetFilter, // Favorites and Search doesn't have or care
-  ) {
+  Map<String, Event> getEventMap(EVENT eventType, int filterIdx) {
     RelicSet relicSet = RelicC.to.getRelicSet(eventType);
 
-    List<int> idxList = [];
-    switch (filterType) {
-      case FILTER_TYPE.Default:
-      case FILTER_TYPE.Tree:
-        for (Relic relic in relicSet.relics) {
-          idxList.add(relic.e.index); // relicId
-        }
-        break;
-      case FILTER_TYPE.IdxList:
-        idxList = relicSetFilter!.idxList!;
-        break;
-    }
+    // The up/dn buttons, by design will navigate through the idxList values
+    // only, this may or may not be all relics of this eventType.
+    List<int> idxList = relicSet.filterList[filterIdx].idxList;
 
     // Create the map to be used for up/dn buttons
     Map<String, Event> eventMap = {};

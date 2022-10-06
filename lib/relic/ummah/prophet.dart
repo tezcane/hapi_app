@@ -1,4 +1,4 @@
-import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter/material.dart';
 import 'package:get/utils.dart';
 import 'package:hapi/controller/time_c.dart';
 import 'package:hapi/main_c.dart';
@@ -48,7 +48,7 @@ class Prophet extends FamilyTree {
           // Event data:
           eventType: EVENT.Anbiya,
           tkEra: tkEra,
-          tkTitle: 'a.${e.name}',
+          tkTitle: 'a.${e.isim}',
           startMs: startMs,
           endMs: endMs,
           // Relic data:
@@ -86,7 +86,7 @@ class Prophet extends FamilyTree {
   @override
   RelicAsset getRelicAsset({width = 200.0, height = 200.0, scale = 1.0}) =>
       RelicAsset(
-        'assets/images/anbiya/${e.name}.png',
+        'assets/images/anbiya/${e.isim}.png',
         width: width,
         height: height,
         scale: scale,
@@ -801,11 +801,11 @@ final List<Prophet> relicsProphet = [
     mom: PF.DaughterOfLut,
     spouses: null,
     daughters: null,
-    sons: [PF.DhulKifl],
+    sons: [PF.Dhul__Kifl],
     relatives: [PF.Lut],
     relativesTypes: [RELATIVE.Grandfather],
-    successors: [PF.DhulKifl],
-    successor: PF.DhulKifl,
+    successors: [PF.Dhul__Kifl],
+    successor: PF.Dhul__Kifl,
     // Required prophet data:
     tvSentTo: a('a.Edom'), // TODO Arabee version
     quranMentionCount: 4,
@@ -825,7 +825,7 @@ final List<Prophet> relicsProphet = [
     startMs: 0, // TODO Buddha: 6th or 5th century BCE
     endMs: 0,
     // Relic data:
-    e: PF.DhulKifl,
+    e: PF.Dhul__Kifl,
     // Fam data:
     predecessors: [],
     dad: PF.Ayyub,
@@ -1844,14 +1844,19 @@ final List<Prophet> relicsProphet = [
   ),
 ];
 
-final List<RelicSetFilter> relicSetFiltersProphet = [
+List<RelicSetFilter> relicSetFiltersProphet = [
   RelicSetFilter(
-    type: FILTER_TYPE.Default,
-    tvLabel: a('a.Nabi'),
+    type: FILTER_TYPE.IdxList,
+    tkLabel: 'a.Nabi',
+    idxList: List.generate(
+      relicsProphet.length,
+      (index) => relicsProphet[index].e.index,
+    ),
+    tprMax: relicsProphet.length,
   ),
   RelicSetFilter(
     type: FILTER_TYPE.IdxList,
-    tvLabel: a('a.Rasul'),
+    tkLabel: 'a.Rasul',
     idxList: [
       PF.Adam.index,
       PF.Nuh.index,
@@ -1870,11 +1875,11 @@ final List<RelicSetFilter> relicSetFiltersProphet = [
       PF.Isa.index,
       PF.Muhammad.index,
     ],
+    tprMax: relicsProphet.length,
   ),
   RelicSetFilter(
     type: FILTER_TYPE.IdxList,
-    tvLabel: a('a.Ulu Al-Azm'),
-    tprMax: 5,
+    tkLabel: 'a.Ulu Al-Azm',
     idxList: [
       PF.Nuh.index,
       PF.Ibrahim.index,
@@ -1882,42 +1887,49 @@ final List<RelicSetFilter> relicSetFiltersProphet = [
       PF.Isa.index,
       PF.Muhammad.index,
     ],
+    tprMax: relicsProphet.length,
   ),
   RelicSetFilter(
     type: FILTER_TYPE.IdxList,
-    tvLabel: 'Quran Name Mentions'.tr,
+    tkLabel: 'Quran Name Mentions',
     field: FILTER_FIELD.QuranMentionCount,
     idxList: [
-      PF.Musa.index, //    136 <-Mentions in Quran
-      PF.Ibrahim.index, //  69
-      PF.Nuh.index, //      43
-      PF.Lut.index, //      27
-      PF.Yusuf.index, //    27
-      PF.Adam.index, //     25
-      PF.Isa.index, //      25
-      PF.Harun.index, //    20
-      PF.Ishaq.index, //    17
-      PF.Suleyman.index, // 17
-      PF.Yaqub.index, //    16
-      PF.Dawud.index, //    16
-      PF.Ismail.index, //   12
-      PF.Salih.index, //     9
-      PF.Shuayb.index, //    9
-      PF.Hud.index, //       7
-      PF.Zakariya.index, //  7
-      PF.Yahya.index, //     5
-      PF.Ayyub.index, //     4
-      PF.Yunus.index, //     4
-      PF.Muhammad.index, //  4
-      PF.Idris.index, //     2
-      PF.DhulKifl.index, //  2 TODO other righteous men/women counts
-      PF.Ilyas.index, //     2
-      PF.Alyasa.index, //    2
+      PF.Musa.index, //      136 <-Mentions in Quran
+      PF.Ibrahim.index, //    69
+      PF.Nuh.index, //        43
+      PF.Lut.index, //        27
+      PF.Yusuf.index, //      27
+      PF.Adam.index, //       25
+      PF.Isa.index, //        25
+      PF.Harun.index, //      20
+      PF.Ishaq.index, //      17
+      PF.Suleyman.index, //   17
+      PF.Yaqub.index, //      16
+      PF.Dawud.index, //      16
+      PF.Ismail.index, //     12
+      PF.Salih.index, //       9
+      PF.Shuayb.index, //      9
+      PF.Hud.index, //         7
+      PF.Zakariya.index, //    7
+      PF.Yahya.index, //       5
+      PF.Ayyub.index, //       4
+      PF.Yunus.index, //       4
+      PF.Muhammad.index, //    4
+      PF.Idris.index, //       2
+      PF.Dhul__Kifl.index, //  2 TODO other righteous men/women counts
+      PF.Ilyas.index, //       2
+      PF.Alyasa.index, //      2
     ],
+    tprMax: relicsProphet.length,
   ),
   RelicSetFilter(
     type: FILTER_TYPE.Tree,
-    tvLabel: 'Family Tree'.tr,
+    tkLabel: 'Family Tree',
+    idxList: List.generate(
+      relicsProphet.length,
+      (index) => relicsProphet[index].e.index,
+    ),
+    tprMax: relicsProphet.length,
     treeGraph1: getGraphAllFamily(EVENT.Anbiya, PF.Gap.index),
     treeGraph2: getGraphOnlyRelics(EVENT.Anbiya, PF.Gap.index),
   ),
@@ -2010,7 +2022,7 @@ enum PF {
     tvGreek: 'Ἰώβ (Iob)',
     tvLatin: 'Iob',
   )), // Eyyub
-  DhulKifl(Isim(
+  Dhul__Kifl(Isim(
 //  tkAr: 'حزقيال', //?
     tvHebrew: 'יְחֶזְקֵאל (Yechezkel)',
     tkHebrewMeaning: 'p.God will strengthen',
