@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/component/separator.dart';
+import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/tarikh/main_menu/main_menu_section.dart';
@@ -32,17 +33,21 @@ class TarikhMenuUI extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     /// A [SingleChildScrollView] is used to create a scrollable view for the main menu.
-    return Container(
-      // Set height since shrinkwrap exposed the hapi logo/menu
-      height: MediaQuery.of(context).size.height,
-      color: Theme.of(context).backgroundColor, // covers hapi logo/menu
-      child: SingleChildScrollView(
-        padding:
-            const EdgeInsets.only(top: 20.0, left: 20, right: 20, bottom: 20),
-        child: Column(
-          children: [
-            GetBuilder<TarikhC>(builder: (c) {
-              return ListView.builder(
+    return GetBuilder<TarikhC>(builder: (c) {
+      if (!c.isTimelineInitDone) {
+        return const Center(child: T('بِسْمِ ٱللَّٰهِ', tsN, tv: true));
+      }
+
+      return Container(
+        // Set height since shrinkwrap exposed the hapi logo/menu
+        height: MediaQuery.of(context).size.height,
+        color: Theme.of(context).backgroundColor, // covers hapi logo/menu
+        child: SingleChildScrollView(
+          padding:
+              const EdgeInsets.only(top: 20.0, left: 20, right: 20, bottom: 20),
+          child: Column(
+            children: [
+              ListView.builder(
                 shrinkWrap: true, // needed or app pukes
                 physics: const ScrollPhysics(), // needed to drag up/down
                 itemCount: c.tarikhMenuData.length,
@@ -62,14 +67,14 @@ class TarikhMenuUI extends StatelessWidget {
                     }),
                   );
                 },
-              );
-            }),
+              ),
 
-            /// this is the little line that shows under the vignettes
-            const Separator(43, 22, 2),
-          ],
+              /// this is the little line that shows under the vignettes
+              const Separator(43, 22, 2),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
