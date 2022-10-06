@@ -1868,7 +1868,6 @@ final List<Surah> relicsSurah = [
 
 final List<RelicSetFilter> relicSetFiltersSurah = [
   RelicSetFilter(
-    type: FILTER_TYPE.IdxList,
     tkLabel: 'a.Surah',
     idxList: List.generate(
       relicsSurah.length,

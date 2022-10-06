@@ -48,12 +48,6 @@ class RelicSet {
   late final List<RelicSetFilter> filterList; // TODO cleaner way to init?
 }
 
-/// Used to tell RelicSetUI() what filter view to build and show.
-enum FILTER_TYPE {
-  IdxList,
-  Tree,
-}
-
 /// Used to tell RelicSetUI() to show a special field under the relic.
 enum FILTER_FIELD {
   QuranMentionCount,
@@ -68,7 +62,6 @@ class RelicSetFilter {
   static const DEFAULT_TPR = 5; // TODO
 
   const RelicSetFilter({
-    required this.type,
     required this.tkLabel,
     required this.idxList,
     required this.tprMax,
@@ -77,7 +70,6 @@ class RelicSetFilter {
     this.treeGraph1,
     this.treeGraph2,
   });
-  final FILTER_TYPE type; // used to build UI around this filter
   final String tkLabel;
 
   /// List of indexes to original relic list to display a full or
@@ -97,6 +89,8 @@ class RelicSetFilter {
   /// If [FILTER_TYPE.Tree], must specify treeGraph1 and optionally treeGraph2.
   final Graph? treeGraph1;
   final Graph? treeGraph2;
+
+  bool get isTreeFilter => treeGraph1 != null || treeGraph2 != null;
 
   /// Tells if [RelicSetUI] should show -/+ buttons:
   bool get isResizeable => tprMin != tprMax; // TODO needed?

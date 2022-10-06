@@ -1846,7 +1846,6 @@ final List<Prophet> relicsProphet = [
 
 List<RelicSetFilter> relicSetFiltersProphet = [
   RelicSetFilter(
-    type: FILTER_TYPE.IdxList,
     tkLabel: 'a.Nabi',
     idxList: List.generate(
       relicsProphet.length,
@@ -1855,7 +1854,6 @@ List<RelicSetFilter> relicSetFiltersProphet = [
     tprMax: relicsProphet.length,
   ),
   RelicSetFilter(
-    type: FILTER_TYPE.IdxList,
     tkLabel: 'a.Rasul',
     idxList: [
       PF.Adam.index,
@@ -1878,7 +1876,6 @@ List<RelicSetFilter> relicSetFiltersProphet = [
     tprMax: relicsProphet.length,
   ),
   RelicSetFilter(
-    type: FILTER_TYPE.IdxList,
     tkLabel: 'a.Ulu Al-Azm',
     idxList: [
       PF.Nuh.index,
@@ -1890,7 +1887,6 @@ List<RelicSetFilter> relicSetFiltersProphet = [
     tprMax: relicsProphet.length,
   ),
   RelicSetFilter(
-    type: FILTER_TYPE.IdxList,
     tkLabel: 'Quran Name Mentions',
     field: FILTER_FIELD.QuranMentionCount,
     idxList: [
@@ -1923,7 +1919,6 @@ List<RelicSetFilter> relicSetFiltersProphet = [
     tprMax: relicsProphet.length,
   ),
   RelicSetFilter(
-    type: FILTER_TYPE.Tree,
     tkLabel: 'Family Tree',
     idxList: List.generate(
       relicsProphet.length,

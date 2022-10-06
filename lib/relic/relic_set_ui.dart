@@ -33,7 +33,7 @@ class RelicSetUI extends StatelessWidget {
     filter = filters[newIdx];
     tpr = RelicC.to.getTilesPerRow(relicSet.eventType, newIdx);
 
-    if (filter.type == FILTER_TYPE.Tree) {
+    if (filter.isTreeFilter) {
       MenuC.to.pushSubPage(SubPage.Family_Tree, arguments: {
         'graph1': filter.treeGraph1,
         'graph2': filter.treeGraph2,
@@ -131,13 +131,7 @@ class RelicSetUI extends StatelessWidget {
       menuMaxHeight: 700.0,
       borderRadius: BorderRadius.circular(AppThemes.cornerRadius),
       underline: Container(height: 0),
-      onChanged: (int? newValue) {
-        _updateFilter(newValue!);
-
-        // updateOnThread1Ms() after RelicC.setFilterIdx() is OK, so don't need:
-        //   Needed to reflect dropdown menu selection on UI:
-        //   WidgetsBinding.instance.addPostFrameCallback((_) => RelicC.to.update());
-      },
+      onChanged: (int? newValue) => _updateFilter(newValue!),
       items: List<int>.generate(relicSet.filterList.length, (i) => i)
           .map<DropdownMenuItem<int>>(
         (int value) {
@@ -287,7 +281,7 @@ class RelicSetUI extends StatelessWidget {
         child: Column(
           children: [
             Container(
-              // color: AppThemes.ajrColorsByIdx[Random().nextInt(7)],
+//            color: AppThemes.ajrColorsByIdx[Random().nextInt(7)],
               color: AppThemes.ajrColorsByIdx[relic.ajrLevel],
               child: SizedBox(
                 width: wTile,
