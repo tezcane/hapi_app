@@ -118,8 +118,8 @@ class ThumbnailDetailWidget extends StatelessWidget {
 
   _goToEventDetailsOfTarikh() {
     MenuC.to.pushSubPage(SubPage.Event_Details, arguments: {
-      'eventType': EVENT.Incident,
-      'eventMap': EventC.to.getEventMap(EVENT.Incident),
+      'eventType': EVENT.Tarikh,
+      'eventMap': EventC.to.getEventMap(EVENT.Tarikh),
       'saveTag': event.saveTag,
     });
   }

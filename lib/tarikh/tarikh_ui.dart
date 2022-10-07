@@ -32,7 +32,7 @@ class TarikhUI extends StatelessWidget {
         // do here to save memory:
         final List<BottomBarItem> bottomBarItems = [
           BottomBarItem(
-            const EventFavoriteUI(EVENT.Incident, navPage),
+            const EventFavoriteUI(EVENT.Tarikh, navPage),
             null,
             'Favorites'.tr,
             at('at.{0} Favorites', [navPage.tk]),

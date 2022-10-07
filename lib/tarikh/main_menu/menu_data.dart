@@ -56,7 +56,8 @@ class MenuItemData {
 
     double start = 0;
     double end = 0;
-    if (event.eventType == EVENT.Era) {
+    if (event.isEra) {
+      // == EVENT.Era) { TODO tune this code around centering things on timeline
       start = event.startMs;
       end = event.endMs;
     } else {

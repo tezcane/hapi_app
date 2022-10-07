@@ -74,8 +74,7 @@ class Nabi extends FamilyTree {
   final AQ? aqRasul; // Messenger (rasūl) رَسُول
   final String? tvKitab;
   final List<AQ>? aqUluAlAzmList; // Archprophet (ʾUlu Al-'Azm)
-  final List<List<AQ>>?
-      aqInDescriptionLists; // Quran verses to put in description
+  final List<List<AQ>>? aqInDescriptionLists; // verses to put in description
   final String? tvLocationBirth;
   final String? tvLocationDeath;
   final String? tvTomb;

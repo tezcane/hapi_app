@@ -12,7 +12,7 @@ import 'package:hapi/tarikh/timeline/timeline_render_widget.dart';
 import 'package:hapi/tarikh/timeline/timeline_utils.dart';
 
 typedef ShowMenuCallback = Function();
-typedef SelectItemCallback = Function(Event item);
+typedef SelectItemCallback = Function(Event event);
 
 /// This is the Stateful Widget associated with the Timeline object.
 /// It is built from a [focusItem], that is the event the [Timeline] should
@@ -73,7 +73,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     if (widget.event == null) {
       // lookup event manually since not provided on init
       widget.event =
-          EventC.to.getEventMap(EVENT.Incident)[widget.focusItem.saveTag];
+          EventC.to.getEventMap(EVENT.Tarikh)[widget.focusItem.saveTag];
 
       // We need event just to update down/up past/future btns. Since it wasn't
       // used/available/wanted? by the original caller to this class, we ignore
@@ -189,8 +189,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
         // stop rendering here, menu controller re-enables it
         TarikhC.to.isActiveTimeline = false;
         MenuC.to.pushSubPage(SubPage.Event_Details, arguments: {
-          'eventType': EVENT.Incident,
-          'eventMap': EventC.to.getEventMap(EVENT.Incident),
+          'eventType': EVENT.Tarikh,
+          'eventMap': EventC.to.getEventMap(EVENT.Tarikh),
           'saveTag': _touchedBubble!.event.saveTag,
         });
 

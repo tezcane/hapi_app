@@ -142,7 +142,7 @@ class TarikhC extends GetxHapi {
       tih._timeMax,
     );
 
-    Event event = EventC.to.getEventList(EVENT.Incident).first;
+    Event event = EventC.to.getEventList(EVENT.Tarikh).first;
     t.setViewport(
       start: event.startMs * 2.0,
       end: event.startMs,
@@ -160,8 +160,7 @@ class TarikhC extends GetxHapi {
   bool get isGutterModeOff => _gutterMode == GutterMode.OFF;
   bool get isGutterModeFav => _gutterMode == GutterMode.FAV;
   bool get isGutterModeAll => _gutterMode == GutterMode.ALL;
-  bool get isGutterFavEmpty =>
-      EventC.to.getEventListFav(EVENT.Incident).isEmpty;
+  bool get isGutterFavEmpty => EventC.to.getEventListFav(EVENT.Tarikh).isEmpty;
 
   /// Updates text around time button, no event is set
   void updateTimeBtn(
@@ -255,13 +254,12 @@ class TimelineInitHandler {
       /// Some events will have a `start` element, but not an `end` specified.
       /// These events specify a particular event such as the appearance of
       /// "Humans" in history, which hasn't come to an end yet.
-      EVENT eventType;
+      bool isEra = false;
       double startMs;
       if (td.date != null) {
-        eventType = EVENT.Incident;
         startMs = td.date!;
       } else {
-        eventType = EVENT.Era;
+        isEra = true;
         startMs = td.start!;
       }
 
@@ -273,8 +271,7 @@ class TimelineInitHandler {
       double endMs;
       if (td.end != null) {
         endMs = td.end!;
-      } else if (eventType == EVENT.Era) {
-        // TODO where timeline eras stretch to future?
+      } else if (isEra) {
         endMs = (await TimeC.to.now()).year.toDouble() * 10.0;
       } else {
         endMs = startMs;
@@ -318,7 +315,7 @@ class TimelineInitHandler {
 
       /// Finally create Event object
       Event event = Event(
-        eventType: eventType,
+        eventType: EVENT.Tarikh,
         tkEra: td.tkEra ?? '',
         tkTitle: td.tkTitle,
         startMs: startMs,
@@ -395,7 +392,7 @@ class TimelineInitHandler {
       Event? parent;
       double minDistance = double.maxFinite;
       for (Event checkEvent in eventsTarikh) {
-        if (checkEvent.eventType == EVENT.Era) {
+        if (checkEvent.isEra) {
           double distance = event.startMs - checkEvent.startMs;
           double distanceEnd = event.startMs - checkEvent.endMs;
           if (distance > 0 && distanceEnd < 0 && distance < minDistance) {

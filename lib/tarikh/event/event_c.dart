@@ -36,7 +36,7 @@ class EventC extends GetxHapi {
     }
 
     // events initialized so we can init favorites now
-    _initFavorites(EVENT.Incident);
+    _initFavorites(EVENT.Tarikh);
     _initFavorites(EVENT.Nabi);
 
     // initialize the SearchManager
@@ -92,13 +92,6 @@ class EventC extends GetxHapi {
     update(); // favorites changed so notify people using it
   }
 
-  /// Sort so Tarikh UI's gutter show favorites in order
-  _sortTarikhFavorites(EVENT eventType, List<Event> favList) {
-    if (eventType == EVENT.Incident || eventType == EVENT.Era) {
-      favList.sort((Event a, Event b) => a.startMs.compareTo(b.startMs));
-    }
-  }
-
   /// Save [e] into the list, re-sort it, and store to disk.
   addFavorite(EVENT eventType, Event event) {
     final Map<String, Event> favMap = getEventMapFav(eventType);
@@ -109,7 +102,10 @@ class EventC extends GetxHapi {
       favList.add(event);
       favMap[saveTag] = event;
 
-      _sortTarikhFavorites(eventType, favList); // does eventType check inside
+      // Sort so Tarikh UI's gutter show favorites in order
+      if (eventType == EVENT.Tarikh) {
+        favList.sort((Event a, Event b) => a.startMs.compareTo(b.startMs));
+      }
 
       _saveFavorites(eventType);
     }
@@ -131,12 +127,12 @@ class EventC extends GetxHapi {
   /// Force static translations to update, i.e. Tarikh Bubble/Fav/Search text.
   /// Do async so we don't slow app
   reinitAllEventsTexts() async {
-    for (Event event in getEventList(EVENT.Incident)) {
-      event.reinitBubbleText();
+    for (Event event in getEventList(EVENT.Tarikh)) {
+      event.reinitTranslationTexts();
     }
     for (Event event in getEventList(EVENT.Nabi)) {
       if (event.isTimeLineEvent) continue; // already updated in first loop
-      event.reinitBubbleText();
+      event.reinitTranslationTexts();
     }
   }
 }

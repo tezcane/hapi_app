@@ -13,7 +13,10 @@ import 'package:hapi/tarikh/event/event_asset.dart';
 /// Name is used to init relics, get tk keys to translate, used to index
 /// the database maps storing ajrLevels, etc.
 ///
-/// NOTE: After adding an EVENT, you must update the [EnumUtil] extension.
+/// NOTE: After adding an EVENT, you must update:
+///   - EnumUtil extension
+///   - pubspec.yaml asset entry, e.g.: assets/i18n/event/<eventType>/
+///   - update_localizations.dart should be good to go (auto looks for tr files)
 enum EVENT {
   /// From here on are Relics:
   /// Each relic subsection/RelicSet (e.g. Ummah->Prophet) needs to have a
@@ -56,16 +59,15 @@ enum EVENT {
 //   Mamluk,
 //   Ottoman,
 
-  /// Originally from timeline.json data, put last to not throw off DB indexes
-  Era, // spans a time-span (uses start and end in input)
-  Incident, // Single event/incident in history (uses "date" in input)
+  /// Originally from timeline.json, last as above is used for ajrLevel DB index
+  Tarikh, // Single event/incident in history (uses "date" in input)
 }
 
 extension EnumUtil on EVENT {
   String get tkRelicSetTitle => tkArabeeIsim; // name of EVENT is "a." title
-  String get trPath => isRelic ? 'r/' : 't/';
+  String get trPath => 'event/${isim.toLowerCase()}/';
 
-  bool get isRelic => index < EVENT.Era.index;
+  bool get isRelic => index < EVENT.Tarikh.index;
 
   List<Relic> initRelics() {
     switch (this) {
@@ -73,8 +75,7 @@ extension EnumUtil on EVENT {
         return relicsNabi;
       case EVENT.Surah:
         return relicsSurah;
-      case EVENT.Era:
-      case EVENT.Incident:
+      case EVENT.Tarikh:
         return l.E('$name is not a relic');
     }
   }
@@ -85,8 +86,7 @@ extension EnumUtil on EVENT {
         return relicSetFiltersNabi;
       case EVENT.Surah:
         return relicSetFiltersSurah;
-      case EVENT.Era:
-      case EVENT.Incident:
+      case EVENT.Tarikh:
         return l.E('$name is not a relic');
     }
   }
@@ -106,8 +106,10 @@ class Event {
     this.endMenu,
     required this.accent,
   }) {
+    isEra = startMs != endMs && endMs != 0; // TODO tune
+
     saveTag = '${tkTitle}_${eventType.index}'; // Relics names not unique->Hud
-    reinitBubbleText();
+    reinitTranslationTexts();
   }
   final EVENT eventType;
   final String tkEra;
@@ -117,6 +119,9 @@ class Event {
   final double? startMenu; // use these when menu->timeline doesn't show well
   final double? endMenu;
   final Color? accent; // not always given in json input file, thus nullable
+
+  /// Era, spans a time-span (uses start and end in input)
+  late final bool isEra;
 
   /// Favorites may have same name (e.g. Muhammad in Prophets and Surah name) so
   /// we must give a more unique name for each event so we can save favorites or
@@ -138,7 +143,7 @@ class Event {
   /// changes.
   ///
   /// NOTE: If in landscape mode, no need to put the text on two lines (I hope).
-  reinitBubbleText() {
+  reinitTranslationTexts() {
     List<String> lines = tvGetTitleLines(22, 44, false, null); // null=force tr
     tvTitleLine1 = lines[0];
     tvTitleLine2 = lines[1];

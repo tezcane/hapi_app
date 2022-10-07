@@ -512,7 +512,7 @@ class Timeline {
     _prevEvent = null;
 
     /// Advance the items hierarchy one level at a time.
-    if (_advanceItems(
+    if (_advanceEvents(
         _rootEvents, _gutterWidth + LineSpacing, scale, elapsed, animate, 0)) {
       doneRendering = false;
     }
@@ -599,16 +599,21 @@ class Timeline {
       ((event.isBubbleTextThick ? 2 : 1) * BubbleTextHeight);
 
   /// Advance event [assets] with the current [elapsed] time.
-  bool _advanceItems(List<Event> items, double x, double scale, double elapsed,
-      bool animate, int depth) {
+  bool _advanceEvents(
+    List<Event> events,
+    double x,
+    double scale,
+    double elapsed,
+    bool animate,
+    int depth,
+  ) {
     bool stillAnimating = false;
     double lastEnd = -double.maxFinite;
-    for (int i = 0; i < items.length; i++) {
-      Event item = items[i];
+    for (int i = 0; i < events.length; i++) {
+      Event event = events[i];
 
-      double start = item.startMs - _renderStart;
-      double end =
-          item.eventType == EVENT.Era ? item.endMs - _renderStart : start;
+      double start = event.startMs - _renderStart;
+      double end = event.isEra ? event.endMs - _renderStart : start;
 
       /// Vertical position for this element.
       double y = start * scale; // +pad;
@@ -621,16 +626,16 @@ class Timeline {
       /// Update the reference to the last found element.
       lastEnd = endY;
 
-      item.length = endY - y;
+      event.length = endY - y;
 
       /// Calculate the best location for the bubble/label.
       double targetLabelY = y;
-      double itemBubbleHeight = bubbleHeight(item);
+      double itemBubbleHeight = bubbleHeight(event);
       double fadeAnimationStart = itemBubbleHeight + BubblePadding / 2.0;
       if (targetLabelY - _lastEventY < fadeAnimationStart &&
           // The best location for our label is occluded, lets see if we can
           // bump it forward...
-          item.eventType == EVENT.Era &&
+          event.isEra &&
           _lastEventY + fadeAnimationStart < endY) {
         targetLabelY = _lastEventY + fadeAnimationStart + 0.5;
       }
@@ -640,72 +645,72 @@ class Timeline {
           targetLabelY - _lastEventY < fadeAnimationStart ? 0.0 : 1.0;
 
       /// Debounce labels becoming visible.
-      if (targetLabelOpacity > 0.0 && item.targetLabelOpacity != 1.0) {
-        item.delayLabel = 0.5;
+      if (targetLabelOpacity > 0.0 && event.targetLabelOpacity != 1.0) {
+        event.delayLabel = 0.5;
       }
-      item.targetLabelOpacity = targetLabelOpacity;
-      if (item.delayLabel > 0.0) {
+      event.targetLabelOpacity = targetLabelOpacity;
+      if (event.delayLabel > 0.0) {
         targetLabelOpacity = 0.0;
-        item.delayLabel -= elapsed;
+        event.delayLabel -= elapsed;
         stillAnimating = true;
       }
 
-      double dt = targetLabelOpacity - item.labelOpacity;
+      double dt = targetLabelOpacity - event.labelOpacity;
       if (!animate || dt.abs() < 0.01) {
-        item.labelOpacity = targetLabelOpacity;
+        event.labelOpacity = targetLabelOpacity;
       } else {
         stillAnimating = true;
-        item.labelOpacity += dt * min(1.0, elapsed * 25.0);
+        event.labelOpacity += dt * min(1.0, elapsed * 25.0);
       }
 
       /// Assign current vertical position.
-      item.y = y;
-      item.endY = endY;
+      event.y = y;
+      event.endY = endY;
 
-      double targetLegOpacity = item.length > EdgeRadius ? 1.0 : 0.0;
-      double dtl = targetLegOpacity - item.legOpacity;
+      double targetLegOpacity = event.length > EdgeRadius ? 1.0 : 0.0;
+      double dtl = targetLegOpacity - event.legOpacity;
       if (!animate || dtl.abs() < 0.01) {
-        item.legOpacity = targetLegOpacity;
+        event.legOpacity = targetLegOpacity;
       } else {
         stillAnimating = true;
-        item.legOpacity += dtl * min(1.0, elapsed * 20.0);
+        event.legOpacity += dtl * min(1.0, elapsed * 20.0);
       }
 
-      double targetItemOpacity = item.parent != null
-          ? item.parent!.length < MinChildLength ||
-                  (item.parent != null && item.parent!.endY < y)
+      double targetItemOpacity = event.parent != null
+          ? event.parent!.length < MinChildLength ||
+                  (event.parent != null && event.parent!.endY < y)
               ? 0.0
-              : y > item.parent!.y
+              : y > event.parent!.y
                   ? 1.0
                   : 0.0
           : 1.0;
-      dtl = targetItemOpacity - item.opacity;
+      dtl = targetItemOpacity - event.opacity;
       if (!animate || dtl.abs() < 0.01) {
-        item.opacity = targetItemOpacity;
+        event.opacity = targetItemOpacity;
       } else {
         stillAnimating = true;
-        item.opacity += dtl * min(1.0, elapsed * 20.0);
+        event.opacity += dtl * min(1.0, elapsed * 20.0);
       }
 
       /// Animate the label position.
-      double targetLabelVelocity = targetLabelY - item.labelY;
-      double dvy = targetLabelVelocity - item.labelVelocity;
+      double targetLabelVelocity = targetLabelY - event.labelY;
+      double dvy = targetLabelVelocity - event.labelVelocity;
       if (dvy.abs() > _height) {
-        item.labelY = targetLabelY;
-        item.labelVelocity = 0.0;
+        event.labelY = targetLabelY;
+        event.labelVelocity = 0.0;
       } else {
-        item.labelVelocity += dvy * elapsed * 18.0;
-        item.labelY += item.labelVelocity * elapsed * 20.0;
+        event.labelVelocity += dvy * elapsed * 18.0;
+        event.labelY += event.labelVelocity * elapsed * 20.0;
       }
 
       /// Check the final position has been reached, otherwise raise a flag.
       if (animate &&
-          (item.labelVelocity.abs() > 0.01 ||
+          (event.labelVelocity.abs() > 0.01 ||
               targetLabelVelocity.abs() > 0.01)) {
         stillAnimating = true;
       }
 
-      if (item.targetLabelOpacity > 0.0) {
+      if (event.targetLabelOpacity > 0.0) {
         _lastEventY = targetLabelY;
         if (_lastEventY < _height && _lastEventY > devicePadding.top) {
           _lastOnScreenEventY = _lastEventY;
@@ -715,31 +720,28 @@ class Timeline {
         }
       }
 
-      if (item.eventType == EVENT.Era &&
-          y < 0 &&
-          endY > _height &&
-          depth > _offsetDepth) {
+      if (event.isEra && y < 0 && endY > _height && depth > _offsetDepth) {
         _offsetDepth = depth.toDouble();
       }
 
       /// A new era is currently in view.
-      if (item.eventType == EVENT.Era && y < 0 && endY > _height / 2.0) {
-        _currentEra = item;
+      if (event.isEra && y < 0 && endY > _height / 2.0) {
+        _currentEra = event;
       }
 
       /// Check if the bubble is out of view and set the y position to the
       /// target one directly.
       if (y > _height + itemBubbleHeight) {
-        item.labelY = y;
+        event.labelY = y;
         if (_nextEvent == null) {
-          _nextEvent = item;
+          _nextEvent = event;
           _distanceToNextEvent = (y - _height) / _height;
         }
       } else if (endY < devicePadding.top) {
-        _prevEvent = item;
+        _prevEvent = event;
         _distanceToPrevEvent = ((y - _height) / _height).abs();
       } else if (endY < -itemBubbleHeight) {
-        item.labelY = y;
+        event.labelY = y;
       }
 
       double lx = x + LineSpacing + LineSpacing;
@@ -747,9 +749,9 @@ class Timeline {
         _labelX = lx;
       }
 
-      if (item.children != null && item.isVisible) {
+      if (event.children != null && event.isVisible) {
         /// Advance the rest of the hierarchy.
-        if (_advanceItems(item.children!, x + LineSpacing + LineWidth, scale,
+        if (_advanceEvents(event.children!, x + LineSpacing + LineWidth, scale,
             elapsed, animate, depth + 1)) {
           stillAnimating = true;
         }
@@ -792,54 +794,54 @@ class Timeline {
     return Color.fromARGB(a.round(), r.round(), g.round(), b.round());
   }
 
-  /// Advance asset [items] with the [elapsed] time. Calls itself recursively
+  /// Advance asset [events] with the [elapsed] time. Calls itself recursively
   /// to process all of a parent's root and its children.
-  bool _advanceAssets(List<Event> items, double elapsed, bool animate,
+  bool _advanceAssets(List<Event> events, double elapsed, bool animate,
       List<EventAsset> renderedAssets) {
     bool stillAnimating = false;
-    for (Event item in items) {
-      double y = item.labelY;
+    for (Event event in events) {
+      double y = event.labelY;
       double halfHeight = _height / 2.0;
       double thresholdAssetY = y + ((y - halfHeight) / halfHeight) * Parallax;
       double targetAssetY =
-          thresholdAssetY - item.asset.height * AssetScreenScale / 2.0;
+          thresholdAssetY - event.asset.height * AssetScreenScale / 2.0;
 
       /// Determine if the current event is visible or not.
       double targetAssetOpacity =
           (thresholdAssetY - _lastAssetY < 0 ? 0.0 : 1.0) *
-              item.opacity *
-              item.labelOpacity;
+              event.opacity *
+              event.labelOpacity;
 
       /// Debounce asset becoming visible.
-      if (targetAssetOpacity > 0.0 && item.targetAssetOpacity != 1.0) {
-        item.delayAsset = 0.25;
+      if (targetAssetOpacity > 0.0 && event.targetAssetOpacity != 1.0) {
+        event.delayAsset = 0.25;
       }
-      item.targetAssetOpacity = targetAssetOpacity;
-      if (item.delayAsset > 0.0) {
+      event.targetAssetOpacity = targetAssetOpacity;
+      if (event.delayAsset > 0.0) {
         /// If this item has been debounced, update it's debounce time.
         targetAssetOpacity = 0.0;
-        item.delayAsset -= elapsed;
+        event.delayAsset -= elapsed;
         stillAnimating = true;
       }
 
       /// Determine if the event needs to be scaled.
       double targetScale = targetAssetOpacity;
-      double targetScaleVelocity = targetScale - item.asset.scale;
+      double targetScaleVelocity = targetScale - event.asset.scale;
       if (!animate || targetScale == 0) {
-        item.asset.scaleVelocity = targetScaleVelocity;
+        event.asset.scaleVelocity = targetScaleVelocity;
       } else {
-        double dvy = targetScaleVelocity - item.asset.scaleVelocity;
-        item.asset.scaleVelocity += dvy * elapsed * 18.0;
+        double dvy = targetScaleVelocity - event.asset.scaleVelocity;
+        event.asset.scaleVelocity += dvy * elapsed * 18.0;
       }
 
-      item.asset.scale += item.asset.scaleVelocity * elapsed * 20.0;
+      event.asset.scale += event.asset.scaleVelocity * elapsed * 20.0;
       if (animate &&
-          (item.asset.scaleVelocity.abs() > 0.01 ||
+          (event.asset.scaleVelocity.abs() > 0.01 ||
               targetScaleVelocity.abs() > 0.01)) {
         stillAnimating = true;
       }
 
-      EventAsset asset = item.asset;
+      EventAsset asset = event.asset;
       if (asset.opacity == 0.0) {
         /// Item was invisible, just pop it to the right place and stop velocity.
         asset.y = targetAssetY;
@@ -939,16 +941,16 @@ class Timeline {
           }
 
           /// Add this asset to the list of rendered assets.
-          renderedAssets.add(item.asset);
+          renderedAssets.add(event.asset);
         }
       } else {
         /// [item] is not visible.
-        item.asset.y = max(_lastAssetY, targetAssetY);
+        event.asset.y = max(_lastAssetY, targetAssetY);
       }
 
-      if (item.children != null && item.isVisible) {
+      if (event.children != null && event.isVisible) {
         /// Proceed down the hierarchy. Recursive call back into this method.
-        if (_advanceAssets(item.children!, elapsed, animate, renderedAssets)) {
+        if (_advanceAssets(event.children!, elapsed, animate, renderedAssets)) {
           stillAnimating = true;
         }
       }
