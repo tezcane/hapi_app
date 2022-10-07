@@ -116,8 +116,10 @@ flutter:
   assets:
     - assets/i18n/
     - assets/i18n/a/
-    - assets/i18n/r/
-    - assets/i18n/t/
+    - assets/i18n/relic/
+    - assets/i18n/relic/nabi
+    - assets/i18n/relic/surah
+    - assets/i18n/tarikh/
     - assets/images/
     - assets/images/Allah/
     - assets/images/anbiya/
