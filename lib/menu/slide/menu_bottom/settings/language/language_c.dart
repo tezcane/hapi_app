@@ -262,7 +262,7 @@ class LanguageC extends GetxHapi {
 
       // language changed so we must change filter language too
       SearchManager.init(NavPage.Tarikh, EventC.to.getEventList(EVENT.Era));
-      SearchManager.init(NavPage.Relics, EventC.to.getEventList(EVENT.Anbiya));
+      SearchManager.init(NavPage.Relics, EventC.to.getEventList(EVENT.Nabi));
     }
     initNeeded = false;
   }

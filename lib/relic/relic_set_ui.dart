@@ -6,7 +6,7 @@ import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_c.dart';
-import 'package:hapi/relic/ummah/prophet.dart';
+import 'package:hapi/relic/ummah/nabi.dart';
 
 /// An entire tab (tab and tile labels, relics, filters, etc.). Uses the
 /// RelicSet object found in relic.dart.
@@ -240,7 +240,7 @@ class RelicSetUI extends StatelessWidget {
     if (hasField) {
       switch (filterField) {
         case FILTER_FIELD.QuranMentionCount:
-          field = cni((relic as Prophet).quranMentionCount);
+          field = cni((relic as Nabi).quranMentionCount);
           break;
         default:
           return l.E('${filterField.name} not implemented yet');

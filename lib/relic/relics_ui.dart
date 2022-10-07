@@ -34,7 +34,7 @@ class RelicsUI extends StatelessWidget {
       // do here to save memory:
       final List<BottomBarItem> bottomBarItems = [
         BottomBarItem(
-          const EventFavoriteUI(EVENT.Anbiya, navPage),
+          const EventFavoriteUI(EVENT.Nabi, navPage),
           null,
           'Favorites'.tr,
           at('at.{0} Favorites', [navPage.tk]),
@@ -76,10 +76,8 @@ class RelicsUI extends StatelessWidget {
           const RelicTabBar(
             relicTab: RELIC_TAB.Ummah,
             eventTypes: [
-              EVENT.Anbiya,
+              EVENT.Nabi,
               EVENT.Surah,
-              // RELIC_TYPE.Quran_AlAnbiya,
-              // RELIC_TYPE.Quran_AlAnbiya,
             ],
           ),
           null,

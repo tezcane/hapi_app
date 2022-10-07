@@ -9,7 +9,7 @@ import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_c.dart';
 import 'package:hapi/relic/relic_set_ui.dart';
-import 'package:hapi/relic/ummah/prophet.dart';
+import 'package:hapi/relic/ummah/nabi.dart';
 import 'package:hapi/tarikh/event/event.dart';
 
 /// Shows a Family Tree SubPage.
@@ -235,7 +235,8 @@ class FamilyTreeUI extends StatelessWidget {
           ],
         ),
 //      child: T('$relicIdx ${PF.values[relicIdx].name}', tsN, w: wTile, h: hText),
-        child: T(PF.values[relicIdx].name, tsN, w: wTile, h: hText),
+        // TODO remove AS dependency:
+        child: T(AS.values[relicIdx].name, tsN, w: wTile, h: hText),
       ),
     );
   }

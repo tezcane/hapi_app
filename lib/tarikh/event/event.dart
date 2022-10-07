@@ -6,7 +6,7 @@ import 'package:hapi/controller/time_c.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/surah/surah.dart';
-import 'package:hapi/relic/ummah/prophet.dart';
+import 'package:hapi/relic/ummah/nabi.dart';
 import 'package:hapi/tarikh/event/event_asset.dart';
 
 /// Tell certain UIs (Timeline/Relic views) what type(s) of events to use. This
@@ -21,7 +21,7 @@ enum EVENT {
 
 //   // LEADERS
 //   Al_Asma_ul_Husna, // اَلاسْمَاءُ الْحُسناى TODO all names mentioned in Quran? AsmaUlHusna - 99 names of allah
-  Anbiya, // Prophets TODO non-Quran mentioned prophets
+  Nabi, // Prophets TODO non-Quran mentioned prophets
 //   Muhammad, // Laqab, Family Tree here?
 //   Righteous, // People: Mentioned in Quran/possible prophets/Sahabah/Promised Jannah
 //
@@ -69,8 +69,8 @@ extension EnumUtil on EVENT {
 
   List<Relic> initRelics() {
     switch (this) {
-      case EVENT.Anbiya:
-        return relicsProphet;
+      case EVENT.Nabi:
+        return relicsNabi;
       case EVENT.Surah:
         return relicsSurah;
       case EVENT.Era:
@@ -81,8 +81,8 @@ extension EnumUtil on EVENT {
 
   List<RelicSetFilter> initRelicSetFilters() {
     switch (this) {
-      case EVENT.Anbiya:
-        return relicSetFiltersProphet;
+      case EVENT.Nabi:
+        return relicSetFiltersNabi;
       case EVENT.Surah:
         return relicSetFiltersSurah;
       case EVENT.Era:

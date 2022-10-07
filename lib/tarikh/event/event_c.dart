@@ -37,7 +37,7 @@ class EventC extends GetxHapi {
 
     // events initialized so we can init favorites now
     _initFavorites(EVENT.Incident);
-    _initFavorites(EVENT.Anbiya);
+    _initFavorites(EVENT.Nabi);
 
     // initialize the SearchManager
     SearchManager.init(NavPage.Tarikh, _eventListTarikh);
@@ -134,7 +134,7 @@ class EventC extends GetxHapi {
     for (Event event in getEventList(EVENT.Incident)) {
       event.reinitBubbleText();
     }
-    for (Event event in getEventList(EVENT.Anbiya)) {
+    for (Event event in getEventList(EVENT.Nabi)) {
       if (event.isTimeLineEvent) continue; // already updated in first loop
       event.reinitBubbleText();
     }

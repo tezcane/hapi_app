@@ -10,9 +10,9 @@ import 'package:hapi/tarikh/event/event_asset.dart';
 
 const String _ = ' '; // space/gap
 
-/// Peace be upon all (SAW) the Prophets mentioned in the code.
-class Prophet extends FamilyTree {
-  Prophet({
+/// Peace be upon all (SAW) all the Anbiya/Prophets mentioned in the code.
+class Nabi extends FamilyTree {
+  Nabi({
     // Event data:
     required String tkEra,
     required double startMs,
@@ -22,18 +22,18 @@ class Prophet extends FamilyTree {
     required Enum e,
 
     // Required Fam data:
-    required List<PF> predecessors,
-    PF? dad,
-    PF? mom,
-    List<PF>? spouses,
-    List<PF>? daughters,
-    List<PF>? sons,
-    List<PF>? relatives,
+    required List<AS> predecessors,
+    AS? dad,
+    AS? mom,
+    List<AS>? spouses,
+    List<AS>? daughters,
+    List<AS>? sons,
+    List<AS>? relatives,
     List<RELATIVE>? relativesTypes,
-    List<PF>? successors, // Next Prophet(s) in lineage, for collapsed list
-    PF? successor, // Next Prophet in prophethood timeline
+    List<AS>? successors, // Next Nabi(s) in lineage, for collapsed list
+    AS? successor, // Next Nabi in prophethood timeline
 
-    // Required prophet data:
+    // Required nabi data:
     required this.tvSentTo,
     required this.quranMentionCount,
     required this.aqNabi,
@@ -46,7 +46,7 @@ class Prophet extends FamilyTree {
     this.tvTomb,
   }) : super(
           // Event data:
-          eventType: EVENT.Anbiya,
+          eventType: EVENT.Nabi,
           tkEra: tkEra,
           tkTitle: 'a.${e.isim}',
           startMs: startMs,
@@ -66,11 +66,11 @@ class Prophet extends FamilyTree {
           successors: successors,
           successor: successor,
         );
-  // Required prophet data:
+  // Required nabi data:
   final String tvSentTo; // nation the prophet was sent to:
   final int quranMentionCount;
   final AQ aqNabi; // Prophet (nabī) نَبِيّ
-  // Optional prophet data:
+  // Optional nabi data:
   final AQ? aqRasul; // Messenger (rasūl) رَسُول
   final String? tvKitab;
   final List<AQ>? aqUluAlAzmList; // Archprophet (ʾUlu Al-'Azm)
@@ -97,29 +97,29 @@ class Prophet extends FamilyTree {
   Widget get widget => throw UnimplementedError();
 }
 
-final List<Prophet> relicsProphet = [
-  Prophet(
+final List<Nabi> relicsNabi = [
+  Nabi(
     // Event data:
     tkEra: 'Intelligent Life',
     startMs: -340000,
     endMs: -339050,
     // Relic data:
-    e: PF.Adam,
+    e: AS.Adam,
     // Fam data:
     predecessors: [], // must be blank, root of the tree
     dad: null, // must leave blank for tree logic
     mom: null, // must leave blank for tree logic
-    spouses: [PF.Hawwa],
-    sons: [PF.Habel, PF.Qabel, PF.Anaq, PF.Sheth],
+    spouses: [AS.Hawwa],
+    sons: [AS.Habel, AS.Qabel, AS.Anaq, AS.Sheth],
     daughters: null, // TODO
     relatives: null,
-    successors: [PF.Idris],
-    successor: PF.Sheth,
-    // Required prophet data:
+    successors: [AS.Idris],
+    successor: AS.Sheth,
+    // Required nabi data:
     tvSentTo: 'p.Earth from Heaven'.tr + _ + cns('(4:1)'),
     quranMentionCount: 25,
     aqNabi: AQ(2, 31),
-    // Optional prophet data:
+    // Optional nabi data:
     aqRasul: AQ(2, 31),
     tvKitab: null,
     aqUluAlAzmList: null,
@@ -128,33 +128,33 @@ final List<Prophet> relicsProphet = [
     tvLocationDeath: null,
     tvTomb: null,
   ),
-  Prophet(
+  Nabi(
     // Event data:
     tkEra: 'Birth of Humans',
     startMs: 0,
     endMs: 0,
     // Relic data:
-    e: PF.Idris,
+    e: AS.Idris,
     // Fam data:
     predecessors: [
 //    PF.Adam,
-      PF.Sheth,
-      PF.Anwas,
-      PF.Qinan,
-      PF.Mahlail,
+      AS.Sheth,
+      AS.Anwas,
+      AS.Qinan,
+      AS.Mahlail,
     ],
-    dad: PF.Yarid,
+    dad: AS.Yarid,
     mom: null,
     spouses: null,
-    sons: [PF.Matulshalkh],
+    sons: [AS.Matulshalkh],
     relatives: null,
-    successors: [PF.Nuh],
-    successor: PF.Nuh,
-    // Required prophet data:
+    successors: [AS.Nuh],
+    successor: AS.Nuh,
+    // Required nabi data:
     tvSentTo: a('a.Babylon'),
     quranMentionCount: 2,
     aqNabi: AQ(19, 56),
-    // Optional prophet data:
+    // Optional nabi data:
     aqRasul: null,
     tvKitab: null,
     aqUluAlAzmList: null,
@@ -165,31 +165,31 @@ final List<Prophet> relicsProphet = [
     tvLocationDeath: 'p.Sixth Heaven'.tr,
     tvTomb: null,
   ),
-  Prophet(
+  Nabi(
     // Event data:
     tkEra: 'Great Flood',
     startMs: 0,
     endMs: 0,
     // Relic data:
-    e: PF.Nuh,
+    e: AS.Nuh,
     // Fam data:
     predecessors: [
 //    PF.Idris,
-      PF.Matulshalkh,
+      AS.Matulshalkh,
     ],
-    dad: PF.Lamik,
+    dad: AS.Lamik,
     mom: null,
-    spouses: [PF.Naamah],
+    spouses: [AS.Naamah],
     daughters: null, // TODO
-    sons: [PF.Ham, PF.Yam, PF.Yafith, PF.Sam],
+    sons: [AS.Ham, AS.Yam, AS.Yafith, AS.Sam],
     relatives: null,
-    successors: [PF.Hud, PF.Salih, PF.Ibrahim, PF.Lut],
-    successor: PF.Hud,
-    // Required prophet data:
+    successors: [AS.Hud, AS.Salih, AS.Ibrahim, AS.Lut],
+    successor: AS.Hud,
+    // Required nabi data:
     tvSentTo: 'p.The people of_'.tr + a('a.Nuh') + _ + cns('(26:105)'),
     quranMentionCount: 43,
     aqNabi: AQ(6, 89),
-    // Optional prophet data:
+    // Optional nabi data:
     aqRasul: AQ(25, 107),
     tvKitab: null,
     aqUluAlAzmList: [AQ(46, 35), AQ(33, 7)],
@@ -291,36 +291,36 @@ final List<Prophet> relicsProphet = [
     tvLocationDeath: null,
     tvTomb: null,
   ),
-  Prophet(
+  Nabi(
     // Event data:
     tkEra: 'Unknown',
     startMs: 0,
     endMs: 0,
     // Relic data:
-    e: PF.Hud,
+    e: AS.Hud,
     // Fam data:
     predecessors: [
 //    PF.Nuh,
-      PF.Sam,
-      PF.Irem,
-      PF.Aush,
-      PF.Ad,
-      PF.Khalud,
-      PF.Raya,
+      AS.Sam,
+      AS.Irem,
+      AS.Aush,
+      AS.Ad,
+      AS.Khalud,
+      AS.Raya,
     ],
-    dad: PF.Abdullah,
+    dad: AS.Abdullah,
     mom: null,
     spouses: null,
     daughters: null,
     sons: null,
     relatives: null,
     successors: null,
-    successor: PF.Salih,
-    // Required prophet data:
+    successor: AS.Salih,
+    // Required nabi data:
     tvSentTo: a('a.Ad') + _ + a('a.Tribe') + _ + cns('(7:65)'),
     quranMentionCount: 7,
     aqNabi: AQ(26, 125),
-    // Optional prophet data:
+    // Optional nabi data:
     aqRasul: AQ(26, 125),
     tvKitab: null,
     aqUluAlAzmList: null,
@@ -331,26 +331,26 @@ final List<Prophet> relicsProphet = [
         'p.Possibly in Qabr Nabi Hud, Hadhramaut, Yemen; Near the Zamzam well; south wall of the Umayyad Mosque, Damascus, Syria.'
             .tr,
   ),
-  Prophet(
+  Nabi(
     // Event data:
     tkEra: 'Unknown',
     startMs: 0,
     endMs: 0,
     // Relic data:
-    e: PF.Salih,
+    e: AS.Salih,
     // Fam data:
     predecessors: [
 //    PF.Nuh,
 //    PF.Sam,
-      PF.Irem,
-      PF.Ars,
-      PF.Samud,
-      PF.Hadzir,
-      PF.Ubayd,
-      PF.Masih,
-      PF.Auf,
+      AS.Irem,
+      AS.Ars,
+      AS.Samud,
+      AS.Hadzir,
+      AS.Ubayd,
+      AS.Masih,
+      AS.Auf,
     ],
-    dad: PF.Abir_Ubayd,
+    dad: AS.Abir_Ubayd,
     mom: null,
     spouses: null,
     daughters: null,
@@ -358,12 +358,12 @@ final List<Prophet> relicsProphet = [
     relatives: null,
     relativesTypes: null,
     successors: null,
-    successor: PF.Lut,
-    // Required prophet data:
+    successor: AS.Lut,
+    // Required nabi data:
     tvSentTo: a('a.Thamud') + _ + a('a.Tribe') + _ + cns('(7:73)'),
     quranMentionCount: 9,
     aqNabi: AQ(26, 143),
-    // Optional prophet data:
+    // Optional nabi data:
     aqRasul: AQ(26, 143),
     tvKitab: null,
     aqUluAlAzmList: null,
@@ -390,35 +390,35 @@ final List<Prophet> relicsProphet = [
     tvLocationDeath: null,
     tvTomb: "p.Possibly in Mada'in Salih or Hasik, Oman.".tr, // TODO
   ),
-  Prophet(
+  Nabi(
     // Event data:
     tkEra: 'a.Ibrahim',
     startMs: 0,
     endMs: 0,
     // Relic data:
-    e: PF.Ibrahim,
+    e: AS.Ibrahim,
     // Fam data:
     predecessors: [
 //    PF.Nuh,
-      PF.Sam,
-      PF.Arfakhshad,
-      PF.Shalikh,
-      PF.Abir,
-      PF.Falikh,
-      PF.Rau_Ergu,
-      PF.Sarukh,
-      PF.Nahur,
+      AS.Sam,
+      AS.Arfakhshad,
+      AS.Shalikh,
+      AS.Abir,
+      AS.Falikh,
+      AS.Rau_Ergu,
+      AS.Sarukh,
+      AS.Nahur,
     ],
-    dad: PF.Azar_Taruh,
-    mom: PF.Mahalath,
-    spouses: [PF.Sarah, PF.Hajar],
+    dad: AS.Azar_Taruh,
+    mom: AS.Mahalath,
+    spouses: [AS.Sarah, AS.Hajar],
     daughters: null,
-    sons: [PF.Madyan, PF.Ismail, PF.Ishaq],
-    relatives: [PF.Lut],
+    sons: [AS.Madyan, AS.Ismail, AS.Ishaq],
+    relatives: [AS.Lut],
     relativesTypes: [RELATIVE.Nephew],
-    successors: [PF.Shuayb, PF.Ismail, PF.Ishaq],
-    successor: PF.Ismail,
-    // Required prophet data:
+    successors: [AS.Shuayb, AS.Ismail, AS.Ishaq],
+    successor: AS.Ismail,
+    // Required nabi data:
     tvSentTo: a('a.Babylon') +
         ',_'.tr +
         'The people of_'.tr +
@@ -429,7 +429,7 @@ final List<Prophet> relicsProphet = [
         cns('(22:43)'),
     quranMentionCount: 69,
     aqNabi: AQ(19, 41),
-    // Optional prophet data:
+    // Optional nabi data:
     aqRasul: AQ(9, 70),
     tvKitab: 'p.Scrolls of_'.tr + a('a.Ibrahim') + _ + cns('(87:19)'),
     // qvsUluAlAzm: [QV(2, 124)],
@@ -597,37 +597,37 @@ final List<Prophet> relicsProphet = [
         a('a.Bilad al-Sham'), // Greater Syria لبِلَاد الشَّام
     tvTomb: 'p.Ibrahimi Mosque, Hebron'.tr,
   ),
-  Prophet(
+  Nabi(
     // Event data:
     tkEra: 'a.Ibrahim',
     startMs: 0,
     endMs: 0,
     // Relic data:
-    e: PF.Lut,
+    e: AS.Lut,
     // Fam data:
     predecessors: [
 //    PF.Nuh,
 //    PF.Sam,
-      PF.Arfakhshad,
-      PF.Shalikh,
-      PF.Abir,
-      PF.Falikh,
-      PF.Rau_Ergu,
-      PF.Sarukh,
-      PF.Nahur,
+      AS.Arfakhshad,
+      AS.Shalikh,
+      AS.Abir,
+      AS.Falikh,
+      AS.Rau_Ergu,
+      AS.Sarukh,
+      AS.Nahur,
     ],
-    dad: PF.Haran,
+    dad: AS.Haran,
     mom: null,
     spouses: null,
     // TODO Possibly had 2+ daughters, but the daughters referenced in the
     //  Quran could also mean the women of his nation:
     daughters: null,
     sons: null,
-    relatives: [PF.Ibrahim, PF.Ayyub, PF.Shuayb],
+    relatives: [AS.Ibrahim, AS.Ayyub, AS.Shuayb],
     relativesTypes: [RELATIVE.Uncle, RELATIVE.Grandson, RELATIVE.Grandson],
     successors: null,
-    successor: PF.Ibrahim,
-    // Required prophet data:
+    successor: AS.Ibrahim,
+    // Required nabi data:
     tvSentTo: a('a.Saddoom') + // سدوم Sodom
         '_and_'.tr +
         a("a.'Amoorah") + //  عمورة Gomorrah
@@ -635,7 +635,7 @@ final List<Prophet> relicsProphet = [
         cns('(7:80)'), // TODO arabee
     quranMentionCount: 27,
     aqNabi: AQ(6, 86),
-    // Optional prophet data:
+    // Optional nabi data:
     aqRasul: AQ(37, 133),
     tvKitab: null,
     aqUluAlAzmList: null,
@@ -645,32 +645,32 @@ final List<Prophet> relicsProphet = [
         "a.Bani Na'im"), //  بني نعيم  Palestinian town in the southern West Bank located 8 kilometers (5.0 mi) east of Hebron.
     tvTomb: null,
   ),
-  Prophet(
+  Nabi(
     // Event data:
     tkEra: 'a.Ibrahim',
     startMs: 0, //-1800, TODO must be younger than Yusuf!
     endMs: 0, //-1664,
     // Relic data:
-    e: PF.Ismail,
+    e: AS.Ismail,
     // Fam data:
     predecessors: [], // must be blank, Father->Son used to build tree
-    dad: PF.Ibrahim,
-    mom: PF.Hajar,
+    dad: AS.Ibrahim,
+    mom: AS.Hajar,
     spouses: null,
     daughters: null,
     sons: null,
-    relatives: [PF.Ishaq],
+    relatives: [AS.Ishaq],
     relativesTypes: [RELATIVE.HalfBrother],
-    successors: [PF.Muhammad],
-    successor: PF.Ishaq,
-    // Required prophet data:
+    successors: [AS.Muhammad],
+    successor: AS.Ishaq,
+    // Required nabi data:
     tvSentTo: 'p.Pre-Islamic_' +
         a('a.Al-Arabiyyah') +
         ',_'.tr +
         a('a.Makkah al-Mukarramah'),
     quranMentionCount: 12,
     aqNabi: AQ(19, 54),
-    // Optional prophet data:
+    // Optional nabi data:
     aqRasul: AQ(19, 54),
     tvKitab: null,
     aqUluAlAzmList: null,
@@ -682,31 +682,31 @@ final List<Prophet> relicsProphet = [
         a('a.Makkah al-Mukarramah'), // Mecca مكة المكرمة 'Makkah the Noble',
     tvTomb: null,
   ),
-  Prophet(
+  Nabi(
     // Event data:
     tkEra: 'a.Ibrahim',
     startMs: 0,
     endMs: 0,
     // Relic data:
-    e: PF.Ishaq,
+    e: AS.Ishaq,
     // Fam data:
     predecessors: [],
-    dad: PF.Ibrahim,
-    mom: PF.Sarah,
-    spouses: [PF.Rafeqa],
+    dad: AS.Ibrahim,
+    mom: AS.Sarah,
+    spouses: [AS.Rafeqa],
     daughters: null,
-    sons: [PF.Yaqub, PF.Isu],
-    relatives: [PF.Ismail],
+    sons: [AS.Yaqub, AS.Isu],
+    relatives: [AS.Ismail],
     relativesTypes: [RELATIVE.HalfBrother],
-    successors: [PF.Yaqub, PF.Ayyub],
-    successor: PF.Yaqub,
-    // Required prophet data:
+    successors: [AS.Yaqub, AS.Ayyub],
+    successor: AS.Yaqub,
+    // Required nabi data:
     tvSentTo: a('a.Falastin') + // فلسطين Palestine
         '/' +
         'Canaan'.tr,
     quranMentionCount: 17,
     aqNabi: AQ(19, 49),
-    // Optional prophet data:
+    // Optional nabi data:
     aqRasul: null,
     tvKitab: null,
     aqUluAlAzmList: null,
@@ -715,36 +715,36 @@ final List<Prophet> relicsProphet = [
     tvLocationDeath: null,
     tvTomb: 'p.Cave of the Patriarchs, Hebron'.tr,
   ),
-  Prophet(
+  Nabi(
     // Event data:
     tkEra: 'Old Egyptian Kingdom',
     startMs: 0,
     endMs: 0,
     // Relic data:
-    e: PF.Yaqub,
+    e: AS.Yaqub,
     // Fam data:
     predecessors: [],
-    dad: PF.Ishaq,
-    mom: PF.Rafeqa,
-    spouses: [PF.Rahil_Bint_Leban, PF.Lia],
+    dad: AS.Ishaq,
+    mom: AS.Rafeqa,
+    spouses: [AS.Rahil_Bint_Leban, AS.Lia],
     daughters: null,
     sons: [
-      PF.Yusuf,
-      PF.Bunyamin,
-      PF.Lawi,
-      PF.Yahudzha,
+      AS.Yusuf,
+      AS.Bunyamin,
+      AS.Lawi,
+      AS.Yahudzha,
       // TODO And all 12 tribe founders
     ],
     relatives: null,
-    successors: [PF.Yusuf, PF.Yunus, PF.Musa, PF.Harun, PF.Dawud],
-    successor: PF.Yusuf,
-    // Required prophet data:
+    successors: [AS.Yusuf, AS.Yunus, AS.Musa, AS.Harun, AS.Dawud],
+    successor: AS.Yusuf,
+    // Required nabi data:
     tvSentTo: a('a.Falastin') + // فلسطين Palestine
         '/' +
         'Canaan'.tr,
     quranMentionCount: 16,
     aqNabi: AQ(19, 49),
-    // Optional prophet data:
+    // Optional nabi data:
     aqRasul: null,
     tvKitab: null,
     aqUluAlAzmList: null,
@@ -753,29 +753,29 @@ final List<Prophet> relicsProphet = [
     tvLocationDeath: null,
     tvTomb: 'p.Cave of the Patriarchs, Hebron'.tr,
   ),
-  Prophet(
+  Nabi(
     // Event data:
     tkEra: 'Ancient Egypt',
     startMs: -2400,
     endMs: -2400,
     // Relic data:
-    e: PF.Yusuf,
+    e: AS.Yusuf,
     // Fam data:
     predecessors: [],
-    dad: PF.Yaqub,
-    mom: PF.Rahil_Bint_Leban,
+    dad: AS.Yaqub,
+    mom: AS.Rahil_Bint_Leban,
     spouses: null,
     daughters: null,
     sons: null,
-    relatives: [PF.Bunyamin], // TODO 10 more!
+    relatives: [AS.Bunyamin], // TODO 10 more!
     relativesTypes: [RELATIVE.Brother], // TODO 10 more!
-    successors: [PF.Alyasa],
+    successors: [AS.Alyasa],
     successor: null, // TODO
-    // Required prophet data:
+    // Required nabi data:
     tvSentTo: 'p.Ancient Kingdom of_'.tr + a('a.Misr'), // Egypt
     quranMentionCount: 27,
     aqNabi: AQ(4, 89),
-    // Optional prophet data:
+    // Optional nabi data:
     aqRasul: AQ(40, 34),
     tvKitab: null,
     aqUluAlAzmList: null,
@@ -784,33 +784,33 @@ final List<Prophet> relicsProphet = [
     tvLocationDeath: null,
     tvTomb: null,
   ),
-  Prophet(
+  Nabi(
     // Event data:
     tkEra: 'Unknown',
     startMs: 0,
     endMs: 0,
     // Relic data:
-    e: PF.Ayyub,
+    e: AS.Ayyub,
     // Fam data:
     predecessors: [
 //    PF.Ishaq,
-      PF.Isu,
-      PF.Rimil,
+      AS.Isu,
+      AS.Rimil,
     ],
-    dad: PF.Amose,
-    mom: PF.DaughterOfLut,
+    dad: AS.Amose,
+    mom: AS.DaughterOfLut,
     spouses: null,
     daughters: null,
-    sons: [PF.Dhul__Kifl],
-    relatives: [PF.Lut],
+    sons: [AS.Dhul__Kifl],
+    relatives: [AS.Lut],
     relativesTypes: [RELATIVE.Grandfather],
-    successors: [PF.Dhul__Kifl],
-    successor: PF.Dhul__Kifl,
-    // Required prophet data:
+    successors: [AS.Dhul__Kifl],
+    successor: AS.Dhul__Kifl,
+    // Required nabi data:
     tvSentTo: a('a.Edom'), // TODO Arabee version
     quranMentionCount: 4,
     aqNabi: AQ(4, 89),
-    // Optional prophet data:
+    // Optional nabi data:
     aqRasul: null,
     tvKitab: null,
     aqUluAlAzmList: null,
@@ -819,16 +819,16 @@ final List<Prophet> relicsProphet = [
     tvLocationDeath: null,
     tvTomb: 'p.Possibly in Al-Qarah Mountains in southern Oman'.tr,
   ),
-  Prophet(
+  Nabi(
     // Event data:
     tkEra: 'Unknown', // TODO
     startMs: 0, // TODO Buddha: 6th or 5th century BCE
     endMs: 0,
     // Relic data:
-    e: PF.Dhul__Kifl,
+    e: AS.Dhul__Kifl,
     // Fam data:
     predecessors: [],
-    dad: PF.Ayyub,
+    dad: AS.Ayyub,
     mom: null,
     spouses: null,
     daughters: null,
@@ -836,12 +836,12 @@ final List<Prophet> relicsProphet = [
     relatives: null,
     successors: null,
     successor: null,
-    // Required prophet data:
+    // Required nabi data:
     // TODO Kifl or Kapilavastu in the northern Indian subcontinent:
     tvSentTo: 'p.Possibly Babylon or Indain subcontinent'.tr,
     quranMentionCount: 2,
     aqNabi: AQ(21, 85, end: 86),
-    // Optional prophet data:
+    // Optional nabi data:
     aqRasul: null,
     tvKitab: null,
     aqUluAlAzmList: null,
@@ -852,35 +852,35 @@ final List<Prophet> relicsProphet = [
         ',_'.tr +
         a('a.Turkiye'),
   ),
-  Prophet(
+  Nabi(
     // Event data:
     tkEra: 'Unknown',
     startMs: 0,
     endMs: 0,
     // Relic data:
-    e: PF.Shuayb,
+    e: AS.Shuayb,
     // Fam data:
     predecessors: [
 //    PF.Ibrahim,
-      PF.Madyan,
-      PF.Yashjar,
+      AS.Madyan,
+      AS.Yashjar,
     ],
-    dad: PF.Mikeel,
-    mom: PF.DaughterOfLut,
+    dad: AS.Mikeel,
+    mom: AS.DaughterOfLut,
     spouses: null,
     daughters: null,
     sons: null,
-    relatives: [PF.Lut],
+    relatives: [AS.Lut],
     relativesTypes: [RELATIVE.Grandfather],
     successors: null,
-    successor: PF.Musa,
-    // Required prophet data:
+    successor: AS.Musa,
+    // Required nabi data:
     tvSentTo: a('a.Madyan') + // Midian
         _ +
         cns('(7:85)'),
     quranMentionCount: 9,
     aqNabi: AQ(26, 178),
-    // Optional prophet data:
+    // Optional nabi data:
     aqRasul: AQ(26, 178),
     tvKitab: null,
     aqUluAlAzmList: null,
@@ -902,35 +902,35 @@ final List<Prophet> relicsProphet = [
         'p.Possibly in Wadi Shuʿayb, Jordan, Guriyeh, Shushtar, Iran or Hittin in the Galilee'
             .tr,
   ),
-  Prophet(
+  Nabi(
     // Event data:
     tkEra: 'Ancient Egypt',
     startMs: -1303,
     endMs: -1200,
     // Relic data:
-    e: PF.Harun,
+    e: AS.Harun,
     // Fam data:
     predecessors: [
 //    PF.Yaqub,
-      PF.Lawi,
-      PF.Kehath_Yashur,
+      AS.Lawi,
+      AS.Kehath_Yashur,
     ],
-    dad: PF.Imran,
-    mom: PF.Yukabid,
+    dad: AS.Imran,
+    mom: AS.Yukabid,
     spouses: null,
     daughters: null,
     sons: null,
-    relatives: [PF.Musa, PF.Miriam],
+    relatives: [AS.Musa, AS.Miriam],
     relativesTypes: [RELATIVE.Brother, RELATIVE.Sister],
-    successors: [PF.Ilyas],
-    successor: PF.Dawud,
-    // Required prophet data:
+    successors: [AS.Ilyas],
+    successor: AS.Dawud,
+    // Required nabi data:
     tvSentTo: a('a.Firaun') + // Pharaoh فرعون
         'p._and his establishment_' +
         cns('(43:46)'),
     quranMentionCount: 20,
     aqNabi: AQ(19, 53),
-    // Optional prophet data:
+    // Optional nabi data:
     aqRasul: AQ(20, 47),
     tvKitab: null,
     aqUluAlAzmList: null,
@@ -939,39 +939,39 @@ final List<Prophet> relicsProphet = [
     tvLocationDeath: null,
     tvTomb: 'p.Possibly in Jabal Harun, Jordan or in Sinai'.tr,
   ),
-  Prophet(
+  Nabi(
     // Event data:
     tkEra: 'Ancient Egypt',
     startMs: -1300,
     endMs: -1200,
     // Relic data:
-    e: PF.Musa,
+    e: AS.Musa,
     // Fam data:
     predecessors: [
 //    PF.Yaqub,
 //    PF.Lawi,
-      PF.Kehath_Yashur,
+      AS.Kehath_Yashur,
     ],
-    dad: PF.Imran,
-    mom: PF.Yukabid,
-    spouses: [PF.Saffurah],
+    dad: AS.Imran,
+    mom: AS.Yukabid,
+    spouses: [AS.Saffurah],
     daughters: null,
     sons: null,
-    relatives: [PF.Harun, PF.Miriam, PF.Asiya],
+    relatives: [AS.Harun, AS.Miriam, AS.Asiya],
     relativesTypes: [
       RELATIVE.Brother,
       RELATIVE.Sister,
       RELATIVE.FosterMother,
     ],
     successors: null,
-    successor: PF.Harun,
-    // Required prophet data:
+    successor: AS.Harun,
+    // Required nabi data:
     tvSentTo: a('a.Firaun') + // Pharaoh فرعون
         'p._and his establishment_' +
         cns('(43:46)'),
     quranMentionCount: 136,
     aqNabi: AQ(20, 47),
-    // Optional prophet data:
+    // Optional nabi data:
     aqRasul: AQ(20, 47),
     tvKitab: 'p.Ten Commandments, Tawrah (Torah); Scrolls of Musa (53:36)',
     aqUluAlAzmList: [AQ(46, 35), AQ(33, 7)],
@@ -1368,32 +1368,32 @@ final List<Prophet> relicsProphet = [
     tvLocationDeath: null,
     tvTomb: 'p.An-Nabi Musa, Jericho'.tr, // ٱلنَّبِي مُوْسَى
   ),
-  Prophet(
+  Nabi(
     // Event data:
     tkEra: 'Kings of Israel',
     startMs: -1000,
     endMs: -971,
     // Relic data:
-    e: PF.Dawud,
+    e: AS.Dawud,
     // Fam data:
     predecessors: [
 //    PF.Dawud,
-      PF.Yahudzha,
-      PF.Gap,
+      AS.Yahudzha,
+      AS.Gap,
     ], // TODO 'p.In kingship: Possibly Talut (Saul), in prophethood: Samuil (Samuel)'
     dad: null,
     mom: null,
     spouses: null,
     daughters: null,
-    sons: [PF.Suleyman],
+    sons: [AS.Suleyman],
     relatives: null,
-    successors: [PF.Suleyman],
-    successor: PF.Suleyman,
-    // Required prophet data:
+    successors: [AS.Suleyman],
+    successor: AS.Suleyman,
+    // Required nabi data:
     tvSentTo: a('a.Al-Quds'), // Jerusalem - القدس
     quranMentionCount: 16,
     aqNabi: AQ(6, 89),
-    // Optional prophet data:
+    // Optional nabi data:
     aqRasul: AQ(6, 89),
     tvKitab: a('a.Zabur') + // Psalms
         _ +
@@ -1404,28 +1404,28 @@ final List<Prophet> relicsProphet = [
     tvLocationDeath: a('a.Al-Quds'),
     tvTomb: 'p.Tomb of Harun, Jabal HarUn in Petra, Jordan'.tr,
   ),
-  Prophet(
+  Nabi(
     // Event data:
     tkEra: 'Kings of Israel',
     startMs: -971,
     endMs: -931,
     // Relic data:
-    e: PF.Suleyman,
+    e: AS.Suleyman,
     // Fam data:
     predecessors: [],
-    dad: PF.Dawud,
+    dad: AS.Dawud,
     mom: null,
     spouses: null,
     daughters: null,
     sons: null,
     relatives: null,
-    successors: [PF.Zakariya, PF.Isa],
-    successor: PF.Ilyas,
-    // Required prophet data:
+    successors: [AS.Zakariya, AS.Isa],
+    successor: AS.Ilyas,
+    // Required nabi data:
     tvSentTo: a('a.Al-Quds'),
     quranMentionCount: 17,
     aqNabi: AQ(6, 89),
-    // Optional prophet data:
+    // Optional nabi data:
     aqRasul: null,
     tvKitab: null,
     aqUluAlAzmList: null,
@@ -1472,28 +1472,28 @@ final List<Prophet> relicsProphet = [
         a('a.United') + _ + 'p.Kingdom of Israel in_'.tr + a('a.Al-Quds'),
     tvTomb: 'p.Al-Ḥaram ash-Sharīf, Jerusalem'.tr,
   ),
-  Prophet(
+  Nabi(
     // Event data:
     tkEra: 'Kings of Israel',
     startMs: 0,
     endMs: 0,
     // Relic data:
-    e: PF.Ilyas,
+    e: AS.Ilyas,
     // Fam data:
     predecessors: [
-      PF.Harun,
-      PF.Izar,
-      PF.Fahnaz,
+      AS.Harun,
+      AS.Izar,
+      AS.Fahnaz,
     ],
-    dad: PF.Yasin,
+    dad: AS.Yasin,
     mom: null,
     spouses: null,
     daughters: null,
     sons: null,
     relatives: null,
     successors: null,
-    successor: PF.Alyasa,
-    // Required prophet data:
+    successor: AS.Alyasa,
+    // Required nabi data:
     tvSentTo: a('a.Samaria') + //  TODO
         ',_'.tr +
         'The people of_'.tr +
@@ -1502,7 +1502,7 @@ final List<Prophet> relicsProphet = [
         cns('(37:124)'),
     quranMentionCount: 2,
     aqNabi: AQ(6, 89),
-    // Optional prophet data:
+    // Optional nabi data:
     aqRasul: AQ(37, 123),
     tvKitab: null,
     aqUluAlAzmList: null,
@@ -1511,28 +1511,28 @@ final List<Prophet> relicsProphet = [
     tvLocationDeath: null,
     tvTomb: 'p.Possibly in Baalbek, Lebanon'.tr,
   ),
-  Prophet(
+  Nabi(
     // Event data:
     tkEra: 'Kings of_'.tr + a('a.Israel'), // TODO unsure
     startMs: 0,
     endMs: 0,
     // Relic data:
-    e: PF.Alyasa,
+    e: AS.Alyasa,
     // Fam data:
     predecessors: [
-      PF.Yusuf,
-      PF.Efraim,
-      PF.Shultem,
+      AS.Yusuf,
+      AS.Efraim,
+      AS.Shultem,
     ],
-    dad: PF.Adi,
+    dad: AS.Adi,
     mom: null,
     spouses: null,
     daughters: null,
     sons: null,
     relatives: null,
     successors: null,
-    successor: PF.Yunus,
-    // Required prophet data:
+    successor: AS.Yunus,
+    // Required nabi data:
     tvSentTo: a('a.Samaria') + //  TODO
         ',_'.tr +
         a('a.East') +
@@ -1542,7 +1542,7 @@ final List<Prophet> relicsProphet = [
         a('a.Fars'), //Fars? Persia
     quranMentionCount: 2,
     aqNabi: AQ(6, 89),
-    // Optional prophet data:
+    // Optional nabi data:
     aqRasul: null,
     tvKitab: null,
     aqUluAlAzmList: null,
@@ -1555,28 +1555,28 @@ final List<Prophet> relicsProphet = [
         ',_'.tr +
         a('a.Turkiye'), //' or Al-Awjam, Saudi Arabia.'
   ),
-  Prophet(
+  Nabi(
     // Event data:
     tkEra: 'Unknown',
     startMs:
         -800, // uncertain (8th century BCE or post-exilic period) in Wikipedia
     endMs: -800,
     // Relic data:
-    e: PF.Yunus,
+    e: AS.Yunus,
     // Fam data:
     predecessors: [
-      PF.Bunyamin,
-      PF.Gap,
+      AS.Bunyamin,
+      AS.Gap,
     ],
-    dad: PF.Matta,
+    dad: AS.Matta,
     mom: null,
     spouses: null,
     daughters: null,
     sons: null,
     relatives: null,
     successors: null,
-    successor: PF.Zakariya,
-    // Required prophet data:
+    successor: AS.Zakariya,
+    // Required nabi data:
     tvSentTo: a('a.Nineveh') + // TODO Ninevah? arabee?
         ',_'.tr +
         'The people of_'.tr +
@@ -1584,7 +1584,7 @@ final List<Prophet> relicsProphet = [
         cns('(10:98)'),
     quranMentionCount: 4,
     aqNabi: AQ(6, 89),
-    // Optional prophet data:
+    // Optional nabi data:
     aqRasul: AQ(37, 139),
     tvKitab: null,
     aqUluAlAzmList: null,
@@ -1597,34 +1597,34 @@ final List<Prophet> relicsProphet = [
             ',_'.tr +
             a('a.Turkiye'),
   ),
-  Prophet(
+  Nabi(
     // Event data:
     tkEra: 'a.Masih',
     startMs: 0,
     endMs: 0,
     // Relic data:
-    e: PF.Zakariya,
+    e: AS.Zakariya,
     // Fam data:
     predecessors: [
 //    PF.Yaqub,
 //    PF.Yahudzha,
 //    PF.Gap,
-      PF.Suleyman,
-      PF.Gap,
+      AS.Suleyman,
+      AS.Gap,
     ],
     dad: null,
     mom: null,
-    spouses: [PF.Ishba],
+    spouses: [AS.Ishba],
     daughters: null,
-    sons: [PF.Yahya],
+    sons: [AS.Yahya],
     relatives: null, // TODO relation to Isa?
-    successors: [PF.Yahya],
-    successor: PF.Yahya,
-    // Required prophet data:
+    successors: [AS.Yahya],
+    successor: AS.Yahya,
+    // Required nabi data:
     tvSentTo: a('a.Al-Quds'),
     quranMentionCount: 7,
     aqNabi: AQ(6, 89),
-    // Optional prophet data:
+    // Optional nabi data:
     aqRasul: null,
     tvKitab: null,
     aqUluAlAzmList: null,
@@ -1633,30 +1633,30 @@ final List<Prophet> relicsProphet = [
     tvLocationDeath: null,
     tvTomb: 'p.Great Mosque of Aleppo, Syria'.tr,
   ),
-  Prophet(
+  Nabi(
     // Event data:
     tkEra: 'a.Masih',
     startMs: -100,
     endMs: 28, // AD 28–36
     // Relic data:
-    e: PF.Yahya,
+    e: AS.Yahya,
     // Fam data:
     predecessors: [],
-    dad: PF.Zakariya,
-    mom: PF.Ishba,
+    dad: AS.Zakariya,
+    mom: AS.Ishba,
     spouses: null,
     daughters: null,
     sons: null,
-    relatives: [PF.Isa],
+    relatives: [AS.Isa],
     relativesTypes: [RELATIVE.DistantCousin],
     successors: null,
-    successor: PF.Isa,
-    // Required prophet data:
+    successor: AS.Isa,
+    // Required nabi data:
     tvSentTo:
         at('p.{0} of {1} in {2}', ['a.Children', 'a.Israel', 'a.Al-Quds']),
     quranMentionCount: 5,
     aqNabi: AQ(3, 39),
-    // Optional prophet data:
+    // Optional nabi data:
     aqRasul: null,
     tvKitab: null,
     aqUluAlAzmList: null,
@@ -1665,29 +1665,29 @@ final List<Prophet> relicsProphet = [
     tvLocationDeath: 'p.Decapitated by the ruler Herod Antipas'.tr,
     tvTomb: 'p.His head is possibly at the Umayyad Mosque in Damascus'.tr,
   ),
-  Prophet(
+  Nabi(
     // Event data:
     tkEra: 'a.Masih',
     startMs: -4,
     endMs: 30,
     // Relic data:
-    e: PF.Isa,
+    e: AS.Isa,
     // Fam data:
     predecessors: [
-      PF.Suleyman,
-      PF.Gap,
-      PF.ImranAbuMaryam,
+      AS.Suleyman,
+      AS.Gap,
+      AS.ImranAbuMaryam,
     ],
     dad: null,
-    mom: PF.Maryam,
+    mom: AS.Maryam,
     spouses: null,
     daughters: null,
     sons: null,
-    relatives: [PF.Zakariya, PF.Yahya],
+    relatives: [AS.Zakariya, AS.Yahya],
     relativesTypes: [RELATIVE.DistantCousin, RELATIVE.DistantCousin],
     successors: null,
-    successor: PF.Muhammad,
-    // Required prophet data:
+    successor: AS.Muhammad,
+    // Required nabi data:
     tvSentTo:
         at('p.{0} of {1} in {2}', ['a.Children', 'a.Israel', 'a.Al-Quds']) +
             'p._as written in the_' +
@@ -1698,7 +1698,7 @@ final List<Prophet> relicsProphet = [
             cns('15:24'),
     quranMentionCount: 25,
     aqNabi: AQ(19, 30),
-    // Optional prophet data:
+    // Optional nabi data:
     aqRasul: AQ(4, 171),
     tvKitab: a('a.Injil') + // Gospel
         _ +
@@ -1710,58 +1710,58 @@ final List<Prophet> relicsProphet = [
         'p.Still alive, was raised to Heaven from_'.tr + a('a.Falastin'),
     tvTomb: 'p.None yet'.tr,
   ),
-  Prophet(
+  Nabi(
     // Event data:
     tkEra: 'a.Muhammad',
     startMs: 570,
     endMs: 632,
     // Relic data:
-    e: PF.Muhammad,
+    e: AS.Muhammad,
     // Fam data:
     predecessors: [
-      PF.Ismail,
-      PF.Gap, // TODO iktilaf here, find best one
-      PF.Adnan,
-      PF.Ma__add,
-      PF.Nizar,
-      PF.Mudar,
-      PF.Ilyas_,
-      PF.Mudrikah,
-      PF.Khuzaimah,
-      PF.Kinanah,
-      PF.An__Nadr,
-      PF.Malik,
-      PF.Fihr,
-      PF.Ghalib,
-      PF.Lu__ayy,
-      PF.Ka__b,
-      PF.Murrah,
-      PF.Kilab,
-      PF.Qusayy,
-      PF.Abd_Manaf,
-      PF.Hashim,
-      PF.Abdull_Muttalib,
+      AS.Ismail,
+      AS.Gap, // TODO iktilaf here, find best one
+      AS.Adnan,
+      AS.Ma__add,
+      AS.Nizar,
+      AS.Mudar,
+      AS.Ilyas_,
+      AS.Mudrikah,
+      AS.Khuzaimah,
+      AS.Kinanah,
+      AS.An__Nadr,
+      AS.Malik,
+      AS.Fihr,
+      AS.Ghalib,
+      AS.Lu__ayy,
+      AS.Ka__b,
+      AS.Murrah,
+      AS.Kilab,
+      AS.Qusayy,
+      AS.Abd_Manaf,
+      AS.Hashim,
+      AS.Abdull_Muttalib,
     ],
-    successors: [PF.Mahdi, PF.Isa],
-    mom: PF.Amina_Bint_Wahb,
-    dad: PF.Abdullah_,
+    successors: [AS.Mahdi, AS.Isa],
+    mom: AS.Amina_Bint_Wahb,
+    dad: AS.Abdullah_,
     spouses: [
       // TODO Link to RELIC_TYPE.Bayt:
       //https://en.wikipedia.org/wiki/Muhammad%27s_wives
       //https://www.quora.com/After-the-death-of-Prophet-Muhammad-which-of-his-wives-died-first
-      PF.Khadijah, //     cns('595–619: ') + a('a.Khadijah'),
-      PF.Sawdah, //       cns('619–632: ') + a('a.Sawdah'),
-      PF.Aisha, //        cns('623–632: ') + a('a.Aisha'), //- Only virgin',
-      PF.Hafsah, //       cns('625–632: ') + a('a.Hafsah'),
-      PF.UmmAlMasakin, // cns('625–626: ') + a('a.Umm al-Masakin'),
-      PF.UmmSalamah, //   cns('625–632: ') + a('a.Umm Salamah'),
-      PF.Zaynab, //       cns('627–632: ') + a('a.Zaynab'),
-      PF.Juwayriyah, //   cns('628–632: ') + a('a.Juwayriyah'),
-      PF.UmmHabibah, //   cns('628–632: ') + a('a.UmmHabibah'),
-      PF.Safiyyah, //     cns('629–632: ') + a('a.Safiyyah'),
-      PF.Maymunah, //     cns('629–632: ') + a('a.Maymunah'),
-      PF.Rayhana, //      cns('627–631: ') + a('a.Rayhana'), // concubine later married?
-      PF.Maria, //        cns('628–632: ') + a('a.Maria'), // concubine later married?
+      AS.Khadijah, //     cns('595–619: ') + a('a.Khadijah'),
+      AS.Sawdah, //       cns('619–632: ') + a('a.Sawdah'),
+      AS.Aisha, //        cns('623–632: ') + a('a.Aisha'), //- Only virgin',
+      AS.Hafsah, //       cns('625–632: ') + a('a.Hafsah'),
+      AS.UmmAlMasakin, // cns('625–626: ') + a('a.Umm al-Masakin'),
+      AS.UmmSalamah, //   cns('625–632: ') + a('a.Umm Salamah'),
+      AS.Zaynab, //       cns('627–632: ') + a('a.Zaynab'),
+      AS.Juwayriyah, //   cns('628–632: ') + a('a.Juwayriyah'),
+      AS.UmmHabibah, //   cns('628–632: ') + a('a.UmmHabibah'),
+      AS.Safiyyah, //     cns('629–632: ') + a('a.Safiyyah'),
+      AS.Maymunah, //     cns('629–632: ') + a('a.Maymunah'),
+      AS.Rayhana, //      cns('627–631: ') + a('a.Rayhana'), // concubine later married?
+      AS.Maria, //        cns('628–632: ') + a('a.Maria'), // concubine later married?
     ],
     // TODO Link to RELIC_TYPE.Bayt:
     daughters: null,
@@ -1780,7 +1780,7 @@ final List<Prophet> relicsProphet = [
     //   PF.Ibrahim_Ibn_Muhmmad, //  cns('630–632 ') + a('a.Ibrahim'),
     // ],
     relatives: null,
-    // Required prophet data:
+    // Required nabi data:
     tvSentTo: 'p.All the worlds'.tr +
         ',_'.tr +
         a('a.Nas') + // mankind
@@ -1790,7 +1790,7 @@ final List<Prophet> relicsProphet = [
         cns('(21:107)'),
     quranMentionCount: 4,
     aqNabi: AQ(33, 40),
-    // Optional prophet data:
+    // Optional nabi data:
     aqRasul: AQ(33, 40),
     tvKitab: a('a.Quran') +
         _ +
@@ -1844,95 +1844,95 @@ final List<Prophet> relicsProphet = [
   ),
 ];
 
-List<RelicSetFilter> relicSetFiltersProphet = [
+List<RelicSetFilter> relicSetFiltersNabi = [
   RelicSetFilter(
     tkLabel: 'a.Nabi',
     idxList: List.generate(
-      relicsProphet.length,
-      (index) => relicsProphet[index].e.index,
+      relicsNabi.length,
+      (index) => relicsNabi[index].e.index,
     ),
-    tprMax: relicsProphet.length,
+    tprMax: relicsNabi.length,
   ),
   RelicSetFilter(
     tkLabel: 'a.Rasul',
     idxList: [
-      PF.Adam.index,
-      PF.Nuh.index,
-      PF.Hud.index,
-      PF.Salih.index,
-      PF.Ibrahim.index,
-      PF.Lut.index,
-      PF.Ismail.index,
-      PF.Yusuf.index,
-      PF.Shuayb.index,
-      PF.Musa.index,
-      PF.Harun.index,
-      PF.Dawud.index,
-      PF.Ilyas.index,
-      PF.Yunus.index,
-      PF.Isa.index,
-      PF.Muhammad.index,
+      AS.Adam.index,
+      AS.Nuh.index,
+      AS.Hud.index,
+      AS.Salih.index,
+      AS.Ibrahim.index,
+      AS.Lut.index,
+      AS.Ismail.index,
+      AS.Yusuf.index,
+      AS.Shuayb.index,
+      AS.Musa.index,
+      AS.Harun.index,
+      AS.Dawud.index,
+      AS.Ilyas.index,
+      AS.Yunus.index,
+      AS.Isa.index,
+      AS.Muhammad.index,
     ],
-    tprMax: relicsProphet.length,
+    tprMax: relicsNabi.length,
   ),
   RelicSetFilter(
     tkLabel: 'a.Ulu Al-Azm',
     idxList: [
-      PF.Nuh.index,
-      PF.Ibrahim.index,
-      PF.Musa.index,
-      PF.Isa.index,
-      PF.Muhammad.index,
+      AS.Nuh.index,
+      AS.Ibrahim.index,
+      AS.Musa.index,
+      AS.Isa.index,
+      AS.Muhammad.index,
     ],
-    tprMax: relicsProphet.length,
+    tprMax: relicsNabi.length,
   ),
   RelicSetFilter(
     tkLabel: 'Quran Name Mentions',
     field: FILTER_FIELD.QuranMentionCount,
     idxList: [
-      PF.Musa.index, //      136 <-Mentions in Quran
-      PF.Ibrahim.index, //    69
-      PF.Nuh.index, //        43
-      PF.Lut.index, //        27
-      PF.Yusuf.index, //      27
-      PF.Adam.index, //       25
-      PF.Isa.index, //        25
-      PF.Harun.index, //      20
-      PF.Ishaq.index, //      17
-      PF.Suleyman.index, //   17
-      PF.Yaqub.index, //      16
-      PF.Dawud.index, //      16
-      PF.Ismail.index, //     12
-      PF.Salih.index, //       9
-      PF.Shuayb.index, //      9
-      PF.Hud.index, //         7
-      PF.Zakariya.index, //    7
-      PF.Yahya.index, //       5
-      PF.Ayyub.index, //       4
-      PF.Yunus.index, //       4
-      PF.Muhammad.index, //    4
-      PF.Idris.index, //       2
-      PF.Dhul__Kifl.index, //  2 TODO other righteous men/women counts
-      PF.Ilyas.index, //       2
-      PF.Alyasa.index, //      2
+      AS.Musa.index, //      136 <-Mentions in Quran
+      AS.Ibrahim.index, //    69
+      AS.Nuh.index, //        43
+      AS.Lut.index, //        27
+      AS.Yusuf.index, //      27
+      AS.Adam.index, //       25
+      AS.Isa.index, //        25
+      AS.Harun.index, //      20
+      AS.Ishaq.index, //      17
+      AS.Suleyman.index, //   17
+      AS.Yaqub.index, //      16
+      AS.Dawud.index, //      16
+      AS.Ismail.index, //     12
+      AS.Salih.index, //       9
+      AS.Shuayb.index, //      9
+      AS.Hud.index, //         7
+      AS.Zakariya.index, //    7
+      AS.Yahya.index, //       5
+      AS.Ayyub.index, //       4
+      AS.Yunus.index, //       4
+      AS.Muhammad.index, //    4
+      AS.Idris.index, //       2
+      AS.Dhul__Kifl.index, //  2 TODO other righteous men/women counts
+      AS.Ilyas.index, //       2
+      AS.Alyasa.index, //      2
     ],
-    tprMax: relicsProphet.length,
+    tprMax: relicsNabi.length,
   ),
   RelicSetFilter(
     tkLabel: 'Family Tree',
     idxList: List.generate(
-      relicsProphet.length,
-      (index) => relicsProphet[index].e.index,
+      relicsNabi.length,
+      (index) => relicsNabi[index].e.index,
     ),
-    tprMax: relicsProphet.length,
-    treeGraph1: getGraphAllFamily(EVENT.Anbiya, PF.Gap.index),
-    treeGraph2: getGraphOnlyRelics(EVENT.Anbiya, PF.Gap.index),
+    tprMax: relicsNabi.length,
+    treeGraph1: getGraphAllFamily(EVENT.Nabi, AS.Gap.index),
+    treeGraph2: getGraphOnlyRelics(EVENT.Nabi, AS.Gap.index),
   ),
 ];
 
-/// PROPHET FAMILY (TODO Turkish Words: Hızır, Lukman, Yuşa, Kâlib b. Yüfena, Hızkıl, Şemûyel, Şâ'yâ
-enum PF {
-  /* TODO rename to AS (Aleyhi Salam) */
+/// AS = (Aleyhi Salam) for respect to Nabis in this list.
+///   TODO Turkish Words: Hızır, Lukman, Yuşa, Kâlib b. Yüfena, Hızkıl, Şemûyel, Şâ'yâ
+enum AS {
   Adam(Isim(
     tvHebrew: 'אדם (Adam)',
     tkHebrewMeaning: 'p.man',
@@ -2302,7 +2302,7 @@ enum PF {
           true)), // Musa and Harun // TODO Sister that followed Musa down river (Same name as Maryam?)
   ;
 
-  const PF(this.isim);
+  const AS(this.isim);
   final Isim isim;
 }
 
