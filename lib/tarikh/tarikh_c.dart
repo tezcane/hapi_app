@@ -77,9 +77,7 @@ class TarikhC extends GetxHapi {
   bool _isActiveTarikhMenu = true;
   bool get isActiveTarikhMenu => _isActiveTarikhMenu;
   set isActiveTarikhMenu(bool nv) {
-    if (nv != _isActiveTarikhMenu) {
-      _isActiveTarikhMenu = nv;
-    }
+    if (nv != _isActiveTarikhMenu) _isActiveTarikhMenu = nv;
     // Causes stutter on bottom bar: (TODO may not be needed)
     // updateOnThread1Ms(); // needed for bottom bar init
   }

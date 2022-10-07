@@ -212,9 +212,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
   /// Use to switch to a high level nav page only (e.g. Quests, Quran, etc.)
   void navigateToNavPage(NavPage navPage, {bool offAll = false}) {
     // clear stack in case we jump to this next nav menu
-    if (_subPageStack.isNotEmpty) {
-      _subPageStack = [];
-    }
+    if (_subPageStack.isNotEmpty) _subPageStack = [];
 
     // save so app restarts at this idx
     s.wr('lastNavIdx', navPage.index);
