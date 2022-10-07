@@ -43,7 +43,8 @@ abstract class GetxHapi extends GetxController {
 
   /// Sometimes we need to run update() in another thread or there is a
   /// render/build/dirty error:
-  void updateOnThread() => Timer(const Duration(seconds: 1), () => update());
+  void updateOnThread1Sec() =>
+      Timer(const Duration(seconds: 1), () => update());
 
   /// Sometimes we need to run update() in another thread or there is a
   /// render/build/dirty error:

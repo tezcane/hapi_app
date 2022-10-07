@@ -64,7 +64,7 @@ class TarikhC extends GetxHapi {
       _isActiveTimeline = nv;
       if (_isActiveTimeline) t.startRendering();
     }
-    updateOnThread(); //update() causes error
+    updateOnThread1Sec(); //update() causes error
   }
 
   // MENU SECTION RENDER ENABLE/DISABLE:
@@ -78,8 +78,12 @@ class TarikhC extends GetxHapi {
   bool get isActiveTarikhMenu => _isActiveTarikhMenu;
   set isActiveTarikhMenu(bool nv) {
     if (nv != _isActiveTarikhMenu) _isActiveTarikhMenu = nv;
-    // Causes stutter on bottom bar: (TODO may not be needed)
-    // updateOnThread1Ms(); // needed for bottom bar init
+
+    if (_isActiveTarikhMenu) {
+      update(); // instant show animations
+    } else {
+      updateOnThread1Sec(); // allow fast menu scroll then disable animations
+    }
   }
 
   /// Loaded from JSON input that's stored in the assets folder which provides
@@ -171,7 +175,7 @@ class TarikhC extends GetxHapi {
     timeBtn.tvTitleLine2 = tvTitleLine2;
     timeBtn.tvTimeUntil = tvTimeUntil;
     timeBtn.tvPageScrolls = tvPageScrolls;
-    updateOnThread();
+    updateOnThread1Sec();
   }
 
   void updateEventBtn(TimeBtn timeBtn, Event? event) {
