@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-import 'dart:ui';
 import 'dart:ui' as ui;
 
 import 'package:flare_dart/math/aabb.dart' as flare;
@@ -49,7 +48,7 @@ class ImageAsset extends EventAsset {
   ImageAsset(
       String filename, double width, double height, double scale, this.image)
       : super(filename, width, height, scale);
-  final Image image;
+  final ui.Image image;
 
   @override
   ASSET_TYPE getAssetType() => ASSET_TYPE.IMAGE;

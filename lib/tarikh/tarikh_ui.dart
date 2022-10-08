@@ -7,7 +7,7 @@ import 'package:hapi/menu/bottom_bar_menu.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/slide/menu_right/menu_right_ui.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
-import 'package:hapi/tarikh/event/event.dart';
+import 'package:hapi/tarikh/event/et.dart';
 import 'package:hapi/tarikh/event/favorite/event_favorite_ui.dart';
 import 'package:hapi/tarikh/event/search/event_search_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_menu_ui.dart';
@@ -32,7 +32,7 @@ class TarikhUI extends StatelessWidget {
         // do here to save memory:
         final List<BottomBarItem> bottomBarItems = [
           BottomBarItem(
-            const EventFavoriteUI(EVENT.Tarikh, navPage),
+            const EventFavoriteUI(ET.Tarikh, navPage),
             null,
             'Favorites'.tr,
             at('at.{0} Favorites', [navPage.tk]),

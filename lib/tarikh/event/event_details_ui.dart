@@ -7,6 +7,8 @@ import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/tarikh/event/animation_controller/heart_controller.dart';
+import 'package:hapi/tarikh/event/et.dart';
+import 'package:hapi/tarikh/event/et_extension.dart';
 import 'package:hapi/tarikh/event/event.dart';
 import 'package:hapi/tarikh/event/event_asset.dart';
 import 'package:hapi/tarikh/event/event_c.dart';
@@ -17,11 +19,11 @@ import 'package:hapi/tarikh/tarikh_c.dart';
 /// removed from Tarikh/Relic favorites. If Relics view, show upgrade button.
 class EventDetailsUI extends StatefulWidget {
   EventDetailsUI() {
-    eventType = Get.arguments['eventType'];
+    et = Get.arguments['et'];
     eventMap = Get.arguments['eventMap'];
     saveTag = Get.arguments['saveTag'];
   }
-  late final EVENT eventType;
+  late final ET et;
   late final Map<String, Event> eventMap;
   late final String saveTag;
 
@@ -64,7 +66,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
   initState() {
     super.initState();
 
-    _eventMapFav = EventC.to.getEventMapFav(widget.eventType);
+    _eventMapFav = EventC.to.getEventMapFav(widget.et);
 
     _btnUp = TimeBtn('', '', '', '', null);
     _btnDn = TimeBtn('', '', '', '', null);
@@ -120,7 +122,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
   /// Load the markdown file from the assets and set the contents of the page to its value.
   void loadMarkdown() async {
     String tvArticleMarkdown =
-        await LanguageC.to.tvArticle(_event.eventType, _event.tkTitle);
+        await LanguageC.to.tvArticle(_event.et, _event.tkTitle);
     setState(() => _tvArticleMarkdown = tvArticleMarkdown); // refresh UI
   }
 
@@ -172,7 +174,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                           mainAxisSize: MainAxisSize.min,
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            if (widget.eventType.isRelic)
+                            if (widget.et.isRelic)
                               FloatingActionButton(
                                 tooltip: 'Upgrade Relic'.tr,
                                 onPressed: () {
@@ -217,7 +219,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                         tv: true,
                                       ),
                                     FloatingActionButton(
-                                      tooltip: widget.eventType.isRelic
+                                      tooltip: widget.et.isRelic
                                           ? 'See previous relic'.tr
                                           : 'Navigate to past'.tr,
                                       heroTag: 'btnUp',
@@ -266,7 +268,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                         tv: true,
                                       ),
                                     FloatingActionButton(
-                                      tooltip: widget.eventType.isRelic
+                                      tooltip: widget.et.isRelic
                                           ? 'See next relic'.tr
                                           : 'Navigate to future'.tr,
                                       heroTag: 'btnDn',
@@ -409,11 +411,9 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                 ),
                                 onTap: () {
                                   if (!isFavorite) {
-                                    EventC.to
-                                        .addFavorite(widget.eventType, _event);
+                                    EventC.to.addFavorite(widget.et, _event);
                                   } else {
-                                    EventC.to
-                                        .delFavorite(widget.eventType, _event);
+                                    EventC.to.delFavorite(widget.et, _event);
                                   }
                                   setState(() {});
                                 },

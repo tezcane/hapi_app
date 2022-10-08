@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/sub_page.dart';
+import 'package:hapi/tarikh/event/et.dart';
 import 'package:hapi/tarikh/event/event.dart';
 import 'package:hapi/tarikh/event/event_c.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
@@ -72,8 +73,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   initState() {
     if (widget.event == null) {
       // lookup event manually since not provided on init
-      widget.event =
-          EventC.to.getEventMap(EVENT.Tarikh)[widget.focusItem.saveTag];
+      widget.event = EventC.to.getEventMap(ET.Tarikh)[widget.focusItem.saveTag];
 
       // We need event just to update down/up past/future btns. Since it wasn't
       // used/available/wanted? by the original caller to this class, we ignore
@@ -189,8 +189,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
         // stop rendering here, menu controller re-enables it
         TarikhC.to.isActiveTimeline = false;
         MenuC.to.pushSubPage(SubPage.Event_Details, arguments: {
-          'eventType': EVENT.Tarikh,
-          'eventMap': EventC.to.getEventMap(EVENT.Tarikh),
+          'et': ET.Tarikh,
+          'eventMap': EventC.to.getEventMap(ET.Tarikh),
           'saveTag': _touchedBubble!.event.saveTag,
         });
 

@@ -11,7 +11,8 @@ import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/settings_option.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/quest/active/active_quests_c.dart';
-import 'package:hapi/tarikh/event/event.dart';
+import 'package:hapi/tarikh/event/et.dart';
+import 'package:hapi/tarikh/event/et_extension.dart';
 import 'package:hapi/tarikh/event/event_c.dart';
 import 'package:hapi/tarikh/event/search/search_manager.dart';
 import 'package:hijri/hijri_calendar.dart';
@@ -261,8 +262,8 @@ class LanguageC extends GetxHapi {
       EventC.to.reinitAllEventsTexts();
 
       // language changed so we must change filter language too
-      SearchManager.init(NavPage.Tarikh, EventC.to.getEventList(EVENT.Tarikh));
-      SearchManager.init(NavPage.Relics, EventC.to.getEventList(EVENT.Nabi));
+      SearchManager.init(NavPage.Tarikh, EventC.to.getEventList(ET.Tarikh));
+      SearchManager.init(NavPage.Relics, EventC.to.getEventList(ET.Nabi));
     }
     initNeeded = false;
   }
@@ -287,9 +288,9 @@ class LanguageC extends GetxHapi {
   /// t/en.json will be parsed and returned.
   ///
   /// Note: tk must not have any "t.", "r.", "a.", etc. tags on it.
-  Future<String> tvArticle(EVENT eventType, String tk) async {
+  Future<String> tvArticle(ET et, String tk) async {
     try {
-      return (await _getTrMap(eventType.trPath, currLangKey))[
+      return (await _getTrMap(et.trPath, currLangKey))[
           tk.startsWith('a.') ? tk.replaceFirst('a.', '') : tk]!;
     } catch (e) {
       return 'Coming Soon'.tr;

@@ -1,7 +1,7 @@
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:hapi/main_c.dart'; // needed to get Extension on Enum
 import 'package:hapi/relic/relic.dart';
-import 'package:hapi/tarikh/event/event.dart';
+import 'package:hapi/tarikh/event/et.dart';
 import 'package:hapi/tarikh/event/event_asset.dart';
 
 class Surah extends Relic {
@@ -22,7 +22,7 @@ class Surah extends Relic {
           // Relic data:
           e: e,
           // Event data:
-          eventType: EVENT.Surah,
+          et: ET.Surah,
           tkEra: 'Quran Revelation',
           tkTitle: e.tkArabeeIsim,
           startMs: 0, // TODO put in quran revelation dates!

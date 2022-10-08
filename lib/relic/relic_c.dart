@@ -5,15 +5,17 @@ import 'package:hapi/onboard/auth/auth_c.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relics_ui.dart';
 import 'package:hapi/service/db.dart';
+import 'package:hapi/tarikh/event/et.dart';
+import 'package:hapi/tarikh/event/et_extension.dart';
 import 'package:hapi/tarikh/event/event.dart';
 
 class RelicC extends GetxHapi {
   static RelicC get to => Get.find();
 
-  /// Perfect hash, access via _relicSets[EVENT.index]
+  /// Perfect hash, access via _relicSets[ET.index]
   final List<RelicSet> _relicSets = [];
 
-  /// Perfect hash, access via _ajrLevels[EVENT.index]=Map<relicId, int ajrLevel>
+  /// Perfect hash, access via _ajrLevels[ET.index]=Map<relicId, int ajrLevel>
   final List<Map<int, int>> _ajrLevels = [];
 
   /// needed by relic tab bar
@@ -43,10 +45,10 @@ class RelicC extends GetxHapi {
     }
 
     List<Event> relicEvents = [];
-    for (EVENT eventType in EVENT.values) {
-      if (!eventType.isRelic) continue; // skip Incident/Era
+    for (ET et in ET.values) {
+      if (!et.isRelic) continue; // skip Tarikh events
 
-      for (Relic relic in getRelicSet(eventType).relics) {
+      for (Relic relic in getRelicSet(et).relics) {
         if (relic.isTimeLineEvent) trkhEvents.add(relic); // add if has date
 
         relicEvents.add(relic);
@@ -74,10 +76,10 @@ class RelicC extends GetxHapi {
 
   _initRelicSets() async {
     // init relics and ajrLevels with empty Maps structures
-    for (EVENT eventType in EVENT.values) {
-      if (!eventType.isRelic) continue; // skip Incident/Era
+    for (ET et in ET.values) {
+      if (!et.isRelic) continue; // skip Tarikh events
 
-      List<Relic> relics = eventType.initRelics();
+      List<Relic> relics = et.initRelics();
 
       /// we manually set relic assets here, done here to make relic objects
       /// closer to const (future upgrade?).
@@ -86,12 +88,12 @@ class RelicC extends GetxHapi {
       }
 
       RelicSet relicSet = RelicSet(
-        eventType: eventType,
+        et: et,
         relics: relics,
-        tkTitle: eventType.tkRelicSetTitle,
+        tkTitle: et.tkRelicSetTitle,
       );
       _relicSets.add(relicSet); // must come before next line
-      relicSet.filterList = eventType.initRelicSetFilters();
+      relicSet.filterList = et.initRelicSetFilters();
 
       print('asdf got here 2');
 
@@ -117,10 +119,9 @@ class RelicC extends GetxHapi {
     // print('********* RELIC INIT DONE *********');
   }
 
-  RelicSet getRelicSet(EVENT eventType) => _relicSets[eventType.index];
+  RelicSet getRelicSet(ET et) => _relicSets[et.index];
 
-  int getAjrLevel(EVENT eventType, int relicId) =>
-      _ajrLevels[eventType.index][relicId]!;
+  int getAjrLevel(ET et, int relicId) => _ajrLevels[et.index][relicId]!;
 
   /// To get the EventUI() UI working, with least amount of pain, we turn our
   /// relic structures into a Map<String, Event> that Tarikh code are already
@@ -128,11 +129,11 @@ class RelicC extends GetxHapi {
   ///
   /// This is also used by Relic's Favorites and Search UI's to be able to jump
   /// to the Relics Details view.
-  Map<String, Event> getEventMap(EVENT eventType, int filterIdx) {
-    RelicSet relicSet = RelicC.to.getRelicSet(eventType);
+  Map<String, Event> getEventMap(ET et, int filterIdx) {
+    RelicSet relicSet = RelicC.to.getRelicSet(et);
 
     // The up/dn buttons, by design will navigate through the idxList values
-    // only, this may or may not be all relics of this eventType.
+    // only, this may or may not be all relics of this et.
     List<int> idxList = relicSet.filterList[filterIdx].idxList;
 
     // Create the map to be used for up/dn buttons
@@ -155,24 +156,23 @@ class RelicC extends GetxHapi {
     return eventMap;
   }
 
-  int getFilterIdx(EVENT eventType) => s.rd('filterIdx${eventType.index}') ?? 0;
-  setFilterIdx(EVENT eventType, int newVal) {
-    s.wr('filterIdx${eventType.index}', newVal);
+  int getFilterIdx(ET et) => s.rd('filterIdx${et.index}') ?? 0;
+  setFilterIdx(ET et, int newVal) {
+    s.wr('filterIdx${et.index}', newVal);
     updateOnThread1Ms(); // NOTE: Used to lock UI so used addPostFrameCallback()
   }
 
-  int getTilesPerRow(EVENT eventType, int relicSetFilterIdx) =>
-      s.rd('tilesPerRow${eventType.index}_$relicSetFilterIdx') ??
+  int getTilesPerRow(ET et, int relicSetFilterIdx) =>
+      s.rd('tilesPerRow${et.index}_$relicSetFilterIdx') ??
       RelicSetFilter.DEFAULT_TPR;
-  setTilesPerRow(EVENT eventType, int relicSetFilterIdx, int newVal) {
-    s.wr('tilesPerRow${eventType.index}_$relicSetFilterIdx', newVal);
+  setTilesPerRow(ET et, int relicSetFilterIdx, int newVal) {
+    s.wr('tilesPerRow${et.index}_$relicSetFilterIdx', newVal);
     updateOnThread1Ms(); // update() worked, but this is safer.
   }
 
-  bool getShowTileText(EVENT eventType) =>
-      s.rd('showTileText${eventType.index}') ?? true;
-  setShowTileText(EVENT eventType, bool newVal) {
-    s.wr('showTileText${eventType.index}', newVal);
+  bool getShowTileText(ET et) => s.rd('showTileText${et.index}') ?? true;
+  setShowTileText(ET et, bool newVal) {
+    s.wr('showTileText${et.index}', newVal);
     updateOnThread1Ms();
   }
 

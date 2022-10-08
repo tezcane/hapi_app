@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
+import 'package:hapi/tarikh/event/et.dart';
 import 'package:hapi/tarikh/event/event.dart';
 import 'package:hapi/tarikh/event/event_c.dart';
 import 'package:hapi/tarikh/event/thumbnail_detail_widget.dart';
@@ -11,13 +12,13 @@ import 'package:hapi/tarikh/event/thumbnail_detail_widget.dart';
 /// timeline when tapping on one of them if event type is Tarikh, otherwise it
 /// shows the relic view.
 class EventFavoriteUI extends StatelessWidget {
-  const EventFavoriteUI(this.eventType, this.navPage);
-  final EVENT eventType;
+  const EventFavoriteUI(this.et, this.navPage);
+  final ET et;
   final NavPage navPage;
 
   @override
   Widget build(BuildContext context) {
-    List<Event> eventListFav = EventC.to.getEventListFav(eventType);
+    List<Event> eventListFav = EventC.to.getEventListFav(et);
 
     /// If no event has been added to the favorites yet, a placeholder is shown
     /// with a [FlareActor] animation of a broken heart and two lines of text.

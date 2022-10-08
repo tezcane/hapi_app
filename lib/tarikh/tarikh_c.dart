@@ -5,6 +5,7 @@ import 'package:hapi/controller/time_c.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/relic/relic_c.dart';
+import 'package:hapi/tarikh/event/et.dart';
 import 'package:hapi/tarikh/event/event.dart';
 import 'package:hapi/tarikh/event/event_c.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
@@ -142,7 +143,7 @@ class TarikhC extends GetxHapi {
       tih._timeMax,
     );
 
-    Event event = EventC.to.getEventList(EVENT.Tarikh).first;
+    Event event = EventC.to.getEventList(ET.Tarikh).first;
     t.setViewport(
       start: event.startMs * 2.0,
       end: event.startMs,
@@ -160,7 +161,7 @@ class TarikhC extends GetxHapi {
   bool get isGutterModeOff => _gutterMode == GutterMode.OFF;
   bool get isGutterModeFav => _gutterMode == GutterMode.FAV;
   bool get isGutterModeAll => _gutterMode == GutterMode.ALL;
-  bool get isGutterFavEmpty => EventC.to.getEventListFav(EVENT.Tarikh).isEmpty;
+  bool get isGutterFavEmpty => EventC.to.getEventListFav(ET.Tarikh).isEmpty;
 
   /// Updates text around time button, no event is set
   void updateTimeBtn(
@@ -315,7 +316,7 @@ class TimelineInitHandler {
 
       /// Finally create Event object
       Event event = Event(
-        eventType: EVENT.Tarikh,
+        et: ET.Tarikh,
         tkEra: td.tkEra ?? '',
         tkTitle: td.tkTitle,
         startMs: startMs,

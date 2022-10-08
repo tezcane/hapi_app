@@ -5,7 +5,7 @@ import 'package:hapi/main_c.dart';
 import 'package:hapi/quran/quran.dart';
 import 'package:hapi/relic/family_tree/family_tree.dart';
 import 'package:hapi/relic/relic.dart';
-import 'package:hapi/tarikh/event/event.dart';
+import 'package:hapi/tarikh/event/et.dart';
 import 'package:hapi/tarikh/event/event_asset.dart';
 
 const String _ = ' '; // space/gap
@@ -46,7 +46,7 @@ class Nabi extends FamilyTree {
     this.tvTomb,
   }) : super(
           // Event data:
-          eventType: EVENT.Nabi,
+          et: ET.Nabi,
           tkEra: tkEra,
           tkTitle: 'a.${e.isim}',
           startMs: startMs,
@@ -1924,8 +1924,8 @@ List<RelicSetFilter> relicSetFiltersNabi = [
       (index) => relicsNabi[index].e.index,
     ),
     tprMax: relicsNabi.length,
-    treeGraph1: getGraphAllFamily(EVENT.Nabi, AS.Gap.index),
-    treeGraph2: getGraphOnlyRelics(EVENT.Nabi, AS.Gap.index),
+    treeGraph1: getGraphAllFamily(ET.Nabi, AS.Gap.index),
+    treeGraph2: getGraphOnlyRelics(ET.Nabi, AS.Gap.index),
   ),
 ];
 

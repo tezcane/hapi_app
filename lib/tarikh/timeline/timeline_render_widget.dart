@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
+import 'package:hapi/tarikh/event/et.dart';
 import 'package:hapi/tarikh/event/event.dart';
 import 'package:hapi/tarikh/event/event_c.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
@@ -686,8 +687,8 @@ class TimelineRenderObject extends RenderBox {
     ///
     /// Here the gutter is drawn and elements are added as *tappable* targets.
     List<Event> events = cTrkh.isGutterModeAll
-        ? EventC.to.getEventList(EVENT.Tarikh)
-        : EventC.to.getEventListFav(EVENT.Tarikh);
+        ? EventC.to.getEventList(ET.Tarikh)
+        : EventC.to.getEventListFav(ET.Tarikh);
 
     if (!cTrkh.isGutterModeOff && events.isNotEmpty) {
       double scale = t.computeScale(t.renderStart, t.renderEnd);

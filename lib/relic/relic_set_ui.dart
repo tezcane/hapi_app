@@ -15,7 +15,7 @@ class RelicSetUI extends StatelessWidget {
   RelicSetUI(this.relicSet) {
     filters = relicSet.filterList; // needs init separately
 
-    _updateFilter(RelicC.to.getFilterIdx(relicSet.eventType));
+    _updateFilter(RelicC.to.getFilterIdx(relicSet.et));
   }
   final RelicSet relicSet;
 
@@ -31,24 +31,24 @@ class RelicSetUI extends StatelessWidget {
   _updateFilter(int newIdx) {
     if (newIdx == filterIdx) return; // no need to do work, return
     filter = filters[newIdx];
-    tpr = RelicC.to.getTilesPerRow(relicSet.eventType, newIdx);
+    tpr = RelicC.to.getTilesPerRow(relicSet.et, newIdx);
 
     if (filter.isTreeFilter) {
       MenuC.to.pushSubPage(SubPage.Family_Tree, arguments: {
         'graph1': filter.treeGraph1,
         'graph2': filter.treeGraph2,
-        'eventType': relicSet.eventType,
+        'et': relicSet.et,
       });
       return;
     }
 
-    if (filterIdx != -1) RelicC.to.setFilterIdx(relicSet.eventType, newIdx);
+    if (filterIdx != -1) RelicC.to.setFilterIdx(relicSet.et, newIdx);
     filterIdx = newIdx;
   }
 
   @override
   Widget build(BuildContext context) {
-    bool showTileText = RelicC.to.getShowTileText(relicSet.eventType);
+    bool showTileText = RelicC.to.getShowTileText(relicSet.et);
 
     return Container(
       color: Theme.of(context).backgroundColor,
@@ -98,7 +98,7 @@ class RelicSetUI extends StatelessWidget {
               InkWell(
                 onTap: () {
                   showTileText = !showTileText;
-                  RelicC.to.setShowTileText(relicSet.eventType, showTileText);
+                  RelicC.to.setShowTileText(relicSet.et, showTileText);
                 },
                 child: SizedBox(
                   width: 45,
@@ -122,7 +122,7 @@ class RelicSetUI extends StatelessWidget {
     return DropdownButton<int>(
       isExpanded: true,
       isDense: false,
-      value: RelicC.to.getFilterIdx(relicSet.eventType),
+      value: RelicC.to.getFilterIdx(relicSet.et),
       iconEnabledColor: Colors.white,
       iconSize: 25,
       style: AppThemes.textStyleBtn,
@@ -139,7 +139,7 @@ class RelicSetUI extends StatelessWidget {
             value: value,
             child: T(
               relicSet.filterList[value].tkLabel,
-              RelicC.to.getFilterIdx(relicSet.eventType) == value ? ts : tsN,
+              RelicC.to.getFilterIdx(relicSet.et) == value ? ts : tsN,
               alignment: LanguageC.to.centerLeft,
             ),
           );
@@ -155,7 +155,7 @@ class RelicSetUI extends StatelessWidget {
           onTap: () {
             if (tpr < filter.tprMax) {
               tpr += 1;
-              RelicC.to.setTilesPerRow(relicSet.eventType, filterIdx, tpr);
+              RelicC.to.setTilesPerRow(relicSet.et, filterIdx, tpr);
             }
           },
           child: SizedBox(
@@ -172,7 +172,7 @@ class RelicSetUI extends StatelessWidget {
           onTap: () {
             if (tpr > filter.tprMin) {
               tpr -= 1;
-              RelicC.to.setTilesPerRow(relicSet.eventType, filterIdx, tpr);
+              RelicC.to.setTilesPerRow(relicSet.et, filterIdx, tpr);
             }
           },
           child: SizedBox(
@@ -270,8 +270,8 @@ class RelicSetUI extends StatelessWidget {
     return InkWell(
       onTap: () {
         MenuC.to.pushSubPage(SubPage.Event_Details, arguments: {
-          'eventType': relicSet.eventType,
-          'eventMap': RelicC.to.getEventMap(relicSet.eventType, filterIdx),
+          'et': relicSet.et,
+          'eventMap': RelicC.to.getEventMap(relicSet.et, filterIdx),
           'saveTag': relic.saveTag,
         });
       },

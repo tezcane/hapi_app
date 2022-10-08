@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:hapi/relic/relic_c.dart';
+import 'package:hapi/tarikh/event/et.dart';
 import 'package:hapi/tarikh/event/event.dart';
 import 'package:hapi/tarikh/event/event_asset.dart';
 
@@ -9,7 +10,7 @@ import 'package:hapi/tarikh/event/event_asset.dart';
 abstract class Relic extends Event {
   Relic({
     // Event data:
-    required EVENT eventType,
+    required ET et,
     required String tkEra,
     required String tkTitle,
     required double startMs,
@@ -17,7 +18,7 @@ abstract class Relic extends Event {
     // Relic data:
     required this.e,
   }) : super(
-          eventType: eventType,
+          et: et,
           tkEra: tkEra,
           tkTitle: tkTitle,
           startMs: startMs,
@@ -26,7 +27,7 @@ abstract class Relic extends Event {
         );
   final Enum e; // Unique relicId for this RELIC_TYPE
 
-  int get ajrLevel => RelicC.to.getAjrLevel(eventType, e.index);
+  int get ajrLevel => RelicC.to.getAjrLevel(et, e.index);
 
   /// Abstract methods:
   RelicAsset getRelicAsset({width = 200.0, height = 200.0, scale = 1.0});
@@ -36,11 +37,11 @@ abstract class Relic extends Event {
 /// Stores all information needed to show a RelicSet, see RelicSetUI().
 class RelicSet {
   RelicSet({
-    required this.eventType,
+    required this.et,
     required this.relics,
     required this.tkTitle,
   });
-  final EVENT eventType;
+  final ET et;
   final List<Relic> relics;
   final String tkTitle;
 

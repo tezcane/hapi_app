@@ -5,6 +5,7 @@ import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/relic/relic_c.dart';
+import 'package:hapi/tarikh/event/et.dart';
 import 'package:hapi/tarikh/event/event.dart';
 import 'package:hapi/tarikh/event/event_c.dart';
 import 'package:hapi/tarikh/event/thumbnail_widget.dart';
@@ -118,16 +119,16 @@ class ThumbnailDetailWidget extends StatelessWidget {
 
   _goToEventDetailsOfTarikh() {
     MenuC.to.pushSubPage(SubPage.Event_Details, arguments: {
-      'eventType': EVENT.Tarikh,
-      'eventMap': EventC.to.getEventMap(EVENT.Tarikh),
+      'et': ET.Tarikh,
+      'eventMap': EventC.to.getEventMap(ET.Tarikh),
       'saveTag': event.saveTag,
     });
   }
 
   _goToEventDetailsOfRelics() {
     MenuC.to.pushSubPage(SubPage.Event_Details, arguments: {
-      'eventType': event.eventType,
-      'eventMap': RelicC.to.getEventMap(event.eventType, 0), // 0 = Default Idx
+      'et': event.et,
+      'eventMap': RelicC.to.getEventMap(event.et, 0), // 0 = Default Idx
       'saveTag': event.saveTag,
     });
   }

@@ -4,7 +4,7 @@ import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_c.dart';
-import 'package:hapi/tarikh/event/event.dart';
+import 'package:hapi/tarikh/event/et.dart';
 
 /// For UI's that have option to show Arabic, Transliteration, and locale lang.
 /// All relic enums must implement/extend this. TODO asdf implement in many places
@@ -71,7 +71,7 @@ enum RELATIVE {
 abstract class FamilyTree extends Relic {
   FamilyTree({
     // Event data:
-    required EVENT eventType,
+    required ET et,
     required String tkEra,
     required String tkTitle,
     required double startMs,
@@ -92,7 +92,7 @@ abstract class FamilyTree extends Relic {
     this.successor, // TODO make use of this, order of prophethood?
   }) : super(
           // Event data:
-          eventType: eventType,
+          et: et,
           tkEra: tkEra,
           tkTitle: tkTitle,
           startMs: startMs,
@@ -114,9 +114,9 @@ abstract class FamilyTree extends Relic {
   final Enum? successor;
 }
 
-Graph getGraphAllFamily(EVENT eventType, int gapIdx) {
+Graph getGraphAllFamily(ET et, int gapIdx) {
   final Graph graph = Graph()..isTree = true;
-  for (Relic relic in RelicC.to.getRelicSet(eventType).relics) {
+  for (Relic relic in RelicC.to.getRelicSet(et).relics) {
     addEdgesAllFamily(graph, relic as FamilyTree, gapIdx);
   }
   return graph;
@@ -188,7 +188,7 @@ addEdgesAllFamily(Graph graph, FamilyTree ft, int gapIdx) {
 
 /// TODO we should be able to build this without tvSuccessors[] data simialr
 /// to how we build the "ALL" graph above.
-Graph getGraphOnlyRelics(EVENT eventType, int gapIdx) {
+Graph getGraphOnlyRelics(ET et, int gapIdx) {
   final Graph graph = Graph()..isTree = true;
 
   /// Embedded function so we can use this methods variables
@@ -208,7 +208,7 @@ Graph getGraphOnlyRelics(EVENT eventType, int gapIdx) {
     );
   }
 
-  List<Relic> relics = RelicC.to.getRelicSet(eventType).relics;
+  List<Relic> relics = RelicC.to.getRelicSet(et).relics;
 
   // for each relic
   for (int relicIdx = 0; relicIdx < relics.length - 1; relicIdx++) {

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:csv/csv.dart';
+import 'package:hapi/tarikh/event/et.dart';
 import 'package:http/http.dart' as http;
 
 /// commandline dart app that generates the localization.g.dart file.
@@ -89,10 +90,15 @@ void main() async {
 
     // updateLocalizationFile(localizations); // obsolete, uses too much memory
 
-    await _updateMainTranslationFiles(localizations, ['t.', 'r.']);
+    List<String> keysToSkip = [];
+    for (ET et in ET.values) {
+      await _updateBigTranslationFiles(localizations, et);
+      keysToSkip.add(et.name.toLowerCase() + '.');
+    }
+
+    await _updateMainTranslationFiles(localizations, keysToSkip);
+
     await _updateArabicOnlyFile(localizations);
-    await _updateBigTranslationFiles(localizations, 't.', 't/');
-    await _updateBigTranslationFiles(localizations, 'r.', 'r/');
   } catch (e) {
     //output error
     stderr.writeln('error: networking error');
@@ -183,11 +189,10 @@ Future _updateArabicOnlyFile(List<Locale> localizations) async {
 /// Filters "t.<key>" / "r.<key>" tarikh, relic, etc. big text descriptions into
 /// their own folder path.  These are to save memory and not always have this
 /// data loaded.
-Future _updateBigTranslationFiles(
-  List<Locale> localizations,
-  String keyToFilterFor,
-  String outFolder,
-) async {
+Future _updateBigTranslationFiles(List<Locale> localizations, ET et) async {
+  String keyToFilterFor = et.name.toLowerCase() + '.';
+  String outFolder = et.name.toLowerCase();
+
   int count = 0;
   for (var localization in localizations) {
     count++;
@@ -211,7 +216,7 @@ Future _updateBigTranslationFiles(
     text += '\n}\n';
 
     String filename =
-        '../../../../../../assets/i18n/$outFolder${localization.lang}.json';
+        '../../../../../../assets/i18n/event/$outFolder/${localization.lang}.json';
     stdout.writeln('Saving $filename');
     final file = File(filename);
     await file.writeAsString(text);
