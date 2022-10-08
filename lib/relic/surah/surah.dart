@@ -24,7 +24,7 @@ class Surah extends Relic {
           // Event data:
           et: ET.Surah,
           tkEra: 'Quran Revelation',
-          tkTitle: e.tkArabeeIsim,
+          tkTitle: e.tkIsimA,
           startMs: 0, // TODO put in quran revelation dates!
           endMs: 0,
         );

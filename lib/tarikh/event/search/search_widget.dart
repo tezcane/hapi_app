@@ -36,7 +36,7 @@ class SearchWidget extends StatelessWidget {
         focusNode: _searchFocusNode,
         textAlign: TextAlign.center, // align UI & better for arabic support
         decoration: InputDecoration(
-            hintText: at('at.{0} Search', [navPage.tk]),
+            hintText: at('at.{0} Search', [navPage.tkIsimA]),
             prefixIcon: const Icon(Icons.search, size: 30),
             suffixIcon: _searchFocusNode.hasFocus
                 ? Visibility(

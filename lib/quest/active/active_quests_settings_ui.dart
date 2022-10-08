@@ -95,10 +95,12 @@ class ActiveQuestsSettingsUI extends StatelessWidget {
                             color: AppThemes.selected.withOpacity(
                                 c.salahCalcMethod == value ? 1 : 0),
                             child: Center(
-                              child: Text(
-                                CalcMethod.values[value].niceName,
-                                textAlign: TextAlign.center,
-                                //textAlign: TextAlign.center,
+                              child: T(
+                                CalcMethod.values[value].tkNiceName,
+                                AppThemes.tsTitle,
+                                w: 150,
+                                h: 16,
+                                alignment: Alignment.center,
                               ),
                             ),
                           ),

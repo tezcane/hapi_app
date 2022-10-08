@@ -2,36 +2,23 @@ import 'package:hapi/main_c.dart';
 import 'package:hapi/quest/active/athan/calculation_params.dart';
 
 enum CalcMethod {
-  America____ISNA___,
+  America____ISNA___, // "America (ISNA)"
   Dubai,
-  Egypt____GAS___, // Egyptian General Authority of Survey
-  Karachi____UIS___, // University of Islamic Sciences, Karachi
+  Egypt____GAS___, // "Egypt (GAS)" // Egyptian General Authority of Survey
+  Karachi____UIS___, // "Karachi (UIS)" // University of Islamic Sciences, Karachi
   Kuwait,
-  Moonsight_Committee,
-  Morocco____MHIA___, // Moroccan ministry of Habous and Islamic Affairs
-  Muslim_World_League,
+  Moonsight_Committee, // "Moonsight Committee"
+  Morocco____MHIA___, // "Morocco (MHIA)" // Moroccan ministry of Habous and Islamic Affairs
+  Muslim_World_League, // "Muslim World League"
   Qatar,
   Singapore,
-  Tehran____IGUT___, // Institute of Geophysics, University of Tehran
-  Turkey____Diyanet___,
-  Umm_Al__Qura____UM___, // Umm al-Qura University, Makkah
+  Tehran____IGUT___, // "Tehran (IGUT)" // Institute of Geophysics, University of Tehran
+  Turkey____Diyanet___, // "Turkey (Diyanet)"
+  Umm_Al__Qura____UM___, // "Umm Al-Qura (UM)" // Umm al-Qura University, Makkah
   Custom, // When user changes from the default
 }
 
 extension EnumUtil on CalcMethod {
-  /// Special logic and rules here to rename enum to a nice name:
-  ///     ____ -> (
-  ///      ___ -> )
-  ///       __ -> -
-  ///        _ -> ' ' (space)
-  String get niceName {
-    return name
-        .replaceFirst('____', ' (')
-        .replaceFirst('___', ')')
-        .replaceFirst('__', '-')
-        .replaceAll('_', ' ');
-  }
-
   CalcMethodParams get params {
     final Map<Salah, int> adjustSecs = {
       Salah.fajr: 0,
@@ -43,52 +30,51 @@ extension EnumUtil on CalcMethod {
     };
 
     switch (this) {
-      case (CalcMethod.Singapore):
+      case CalcMethod.Singapore:
         adjustSecs[Salah.dhuhr] = 1 * 60;
         return CalcMethodParams(this, 20.0, 18.0, 0, 0.0, adjustSecs);
-      case (CalcMethod.Egypt____GAS___):
+      case CalcMethod.Egypt____GAS___:
         adjustSecs[Salah.dhuhr] = 1 * 60;
         return CalcMethodParams(this, 19.5, 17.5, 0, 0.0, adjustSecs);
-      case (CalcMethod.Morocco____MHIA___):
+      case CalcMethod.Morocco____MHIA___:
         adjustSecs[Salah.sunrise] = -3 * 60;
         adjustSecs[Salah.dhuhr] = 5 * 60;
         adjustSecs[Salah.maghrib] = 5 * 60;
         return CalcMethodParams(this, 19.0, 17.0, 0, 0.0, adjustSecs);
-      case (CalcMethod.Dubai):
+      case CalcMethod.Dubai:
         adjustSecs[Salah.sunrise] = -3 * 60;
         adjustSecs[Salah.dhuhr] = 3 * 60;
         adjustSecs[Salah.asr] = 3 * 60;
         adjustSecs[Salah.maghrib] = 3 * 60;
         return CalcMethodParams(this, 18.2, 18.2, 0, 0.0, adjustSecs);
-      case (CalcMethod.Moonsight_Committee):
+      case CalcMethod.Moonsight_Committee:
         adjustSecs[Salah.dhuhr] = 5 * 60;
         adjustSecs[Salah.maghrib] = 3 * 60;
         return CalcMethodParams(this, 18.0, 18.0, 0, 0.0, adjustSecs);
-      case (CalcMethod.Karachi____UIS___):
+      case CalcMethod.Karachi____UIS___:
         adjustSecs[Salah.dhuhr] = 1 * 60;
         return CalcMethodParams(this, 18.0, 18.0, 0, 0.0, adjustSecs);
-      case (CalcMethod.Kuwait):
+      case CalcMethod.Kuwait:
         return CalcMethodParams(this, 18.0, 17.5, 0, 0.0, adjustSecs);
-      case (CalcMethod.Turkey____Diyanet___):
+      case CalcMethod.Turkey____Diyanet___:
         adjustSecs[Salah.sunrise] = -7 * 60;
         adjustSecs[Salah.dhuhr] = 5 * 60;
         adjustSecs[Salah.asr] = 4 * 60;
         adjustSecs[Salah.maghrib] = 7 * 60;
         return CalcMethodParams(this, 18.0, 17.0, 0, 0.0, adjustSecs);
-      case (CalcMethod.Muslim_World_League):
+      case CalcMethod.Muslim_World_League:
         adjustSecs[Salah.dhuhr] = 1 * 60;
         return CalcMethodParams(this, 18.0, 17.0, 0, 0.0, adjustSecs);
-      case (CalcMethod.Umm_Al__Qura____UM___):
+      case CalcMethod.Umm_Al__Qura____UM___:
         return CalcMethodParams(this, 18.5, 0.0, 90, 0.0, adjustSecs);
-      case (CalcMethod.Qatar):
+      case CalcMethod.Qatar:
         return CalcMethodParams(this, 18.0, 0.0, 90, 0.0, adjustSecs);
-      case (CalcMethod.Tehran____IGUT___):
+      case CalcMethod.Tehran____IGUT___:
         return CalcMethodParams(this, 17.7, 14.0, 0, 4.5, adjustSecs);
-      case (CalcMethod.America____ISNA___):
+      case CalcMethod.America____ISNA___:
         adjustSecs[Salah.dhuhr] = 1 * 60;
         return CalcMethodParams(this, 15.0, 15.0, 0, 0.0, adjustSecs);
-      case (CalcMethod.Custom):
-      default:
+      case CalcMethod.Custom:
         CalcMethod calcMethod = CalcMethod
             .values[s.rd('calcMethod_idx') ?? CalcMethod.Custom.index];
         double fajrAngle = s.rd('calcMethod_fajrAngle') ?? 18.0;
@@ -186,7 +172,7 @@ class CalcMethodParams {
   }
 
   /// Salah Calculation Method, references itself here so origin is known for
-  /// quick comparisons, niceName printing needs, etc.
+  /// quick comparisons, [tkNiceName] printing needs, etc.
   final CalcMethod calcMethod;
 
   /// Must have all these SalahAdjust values, +/- seconds to tune a salah time:

@@ -63,8 +63,6 @@ enum QUEST {
   LAYL_SLEEP,
   LAYL_TAHAJJUD,
   LAYL_WITR,
-
-  NONE, // used as terminator and no operation, but also stores bit length
 }
 
 /// Bit Completion Type
@@ -100,54 +98,52 @@ extension EnumUtil on QUEST {
 
   Z getQuestZRow() {
     switch (this) {
-      case (QUEST.FAJR_MUAKB):
-      case (QUEST.FAJR_FARD):
-      case (QUEST.MORNING_ADHKAR):
-      case (QUEST.FAJR_THIKR):
-      case (QUEST.FAJR_DUA):
+      case QUEST.FAJR_MUAKB:
+      case QUEST.FAJR_FARD:
+      case QUEST.MORNING_ADHKAR:
+      case QUEST.FAJR_THIKR:
+      case QUEST.FAJR_DUA:
         return Z.Fajr;
-      case (QUEST.KARAHAT_SUNRISE):
-      case (QUEST.DHUHA_ISHRAQ):
-      case (QUEST.DHUHA_DHUHA):
-      case (QUEST.KARAHAT_ISTIWA):
+      case QUEST.KARAHAT_SUNRISE:
+      case QUEST.DHUHA_ISHRAQ:
+      case QUEST.DHUHA_DHUHA:
+      case QUEST.KARAHAT_ISTIWA:
         return Z.Dhuha;
-      case (QUEST.DHUHR_MUAKB):
-      case (QUEST.DHUHR_FARD):
-      case (QUEST.DHUHR_MUAKA):
-      case (QUEST.DHUHR_NAFLA):
-      case (QUEST.DHUHR_THIKR):
-      case (QUEST.DHUHR_DUA):
+      case QUEST.DHUHR_MUAKB:
+      case QUEST.DHUHR_FARD:
+      case QUEST.DHUHR_MUAKA:
+      case QUEST.DHUHR_NAFLA:
+      case QUEST.DHUHR_THIKR:
+      case QUEST.DHUHR_DUA:
         return Z.Dhuhr;
-      case (QUEST.ASR_NAFLB):
-      case (QUEST.ASR_FARD):
-      case (QUEST.EVENING_ADHKAR):
-      case (QUEST.ASR_THIKR):
-      case (QUEST.ASR_DUA):
+      case QUEST.ASR_NAFLB:
+      case QUEST.ASR_FARD:
+      case QUEST.EVENING_ADHKAR:
+      case QUEST.ASR_THIKR:
+      case QUEST.ASR_DUA:
         return Z.Asr;
-      case (QUEST.KARAHAT_SUNSET):
-      case (QUEST.MAGHRIB_FARD):
-      case (QUEST.MAGHRIB_MUAKA):
-      case (QUEST.MAGHRIB_NAFLA):
-      case (QUEST.MAGHRIB_THIKR):
-      case (QUEST.MAGHRIB_DUA):
+      case QUEST.KARAHAT_SUNSET:
+      case QUEST.MAGHRIB_FARD:
+      case QUEST.MAGHRIB_MUAKA:
+      case QUEST.MAGHRIB_NAFLA:
+      case QUEST.MAGHRIB_THIKR:
+      case QUEST.MAGHRIB_DUA:
         return Z.Maghrib;
-      case (QUEST.ISHA_NAFLB):
-      case (QUEST.ISHA_FARD):
-      case (QUEST.ISHA_MUAKA):
-      case (QUEST.ISHA_NAFLA):
-      case (QUEST.ISHA_THIKR):
-      case (QUEST.ISHA_DUA):
+      case QUEST.ISHA_NAFLB:
+      case QUEST.ISHA_FARD:
+      case QUEST.ISHA_MUAKA:
+      case QUEST.ISHA_NAFLA:
+      case QUEST.ISHA_THIKR:
+      case QUEST.ISHA_DUA:
         return Z.Isha;
-      case (QUEST.LAYL_QIYAM):
-      case (QUEST.LAYL_THIKR):
-      case (QUEST.LAYL_DUA):
+      case QUEST.LAYL_QIYAM:
+      case QUEST.LAYL_THIKR:
+      case QUEST.LAYL_DUA:
         return Z.Middle_of_Night;
-      case (QUEST.LAYL_SLEEP):
-      case (QUEST.LAYL_TAHAJJUD):
-      case (QUEST.LAYL_WITR):
+      case QUEST.LAYL_SLEEP:
+      case QUEST.LAYL_TAHAJJUD:
+      case QUEST.LAYL_WITR:
         return Z.Last_3rd_of_Night;
-      default:
-        return l.E('Z:getZRow: Invalid QUEST "$this" given');
     }
   }
 
@@ -200,68 +196,65 @@ extension EnumUtil on QUEST {
     // if we got here: Quest's zRow is Pinned but it's not the current quest
     switch (this) {
       // FARD, MUAK, NAFL, and LAYL quests must be done sequentially
-      case (QUEST.FAJR_MUAKB):
-      case (QUEST.FAJR_FARD):
-      case (QUEST.DHUHR_MUAKB):
-      case (QUEST.DHUHR_FARD):
-      case (QUEST.DHUHR_MUAKA):
-      case (QUEST.DHUHR_NAFLA):
-      case (QUEST.ASR_NAFLB):
-      case (QUEST.ASR_FARD):
-      case (QUEST.MAGHRIB_FARD):
-      case (QUEST.MAGHRIB_MUAKA):
-      case (QUEST.MAGHRIB_NAFLA):
-      case (QUEST.ISHA_NAFLB):
-      case (QUEST.ISHA_FARD):
-      case (QUEST.ISHA_MUAKA):
-      case (QUEST.ISHA_NAFLA):
-      case (QUEST.LAYL_QIYAM):
-      case (QUEST.LAYL_THIKR):
-      case (QUEST.LAYL_DUA):
-      case (QUEST.LAYL_SLEEP):
-      case (QUEST.LAYL_TAHAJJUD):
-      case (QUEST.LAYL_WITR):
+      case QUEST.FAJR_MUAKB:
+      case QUEST.FAJR_FARD:
+      case QUEST.DHUHR_MUAKB:
+      case QUEST.DHUHR_FARD:
+      case QUEST.DHUHR_MUAKA:
+      case QUEST.DHUHR_NAFLA:
+      case QUEST.ASR_NAFLB:
+      case QUEST.ASR_FARD:
+      case QUEST.MAGHRIB_FARD:
+      case QUEST.MAGHRIB_MUAKA:
+      case QUEST.MAGHRIB_NAFLA:
+      case QUEST.ISHA_NAFLB:
+      case QUEST.ISHA_FARD:
+      case QUEST.ISHA_MUAKA:
+      case QUEST.ISHA_NAFLA:
+      case QUEST.LAYL_QIYAM:
+      case QUEST.LAYL_THIKR:
+      case QUEST.LAYL_DUA:
+      case QUEST.LAYL_SLEEP:
+      case QUEST.LAYL_TAHAJJUD:
+      case QUEST.LAYL_WITR:
         return QUEST_STATE.NOT_ACTIVE_YET;
 
       // karahat can complete anytime isSalahRowPinned:
-      case (QUEST.KARAHAT_SUNRISE):
-      case (QUEST.KARAHAT_ISTIWA):
-      case (QUEST.KARAHAT_SUNSET):
+      case QUEST.KARAHAT_SUNRISE:
+      case QUEST.KARAHAT_ISTIWA:
+      case QUEST.KARAHAT_SUNSET:
         return QUEST_STATE.ACTIVE;
 
       // adhkar and thikr must wait until salahQuestsAreComplete
-      case (QUEST.MORNING_ADHKAR):
-      case (QUEST.EVENING_ADHKAR):
-      case (QUEST.FAJR_THIKR):
-      case (QUEST.DHUHR_THIKR):
-      case (QUEST.ASR_THIKR):
-      case (QUEST.MAGHRIB_THIKR):
-      case (QUEST.ISHA_THIKR):
+      case QUEST.MORNING_ADHKAR:
+      case QUEST.EVENING_ADHKAR:
+      case QUEST.FAJR_THIKR:
+      case QUEST.DHUHR_THIKR:
+      case QUEST.ASR_THIKR:
+      case QUEST.MAGHRIB_THIKR:
+      case QUEST.ISHA_THIKR:
         if (salahQuestsAreComplete) return QUEST_STATE.ACTIVE;
         return QUEST_STATE.NOT_ACTIVE_YET;
 
       // Salah duas wait until salah, adhkar, and thikr quests are complete
-      case (QUEST.FAJR_DUA):
-      case (QUEST.DHUHR_DUA):
-      case (QUEST.ASR_DUA):
-      case (QUEST.MAGHRIB_DUA):
-      case (QUEST.ISHA_DUA):
+      case QUEST.FAJR_DUA:
+      case QUEST.DHUHR_DUA:
+      case QUEST.ASR_DUA:
+      case QUEST.MAGHRIB_DUA:
+      case QUEST.ISHA_DUA:
         if (adhkarAndThikrAreComplete) return QUEST_STATE.ACTIVE;
         return QUEST_STATE.NOT_ACTIVE_YET;
 
       // ishraq only active during ishraq time
-      case (QUEST.DHUHA_ISHRAQ):
+      case QUEST.DHUHA_ISHRAQ:
         // Karahat sunrise not complete
         if (currZ == Z.Ishraq) return QUEST_STATE.ACTIVE;
         return QUEST_STATE.NOT_ACTIVE_YET;
       // Duha active anytime during ishraq and duha only
-      case (QUEST.DHUHA_DHUHA):
+      case QUEST.DHUHA_DHUHA:
         // Karahat sunrise not complete
         if (currZ == Z.Ishraq || currZ == Z.Dhuha) return QUEST_STATE.ACTIVE;
         return QUEST_STATE.NOT_ACTIVE_YET;
-
-      default:
-        return l.E('Z:getActionState: Invalid QUEST "$this" given');
     }
   }
 }
@@ -305,7 +298,8 @@ class ActiveQuestsAjrC extends GetxHapi {
     QUEST lastQuest = QUEST.values[0];
     for (QUEST q in QUEST.values) {
       lastQuest = q;
-      if (q == currZ.firstQuestToNotSetMiss()) {
+      QUEST? firstQuestToNotSetMiss = currZ.firstQuestToNotSetMiss();
+      if (firstQuestToNotSetMiss == null || q == firstQuestToNotSetMiss) {
         l.i('Stopping init: $q, _questsMiss=$_questsMiss');
         break;
       }
@@ -360,8 +354,8 @@ class ActiveQuestsAjrC extends GetxHapi {
 
   QUEST getCurrQuest() => QUEST.values[getCurrIdx];
   QUEST getPrevQuest() => QUEST.values[getCurrIdx - 1 < 0 ? 0 : getCurrIdx - 1];
-  QUEST getNextQuest() => QUEST.values[getCurrIdx + 1 >= QUEST.NONE.index
-      ? QUEST.NONE.index - 1
+  QUEST getNextQuest() => QUEST.values[getCurrIdx >= QUEST.LAYL_WITR.index
+      ? QUEST.LAYL_WITR.index
       : getCurrIdx + 1];
 
   bool isDone(QUEST q) => (_questsDone >> q.index) & 1 == 1;
@@ -406,13 +400,13 @@ class ActiveQuestsAjrC extends GetxHapi {
   _setMiss(QUEST q) => _setBit(q, BitType.MISS, false);
   _setBit(QUEST q, BitType bitType, bool updateDb) {
     switch (bitType) {
-      case (BitType.DONE):
+      case BitType.DONE:
         _questsDone |= 1 << q.index;
         break;
-      case (BitType.SKIP):
+      case BitType.SKIP:
         _questsSkip |= 1 << q.index;
         break;
-      case (BitType.MISS):
+      case BitType.MISS:
         _questsMiss |= 1 << q.index;
         break;
     }
@@ -421,13 +415,13 @@ class ActiveQuestsAjrC extends GetxHapi {
       // don't do work of big binary output, unless verbose mode is on
       if (l.isVerboseMode) {
         switch (bitType) {
-          case (BitType.DONE):
+          case BitType.DONE:
             l.v(_questsDone.toRadixString(2));
             break;
-          case (BitType.SKIP):
+          case BitType.SKIP:
             l.v(_questsSkip.toRadixString(2));
             break;
-          case (BitType.MISS):
+          case BitType.MISS:
             l.v(_questsMiss.toRadixString(2));
             break;
         }

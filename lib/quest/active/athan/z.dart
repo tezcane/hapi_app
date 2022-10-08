@@ -49,58 +49,54 @@ extension EnumUtil on Z {
   }
 
   /// Used to set misses at new Z time init
-  QUEST firstQuestToNotSetMiss() {
+  QUEST? firstQuestToNotSetMiss() {
     switch (this) {
-      case (Z.Fajr):
-      case (Z.Dhuhr):
-      case (Z.Asr):
-      case (Z.Maghrib):
-      case (Z.Isha):
-      case (Z.Middle_of_Night):
+      case Z.Fajr:
+      case Z.Dhuhr:
+      case Z.Asr:
+      case Z.Maghrib:
+      case Z.Isha:
+      case Z.Middle_of_Night:
         return getZRowQuests().first;
-      case (Z.Shuruq):
-      case (Z.Ishraq):
+      case Z.Shuruq:
+      case Z.Ishraq:
         return QUEST.KARAHAT_SUNRISE;
-      case (Z.Dhuha):
+      case Z.Dhuha:
         return QUEST.DHUHA_DHUHA;
-      case (Z.Istiwa):
+      case Z.Istiwa:
         return QUEST.KARAHAT_ISTIWA;
-      case (Z.Ghurub):
+      case Z.Ghurub:
         return QUEST.ASR_FARD; // only disallow ASR salah's, adhkar/thikr/dua ok
-      case (Z.Last_3rd_of_Night):
+      case Z.Last_3rd_of_Night:
         return QUEST.LAYL_QIYAM; // isha must be prayed before Middle of Night
-      case (Z.Fajr_Tomorrow): // needed to set full misses at end of day detect
-        return QUEST.NONE; // sets Witr miss last, if needed
-      default:
-        return l.E('Z:firstQuestToNotSetMiss: Invalid Z "$this" given');
+      case Z.Fajr_Tomorrow: // needed to set full misses at end of day detect
+        return null; // sets Witr miss last, if needed
     }
   }
 
   bool isAboveHorizon() {
     switch (this) {
-      case (Z.Shuruq):
-      case (Z.Ishraq):
-      case (Z.Dhuha):
-      case (Z.Istiwa):
-      case (Z.Dhuhr):
-      case (Z.Asr):
-      case (Z.Ghurub):
+      case Z.Shuruq:
+      case Z.Ishraq:
+      case Z.Dhuha:
+      case Z.Istiwa:
+      case Z.Dhuhr:
+      case Z.Asr:
+      case Z.Ghurub:
         return true;
-      case (Z.Maghrib):
-      case (Z.Isha):
-      case (Z.Middle_of_Night):
-      case (Z.Last_3rd_of_Night):
-      case (Z.Fajr):
-      case (Z.Fajr_Tomorrow):
+      case Z.Maghrib:
+      case Z.Isha:
+      case Z.Middle_of_Night:
+      case Z.Last_3rd_of_Night:
+      case Z.Fajr:
+      case Z.Fajr_Tomorrow:
         return false;
-      default:
-        return l.E('Z:isSunAboveHorizon: Invalid Z "$this" given');
     }
   }
 
   List<QUEST> getZRowQuests() {
     switch (this) {
-      case (Z.Fajr):
+      case Z.Fajr:
         return [
           QUEST.FAJR_MUAKB,
           QUEST.FAJR_FARD,
@@ -108,14 +104,14 @@ extension EnumUtil on Z {
           QUEST.FAJR_THIKR,
           QUEST.FAJR_DUA,
         ];
-      case (Z.Dhuha):
+      case Z.Dhuha:
         return [
           QUEST.KARAHAT_SUNRISE,
           QUEST.DHUHA_ISHRAQ,
           QUEST.DHUHA_DHUHA,
           QUEST.KARAHAT_ISTIWA,
         ];
-      case (Z.Dhuhr):
+      case Z.Dhuhr:
         return [
           QUEST.DHUHR_MUAKB,
           QUEST.DHUHR_FARD,
@@ -124,7 +120,7 @@ extension EnumUtil on Z {
           QUEST.DHUHR_THIKR,
           QUEST.DHUHR_DUA,
         ];
-      case (Z.Asr):
+      case Z.Asr:
         return [
           QUEST.ASR_NAFLB,
           QUEST.ASR_FARD,
@@ -132,7 +128,7 @@ extension EnumUtil on Z {
           QUEST.ASR_THIKR,
           QUEST.ASR_DUA,
         ];
-      case (Z.Maghrib):
+      case Z.Maghrib:
         return [
           QUEST.KARAHAT_SUNSET,
           QUEST.MAGHRIB_FARD,
@@ -141,7 +137,7 @@ extension EnumUtil on Z {
           QUEST.MAGHRIB_THIKR,
           QUEST.MAGHRIB_DUA,
         ];
-      case (Z.Isha):
+      case Z.Isha:
         return [
           QUEST.ISHA_NAFLB,
           QUEST.ISHA_FARD,
@@ -150,13 +146,13 @@ extension EnumUtil on Z {
           QUEST.ISHA_THIKR,
           QUEST.ISHA_DUA,
         ];
-      case (Z.Middle_of_Night):
+      case Z.Middle_of_Night:
         return [
           QUEST.LAYL_QIYAM,
           QUEST.LAYL_THIKR,
           QUEST.LAYL_DUA,
         ];
-      case (Z.Last_3rd_of_Night):
+      case Z.Last_3rd_of_Night:
         return [
           QUEST.LAYL_SLEEP,
           QUEST.LAYL_TAHAJJUD,

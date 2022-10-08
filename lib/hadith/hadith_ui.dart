@@ -13,16 +13,15 @@ import 'package:hapi/tarikh/event/search/event_search_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_menu_ui.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 
-enum TARIKH_TAB {
+enum HADITH_TAB {
   Favorites,
   Search,
-  Menu,
+  Menu, // TODO
 }
 
-/// Init active/daily/timed/hapi quests with slick bottom bar navigation
-class TarikhUI extends StatelessWidget {
-  const TarikhUI();
-  static const navPage = NavPage.Tarikh;
+class HadithUI extends StatelessWidget {
+  const HadithUI();
+  static const navPage = NavPage.Hadith;
 
   @override
   Widget build(BuildContext context) {

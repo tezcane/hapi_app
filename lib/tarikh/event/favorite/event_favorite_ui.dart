@@ -44,7 +44,7 @@ class EventFavoriteUI extends StatelessWidget {
                   T(
                     at(
                       'at.Add favorites in {0} detail pages',
-                      [navPage.tk],
+                      [navPage.tkIsimA],
                     ),
                     ts,
                     h: 25,

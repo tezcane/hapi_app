@@ -360,64 +360,65 @@ class Athan {
 
   /// Gets salah row times that are used for notifications.
   /// Each salah row header on active quests has a start time, return it here.
-  DateTime getZamanRowTime(Z z) {
+  ///
+  /// Caller must ensure passed in Z is in "List<Z> zRows = ...".
+  DateTime getAthanNotficationTime(Z z) {
     switch (z) {
-      case (Z.Fajr):
+      case Z.Fajr:
         return _fajr_01;
-      case (Z.Dhuha):
+      case Z.Dhuha:
         // NOTE1: It's not _karahatAdkharSunrise_02;
         // NOTE2: return ishraq for notification time, but technically I believe
         //        Duha begins at Sunrise (which is on the Duha Salah Row anyway)
         return _ishraqPrayer_03;
-      case (Z.Dhuhr):
+      case Z.Dhuhr:
         return _dhuhr_06;
-      case (Z.Asr):
+      case Z.Asr:
         return asr; // based on setting gets asr early/later time
-      case (Z.Maghrib):
+      case Z.Maghrib:
         return _maghrib_10;
-      case (Z.Isha):
+      case Z.Isha:
         return _isha_11;
-      case (Z.Middle_of_Night):
+      case Z.Middle_of_Night:
         return _middleOfNight_12;
-      case (Z.Last_3rd_of_Night):
+      case Z.Last_3rd_of_Night:
         return _last3rdOfNight_13;
       default:
-        return l.E('athan:getZamanRowTime: unexpected Z given: $z');
+        return l.E('athan:getAthanNotficationTime: unexpected Z given: $z');
     }
   }
 
   /// Returns Object[] - idx 0 = Z's DateTime, index 1 = sun rings circle color.
   List<Object> getZamanTime(Z z) {
-    if (z == Z.Fajr) {
-      return [_fajr_01, Colors.blue.shade700];
-    } else if (z == Z.Shuruq) {
-      return [_karahatAdkharSunrise_02, Colors.red]; // karahat sunrise
-    } else if (z == Z.Ishraq) {
-      return [_ishraqPrayer_03, Colors.green];
-    } else if (z == Z.Dhuha) {
-      return [_dhuhaPrayer_04, Colors.yellow.shade800];
-    } else if (z == Z.Istiwa) {
-      return [_karahatAdkharIstiwa_05, Colors.red]; // karahat zawal/zenith
-    } else if (z == Z.Dhuhr) {
-      return [_dhuhr_06, Colors.yellow.shade700];
-    } else if (z == Z.Asr) {
-      return ActiveQuestsC.to.salahAsrEarlier
-          ? [_asrEarly_07, Colors.yellow.shade900]
-          : [_asrLater_08, Colors.yellow.shade900];
-    } else if (z == Z.Ghurub) {
-      return [_karahatAdkharSunSetting_09, Colors.red]; // karahat sunsetting
-    } else if (z == Z.Maghrib) {
-      return [_maghrib_10, Colors.blue.shade700];
-    } else if (z == Z.Isha) {
-      return [_isha_11, Colors.purple.shade900];
-    } else if (z == Z.Middle_of_Night) {
-      return [_middleOfNight_12, Colors.purple.shade800];
-    } else if (z == Z.Last_3rd_of_Night) {
-      return [_last3rdOfNight_13, Colors.purple.shade900];
-    } else if (z == Z.Fajr_Tomorrow) {
-      return [_fajrTomorrow_14, Colors.pink]; // should never show
-    } else {
-      return l.E('TimeOfDay:getZamanTime: unknown zaman: "$z"');
+    switch (z) {
+      case Z.Fajr:
+        return [_fajr_01, Colors.blue.shade700];
+      case Z.Shuruq:
+        return [_karahatAdkharSunrise_02, Colors.red]; // karahat sunrise
+      case Z.Ishraq:
+        return [_ishraqPrayer_03, Colors.green];
+      case Z.Dhuha:
+        return [_dhuhaPrayer_04, Colors.yellow.shade800];
+      case Z.Istiwa:
+        return [_karahatAdkharIstiwa_05, Colors.red]; // karahat zawal/zenith
+      case Z.Dhuhr:
+        return [_dhuhr_06, Colors.yellow.shade700];
+      case Z.Asr:
+        return ActiveQuestsC.to.salahAsrEarlier
+            ? [_asrEarly_07, Colors.yellow.shade900]
+            : [_asrLater_08, Colors.yellow.shade900];
+      case Z.Ghurub:
+        return [_karahatAdkharSunSetting_09, Colors.red]; // karahat sunsetting
+      case Z.Maghrib:
+        return [_maghrib_10, Colors.blue.shade700];
+      case Z.Isha:
+        return [_isha_11, Colors.purple.shade900];
+      case Z.Middle_of_Night:
+        return [_middleOfNight_12, Colors.purple.shade800];
+      case Z.Last_3rd_of_Night:
+        return [_last3rdOfNight_13, Colors.purple.shade900];
+      case Z.Fajr_Tomorrow:
+        return [_fajrTomorrow_14, Colors.pink]; // should never show
     }
   }
 

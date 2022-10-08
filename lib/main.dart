@@ -47,11 +47,11 @@ void main() async {
   const bool permOn = true;
   Get.put<MainC>(MainC(), permanent: permOn); // should do first
   Get.put<OnboardingC>(OnboardingC());
-  Get.put<NavPageC>(NavPageC(), permanent: permOn);
+  Get.put<ThemeC>(ThemeC());
+  Get.put<LanguageC>(LanguageC(), permanent: permOn);
+  Get.put<NavPageC>(NavPageC(), permanent: permOn); // requires LangC
   Get.put<MenuC>(MenuC(), permanent: permOn);
   Get.put<AuthC>(AuthC(), permanent: permOn);
-  Get.put<ThemeC>(ThemeC());
-  Get.put<LanguageC>(LanguageC()); // Must be before TarikhC
   Get.put<ConnectivityC>(ConnectivityC(), permanent: permOn);
   Get.put<TimeC>(TimeC(), permanent: permOn); // requires ConnectivityC
   Get.put<LocationC>(LocationC(), permanent: permOn); // requires TimeC

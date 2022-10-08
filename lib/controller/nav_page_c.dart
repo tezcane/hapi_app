@@ -27,18 +27,19 @@ class NavPageC extends GetxHapi {
   }
 
   setLastIdx(NavPage navPage, int newIdx) {
-    pageIdxMap[navPage] = getEnumName(navPage.tabEnumList, newIdx);
+    pageIdxMap[navPage] = getEnumName(navPage.tabList, newIdx);
     s.wr(key(navPage), pageIdxMap[navPage]);
     update(); // needed to show bottom bar UI animation and tab selection
   }
 
   int getLastIdx(NavPage navPage) {
-    List<dynamic> tabEnumList = navPage.tabEnumList;
+    List<dynamic> tabEnumList = navPage.tabList;
 
     for (int idx = tabEnumList.length - 1; idx >= 0; idx--) {
       if (getEnumName(tabEnumList, idx) == pageIdxMap[navPage]!) return idx;
     }
-    return l.E('tabEnumList "$tabEnumList" missing ${pageIdxMap[navPage]!}');
+    l.e('tabEnumList "$tabEnumList" missing ${pageIdxMap[navPage]!}');
+    return navPage.initEnum.index;
   }
 
   String getLastIdxName(NavPage navPage) => pageIdxMap[navPage]!;

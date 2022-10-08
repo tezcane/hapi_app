@@ -4,8 +4,11 @@ import 'dart:math';
 import 'package:confetti/confetti.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hapi/ajr/ajr_ui.dart';
 import 'package:hapi/controller/getx_hapi.dart';
 import 'package:hapi/controller/nav_page_c.dart';
+import 'package:hapi/dua/dua_ui.dart';
+import 'package:hapi/hadith/hadith_ui.dart';
 import 'package:hapi/helper/loading.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/bottom_bar_menu.dart';
@@ -18,12 +21,14 @@ import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/onboard/auth/auth_c.dart';
 import 'package:hapi/quest/active/active_quest_action_ui.dart';
 import 'package:hapi/quest/quests_ui.dart';
+import 'package:hapi/quran/quran_ui.dart';
 import 'package:hapi/relic/family_tree/family_tree_ui.dart';
 import 'package:hapi/relic/relics_ui.dart';
 import 'package:hapi/tarikh/event/event_details_ui.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/tarikh_ui.dart';
 import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
+import 'package:hapi/tool/tool_ui.dart';
 
 class MenuC extends GetxHapi with GetTickerProviderStateMixin {
   static MenuC get to => Get.find();
@@ -125,7 +130,10 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
       if (_subPageStack.length > 1) {
         return 'Go back to previous page'.tr;
       } else {
-        return at('at.Go back to {0} home page', [getLastNavPage().tk]);
+        return at(
+          'at.Go back to {0} home page',
+          [getLastNavPage().tkIsimA],
+        );
       }
     } else if (_isMenuShowing) {
       return 'Hide menu'.tr;
@@ -148,7 +156,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
   // TODO Persist this, where possible, pass in arguments to classes to rebuild:
   List<SubPage> _subPageStack = [];
 
-  int _getLastNavIdx() => s.rd('lastNavIdx') ?? NavPage.Quests.index;
+  int _getLastNavIdx() => s.rd('lastNavIdx') ?? NavPage.a_Asyila.index;
 
   NavPage getLastNavPage() => _getNavPage(_getLastNavIdx());
 
@@ -158,7 +166,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
   initAppsFirstPage() {
     int navIdx = _getLastNavIdx(); //Quests
 
-    NavPage lastNavPage = NavPage.Quests;
+    NavPage lastNavPage = NavPage.a_Asyila;
     try {
       lastNavPage = NavPage.values[navIdx];
     } catch (e) {
@@ -205,7 +213,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
       return NavPage.values[navIdx];
     } catch (e) {
       l.e('Did not find navIdx $navIdx page, trying for Quest, error: $e');
-      return NavPage.Quests;
+      return NavPage.a_Asyila;
     }
   }
 
@@ -229,33 +237,54 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
     TarikhC.to.isActiveTimeline = false; // turn off timeline rendering
 
     switch (navPage) {
-      case (NavPage.Tarikh):
-        Get.offAll(
+      case NavPage.Ajr:
+        return Get.offAll(
+          () => const AjrUI(),
+          transition: transition,
+          duration: Duration(milliseconds: transitionMs),
+        );
+      case NavPage.a_Adawat:
+        return Get.offAll(
+          () => const ToolUI(),
+          transition: transition,
+          duration: Duration(milliseconds: transitionMs),
+        );
+      case NavPage.Dua:
+        return Get.offAll(
+          () => const DuaUI(),
+          transition: transition,
+          duration: Duration(milliseconds: transitionMs),
+        );
+      case NavPage.Hadith:
+        return Get.offAll(
+          () => const HadithUI(),
+          transition: transition,
+          duration: Duration(milliseconds: transitionMs),
+        );
+      case NavPage.Quran:
+        return Get.offAll(
+          () => const QuranUI(),
+          transition: transition,
+          duration: Duration(milliseconds: transitionMs),
+        );
+      case NavPage.Tarikh:
+        return Get.offAll(
           () => const TarikhUI(),
           transition: transition,
           duration: Duration(milliseconds: transitionMs),
         );
-        break;
-      case (NavPage.Ajr):
-      case (NavPage.Tools):
-      case (NavPage.Dua):
-      case (NavPage.Hadith):
-      case (NavPage.Quran):
-      case (NavPage.Relics):
-        Get.offAll(
+      case NavPage.Alathar:
+        return Get.offAll(
           () => const RelicsUI(),
           transition: transition,
           duration: Duration(milliseconds: transitionMs),
         );
-        break;
-      case (NavPage.Quests):
-      default:
-        Get.offAll(
+      case NavPage.a_Asyila:
+        return Get.offAll(
           () => const QuestsUI(),
           transition: transition,
           duration: Duration(milliseconds: transitionMs),
         );
-        break;
     }
   }
 

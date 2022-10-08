@@ -106,7 +106,7 @@ class ThumbnailDetailWidget extends StatelessWidget {
   _onTapThumbnailAndText() {
     if (navPage == NavPage.Tarikh) {
       _goToTimeline();
-    } else if (navPage == NavPage.Relics) {
+    } else if (navPage == NavPage.Alathar) {
       if (event.isTimeLineEvent) {
         _goToTimeline();
       } else {
@@ -136,7 +136,7 @@ class ThumbnailDetailWidget extends StatelessWidget {
   _onLongPressThumbnailAndText() {
     if (navPage == NavPage.Tarikh) {
       _goToEventDetailsOfTarikh();
-    } else if (navPage == NavPage.Relics) {
+    } else if (navPage == NavPage.Alathar) {
       _goToEventDetailsOfRelics();
     } else {
       l.E('onTapThumbnailAndText: navPage=${navPage.name} not implemented yet');

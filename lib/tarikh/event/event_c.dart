@@ -44,7 +44,7 @@ class EventC extends GetxHapi {
     // initialize the SearchManager
     SearchManager.init(NavPage.Tarikh, _eventListTarikh);
     // initDoneTarikh = true;
-    SearchManager.init(NavPage.Relics, _eventListRelics);
+    SearchManager.init(NavPage.Alathar, _eventListRelics);
     // initDoneRelics = true;
 
     update(); // notify UI's they have data now

@@ -44,17 +44,18 @@ class _BounceAlertState extends State<BounceAlert>
 
     _controller.addStatusListener((AnimationStatus status) {
       switch (status) {
-        case (AnimationStatus.completed): // animation is stopped at the end.
+        case AnimationStatus.completed: // animation is stopped at the end.
           _controller.reverse(); // grow done, now shrink
           break;
-        case (AnimationStatus.dismissed): // animation stopped at the beginning.
+        case AnimationStatus.dismissed: // animation stopped at the beginning.
           if (++cycledCount < widget.repeatCount) {
             _controller.forward(); // shrink done, now grow
           } else if (widget.repeatCount == 0) {
             _controller.forward(); // infinity, go forever
           }
           break;
-        default:
+        case AnimationStatus.reverse:
+        case AnimationStatus.forward:
           break;
       }
     });

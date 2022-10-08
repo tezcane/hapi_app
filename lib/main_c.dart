@@ -22,13 +22,38 @@ import 'package:hapi/tarikh/event/event_c.dart';
 /// To use, import in same file your Enums live:
 ///   import 'package:hapi/main_c.dart';
 extension GlobalEnumUtil on Enum {
-  String get isim => name
-      .replaceFirst('_a_', "'") // _a_ -> ' (Typically Arabic Ayn Symbol)
-      .replaceFirst('__', '-') //  __  -> -
-      .replaceFirst('_', ' '); //  _   -> " "
+  /// Renames enum to an arabic name with the following rules:
+  ///     _a  -> "'" (replaces if enum.name starts with "_a" only)
+  ///     _a_ -> "'" (Typically Arabic Ayn Symbol)
+  ///     __  -> "-"
+  ///     _   -> " "
+  String get isim {
+    String isim = name;
 
-  /// Get an Arabic tk key from isim.
-  String get tkArabeeIsim => 'a.$isim';
+    // Enum if starts with "_" is private so we make "a_"-> "'":
+    if (isim.startsWith('a_')) isim = isim.replaceFirst('a_', "'");
+
+    return isim
+        .replaceFirst('_a_', "'")
+        .replaceFirst('__', '-')
+        .replaceFirst('_', ' ');
+  }
+
+  /// Get an "a." tk from an Arabic/Arabee/Transliterated enum name/isim.
+  String get tkIsimA => 'a.$isim';
+
+  /// Renames enum to a nice name using the following rules:
+  ///     ____ -> " ("
+  ///     ___  -> ")"
+  ///     __   -> "-"
+  ///     _    -> " " (space)
+  String get tkNiceName {
+    return name
+        .replaceFirst('____', ' (')
+        .replaceFirst('___', ')')
+        .replaceFirst('__', '-')
+        .replaceAll('_', ' ');
+  }
 }
 
 /// Handles Sign In/Out, Screen orientation/rotation

@@ -26,7 +26,7 @@ enum RELIC_TAB {
 class RelicsUI extends StatelessWidget {
   const RelicsUI();
 
-  static const navPage = NavPage.Relics;
+  static const navPage = NavPage.Alathar;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class RelicsUI extends StatelessWidget {
           const EventFavoriteUI(ET.Nabi, navPage),
           null,
           'Favorites'.tr,
-          at('at.{0} Favorites', [navPage.tk]),
+          at('at.{0} Favorites', [navPage.tkIsimA]),
           Icons.favorite_border_outlined,
           onPressed: hideKeyboard, // in case search is showing keyboard
         ),
@@ -45,7 +45,7 @@ class RelicsUI extends StatelessWidget {
           const EventSearchUI(navPage),
           null,
           'Search'.tr,
-          at('at.{0} Search', [navPage.tk]),
+          at('at.{0} Search', [navPage.tkIsimA]),
           Icons.search_outlined,
         ),
         BottomBarItem(

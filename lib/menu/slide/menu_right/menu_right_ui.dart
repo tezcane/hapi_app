@@ -108,7 +108,7 @@ class MenuRightUI extends StatelessWidget {
                                 Stack(
                                   children: [
                                     Transform.rotate(
-                                      angle: nav.navPage == NavPage.Relics
+                                      angle: nav.navPage == NavPage.Alathar
                                           ? 2.8
                                           : 0,
                                       child: Icon(
@@ -119,12 +119,12 @@ class MenuRightUI extends StatelessWidget {
                                     ),
                                     if (c.getShowBadge(navPage))
                                       Positioned(
-                                        top: nav.navPage == NavPage.Relics
+                                        top: nav.navPage == NavPage.Alathar
                                             ? 8.6
                                             : -2.0,
                                         right: -2.0,
                                         child: Transform.rotate(
-                                          angle: nav.navPage == NavPage.Relics
+                                          angle: nav.navPage == NavPage.Alathar
                                               ? .59
                                               : 0,
                                           child: const Icon(
@@ -137,7 +137,7 @@ class MenuRightUI extends StatelessWidget {
                                   ],
                                 ),
                                 T(
-                                  nav.navPage.tk,
+                                  nav.navPage.tkIsimA,
                                   const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,

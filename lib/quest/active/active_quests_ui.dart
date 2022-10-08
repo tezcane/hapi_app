@@ -218,6 +218,7 @@ class _Sliv extends StatelessWidget {
 }
 
 /// SalahRow displays actions for it's time of day, e.g. Fajr, Duha, etc.
+/// Caller must ensure passed in Z is in "List<Z> zRows = ...".
 class SalahRow extends StatelessWidget {
   const SalahRow(this.aqC, this.z);
   final ActiveQuestsC aqC;
@@ -440,7 +441,7 @@ class SalahRow extends StatelessWidget {
                 // Center needed to make fit height work
                 child: T(
                   TimeC.tvTime(
-                    ZamanC.to.athan!.getZamanRowTime(z),
+                    ZamanC.to.athan!.getAthanNotficationTime(z),
                     ActiveQuestsC.to.show12HourClock,
                     ActiveQuestsC.to.showSecPrecision,
                   ),
@@ -469,28 +470,24 @@ class SalahRow extends StatelessWidget {
     );
   }
 
-  Widget _getSalahRowActions(
-    ActiveQuestsC aqC,
-    double w1,
-    Color bg,
-    Color fg,
-  ) {
+  /// Caller must ensure passed in z is in "List<Z> zRows = ...".
+  Widget _getSalahRowActions(ActiveQuestsC aqC, double w1, Color bg, Color fg) {
     switch (z) {
-      case (Z.Fajr):
+      case Z.Fajr:
         return _actionsFajr(w1);
-      case (Z.Dhuha):
+      case Z.Dhuha:
         return _actionsDhuha(w1);
-      case (Z.Dhuhr):
+      case Z.Dhuhr:
         return _actionsDhuhr(aqC.showJumahOnFriday);
-      case (Z.Asr):
+      case Z.Asr:
         return _actionsAsr(w1);
-      case (Z.Maghrib):
+      case Z.Maghrib:
         return _actionsMaghrib(w1, bg, fg);
-      case (Z.Isha):
+      case Z.Isha:
         return _actionsIsha();
-      case (Z.Middle_of_Night):
+      case Z.Middle_of_Night:
         return _actionsMiddleOfNight(w1);
-      case (Z.Last_3rd_of_Night):
+      case Z.Last_3rd_of_Night:
         return _actionsLastThirdOfNight(w1, bg);
       default:
         return l.e('_getSalahRowActions: unexpected Z given: $z');
@@ -677,23 +674,24 @@ class SalahRow extends StatelessWidget {
     );
   }
 
+  /// Caller must ensure passed in Z is in "List<Z> zRows = ...".
   Widget _getSalahRowResults() {
     switch (z) {
-      case (Z.Fajr):
+      case Z.Fajr:
         return _resultsFajr();
-      case (Z.Dhuha):
+      case Z.Dhuha:
         return _resultsDhuha();
-      case (Z.Dhuhr):
+      case Z.Dhuhr:
         return _resultsDhuhr();
-      case (Z.Asr):
+      case Z.Asr:
         return _resultsAsr();
-      case (Z.Maghrib):
+      case Z.Maghrib:
         return _resultsMaghrib();
-      case (Z.Isha):
+      case Z.Isha:
         return _resultsIsha();
-      case (Z.Middle_of_Night):
+      case Z.Middle_of_Night:
         return _resultsMiddleOfNight();
-      case (Z.Last_3rd_of_Night):
+      case Z.Last_3rd_of_Night:
         return _resultsLastThirdOfNight();
       default:
         return l.E('_getSalahRowResults: unexpected Z given: $z');

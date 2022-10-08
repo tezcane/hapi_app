@@ -20,7 +20,7 @@ enum QUEST_TAB {
 /// Init active/daily/timed/hapi quests with slick bottom bar navigation
 class QuestsUI extends StatelessWidget {
   const QuestsUI();
-  static const navPage = NavPage.Quests;
+  static const navPage = NavPage.a_Asyila;
 
   @override
   Widget build(BuildContext context) {

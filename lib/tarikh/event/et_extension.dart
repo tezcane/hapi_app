@@ -6,7 +6,7 @@ import 'package:hapi/tarikh/event/et.dart';
 
 /// See [et.dart] for detailed description why we need this in a separate file.
 extension EtExtension on ET {
-  String get tkRelicSetTitle => tkArabeeIsim; // name of EVENT is "a." title
+  String get tkRelicSetTitle => tkIsimA; // name of EVENT is "a." title
   String get trPath => 'event/${name.toLowerCase()}/';
 
   bool get isRelic => index != ET.Tarikh.index;

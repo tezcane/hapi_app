@@ -84,11 +84,19 @@ class AppThemes {
 
   static const double cornerRadius = 5.0;
 
-  // TODO best place/way of doing this?:
-  static const TextStyle tsTitle =
-      TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14);
-  static const TextStyle textStyleBtn =
-      TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 14);
+  // TODO best place/way of doing this?: Move to main_c with other TS?
+  static const TextStyle tsTitle = TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+    fontSize: 14,
+    decoration: TextDecoration.none, // makes yellow underlines go away
+  );
+  static const TextStyle textStyleBtn = TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+    fontSize: 14,
+    decoration: TextDecoration.none, // makes yellow underlines go away
+  );
 
   static const Color COLOR_DIRECT_DESCENDANT = Colors.green;
   static const Color COLOR_GENERATION_GAP = Colors.red;

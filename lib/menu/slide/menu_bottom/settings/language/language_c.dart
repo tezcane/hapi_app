@@ -233,6 +233,16 @@ class LanguageC extends GetxHapi {
 
   /// Setup special language variables now
   _initLocaleValues(String newLangKey) {
+    _isRightToLeftLang = _nonLeftToRightLangs[newLangKey] ?? false;
+    _isEnNumerals = _nonEnNumeralLangs[newLangKey] == null;
+    if (_isEnNumerals) {
+      _curNumerals = _enNumerals;
+    } else {
+      _curNumerals = _nonEnNumeralLangs[newLangKey]!;
+    }
+    _am = ' ' + 'AM'.tr; // tr ok
+    _pm = ' ' + 'PM'.tr; // tr ok
+
     _arabicScriptLangs[newLangKey] ?? false
         ? HijriCalendar.setLocal('ar') // supports ar or en only
         : HijriCalendar.setLocal('en'); // switch out Arabic script, if was set
@@ -245,16 +255,6 @@ class LanguageC extends GetxHapi {
       numCompactFormatter = NumberFormat.compact(locale: 'en');
     }
 
-    _isRightToLeftLang = _nonLeftToRightLangs[newLangKey] ?? false;
-    _isEnNumerals = _nonEnNumeralLangs[newLangKey] == null;
-    if (_isEnNumerals) {
-      _curNumerals = _enNumerals;
-    } else {
-      _curNumerals = _nonEnNumeralLangs[newLangKey]!;
-    }
-    _am = ' ' + 'AM'.tr; // tr ok
-    _pm = ' ' + 'PM'.tr; // tr ok
-
     TimeC.to.updateDaysOfWeek(); // needed to convert SunRing dates
 
     if (initNeeded == false) {
@@ -263,7 +263,7 @@ class LanguageC extends GetxHapi {
 
       // language changed so we must change filter language too
       SearchManager.init(NavPage.Tarikh, EventC.to.getEventList(ET.Tarikh));
-      SearchManager.init(NavPage.Relics, EventC.to.getEventList(ET.Nabi));
+      SearchManager.init(NavPage.Alathar, EventC.to.getEventList(ET.Nabi));
     }
     initNeeded = false;
   }

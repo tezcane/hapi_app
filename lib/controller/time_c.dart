@@ -23,110 +23,35 @@ const int DUMMY_NTP_OFFSET = 222222222222222;
 const String DUMMY_TIMEZONE = 'America/Los_Angeles'; // TODO random Antarctica?
 
 enum DAY_OF_WEEK {
-  Monday,
-  Tuesday,
-  Wednesday,
-  Thursday,
-  Friday,
-  Saturday,
-  Sunday,
-}
-
-extension EnumUtil on DAY_OF_WEEK {
-  String get tk {
-    String transliteration = name;
-    switch (this) {
-      case (DAY_OF_WEEK.Monday):
-        transliteration = 'Aliathnayn';
-        break;
-      case (DAY_OF_WEEK.Tuesday):
-        transliteration = "Althulatha'";
-        break;
-      case (DAY_OF_WEEK.Wednesday):
-        transliteration = "Al'arbiea'";
-        break;
-      case (DAY_OF_WEEK.Thursday):
-        transliteration = 'Alkhamis';
-        break;
-      case (DAY_OF_WEEK.Friday):
-        transliteration = 'Jumah';
-        break;
-      case (DAY_OF_WEEK.Saturday):
-        transliteration = 'Alsabt';
-        break;
-      case (DAY_OF_WEEK.Sunday):
-        transliteration = "Al'ahad";
-        break;
-    }
-    return 'a.$transliteration';
-  }
+  Aliathnayn, // Monday = "a.Aliathnayn"
+  Althulatha_a_, // Tuesday = "a.Althulatha'"
+  Al_a_arbiea_a_, // Wednesday = "a.Al'arbiea'"
+  Alkhamis, // Thursday = "a.Alkhamis"
+  Jumah, // Friday = "a.Jumah"
+  Alsabt, // Saturday = "a.Alsabt"
+  Al_a_ahad, // Sunday = "a.Al'ahad"
 }
 
 enum MONTH {
-  January,
-  February,
-  March,
-  April,
-  May,
-  June,
-  July,
-  August,
-  September,
-  October,
-  November,
-  December,
-}
-
-extension EnumUtil2 on MONTH {
-  String get tk {
-    String transliteration = name;
-    switch (this) {
-      case (MONTH.January):
-        transliteration = 'Kānūn aṯ-Ṯānī';
-        break;
-      case (MONTH.February):
-        transliteration = 'Šubāṭ';
-        break;
-      case (MONTH.March):
-        transliteration = "'Āḏār";
-        break;
-      case (MONTH.April):
-        transliteration = 'Naysān';
-        break;
-      case (MONTH.May):
-        transliteration = "'Ayyār";
-        break;
-      case (MONTH.June):
-        transliteration = 'Ḥazīrān';
-        break;
-      case (MONTH.July):
-        transliteration = 'Tammūz';
-        break;
-      case (MONTH.August):
-        transliteration = "'Āb";
-        break;
-      case (MONTH.September):
-        transliteration = "'Aylūl";
-        break;
-      case (MONTH.October):
-        transliteration = "Tišrīn al-'Awwal";
-        break;
-      case (MONTH.November):
-        transliteration = 'Tišrīn aṯ-Ṯānī';
-        break;
-      case (MONTH.December):
-        transliteration = "Kānūn al-'Awwal";
-        break;
-    }
-    return 'a.$transliteration';
-  }
+  Kanun_at__Tani, // January = "a.Kanun at-Tani"
+  Shubat, // February = "a.Shubat"
+  a_Adar, // March = "a.'Adar"
+  Naysan, // April = "a.Naysan"
+  a_Ayyar, // May = "a.'Ayyar"
+  Haziran, // June = "a.Haziran"
+  Tammuz, // July = "a.Tammuz"
+  a_Ab, // August = "a.'Ab"
+  a_Aylul, // September = "a.'Aylul"
+  Tishrin_al___a_Awwal, // October = "a.Tishrin al-'Awwal"
+  Tishrin_at___a_Tani, // November = "a.Tishrin at-'Tani"
+  Kanun_al___a_Awwal, // December = "a.Kanun al-'Awwal"
 }
 
 /// Used to get accurate server UTC/NTP based time in case user's clock is off
 class TimeC extends GetxHapi {
   static TimeC get to => Get.find();
 
-  static DAY_OF_WEEK defaultDayOfWeek = DAY_OF_WEEK.Monday;
+  static DAY_OF_WEEK defaultDayOfWeek = DAY_OF_WEEK.Aliathnayn;
   static int thisYear = TimeC.to.now2().year;
 
   int _ntpOffset = DUMMY_NTP_OFFSET;
@@ -363,13 +288,13 @@ class TimeC extends GetxHapi {
   /// _dayOfWeekGreco, it changes at midnight but the salah row headers are
   /// still using the day before until Fajr Tomorrow. So these realtime values
   /// are not always desired to show the day of the week.
-  bool isFriday() => currDayOfWeek == DAY_OF_WEEK.Friday;
+  bool isFriday() => currDayOfWeek == DAY_OF_WEEK.Jumah;
 
   String tvDateHijri(bool addDayOfWeek) {
     DateTime dT = now2(); // TODO use now()?
     if (iterateHijriDateByOne(dT)) dT = dateToTomorrow(dT);
     String dayOfWeek = '';
-    if (addDayOfWeek) dayOfWeek = '${a(_dayOfWeekHijri.tk)} ';
+    if (addDayOfWeek) dayOfWeek = '${a(_dayOfWeekHijri.tkIsimA)} ';
 
     HijriCalendar hijriCalendar = HijriCalendar.fromDate(dT);
     _hijriMonth = hijriCalendar.hMonth;
@@ -381,7 +306,7 @@ class TimeC extends GetxHapi {
     bool foundMonth = false;
     for (MONTH month in MONTH.values) {
       if (date.contains(month.name)) {
-        date = date.replaceFirst(month.name, a(month.tk));
+        date = date.replaceFirst(month.name, a(month.tkIsimA));
         foundMonth = true;
         break;
       }
@@ -391,7 +316,7 @@ class TimeC extends GetxHapi {
     }
 
     String dayOfWeek = '';
-    if (addDayOfWeek) dayOfWeek = '${a(_dayOfWeekGrego.tk)} ';
+    if (addDayOfWeek) dayOfWeek = '${a(_dayOfWeekGrego.tkIsimA)} ';
 
     return '$dayOfWeek$date';
   }

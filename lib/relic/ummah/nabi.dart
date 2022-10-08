@@ -1800,7 +1800,7 @@ final List<Nabi> relicsNabi = [
         cns('(3:31, 3:164, 4:59, 4:115, 59:7)'),
     aqUluAlAzmList: [AQ(2, 124)],
     aqInDescriptionLists: [[]],
-    tvLocationBirth: a(DAY_OF_WEEK.Monday.tk) +
+    tvLocationBirth: a(DAY_OF_WEEK.Aliathnayn.tkIsimA) +
         ',_'.tr +
         cni(12) +
         _ +
@@ -1819,7 +1819,7 @@ final List<Nabi> relicsNabi = [
         a('a.Al-Hejaz') +
         ',_'.tr +
         a('a.Al-Arabiyyah'),
-    tvLocationDeath: a(DAY_OF_WEEK.Monday.tk) +
+    tvLocationDeath: a(DAY_OF_WEEK.Aliathnayn.tkIsimA) +
         ',_'.tr +
         cni(12) +
         _ +

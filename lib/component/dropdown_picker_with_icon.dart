@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hapi/main_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 
 /// shows a dropdown list with icons.
 ///
@@ -29,7 +31,7 @@ class DropdownPickerWithIcon extends StatelessWidget {
                     children: <Widget>[
                       Icon(data.icon),
                       const SizedBox(width: 10),
-                      Text(data.tv), // tr ok
+                      T(data.tv, AppThemes.tsTitle), // tr ok
                     ],
                   ),
                   value: data.key,

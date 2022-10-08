@@ -170,7 +170,7 @@ class NotificationC extends GetxHapi {
       return;
     }
 
-    DateTime salahTime = athan.getZamanRowTime(z);
+    DateTime salahTime = athan.getAthanNotficationTime(z);
     // TZDateTime scheduledTime = (await TimeC.to.now())
     //     .add(const Duration(seconds: 1)) as TZDateTime;
     TZDateTime scheduledTime = TZDateTime.from(salahTime, TimeC.to.tzLoc);
