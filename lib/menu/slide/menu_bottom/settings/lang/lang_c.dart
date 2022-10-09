@@ -229,7 +229,7 @@ class LangC extends GetxHapi {
 
     // Don't call at init, reload UI when user selects new language
     if (initNeeded == false) {
-      MenuC.to.navigateToNavPageResetFAB(MenuC.to.getLastNavPage());
+      MenuC.to.setPendingLangChangeFlag();
     }
   }
 

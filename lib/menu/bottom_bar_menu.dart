@@ -6,7 +6,6 @@ import 'package:hapi/controller/nav_page_c.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/bottom_bar.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
-import 'package:hapi/tarikh/tarikh_c.dart';
 
 /// Controls NavPage bottom bars and loads/persists new tab selections.
 // ignore: must_be_immutable
@@ -70,11 +69,6 @@ class BottomBarMenu extends StatelessWidget {
   static const int CHANGE_TO_DIRECTION_STATE_THRESHOLD = 4; // +1 times this
 
   _initPageControllerAndBottomBar(int newIdx) {
-    // if Tarikh menu to show on init, turn on animation, needed for lang change
-    if (NavPage.Tarikh == navPage && newIdx == 0) {
-      TarikhC.to.isActiveTarikhMenu = true; // TODO wart
-    }
-
     curBottomBarHighlightIdx = newIdx;
     _pageController = PageController(initialPage: newIdx);
     _handlePostFrameAnimation(newIdx); // needed for RTL<->LTR

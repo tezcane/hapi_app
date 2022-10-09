@@ -45,8 +45,15 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
   /// Track if user clicks on sub page transition so we can protect fab icon
   bool fabButtonIsTransitioning = false;
 
+  /// handle special case where user changes the language then we wait until
+  /// the back button is hit, now we refresh the whole UI to fix all
+  /// translations that were on the last NavPage view. You can skip this but
+  /// then your Sliver's (and other things) will not have updated translations.
+  bool _pendingLangChange = false;
+  setPendingLangChangeFlag() => _pendingLangChange = true;
+
   @override
-  void onInit() {
+  onInit() {
     super.onInit();
 
     _acFabIcon = AnimationController(
@@ -65,7 +72,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
   clearSubPageStack() => _subPageStack = [];
 
   /// Here we handle when the FAB button is hit for show/hide menu or back btn.
-  void handlePressedFAB() {
+  handlePressedFAB() {
     if (fabButtonIsTransitioning) {
       l.w('GOOD TRY, FAB is still transitioning!!!!!!!!!!');
       return; // POSSIBLE HAPI QUEST: "Interrupt/Break Menu Button" hapi task
@@ -87,7 +94,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
     if (_subPageStack.length == 1) {
       _acFabIcon.reverse();
       _fabAnimatedIcon = AnimatedIcons.menu_close; // switch to menu close icon
-      update();
+      update(); // TODO needed?
     }
 
     /// User may have updated profile settings and hit back button before saving
@@ -118,7 +125,14 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
       }
     }
 
-    Get.back(); // pop the sub menu stack
+    // If user updated language we must reset the UI to update translations
+    if (_pendingLangChange) {
+      _pendingLangChange = false;
+      navigateToNavPageResetFAB(getLastNavPage());
+    } else {
+      // Otherwise, normal back button operation, don't need to refresh UI.
+      Get.back(); // pop the sub menu stack
+    }
 
     update(); // updates FAB tooltip to say what back button does
   }
@@ -147,7 +161,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
   final RxList<bool> _showBadge =
       RxList([false, true, true, false, false, false, true, false]);
   bool getShowBadge(NavPage navPage) => _showBadge[navPage.index];
-  void setShowBadge(NavPage navPage, bool value) {
+  setShowBadge(NavPage navPage, bool value) {
     _showBadge[navPage.index] = value;
     update();
   }
@@ -198,12 +212,12 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
     }
   }
 
-  void _disableScreenTouch() {
+  _disableScreenTouch() {
     _isScreenDisabled = true;
     update();
   }
 
-  void _enableScreenTouch() {
+  _enableScreenTouch() {
     _isScreenDisabled = false;
     update();
   }
@@ -218,7 +232,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
   }
 
   /// Use to switch to a high level nav page only (e.g. Quests, Quran, etc.)
-  void navigateToNavPageResetFAB(NavPage navPage, {bool offAll = false}) {
+  navigateToNavPageResetFAB(NavPage navPage, {bool offAll = false}) {
     if (_subPageStack.length == 1) {
       _acFabIcon.reverse();
       _fabAnimatedIcon = AnimatedIcons.menu_close; // switch to menu close icon
@@ -243,6 +257,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
   }) {
     TarikhC.to.isActiveTimeline = false; // turn off timeline rendering
 
+    // do "Get.offAll" everywhere so we can keep const
     switch (navPage) {
       case NavPage.Ajr:
         return Get.offAll(
@@ -297,7 +312,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
 
   /// use to push a NavPages sub page (Tarikh Favorites, etc.) on top of menu stack
   /// About page is ok here too
-  void pushSubPage(
+  pushSubPage(
     SubPage subPage, {
     dynamic arguments,
     int transitionMs = 1000,
@@ -333,73 +348,41 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
       TarikhC.to.isActiveTarikhMenu = false; // inactivate tarikh menu
     }
 
+    Widget subPageToGoTo;
     switch (subPage) {
       case SubPage.Active_Quest_Action:
-        Get.to(
-          () => ActiveQuestActionUI(),
-          arguments: arguments,
-          transition: transition,
-          duration: Duration(milliseconds: transitionMs),
-        );
+        subPageToGoTo = ActiveQuestActionUI();
         break;
       case SubPage.Tarikh_Timeline:
         await _handleTimelineNotInitializedYet();
-        Get.to(
-          () => TarikhTimelineUI(),
-          arguments: arguments,
-          transition: transition,
-          duration: Duration(milliseconds: transitionMs),
-        );
+        subPageToGoTo = TarikhTimelineUI();
         break;
       case SubPage.Event_Details:
-        Get.to(
-          () => EventDetailsUI(),
-          arguments: arguments,
-          transition: transition,
-          duration: Duration(milliseconds: transitionMs),
-        );
+        subPageToGoTo = EventDetailsUI();
         break;
       case SubPage.Family_Tree:
-        Get.to(
-          () => FamilyTreeUI(),
-          arguments: arguments,
-          transition: transition,
-          duration: Duration(milliseconds: transitionMs),
-        );
+        subPageToGoTo = FamilyTreeUI();
         break;
       case SubPage.Settings:
-        Get.to(
-          () => SettingsUI(),
-          arguments: arguments,
-          transition: transition,
-          duration: Duration(milliseconds: transitionMs),
-        );
+        subPageToGoTo = SettingsUI();
         break;
       case SubPage.Update_Profile:
-        Get.to(
-          () => UpdateProfileUI(),
-          arguments: arguments,
-          transition: transition,
-          duration: Duration(milliseconds: transitionMs),
-        );
+        subPageToGoTo = UpdateProfileUI();
         break;
       case SubPage.Reset_Password:
-        Get.to(
-          () => ResetPasswordUI(),
-          arguments: arguments,
-          transition: transition,
-          duration: Duration(milliseconds: transitionMs),
-        );
+        subPageToGoTo = ResetPasswordUI();
         break;
       case SubPage.About:
-        Get.to(
-          () => AboutUI(),
-          arguments: arguments,
-          transition: transition,
-          duration: Duration(milliseconds: transitionMs),
-        );
+        subPageToGoTo = AboutUI();
         break;
     }
+
+    Get.to(
+      () => subPageToGoTo,
+      arguments: arguments,
+      transition: transition,
+      duration: Duration(milliseconds: transitionMs),
+    );
 
     update(); // updates FAB tooltip to say what back button does
   }
@@ -428,7 +411,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
   bool get isMenuShowingNav => _isMenuShowingNav;
   bool get isMenuShowingSettings => _isMenuShowingSettings;
 
-  void showMenu() {
+  showMenu() {
     // If bottom bar is hidden, we must show it now so it doesn't block menu UI:
     if (!BottomBarMenu.isBottomBarVisible) {
       BottomBarMenu.isBottomBarVisible = true;
@@ -445,7 +428,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
     update();
   }
 
-  void hideMenu() {
+  hideMenu() {
     _isMenuShowing = false;
     _isMenuShowingNav = false;
     _isMenuShowingSettings = false;
@@ -456,7 +439,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
     update();
   }
 
-  void hideMenuNav() {
+  hideMenuNav() {
     _isMenuShowing = true;
     _isMenuShowingNav = false;
     _isMenuShowingSettings = true;
@@ -496,7 +479,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
 
   // TODO move to main controller?
   ConfettiController confettiController() => _confettiController;
-  void playConfetti() => _confettiController.play();
+  playConfetti() => _confettiController.play();
 
   /// If we are in Tarikh page and switch to a page that needs timeline fully
   /// initialized, we must wait for it to initialize:
@@ -516,7 +499,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
 
 // TODO
 // @override
-// void dispose() {
+// dispose() {
 //   _confettiController.dispose();
 //   super.dispose();
 // }
