@@ -332,7 +332,7 @@ Future<FlareAsset> loadFlareAsset(
 Future<EventAsset> getEventAsset(Asset asset) async {
   ASSET_TYPE _parseAssetType(String filename) {
     if (filename.endsWith('png')) return ASSET_TYPE.IMAGE;
-//if (filename.endsWith('jpg')) return ASSET_TYPE.IMAGE;
+//  if (filename.endsWith('jpg')) return ASSET_TYPE.IMAGE;
     if (filename.endsWith('nma')) return ASSET_TYPE.NIMA;
     if (filename.endsWith('flr')) return ASSET_TYPE.FLARE;
 
