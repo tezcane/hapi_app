@@ -348,37 +348,37 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
       TarikhC.to.isActiveTarikhMenu = false; // inactivate tarikh menu
     }
 
-    Widget subPageToGoTo;
+    Function subPageFunction; // needs to be function for sub pages with params
     switch (subPage) {
       case SubPage.Active_Quest_Action:
-        subPageToGoTo = ActiveQuestActionUI();
+        subPageFunction = () => ActiveQuestActionUI();
         break;
       case SubPage.Tarikh_Timeline:
         await _handleTimelineNotInitializedYet();
-        subPageToGoTo = TarikhTimelineUI();
+        subPageFunction = () => TarikhTimelineUI();
         break;
       case SubPage.Event_Details:
-        subPageToGoTo = EventDetailsUI();
+        subPageFunction = () => EventDetailsUI();
         break;
       case SubPage.Family_Tree:
-        subPageToGoTo = FamilyTreeUI();
+        subPageFunction = () => FamilyTreeUI();
         break;
       case SubPage.Settings:
-        subPageToGoTo = SettingsUI();
+        subPageFunction = () => SettingsUI();
         break;
       case SubPage.Update_Profile:
-        subPageToGoTo = UpdateProfileUI();
+        subPageFunction = () => UpdateProfileUI();
         break;
       case SubPage.Reset_Password:
-        subPageToGoTo = ResetPasswordUI();
+        subPageFunction = () => ResetPasswordUI();
         break;
       case SubPage.About:
-        subPageToGoTo = AboutUI();
+        subPageFunction = () => AboutUI();
         break;
     }
 
     Get.to(
-      () => subPageToGoTo,
+      subPageFunction,
       arguments: arguments,
       transition: transition,
       duration: Duration(milliseconds: transitionMs),
