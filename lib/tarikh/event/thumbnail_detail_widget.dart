@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/menu_c.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/relic/relic_c.dart';
@@ -63,7 +63,7 @@ class ThumbnailDetailWidget extends StatelessWidget {
                             event.tvTitleLine1,
                             ts,
                             h: 27,
-                            alignment: LanguageC.to.centerLeft,
+                            alignment: LangC.to.centerLeft,
                             tv: true,
                           ),
                           if (event.isBubbleTextThick)
@@ -71,14 +71,14 @@ class ThumbnailDetailWidget extends StatelessWidget {
                               event.tvTitleLine2,
                               ts,
                               h: 27,
-                              alignment: LanguageC.to.centerLeft,
+                              alignment: LangC.to.centerLeft,
                               tv: true,
                             ),
                           const SizedBox(height: 5),
                           T(
                             event.tvYearsAgo(),
                             ts,
-                            alignment: LanguageC.to.centerLeft,
+                            alignment: LangC.to.centerLeft,
                             h: 17,
                             tv: true,
                           ),

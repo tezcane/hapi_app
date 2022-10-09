@@ -147,8 +147,7 @@ class _MenuRightState extends State<MenuRight> {
                                   MenuC.to.hideMenu();
                                 } else {
                                   // selected new nav page
-                                  MenuC.to.hideMenu();
-                                  MenuC.to.navigateToNavPage(navPage);
+                                  MenuC.to.navigateToNavPageResetFAB(navPage);
                                 }
                               },
                               child: widget.items[navPage.index],

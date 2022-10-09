@@ -10,6 +10,8 @@ import 'package:hapi/quest/active/athan/z.dart';
 typedef OnToggle = void Function(int index);
 
 class ActiveQuestsSettingsUI extends StatelessWidget {
+  const ActiveQuestsSettingsUI();
+
   Widget addSetting({
     required String tvTitle,
     required String tvTooltip,

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hapi/main_c.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/settings_option.dart';
 
 /// shows a dropdown list.
@@ -34,7 +34,7 @@ class DropdownPicker extends StatelessWidget {
                 data.tv,
                 tsN,
                 w: width,
-                alignment: LanguageC.to.centerRight,
+                alignment: LangC.to.centerRight,
                 tv: true,
               ),
               value: data.key,

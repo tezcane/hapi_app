@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:hapi/controller/getx_hapi.dart';
 import 'package:hapi/controller/time_c.dart';
 import 'package:hapi/main_c.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/relic/relic_c.dart';
 import 'package:hapi/tarikh/event/et.dart';
 import 'package:hapi/tarikh/event/event.dart';
@@ -81,7 +81,7 @@ class TarikhC extends GetxHapi {
     if (nv != _isActiveTarikhMenu) _isActiveTarikhMenu = nv;
 
     if (_isActiveTarikhMenu) {
-      update(); // instant show animations
+      updateOnThread1Ms(); // instant show animations
     } else {
       updateOnThread1Sec(); // allow fast menu scroll then disable animations
     }
@@ -115,10 +115,10 @@ class TarikhC extends GetxHapi {
   _initTimelineRelicsAndTarikhMenu() async {
     /// If we don't wait for LangC to init, then several of the first
     /// translations fail (always English) on the Timeline and Tarikh Menu.
-    if (LanguageC.to.initNeeded) {
+    if (LangC.to.initNeeded) {
       int sleepBackoffMs = 250;
       // No internet needed if already initialized
-      while (LanguageC.to.initNeeded) {
+      while (LangC.to.initNeeded) {
         l.d('_initTimelineRelicsAndTarikhMenu: Language translations not ready, try again after sleeping $sleepBackoffMs ms...');
         await Future.delayed(Duration(milliseconds: sleepBackoffMs));
         if (sleepBackoffMs < 1000) sleepBackoffMs += 250;

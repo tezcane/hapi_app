@@ -6,6 +6,7 @@ import 'package:hapi/controller/nav_page_c.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/bottom_bar.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
+import 'package:hapi/tarikh/tarikh_c.dart';
 
 /// Controls NavPage bottom bars and loads/persists new tab selections.
 // ignore: must_be_immutable
@@ -69,6 +70,11 @@ class BottomBarMenu extends StatelessWidget {
   static const int CHANGE_TO_DIRECTION_STATE_THRESHOLD = 4; // +1 times this
 
   _initPageControllerAndBottomBar(int newIdx) {
+    // if Tarikh menu to show on init, turn on animation, needed for lang change
+    if (NavPage.Tarikh == navPage && newIdx == 0) {
+      TarikhC.to.isActiveTarikhMenu = true; // TODO wart
+    }
+
     curBottomBarHighlightIdx = newIdx;
     _pageController = PageController(initialPage: newIdx);
     _handlePostFrameAnimation(newIdx); // needed for RTL<->LTR
@@ -76,192 +82,192 @@ class BottomBarMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<NavPageC>(
-      // needed, or bar doesn't update
-      builder: (c) {
-        return Scaffold(
-          backgroundColor: Theme.of(context).backgroundColor,
-          body: NotificationListener<ScrollNotification>(
-            child: PageView(
-//            pageSnapping: false,
-              controller: _pageController,
-              children: aliveMainWidgets,
-              onPageChanged: (newIdx) => _onPageChanged(newIdx, c),
-            ),
-            onNotification: (ScrollNotification scrollInfo) {
-              if (kDebugMode) cnt++; // help detect
+    // needed, or bar doesn't update
+    return GetBuilder<NavPageC>(builder: (c) {
+      // return GetBuilder<LangC>(builder: (lc) {
+      return Scaffold(
+        backgroundColor: Theme.of(context).backgroundColor,
+        body: NotificationListener<ScrollNotification>(
+          child: PageView(
+//          pageSnapping: false,
+            controller: _pageController,
+            children: aliveMainWidgets,
+            onPageChanged: (newIdx) => _onPageChanged(newIdx, c),
+          ),
+          onNotification: (ScrollNotification scrollInfo) {
+            if (kDebugMode) cnt++; // help detect
 
-              /// Left as an example, you can use it to horizontally scroll the
-              /// bottom bar faster/smoother, needs PageView.pageSnapping=false:
-              // if (scrollInfo is ScrollEndNotification) {
-              //   Future.delayed(const Duration(milliseconds: 0), () {
-              //     int newPage = _pageController.page!.round();
-              //     _pageController.animateToPage(
-              //       newPage,
-              //       duration: const Duration(milliseconds: 80),
-              //       curve: Curves.fastOutSlowIn,
-              //     );
-              //   });
-              // }
+            /// Left as an example, you can use it to horizontally scroll the
+            /// bottom bar faster/smoother, needs PageView.pageSnapping=false:
+            // if (scrollInfo is ScrollEndNotification) {
+            //   Future.delayed(const Duration(milliseconds: 0), () {
+            //     int newPage = _pageController.page!.round();
+            //     _pageController.animateToPage(
+            //       newPage,
+            //       duration: const Duration(milliseconds: 80),
+            //       curve: Curves.fastOutSlowIn,
+            //     );
+            //   });
+            // }
 
-              if (scrollInfo is ScrollUpdateNotification) {
-                if (state >= UP && state <= RT) {
-                  //if (kDebugMode) l.v('$cnt $state SN: Update, UP/DN/LF/RT');
-                } else if (state == DETECT) {
-                  if (kDebugMode) l.v('$cnt $state SN: Update, detect state');
-                } else if (state == FOUND_START || state == BUTTON_PRESSED) {
-                  state = BUTTON_PRESSED;
-                  if (kDebugMode) l.v('$cnt $state SN: Update, button pressed');
-                  return true; // ignore scroll data from button presses
-                } else {
-                  scrolls[0] = 0; // reset all scroll in a row counts
-                  scrolls[1] = 0;
-                  scrolls[2] = 0;
-                  scrolls[3] = 0;
-                  if (kDebugMode) l.w('$cnt $state SN: Update, unknown state');
-                  return true;
-                }
-                // in state detect/up/dn/lf/rt, so go to scroll direction logic
-              } else if (scrollInfo is ScrollStartNotification) {
-                cnt = 1; // so debug prints start from 1
-                scrolls[0] = 0; // reset all scroll in a row counts
-                scrolls[1] = 0;
-                scrolls[2] = 0;
-                scrolls[3] = 0;
-                state = FOUND_START;
-                if (kDebugMode) l.v('$cnt $state SN: Start');
-                return true; // return, no scroll data comes with this
-              } else if (scrollInfo is UserScrollNotification) {
-                // if (state == FOUND_START) {
-                state = DETECT;
-                if (kDebugMode) l.v('$cnt $state SN: User, start detect');
-                // scroll data sometimes came in with this, i think
-                // } else {
-                //   state = IDLE;
-                //   if (kDebugMode) l.v('$cnt $state SN: User, End');
-                //   return true; // return, at end of user scroll event
-                // }
-              } else if (scrollInfo is ScrollEndNotification) {
-                cnt = 1; // so debug prints start from 1
-                scrolls[0] = 0; // reset all scroll in a row counts
-                scrolls[1] = 0;
-                scrolls[2] = 0;
-                scrolls[3] = 0;
-                state = IDLE;
-                if (kDebugMode) l.v('$cnt $state SN: End');
-                return true; // return, nothing to do
-              } else if (scrollInfo is OverscrollNotification) {
-                if (kDebugMode) l.v('$cnt $state SN: Overscroll');
-                return true; // return, nothing to do
+            if (scrollInfo is ScrollUpdateNotification) {
+              if (state >= UP && state <= RT) {
+                //if (kDebugMode) l.v('$cnt $state SN: Update, UP/DN/LF/RT');
+              } else if (state == DETECT) {
+                if (kDebugMode) l.v('$cnt $state SN: Update, detect state');
+              } else if (state == FOUND_START || state == BUTTON_PRESSED) {
+                state = BUTTON_PRESSED;
+                if (kDebugMode) l.v('$cnt $state SN: Update, button pressed');
+                return true; // ignore scroll data from button presses
               } else {
-                if (kDebugMode) l.w('$cnt $state SN: ??? $scrollInfo');
-                return true; // return, nothing to do
+                scrolls[0] = 0; // reset all scroll in a row counts
+                scrolls[1] = 0;
+                scrolls[2] = 0;
+                scrolls[3] = 0;
+                if (kDebugMode) l.w('$cnt $state SN: Update, unknown state');
+                return true;
               }
+              // in state detect/up/dn/lf/rt, so go to scroll direction logic
+            } else if (scrollInfo is ScrollStartNotification) {
+              cnt = 1; // so debug prints start from 1
+              scrolls[0] = 0; // reset all scroll in a row counts
+              scrolls[1] = 0;
+              scrolls[2] = 0;
+              scrolls[3] = 0;
+              state = FOUND_START;
+              if (kDebugMode) l.v('$cnt $state SN: Start');
+              return true; // return, no scroll data comes with this
+            } else if (scrollInfo is UserScrollNotification) {
+              // if (state == FOUND_START) {
+              state = DETECT;
+              if (kDebugMode) l.v('$cnt $state SN: User, start detect');
+              // scroll data sometimes came in with this, i think
+              // } else {
+              //   state = IDLE;
+              //   if (kDebugMode) l.v('$cnt $state SN: User, End');
+              //   return true; // return, at end of user scroll event
+              // }
+            } else if (scrollInfo is ScrollEndNotification) {
+              cnt = 1; // so debug prints start from 1
+              scrolls[0] = 0; // reset all scroll in a row counts
+              scrolls[1] = 0;
+              scrolls[2] = 0;
+              scrolls[3] = 0;
+              state = IDLE;
+              if (kDebugMode) l.v('$cnt $state SN: End');
+              return true; // return, nothing to do
+            } else if (scrollInfo is OverscrollNotification) {
+              if (kDebugMode) l.v('$cnt $state SN: Overscroll');
+              return true; // return, nothing to do
+            } else {
+              if (kDebugMode) l.w('$cnt $state SN: ??? $scrollInfo');
+              return true; // return, nothing to do
+            }
 
-              if (_pageController.position.userScrollDirection ==
-                  ScrollDirection.reverse) {
-                // IF HERE PAGE VIEW IS SCROLLING LEFT
-                if (scrolls[RT] == 0 && scrolls[UP] == 0 && scrolls[DN] == 0) {
-                  if (scrolls[LF] > CHANGE_TO_DIRECTION_STATE_THRESHOLD) {
-                    state = LF;
-                    if (kDebugMode) l.v('$cnt $state LEFT STATE SET');
-                  }
-                } else {
-                  scrolls[0] = 0; // reset all scroll in a row counts
-                  scrolls[1] = 0;
-                  scrolls[2] = 0;
-                  scrolls[3] = 0;
-                  state = DETECT;
-                  if (kDebugMode) l.v('$cnt $state LEFT DETECT');
+            if (_pageController.position.userScrollDirection ==
+                ScrollDirection.reverse) {
+              // IF HERE PAGE VIEW IS SCROLLING LEFT
+              if (scrolls[RT] == 0 && scrolls[UP] == 0 && scrolls[DN] == 0) {
+                if (scrolls[LF] > CHANGE_TO_DIRECTION_STATE_THRESHOLD) {
+                  state = LF;
+                  if (kDebugMode) l.v('$cnt $state LEFT STATE SET');
                 }
-                scrolls[LF]++;
-              } else if (_pageController.position.userScrollDirection ==
-                  ScrollDirection.forward) {
-                // IF HERE PAGE VIEW IS SCROLLING RIGHT
-                if (scrolls[LF] == 0 && scrolls[UP] == 0 && scrolls[DN] == 0) {
-                  if (scrolls[RT] > CHANGE_TO_DIRECTION_STATE_THRESHOLD) {
-                    state = RT;
-                    if (kDebugMode) l.v('$cnt $state RIGHT STATE SET');
-                  }
-                } else {
-                  scrolls[0] = 0; // reset all scroll in a row counts
-                  scrolls[1] = 0;
-                  scrolls[2] = 0;
-                  scrolls[3] = 0;
-                  state = DETECT;
-                  if (kDebugMode) l.v('$cnt $state RIGHT DETECT');
-                }
-                scrolls[RT]++;
-              } else if (scrollInfo.metrics.pixels - position >= 0.0) {
-                position = scrollInfo.metrics.pixels;
-                // IF HERE PAGE VIEW'S WIDGET IS SCROLLING UP
-                if (scrolls[LF] == 0 && scrolls[RT] == 0 && scrolls[DN] == 0) {
-                  if (scrolls[UP] > CHANGE_TO_DIRECTION_STATE_THRESHOLD) {
-                    state = UP;
-                    if (kDebugMode) l.v('$cnt $state UP STATE SET');
-                    if (isBottomBarVisible) {
-                      if (kDebugMode) l.d('$cnt $state hide bottom bar');
-                      isBottomBarVisible = false;
-                      c.updateOnThread1Ms();
-                    }
-                  }
-                } else {
-                  scrolls[0] = 0; // reset all scroll in a row counts
-                  scrolls[1] = 0;
-                  scrolls[2] = 0;
-                  scrolls[3] = 0;
-                  state = DETECT;
-                  if (kDebugMode) l.v('$cnt $state UP DETECT');
-                }
-                scrolls[UP]++;
-              } else if (position - scrollInfo.metrics.pixels >= 0.0) {
-                // IF HERE PAGE VIEW'S WIDGET IS SCROLLING DOWN
-                position = scrollInfo.metrics.pixels;
-                if (scrolls[LF] == 0 && scrolls[RT] == 0 && scrolls[UP] == 0) {
-                  if (scrolls[DN] > CHANGE_TO_DIRECTION_STATE_THRESHOLD) {
-                    state = DN;
-                    if (kDebugMode) l.v('$cnt $state DOWN STATE SET');
-                    if (!isBottomBarVisible) {
-                      if (kDebugMode) l.d('$cnt $state show bottom bar');
-                      isBottomBarVisible = true;
-                      c.updateOnThread1Ms();
-                    }
-                  }
-                } else {
-                  scrolls[0] = 0; // reset all scroll in a row counts
-                  scrolls[1] = 0;
-                  scrolls[2] = 0;
-                  scrolls[3] = 0;
-                  state = DETECT;
-                  if (kDebugMode) l.v('$cnt $state DOWN DETECT');
-                }
-                scrolls[DN]++;
+              } else {
+                scrolls[0] = 0; // reset all scroll in a row counts
+                scrolls[1] = 0;
+                scrolls[2] = 0;
+                scrolls[3] = 0;
+                state = DETECT;
+                if (kDebugMode) l.v('$cnt $state LEFT DETECT');
               }
-              return true;
-            },
+              scrolls[LF]++;
+            } else if (_pageController.position.userScrollDirection ==
+                ScrollDirection.forward) {
+              // IF HERE PAGE VIEW IS SCROLLING RIGHT
+              if (scrolls[LF] == 0 && scrolls[UP] == 0 && scrolls[DN] == 0) {
+                if (scrolls[RT] > CHANGE_TO_DIRECTION_STATE_THRESHOLD) {
+                  state = RT;
+                  if (kDebugMode) l.v('$cnt $state RIGHT STATE SET');
+                }
+              } else {
+                scrolls[0] = 0; // reset all scroll in a row counts
+                scrolls[1] = 0;
+                scrolls[2] = 0;
+                scrolls[3] = 0;
+                state = DETECT;
+                if (kDebugMode) l.v('$cnt $state RIGHT DETECT');
+              }
+              scrolls[RT]++;
+            } else if (scrollInfo.metrics.pixels - position >= 0.0) {
+              position = scrollInfo.metrics.pixels;
+              // IF HERE PAGE VIEW'S WIDGET IS SCROLLING UP
+              if (scrolls[LF] == 0 && scrolls[RT] == 0 && scrolls[DN] == 0) {
+                if (scrolls[UP] > CHANGE_TO_DIRECTION_STATE_THRESHOLD) {
+                  state = UP;
+                  if (kDebugMode) l.v('$cnt $state UP STATE SET');
+                  if (isBottomBarVisible) {
+                    if (kDebugMode) l.d('$cnt $state hide bottom bar');
+                    isBottomBarVisible = false;
+                    c.updateOnThread1Ms();
+                  }
+                }
+              } else {
+                scrolls[0] = 0; // reset all scroll in a row counts
+                scrolls[1] = 0;
+                scrolls[2] = 0;
+                scrolls[3] = 0;
+                state = DETECT;
+                if (kDebugMode) l.v('$cnt $state UP DETECT');
+              }
+              scrolls[UP]++;
+            } else if (position - scrollInfo.metrics.pixels >= 0.0) {
+              // IF HERE PAGE VIEW'S WIDGET IS SCROLLING DOWN
+              position = scrollInfo.metrics.pixels;
+              if (scrolls[LF] == 0 && scrolls[RT] == 0 && scrolls[UP] == 0) {
+                if (scrolls[DN] > CHANGE_TO_DIRECTION_STATE_THRESHOLD) {
+                  state = DN;
+                  if (kDebugMode) l.v('$cnt $state DOWN STATE SET');
+                  if (!isBottomBarVisible) {
+                    if (kDebugMode) l.d('$cnt $state show bottom bar');
+                    isBottomBarVisible = true;
+                    c.updateOnThread1Ms();
+                  }
+                }
+              } else {
+                scrolls[0] = 0; // reset all scroll in a row counts
+                scrolls[1] = 0;
+                scrolls[2] = 0;
+                scrolls[3] = 0;
+                state = DETECT;
+                if (kDebugMode) l.v('$cnt $state DOWN DETECT');
+              }
+              scrolls[DN]++;
+            }
+            return true;
+          },
+        ),
+        // AnimatedContainer animates the showing/hiding of bottom bar
+        bottomNavigationBar: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          height: isBottomBarVisible ? 72 : 0, // magic that hides bottom bar
+          // Wrap needed or get overflow errors
+          child: Wrap(
+            children: [
+              BottomBar(
+                selectedIndex: curBottomBarHighlightIdx,
+                items: bottomBarItems,
+                tabHeight: 72,
+                onTap: (newIdx) => _onBottomBarTabTapped(newIdx),
+                // Disable to turn off bottom bar view, so menu blends to page:
+                //backgroundColor: Theme.of(context).scaffoldBackgroundColor, null
+                //showActiveBackgroundColor: false,
+              ),
+            ],
           ),
-          // AnimatedContainer animates the showing/hiding of bottom bar
-          bottomNavigationBar: AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            height: isBottomBarVisible ? 72 : 0, // magic that hides bottom bar
-            // Wrap needed or get overflow errors
-            child: Wrap(
-              children: [
-                BottomBar(
-                  selectedIndex: curBottomBarHighlightIdx,
-                  items: bottomBarItems,
-                  tabHeight: 72,
-                  onTap: (newIdx) => _onBottomBarTabTapped(newIdx),
-                  // Disable to turn off bottom bar view, so menu blends to page:
-                  //backgroundColor: Theme.of(context).scaffoldBackgroundColor, null
-                  //showActiveBackgroundColor: false,
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
+        ),
+      );
+      // });
+    });
   }
 
   /// Called directly when swiping page or indirectly on bottom bar tab tap

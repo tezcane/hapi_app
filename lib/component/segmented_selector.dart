@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:hapi/main_c.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/settings_option.dart';
 
 /// a control used to select the theme.
@@ -38,7 +38,7 @@ class SegmentedSelector extends StatelessWidget {
                 option.tv,
                 tsN,
                 w: w / tvMenuOptions.length,
-                alignment: LanguageC.to.centerLeft,
+                alignment: LangC.to.centerLeft,
                 tv: true,
               ),
             ],

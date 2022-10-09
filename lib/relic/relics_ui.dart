@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/bottom_bar.dart';
 import 'package:hapi/menu/bottom_bar_menu.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/slide/menu_right/menu_right_ui.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/relic/relic_tab_bar.dart';
@@ -12,95 +10,92 @@ import 'package:hapi/tarikh/event/et.dart';
 import 'package:hapi/tarikh/event/favorite/event_favorite_ui.dart';
 import 'package:hapi/tarikh/event/search/event_search_ui.dart';
 
-/// Init active/daily/timed/hapi quests with slick bottom bar navigation
+/// Init all of this NavPage's main widgets and bottom bar
 class RelicsUI extends StatelessWidget {
   const RelicsUI();
 
-  static const navPage = NavPage.Alathar;
-
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<LanguageC>(builder: (c) {
-      // do here to save memory:
-      final List<BottomBarItem> bottomBarItems = [
-        BottomBarItem(
-          const EventFavoriteUI(ET.Nabi, navPage),
-          null,
-          'Favorites'.tr,
-          at('at.{0} Favorites', [navPage.tkIsimA]),
-          Icons.favorite_border_outlined,
-          onPressed: hideKeyboard, // in case search is showing keyboard
-        ),
-        BottomBarItem(
-          const EventSearchUI(navPage),
-          null,
-          'Search'.tr,
-          at('at.{0} Search', [navPage.tkIsimA]),
-          Icons.search_outlined,
-        ),
-        BottomBarItem(
-          Center(child: T('Coming Soon', tsN, h: 50)),
-          null,
-          'a.Alathar'.tr, // Relics
-          'Islamic relics'.tr,
-          Icons.brightness_3_outlined, // Icons.wine_bar_sharp
-          onPressed: hideKeyboard,
-        ),
-        BottomBarItem(
-          Center(child: T('Coming Soon', tsN, h: 50)),
-          null,
-          'Places'.tr,
-          'Famous Muslim Places'.tr,
-          Icons.map_outlined, // TODO Icons.mosque_outlined/.school_outlined
-          onPressed: hideKeyboard,
-        ),
-        BottomBarItem(
-          Center(child: T('Coming Soon', tsN, h: 50)),
-          null,
-          'a.Delil'.tr,
-          'Proofs of Islam'.tr,
-          Icons.auto_stories,
-          onPressed: hideKeyboard,
-        ),
-        BottomBarItem(
-          const RelicTabBar(
-            relicTab: RELIC_TAB.Ummah,
-            etList: [ET.Nabi, ET.Surah],
-          ),
-          null,
-          a('a.Ummah'),
-          'Remarkable Muslims'.tr + '\n', // FAB padding
-          Icons.connect_without_contact_outlined,
-          onPressed: hideKeyboard,
-        ),
-        BottomBarItem(
-          const Center(child: T('Coming Soon', tsN, h: 50)),
-          null,
-          a('a.Allah'), //a('Asma-ul-Husna'),
-          at('at.About {0} {1}', ['a.Allah', 'a.SWT']) + '\n', // FAB padding
-          Icons.apps_outlined,
-          onPressed: hideKeyboard,
-        ),
-      ];
+    List<Widget?> settingsWidgets = [];
+    List<Widget> aliveMainWidgets = [];
+    for (BottomBarItem bottomBarItem in _bottomBarItems) {
+      settingsWidgets.add(bottomBarItem.settingsWidget);
+      aliveMainWidgets.add(bottomBarItem.aliveMainWidget);
+    }
 
-      final List<BottomBarItem> bbItems = c.isLTR
-          ? bottomBarItems
-          : List<BottomBarItem>.from(bottomBarItems.reversed);
-
-      List<Widget> mainWidgets = [];
-      List<Widget?> settingsWidgets = [];
-      for (int idx = 0; idx < bottomBarItems.length; idx++) {
-        mainWidgets.add(bbItems[idx].aliveMainWidget);
-        settingsWidgets.add(bbItems[idx].settingsWidget);
-      }
-
-      return MenuRightUI(
-        navPage: navPage,
-        settingsWidgets: settingsWidgets,
-        foregroundPage: BottomBarMenu(navPage, bbItems, mainWidgets),
-      );
-    });
+    return MenuRightUI(
+      navPage: _navPage,
+      settingsWidgets: settingsWidgets,
+      foregroundPage: BottomBarMenu(
+        _navPage,
+        _bottomBarItems,
+        aliveMainWidgets,
+      ),
+    );
   }
-
-  hideKeyboard() => SystemChannels.textInput.invokeMethod('TextInput.hide');
 }
+
+const _navPage = NavPage.Alathar;
+
+const List<BottomBarItem> _bottomBarItems = [
+  BottomBarItem(
+    Center(child: T('Coming Soon', tsN, h: 50)),
+    null,
+    'a.Allah',
+    'About Allah SWT',
+    Icons.apps_outlined,
+    onPressed: _hideKeyboard,
+  ),
+  BottomBarItem(
+    RelicTabBar(
+      relicTab: RELIC_TAB.Ummah,
+      etList: [ET.Nabi, ET.Surah],
+    ),
+    null,
+    'a.Ummah',
+    'Remarkable Muslims', // FAB padding
+    Icons.connect_without_contact_outlined,
+    onPressed: _hideKeyboard,
+  ),
+  BottomBarItem(
+    Center(child: T('Coming Soon', tsN, h: 50)),
+    null,
+    'a.Delil',
+    'Proofs of Islam',
+    Icons.auto_stories,
+    onPressed: _hideKeyboard,
+  ),
+  BottomBarItem(
+    Center(child: T('Coming Soon', tsN, h: 50)),
+    null,
+    'Places',
+    'Famous Muslim Places',
+    Icons.map_outlined, // TODO Icons.mosque_outlined/.school_outlined
+    onPressed: _hideKeyboard,
+  ),
+  BottomBarItem(
+    Center(child: T('Coming Soon', tsN, h: 50)),
+    null,
+    'a.Alathar', // Relics
+    'Islamic relics',
+    Icons.brightness_3_outlined, // Icons.wine_bar_sharp
+    onPressed: _hideKeyboard,
+  ),
+  BottomBarItem(
+    EventSearchUI(_navPage),
+    null,
+    'Search',
+    'Alathar Search',
+    Icons.search_outlined,
+  ),
+  BottomBarItem(
+    EventFavoriteUI(ET.Nabi, _navPage),
+    null,
+    'Favorites',
+    'Alathar Favorites',
+    Icons.favorite_border_outlined,
+    onPressed: _hideKeyboard, // in case search is showing keyboard
+  ),
+];
+
+_hideKeyboard() => SystemChannels.textInput.invokeMethod('TextInput.hide');

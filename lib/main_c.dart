@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hapi/controller/getx_hapi.dart';
 import 'package:hapi/menu/menu_c.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/onboard/auth/auth_c.dart';
 import 'package:hapi/tarikh/event/event_c.dart';
@@ -112,8 +112,7 @@ class MainC extends GetxHapi {
       update(); // notify watchers
     } else {
       // TODO only do this to fix slide menu for now
-      if (MenuC.to.isMenuShowing) MenuC.to.hideMenu();
-      MenuC.to.navigateToNavPage(MenuC.to.getLastNavPage());
+      MenuC.to.navigateToNavPageResetFAB(MenuC.to.getLastNavPage());
     }
   }
 
@@ -375,10 +374,10 @@ Color ct(BuildContext context) => Theme.of(context).textTheme.headline6!.color!;
 
 /// cni = Convert Number Integer, int to other numeral system string, if needed.
 String cni(int input) {
-  if (LanguageC.to.isEnNumerals) return input.toString(); // no need
+  if (LangC.to.isEnNumerals) return input.toString(); // no need
 
   // single digit, easy conversion
-  if (input < 10 && input > -1) return LanguageC.to.curNumerals[input];
+  if (input < 10 && input > -1) return LangC.to.curNumerals[input];
 
   // if got here, then there is more than one digit entered so call cns()
   return cns(input.toString());
@@ -387,10 +386,10 @@ String cni(int input) {
 /// cns = Convert Number String, Replaces all digits to another number system,
 /// like Arabic and Farsi.  Only done, if current language needs it.
 String cns(String input) {
-  if (LanguageC.to.isEnNumerals) return input; // no need to convert
+  if (LangC.to.isEnNumerals) return input; // no need to convert
 
   // replace all found digits in the input string
-  List<String> nonEnNumerals = LanguageC.to.curNumerals;
+  List<String> nonEnNumerals = LangC.to.curNumerals;
   for (int idx = 0; idx < 10; idx++) {
     input = input.replaceAll(idx.toString(), nonEnNumerals[idx]);
   }

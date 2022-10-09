@@ -3,7 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:hapi/main_c.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
 import 'package:hapi/tarikh/timeline/timeline_utils.dart';
@@ -158,7 +158,7 @@ class Ticks {
         if (value < 9000) {
           label = value.toStringAsFixed(0);
         } else {
-          NumberFormat formatter = LanguageC.numCompactFormatter;
+          NumberFormat formatter = LangC.numCompactFormatter;
           label = formatter.format(value);
           int digits = formatter.significantDigits!;
           while (usedValues.contains(label) && digits < 10) {

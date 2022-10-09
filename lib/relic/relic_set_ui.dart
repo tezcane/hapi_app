@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/menu_c.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/relic/relic.dart';
@@ -86,7 +86,7 @@ class RelicSetUI extends StatelessWidget {
                       filter.tkLabel,
                       tsNB,
                       w: wText,
-                      alignment: LanguageC.to.centerLeft,
+                      alignment: LangC.to.centerLeft,
                     ) // only one item, no drop menu needed
                   : _filterDropMenu(context), // to match big/small labels
             ),
@@ -140,7 +140,7 @@ class RelicSetUI extends StatelessWidget {
             child: T(
               relicSet.filterList[value].tkLabel,
               RelicC.to.getFilterIdx(relicSet.et) == value ? ts : tsN,
-              alignment: LanguageC.to.centerLeft,
+              alignment: LangC.to.centerLeft,
             ),
           );
         },

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/component/segmented_selector.dart';
 import 'package:hapi/main_c.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/settings_option.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/theme_c.dart';
 
@@ -26,7 +26,7 @@ class ThemeListUI extends StatelessWidget {
               'Theme',
               tsN,
               w: w / 4,
-              alignment: LanguageC.to.centerLeft,
+              alignment: LangC.to.centerLeft,
             ),
           ]),
           SizedBox(

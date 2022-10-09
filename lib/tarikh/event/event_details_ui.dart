@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
 import 'package:hapi/main_c.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/tarikh/event/animation_controller/heart_controller.dart';
 import 'package:hapi/tarikh/event/et.dart';
@@ -122,7 +122,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
   /// Load the markdown file from the assets and set the contents of the page to its value.
   void loadMarkdown() async {
     String tvArticleMarkdown =
-        await LanguageC.to.tvArticle(_event.et, _event.tkTitle);
+        await LangC.to.tvArticle(_event.et, _event.tkTitle);
     setState(() => _tvArticleMarkdown = tvArticleMarkdown); // refresh UI
   }
 
@@ -361,7 +361,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                         fontSize: 25.0,
                                         height: 1.1,
                                       ),
-                                      alignment: LanguageC.to.centerLeft,
+                                      alignment: LangC.to.centerLeft,
                                     ),
                                     if (_tvTitle2 != '')
                                       T(
@@ -370,7 +370,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                           fontSize: 25.0,
                                           height: 1.1,
                                         ),
-                                        alignment: LanguageC.to.centerLeft,
+                                        alignment: LangC.to.centerLeft,
                                       ),
                                     T(
                                       _tvYearsAgo,
@@ -378,7 +378,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                         fontSize: 17.0,
                                         height: 1.5,
                                       ),
-                                      alignment: LanguageC.to.centerLeft,
+                                      alignment: LangC.to.centerLeft,
                                     ),
                                   ],
                                 ),
@@ -387,7 +387,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                 child: Container(
                                   height: 55.0,
                                   width: 55.0,
-                                  padding: LanguageC.to.isLTR
+                                  padding: LangC.to.isLTR
                                       ? const EdgeInsets.only(right: 20.0)
                                       : const EdgeInsets.only(left: 20.0),
                                   child: Hero(

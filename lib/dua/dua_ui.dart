@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
-import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/bottom_bar.dart';
 import 'package:hapi/menu/bottom_bar_menu.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
 import 'package:hapi/menu/slide/menu_right/menu_right_ui.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/tarikh/event/et.dart';
@@ -13,72 +10,66 @@ import 'package:hapi/tarikh/event/search/event_search_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_menu_ui.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 
+/// Init all of this NavPage's main widgets and bottom bar
 class DuaUI extends StatelessWidget {
   const DuaUI();
-  static const navPage = NavPage.Dua;
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<LanguageC>(builder: (c) {
-      // need for when timeline finally loads at init, add timeline data to UI:
-      return GetBuilder<TarikhC>(builder: (tc) {
-        // do here to save memory:
-        final List<BottomBarItem> bottomBarItems = [
-          BottomBarItem(
-            const EventFavoriteUI(ET.Tarikh, navPage),
-            null,
-            'Favorites'.tr,
-            at('at.{0} Favorites', [navPage.tkIsimA]),
-            Icons.favorite_border_outlined,
-            onPressed: setTarikhMenuInactive,
-          ),
-          BottomBarItem(
-            const EventSearchUI(navPage),
-            null,
-            'Search'.tr,
-            at('at.{0} Search', [navPage.tkIsimA]),
-            Icons.search_outlined,
-            onPressed: setTarikhMenuInactive,
-          ),
-          BottomBarItem(
-            const TarikhMenuUI(),
-            null,
-            'Menu'.tr,
-            at('at.{0} Menu', [navPage.tkIsimA]) + '\n', // FAB padding
-            Icons.menu_open_rounded,
-            onPressed: setTarikhMenuActive,
-          ),
-        ];
+    List<Widget?> settingsWidgets = [];
+    List<Widget> aliveMainWidgets = [];
+    for (BottomBarItem bottomBarItem in _bottomBarItems) {
+      settingsWidgets.add(bottomBarItem.settingsWidget);
+      aliveMainWidgets.add(bottomBarItem.aliveMainWidget);
+    }
 
-        final List<BottomBarItem> bbItems = c.isLTR
-            ? bottomBarItems
-            : List<BottomBarItem>.from(bottomBarItems.reversed);
-
-        List<Widget> mainWidgets = [];
-        List<Widget?> settingsWidgets = [];
-        for (int idx = 0; idx < bottomBarItems.length; idx++) {
-          mainWidgets.add(bbItems[idx].aliveMainWidget);
-          settingsWidgets.add(bbItems[idx].settingsWidget);
-        }
-
-        return MenuRightUI(
-          navPage: navPage,
-          settingsWidgets: settingsWidgets,
-          foregroundPage: BottomBarMenu(navPage, bbItems, mainWidgets),
-        );
-      });
-    });
+    return MenuRightUI(
+      navPage: _navPage,
+      settingsWidgets: settingsWidgets,
+      foregroundPage: BottomBarMenu(
+        _navPage,
+        _bottomBarItems,
+        aliveMainWidgets,
+      ),
+    );
   }
+}
 
-  hideKeyboard() => SystemChannels.textInput.invokeMethod('TextInput.hide');
+const _navPage = NavPage.Dua;
 
-  setTarikhMenuInactive() {
-    TarikhC.to.isActiveTarikhMenu = false;
-    hideKeyboard();
-  }
+const List<BottomBarItem> _bottomBarItems = [
+  BottomBarItem(
+    TarikhMenuUI(),
+    null,
+    'Menu',
+    'Dua Menu', // FAB padding
+    Icons.menu_open_rounded,
+    onPressed: _setTarikhMenuActive,
+  ),
+  BottomBarItem(
+    EventSearchUI(_navPage),
+    null,
+    'Search',
+    'Dua Search',
+    Icons.search_outlined,
+    onPressed: _setTarikhMenuInactive,
+  ),
+  BottomBarItem(
+    EventFavoriteUI(ET.Tarikh, _navPage),
+    null,
+    'Favorites',
+    'Dua Favorites',
+    Icons.favorite_border_outlined,
+    onPressed: _setTarikhMenuInactive,
+  ),
+];
 
-  setTarikhMenuActive() {
-    TarikhC.to.isActiveTarikhMenu = true;
-    hideKeyboard();
-  }
+_setTarikhMenuInactive() {
+  TarikhC.to.isActiveTarikhMenu = false;
+  SystemChannels.textInput.invokeMethod('TextInput.hide');
+}
+
+_setTarikhMenuActive() {
+  TarikhC.to.isActiveTarikhMenu = true;
+  SystemChannels.textInput.invokeMethod('TextInput.hide');
 }

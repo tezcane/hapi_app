@@ -111,8 +111,8 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
         TarikhC.to.isActiveTimeline = false; // inactivate timeline
 
         if (_subPageStack.isEmpty &&
-            NavPageC.to.getLastIdxName(NavPage.Tarikh) ==
-                TARIKH_TAB.Menu.name) {
+            // TARIKH.Menu == 0
+            NavPageC.to.getLastIdx(NavPage.Tarikh) == 0) {
           TarikhC.to.isActiveTarikhMenu = true; // reactivate menu
         }
       }
@@ -218,9 +218,16 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
   }
 
   /// Use to switch to a high level nav page only (e.g. Quests, Quran, etc.)
-  void navigateToNavPage(NavPage navPage, {bool offAll = false}) {
+  void navigateToNavPageResetFAB(NavPage navPage, {bool offAll = false}) {
+    if (_subPageStack.length == 1) {
+      _acFabIcon.reverse();
+      _fabAnimatedIcon = AnimatedIcons.menu_close; // switch to menu close icon
+    }
+
     // clear stack in case we jump to this next nav menu
     if (_subPageStack.isNotEmpty) _subPageStack = [];
+
+    hideMenu();
 
     // save so app restarts at this idx
     s.wr('lastNavIdx', navPage.index);

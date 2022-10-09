@@ -8,9 +8,9 @@ import 'package:get/get.dart';
 import 'package:hapi/controller/getx_hapi.dart';
 import 'package:hapi/controller/time_c.dart';
 import 'package:hapi/main_c.dart';
+import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/settings_option.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
-import 'package:hapi/quest/active/active_quests_c.dart';
 import 'package:hapi/tarikh/event/et.dart';
 import 'package:hapi/tarikh/event/et_extension.dart';
 import 'package:hapi/tarikh/event/event_c.dart';
@@ -64,8 +64,8 @@ final List<SettingsOption> languageOptions = [
 ];
 
 /// Saves and loads our selected language.
-class LanguageC extends GetxHapi {
-  static LanguageC get to => Get.find();
+class LangC extends GetxHapi {
+  static LangC get to => Get.find();
 
   static NumberFormat numCompactFormatter = NumberFormat.compact(locale: 'en');
 
@@ -225,10 +225,12 @@ class LanguageC extends GetxHapi {
     s.wr('language', currLangKey);
     l.i('updateLanguage: Setting currLangKey=$currLangKey, isEnNumerals=$_isEnNumerals, isRightToLeftLang=$_isRightToLeftLang');
 
-    // update athan time translations by refreshing active quests UI
-    ActiveQuestsC.to.update();
-
     update(); // notify watchers
+
+    // Don't call at init, reload UI when user selects new language
+    if (initNeeded == false) {
+      MenuC.to.navigateToNavPageResetFAB(MenuC.to.getLastNavPage());
+    }
   }
 
   /// Setup special language variables now
@@ -293,7 +295,7 @@ class LanguageC extends GetxHapi {
       return (await _getTrMap(et.trPath, currLangKey))[
           tk.startsWith('a.') ? tk.replaceFirst('a.', '') : tk]!;
     } catch (e) {
-      return 'Coming Soon'.tr;
+      return 'Article Coming Soon'.tr;
     }
   }
 

@@ -315,8 +315,8 @@ class _HijriAndGregoDate extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<TimeC>(builder: (c) {
-      DAY_OF_WEEK hijriDay = c.dayOfWeekHijri;
-      DAY_OF_WEEK gregoDay = c.dayOfWeekGrego;
+      DAY_OF_WEEK_EN hijriDay = c.dayOfWeekHijri;
+      DAY_OF_WEEK_EN gregoDay = c.dayOfWeekGrego;
 
       bool addDayOfWeekWithDate = hijriDay != gregoDay;
 
@@ -326,16 +326,15 @@ class _HijriAndGregoDate extends StatelessWidget {
           // placeholder
           if (addDayOfWeekWithDate) const T(' ', ts, w: 180, h: 25, tv: true),
           if (!addDayOfWeekWithDate)
-            T(
-              a(hijriDay.tkIsimA),
-              ts,
-              w: 160,
-              h: 25,
-              tv: true,
-            ),
+            T(DAY_OF_WEEK_AR.values[hijriDay.index].tkIsimA, ts, w: 160, h: 25),
           T(c.tvDateHijri(addDayOfWeekWithDate), ts, w: 180, h: 25, tv: true),
-          T(cns(c.tvDateGrego(addDayOfWeekWithDate)), ts,
-              w: 180, h: 25, tv: true),
+          T(
+            cns(c.tvDateGrego(addDayOfWeekWithDate)),
+            ts,
+            w: 180,
+            h: 25,
+            tv: true,
+          ),
         ],
       );
     });

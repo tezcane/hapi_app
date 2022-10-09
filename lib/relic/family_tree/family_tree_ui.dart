@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:graphview/GraphView.dart' as graph_view;
 import 'package:hapi/main_c.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/relic/relic.dart';
@@ -44,7 +44,7 @@ class FamilyTreeUI extends StatelessWidget {
     const double legendW = 310;
     const double textW = legendW - 30 - 10 - 20;
     return Directionality(
-      textDirection: LanguageC.to.textDirection,
+      textDirection: LangC.to.textDirection,
       child: Row(
         // mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -69,7 +69,7 @@ class FamilyTreeUI extends StatelessWidget {
                     T(
                       'p.LEGEND',
                       tsNB,
-                      alignment: LanguageC.to.centerLeft,
+                      alignment: LangC.to.centerLeft,
                       w: textW,
                     ),
                   ],
@@ -90,7 +90,7 @@ class FamilyTreeUI extends StatelessWidget {
                     T(
                       'p.Direct Descendants',
                       tsN,
-                      alignment: LanguageC.to.centerLeft,
+                      alignment: LangC.to.centerLeft,
                       w: textW,
                     ),
                   ],
@@ -111,7 +111,7 @@ class FamilyTreeUI extends StatelessWidget {
                     T(
                       'p.Generation Gap',
                       tsN,
-                      alignment: LanguageC.to.centerLeft,
+                      alignment: LangC.to.centerLeft,
                       w: textW,
                     ),
                   ],

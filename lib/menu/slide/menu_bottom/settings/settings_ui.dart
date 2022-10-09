@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/menu_c.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_list_ui.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_list_ui.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/theme_list_ui.dart';
 import 'package:hapi/menu/sub_page.dart';
 
@@ -38,7 +38,7 @@ class SettingsUI extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 30.0),
-                SizedBox(height: 55, child: LanguageListUI(width)),
+                SizedBox(height: 55, child: LangListUI(width)),
                 const SizedBox(height: 20.0),
                 SizedBox(height: 55, child: ThemeListUI(width)),
                 const SizedBox(height: 20.0),

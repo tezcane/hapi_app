@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:hapi/controller/connectivity_c.dart';
 import 'package:hapi/controller/getx_hapi.dart';
 import 'package:hapi/main_c.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/onboard/auth/auth_c.dart';
 import 'package:hapi/quest/active/athan/athan.dart';
 import 'package:hapi/quest/active/zaman_c.dart';
@@ -22,7 +22,7 @@ const String DUMMY_TIME_STR = '2022-02-22';
 const int DUMMY_NTP_OFFSET = 222222222222222;
 const String DUMMY_TIMEZONE = 'America/Los_Angeles'; // TODO random Antarctica?
 
-enum DAY_OF_WEEK {
+enum DAY_OF_WEEK_AR {
   Aliathnayn, // Monday = "a.Aliathnayn"
   Althulatha_a_, // Tuesday = "a.Althulatha'"
   Al_a_arbiea_a_, // Wednesday = "a.Al'arbiea'"
@@ -32,7 +32,17 @@ enum DAY_OF_WEEK {
   Al_a_ahad, // Sunday = "a.Al'ahad"
 }
 
-enum MONTH {
+enum DAY_OF_WEEK_EN {
+  Monday,
+  Tuesday,
+  Wednesday,
+  Thursday,
+  Friday,
+  Saturday,
+  Sunday,
+}
+
+enum MONTH_AR {
   Kanun_at__Tani, // January = "a.Kanun at-Tani"
   Shubat, // February = "a.Shubat"
   a_Adar, // March = "a.'Adar"
@@ -47,11 +57,26 @@ enum MONTH {
   Kanun_al___a_Awwal, // December = "a.Kanun al-'Awwal"
 }
 
+enum MONTH_EN {
+  January,
+  February,
+  March,
+  April,
+  May,
+  June,
+  July,
+  August,
+  September,
+  October,
+  November,
+  December,
+}
+
 /// Used to get accurate server UTC/NTP based time in case user's clock is off
 class TimeC extends GetxHapi {
   static TimeC get to => Get.find();
 
-  static DAY_OF_WEEK defaultDayOfWeek = DAY_OF_WEEK.Aliathnayn;
+  static DAY_OF_WEEK_EN defaultDayOfWeek = DAY_OF_WEEK_EN.Monday;
   static int thisYear = TimeC.to.now2().year;
 
   int _ntpOffset = DUMMY_NTP_OFFSET;
@@ -63,13 +88,13 @@ class TimeC extends GetxHapi {
   /// Holds the current day in 'yyyy-MM-dd' used for current day's calculations.
   String currDay = DUMMY_TIME_STR;
   DateTime currDayDate = DUMMY_TIME1;
-  DAY_OF_WEEK currDayOfWeek = defaultDayOfWeek;
+  DAY_OF_WEEK_EN currDayOfWeek = defaultDayOfWeek;
   DateTime nextDayDate = DUMMY_TIME2;
 
-  DAY_OF_WEEK _dayOfWeekHijri = defaultDayOfWeek;
-  DAY_OF_WEEK _dayOfWeekGrego = defaultDayOfWeek;
-  DAY_OF_WEEK get dayOfWeekHijri => _dayOfWeekHijri;
-  DAY_OF_WEEK get dayOfWeekGrego => _dayOfWeekGrego;
+  DAY_OF_WEEK_EN _dayOfWeekHijri = defaultDayOfWeek;
+  DAY_OF_WEEK_EN _dayOfWeekGrego = defaultDayOfWeek;
+  DAY_OF_WEEK_EN get dayOfWeekHijri => _dayOfWeekHijri;
+  DAY_OF_WEEK_EN get dayOfWeekGrego => _dayOfWeekGrego;
 
   int _hijriMonth = 1;
   bool get isMonthMuharram => _hijriMonth == 1;
@@ -249,12 +274,12 @@ class TimeC extends GetxHapi {
       _dayOfWeekGrego = _getDayOfWeekGrego(await now());
 
   /// Hijri calendar day starts at maghrib
-  DAY_OF_WEEK _getDayOfWeekHijri(DateTime time) {
-    DAY_OF_WEEK day = _getDayOfWeekGrego(time);
+  DAY_OF_WEEK_EN _getDayOfWeekHijri(DateTime time) {
+    DAY_OF_WEEK_EN day = _getDayOfWeekGrego(time);
     if (iterateHijriDateByOne(time)) {
       int dayIndex = day.index + 1;
       if (dayIndex == 7) dayIndex = 0; // wrap around: if past Sunday -> Monday
-      return DAY_OF_WEEK.values[dayIndex];
+      return DAY_OF_WEEK_EN.values[dayIndex];
     }
     l.d('_getDayOfWeekHijri: ${day.name}');
     return day;
@@ -267,14 +292,14 @@ class TimeC extends GetxHapi {
   }
 
   /// Gregorian calendar day starts at Midnight (12:00AM)
-  DAY_OF_WEEK _getDayOfWeekGrego(DateTime dT) {
+  DAY_OF_WEEK_EN _getDayOfWeekGrego(DateTime dT) {
     // TODO Force English Locale: works?
     String dayFromDate = DateFormat('EEEE').format(dT);
 
-    DAY_OF_WEEK day = defaultDayOfWeek;
-    for (var dayOfWeek in DAY_OF_WEEK.values) {
-      if (dayFromDate == dayOfWeek.name) {
-        day = dayOfWeek;
+    DAY_OF_WEEK_EN day = defaultDayOfWeek;
+    for (DAY_OF_WEEK_EN dayOfWeekEn in DAY_OF_WEEK_EN.values) {
+      if (dayFromDate == dayOfWeekEn.name) {
+        day = dayOfWeekEn;
         break;
       }
     }
@@ -288,32 +313,35 @@ class TimeC extends GetxHapi {
   /// _dayOfWeekGreco, it changes at midnight but the salah row headers are
   /// still using the day before until Fajr Tomorrow. So these realtime values
   /// are not always desired to show the day of the week.
-  bool isFriday() => currDayOfWeek == DAY_OF_WEEK.Jumah;
+  bool isFriday() => currDayOfWeek == DAY_OF_WEEK_EN.Friday;
 
   String tvDateHijri(bool addDayOfWeek) {
     DateTime dT = now2(); // TODO use now()?
     if (iterateHijriDateByOne(dT)) dT = dateToTomorrow(dT);
     String dayOfWeek = '';
-    if (addDayOfWeek) dayOfWeek = '${a(_dayOfWeekHijri.tkIsimA)} ';
+    if (addDayOfWeek) {
+      dayOfWeek = a(DAY_OF_WEEK_AR.values[_dayOfWeekHijri.index].tkIsimA);
+    }
 
     HijriCalendar hijriCalendar = HijriCalendar.fromDate(dT);
     _hijriMonth = hijriCalendar.hMonth;
-    return '$dayOfWeek${hijriCalendar.toFormat('MMMM dd, yyyy')}';
+    return '$dayOfWeek ${hijriCalendar.toFormat('MMMM dd, yyyy')}';
   }
 
   String tvDateGrego(bool addDayOfWeek) {
     String date = DateFormat('MMMM d, yyyy').format(now2());
     bool foundMonth = false;
-    for (MONTH month in MONTH.values) {
-      if (date.contains(month.name)) {
-        date = date.replaceFirst(month.name, a(month.tkIsimA));
+    for (MONTH_EN monthEn in MONTH_EN.values) {
+      if (date.contains(monthEn.name)) {
+        date = date.replaceFirst(
+          monthEn.name,
+          a(MONTH_AR.values[monthEn.index].tkIsimA),
+        );
         foundMonth = true;
         break;
       }
     }
-    if (!foundMonth) {
-      l.e('tvDateGrego: Did not find month in "$date"');
-    }
+    if (!foundMonth) l.e('tvDateGrego: Did not find month in "$date"');
 
     String dayOfWeek = '';
     if (addDayOfWeek) dayOfWeek = '${a(_dayOfWeekGrego.tkIsimA)} ';
@@ -366,9 +394,9 @@ class TimeC extends GetxHapi {
     if (show12HourClock) {
       if (startHour >= 12) {
         startHour -= 12;
-        startAmPm = LanguageC.to.pm;
+        startAmPm = LangC.to.pm;
       } else {
-        startAmPm = LanguageC.to.am;
+        startAmPm = LangC.to.am;
       }
       if (startHour == 0) startHour = 12;
     }
@@ -396,9 +424,9 @@ class TimeC extends GetxHapi {
       if (show12HourClock) {
         if (endHour >= 12) {
           endHour -= 12;
-          endAmPm = LanguageC.to.pm;
+          endAmPm = LangC.to.pm;
         } else {
-          endAmPm = LanguageC.to.am;
+          endAmPm = LangC.to.am;
         }
         if (endHour == 0) endHour = 12;
 

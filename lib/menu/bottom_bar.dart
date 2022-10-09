@@ -3,7 +3,7 @@ library bottom_bar;
 import 'package:flutter/material.dart';
 import 'package:hapi/helper/keep_alive_page.dart';
 import 'package:hapi/main_c.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 
 /// Display a bar with multiple icons and titles to hold different UIs
@@ -38,7 +38,7 @@ class BottomBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          SizedBox(width: LanguageC.to.isLTR ? 10 : 80),
+          SizedBox(width: LangC.to.isLTR ? 10 : 80),
           ...List<Widget>.generate(
             itemCount,
             (int index) => _BottomBarItemWidget(
@@ -54,7 +54,7 @@ class BottomBar extends StatelessWidget {
               duration: duration,
             ),
           ),
-          SizedBox(width: LanguageC.to.isLTR ? 80 : 10),
+          SizedBox(width: LangC.to.isLTR ? 80 : 10),
         ],
       ),
     );
@@ -121,7 +121,7 @@ class _BottomBarItemWidget extends StatelessWidget {
                 : Colors.transparent,
             shape: const RoundedRectangleBorder(),
             child: Tooltip(
-              message: bottomBarItem.tvTooltip,
+              message: a(bottomBarItem.tkTooltip),
               child: InkWell(
                 onTap: onTap,
                 customBorder: const StadiumBorder(),
@@ -165,12 +165,11 @@ class _BottomBarItemWidget extends StatelessWidget {
                             ),
                           ),
                           child: T(
-                            bottomBarItem.tvTitle,
+                            bottomBarItem.tkTitle,
                             textStyle,
                             w: tabWidth,
                             h: textHeight,
                             alignment: Alignment.topCenter,
-                            tv: true,
                           ),
                         ),
                     ],
@@ -189,16 +188,16 @@ class BottomBarItem {
   const BottomBarItem(
     this.mainWidget,
     this.settingsWidget,
-    this.tvTitle,
-    this.tvTooltip,
+    this.tkTitle,
+    this.tkTooltip,
     this.iconData, {
     this.selectedColor = AppThemes.selected,
     this.onPressed,
   });
   final Widget mainWidget;
   final Widget? settingsWidget;
-  final String tvTitle;
-  final String tvTooltip;
+  final String tkTitle;
+  final String tkTooltip;
   final IconData iconData;
   final Color selectedColor;
   final VoidCallback? onPressed;

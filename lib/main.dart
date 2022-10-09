@@ -13,7 +13,7 @@ import 'package:hapi/controller/time_c.dart';
 import 'package:hapi/helper/loading.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/menu_c.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/theme_c.dart';
 import 'package:hapi/onboard/auth/auth_c.dart';
@@ -48,7 +48,7 @@ void main() async {
   Get.put<MainC>(MainC(), permanent: permOn); // should do first
   Get.put<OnboardingC>(OnboardingC());
   Get.put<ThemeC>(ThemeC());
-  Get.put<LanguageC>(LanguageC(), permanent: permOn);
+  Get.put<LangC>(LangC(), permanent: permOn);
   Get.put<NavPageC>(NavPageC(), permanent: permOn); // requires LangC
   Get.put<MenuC>(MenuC(), permanent: permOn);
   Get.put<AuthC>(AuthC(), permanent: permOn);
@@ -85,15 +85,15 @@ class HapiApp extends StatelessWidget {
     return OrientationBuilder(
       builder: (context, orientation) {
         MainC.to.setOrientation(orientation == Orientation.portrait);
-        return GetBuilder<LanguageC>(
-          builder: (c) => Loading(
-            child: MaterialApp(
-              home: Scaffold(
-                resizeToAvoidBottomInset: false, // fixes keyboard pushing UI up
-                floatingActionButton: GetBuilder<MenuC>(builder: (mc) {
-                  return Visibility(
-                    visible: MainC.to.showMainMenuFab,
-                    child: FloatingActionButton(
+        return Loading(
+          child: MaterialApp(
+            home: Scaffold(
+              resizeToAvoidBottomInset: false, // fixes keyboard pushing UI up
+              floatingActionButton: GetBuilder<MenuC>(builder: (mc) {
+                return Visibility(
+                  visible: MainC.to.showMainMenuFab,
+                  child: GetBuilder<LangC>(
+                    builder: (c) => FloatingActionButton(
                       tooltip: mc.tvMenuTooltip(),
                       backgroundColor:
                           AppThemes.floatingActionButtonTheme.backgroundColor,
@@ -116,25 +116,25 @@ class HapiApp extends StatelessWidget {
                         ),
                       ),
                     ),
-                  );
-                }),
-                body: GetMaterialApp(
-                  // translations: Localization(),
-                  // locale: c.getLocale, // we set in LanguageC
-                  // fallbackLocale: const Locale('en', 'US'), // uses if .tr fails
-                  // navigatorObservers: [ // TODO
-                  //   // FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
-                  // ],
-                  // debugShowCheckedModeBanner: false,
-                  // Also set in MenuC, but we do here for sign in/out pages:
-                  defaultTransition: Transition.fade,
-                  transitionDuration: const Duration(milliseconds: 1000),
-                  theme: AppThemes.lightTheme,
-                  darkTheme: AppThemes.darkTheme,
-                  themeMode: ThemeMode.dark,
-                  initialRoute: '/',
-                  getPages: [GetPage(name: '/', page: () => SplashUI())],
-                ),
+                  ),
+                );
+              }),
+              body: GetMaterialApp(
+                // translations: Localization(),
+                // locale: c.getLocale, // we set in LanguageC
+                // fallbackLocale: const Locale('en', 'US'), // uses if .tr fails
+                // navigatorObservers: [ // TODO
+                //   // FirebaseAnalyticsObserver(analytics: FirebaseAnalytics()),
+                // ],
+                // debugShowCheckedModeBanner: false,
+                // Also set in MenuC, but we do here for sign in/out pages:
+                defaultTransition: Transition.fade,
+                transitionDuration: const Duration(milliseconds: 1000),
+                theme: AppThemes.lightTheme,
+                darkTheme: AppThemes.darkTheme,
+                themeMode: ThemeMode.dark,
+                initialRoute: '/',
+                getPages: [GetPage(name: '/', page: () => SplashUI())],
               ),
             ),
           ),

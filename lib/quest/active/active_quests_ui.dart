@@ -9,7 +9,7 @@ import 'package:hapi/controller/notification_c.dart';
 import 'package:hapi/controller/time_c.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/menu_c.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/quest/active/active_quests_ajr_c.dart';
@@ -427,7 +427,7 @@ class SalahRow extends StatelessWidget {
                     color: isBold ? textStyle.color : AppThemes.ldTextColor,
                     fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
                   ),
-                  alignment: LanguageC.to.centerRight,
+                  alignment: LangC.to.centerRight,
                   w: w2 - 10, // - 10 for center divider
                   h: 25, //_Sliv.slivH, // tuned to find best value in all cases
                 ),
@@ -449,7 +449,7 @@ class SalahRow extends StatelessWidget {
                     color: isBold ? textStyle.color : AppThemes.ldTextColor,
                     fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
                   ),
-                  alignment: LanguageC.to.centerLeft,
+                  alignment: LangC.to.centerLeft,
                   w: w2,
                   h: 25, //_Sliv.slivH, // tuned to find best value in all cases
                   tv: true,

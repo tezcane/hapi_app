@@ -4,7 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flare_dart/math/aabb.dart' as flare;
 import 'package:flutter/material.dart';
 import 'package:hapi/main_c.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/tarikh/event/et.dart';
 import 'package:hapi/tarikh/event/event.dart';
@@ -963,7 +963,7 @@ class TimelineRenderObject extends RenderBox {
               if (value < 10000) {
                 label = value.toStringAsFixed(0);
               } else {
-                NumberFormat formatter = LanguageC.numCompactFormatter;
+                NumberFormat formatter = LangC.numCompactFormatter;
                 label = formatter.format(value);
               }
 
