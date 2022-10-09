@@ -163,7 +163,7 @@ List<TimelineData> getTimelineData() {
         width: 1210,
         height: 1210,
         scale: 0.25,
-        idle: 'Bombardmnet',
+        idle: 'Bombardmnet', // Note: typo is needed
         bounds: [-598.0, -2075.5, 3176, 599.5],
       ),
       accent: Color.fromARGB(0xFF, 255, 63, 0),
