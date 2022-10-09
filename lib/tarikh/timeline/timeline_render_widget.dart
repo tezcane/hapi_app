@@ -292,7 +292,7 @@ class TimelineRenderObject extends RenderBox {
             double x = -bounds[0] -
                 contentWidth / 2.0 -
                 (alignment.x * contentWidth / 2.0) +
-                asset.tHorizontalOffset;
+                asset.tOffsetHorizontal;
             double y = -bounds[1] -
                 contentHeight / 2.0 +
                 (alignment.y * contentHeight / 2.0);
@@ -380,7 +380,7 @@ class TimelineRenderObject extends RenderBox {
             double x = -bounds[0] -
                 contentWidth / 2.0 -
                 (alignment.x * contentWidth / 2.0) +
-                asset.tHorizontalOffset;
+                asset.tOffsetHorizontal;
             double y = -bounds[1] -
                 contentHeight / 2.0 +
                 (alignment.y * contentHeight / 2.0);
@@ -789,7 +789,7 @@ class TimelineRenderObject extends RenderBox {
           double x = -bounds[0] -
               contentWidth / 2.0 -
               (alignment.x * contentWidth / 2.0) +
-              asset.tHorizontalOffset;
+              asset.tOffsetHorizontal;
           double y = -bounds[1] -
               contentHeight / 2.0 +
               (alignment.y * contentHeight / 2.0);
@@ -860,7 +860,7 @@ class TimelineRenderObject extends RenderBox {
           double x = -bounds[0] -
               contentWidth / 2.0 -
               (alignment.x * contentWidth / 2.0) +
-              asset.tHorizontalOffset;
+              asset.tOffsetHorizontal;
           double y = -bounds[1] -
               contentHeight / 2.0 +
               (alignment.y * contentHeight / 2.0);
