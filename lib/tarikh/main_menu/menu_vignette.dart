@@ -140,7 +140,7 @@ class MenuVignetteRenderObject extends RenderBox {
     final Canvas canvas = context.canvas;
 
     /// Don't paint if not needed. TODO test
-    if (_event == null) /* || _event?.asset == null) */ {
+    if (_event == null /* || _event?.asset == null) */) {
       opacity = 0.0;
       return;
     }

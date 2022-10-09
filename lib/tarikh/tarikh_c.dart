@@ -245,10 +245,9 @@ class TimelineInitHandler {
   _loadTimelineData() async {
     final List<TimelineData> timelineDatas = getTimelineData();
 
-    List<Event> eventsTarikh = [];
-
     /// The JSON decode doesn't provide strong typing, so we'll iterate
     /// on the dynamic events in the [jsonEvents] list.
+    List<Event> eventsTarikh = [];
     for (TimelineData td in timelineDatas) {
       /// Create the current event and fill in the current date if it's
       /// an `Incident`, or look for the `start` property if it's an `Era` instead.
@@ -415,9 +414,9 @@ class TimelineInitHandler {
 
     /// Step 2 of 2: Build menu section data off eraMenuSectionMap:
     for (String tkEra in eraMenuSectionMap.keys) {
-      List<MenuItemData> menuItemList = [];
       EraMenuSection eraMenuSection = eraMenuSectionMap[tkEra]!;
 
+      List<MenuItemData> menuItemList = [];
       for (Event event in eraMenuSection.events) {
         menuItemList.add(
           MenuItemData(
@@ -471,18 +470,14 @@ class EraMenuSection {
   final Event? event;
 
   final List<Event> events = [];
-  // double timeMin = -1;
-  // double timeMax = -1;
 
+  addEraEvent(Event event) => events.add(event);
+
+  // if (timeMin == -1 || event.startMs < timeMin) timeMin = event.startMs;
+  // if (timeMax == -1 || event.endMs > timeMax) timeMax = event.endMs;
   // TODO we can also set this based off close next/previous to zoom in more
   double getTimeMin(Event event) =>
       event.startMs < 0 ? event.startMs * 1.2 : event.startMs * .8;
   double getTimeMax(Event event) =>
       event.startMs < 0 ? event.endMs * .8 : event.endMs * 1.2;
-
-  addEraEvent(Event event) {
-    // if (timeMin == -1 || event.startMs < timeMin) timeMin = event.startMs;
-    // if (timeMax == -1 || event.endMs > timeMax) timeMax = event.endMs;
-    events.add(event);
-  }
 }
