@@ -877,11 +877,10 @@ class Timeline {
 
         _lastAssetY =
             targetAssetY + asset.height * AssetScreenScale + AssetPadding;
-        if (asset is NimaAsset) {
-          _lastAssetY += asset.gap;
-        } else if (asset is FlareAsset) {
-          _lastAssetY += asset.gap;
-        }
+
+        // NimaAsset or FlareAsset:
+        if (asset is AnimatedEventAsset) _lastAssetY += asset.tOffsetVertical;
+
         if (asset.y > _height ||
             asset.y + asset.height * AssetScreenScale < 0.0) {
           /// It's not in view: cull it. Make sure we don't advance animations.

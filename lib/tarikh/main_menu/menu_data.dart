@@ -52,7 +52,7 @@ class MenuItemData {
 
     /// Extra padding for the top base don the asset size.
     double padTop = asset.height * Timeline.AssetScreenScale;
-    if (asset is AnimatedEventAsset) padTop += asset.gap;
+    if (asset is AnimatedEventAsset) padTop += asset.tOffsetVertical;
 
     double start = 0;
     double end = 0;

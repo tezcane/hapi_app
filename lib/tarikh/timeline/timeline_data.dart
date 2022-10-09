@@ -65,7 +65,7 @@ class Asset {
     required this.height,
     this.loop = true,
     this.tOffsetHorizontal = 0.0,
-    this.gap = 0.0,
+    this.tOffsetVertical = 0.0,
     this.scale = 1.0,
     this.bounds,
     this.intro,
@@ -76,7 +76,7 @@ class Asset {
   final double height;
   final bool loop;
   final double tOffsetHorizontal;
-  final double gap;
+  final double tOffsetVertical;
   final double scale;
   final List<double>? bounds;
   final String? intro;
@@ -93,7 +93,7 @@ List<TimelineData> getTimelineData() {
         width: 3628,
         height: 3620,
         tOffsetHorizontal: 1500,
-        gap: -1000,
+        tOffsetVertical: -1000,
         loop: false,
         bounds: [-1814, -1810, 1814, 1810],
       ),
@@ -279,7 +279,7 @@ List<TimelineData> getTimelineData() {
         width: 800,
         height: 570,
         tOffsetHorizontal: 0,
-        gap: 0,
+        tOffsetVertical: 0,
       ),
       tkEra: 'Prehistoric Times',
     ),
@@ -302,7 +302,7 @@ List<TimelineData> getTimelineData() {
         width: 800,
         height: 570,
         tOffsetHorizontal: -200,
-        gap: 0,
+        tOffsetVertical: 0,
       ),
       tkEra: 'Prehistoric Times',
       accent: Color.fromARGB(0xFF, 235, 155, 75),

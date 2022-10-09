@@ -63,7 +63,7 @@ abstract class AnimatedEventAsset extends EventAsset {
     double scale,
     this.loop,
     this.tOffsetHorizontal,
-    this.gap,
+    this.tOffsetVertical,
     this.animationTime,
   ) : super(filename, width, height, scale);
 
@@ -72,7 +72,9 @@ abstract class AnimatedEventAsset extends EventAsset {
 
   /// Timeline horizontal offset (negative move left, positive move right)
   final double tOffsetHorizontal;
-  final double gap;
+
+  /// Timeline vertical offset (negative move up, positive move down)
+  final double tOffsetVertical;
 
   /// Can be overwritten
   double animationTime;
@@ -87,12 +89,21 @@ class NimaAsset extends AnimatedEventAsset {
     double scale,
     bool loop,
     double tOffsetHorizontal,
-    double gap,
+    double tOffsetVertical,
     this.actorStatic,
     this.actor,
     this.setupAABB,
     this.animation,
-  ) : super(filename, width, height, scale, loop, tOffsetHorizontal, gap, 0.0);
+  ) : super(
+          filename,
+          width,
+          height,
+          scale,
+          loop,
+          tOffsetHorizontal,
+          tOffsetVertical,
+          0.0,
+        );
   final nima.FlutterActor actorStatic;
   final nima.FlutterActor actor;
   final nima.AABB setupAABB;
@@ -111,12 +122,21 @@ class FlareAsset extends AnimatedEventAsset {
     double scale,
     bool loop,
     double tOffsetHorizontal,
-    double gap,
+    double tOffsetVertical,
     this.actorStatic,
     this.actor,
     this.setupAABB,
     this.animation,
-  ) : super(filename, width, height, scale, loop, tOffsetHorizontal, gap, 0.0);
+  ) : super(
+          filename,
+          width,
+          height,
+          scale,
+          loop,
+          tOffsetHorizontal,
+          tOffsetVertical,
+          0.0,
+        );
   final flare.FlutterActorArtboard actorStatic;
   final flare.FlutterActorArtboard actor;
   final flare.AABB setupAABB;
@@ -158,7 +178,7 @@ Future<NimaAsset> loadNimaAsset(
   double scale,
   bool loop,
   double tOffsetHorizontal,
-  double gap,
+  double tOffsetVertical,
   String? nimaIdle,
   List<double>? bounds,
 ) async {
@@ -194,7 +214,7 @@ Future<NimaAsset> loadNimaAsset(
     scale,
     loop,
     tOffsetHorizontal,
-    gap,
+    tOffsetVertical,
     actorStatic,
     actor,
     setupAABB,
@@ -211,7 +231,7 @@ Future<FlareAsset> loadFlareAsset(
   double scale,
   bool loop,
   double tOffsetHorizontal,
-  double gap,
+  double tOffsetVertical,
   String? flareIdle,
   List<double>? bounds,
   String? flareIntro,
@@ -278,7 +298,7 @@ Future<FlareAsset> loadFlareAsset(
     scale,
     loop,
     tOffsetHorizontal,
-    gap,
+    tOffsetVertical,
     actorStatic,
     actor,
     setupAABB,
@@ -298,7 +318,7 @@ Future<FlareAsset> loadFlareAsset(
 ///
 /// `asset` is an object with:
 ///   - source: the name of the nima/flare/image file in the assets folder.
-///   - width/height/offset/bounds/gap:
+///   - width/height/tOffsetHorizontal/tOffsetVertical/bounds:
 ///            Sizes of the animation to properly align it in the timeline,
 ///            together with its Axis-Aligned Bounding Box container.
 ///   - intro: Some files have an 'intro' animation, to be played before
@@ -341,7 +361,7 @@ Future<EventAsset> getEventAsset(Asset asset) async {
         asset.scale,
         asset.loop,
         asset.tOffsetHorizontal,
-        asset.gap,
+        asset.tOffsetVertical,
         asset.idle,
         asset.bounds,
       );
@@ -354,7 +374,7 @@ Future<EventAsset> getEventAsset(Asset asset) async {
         asset.scale,
         asset.loop,
         asset.tOffsetHorizontal,
-        asset.gap,
+        asset.tOffsetVertical,
         asset.idle,
         asset.bounds,
         asset.intro,
