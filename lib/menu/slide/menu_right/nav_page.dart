@@ -1,14 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/ajr/ajr_ui.dart';
-import 'package:hapi/dua/dua_ui.dart';
-import 'package:hapi/hadith/hadith_ui.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/language/language_c.dart';
-import 'package:hapi/quest/quests_ui.dart';
-import 'package:hapi/quran/quran_ui.dart';
-import 'package:hapi/relic/relics_ui.dart';
-import 'package:hapi/tarikh/tarikh_ui.dart';
-import 'package:hapi/tool/tool_ui.dart';
 
 /// NPV= Nav Page Value holds values used to init a NavPage.
 class NPV {
@@ -74,16 +66,11 @@ extension EnumUtil on NavPage {
   /// [tabListLTR] has the most significant tab at the last index.
   List<Enum> get tabListLTR {
     switch (this) {
-      case NavPage.Ajr:
-        return AJR_TAB.values;
+      case NavPage.Ajr: // TODO implement these
       case NavPage.a_Adawat:
-        return TOOL_TAB.values;
       case NavPage.Dua:
-        return DUA_TAB.values;
       case NavPage.Hadith:
-        return HADITH_TAB.values;
       case NavPage.Quran:
-        return QURAN_TAB.values;
       case NavPage.Tarikh:
         return TARIKH_TAB.values;
       case NavPage.Alathar:
@@ -98,4 +85,27 @@ extension EnumUtil on NavPage {
   List<Enum> get tabListRTL => List<Enum>.from(tabListLTR.reversed);
 
   List<Enum> get tabList => LanguageC.to.isLTR ? tabListLTR : tabListRTL;
+}
+
+enum TARIKH_TAB {
+  Favorites,
+  Search,
+  Menu,
+}
+
+enum RELIC_TAB {
+  Favorites,
+  Search,
+  Relics, // a.Alathar
+  Places,
+  Delil,
+  Ummah,
+  Allah, // Asma_ul_Husna,
+}
+
+enum QUEST_TAB {
+  hapi,
+  Time,
+  Daily,
+  Active,
 }

@@ -12,16 +12,6 @@ import 'package:hapi/tarikh/event/et.dart';
 import 'package:hapi/tarikh/event/favorite/event_favorite_ui.dart';
 import 'package:hapi/tarikh/event/search/event_search_ui.dart';
 
-enum RELIC_TAB {
-  Favorites,
-  Search,
-  Relics, // a.Alathar
-  Places,
-  Delil,
-  Ummah,
-  Allah, //Asma_ul_Husna,
-}
-
 /// Init active/daily/timed/hapi quests with slick bottom bar navigation
 class RelicsUI extends StatelessWidget {
   const RelicsUI();
@@ -79,7 +69,7 @@ class RelicsUI extends StatelessWidget {
           ),
           null,
           a('a.Ummah'),
-          '              ' + 'Remarkable Muslims'.tr + '              ',
+          'Remarkable Muslims'.tr + '\n', // FAB padding
           Icons.connect_without_contact_outlined,
           onPressed: hideKeyboard,
         ),
@@ -87,9 +77,7 @@ class RelicsUI extends StatelessWidget {
           const Center(child: T('Coming Soon', tsN, h: 50)),
           null,
           a('a.Allah'), //a('Asma-ul-Husna'),
-          '              ' +
-              at('at.About {0} {1}', ['a.Allah', 'a.SWT']) +
-              '              ',
+          at('at.About {0} {1}', ['a.Allah', 'a.SWT']) + '\n', // FAB padding
           Icons.apps_outlined,
           onPressed: hideKeyboard,
         ),

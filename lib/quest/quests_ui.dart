@@ -10,13 +10,6 @@ import 'package:hapi/quest/active/active_quests_settings_ui.dart';
 import 'package:hapi/quest/active/active_quests_ui.dart';
 import 'package:hapi/quest/daily/do_list/do_list_quest_ui.dart';
 
-enum QUEST_TAB {
-  hapi,
-  Time,
-  Daily,
-  Active,
-}
-
 /// Init active/daily/timed/hapi quests with slick bottom bar navigation
 class QuestsUI extends StatelessWidget {
   const QuestsUI();
@@ -52,7 +45,7 @@ class QuestsUI extends StatelessWidget {
           const ActiveQuestsUI(),
           ActiveQuestsSettingsUI(),
           'Active'.tr,
-          '                 ${'Pray like the Prophet (AS)'.tr}                 ', // FAB
+          'Pray like the Prophet (AS)'.tr + '\n', // FAB padding
           Icons.how_to_reg_outlined,
         ),
       ];

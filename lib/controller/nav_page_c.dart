@@ -16,19 +16,19 @@ class NavPageC extends GetxHapi {
 
   final Map<NavPage, String> pageIdxMap = {};
 
-  key(NavPage navPage) => navPage.name + '_lastIdx';
+  _key(NavPage navPage) => navPage.name + '_lastIdx';
 
   @override
   onInit() {
     for (NPV npv in navPageValues) {
-      pageIdxMap[npv.navPage] = s.rd(key(npv.navPage)) ?? npv.initTabName;
+      pageIdxMap[npv.navPage] = s.rd(_key(npv.navPage)) ?? npv.initTabName;
     }
     super.onInit();
   }
 
   setLastIdx(NavPage navPage, int newIdx) {
     pageIdxMap[navPage] = getEnumName(navPage.tabList, newIdx);
-    s.wr(key(navPage), pageIdxMap[navPage]);
+    s.wr(_key(navPage), pageIdxMap[navPage]);
     update(); // needed to show bottom bar UI animation and tab selection
   }
 

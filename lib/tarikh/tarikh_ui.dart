@@ -13,12 +13,6 @@ import 'package:hapi/tarikh/event/search/event_search_ui.dart';
 import 'package:hapi/tarikh/main_menu/tarikh_menu_ui.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 
-enum TARIKH_TAB {
-  Favorites,
-  Search,
-  Menu,
-}
-
 /// Init active/daily/timed/hapi quests with slick bottom bar navigation
 class TarikhUI extends StatelessWidget {
   const TarikhUI();
@@ -51,9 +45,7 @@ class TarikhUI extends StatelessWidget {
             const TarikhMenuUI(),
             null,
             'Menu'.tr,
-            '                 ' +
-                at('at.{0} Menu', [navPage.tkIsimA]) +
-                '                 ', // FAB padding
+            at('at.{0} Menu', [navPage.tkIsimA]) + '\n', // FAB padding
             Icons.menu_open_rounded,
             onPressed: setTarikhMenuActive,
           ),

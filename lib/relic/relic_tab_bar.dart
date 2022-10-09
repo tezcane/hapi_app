@@ -4,10 +4,10 @@ import 'package:hapi/component/auto_scroll_tab_view/auto_scroll_controller/auto_
 import 'package:hapi/component/auto_scroll_tab_view/auto_scroll_tab_view.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
+import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_c.dart';
 import 'package:hapi/relic/relic_set_ui.dart';
-import 'package:hapi/relic/relics_ui.dart';
 import 'package:hapi/tarikh/event/et.dart';
 
 /// A single RELIC_TAB bar which holds one or more RelicSets that are accessible
