@@ -257,57 +257,39 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
   }) {
     TarikhC.to.isActiveTimeline = false; // turn off timeline rendering
 
-    // do "Get.offAll" everywhere so we can keep const
+    Function navPageFunction;
     switch (navPage) {
       case NavPage.Ajr:
-        return Get.offAll(
-          () => const AjrUI(),
-          transition: transition,
-          duration: Duration(milliseconds: transitionMs),
-        );
+        navPageFunction = () => const AjrUI();
+        break;
       case NavPage.a_Adawat:
-        return Get.offAll(
-          () => const ToolUI(),
-          transition: transition,
-          duration: Duration(milliseconds: transitionMs),
-        );
+        navPageFunction = () => const ToolUI();
+        break;
       case NavPage.Dua:
-        return Get.offAll(
-          () => const DuaUI(),
-          transition: transition,
-          duration: Duration(milliseconds: transitionMs),
-        );
+        navPageFunction = () => const DuaUI();
+        break;
       case NavPage.Hadith:
-        return Get.offAll(
-          () => const HadithUI(),
-          transition: transition,
-          duration: Duration(milliseconds: transitionMs),
-        );
+        navPageFunction = () => const HadithUI();
+        break;
       case NavPage.Quran:
-        return Get.offAll(
-          () => const QuranUI(),
-          transition: transition,
-          duration: Duration(milliseconds: transitionMs),
-        );
+        navPageFunction = () => const QuranUI();
+        break;
       case NavPage.Tarikh:
-        return Get.offAll(
-          () => const TarikhUI(),
-          transition: transition,
-          duration: Duration(milliseconds: transitionMs),
-        );
+        navPageFunction = () => const TarikhUI();
+        break;
       case NavPage.Alathar:
-        return Get.offAll(
-          () => const RelicsUI(),
-          transition: transition,
-          duration: Duration(milliseconds: transitionMs),
-        );
+        navPageFunction = () => const RelicsUI();
+        break;
       case NavPage.a_Asyila:
-        return Get.offAll(
-          () => const QuestsUI(),
-          transition: transition,
-          duration: Duration(milliseconds: transitionMs),
-        );
+        navPageFunction = () => const QuestsUI();
+        break;
     }
+
+    Get.offAll(
+      navPageFunction,
+      transition: transition,
+      duration: Duration(milliseconds: transitionMs),
+    );
   }
 
   /// use to push a NavPages sub page (Tarikh Favorites, etc.) on top of menu stack
