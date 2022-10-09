@@ -25,11 +25,11 @@ class MenuSectionData {
 
 /// Data container for all the sub-elements of the [MenuSection].
 class MenuItemData {
-  MenuItemData(this.tkTitle, this.saveTag, this.startMs, this.endMs);
+  MenuItemData(this.tkTitle, this.saveTag, this.start, this.end);
   final String tkTitle;
   final String saveTag;
-  final double startMs;
-  final double endMs;
+  final double start;
+  final double end;
 
   bool pad = false;
   double padTop = 0.0;
@@ -37,7 +37,7 @@ class MenuItemData {
 
   /// When initializing this object from a [Event], fill in the
   /// fields according to the [event] provided. The event in fact specifies
-  /// a [tkTitle], a [startMs] and [endMs] times.
+  /// a [tkTitle], a [start] and [end] times.
   /// Padding is built depending on the type of the [event] provided.
   static MenuItemData fromEvent(Event event) {
     // put in timer so btns updates after navigation
@@ -58,13 +58,13 @@ class MenuItemData {
     double end = 0;
     if (event.isEra) {
       // == EVENT.Era) { TODO tune this code around centering things on timeline
-      start = event.startMs;
-      end = event.endMs;
+      start = event.start;
+      end = event.end;
     } else {
       /// No need to pad here as we are centering on a single item.
       double rangeBefore = double.maxFinite;
       for (Event? prev = event.previous; prev != null; prev = prev.previous) {
-        double diff = event.startMs - prev.startMs;
+        double diff = event.start - prev.start;
         if (diff > 0.0) {
           rangeBefore = diff;
           break;
@@ -73,15 +73,15 @@ class MenuItemData {
 
       double rangeAfter = double.maxFinite;
       for (Event? next = event.next; next != null; next = next.next!) {
-        double diff = next.startMs - event.startMs;
+        double diff = next.start - event.start;
         if (diff > 0.0) {
           rangeAfter = diff;
           break;
         }
       }
       double range = min(rangeBefore, rangeAfter) / 2.0;
-      start = event.startMs;
-      end = event.endMs + range;
+      start = event.start;
+      end = event.end + range;
     }
 
     var menuItemData = MenuItemData(event.tkTitle, event.saveTag, start, end);

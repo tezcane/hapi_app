@@ -15,8 +15,8 @@ class Nabi extends FamilyTree {
   Nabi({
     // Event data:
     required String tkEra,
-    required double startMs,
-    required double endMs,
+    required double start,
+    required double end,
 
     // Relic data not needed to pass in, it is auto-generated in super() call
     required Enum e,
@@ -49,8 +49,8 @@ class Nabi extends FamilyTree {
           et: ET.Nabi,
           tkEra: tkEra,
           tkTitle: 'a.${e.isim}',
-          startMs: startMs,
-          endMs: endMs,
+          start: start,
+          end: end,
           // Relic data:
           e: e,
           // Required Fam data:
@@ -100,8 +100,8 @@ final List<Nabi> relicsNabi = [
   Nabi(
     // Event data:
     tkEra: 'Intelligent Life',
-    startMs: -340000,
-    endMs: -339050,
+    start: -340000,
+    end: -339050,
     // Relic data:
     e: AS.Adam,
     // Fam data:
@@ -130,8 +130,8 @@ final List<Nabi> relicsNabi = [
   Nabi(
     // Event data:
     tkEra: 'Birth of Humans',
-    startMs: 0,
-    endMs: 0,
+    start: 0,
+    end: 0,
     // Relic data:
     e: AS.Idris,
     // Fam data:
@@ -167,8 +167,8 @@ final List<Nabi> relicsNabi = [
   Nabi(
     // Event data:
     tkEra: 'Great Flood',
-    startMs: 0,
-    endMs: 0,
+    start: 0,
+    end: 0,
     // Relic data:
     e: AS.Nuh,
     // Fam data:
@@ -293,8 +293,8 @@ final List<Nabi> relicsNabi = [
   Nabi(
     // Event data:
     tkEra: 'Unknown',
-    startMs: 0,
-    endMs: 0,
+    start: 0,
+    end: 0,
     // Relic data:
     e: AS.Hud,
     // Fam data:
@@ -333,8 +333,8 @@ final List<Nabi> relicsNabi = [
   Nabi(
     // Event data:
     tkEra: 'Unknown',
-    startMs: 0,
-    endMs: 0,
+    start: 0,
+    end: 0,
     // Relic data:
     e: AS.Salih,
     // Fam data:
@@ -392,8 +392,8 @@ final List<Nabi> relicsNabi = [
   Nabi(
     // Event data:
     tkEra: 'a.Ibrahim',
-    startMs: 0,
-    endMs: 0,
+    start: 0,
+    end: 0,
     // Relic data:
     e: AS.Ibrahim,
     // Fam data:
@@ -599,8 +599,8 @@ final List<Nabi> relicsNabi = [
   Nabi(
     // Event data:
     tkEra: 'a.Ibrahim',
-    startMs: 0,
-    endMs: 0,
+    start: 0,
+    end: 0,
     // Relic data:
     e: AS.Lut,
     // Fam data:
@@ -647,8 +647,8 @@ final List<Nabi> relicsNabi = [
   Nabi(
     // Event data:
     tkEra: 'a.Ibrahim',
-    startMs: 0, //-1800, TODO must be younger than Yusuf!
-    endMs: 0, //-1664,
+    start: 0, //-1800, TODO must be younger than Yusuf!
+    end: 0, //-1664,
     // Relic data:
     e: AS.Ismail,
     // Fam data:
@@ -684,8 +684,8 @@ final List<Nabi> relicsNabi = [
   Nabi(
     // Event data:
     tkEra: 'a.Ibrahim',
-    startMs: 0,
-    endMs: 0,
+    start: 0,
+    end: 0,
     // Relic data:
     e: AS.Ishaq,
     // Fam data:
@@ -717,8 +717,8 @@ final List<Nabi> relicsNabi = [
   Nabi(
     // Event data:
     tkEra: 'Old Egyptian Kingdom',
-    startMs: 0,
-    endMs: 0,
+    start: 0,
+    end: 0,
     // Relic data:
     e: AS.Yaqub,
     // Fam data:
@@ -755,8 +755,8 @@ final List<Nabi> relicsNabi = [
   Nabi(
     // Event data:
     tkEra: 'Ancient Egypt',
-    startMs: -2400,
-    endMs: -2400,
+    start: -2400,
+    end: -2400,
     // Relic data:
     e: AS.Yusuf,
     // Fam data:
@@ -786,8 +786,8 @@ final List<Nabi> relicsNabi = [
   Nabi(
     // Event data:
     tkEra: 'Unknown',
-    startMs: 0,
-    endMs: 0,
+    start: 0,
+    end: 0,
     // Relic data:
     e: AS.Ayyub,
     // Fam data:
@@ -821,8 +821,8 @@ final List<Nabi> relicsNabi = [
   Nabi(
     // Event data:
     tkEra: 'Unknown', // TODO
-    startMs: 0, // TODO Buddha: 6th or 5th century BCE
-    endMs: 0,
+    start: 0, // TODO Buddha: 6th or 5th century BCE
+    end: 0,
     // Relic data:
     e: AS.Dhul__Kifl,
     // Fam data:
@@ -854,8 +854,8 @@ final List<Nabi> relicsNabi = [
   Nabi(
     // Event data:
     tkEra: 'Unknown',
-    startMs: 0,
-    endMs: 0,
+    start: 0,
+    end: 0,
     // Relic data:
     e: AS.Shuayb,
     // Fam data:
@@ -904,8 +904,8 @@ final List<Nabi> relicsNabi = [
   Nabi(
     // Event data:
     tkEra: 'Ancient Egypt',
-    startMs: -1303,
-    endMs: -1200,
+    start: -1303,
+    end: -1200,
     // Relic data:
     e: AS.Harun,
     // Fam data:
@@ -941,8 +941,8 @@ final List<Nabi> relicsNabi = [
   Nabi(
     // Event data:
     tkEra: 'Ancient Egypt',
-    startMs: -1300,
-    endMs: -1200,
+    start: -1300,
+    end: -1200,
     // Relic data:
     e: AS.Musa,
     // Fam data:
@@ -1370,8 +1370,8 @@ final List<Nabi> relicsNabi = [
   Nabi(
     // Event data:
     tkEra: 'Kings of Israel',
-    startMs: -1000,
-    endMs: -971,
+    start: -1000,
+    end: -971,
     // Relic data:
     e: AS.Dawud,
     // Fam data:
@@ -1406,8 +1406,8 @@ final List<Nabi> relicsNabi = [
   Nabi(
     // Event data:
     tkEra: 'Kings of Israel',
-    startMs: -971,
-    endMs: -931,
+    start: -971,
+    end: -931,
     // Relic data:
     e: AS.Suleyman,
     // Fam data:
@@ -1474,8 +1474,8 @@ final List<Nabi> relicsNabi = [
   Nabi(
     // Event data:
     tkEra: 'Kings of Israel',
-    startMs: 0,
-    endMs: 0,
+    start: 0,
+    end: 0,
     // Relic data:
     e: AS.Ilyas,
     // Fam data:
@@ -1513,8 +1513,8 @@ final List<Nabi> relicsNabi = [
   Nabi(
     // Event data:
     tkEra: 'Kings of_'.tr + a('a.Israel'), // TODO unsure
-    startMs: 0,
-    endMs: 0,
+    start: 0,
+    end: 0,
     // Relic data:
     e: AS.Alyasa,
     // Fam data:
@@ -1557,9 +1557,9 @@ final List<Nabi> relicsNabi = [
   Nabi(
     // Event data:
     tkEra: 'Unknown',
-    startMs:
+    start:
         -800, // uncertain (8th century BCE or post-exilic period) in Wikipedia
-    endMs: -800,
+    end: -800,
     // Relic data:
     e: AS.Yunus,
     // Fam data:
@@ -1599,8 +1599,8 @@ final List<Nabi> relicsNabi = [
   Nabi(
     // Event data:
     tkEra: 'a.Masih',
-    startMs: 0,
-    endMs: 0,
+    start: 0,
+    end: 0,
     // Relic data:
     e: AS.Zakariya,
     // Fam data:
@@ -1635,8 +1635,8 @@ final List<Nabi> relicsNabi = [
   Nabi(
     // Event data:
     tkEra: 'a.Masih',
-    startMs: -100,
-    endMs: 28, // AD 28–36
+    start: -100,
+    end: 28, // AD 28–36
     // Relic data:
     e: AS.Yahya,
     // Fam data:
@@ -1667,8 +1667,8 @@ final List<Nabi> relicsNabi = [
   Nabi(
     // Event data:
     tkEra: 'a.Masih',
-    startMs: -4,
-    endMs: 30,
+    start: -4,
+    end: 30,
     // Relic data:
     e: AS.Isa,
     // Fam data:
@@ -1712,8 +1712,8 @@ final List<Nabi> relicsNabi = [
   Nabi(
     // Event data:
     tkEra: 'a.Muhammad',
-    startMs: 570,
-    endMs: 632,
+    start: 570,
+    end: 632,
     // Relic data:
     e: AS.Muhammad,
     // Fam data:

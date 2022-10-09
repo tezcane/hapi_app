@@ -69,7 +69,7 @@ class _EventSearchUIState extends State<EventSearchUI> {
 
     // Sort by starting time, so results are displayed in ascending order
     searchResult.sort((Event a, Event b) {
-      return a.startMs.compareTo(b.startMs);
+      return a.start.compareTo(b.start);
     });
 
     return searchResult;

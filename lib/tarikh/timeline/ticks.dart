@@ -81,19 +81,19 @@ class Ticks {
     List<TickColors> tickColors = tih.tickColors;
     if (tickColors.isNotEmpty) {
       /// Build up the color stops for the linear gradient.
-      double rangeStart = tickColors.first.startMs;
-      double range = tickColors.last.startMs - tickColors.first.startMs;
+      double rangeStart = tickColors.first.start;
+      double range = tickColors.last.start - tickColors.first.start;
       List<ui.Color> colors = <ui.Color>[];
       List<double> stops = <double>[];
       for (TickColors bg in tickColors) {
         colors.add(bg.background);
-        stops.add((bg.startMs - rangeStart) / range);
+        stops.add((bg.start - rangeStart) / range);
       }
       double s = t.computeScale(t.renderStart, t.renderEnd);
 
       /// y-coordinate for the starting and ending element.
-      double y1 = (tickColors.first.startMs - t.renderStart) * s;
-      double y2 = (tickColors.last.startMs - t.renderStart) * s;
+      double y1 = (tickColors.first.start - t.renderStart) * s;
+      double y2 = (tickColors.last.start - t.renderStart) * s;
 
       /// Fill Background.
       ui.Paint paint = ui.Paint()

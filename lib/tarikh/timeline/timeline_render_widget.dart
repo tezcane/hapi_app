@@ -166,14 +166,14 @@ class TimelineRenderObject extends RenderBox {
           top: topOverlap + _focusItem!.padTop + Timeline.Parallax,
           bottom: 0.0); //_focusItem!.padBottom);
       t.setViewport(
-          start: _focusItem!.startMs,
-          end: _focusItem!.endMs,
+          start: _focusItem!.start,
+          end: _focusItem!.end,
           animate: true,
           pad: true);
     } else {
       t.padding = EdgeInsets.zero;
       t.setViewport(
-          start: _focusItem!.startMs, end: _focusItem!.endMs, animate: true);
+          start: _focusItem!.start, end: _focusItem!.end, animate: true);
     }
     _processedFocusItem = _focusItem;
   }
@@ -214,18 +214,17 @@ class TimelineRenderObject extends RenderBox {
     List<TimelineBackgroundColor> backgroundColors = tih.backgroundColors;
     ui.Paint? backgroundPaint;
     if (backgroundColors.isNotEmpty) {
-      double rangeStart = backgroundColors.first.startMs;
-      double range =
-          backgroundColors.last.startMs - backgroundColors.first.startMs;
+      double rangeStart = backgroundColors.first.start;
+      double range = backgroundColors.last.start - backgroundColors.first.start;
       List<ui.Color> colors = <ui.Color>[];
       List<double> stops = <double>[];
       for (TimelineBackgroundColor bg in backgroundColors) {
         colors.add(bg.color);
-        stops.add((bg.startMs - rangeStart) / range);
+        stops.add((bg.start - rangeStart) / range);
       }
       double s = t.computeScale(t.renderStart, t.renderEnd);
-      double y1 = (backgroundColors.first.startMs - t.renderStart) * s;
-      double y2 = (backgroundColors.last.startMs - t.renderStart) * s;
+      double y1 = (backgroundColors.first.start - t.renderStart) * s;
+      double y2 = (backgroundColors.last.start - t.renderStart) * s;
 
       /// Fill Background.
       backgroundPaint = ui.Paint()
@@ -703,13 +702,13 @@ class TimelineRenderObject extends RenderBox {
       List<Event> nearbyEvents = List<Event>.from(events);
       double mid = t.renderStart + (t.renderEnd - t.renderStart) / 2.0;
       nearbyEvents.sort((Event a, Event b) {
-        return (a.startMs - mid).abs().compareTo((b.startMs - mid).abs());
+        return (a.start - mid).abs().compareTo((b.start - mid).abs());
       });
 
       /// layout events.
       for (int i = 0; i < nearbyEvents.length; i++) {
         Event event = nearbyEvents[i];
-        double y = ((event.startMs - t.renderStart) * scale).clamp(
+        double y = ((event.start - t.renderStart) * scale).clamp(
           offset.dy + eventRadius + padEvents + GutterPadTop, //had + topOverlap
           offset.dy + size.height - eventRadius - padEvents - GutterPadBottom,
         );
@@ -958,7 +957,7 @@ class TimelineRenderObject extends RenderBox {
                 ),
               )..pushStyle(ui.TextStyle(color: Colors.white));
 
-              int value = (event.startMs - previous.startMs).round().abs();
+              int value = (event.start - previous.start).round().abs();
               String label;
               if (value < 10000) {
                 label = value.toStringAsFixed(0);

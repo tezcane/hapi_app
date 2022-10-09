@@ -5,7 +5,7 @@ import 'package:hapi/main_c.dart';
 import 'package:hapi/tarikh/event/et.dart';
 import 'package:hapi/tarikh/event/event_asset.dart';
 
-/// The timeline displays these objects, if their startMs is not 0. The
+/// The timeline displays these objects, if their start is not 0. The
 /// Favorite, Search and Relics also use this object.
 /// NOTE: It is a const so all Relics/subclasses can also be const.
 class Event {
@@ -13,13 +13,13 @@ class Event {
     required this.et,
     required this.tkEra,
     required this.tkTitle,
-    required this.startMs, // TODO are these ms or years?!
-    required this.endMs,
+    required this.start,
+    required this.end,
     this.startMenu,
     this.endMenu,
     required this.accent,
   }) {
-    isEra = startMs != endMs && endMs != 0; // TODO tune
+    isEra = start != end && end != 0; // TODO tune
 
     saveTag = '${tkTitle}_${et.index}'; // Relics names not unique->Hud
     reinitTranslationTexts();
@@ -27,8 +27,10 @@ class Event {
   final ET et;
   final String tkEra;
   final String tkTitle;
-  final double startMs;
-  final double endMs;
+
+  /// Start/End are years, e.g. -1= 1 BC, 1=1 AD, 1.5= June 1st, 1 A.D, etc.
+  final double start;
+  final double end;
   final double? startMenu; // use these when menu->timeline doesn't show well
   final double? endMenu;
   final Color? accent; // not always given in json input file, thus nullable
@@ -75,15 +77,15 @@ class Event {
   /// we can turn these into const for future optimizations.
   late final EventAsset asset;
 
-  bool get isTimeLineEvent => startMs != 0 && endMs != 0; // TODO need both?
+  bool get isTimeLineEvent => start != 0 && end != 0; // TODO need both?
 
   /// Pretty-printing for the event date.
   String tvYearsAgo({double? eventYear}) {
     if (!isTimeLineEvent) return 'Date Estimate Coming Soon'.tr; // TODO
 
-    eventYear ??= startMs;
+    eventYear ??= start;
 
-    if (eventYear <= -10000) return tvYears(startMs) + ' ' + 'Ago'.tr;
+    if (eventYear <= -10000) return tvYears(start) + ' ' + 'Ago'.tr;
 
     double tvYearsAgo;
     String adBc = ' ${'AD'.tr} (';

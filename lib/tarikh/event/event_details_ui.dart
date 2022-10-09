@@ -452,7 +452,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
       tvTitle1 = event.tvTitleLine1;
       tvTitle2 = event.tvTitleLine2;
       if (event.isTimeLineEvent && timeBtn.event!.isTimeLineEvent) {
-        double timeUntilDouble = (event.startMs - timeBtn.event!.startMs).abs();
+        double timeUntilDouble = (event.start - timeBtn.event!.start).abs();
         tvTimeUntil = event.tvYears(timeUntilDouble).toLowerCase();
       }
     }

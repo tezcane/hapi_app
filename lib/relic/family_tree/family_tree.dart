@@ -74,8 +74,8 @@ abstract class FamilyTree extends Relic {
     required ET et,
     required String tkEra,
     required String tkTitle,
-    required double startMs,
-    required double endMs,
+    required double start,
+    required double end,
     // Relic data:
     required Enum e,
     // Fam Required
@@ -95,8 +95,8 @@ abstract class FamilyTree extends Relic {
           et: et,
           tkEra: tkEra,
           tkTitle: tkTitle,
-          startMs: startMs,
-          endMs: endMs,
+          start: start,
+          end: end,
           // Relic data:
           e: e,
         );

@@ -145,8 +145,8 @@ class TarikhC extends GetxHapi {
 
     Event event = EventC.to.getEventList(ET.Tarikh).first;
     t.setViewport(
-      start: event.startMs * 2.0,
-      end: event.startMs,
+      start: event.start * 2.0,
+      end: event.start,
       animate: true,
     ); // TODO needed, what does it and other setViewport do?
 
@@ -190,7 +190,7 @@ class TarikhC extends GetxHapi {
 
       //was t.renderEnd, had 'page away 0' at bottom page edge, now in middle:
       double pageReference = (t.renderStart + t.renderEnd) / 2.0;
-      double timeUntilDouble = event.startMs - pageReference;
+      double timeUntilDouble = event.start - pageReference;
       tvTimeUntil = event.tvYears(timeUntilDouble).toLowerCase();
 
       double pageSize = t.renderEnd - t.renderStart;
@@ -255,12 +255,12 @@ class TimelineInitHandler {
       /// These events specify a particular event such as the appearance of
       /// "Humans" in history, which hasn't come to an end yet.
       bool isEra = false;
-      double startMs;
+      double start;
       if (td.date != null) {
-        startMs = td.date!;
+        start = td.date!;
       } else {
         isEra = true;
-        startMs = td.start!;
+        start = td.start!;
       }
 
       /// Some elements will have an `end` time specified.
@@ -268,13 +268,13 @@ class TimelineInitHandler {
       /// on the type of the event:
       /// - Eras use the current year as an end time.
       /// - Other events are just single points in time (start == end).
-      double endMs;
+      double end;
       if (td.end != null) {
-        endMs = td.end!;
+        end = td.end!;
       } else if (isEra) {
-        endMs = (await TimeC.to.now()).year.toDouble() * 10.0;
+        end = (await TimeC.to.now()).year.toDouble() * 10.0;
       } else {
-        endMs = startMs;
+        end = start;
       }
 
       /// Get Timeline Color Setup:
@@ -287,7 +287,7 @@ class TimelineInitHandler {
         _backgroundColors.add(
           TimelineBackgroundColor(
             timelineColors.background,
-            startMs,
+            start,
           ),
         );
 
@@ -299,7 +299,7 @@ class TimelineInitHandler {
             timelineColors.ticks.long,
             timelineColors.ticks.short,
             timelineColors.ticks.text,
-            startMs,
+            start,
           ),
         );
 
@@ -308,7 +308,7 @@ class TimelineInitHandler {
           HeaderColors(
             timelineColors.header.background,
             timelineColors.header.text,
-            startMs,
+            start,
           ),
         );
       }
@@ -318,8 +318,8 @@ class TimelineInitHandler {
         et: ET.Tarikh,
         tkEra: td.tkEra ?? '',
         tkTitle: td.tkTitle,
-        startMs: startMs,
-        endMs: endMs,
+        start: start,
+        end: end,
         startMenu: td.startMenu,
         endMenu: td.endMenu,
         accent: td.accent, // accent color specified sometimes
@@ -347,11 +347,11 @@ class TimelineInitHandler {
         .mergeRelicAndTarikhEvents(eventsTarikh); // add Relics before sort
 
     /// sort Tarikh the full list so they are in order of oldest to newest
-    eventsTarikh.sort((Event a, Event b) => a.startMs.compareTo(b.startMs));
+    eventsTarikh.sort((Event a, Event b) => a.start.compareTo(b.start));
 
     _backgroundColors
         .sort((TimelineBackgroundColor a, TimelineBackgroundColor b) {
-      return a.startMs.compareTo(b.startMs);
+      return a.start.compareTo(b.start);
     });
 
     _tickColorsReversed = _tickColors.reversed;
@@ -382,8 +382,8 @@ class TimelineInitHandler {
 
       /// Build up hierarchy (Eras are grouped into "Spanning Eras" and Events
       ///  are placed into the Eras they belong to). TODO do we need this?
-      if (event.startMs < _timeMin) _timeMin = event.startMs;
-      if (event.endMs > _timeMax) _timeMax = event.endMs;
+      if (event.start < _timeMin) _timeMin = event.start;
+      if (event.end > _timeMax) _timeMax = event.end;
 
       if (previous != null) previous.next = event;
       event.previous = previous;
@@ -393,8 +393,8 @@ class TimelineInitHandler {
       double minDistance = double.maxFinite;
       for (Event checkEvent in eventsTarikh) {
         if (checkEvent.isEra) {
-          double distance = event.startMs - checkEvent.startMs;
-          double distanceEnd = event.startMs - checkEvent.endMs;
+          double distance = event.start - checkEvent.start;
+          double distanceEnd = event.start - checkEvent.end;
           if (distance > 0 && distanceEnd < 0 && distance < minDistance) {
             minDistance = distance;
             parent = checkEvent;
@@ -473,11 +473,11 @@ class EraMenuSection {
 
   addEraEvent(Event event) => events.add(event);
 
-  // if (timeMin == -1 || event.startMs < timeMin) timeMin = event.startMs;
-  // if (timeMax == -1 || event.endMs > timeMax) timeMax = event.endMs;
+  // if (timeMin == -1 || event.start < timeMin) timeMin = event.start;
+  // if (timeMax == -1 || event.end > timeMax) timeMax = event.end;
   // TODO we can also set this based off close next/previous to zoom in more
   double getTimeMin(Event event) =>
-      event.startMs < 0 ? event.startMs * 1.2 : event.startMs * .8;
+      event.start < 0 ? event.start * 1.2 : event.start * .8;
   double getTimeMax(Event event) =>
-      event.startMs < 0 ? event.endMs * .8 : event.endMs * 1.2;
+      event.start < 0 ? event.end * .8 : event.end * 1.2;
 }

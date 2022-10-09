@@ -66,26 +66,26 @@ import 'package:hapi/tarikh/event/event.dart';
 // }
 
 class TimelineBackgroundColor {
-  const TimelineBackgroundColor(this.color, this.startMs);
+  const TimelineBackgroundColor(this.color, this.start);
   final Color color;
-  final double startMs;
+  final double start;
 }
 
 class TickColors {
-  TickColors(this.background, this.long, this.short, this.text, this.startMs);
+  TickColors(this.background, this.long, this.short, this.text, this.start);
   final Color background;
   final Color long;
   final Color short;
   final Color text;
-  final double startMs;
+  final double start;
   double screenY = 0.0;
 }
 
 class HeaderColors {
-  HeaderColors(this.background, this.text, this.startMs);
+  HeaderColors(this.background, this.text, this.start);
   final Color background;
   final Color text;
-  final double startMs;
+  final double start;
   double screenY = 0.0;
 }
 

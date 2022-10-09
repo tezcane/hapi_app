@@ -25,8 +25,8 @@ class Surah extends Relic {
           et: ET.Surah,
           tkEra: 'Quran Revelation',
           tkTitle: e.tkIsimA,
-          startMs: 0, // TODO put in quran revelation dates!
-          endMs: 0,
+          start: 0, // TODO put in quran revelation dates!
+          end: 0,
         );
   final int numEgypt;
   final int numNoldeke;

@@ -438,20 +438,18 @@ class Timeline {
     scale = _height / (_renderEnd - _renderStart);
 
     /// Update color screen positions.
-    double lastStart = _tickColors.first.startMs;
+    double lastStart = _tickColors.first.start;
     for (TickColors color in _tickColors) {
       color.screenY =
-          (lastStart + (color.startMs - lastStart / 2.0) - _renderStart) *
-              scale;
-      lastStart = color.startMs;
+          (lastStart + (color.start - lastStart / 2.0) - _renderStart) * scale;
+      lastStart = color.start;
     }
 
-    lastStart = _headerColors.first.startMs;
+    lastStart = _headerColors.first.start;
     for (HeaderColors color in _headerColors) {
       color.screenY =
-          (lastStart + (color.startMs - lastStart / 2.0) - _renderStart) *
-              scale;
-      lastStart = color.startMs;
+          (lastStart + (color.start - lastStart / 2.0) - _renderStart) * scale;
+      lastStart = color.start;
     }
 
     // old _findHeaderColors() logic:
@@ -612,8 +610,8 @@ class Timeline {
     for (int i = 0; i < events.length; i++) {
       Event event = events[i];
 
-      double start = event.startMs - _renderStart;
-      double end = event.isEra ? event.endMs - _renderStart : start;
+      double start = event.start - _renderStart;
+      double end = event.isEra ? event.end - _renderStart : start;
 
       /// Vertical position for this element.
       double y = start * scale; // +pad;

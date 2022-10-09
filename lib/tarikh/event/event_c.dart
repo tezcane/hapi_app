@@ -106,7 +106,7 @@ class EventC extends GetxHapi {
 
       // Sort so Tarikh UI's gutter show favorites in order
       if (et == ET.Tarikh) {
-        favList.sort((Event a, Event b) => a.startMs.compareTo(b.startMs));
+        favList.sort((Event a, Event b) => a.start.compareTo(b.start));
       }
 
       _saveFavorites(et);

@@ -13,16 +13,16 @@ abstract class Relic extends Event {
     required ET et,
     required String tkEra,
     required String tkTitle,
-    required double startMs,
-    required double endMs,
+    required double start,
+    required double end,
     // Relic data:
     required this.e,
   }) : super(
           et: et,
           tkEra: tkEra,
           tkTitle: tkTitle,
-          startMs: startMs,
-          endMs: endMs,
+          start: start,
+          end: end,
           accent: null, // TODO
         );
   final Enum e; // Unique relicId for this RELIC_TYPE
