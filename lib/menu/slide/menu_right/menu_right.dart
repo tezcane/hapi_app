@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/controller/nav_page_c.dart';
+import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
@@ -54,6 +55,7 @@ class MenuRight extends StatefulWidget {
 class _MenuRightState extends State<MenuRight> {
   void _displayMenuDragGesture(DragEndDetails endDetails) {
     if (!MenuC.to.isMenuShowing) {
+      MainC.to.showMainMenuFab();
       final velocity = endDetails.primaryVelocity!;
       if (velocity < 0) {
         MenuC.to.showMenu();

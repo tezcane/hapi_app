@@ -207,6 +207,7 @@ class BottomBarMenu extends StatelessWidget {
                   if (kDebugMode) l.v('$cnt $state UP STATE SET');
                   if (isBottomBarVisible) {
                     if (kDebugMode) l.d('$cnt $state hide bottom bar');
+                    MainC.to.hideMainMenuFab();
                     isBottomBarVisible = false;
                     c.updateOnThread1Ms();
                   }
@@ -229,6 +230,7 @@ class BottomBarMenu extends StatelessWidget {
                   if (kDebugMode) l.v('$cnt $state DOWN STATE SET');
                   if (!isBottomBarVisible) {
                     if (kDebugMode) l.d('$cnt $state show bottom bar');
+                    MainC.to.showMainMenuFab();
                     isBottomBarVisible = true;
                     c.updateOnThread1Ms();
                   }
@@ -272,6 +274,7 @@ class BottomBarMenu extends StatelessWidget {
 
   /// Called directly when swiping page or indirectly on bottom bar tab tap
   _onPageChanged(int newIdx, NavPageC c) {
+    MainC.to.showMainMenuFab();
     isBottomBarVisible = true; // if hidden, force show on page view change
 
     curBottomBarHighlightIdx = newIdx; // always highlight current page

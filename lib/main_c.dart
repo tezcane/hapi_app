@@ -57,10 +57,12 @@ extension GlobalEnumUtil on Enum {
 }
 
 /// Handles Sign In/Out, Screen orientation/rotation
+/// TODO Not used as typical controller anywhere, currently doesn't need GetxHapi
 class MainC extends GetxHapi {
   static MainC get to => Get.find();
 
-  bool showMainMenuFab = false;
+  /// Gives main menu FAB ability to show/hide in an animated way.
+  bool _showMainMenuFab = false;
   bool initNeeded = true;
   bool isPortrait = true; // MUST LEAVE TRUE FOR APP TO START
   // bool _isOrientationChanged = false;
@@ -72,23 +74,39 @@ class MainC extends GetxHapi {
     SystemChannels.textInput.invokeMethod('TextInput.hide');
   }
 
+  bool get isMainMenuFabShowing => _showMainMenuFab;
+
+  showMainMenuFab() {
+    if (!_showMainMenuFab) {
+      _showMainMenuFab = true;
+      MenuC.to.update(); // needed to show FAB (MenuC has FAB logic)
+    }
+  }
+
+  hideMainMenuFab() {
+    if (_showMainMenuFab) {
+      _showMainMenuFab = false;
+      MenuC.to.update(); // needed to hide FAB (MenuC has FAB logic)
+    }
+  }
+
   signIn() {
-    showMainMenuFab = true;
-    MenuC.to.update(); // needed to make FAB visible
+    showMainMenuFab();
+
     MenuC.to.initAppsFirstPage();
   }
 
   signOut() {
     MenuC.to.hideMenu(); // reset FAB (for sign back in)
     MenuC.to.clearSubPageStack(); // reset FAB (for sign back in)
-    showMainMenuFab = false; // Make FAB button invisible
-    MenuC.to.update(); // Make FAB button invisible
+
+    hideMainMenuFab();
+
     AuthC.to.signOut(); // Sign out of Auth
   }
 
   setOrientation(bool isPortrait) {
     // don't proceed with any auto-orientation yet
-    if (!showMainMenuFab) return l.w('ORIENTATION: App not initialized yet.');
     if (this.isPortrait && isPortrait) return l.d('Still in portrait');
     if (!this.isPortrait && !isPortrait) return l.d('Still in landscape');
 

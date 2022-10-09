@@ -89,36 +89,6 @@ class HapiApp extends StatelessWidget {
           child: MaterialApp(
             home: Scaffold(
               resizeToAvoidBottomInset: false, // fixes keyboard pushing UI up
-              floatingActionButton: GetBuilder<MenuC>(builder: (mc) {
-                return Visibility(
-                  visible: MainC.to.showMainMenuFab,
-                  child: GetBuilder<LangC>(
-                    builder: (c) => FloatingActionButton(
-                      tooltip: mc.tvMenuTooltip(),
-                      backgroundColor:
-                          AppThemes.floatingActionButtonTheme.backgroundColor,
-                      foregroundColor:
-                          AppThemes.floatingActionButtonTheme.foregroundColor,
-                      onPressed: () => {},
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: <Widget>[
-                            IconButton(
-                              iconSize: 30.0,
-                              icon: AnimatedIcon(
-                                icon: mc.fabAnimatedIcon,
-                                progress: mc.acFabIcon,
-                              ),
-                              onPressed: () => mc.handlePressedFAB(),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                );
-              }),
               body: GetMaterialApp(
                 // translations: Localization(),
                 // locale: c.getLocale, // we set in LanguageC
@@ -135,6 +105,41 @@ class HapiApp extends StatelessWidget {
                 themeMode: ThemeMode.dark,
                 initialRoute: '/',
                 getPages: [GetPage(name: '/', page: () => SplashUI())],
+              ),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.miniEndDocked,
+              // MenuC to detect updates, since it has FAB logic
+              floatingActionButton: GetBuilder<MenuC>(
+                builder: (mc) => AnimatedContainer(
+                  duration: const Duration(milliseconds: 200),
+                  height: MainC.to.isMainMenuFabShowing
+                      ? 72 // matches bottom bar show/hide/wrap height
+                      : 0, // magic that hides bottom bar
+                  // Wrap needed or get overflow errors
+                  child: Wrap(
+                    children: [
+                      // LangC to update tooltip translation
+                      GetBuilder<LangC>(
+                        builder: (lc) => FloatingActionButton(
+                          tooltip: mc.tvMenuTooltip(),
+                          backgroundColor: AppThemes
+                              .floatingActionButtonTheme.backgroundColor,
+                          foregroundColor: AppThemes
+                              .floatingActionButtonTheme.foregroundColor,
+                          onPressed: () => {},
+                          child: IconButton(
+                            iconSize: 30.0,
+                            icon: AnimatedIcon(
+                              icon: mc.fabAnimatedIcon,
+                              progress: mc.acFabIcon,
+                            ),
+                            onPressed: () => mc.handlePressedFAB(),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ),
           ),

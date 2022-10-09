@@ -311,6 +311,8 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
     //   }
     // }
 
+    MainC.to.showMainMenuFab(); // must always show menu, for back button
+
     _subPageStack.add(subPage);
 
     /// HERE WE HANDLE THE FAB BUTTON ANIMATIONS ON INSERTING NEW SUB PAGES
