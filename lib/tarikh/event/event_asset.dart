@@ -62,12 +62,16 @@ abstract class AnimatedEventAsset extends EventAsset {
     double height,
     double scale,
     this.loop,
-    this.offset,
+    this.tHorizontalOffset,
     this.gap,
     this.animationTime,
   ) : super(filename, width, height, scale);
+
+  /// true=loop animation, false=play once ant stop
   final bool loop;
-  final double offset;
+
+  /// Timeline horizontal offset (negative move left, positive move right)
+  final double tHorizontalOffset;
   final double gap;
 
   /// Can be overwritten
@@ -82,13 +86,13 @@ class NimaAsset extends AnimatedEventAsset {
     double height,
     double scale,
     bool loop,
-    double offset,
+    double tHorizontalOffset,
     double gap,
     this.actorStatic,
     this.actor,
     this.setupAABB,
     this.animation,
-  ) : super(filename, width, height, scale, loop, offset, gap, 0.0);
+  ) : super(filename, width, height, scale, loop, tHorizontalOffset, gap, 0.0);
   final nima.FlutterActor actorStatic;
   final nima.FlutterActor actor;
   final nima.AABB setupAABB;
@@ -106,13 +110,13 @@ class FlareAsset extends AnimatedEventAsset {
     double height,
     double scale,
     bool loop,
-    double offset,
+    double tHorizontalOffset,
     double gap,
     this.actorStatic,
     this.actor,
     this.setupAABB,
     this.animation,
-  ) : super(filename, width, height, scale, loop, offset, gap, 0.0);
+  ) : super(filename, width, height, scale, loop, tHorizontalOffset, gap, 0.0);
   final flare.FlutterActorArtboard actorStatic;
   final flare.FlutterActorArtboard actor;
   final flare.AABB setupAABB;
@@ -153,7 +157,7 @@ Future<NimaAsset> loadNimaAsset(
   double height,
   double scale,
   bool loop,
-  double offset,
+  double tHorizontalOffset,
   double gap,
   String? nimaIdle,
   List<double>? bounds,
@@ -189,7 +193,7 @@ Future<NimaAsset> loadNimaAsset(
     height,
     scale,
     loop,
-    offset,
+    tHorizontalOffset,
     gap,
     actorStatic,
     actor,
@@ -206,7 +210,7 @@ Future<FlareAsset> loadFlareAsset(
   double height,
   double scale,
   bool loop,
-  double offset,
+  double tHorizontalOffset,
   double gap,
   String? flareIdle,
   List<double>? bounds,
@@ -273,7 +277,7 @@ Future<FlareAsset> loadFlareAsset(
     height,
     scale,
     loop,
-    offset,
+    tHorizontalOffset,
     gap,
     actorStatic,
     actor,
@@ -336,7 +340,7 @@ Future<EventAsset> getEventAsset(Asset asset) async {
         asset.height,
         asset.scale,
         asset.loop,
-        asset.offset,
+        asset.tHorizontalOffset,
         asset.gap,
         asset.idle,
         asset.bounds,
@@ -349,7 +353,7 @@ Future<EventAsset> getEventAsset(Asset asset) async {
         asset.height,
         asset.scale,
         asset.loop,
-        asset.offset,
+        asset.tHorizontalOffset,
         asset.gap,
         asset.idle,
         asset.bounds,
