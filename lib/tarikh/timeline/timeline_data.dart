@@ -163,6 +163,7 @@ List<TimelineData> getTimelineData() {
         width: 1210,
         height: 1210,
         scale: 0.25,
+        offset: 1000,
         idle: 'Bombardmnet', // Note: typo is needed
         bounds: [-598.0, -2075.5, 3176, 599.5],
       ),
@@ -264,6 +265,7 @@ List<TimelineData> getTimelineData() {
         source: 'tarikh/nima/Reptiles.nma',
         width: 400,
         height: 600,
+        offset: -300,
       ),
       tkEra: 'Life on Earth',
       accent: Color.fromARGB(0xFF, 55, 134, 222),
