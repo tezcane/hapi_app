@@ -42,7 +42,7 @@ const List<BottomBarItem> _bottomBarItems = [
     TarikhMenuUI(),
     null,
     'Menu',
-    'Hadith Menu', // FAB padding
+    'Hadith Menu',
     Icons.menu_open_rounded,
     onPressed: _setTarikhMenuActive,
   ),

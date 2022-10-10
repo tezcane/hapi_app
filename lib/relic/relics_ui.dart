@@ -53,7 +53,7 @@ const List<BottomBarItem> _bottomBarItems = [
     ),
     null,
     'a.Ummah',
-    'Remarkable Muslims', // FAB padding
+    'Remarkable Muslims',
     Icons.connect_without_contact_outlined,
     onPressed: _hideKeyboard,
   ),

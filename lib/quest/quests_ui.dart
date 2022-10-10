@@ -39,7 +39,7 @@ const List<BottomBarItem> _bottomBarItems = [
     ActiveQuestsUI(),
     ActiveQuestsSettingsUI(),
     'Active',
-    'Pray like the Prophet (AS)', // FAB padding
+    'Pray like the Prophet (AS)',
     Icons.how_to_reg_outlined,
   ),
   BottomBarItem(
