@@ -1,4 +1,4 @@
-// TODO i18n
+/* TODO delete
 import 'package:flutter/material.dart';
 import 'package:flutter_overboard/flutter_overboard.dart';
 import 'package:hapi/onboard/onboarding_c.dart';
@@ -50,3 +50,4 @@ class OnboardingUI extends StatelessWidget {
     );
   }
 }
+*/
