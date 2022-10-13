@@ -3,17 +3,11 @@ import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/settings_option.dart';
 
-/// a control used to select the theme.
-///
-/// SegmentedSelector(
-///                 menuOptions: list of dropdown options in key value pairs,
-///                 selectedOption: menu option string value,
-///                 onChanged: (value) => print('changed'),
-///               ),
+/// Component to select things like a dark/light theme, more than 2 options
 class SegmentedSelector extends StatelessWidget {
   const SegmentedSelector({
-    required this.tvMenuOptions,
-    required this.selectedOption,
+    required this.tvMenuOptions, // list of dropdown options in key value pairs
+    required this.selectedOption, // menu option string value
     required this.onValueChanged,
     required this.width,
   });
@@ -36,7 +30,7 @@ class SegmentedSelector extends StatelessWidget {
               Icon(option.icon, size: iconSize),
               T(
                 option.tv,
-                tsN,
+                ts,
                 w: w / tvMenuOptions.length,
                 alignment: LangC.to.centerLeft,
                 tv: true,

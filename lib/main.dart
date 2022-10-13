@@ -17,7 +17,6 @@ import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/theme_c.dart';
 import 'package:hapi/onboard/auth/auth_c.dart';
-import 'package:hapi/onboard/onboarding_c.dart';
 import 'package:hapi/onboard/splash_ui.dart';
 import 'package:hapi/quest/active/active_quests_ajr_c.dart';
 import 'package:hapi/quest/active/active_quests_c.dart';
@@ -46,7 +45,6 @@ void main() async {
   // TODO cleanup/optimize use Getx bindings?
   const bool permOn = true;
   Get.put<MainC>(MainC(), permanent: permOn); // should do first
-  Get.put<OnboardingC>(OnboardingC());
   Get.put<ThemeC>(ThemeC());
   Get.put<LangC>(LangC(), permanent: permOn);
   Get.put<NavPageC>(NavPageC(), permanent: permOn); // requires LangC
@@ -64,6 +62,8 @@ void main() async {
   Get.put<ZamanC>(ZamanC(), permanent: permOn);
   Get.put<ActiveQuestsAjrC>(ActiveQuestsAjrC(), permanent: permOn);
 
+  await ThemeC.to.initTheme(); // TODO needed, best place?
+
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -72,7 +72,7 @@ void main() async {
   ]);
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
 
-  ThemeC.to.getThemeModeFromStore();
+  // ThemeC.to.getThemeModeFromStore();
 
   runApp(const HapiApp());
 }

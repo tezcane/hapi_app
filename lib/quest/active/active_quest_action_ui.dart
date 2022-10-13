@@ -74,7 +74,7 @@ class ActiveQuestActionUI extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     const SizedBox(width: fabGap),
-                    T(tk, tsR, w: w1),
+                    T(tk, tsRe, w: w1),
                     const SizedBox(width: fabGap),
                   ],
                 ),

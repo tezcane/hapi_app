@@ -187,7 +187,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                   size: 36.0,
                                 ),
                               ),
-                            T('', tsR, w: w2, h: 17),
+                            T('', tsRe, w: w2, h: 17),
                             const SizedBox(height: 1),
                           ],
                         ),
@@ -205,7 +205,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                   children: [
                                     T(
                                       _btnUp.tvTitleLine1,
-                                      tsR,
+                                      tsRe,
                                       w: w2,
                                       h: 18,
                                       tv: true,
@@ -213,7 +213,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                     if (_btnUp.tvTitleLine2 != '')
                                       T(
                                         _btnUp.tvTitleLine2,
-                                        tsR,
+                                        tsRe,
                                         w: w2,
                                         h: 18,
                                         tv: true,
@@ -234,7 +234,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                     ),
                                     T(
                                       _btnUp.tvTimeUntil,
-                                      tsR,
+                                      tsRe,
                                       w: w2,
                                       h: 17,
                                       tv: true,
@@ -254,7 +254,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                   children: [
                                     T(
                                       _btnDn.tvTitleLine1,
-                                      tsR,
+                                      tsRe,
                                       w: w2,
                                       h: 18,
                                       tv: true,
@@ -262,7 +262,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                     if (_btnDn.tvTitleLine2 != '')
                                       T(
                                         _btnDn.tvTitleLine2,
-                                        tsR,
+                                        tsRe,
                                         w: w2,
                                         h: 18,
                                         tv: true,
@@ -283,7 +283,7 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                                     ),
                                     T(
                                       _btnDn.tvTimeUntil,
-                                      tsR,
+                                      tsRe,
                                       w: w2,
                                       h: 17,
                                       tv: true,

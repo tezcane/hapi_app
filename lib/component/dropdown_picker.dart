@@ -32,7 +32,7 @@ class DropdownPicker extends StatelessWidget {
             (data) => DropdownMenuItem<String>(
               child: T(
                 data.tv,
-                tsN,
+                data.key == selectedOption ? ts : tsN, // select active key
                 w: width,
                 alignment: LangC.to.centerRight,
                 tv: true,

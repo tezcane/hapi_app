@@ -319,7 +319,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                   MaterialTapTargetSize.padded,
                               child: Icon(_getGutterIconData(c), size: 36),
                             ),
-                            T('', tsR, w: w2, h: 17),
+                            T('', tsRe, w: w2, h: 17),
                             const SizedBox(height: 1),
                           ],
                         ),
@@ -343,7 +343,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                     children: [
                                       T(
                                         btnUp.tvTitleLine1,
-                                        tsR,
+                                        tsRe,
                                         w: w2,
                                         h: 18,
                                         tv: true,
@@ -351,14 +351,14 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                       if (btnUp.tvTitleLine2 != '')
                                         T(
                                           btnUp.tvTitleLine2,
-                                          tsR,
+                                          tsRe,
                                           w: w2,
                                           h: 18,
                                           tv: true,
                                         ),
                                       T(
                                         btnUp.tvPageScrolls,
-                                        tsR,
+                                        tsRe,
                                         w: w2,
                                         h: 17,
                                         tv: true,
@@ -377,7 +377,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                       ),
                                       T(
                                         btnUp.tvTimeUntil,
-                                        tsR,
+                                        tsRe,
                                         w: w2,
                                         h: 17,
                                         tv: true,
@@ -398,7 +398,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                     children: [
                                       T(
                                         btnDn.tvTitleLine1,
-                                        tsR,
+                                        tsRe,
                                         w: w2,
                                         h: 18,
                                         tv: true,
@@ -406,14 +406,14 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                       if (btnDn.tvTitleLine2 != '')
                                         T(
                                           btnDn.tvTitleLine2,
-                                          tsR,
+                                          tsRe,
                                           w: w2,
                                           h: 18,
                                           tv: true,
                                         ),
                                       T(
                                         btnDn.tvPageScrolls,
-                                        tsR,
+                                        tsRe,
                                         w: w2,
                                         h: 17,
                                         tv: true,
@@ -432,7 +432,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                                       ),
                                       T(
                                         btnDn.tvTimeUntil,
-                                        tsR,
+                                        tsRe,
                                         w: w2,
                                         h: 17,
                                         tv: true,
@@ -478,7 +478,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                   ),
                   child: T(
                     _tvEraName,
-                    tsR,
+                    tsRe,
                     w: titleWidth,
                     h: 25,
                     tv: true,

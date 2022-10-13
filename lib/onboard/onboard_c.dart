@@ -1,3 +1,4 @@
+/* TODO delete
 import 'package:get/get.dart';
 import 'package:hapi/controller/getx_hapi.dart';
 import 'package:hapi/main_c.dart';
@@ -20,3 +21,4 @@ class OnboardingC extends GetxHapi {
     //update(); // not needed
   }
 }
+*/

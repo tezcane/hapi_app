@@ -5,6 +5,7 @@ import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
+import 'package:hapi/onboard/onboard_ui.dart';
 
 /// Signature for creating widget to open/close Side Menu.
 typedef SideMenuAnimationBuilder = Widget Function();
@@ -31,8 +32,7 @@ class MenuRight extends StatefulWidget {
     required this.settingsWidgets,
     required this.builder,
     required this.items,
-    Key? key,
-  }) : super(key: key);
+  });
 
   /// NavPage to know what is selected in nav menu.
   final NavPage initNavPage;
@@ -124,35 +124,23 @@ class _MenuRightState extends State<MenuRight> {
                         ),
 
                       /// Show Menu:
-                      for (NavPage navPage in NavPage.values)
+                      for (NPV npv in MainC.to.isSignedIn
+                          ? navPageValuesSignedIn
+                          : navPageValuesSignedOut)
                         GetBuilder<NavPageC>(
                           builder: (c) {
                             return MenuItem(
-                              index: navPage.index,
+                              index: npv.navPage.index,
                               length: NavPage.values.length,
                               width: kSideMenuWidth,
                               height: itemSize,
                               acNavMenu: MenuC.to.acNavMenu,
                               curve: _kCurveAnimation,
-                              color: (navPage == widget.initNavPage)
+                              color: (npv.navPage == widget.initNavPage)
                                   ? _kButtonColorSelected
                                   : _kButtonColorUnselected,
-                              onTap: () {
-                                if (navPage == widget.initNavPage &&
-                                    widget.settingsWidgets[
-                                            c.getLastIdx(navPage)] !=
-                                        null) {
-                                  // same page selected and it has settings
-                                  MenuC.to.hideMenuNav();
-                                } else if (navPage == widget.initNavPage) {
-                                  // same page selected
-                                  MenuC.to.hideMenu();
-                                } else {
-                                  // selected new nav page
-                                  MenuC.to.navigateToNavPageResetFAB(navPage);
-                                }
-                              },
-                              child: widget.items[navPage.index],
+                              onTap: () => handleNavPageTapped(npv, c),
+                              child: widget.items[npv.navPage.index],
                             );
                           },
                         ),
@@ -165,6 +153,32 @@ class _MenuRightState extends State<MenuRight> {
         },
       ),
     );
+  }
+
+  handleNavPageTapped(NPV npv, NavPageC c) {
+    if (npv.navPage == widget.initNavPage &&
+        widget.settingsWidgets[c.getLastIdx(npv.navPage)] != null) {
+      // same page selected and it has settings
+      MenuC.to.hideMenuNav();
+
+      if (widget.initNavPage == NavPage.Mithal) {
+        OnboardUI.menuViewedSettingsTab = true;
+        c.updateOnThread1Ms();
+      }
+    } else if (npv.navPage == widget.initNavPage) {
+      // same page selected, just dispose the whole menu
+      MenuC.to.hideMenu();
+    } else {
+      // selected new nav page
+      if (widget.initNavPage == NavPage.Mithal) {
+        // if we are in Onboard/Example/Tutorial mode
+        OnboardUI.menuUsedToSwitchFeatures = true;
+        c.updateOnThread1Ms();
+      } else {
+        // If in normal mode, navigate to the new NavPage
+        MenuC.to.navigateToNavPageResetFAB(npv.navPage);
+      }
+    }
   }
 }
 

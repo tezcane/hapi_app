@@ -8,7 +8,6 @@ import 'package:get/get.dart';
 import 'package:hapi/controller/getx_hapi.dart';
 import 'package:hapi/controller/time_c.dart';
 import 'package:hapi/main_c.dart';
-import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/settings_option.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/tarikh/event/et.dart';
@@ -72,7 +71,8 @@ class LangC extends GetxHapi {
   final String defaultLangKey = 'en';
 
   /// Always a 2 character language key, e.g. "ar", "en", etc.
-  String currLangKey = '';
+  /// TODO was initalized to '' but interactive onboarding crashes without default
+  String currLangKey = 'en';
 
   /// Holds all a.json Arabic "transileration"->"Arabic" variables that the app
   /// uses to teach Arabic to the user.
@@ -226,11 +226,6 @@ class LangC extends GetxHapi {
     l.i('updateLanguage: Setting currLangKey=$currLangKey, isEnNumerals=$_isEnNumerals, isRightToLeftLang=$_isRightToLeftLang');
 
     update(); // notify watchers
-
-    // Don't call at init, reload UI when user selects new language
-    if (initNeeded == false) {
-      MenuC.to.setPendingLangChangeFlag();
-    }
   }
 
   /// Setup special language variables now
@@ -259,7 +254,7 @@ class LangC extends GetxHapi {
 
     TimeC.to.updateDaysOfWeek(); // needed to convert SunRing dates
 
-    if (initNeeded == false) {
+    if (initNeeded == false && MainC.to.isSignedIn) {
       // call only if user changes lang, not at init
       EventC.to.reinitAllEventsTexts();
 

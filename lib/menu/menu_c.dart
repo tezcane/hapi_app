@@ -19,6 +19,8 @@ import 'package:hapi/menu/slide/menu_bottom/settings/settings_ui.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/onboard/auth/auth_c.dart';
+import 'package:hapi/onboard/auth/sign_up_ui.dart';
+import 'package:hapi/onboard/onboard_ui.dart';
 import 'package:hapi/quest/active/active_quest_action_ui.dart';
 import 'package:hapi/quest/quests_ui.dart';
 import 'package:hapi/quran/quran_ui.dart';
@@ -127,14 +129,20 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
 
     // If user updated language we must reset the UI to update translations
     if (_pendingLangChange) {
-      _pendingLangChange = false;
-      navigateToNavPageResetFAB(getLastNavPage());
+      _handleRefreshLastNavPageAfterLangChange();
     } else {
       // Otherwise, normal back button operation, don't need to refresh UI.
       Get.back(); // pop the sub menu stack
     }
 
     update(); // updates FAB tooltip to say what back button does
+  }
+
+  /// Handles eventual reloading of NavPage after user changes lang in settings
+  /// then hits the back button.
+  _handleRefreshLastNavPageAfterLangChange() {
+    _pendingLangChange = false;
+    navigateToNavPageResetFAB(getLastNavPage());
   }
 
   /// Handle the fab button hint, required update() to be called on page
@@ -158,8 +166,8 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
 
   // TODO looks like a bug in getx for this: https://github.com/jonataslaw/getx/issues/1027
   // list aligns with enum NavPage above.
-  final RxList<bool> _showBadge =
-      RxList([false, true, true, false, false, false, true, false]);
+  final RxList<bool> _showBadge = // TODO asdf this is crap?
+      RxList([false, false, true, true, false, false, false, true, false]);
   bool getShowBadge(NavPage navPage) => _showBadge[navPage.index];
   setShowBadge(NavPage navPage, bool value) {
     _showBadge[navPage.index] = value;
@@ -249,6 +257,10 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
     _navigateToNavPage(navPage);
   }
 
+  // TODO put this on the settings menu too,
+  // TODO POSSIBLE HAPI QUEST, finish tutorial, then finish right hand only.
+  navigateToOnboardPage() => _navigateToNavPage(NavPage.Mithal);
+
   _navigateToNavPage(
     NavPage navPage, {
     //dynamic arguments,
@@ -282,6 +294,9 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
         break;
       case NavPage.a_Asyila:
         navPageFunction = () => const QuestsUI();
+        break;
+      case NavPage.Mithal:
+        navPageFunction = () => const OnboardUI();
         break;
     }
 
@@ -346,16 +361,19 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
         subPageFunction = () => FamilyTreeUI();
         break;
       case SubPage.Settings:
-        subPageFunction = () => SettingsUI();
+        subPageFunction = () => const SettingsUI();
         break;
       case SubPage.Update_Profile:
-        subPageFunction = () => UpdateProfileUI();
+        subPageFunction = () => UpdateProfileUI(); // TODO make const?
+        break;
+      case SubPage.Sign_Up:
+        subPageFunction = () => const SignUpUI();
         break;
       case SubPage.Reset_Password:
-        subPageFunction = () => ResetPasswordUI();
+        subPageFunction = () => const ResetPasswordUI();
         break;
       case SubPage.About:
-        subPageFunction = () => AboutUI();
+        subPageFunction = () => const AboutUI();
         break;
     }
 

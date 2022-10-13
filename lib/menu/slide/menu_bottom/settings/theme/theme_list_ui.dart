@@ -24,7 +24,7 @@ class ThemeListUI extends StatelessWidget {
             Icon(Icons.palette_outlined, size: iconSize),
             T(
               'Theme',
-              tsN,
+              ts,
               w: w / 4,
               alignment: LangC.to.centerLeft,
             ),

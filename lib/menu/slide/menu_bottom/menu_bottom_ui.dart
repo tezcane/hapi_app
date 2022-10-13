@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hapi/controller/nav_page_c.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/sub_page.dart';
+import 'package:hapi/onboard/onboard_ui.dart';
 import 'package:share/share.dart';
 
 class MenuBottomUI extends StatelessWidget {
@@ -49,6 +51,28 @@ class MenuBottomUI extends StatelessWidget {
               ),
             ),
             Tooltip(
+              message: at('at.Share {0} then share in mountains of rewards!',
+                  ['a.hapi']),
+              child: InkWell(
+                onTap: () {
+                  OnboardUI.menuUsedToShareHapiWithOthers = true;
+                  NavPageC.to.update();
+                  Share.share(
+                    a('a.Assalamu Alaykum') +
+                        ','.tr + // translate the comma
+                        '\n' +
+                        'Check out this really useful and fun Muslim app!'.tr +
+                        ' https://hapi.net',
+                  );
+                },
+                child: const Icon(
+                  Icons.share_outlined,
+                  size: iconSize,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            Tooltip(
               message: 'Settings'.tr,
               child: InkWell(
                 onTap: () {
@@ -57,24 +81,6 @@ class MenuBottomUI extends StatelessWidget {
                 },
                 child: const Icon(
                   Icons.settings_rounded,
-                  size: iconSize,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-            Tooltip(
-              message: at('at.Share {0} then share in mountains of rewards!',
-                  ['a.hapi']),
-              child: InkWell(
-                onTap: () => Share.share(
-                  a('a.Assalamu Alaykum') +
-                      ','.tr + // translate the comma
-                      '\n' +
-                      'Check out this really useful and fun Muslim app!'.tr +
-                      ' https://hapi.net',
-                ),
-                child: const Icon(
-                  Icons.share_outlined,
                   size: iconSize,
                   color: Colors.white,
                 ),

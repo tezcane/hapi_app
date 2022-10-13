@@ -1,6 +1,7 @@
 library bottom_bar;
 
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:hapi/helper/keep_alive_page.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
@@ -35,27 +36,30 @@ class BottomBar extends StatelessWidget {
     return Container(
       height: tabHeight,
       color: backgroundColor,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(width: LangC.to.isLTR ? 10 : 80),
-          ...List<Widget>.generate(
-            itemCount,
-            (int index) => _BottomBarItemWidget(
-              itemCount: itemCount,
-              bottomBarItem: items.elementAt(index),
-              tabWidth: tabWidth,
-              tabHeight: tabHeight,
-              index: index,
-              isSelected: index == selectedIndex,
-              onTap: () => onTap(index),
-              showActiveBackgroundColor: showActiveBackgroundColor,
-              curve: curve,
-              duration: duration,
+      // LangC needed for tab switch on Onboard Example page lang switch
+      child: GetBuilder<LangC>(
+        builder: (lc) => Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            SizedBox(width: LangC.to.isLTR ? 10 : 80),
+            ...List<Widget>.generate(
+              itemCount,
+              (int index) => _BottomBarItemWidget(
+                itemCount: itemCount,
+                bottomBarItem: items.elementAt(index),
+                tabWidth: tabWidth,
+                tabHeight: tabHeight,
+                index: index,
+                isSelected: index == selectedIndex,
+                onTap: () => onTap(index),
+                showActiveBackgroundColor: showActiveBackgroundColor,
+                curve: curve,
+                duration: duration,
+              ),
             ),
-          ),
-          SizedBox(width: LangC.to.isLTR ? 80 : 10),
-        ],
+            SizedBox(width: LangC.to.isLTR ? 80 : 10),
+          ],
+        ),
       ),
     );
   }

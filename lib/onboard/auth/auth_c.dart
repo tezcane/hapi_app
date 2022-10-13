@@ -9,9 +9,6 @@ import 'package:hapi/helper/gravatar.dart';
 import 'package:hapi/helper/loading.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/menu_c.dart';
-import 'package:hapi/onboard/auth/sign_in_ui.dart';
-import 'package:hapi/onboard/onboarding_c.dart';
-import 'package:hapi/onboard/onboarding_ui.dart';
 import 'package:hapi/onboard/splash_ui.dart';
 import 'package:hapi/onboard/user_model.dart';
 
@@ -112,11 +109,13 @@ class AuthC extends GetxHapi {
 
     /// TODO need to detect if user is deleted/banned/not found, etc. here.
     if (_firebaseUser == null) {
-      if (OnboardingC.to.isOnboarded) {
-        Get.offAll(() => SignInUI());
-      } else {
-        Get.offAll(() => OnboardingUI());
-      }
+      // TODO asdf check onboarding logic, was jsut:
+      // if (OnboardingC.to.isOnboarded) {
+      //   Get.offAll(() => SignInUI());
+      // } else {
+      //   Get.offAll(() => OnboardingUI());
+      // }
+      MainC.to.signOut();
     } else {
       splashTimer.stop();
       int msLeftToShowSplash =
@@ -159,11 +158,12 @@ class AuthC extends GetxHapi {
     showLoadingIndicator();
     try {
       await _auth.signInWithEmailAndPassword(
-          email: emailController.text.trim(),
-          password: passwordController.text.trim());
-      storeLastSignedInName(); // tez
+        email: emailController.text.trim(),
+        password: passwordController.text.trim(),
+      );
+      storeLastSignedInName();
       storeLastSignedInEmail();
-      //emailController.clear();
+
       passwordController.clear();
       hideLoadingIndicator();
       MainC.to.signIn();
@@ -358,10 +358,15 @@ class AuthC extends GetxHapi {
 
   /// Sign out
   Future<void> signOut() {
-    s.setUidKey(''); // clear for next user
+    getLastSignedInEmail(); // show it in case user forgets what email they used
+
+    s.setUidKey('noLogin'); // clear for next user
+
+    storeLastSignedInEmail(); // store with 'noLogin' so persists TODO TEST
+
     nameController.clear();
     //emailController.clear();
-    getLastSignedInEmail(); // show it in case user forgets what email they used
+    //getLastSignedInEmail(); // show it in case user forgets what email they used
     passwordController.clear();
     return _auth.signOut();
   }

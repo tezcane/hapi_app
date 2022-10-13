@@ -4,10 +4,12 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hapi/controller/getx_hapi.dart';
+import 'package:hapi/controller/nav_page_c.dart';
 import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/onboard/auth/auth_c.dart';
+import 'package:hapi/onboard/onboard_ui.dart';
 import 'package:hapi/tarikh/event/event_c.dart';
 
 /// NOTE ABOUT WHAT'S IN THIS FILE:
@@ -62,8 +64,10 @@ class MainC extends GetxHapi {
   static MainC get to => Get.find();
 
   /// Gives main menu FAB ability to show/hide in an animated way.
-  bool _showMainMenuFab = false;
+  bool _showMainMenuFab = true; // TODO asdf false, hide on splash screen?
   bool initNeeded = true;
+
+  bool isSignedIn = false;
   bool isPortrait = true; // MUST LEAVE TRUE FOR APP TO START
   // bool _isOrientationChanged = false;
 
@@ -91,18 +95,24 @@ class MainC extends GetxHapi {
   }
 
   signIn() {
+    isSignedIn = true;
+
     showMainMenuFab();
 
     MenuC.to.initAppsFirstPage();
   }
 
   signOut() {
+    isSignedIn = false;
     MenuC.to.hideMenu(); // reset FAB (for sign back in)
     MenuC.to.clearSubPageStack(); // reset FAB (for sign back in)
 
-    hideMainMenuFab();
+    showMainMenuFab();
 
     AuthC.to.signOut(); // Sign out of Auth
+
+    // TODO asdf check onboarding logic
+    MenuC.to.navigateToOnboardPage(); // show Onboarding page
   }
 
   setOrientation(bool isPortrait) {
@@ -119,10 +129,18 @@ class MainC extends GetxHapi {
     this.isPortrait = isPortrait;
     // _isOrientationChanged = true;
 
+    if (!OnboardUI.rotatedScreen) {
+      OnboardUI.rotatedScreen = true;
+      NavPageC.to.updateOnThread1Ms();
+    }
+
     // this is expensive on orientation change but realistically we don't do it
     // much, we optimizing common case of accessing event text often instead.
     if (initNeeded == false) {
-      EventC.to.reinitAllEventsTexts(); // don't call on app init
+      if (isSignedIn) {
+        // TODO good enough check, should check events inited?
+        EventC.to.reinitAllEventsTexts(); // only call if app init and signed in
+      }
     }
     initNeeded = false;
 
@@ -189,27 +207,27 @@ Storage s = Storage();
 class Storage {
   Storage() {
     // GetStorage key persisted so we always know last uidKey
-    _uidKey = box.read('uidKey') ?? '';
+    _uidKey = box.read('uidKey') ?? 'noLogin'; // no more than 7 chars
   }
 
   final GetStorage box = GetStorage();
-  String _uidKey = '';
+
+  // TODO asdf not working to save email on sign out/log back in
+  String _uidKey = 'noLogin';
 
   /// Used so _uidKey so we can support multiple user sign in/out user settings
   void setUidKey(String newKey) async {
-    if (newKey.length > 5) {
-      newKey = newKey.substring(0, 5); // don't need such a long key
-    }
+    if (newKey.length > 5) newKey = newKey.substring(0, 7); // shorten key
     l.d('storage: s.setUIDKey: old="$_uidKey", new="$newKey"');
     await box.write('uidKey', newKey);
     _uidKey = newKey;
   }
 
   T? rd<T>(String key) {
-    if (_uidKey.isEmpty) {
-      l.w('WARNING: storage: _uidKey is empty, not reading setting, returning null');
-      return null;
-    }
+    // if (_uidKey.isEmpty) {
+    //   l.w('WARNING: storage: _uidKey is empty, not reading setting, returning null');
+    //   return null;
+    // }
     key = '${_uidKey}_$key';
     dynamic rv = box.read(key);
     l.d('storage: s.rd($key)="$rv"');
@@ -217,9 +235,9 @@ class Storage {
   }
 
   Future<void> wr(String key, dynamic value) async {
-    if (_uidKey.isEmpty) {
-      l.w('WARNING: storage: _uidKey is empty, not writing setting');
-    }
+    // if (_uidKey.isEmpty) {
+    //   l.w('WARNING: storage: _uidKey is empty, not writing setting');
+    // }
     key = '${_uidKey}_$key';
     l.d('storage: s.wr($key)="$value"');
     return box.write(key, value);
@@ -240,15 +258,18 @@ class TS extends TextStyle {
         );
 }
 
-/// Commonly used TextStyles: tsB (Bold), tsN (Normal), tsR (Red):
+/// Commonly used TextStyles: tsB (Bold), tsN (Normal), tsRe (Red):
 // TODO ts and tsB don't work on light/dark change:
-TS ts = TS(Get.theme.textTheme.headline6!.color!);
-TS tsB = TS(Get.theme.textTheme.headline6!.color!, fontWeight: FontWeight.bold);
 const TS tsNB = TS(AppThemes.ldTextColor, fontWeight: FontWeight.bold);
-const TS tsWB = TS(Colors.white, fontWeight: FontWeight.bold);
 const TS tsN = TS(AppThemes.ldTextColor);
-const TS tsR = TS(Colors.red);
-const TS tsW = TS(Colors.white);
+const TS tsRe = TS(Colors.red);
+const TS tsGr = TS(Colors.green);
+TS get ts => Get.isDarkMode ? tsWi : _tsBl; // TODO make constant
+TS get tsB => Get.isDarkMode ? _tsWiB : _tsBlB;
+const TS tsWi = TS(Colors.white);
+const TS _tsBl = TS(Colors.black);
+const TS _tsWiB = TS(Colors.white, fontWeight: FontWeight.bold);
+const TS _tsBlB = TS(Colors.black, fontWeight: FontWeight.bold);
 
 // TODO change to TK - Translate tk, and TV - Translate tvue
 /// "T"/"t" short for Text, use to translate or fit text in UI.

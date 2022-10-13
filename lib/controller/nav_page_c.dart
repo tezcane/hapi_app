@@ -16,7 +16,7 @@ class NavPageC extends GetxHapi {
 
   @override
   onInit() {
-    for (NPV npv in navPageValues) {
+    for (NPV npv in navPageValuesSignedOut) {
       pageIdxMap[npv.navPage] = s.rd(_key(npv.navPage)) ?? 0;
     }
     super.onInit();
@@ -25,6 +25,7 @@ class NavPageC extends GetxHapi {
   setLastIdx(NavPage navPage, int newIdx) {
     pageIdxMap[navPage] = newIdx;
     s.wr(_key(navPage), newIdx);
+
     update(); // needed to show bottom bar UI animation and tab selection
   }
 

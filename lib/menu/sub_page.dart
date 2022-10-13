@@ -7,6 +7,7 @@ enum SubPage {
   Family_Tree,
   Settings,
   Update_Profile,
+  Sign_Up,
   Reset_Password,
   About,
 }

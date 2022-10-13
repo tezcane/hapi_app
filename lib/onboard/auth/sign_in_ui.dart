@@ -1,27 +1,30 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:hapi/component/form_input_field_with_icon.dart';
 import 'package:hapi/component/form_vertical_spacing.dart';
 import 'package:hapi/component/label_button.dart';
 import 'package:hapi/component/logo_graphic_header.dart';
 import 'package:hapi/component/primary_button.dart';
 import 'package:hapi/helper/validator.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/profile/reset_password_ui.dart';
+import 'package:hapi/menu/menu_c.dart';
+import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/onboard/auth/auth_c.dart';
-import 'package:hapi/onboard/auth/sign_up_ui.dart';
 
 /// allows user to login with email and password.
 class SignInUI extends StatelessWidget {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  const SignInUI();
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+    AuthC.to.getLastSignedInEmail();
+
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: Form(
-        key: _formKey,
+        key: formKey,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Center(
@@ -57,18 +60,19 @@ class SignInUI extends StatelessWidget {
                   PrimaryButton(
                       tk: 'Sign In',
                       onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
+                        if (formKey.currentState!.validate()) {
                           AuthC.to.signInWithEmailAndPassword(context);
                         }
                       }),
                   const FormVerticalSpace(),
                   LabelButton(
                     tk: 'Forgot password?',
-                    onPressed: () => Get.to(() => ResetPasswordUI()),
+                    onPressed: () =>
+                        MenuC.to.pushSubPage(SubPage.Reset_Password),
                   ),
                   LabelButton(
                     tk: 'Create an account',
-                    onPressed: () => Get.to(() => SignUpUI()),
+                    onPressed: () => MenuC.to.pushSubPage(SubPage.Sign_Up),
                   ),
                 ],
               ),

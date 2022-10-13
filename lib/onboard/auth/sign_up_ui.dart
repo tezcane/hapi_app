@@ -7,19 +7,22 @@ import 'package:hapi/component/label_button.dart';
 import 'package:hapi/component/logo_graphic_header.dart';
 import 'package:hapi/component/primary_button.dart';
 import 'package:hapi/helper/validator.dart';
+import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/onboard/auth/auth_c.dart';
 import 'package:hapi/onboard/auth/sign_in_ui.dart';
 
 /// allows user to create a new account.
 class SignUpUI extends StatelessWidget {
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  const SignUpUI();
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).backgroundColor,
-      body: Form(
-        key: _formKey,
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+    return FabSubPage(
+      subPage: SubPage.Sign_Up,
+      child: Form(
+        key: formKey,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Center(
@@ -64,7 +67,7 @@ class SignUpUI extends StatelessWidget {
                   PrimaryButton(
                       tk: 'Sign Up',
                       onPressed: () async {
-                        if (_formKey.currentState!.validate()) {
+                        if (formKey.currentState!.validate()) {
                           SystemChannels.textInput.invokeMethod(
                               'TextInput.hide'); //to hide the keyboard - if any
                           AuthC.to.registerWithEmailAndPassword(context);

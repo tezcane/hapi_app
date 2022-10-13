@@ -6,7 +6,7 @@ class LogoGraphicHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String _imageLogo = 'assets/images/profileD.png';
-    if (ThemeC.to.isDarkModeOn == false) {
+    if (ThemeC.to.isDarkMode == false) {
       _imageLogo = 'assets/images/profileL.png';
     }
 

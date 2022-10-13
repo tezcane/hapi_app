@@ -9,17 +9,19 @@ import 'package:hapi/onboard/auth/auth_c.dart';
 
 /// Sends a password reset email to the user.
 class ResetPasswordUI extends StatelessWidget {
-  final TextEditingController emailController = TextEditingController();
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  const ResetPasswordUI();
 
   @override
   Widget build(BuildContext context) {
+    final TextEditingController emailController = TextEditingController();
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
     // set initial email from what user already entered on previous screen
     emailController.text = AuthC.to.emailController.text;
     return FabSubPage(
       subPage: SubPage.Reset_Password,
       child: Form(
-        key: _formKey,
+        key: formKey,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 24.0),
           child: Center(
@@ -43,7 +45,7 @@ class ResetPasswordUI extends StatelessWidget {
                   PrimaryButton(
                     tk: 'Send a password reset email',
                     onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
+                      if (formKey.currentState!.validate()) {
                         await AuthC.to.sendPasswordResetEmail(
                             emailController.text.trim());
                       }

@@ -6,6 +6,7 @@ import 'package:hapi/controller/nav_page_c.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/bottom_bar.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
+import 'package:hapi/onboard/onboard_ui.dart';
 
 /// Controls NavPage bottom bars and loads/persists new tab selections.
 // ignore: must_be_immutable
@@ -19,6 +20,9 @@ class BottomBarMenu extends StatelessWidget {
 
   late final PageController _pageController;
   late int curBottomBarHighlightIdx; // to briefly highlight bottom bar indexes
+
+  /// Used for tab vs swipe detection in [OnboardUI].
+  bool postFrameAnimationOccurring = false;
 
   int movingToIdx = -1;
 
@@ -199,12 +203,7 @@ class BottomBarMenu extends StatelessWidget {
                 if (scrolls[UP] > CHANGE_TO_DIRECTION_STATE_THRESHOLD) {
                   state = UP;
                   if (kDebugMode) l.v('$cnt $state UP STATE SET');
-                  if (isBottomBarVisible) {
-                    if (kDebugMode) l.d('$cnt $state hide bottom bar');
-                    MainC.to.hideMainMenuFab();
-                    isBottomBarVisible = false;
-                    c.updateOnThread1Ms();
-                  }
+                  if (isBottomBarVisible) _hideTabBarAndMenuFab();
                 }
               } else {
                 scrolls[0] = 0; // reset all scroll in a row counts
@@ -222,12 +221,7 @@ class BottomBarMenu extends StatelessWidget {
                 if (scrolls[DN] > CHANGE_TO_DIRECTION_STATE_THRESHOLD) {
                   state = DN;
                   if (kDebugMode) l.v('$cnt $state DOWN STATE SET');
-                  if (!isBottomBarVisible) {
-                    if (kDebugMode) l.d('$cnt $state show bottom bar');
-                    MainC.to.showMainMenuFab();
-                    isBottomBarVisible = true;
-                    c.updateOnThread1Ms();
-                  }
+                  if (!isBottomBarVisible) _showTabBarAndMenuFab();
                 }
               } else {
                 scrolls[0] = 0; // reset all scroll in a row counts
@@ -262,14 +256,38 @@ class BottomBarMenu extends StatelessWidget {
           ),
         ),
       );
-      // });
     });
+  }
+
+  _hideTabBarAndMenuFab() {
+    if (!isBottomBarVisible) return; // already hidden
+
+    if (kDebugMode) l.d('$cnt $state hide bottom bar');
+
+    MainC.to.hideMainMenuFab();
+    isBottomBarVisible = false;
+
+    if (navPage == NavPage.Mithal) OnboardUI.tabBarWasHidden = true;
+
+    NavPageC.to.updateOnThread1Ms();
+  }
+
+  _showTabBarAndMenuFab() {
+    if (isBottomBarVisible) return; // already showing
+
+    if (kDebugMode) l.d('$cnt $state show bottom bar');
+
+    MainC.to.showMainMenuFab();
+    isBottomBarVisible = true; // if hidden, force show on page view change
+
+    if (navPage == NavPage.Mithal) OnboardUI.tabBarWasShown = true;
+
+    NavPageC.to.updateOnThread1Ms();
   }
 
   /// Called directly when swiping page or indirectly on bottom bar tab tap
   _onPageChanged(int newIdx, NavPageC c) {
-    MainC.to.showMainMenuFab();
-    isBottomBarVisible = true; // if hidden, force show on page view change
+    _showTabBarAndMenuFab();
 
     curBottomBarHighlightIdx = newIdx; // always highlight current page
 
@@ -282,6 +300,16 @@ class BottomBarMenu extends StatelessWidget {
       if (bottomBarItems[newIdx].onPressed != null) {
         bottomBarItems[newIdx].onPressed!.call();
       }
+
+      // To support the onboarding red->green text we need to detect if this
+      // is a swipe event or not. If postFrameAnimationOccurring, this method
+      // is always called to update tabs on transition, so we will falsely set
+      // OnboardUI.isTabChangedBySwipe = true, if we don't check for this:
+      if (!postFrameAnimationOccurring) {
+        if (navPage == NavPage.Mithal) OnboardUI.tabChangedBySwipe = true;
+        // note setLastIdx() will call NavPageC.to.update() for us
+      }
+
       NavPageC.to.setLastIdx(navPage, newIdx);
     } else {
       NavPageC.to.update(); // to flash intermediate bottom bar select
@@ -291,6 +319,10 @@ class BottomBarMenu extends StatelessWidget {
   /// Called only when bottom bar tab is tapped
   _onBottomBarTabTapped(int newIdx) {
     if (newIdx == NavPageC.to.getLastIdx(navPage)) return; // we r here
+
+    if (navPage == NavPage.Mithal) OnboardUI.tabChangedByTabTap = true;
+    // note _handlePostFrameAnimation will call NavPageC.to.update() for us
+
     movingToIdx = newIdx;
     _handlePostFrameAnimation(newIdx); // needed for stateless widget to work
   }
@@ -299,13 +331,34 @@ class BottomBarMenu extends StatelessWidget {
   /// PostFrameCallback so all needed objects are initialized.
   _handlePostFrameAnimation(int newIdx) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _pageController.animateToPage(
-        newIdx,
-        curve: Curves.easeInOut,
-        duration: const Duration(milliseconds: 500),
-      ); // this animates to the page on tab press
+      if (!_pageController.hasClients) return; // fix unwanted init exception
+
+      postFrameAnimationOccurring = true;
+      _pageController
+          .animateToPage(
+            newIdx,
+            curve: Curves.easeInOut,
+            duration: const Duration(milliseconds: 500),
+          ) // this animates to the page on tab press
+          .then((_) => postFrameAnimationOccurring = false);
       // jumpToPage/animateToPage triggers onPageChanged, so don't need:
       //NavPageC.to.setLastIdx(widget.navPage, newIdx);
     });
   }
+
+  // TODO put history on bottom_bar_menu and switch to it with this?
+  // /// Allow an external class to animate to any page
+  // /// Note: No index overflow protected.
+  // static animateToPage(NavPage navPage, int newIdx) {
+  //   PageController pageController = bottomBarMenus[navPage]!._pageController;
+  //
+  //   if (!pageController.hasClients) return; // stop unwanted shell exception
+  //
+  //   pageController
+  //       .animateToPage(
+  //     newIdx,
+  //     curve: Curves.easeInOut,
+  //     duration: const Duration(milliseconds: 500),
+  //   );
+  // }
 }

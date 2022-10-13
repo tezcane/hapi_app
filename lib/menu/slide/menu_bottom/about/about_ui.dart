@@ -1,9 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hapi/controller/nav_page_c.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/sub_page.dart';
+import 'package:hapi/onboard/onboard_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// This widget is visible when opening the about page from the [MainMenuWidget].
@@ -14,8 +16,16 @@ import 'package:url_launcher/url_launcher.dart';
 /// This page uses the package `url_launcher` available at https://pub.dartlang.org/packages/url_launcher
 /// to open up urls in a WebView on both iOS & Android.
 class AboutUI extends StatelessWidget {
+  const AboutUI();
+
   @override
   Widget build(BuildContext context) {
+    OnboardUI.menuUsedToViewAboutPage = true;
+    NavPageC.to.updateOnThread1Ms();
+
+    final double logoWidthAndHeight =
+        (MainC.to.isPortrait ? w(context) : h(context)) / GR;
+
     // double padding = 20; // p for padding
     // double width = w(context) - padding * 2;
     return FabSubPage(
@@ -31,7 +41,6 @@ class AboutUI extends StatelessWidget {
             right: 20,
           ),
           child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -40,8 +49,8 @@ class AboutUI extends StatelessWidget {
                     tag: 'hapiLogo',
                     child: Image.asset(
                       'assets/images/logo/logo.png',
-                      width: 175,
-                      height: 175,
+                      width: logoWidthAndHeight,
+                      height: logoWidthAndHeight,
                     ),
                   ),
                 ),
