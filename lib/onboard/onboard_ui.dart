@@ -89,13 +89,7 @@ const List<BottomBarItem> _bottomBarItems = [
   ),
   BottomBarItem(
     DemoPage4MenuSettings(),
-    SizedBox(
-      height: 100,
-      child: T(
-        'Tab Settings',
-        tsWi,
-      ),
-    ),
+    SizedBox(height: 150, child: T('Tab Settings Area', tsWi)), // Settings UI
     'Settings',
     'How to change settings',
     Icons.settings_applications_outlined,
@@ -127,21 +121,46 @@ const double wBullet2 = wBullet1 * 2;
 class WelcomePage extends StatelessWidget {
   const WelcomePage();
 
+  // must use static so we can keep const for init
+  static double _hPageGap = 0;
+  static final GlobalKey _key = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     final double width = w(context);
     final double logoWidthAndHeight =
         (MainC.to.isPortrait ? width : h(context)) / GR;
 
+    final double hPage = h(context);
+
     return Center(
       child: SingleChildScrollView(
         child: Padding(
-          padding:
-              const EdgeInsets.only(top: 10, bottom: 90, left: 10, right: 10),
+          // Don't pad top or bottom for easier _hPageGap calculations
+          padding: const EdgeInsets.only(left: 10, right: 10),
           child: GetBuilder<LangC>(
             builder: (c) => Column(
+              key: _key, // use key to later get the height of this Widget
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                GetBuilder<NavPageC>(builder: (nc) {
+                  if (_hPageGap == 0) {
+                    WidgetsBinding.instance.addPostFrameCallback((_) {
+                      double hKey = 0;
+                      if (_key.currentContext != null &&
+                          _key.currentContext!.size != null) {
+                        hKey += _key.currentContext!.size!.height;
+                      }
+                      // Calc vertical white space on page (no UI on it):
+                      _hPageGap = hPage - hKey - 72; // 72= height of bottom bar
+                      if (_hPageGap < 10) _hPageGap = 10; // have min gap
+                      c.updateOnThread1Ms(); // now update this UI with gap
+                    });
+                  }
+
+                  // on init 0, then after calculates gap above, sets real size
+                  return SizedBox(height: _hPageGap);
+                }),
                 Center(
                   child: Image.asset(
                     'assets/images/logo/logo.png',
@@ -149,7 +168,7 @@ class WelcomePage extends StatelessWidget {
                     height: logoWidthAndHeight,
                   ),
                 ),
-                const SizedBox(height: 30.0),
+                const SizedBox(height: hTextGR),
                 RichText(
                   text: TextSpan(
                     style: context.textTheme.headline5,
@@ -230,21 +249,10 @@ class WelcomePage extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            T(
-                              'Tap',
-                              w: width / 3 / 3,
-                              h: hText,
-                              ts,
-                              alignment: c.centerRight,
-                            ),
+                            SizedBox(width: width / 3 / 3 / 2),
+                            T('Tap', w: width / 3 / 3, h: hText, ts),
                             const Icon(Icons.swap_horiz_outlined, size: 30),
-                            T(
-                              'below',
-                              w: width / 3 / 3,
-                              h: hText,
-                              ts,
-                              alignment: c.centerLeft,
-                            ),
+                            SizedBox(width: width / 3 / 3 / 2),
                           ],
                         ),
                         const SizedBox(height: hText / 2),
@@ -265,21 +273,10 @@ class WelcomePage extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            T(
-                              'Tap',
-                              w: width / 3 / 3,
-                              h: hText,
-                              ts,
-                              alignment: c.centerRight,
-                            ),
+                            SizedBox(width: width / 3 / 3 / 2),
+                            T('Tap', w: width / 3 / 3, h: hText, ts),
                             const Icon(Icons.perm_identity_outlined, size: 30),
-                            T(
-                              'below',
-                              w: width / 3 / 3,
-                              h: hText,
-                              ts,
-                              alignment: c.centerLeft,
-                            ),
+                            SizedBox(width: width / 3 / 3 / 2),
                           ],
                         ),
                         const SizedBox(height: hText / 2),
@@ -336,7 +333,7 @@ class DemoPage1TabSwipe extends StatelessWidget {
                 // if (MainC.to.isSignedIn) const SizedBox(height: hText),
                 if (MainC.to.isSignedIn) T("Let's begin!", ts, h: hText),
                 const SizedBox(height: hTextGR),
-                T('Tabs let you jump between related features.', ts, h: hText),
+                T('Use tabs to jump between related features.', ts, h: hText),
                 const SizedBox(height: hTextGR),
                 Row(
                   mainAxisAlignment: LangC.to.axisStart,
@@ -363,7 +360,7 @@ class DemoPage1TabSwipe extends StatelessWidget {
                     const SizedBox(
                         width: wIconGap), // gap between icon and text
                     T(
-                      'Tap a tab icon',
+                      'Tap a tab',
                       w: width - wBullet2 - iconSize - wIconGap,
                       h: hText,
                       OnboardUI.tabChangedByTabTap ? tsGr : tsRe,
@@ -388,8 +385,10 @@ class DemoPage1TabSwipe extends StatelessWidget {
                     ),
                   ],
                 ),
-                // const SizedBox(height: hTextGR),
-                // T('Go to the next tab', h: hText, ts),
+                const SizedBox(height: hTextGR * 2),
+                T('Optional', tsB, h: hText),
+                const SizedBox(height: hText),
+                T('On mobile devices, use only your right hand.', ts, h: hText),
               ],
             ),
           ),
@@ -497,10 +496,10 @@ class DemoPage3MenuIntro extends StatelessWidget {
             builder: (c) => Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                T('Did you open the menu yet?', ts, h: hText),
+                T('The menu is in the bottom right corner.', ts, h: hText),
                 const SizedBox(height: hTextGR),
                 T(
-                  "It's in the bottom right corner. Use it to:",
+                  'Use the menu to:',
                   ts,
                   h: hText,
                   alignment: LangC.to.centerLeft,
@@ -514,7 +513,7 @@ class DemoPage3MenuIntro extends StatelessWidget {
                     const SizedBox(
                         width: wIconGap), // gap between icon and text
                     T(
-                      'Switch between the main hapi features',
+                      'Switch to a different hapi feature',
                       w: width - wBullet1 - iconSize - wIconGap,
                       h: hText,
                       OnboardUI.menuUsedToSwitchFeatures ? tsGr : tsRe,
@@ -531,7 +530,7 @@ class DemoPage3MenuIntro extends StatelessWidget {
                     const SizedBox(
                         width: wIconGap), // gap between icon and text
                     T(
-                      'Try it, but the tutorial keeps you here',
+                      "Don't worry, the tutorial won't let you leave",
                       w: width - wBullet2 - iconSize - wIconGap,
                       h: hText,
                       ts,
@@ -548,7 +547,7 @@ class DemoPage3MenuIntro extends StatelessWidget {
                     const SizedBox(
                         width: wIconGap), // gap between icon and text
                     T(
-                      'Hold down buttons to see tips popup',
+                      'Hold down a button to see what it does',
                       w: width - wBullet2 - iconSize - wIconGap,
                       h: hText,
                       ts,
@@ -791,20 +790,22 @@ class DemoPage5LandscapeZoom extends StatelessWidget {
                 ),
                 const SizedBox(height: hText),
                 T(
-                  'If you have a mobile device, rotate it 90 degrees.',
+                  'If your device supports screen rotation, rotate it.',
                   w: width - wBullet1 - iconSize - wIconGap,
                   h: hText,
                   OnboardUI.rotatedScreen ? tsGr : tsRe,
                 ),
                 const SizedBox(height: hText),
                 T(
-                  'Depending on your language, screen size and eye sight, you may prefer to view hapi features in landscape mode.',
+                  'Depending on your screen size, and some other factors, you may prefer to view some hapi features in landscape mode.',
                   w: width - wBullet1 - iconSize - wIconGap,
                   h: hText,
                   ts,
                 ),
+                const SizedBox(height: hTextGR * 3),
+                T("That's it!", ts, h: hText),
                 const SizedBox(height: hTextGR),
-                T("You're done. It's time to start hapi!", ts, h: hText),
+                T('Go to the next tab to start hapi.', h: hText, ts),
               ],
             ),
           ),
