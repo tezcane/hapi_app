@@ -639,7 +639,7 @@ class DemoPage4MenuSettings extends StatelessWidget {
   Widget build(BuildContext context) {
     final double width = w(context);
 
-    final double h2 = (h(context) / 2) - (((hText * 11) + ((hTextGR) * 2)) / 2);
+//  final double h2 = (h(context) / 2) - (((hText * 11) + ((hTextGR) * 2)) / 2);
 
     return Center(
       child: SingleChildScrollView(
