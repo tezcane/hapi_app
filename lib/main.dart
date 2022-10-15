@@ -126,7 +126,8 @@ class HapiApp extends StatelessWidget {
                               .floatingActionButtonTheme.backgroundColor,
                           foregroundColor: AppThemes
                               .floatingActionButtonTheme.foregroundColor,
-                          onPressed: () => {},
+                          // TODO fixes bug where tapping back doesn't work?:
+                          onPressed: () => mc.handlePressedFAB(),
                           child: IconButton(
                             iconSize: 30.0,
                             icon: AnimatedIcon(
