@@ -10,6 +10,7 @@ import 'package:hapi/controller/time_c.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/settings_option.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
+import 'package:hapi/quest/active/zaman_c.dart';
 import 'package:hapi/tarikh/event/et.dart';
 import 'package:hapi/tarikh/event/et_extension.dart';
 import 'package:hapi/tarikh/event/event_c.dart';
@@ -261,6 +262,8 @@ class LangC extends GetxHapi {
       // language changed so we must change filter language too
       SearchManager.init(NavPage.Tarikh, EventC.to.getEventList(ET.Tarikh));
       SearchManager.init(NavPage.Alathar, EventC.to.getEventList(ET.Nabi));
+
+      ZamanC.to.updateTooltipAfterLangChange();
     }
     initNeeded = false;
   }

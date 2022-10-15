@@ -183,7 +183,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
 
   NavPage getLastNavPage() => _getNavPage(_getLastNavIdx());
 
-  bool isFastStartupMode() => s.rd('fastStartupMode') ?? true; // TODO persists
+  bool isFastStartupMode() => false; // s.rd('fastStartupMode') ?? true; // TODO
 
   /// set foreground to last opened page
   initAppsFirstPage() {

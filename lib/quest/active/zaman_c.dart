@@ -212,6 +212,8 @@ class ZamanC extends GetxHapi {
     updateZaman();
   }
 
+  updateTooltipAfterLangChange() => _updateTooltip(_currZ, _nextZ);
+
   _updateTooltip(Z? cTooltip, Z nTooltip) {
     currZTooltip = cTooltip;
     nextZTooltip = nTooltip;
@@ -220,9 +222,7 @@ class ZamanC extends GetxHapi {
 
     // special case to support "at" of Fajr tomorrow ('a.{0} Tomorrow').
     String tkOrVal = nTooltip.tk;
-    if (nextZTooltip == Z.Fajr_Tomorrow) {
-      tkOrVal = at(tkOrVal, [Z.Fajr.tk]);
-    }
+    if (nextZTooltip == Z.Fajr_Tomorrow) tkOrVal = at(tkOrVal, [Z.Fajr.tk]);
 
     if (cTooltip != null) {
       if (nextZ.index != currZ.index + 1) {

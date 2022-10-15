@@ -22,6 +22,7 @@ const String DUMMY_TIME_STR = '2022-02-22';
 const int DUMMY_NTP_OFFSET = 222222222222222;
 const String DUMMY_TIMEZONE = 'America/Los_Angeles'; // TODO random Antarctica?
 
+/// Uses DAY_OF_WEEK_EN as master lookup, but uses this enum to display Arabic.
 enum DAY_OF_WEEK_AR {
   Aliathnayn, // Monday = "a.Aliathnayn"
   Althulatha_a_, // Tuesday = "a.Althulatha'"
@@ -32,6 +33,7 @@ enum DAY_OF_WEEK_AR {
   Al_a_ahad, // Sunday = "a.Al'ahad"
 }
 
+/// Used to get dates out of date format strings
 enum DAY_OF_WEEK_EN {
   Monday,
   Tuesday,
@@ -42,6 +44,7 @@ enum DAY_OF_WEEK_EN {
   Sunday,
 }
 
+/// Uses MONTH_EN as master lookup, but uses this enum to display Arabic.
 enum MONTH_AR {
   Kanun_at__Tani, // January = "a.Kanun at-Tani"
   Shubat, // February = "a.Shubat"
@@ -57,6 +60,7 @@ enum MONTH_AR {
   Kanun_al___a_Awwal, // December = "a.Kanun al-'Awwal"
 }
 
+/// Used to get dates out of date format strings
 enum MONTH_EN {
   January,
   February,
@@ -330,6 +334,7 @@ class TimeC extends GetxHapi {
 
   String tvDateGrego(bool addDayOfWeek) {
     String date = DateFormat('MMMM d, yyyy').format(now2());
+
     bool foundMonth = false;
     for (MONTH_EN monthEn in MONTH_EN.values) {
       if (date.contains(monthEn.name)) {
@@ -344,7 +349,9 @@ class TimeC extends GetxHapi {
     if (!foundMonth) l.e('tvDateGrego: Did not find month in "$date"');
 
     String dayOfWeek = '';
-    if (addDayOfWeek) dayOfWeek = '${a(_dayOfWeekGrego.tkIsimA)} ';
+    if (addDayOfWeek) {
+      dayOfWeek = '${a(DAY_OF_WEEK_AR.values[_dayOfWeekGrego.index].tkIsimA)} ';
+    }
 
     return '$dayOfWeek$date';
   }
