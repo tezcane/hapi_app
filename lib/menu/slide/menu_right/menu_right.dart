@@ -171,12 +171,17 @@ class _MenuRightState extends State<MenuRight> {
     } else {
       // selected new nav page
       if (widget.initNavPage == NavPage.Mithal) {
+        showSnackBar(
+          'The tutorial prevents feature switching.',
+          'Hold down buttons to see popup text.',
+        );
+
         // if we are in Onboard/Example/Tutorial mode
         OnboardUI.menuUsedToSwitchFeatures = true;
         c.updateOnThread1Ms();
       } else {
         // If in normal mode, navigate to the new NavPage
-        MenuC.to.navigateToNavPageResetFAB(npv.navPage);
+        MenuC.to.navigateToNavPageAndResetFAB(navPage: npv.navPage);
       }
     }
   }

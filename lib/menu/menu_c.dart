@@ -19,6 +19,7 @@ import 'package:hapi/menu/slide/menu_bottom/settings/settings_ui.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/onboard/auth/auth_c.dart';
+import 'package:hapi/onboard/auth/sign_in_ui.dart';
 import 'package:hapi/onboard/auth/sign_up_ui.dart';
 import 'package:hapi/onboard/onboard_ui.dart';
 import 'package:hapi/quest/active/active_quest_action_ui.dart';
@@ -142,7 +143,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
   /// then hits the back button.
   _handleRefreshLastNavPageAfterLangChange() {
     _pendingLangChange = false;
-    navigateToNavPageResetFAB(getLastNavPage());
+    navigateToNavPageAndResetFAB();
   }
 
   /// Handle the fab button hint, required update() to be called on page
@@ -240,7 +241,9 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
   }
 
   /// Use to switch to a high level nav page only (e.g. Quests, Quran, etc.)
-  navigateToNavPageResetFAB(NavPage navPage, {bool offAll = false}) {
+  navigateToNavPageAndResetFAB({NavPage? navPage, bool offAll = false}) {
+    navPage ??= getLastNavPage();
+
     if (_subPageStack.length == 1) {
       _acFabIcon.reverse();
       _fabAnimatedIcon = AnimatedIcons.menu_close; // switch to menu close icon
@@ -250,9 +253,6 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
     if (_subPageStack.isNotEmpty) _subPageStack = [];
 
     hideMenu();
-
-    // save so app restarts at this idx
-    s.wr('lastNavIdx', navPage.index);
 
     _navigateToNavPage(navPage);
   }
@@ -305,6 +305,9 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
       transition: transition,
       duration: Duration(milliseconds: transitionMs),
     );
+
+    // save so app restarts at this idx
+    if (navPage != NavPage.Mithal) s.wr('lastNavIdx', navPage.index);
   }
 
   /// use to push a NavPages sub page (Tarikh Favorites, etc.) on top of menu stack
@@ -365,6 +368,9 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
         break;
       case SubPage.Update_Profile:
         subPageFunction = () => UpdateProfileUI(); // TODO make const?
+        break;
+      case SubPage.Sign_In:
+        subPageFunction = () => const SignInUI();
         break;
       case SubPage.Sign_Up:
         subPageFunction = () => const SignUpUI();

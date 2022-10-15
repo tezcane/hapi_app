@@ -47,11 +47,11 @@ void main() async {
   Get.put<MainC>(MainC(), permanent: permOn); // should do first
   Get.put<ThemeC>(ThemeC());
   Get.put<LangC>(LangC(), permanent: permOn);
-  Get.put<NavPageC>(NavPageC(), permanent: permOn); // requires LangC
-  Get.put<MenuC>(MenuC(), permanent: permOn);
-  Get.put<AuthC>(AuthC(), permanent: permOn);
   Get.put<ConnectivityC>(ConnectivityC(), permanent: permOn);
   Get.put<TimeC>(TimeC(), permanent: permOn); // requires ConnectivityC
+  Get.put<NavPageC>(NavPageC(), permanent: permOn); // requires LangC, TimeC
+  Get.put<MenuC>(MenuC(), permanent: permOn);
+  Get.put<AuthC>(AuthC(), permanent: permOn);
   Get.put<LocationC>(LocationC(), permanent: permOn); // requires TimeC
   Get.put<EventC>(EventC(), permanent: permOn); // requires Auth
   Get.put<RelicC>(RelicC(), permanent: permOn); // requires LangC, EventC, AuthC

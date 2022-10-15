@@ -73,11 +73,11 @@ class SignUpUI extends StatelessWidget {
                           AuthC.to.registerWithEmailAndPassword(context);
                         }
                       }),
-                  const FormVerticalSpace(),
-                  LabelButton(
-                    tk: 'Have an account? Sign in to your account.',
-                    onPressed: () => Get.to(() => SignInUI()),
-                  ),
+                  // const FormVerticalSpace(),
+                  // LabelButton(
+                  //   tk: 'Have an account? Sign in to your account.',
+                  //   onPressed: () => Get.to(() => SignInUI()),
+                  // ),
                 ],
               ),
             ),

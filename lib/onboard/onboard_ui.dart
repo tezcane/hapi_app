@@ -8,7 +8,7 @@ import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_list_ui.dart';
 import 'package:hapi/menu/slide/menu_right/menu_right_ui.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
-import 'package:hapi/onboard/auth/sign_in_ui.dart';
+import 'package:hapi/onboard/auth/sign_in_up_ui.dart';
 
 /// Init all of this NavPage's main widgets and bottom bar
 class OnboardUI extends StatelessWidget {
@@ -31,13 +31,6 @@ class OnboardUI extends StatelessWidget {
     List<Widget?> settingsWidgets = [];
     List<Widget> aliveMainWidgets = [];
     for (BottomBarItem bottomBarItem in _bottomBarItems) {
-      // We can call the onboarding tutorial when signed out or signed in, when
-      // Signed in/out some minor logic changes are needed throughout the app.
-      if (MainC.to.isSignedIn) {
-        if (bottomBarItem is WelcomePage) continue;
-        if (bottomBarItem is SignInUI) continue;
-      }
-
       settingsWidgets.add(bottomBarItem.settingsWidget);
       aliveMainWidgets.add(bottomBarItem.aliveMainWidget);
     }
@@ -63,7 +56,7 @@ const List<BottomBarItem> _bottomBarItems = [
     WelcomePage(),
     null,
     'Welcome',
-    'Welcome to hapi!',
+    'Welcome tab',
     Icons.brightness_3_outlined,
   ),
   BottomBarItem(
@@ -89,7 +82,7 @@ const List<BottomBarItem> _bottomBarItems = [
   ),
   BottomBarItem(
     DemoPage4MenuSettings(),
-    SizedBox(height: 150, child: T('Tab Settings Area', tsWi)), // Settings UI
+    SizedBox(height: 150, child: T('Tab Settings Area', tsWiB)), // Settings UI
     'Settings',
     'How to change settings',
     Icons.settings_applications_outlined,
@@ -102,10 +95,10 @@ const List<BottomBarItem> _bottomBarItems = [
     Icons.rotate_90_degrees_ccw_outlined,
   ),
   BottomBarItem(
-    SignInUI(),
+    SignInUpUI(),
     null,
     'Sign In',
-    'Sign in to the app',
+    'Start hapi',
     Icons.perm_identity_outlined,
   ),
 ];
@@ -206,37 +199,6 @@ class WelcomePage extends StatelessWidget {
                     ],
                   ),
                 ),
-                // const SizedBox(height: hTextGR),
-                // RichText(
-                //   text: TextSpan(
-                //     style: context.textTheme.headline6,
-                //     children: [
-                //       TextSpan(
-                //         text: 'Start the interactive tutorial'.tr,
-                //         style: const TextStyle(
-                //           color: AppThemes.hyperlink,
-                //           fontWeight: FontWeight.bold,
-                //           decoration: TextDecoration.underline,
-                //         ),
-                //         recognizer: TapGestureRecognizer()
-                //           ..onTap = () => BottomBarMenu.animateToPage(_navPage, 1),
-                //       ),
-                //     ],
-                //   ),
-                // ),
-                // const SizedBox(height: hTextGR),
-                // RichText(
-                //   text: TextSpan(
-                //     style: context.textTheme.headline6,
-                //     children: [
-                //       TextSpan(
-                //         text: 'Skip the tutorial',
-                //         recognizer: TapGestureRecognizer()
-                //           ..onTap = () => BottomBarMenu.animateToPage(_navPage, 6),
-                //       ),
-                //     ],
-                //   ),
-                // ),
                 const SizedBox(height: hTextGR),
                 Row(
                   children: [
@@ -310,58 +272,26 @@ class DemoPage1TabSwipe extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 if (OnboardUI.tabChangedByTabTap || OnboardUI.tabChangedBySwipe)
-                  T('Nice, you changed tabs and completed a tutorial task!', ts,
-                      h: hText),
-                // if (MainC.to.isSignedIn) const SizedBox(height: hTextGR),
-                // if (MainC.to.isSignedIn)
-                //   const T('Please note, Tutorial tasks start as red text.', tsRe,
-                //       h: hText),
-                // if (MainC.to.isSignedIn) const SizedBox(height: hText),
-                // if (MainC.to.isSignedIn)
-                //   const T('Tutorial tasks start as red text.', tsRe, h: hText),
-                // if (MainC.to.isSignedIn) const SizedBox(height: hText),
-                // if (MainC.to.isSignedIn)
-                //   const T('When completed, they turn green.', tsGr, h: hText),
-                // if (MainC.to.isSignedIn) const SizedBox(height: hTextGR),
-                // if (MainC.to.isSignedIn)
-                //   T('If stuck, hold down buttons for tips or skip ahead.', ts,
-                //       h: hText),
-                // if (MainC.to.isSignedIn) const SizedBox(height: hText),
-                // if (MainC.to.isSignedIn)
-                //   T('On mobile devices, try using only your right hand.', ts,
-                //       h: hText),
-                // if (MainC.to.isSignedIn) const SizedBox(height: hText),
+                  T('Nice, you just completed a tutorial task!', ts, h: hText),
                 if (MainC.to.isSignedIn) T("Let's begin!", ts, h: hText),
                 const SizedBox(height: hTextGR),
-                T('Use tabs to jump between related features.', ts, h: hText),
-                const SizedBox(height: hTextGR),
-                Row(
-                  mainAxisAlignment: LangC.to.axisStart,
-                  children: [
-                    const SizedBox(width: wBullet1),
-                    const Icon(Icons.circle, size: iconSize),
-                    const SizedBox(
-                        width: wIconGap), // gap between icon and text
-                    T(
-                      'To change tabs:',
-                      w: width - wBullet1 - iconSize - wIconGap,
-                      h: hText,
-                      ts,
-                      alignment: LangC.to.centerLeft,
-                    ),
-                  ],
+                T(
+                  'You can switch tabs in two ways:',
+                  w: width - wBullet1 - iconSize - wIconGap,
+                  h: hText,
+                  ts,
+                  alignment: LangC.to.centerLeft,
                 ),
                 const SizedBox(height: hText),
                 Row(
                   mainAxisAlignment: LangC.to.axisStart,
                   children: [
-                    const SizedBox(width: wBullet2),
-                    const Icon(Icons.remove, size: iconSize),
-                    const SizedBox(
-                        width: wIconGap), // gap between icon and text
+                    const SizedBox(width: wBullet1),
+                    const Icon(Icons.circle, size: iconSize),
+                    const SizedBox(width: wIconGap), // icon and text gap
                     T(
                       'Tap a tab',
-                      w: width - wBullet2 - iconSize - wIconGap,
+                      w: width - wBullet1 - iconSize - wIconGap,
                       h: hText,
                       OnboardUI.tabChangedByTabTap ? tsGr : tsRe,
                       alignment: LangC.to.centerLeft,
@@ -372,13 +302,12 @@ class DemoPage1TabSwipe extends StatelessWidget {
                 Row(
                   mainAxisAlignment: LangC.to.axisStart,
                   children: [
-                    const SizedBox(width: wBullet2),
-                    const Icon(Icons.remove, size: iconSize),
-                    const SizedBox(
-                        width: wIconGap), // gap between icon and text
+                    const SizedBox(width: wBullet1),
+                    const Icon(Icons.circle, size: iconSize),
+                    const SizedBox(width: wIconGap), // icon and text gap
                     T(
                       'Swipe left or right',
-                      w: width - wBullet2 - iconSize - wIconGap,
+                      w: width - wBullet1 - iconSize - wIconGap,
                       h: hText,
                       OnboardUI.tabChangedBySwipe ? tsGr : tsRe,
                       alignment: LangC.to.centerLeft,
@@ -386,9 +315,7 @@ class DemoPage1TabSwipe extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: hTextGR * 2),
-                T('Optional', tsB, h: hText),
-                const SizedBox(height: hText),
-                T('On mobile devices, use only your right hand.', ts, h: hText),
+                T('OPTIONAL: Complete the tutorial one handed.', ts, h: hText),
               ],
             ),
           ),
@@ -416,13 +343,10 @@ class DemoPage2TabScroll extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               SizedBox(height: hAllTextBorder),
-              T('Tabs are not always needed and take up space.', h: hText, ts),
-              const SizedBox(height: hTextGR),
               T(
-                'hapi has a solution, try this now:',
+                'Tabs are not always needed and take up space, try this:',
                 h: hText,
                 ts,
-                alignment: LangC.to.centerLeft,
               ),
               const SizedBox(height: hText),
               Row(
@@ -496,10 +420,8 @@ class DemoPage3MenuIntro extends StatelessWidget {
             builder: (c) => Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                T('The menu is in the bottom right corner.', ts, h: hText),
-                const SizedBox(height: hTextGR),
                 T(
-                  'Use the menu to:',
+                  'The menu is on the bottom right, use it to:',
                   ts,
                   h: hText,
                   alignment: LangC.to.centerLeft,
@@ -513,7 +435,7 @@ class DemoPage3MenuIntro extends StatelessWidget {
                     const SizedBox(
                         width: wIconGap), // gap between icon and text
                     T(
-                      'Switch to a different hapi feature',
+                      'Switch hapi features',
                       w: width - wBullet1 - iconSize - wIconGap,
                       h: hText,
                       OnboardUI.menuUsedToSwitchFeatures ? tsGr : tsRe,
@@ -531,23 +453,6 @@ class DemoPage3MenuIntro extends StatelessWidget {
                         width: wIconGap), // gap between icon and text
                     T(
                       "Don't worry, the tutorial won't let you leave",
-                      w: width - wBullet2 - iconSize - wIconGap,
-                      h: hText,
-                      ts,
-                      alignment: LangC.to.centerLeft,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: hText),
-                Row(
-                  mainAxisAlignment: LangC.to.axisStart,
-                  children: [
-                    const SizedBox(width: wBullet2),
-                    const Icon(Icons.remove, size: iconSize),
-                    const SizedBox(
-                        width: wIconGap), // gap between icon and text
-                    T(
-                      'Hold down a button to see what it does',
                       w: width - wBullet2 - iconSize - wIconGap,
                       h: hText,
                       ts,
@@ -598,25 +503,8 @@ class DemoPage3MenuIntro extends StatelessWidget {
                     const SizedBox(
                         width: wIconGap), // gap between icon and text
                     T(
-                      'Change settings',
+                      'Change setting (explained next)',
                       w: width - wBullet1 - iconSize - wIconGap,
-                      h: hText,
-                      ts,
-                      alignment: LangC.to.centerLeft,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: hText),
-                Row(
-                  mainAxisAlignment: LangC.to.axisStart,
-                  children: [
-                    const SizedBox(width: wBullet2),
-                    const Icon(Icons.remove, size: iconSize),
-                    const SizedBox(
-                        width: wIconGap), // gap between icon and text
-                    T(
-                      "We'll do this next",
-                      w: width - wBullet2 - iconSize - wIconGap,
                       h: hText,
                       ts,
                       alignment: LangC.to.centerLeft,
@@ -649,7 +537,7 @@ class DemoPage4MenuSettings extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 T(
-                  'Two type of settings are found in the menu:',
+                  'The menu has two type of settings, find them:',
                   ts,
                   h: hText,
                   alignment: LangC.to.centerLeft,
@@ -660,31 +548,12 @@ class DemoPage4MenuSettings extends StatelessWidget {
                   children: [
                     const SizedBox(width: wBullet1),
                     const Icon(Icons.circle, size: iconSize),
-                    const SizedBox(
-                        width: wIconGap / 2), // gap between icon and text
+                    const SizedBox(width: wIconGap / 2), // icon and text gap
                     const Icon(Icons.settings_rounded, size: 28),
-                    const SizedBox(
-                        width: wIconGap / 2), // gap between icon and text
+                    const SizedBox(width: wIconGap / 2), // icon and text gap
                     T(
                       'Global settings',
                       w: (width - wBullet1 - iconSize - wIconGap) - 28,
-                      h: hText,
-                      ts,
-                      alignment: LangC.to.centerLeft,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: hText),
-                Row(
-                  mainAxisAlignment: LangC.to.axisStart,
-                  children: [
-                    const SizedBox(width: wBullet2),
-                    const Icon(Icons.remove, size: iconSize),
-                    const SizedBox(
-                        width: wIconGap), // gap between icon and text
-                    T(
-                      'View the global settings page',
-                      w: width - wBullet2 - iconSize - wIconGap,
                       h: hText,
                       OnboardUI.menuViewedSettingsGlobal ? tsGr : tsRe,
                       alignment: LangC.to.centerLeft,
@@ -697,31 +566,12 @@ class DemoPage4MenuSettings extends StatelessWidget {
                   children: [
                     const SizedBox(width: wBullet1),
                     const Icon(Icons.circle, size: iconSize),
-                    const SizedBox(
-                        width: wIconGap / 2), // gap between icon and text
+                    const SizedBox(width: wIconGap / 2), // icon and text gap
                     const Icon(Icons.settings_applications_outlined, size: 28),
-                    const SizedBox(
-                        width: wIconGap / 2), // gap between icon and text
+                    const SizedBox(width: wIconGap / 2), // icon and text gap
                     T(
                       'Tab specific settings',
                       w: (width - wBullet1 - iconSize - wIconGap) - 28,
-                      h: hText,
-                      ts,
-                      alignment: LangC.to.centerLeft,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: hText),
-                Row(
-                  mainAxisAlignment: LangC.to.axisStart,
-                  children: [
-                    const SizedBox(width: wBullet2),
-                    const Icon(Icons.remove, size: iconSize),
-                    const SizedBox(
-                        width: wIconGap), // gap between icon and text
-                    T(
-                      "View this tab's settings area",
-                      w: width - wBullet2 - iconSize - wIconGap,
                       h: hText,
                       OnboardUI.menuViewedSettingsTab ? tsGr : tsRe,
                       alignment: LangC.to.centerLeft,
@@ -737,7 +587,7 @@ class DemoPage4MenuSettings extends StatelessWidget {
                     const SizedBox(
                         width: wIconGap), // gap between icon and text
                     T(
-                      'Only active tabs with settings show this icon',
+                      'Appears if the selected tab has settings',
                       w: width - wBullet2 - iconSize - wIconGap,
                       h: hText,
                       ts,
@@ -769,43 +619,27 @@ class DemoPage5LandscapeZoom extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 T(
-                  'hapi has lots of pages to explore.',
+                  'hapi has many features to explore.',
                   w: width - wBullet1 - iconSize - wIconGap,
                   h: hText,
                   ts,
                 ),
                 const SizedBox(height: hText),
                 T(
-                  'They all work in portrait and landscape mode.',
-                  w: width - wBullet1 - iconSize - wIconGap,
-                  h: hText,
-                  ts,
-                ),
-                const SizedBox(height: hText),
-                T(
-                  'Try both orientations to see what you like more.',
-                  w: width - wBullet1 - iconSize - wIconGap,
-                  h: hText,
-                  ts,
-                ),
-                const SizedBox(height: hText),
-                T(
-                  'If your device supports screen rotation, rotate it.',
+                  'If your device supports it, rotate it now.',
                   w: width - wBullet1 - iconSize - wIconGap,
                   h: hText,
                   OnboardUI.rotatedScreen ? tsGr : tsRe,
                 ),
                 const SizedBox(height: hText),
                 T(
-                  'Depending on your screen size, and some other factors, you may prefer to view some hapi features in landscape mode.',
+                  'On many devices, this sentence will look small in portrait orientation and normal in landscape orientation.',
                   w: width - wBullet1 - iconSize - wIconGap,
                   h: hText,
                   ts,
                 ),
-                const SizedBox(height: hTextGR * 3),
-                T("That's it!", ts, h: hText),
-                const SizedBox(height: hTextGR),
-                T('Go to the next tab to start hapi.', h: hText, ts),
+                const SizedBox(height: hTextGR * 2),
+                T("That's it! You are ready to start hapi.", ts, h: hText),
               ],
             ),
           ),

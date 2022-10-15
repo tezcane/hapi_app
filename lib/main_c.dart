@@ -148,7 +148,7 @@ class MainC extends GetxHapi {
       update(); // notify watchers
     } else {
       // TODO only do this to fix slide menu for now
-      MenuC.to.navigateToNavPageResetFAB(MenuC.to.getLastNavPage());
+      MenuC.to.navigateToNavPageAndResetFAB();
     }
   }
 
@@ -265,10 +265,10 @@ const TS tsN = TS(AppThemes.ldTextColor);
 const TS tsRe = TS(Colors.red);
 const TS tsGr = TS(Colors.green);
 TS get ts => Get.isDarkMode ? tsWi : _tsBl; // TODO make constant
-TS get tsB => Get.isDarkMode ? _tsWiB : _tsBlB;
+TS get tsB => Get.isDarkMode ? tsWiB : _tsBlB;
 const TS tsWi = TS(Colors.white);
+const TS tsWiB = TS(Colors.white, fontWeight: FontWeight.bold);
 const TS _tsBl = TS(Colors.black);
-const TS _tsWiB = TS(Colors.white, fontWeight: FontWeight.bold);
 const TS _tsBlB = TS(Colors.black, fontWeight: FontWeight.bold);
 
 // TODO change to TK - Translate tk, and TV - Translate tvue
@@ -377,7 +377,7 @@ String at(String tkTemplate, List<String> tksToInsert) {
 showSnackBar(
   String tkTitle,
   String tkMsg, {
-  int durationSec = 3,
+  int durationSec = 4,
   bool isRed = false,
 }) {
   Color? colorText = Get.theme.snackBarTheme.actionTextColor;

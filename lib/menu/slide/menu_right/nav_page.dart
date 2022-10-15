@@ -66,7 +66,7 @@ extension EnumUtil on NavPage {
       case NavPage.a_Asyila:
         return 'Earn rewards for this life and the next'.tr;
       case NavPage.Mithal:
-        return 'This tutorial is a hapi feature page example.';
+        return 'This hapi tutorial and sign in page.';
     }
   }
 }

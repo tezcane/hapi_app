@@ -73,7 +73,7 @@ class _MenuBottomState extends State<MenuBottom>
                           visible: cMenu.isMenuShowingSettings,
                           child: widget.settingsWidgets[
                                   c.getLastIdx(widget.navPage)] ??
-                              Column(),
+                              const SizedBox(),
                         );
                       }),
                     ),
