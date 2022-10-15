@@ -190,7 +190,6 @@ class _MenuRightState extends State<MenuRight> {
 /// A [MenuItem]/A button for the [MenuRight]
 class MenuItem extends StatelessWidget {
   const MenuItem({
-    Key? key,
     required this.index,
     required this.length,
     required this.width,
@@ -200,7 +199,7 @@ class MenuItem extends StatelessWidget {
     required this.color,
     required this.onTap,
     required this.child,
-  }) : super(key: key);
+  });
 
   /// `index` for the [MenuItem]
   final int index;
@@ -259,12 +258,7 @@ class MenuItem extends StatelessWidget {
         alignment: Alignment.bottomRight, // was topRight
         child: Material(
           color: color,
-          child: InkWell(
-            onTap: () {
-              onTap();
-            },
-            child: child,
-          ),
+          child: InkWell(onTap: () => onTap(), child: child),
         ),
       ),
     );

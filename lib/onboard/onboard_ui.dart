@@ -165,19 +165,14 @@ class WelcomePage extends StatelessWidget {
                 RichText(
                   text: TextSpan(
                     style: context.textTheme.headline5,
-                    children: const [
-                      TextSpan(text: 'Welcome to hapi!'),
-                    ],
+                    children: const [TextSpan(text: 'Welcome to hapi!')],
                   ),
                 ),
                 const SizedBox(height: hTextGR),
                 SizedBox(
                   height: 55,
                   child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 20,
-                      right: 20,
-                    ),
+                    padding: const EdgeInsets.only(left: 20, right: 20),
                     child: LangListUI(width - 60, false),
                   ),
                 ),
@@ -225,12 +220,7 @@ class WelcomePage extends StatelessWidget {
                     Column(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        T(
-                          'Skip the tutorial',
-                          w: width / 3,
-                          h: hText,
-                          ts,
-                        ),
+                        T('Skip the tutorial', w: width / 3, h: hText, ts),
                         const SizedBox(height: hText / 2),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -432,8 +422,7 @@ class DemoPage3MenuIntro extends StatelessWidget {
                   children: [
                     const SizedBox(width: wBullet1),
                     const Icon(Icons.circle, size: iconSize),
-                    const SizedBox(
-                        width: wIconGap), // gap between icon and text
+                    const SizedBox(width: wIconGap), // icon gap text
                     T(
                       'Switch hapi features',
                       w: width - wBullet1 - iconSize - wIconGap,
@@ -449,8 +438,7 @@ class DemoPage3MenuIntro extends StatelessWidget {
                   children: [
                     const SizedBox(width: wBullet2),
                     const Icon(Icons.remove, size: iconSize),
-                    const SizedBox(
-                        width: wIconGap), // gap between icon and text
+                    const SizedBox(width: wIconGap), // icon gap text
                     T(
                       "Don't worry, the tutorial won't let you leave",
                       w: width - wBullet2 - iconSize - wIconGap,
@@ -466,8 +454,7 @@ class DemoPage3MenuIntro extends StatelessWidget {
                   children: [
                     const SizedBox(width: wBullet1),
                     const Icon(Icons.circle, size: iconSize),
-                    const SizedBox(
-                        width: wIconGap), // gap between icon and text
+                    const SizedBox(width: wIconGap), // icon gap text
                     T(
                       'View the about page',
                       w: width - wBullet1 - iconSize - wIconGap,
@@ -483,8 +470,7 @@ class DemoPage3MenuIntro extends StatelessWidget {
                   children: [
                     const SizedBox(width: wBullet1),
                     const Icon(Icons.circle, size: iconSize),
-                    const SizedBox(
-                        width: wIconGap), // gap between icon and text
+                    const SizedBox(width: wIconGap), // icon gap text
                     T(
                       'Share hapi with others',
                       w: width - wBullet1 - iconSize - wIconGap,
@@ -500,8 +486,7 @@ class DemoPage3MenuIntro extends StatelessWidget {
                   children: [
                     const SizedBox(width: wBullet1),
                     const Icon(Icons.circle, size: iconSize),
-                    const SizedBox(
-                        width: wIconGap), // gap between icon and text
+                    const SizedBox(width: wIconGap), // icon gap text
                     T(
                       'Change setting (explained next)',
                       w: width - wBullet1 - iconSize - wIconGap,
@@ -526,8 +511,6 @@ class DemoPage4MenuSettings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final double width = w(context);
-
-//  final double h2 = (h(context) / 2) - (((hText * 11) + ((hTextGR) * 2)) / 2);
 
     return Center(
       child: SingleChildScrollView(
@@ -584,8 +567,7 @@ class DemoPage4MenuSettings extends StatelessWidget {
                   children: [
                     const SizedBox(width: wBullet2),
                     const Icon(Icons.remove, size: iconSize),
-                    const SizedBox(
-                        width: wIconGap), // gap between icon and text
+                    const SizedBox(width: wIconGap), // icon gap text
                     T(
                       'Appears if the selected tab has settings',
                       w: width - wBullet2 - iconSize - wIconGap,

@@ -7,7 +7,6 @@ import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 
 class MenuBottom extends StatefulWidget {
   const MenuBottom({
-    Key? key,
     required this.navPage,
     required this.foregroundPage,
     required this.bottomWidget,
@@ -17,8 +16,7 @@ class MenuBottom extends StatefulWidget {
     this.slideAnimationDuration = const Duration(milliseconds: 600),
     this.openAnimationCurve = const ElasticOutCurve(0.9),
     this.closeAnimationCurve = const ElasticInCurve(0.9),
-  })  : assert(scaleHeight >= 40),
-        super(key: key);
+  }) : assert(scaleHeight >= 40);
 
   final NavPage navPage;
   final Widget foregroundPage; // where the app/navigation lives
@@ -175,9 +173,8 @@ class _SlideState extends State<SlideAnimation>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return SlideTransition(position: offset, child: widget.child);
-  }
+  Widget build(BuildContext context) =>
+      SlideTransition(position: offset, child: widget.child);
 
   @override
   void dispose() {
