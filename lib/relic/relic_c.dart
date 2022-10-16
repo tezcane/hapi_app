@@ -95,8 +95,6 @@ class RelicC extends GetxHapi {
       _relicSets.add(relicSet); // must come before next line
       relicSet.filterList = et.initRelicSetFilters();
 
-      print('asdf got here 2');
-
       // init ajrLevels to be used in DB access
       Map<int, int> relicIdMap = {};
       for (int relicId = 0; relicId < relicSet.relics.length; relicId++) {

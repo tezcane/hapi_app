@@ -8,16 +8,24 @@ import 'package:hapi/quest/active/athan/z.dart';
 import 'package:hapi/quest/active/zaman_c.dart';
 import 'package:hapi/service/db.dart';
 
-const int ajrXMissed = 0; // shows that they missed all quests
-// const int ajr1Common = 1;
-// const int ajr2Uncommon = 2;
-// const int ajr3Rare = 3;
-// const int ajr4Epic = 4;
-// const int ajr5Legendary = 5;
-// const int ajr6Mythic = 6;
-const int ajrXTimeNotInYet = 7; // so can show blank around ring
+/// Bit Completion Type
+enum BitType {
+  DONE,
+  SKIP,
+  MISS,
+}
 
-/// ONLY NEW VALUES CAN BE ADDED TO PRESERVE ENUM IN DB:
+/// Used to allow user to complete an Active Quest or not.
+enum QUEST_STATE {
+  DONE,
+  SKIP,
+  MISS,
+  NOT_ACTIVE_YET,
+  ACTIVE_CURR_QUEST,
+  ACTIVE,
+}
+
+/// These are all the active quests shown on the UI.
 enum QUEST {
   FAJR_MUAKB, // Muakaddah Before
   FAJR_FARD,
@@ -63,22 +71,6 @@ enum QUEST {
   LAYL_SLEEP,
   LAYL_TAHAJJUD,
   LAYL_WITR,
-}
-
-/// Bit Completion Type
-enum BitType {
-  DONE,
-  SKIP,
-  MISS,
-}
-
-enum QUEST_STATE {
-  DONE,
-  SKIP,
-  MISS,
-  NOT_ACTIVE_YET,
-  ACTIVE_CURR_QUEST,
-  ACTIVE,
 }
 
 extension EnumUtil on QUEST {
@@ -159,41 +151,41 @@ extension EnumUtil on QUEST {
     Z zRow = getQuestZRow();
 
     // if salah row is not pinned, NOT_ACTIVE_YET
-    bool isNotInPinnedSalahRow = !ZamanC.to.isSalahRowPinned(zRow);
+    bool isNotInPinnedSalahRow = !ZamanC.to.isZRowPinned(zRow);
     if (isNotInPinnedSalahRow) return QUEST_STATE.NOT_ACTIVE_YET;
 
-    Z currZ = ZamanC.to.currZ;
+    // if we got here we know zRow is pinned
 
     if (ajrC.isQuestAtCurrIdx(this)) {
-      // Edge case, can't do Maghrib tasks until maghrib time comes in. We need
-      // this since Sunsetting time is active/pinned on maghrib zRow before
-      // maghrib times comes in, NOT_ACTIVE_YET
-      if (this == QUEST.MAGHRIB_FARD && currZ != Z.Maghrib) {
-        return QUEST_STATE.NOT_ACTIVE_YET;
+      // Special logic used to handle these quests, see below switch statement
+      if (this == QUEST.MAGHRIB_FARD ||
+          this == QUEST.DHUHA_ISHRAQ ||
+          this == QUEST.DHUHA_DHUHA) {
       } else {
         // Normal, if current quest (next in line) and pinned, ACTIVE_CURR_QUEST
         return QUEST_STATE.ACTIVE_CURR_QUEST;
       }
     }
 
+    // For salah rows (Fajr, Dhuhr, Asr, Maghrib, Isha):
     // find out if the salah's      for this pinned row are complete or not
     // find out if adhkar and dhikr for this pinned row are complete or not
-    bool salahQuestsAreComplete = true;
-    bool adhkarAndThikrAreComplete = true;
+    bool isSalahRowCompletedSalah = true;
+    bool isSalahRowCompletedAdhkarAndThikr = true;
     List<QUEST> zRowQuests = zRow.getZRowQuests();
     for (QUEST q in zRowQuests) {
       if (q.isFard || q.isMuak || q.isNafl || q.isLayl) {
         if (ajrC.isNotComplete(q)) {
-          salahQuestsAreComplete = false;
-          adhkarAndThikrAreComplete = false; // can't be true either
+          isSalahRowCompletedSalah = false;
+          isSalahRowCompletedAdhkarAndThikr = false; // can't be true too
           break;
         }
       } else if (q.isAdhkar || q.isFardThikr) {
-        if (ajrC.isNotComplete(q)) adhkarAndThikrAreComplete = false;
+        if (ajrC.isNotComplete(q)) isSalahRowCompletedAdhkarAndThikr = false;
       }
     }
 
-    // if we got here: Quest's zRow is Pinned but it's not the current quest
+    // if we got here: Quest's zRow is Pinned but it's not the current quest yet
     switch (this) {
       // FARD, MUAK, NAFL, and LAYL quests must be done sequentially
       case QUEST.FAJR_MUAKB:
@@ -204,7 +196,6 @@ extension EnumUtil on QUEST {
       case QUEST.DHUHR_NAFLA:
       case QUEST.ASR_NAFLB:
       case QUEST.ASR_FARD:
-      case QUEST.MAGHRIB_FARD:
       case QUEST.MAGHRIB_MUAKA:
       case QUEST.MAGHRIB_NAFLA:
       case QUEST.ISHA_NAFLB:
@@ -225,7 +216,7 @@ extension EnumUtil on QUEST {
       case QUEST.KARAHAT_SUNSET:
         return QUEST_STATE.ACTIVE;
 
-      // adhkar and thikr must wait until salahQuestsAreComplete
+      // adhkar and thikr must wait until isSalahRowCompletedSalah
       case QUEST.MORNING_ADHKAR:
       case QUEST.EVENING_ADHKAR:
       case QUEST.FAJR_THIKR:
@@ -233,7 +224,7 @@ extension EnumUtil on QUEST {
       case QUEST.ASR_THIKR:
       case QUEST.MAGHRIB_THIKR:
       case QUEST.ISHA_THIKR:
-        if (salahQuestsAreComplete) return QUEST_STATE.ACTIVE;
+        if (isSalahRowCompletedSalah) return QUEST_STATE.ACTIVE;
         return QUEST_STATE.NOT_ACTIVE_YET;
 
       // Salah duas wait until salah, adhkar, and thikr quests are complete
@@ -242,18 +233,28 @@ extension EnumUtil on QUEST {
       case QUEST.ASR_DUA:
       case QUEST.MAGHRIB_DUA:
       case QUEST.ISHA_DUA:
-        if (adhkarAndThikrAreComplete) return QUEST_STATE.ACTIVE;
+        if (isSalahRowCompletedAdhkarAndThikr) return QUEST_STATE.ACTIVE;
         return QUEST_STATE.NOT_ACTIVE_YET;
 
-      // ishraq only active during ishraq time
-      case QUEST.DHUHA_ISHRAQ:
-        // Karahat sunrise not complete
-        if (currZ == Z.Ishraq) return QUEST_STATE.ACTIVE;
+      // Edge case, can't do Maghrib task until Maghrib time comes in. We need
+      // this since Sunsetting time is active/pinned on Maghrib zRow before
+      // Maghrib times comes in (Karahat sunset completed before time came in).
+      case QUEST.MAGHRIB_FARD:
+        if (ZamanC.to.currZ == Z.Maghrib) return QUEST_STATE.ACTIVE;
         return QUEST_STATE.NOT_ACTIVE_YET;
-      // Duha active anytime during ishraq and duha only
+
+      // Edge case, can't do Ishraq task until Ishraq time comes in. We need
+      // this since Ishraq time is active/pinned on Dhuha zRow before
+      // Ishraq times comes in (Karahat sunrise completed before time came in).
+      case QUEST.DHUHA_ISHRAQ:
+        if (ZamanC.to.currZ == Z.Ishraq) return QUEST_STATE.ACTIVE;
+        return QUEST_STATE.NOT_ACTIVE_YET;
+
+      // Edge case, can't do Dhuha task until Dhuha time comes in. We need
+      // this since Dhuha time is active/pinned on Dhuha zRow before
+      // Dhuha times comes in (Ishraq was completed before time came in).
       case QUEST.DHUHA_DHUHA:
-        // Karahat sunrise not complete
-        if (currZ == Z.Ishraq || currZ == Z.Dhuha) return QUEST_STATE.ACTIVE;
+        if (ZamanC.to.currZ == Z.Dhuha) return QUEST_STATE.ACTIVE;
         return QUEST_STATE.NOT_ACTIVE_YET;
     }
   }
@@ -497,7 +498,8 @@ class ActiveQuestsAjrC extends GetxHapi {
       for (QUEST q in quests) {
         if (isMiss(q)) missCount++;
       }
-      ajrCount = missCount == quests.length ? ajrXMissed : ajrXTimeNotInYet;
+      // 0=ajrXMissed, 7=ajrXTimeNotInYet:
+      ajrCount = missCount == quests.length ? 0 : 7;
     } else {
       if (quests.length < 6) {
         int ajrStartingPoint = 6 - quests.length;

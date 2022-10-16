@@ -222,7 +222,7 @@ class _Sliv extends StatelessWidget {
 class SalahRow extends StatelessWidget {
   const SalahRow(this.aqC, this.z);
   final ActiveQuestsC aqC;
-  final Z z;
+  final Z z; // Note: z is always a zRow.
 
   static const TS tsFard = TS(AppThemes.ajr2Uncommon);
   static const TS tsMuak = TS(AppThemes.ajr4Epic);
@@ -235,7 +235,7 @@ class SalahRow extends StatelessWidget {
     final Color fg = cf(context); // color foreground
     final TextStyle textStyle = Theme.of(context).textTheme.headline6!;
 
-    return ZamanC.to.isSalahRowPinned(z) && aqC.showPinnedSalahRow
+    return ZamanC.to.isZRowPinned(z) && aqC.showPinnedSalahRow
         ? MultiSliver(
             // salah actions and results are pinned under headers
             children: [
@@ -388,7 +388,7 @@ class SalahRow extends StatelessWidget {
 
     // Fajr, Dhuhr, Asr, Isha, Middle Of Night and Last 3rd of Night don't have
     // SideTimes that need to be highlighted, so isSalahRowPinned == isBold:
-    bool isPinned = ZamanC.to.isSalahRowPinned(z);
+    bool isPinned = ZamanC.to.isZRowPinned(z);
     bool isBold = isPinned;
 
     // However, for Duha and Maghrib they have multiple Z times (SideTimes),

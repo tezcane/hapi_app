@@ -165,7 +165,7 @@ class WelcomePage extends StatelessWidget {
                 RichText(
                   text: TextSpan(
                     style: context.textTheme.headline5,
-                    children: const [TextSpan(text: 'Welcome to hapi!')],
+                    children: [TextSpan(text: 'Welcome to hapi!'.tr)],
                   ),
                 ),
                 const SizedBox(height: hTextGR),
@@ -182,7 +182,7 @@ class WelcomePage extends StatelessWidget {
                     style: context.textTheme.headline6,
                     children: [
                       TextSpan(
-                        text: 'hapi is a fun and useful Islamic lifestyle app.'
+                        text: 'hapi is a useful and fun Islamic lifestyle app.'
                                 .tr +
                             ' ' +
                             "It's meant to elevate Muslims, in this life and the next."

@@ -306,25 +306,25 @@ class ZamanC extends GetxHapi {
   /// quests for that row are active. It also does not meant that it should be
   /// highlighted on UI as there are special cases on Duha and Maghrib to
   /// bold/highlight karahat cells instead of the header.
-  bool isSalahRowPinned(Z z) {
-    Map<Z, String> zs = {z: ''}; // add Z here so not inserted everywhere below
+  bool isZRowPinned(Z z) {
+    Set<Z> zs = {z}; // add Z here so not inserted everywhere below
 
     switch (z) {
       case Z.Fajr:
         break;
       case Z.Dhuha:
-        zs.addAll({Z.Shuruq: '', Z.Ishraq: '', Z.Dhuha: '', Z.Istiwa: ''});
+        zs.addAll({Z.Shuruq, Z.Ishraq, Z.Dhuha, Z.Istiwa});
         break;
       case Z.Dhuhr:
         break;
       case Z.Asr:
         // if Asr ibadah not done, give until sunset (maghrib) to complete
         // Asr's EVENING ADHKAR, DHIKR and DUA only. Fard ends at Karahat time.
-        if (!ActiveQuestsAjrC.to.isAsrComplete) zs[Z.Ghurub] = '';
+        if (!ActiveQuestsAjrC.to.isAsrComplete) zs.add(Z.Ghurub);
         break;
       case Z.Maghrib:
         // if asr ibadah done, pin maghrib row which has Karahat time there
-        if (ActiveQuestsAjrC.to.isAsrComplete) zs[Z.Ghurub] = '';
+        if (ActiveQuestsAjrC.to.isAsrComplete) zs.add(Z.Ghurub);
         break;
       case Z.Isha:
         // if isha ibadah done, then we move to Layl times right away (we don't
@@ -338,7 +338,7 @@ class ZamanC extends GetxHapi {
         return l.E('isSalahRowPinned: Invalid Zaman "$z" given');
     }
 
-    return zs.containsKey(_currZ); // true= zaman is active, false inactive
+    return zs.contains(_currZ); // true= zaman is active, false inactive
   }
 
   /// Break this out from isSalahRowPinned() to optimize since called so much.
