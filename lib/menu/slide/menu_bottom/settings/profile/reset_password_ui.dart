@@ -34,7 +34,7 @@ class ResetPasswordUI extends StatelessWidget {
                   const SizedBox(height: 48.0),
                   FormInputFieldWithIcon(
                     controller: emailController,
-                    iconPrefix: Icons.email,
+                    prefixIcon: Icons.email,
                     tk: 'Email',
                     validator: Validator().email,
                     keyboardType: TextInputType.emailAddress,

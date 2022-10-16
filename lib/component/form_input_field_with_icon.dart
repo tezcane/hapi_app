@@ -13,20 +13,20 @@ import 'package:get/get.dart';
 ///                 onSaved: (value) => print('implement me'),
 ///               ),
 class FormInputFieldWithIcon extends StatelessWidget {
-  const FormInputFieldWithIcon(
-      {required this.controller,
-      required this.iconPrefix,
-      required this.tk,
-      required this.validator,
-      this.keyboardType = TextInputType.text,
-      this.obscureText = false,
-      this.minLines = 1,
-      this.maxLines,
-      required this.onChanged,
-      required this.onSaved});
-
+  const FormInputFieldWithIcon({
+    required this.controller,
+    required this.prefixIcon,
+    required this.tk,
+    required this.validator,
+    this.keyboardType = TextInputType.text,
+    this.obscureText = false,
+    this.minLines = 1,
+    this.maxLines,
+    required this.onChanged,
+    required this.onSaved,
+  });
   final TextEditingController controller;
-  final IconData iconPrefix;
+  final IconData prefixIcon;
   final String tk;
   final String? Function(String?)? validator;
   final TextInputType keyboardType;
@@ -41,7 +41,7 @@ class FormInputFieldWithIcon extends StatelessWidget {
     return TextFormField(
       decoration: InputDecoration(
         filled: true,
-        prefixIcon: Icon(iconPrefix),
+        prefixIcon: Icon(prefixIcon),
         labelText: tk.tr,
       ),
       controller: controller,

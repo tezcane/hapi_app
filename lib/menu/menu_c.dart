@@ -104,8 +104,8 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
     if (_subPageStack.isNotEmpty &&
         _subPageStack.last == SubPage.Update_Profile) {
       AuthC c = AuthC.to;
-      c.nameController.text = c.firestoreUser.value!.name;
-      c.emailController.text = c.firestoreUser.value!.email;
+      c.nameController.text = c.fsUser.value!.name;
+      c.emailController.text = c.fsUser.value!.email;
     }
 
     /// pop the page out of the stack
@@ -259,7 +259,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
 
   // TODO put this on the settings menu too,
   // TODO POSSIBLE HAPI QUEST, finish tutorial, then finish right hand only.
-  navigateToOnboardPage() => _navigateToNavPage(NavPage.Mithal);
+  navigateToNavPageOnboardUI() => _navigateToNavPage(NavPage.Mithal);
 
   _navigateToNavPage(
     NavPage navPage, {

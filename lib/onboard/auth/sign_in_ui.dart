@@ -19,7 +19,7 @@ class SignInUI extends StatelessWidget {
   Widget build(BuildContext context) {
     final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-    AuthC.to.getLastSignedInEmail();
+    AuthC.to.getEmail();
 
     return FabSubPage(
       subPage: SubPage.Sign_Up,
@@ -37,17 +37,17 @@ class SignInUI extends StatelessWidget {
                   const SizedBox(height: 48.0),
                   FormInputFieldWithIcon(
                     controller: AuthC.to.emailController,
-                    iconPrefix: Icons.email,
+                    prefixIcon: Icons.email,
                     tk: 'Email',
                     validator: Validator().email,
                     keyboardType: TextInputType.emailAddress,
-                    onChanged: (value) {},
+                    onChanged: (value) => AuthC.to.storeEmail(),
                     onSaved: (value) => AuthC.to.emailController.text = value!,
                   ),
                   const FormVerticalSpace(),
                   FormInputFieldWithIcon(
                     controller: AuthC.to.passwordController,
-                    iconPrefix: Icons.lock,
+                    prefixIcon: Icons.lock,
                     tk: 'Password',
                     validator: Validator().password,
                     obscureText: true,

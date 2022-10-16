@@ -44,14 +44,15 @@ void main() async {
 
   // TODO cleanup/optimize use Getx bindings?
   const bool permOn = true;
+  Get.put<AuthC>(AuthC(), permanent: permOn);
   Get.put<MainC>(MainC(), permanent: permOn); // should do first
   Get.put<ThemeC>(ThemeC());
   Get.put<LangC>(LangC(), permanent: permOn);
   Get.put<ConnectivityC>(ConnectivityC(), permanent: permOn);
+  Get.put<ZamanC>(ZamanC(), permanent: permOn);
   Get.put<TimeC>(TimeC(), permanent: permOn); // requires ConnectivityC
   Get.put<NavPageC>(NavPageC(), permanent: permOn); // requires LangC, TimeC
   Get.put<MenuC>(MenuC(), permanent: permOn);
-  Get.put<AuthC>(AuthC(), permanent: permOn);
   Get.put<LocationC>(LocationC(), permanent: permOn); // requires TimeC
   Get.put<EventC>(EventC(), permanent: permOn); // requires Auth
   Get.put<RelicC>(RelicC(), permanent: permOn); // requires LangC, EventC, AuthC
@@ -59,7 +60,6 @@ void main() async {
   Get.put<DailyQuestsC>(DailyQuestsC(), permanent: permOn); // requires AuthC
   Get.put<NotificationC>(NotificationC(), permanent: permOn); // requires AuthC
   Get.put<ActiveQuestsC>(ActiveQuestsC(), permanent: permOn); // requires AuthC
-  Get.put<ZamanC>(ZamanC(), permanent: permOn);
   Get.put<ActiveQuestsAjrC>(ActiveQuestsAjrC(), permanent: permOn);
 
   await ThemeC.to.initTheme(); // TODO needed, best place?

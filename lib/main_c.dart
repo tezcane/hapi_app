@@ -111,8 +111,7 @@ class MainC extends GetxHapi {
 
     AuthC.to.signOut(); // Sign out of Auth
 
-    // TODO asdf check onboarding logic
-    MenuC.to.navigateToOnboardPage(); // show Onboarding page
+    MenuC.to.navigateToNavPageOnboardUI();
   }
 
   setOrientation(bool isPortrait) {

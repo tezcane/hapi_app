@@ -25,7 +25,7 @@ class AuthC extends GetxHapi {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   Rxn<User> firebaseUser = Rxn<User>();
-  Rxn<UserModel> firestoreUser = Rxn<UserModel>();
+  Rxn<UserModel> fsUser = Rxn<UserModel>(); // fs= firestore
   bool admin = false;
 
   /// SplashUI has gif timer is used to swap gif to png for hero animation
@@ -56,19 +56,17 @@ class AuthC extends GetxHapi {
 
     firebaseUser.bindStream(user);
 
-    getLastSignedInName();
-    getLastSignedInEmail();
-
     super.onReady();
   }
 
-  String getLastSignedInEmail() {
+  String getEmail() {
     emailController.text = s.rd('lastSignedInEmail') ?? '';
     return emailController.text;
   }
 
-  storeLastSignedInEmail() =>
-      s.wr('lastSignedInEmail', emailController.text.trim());
+  /// This is used when user is onboarding (not signed in), so it is not stored
+  /// only on cleaned data like "storeLastSignedInName".
+  storeEmail() => s.wr('lastSignedInEmail', emailController.text.trim());
 
   String getLastSignedInName() {
     nameController.text = s.rd('lastSignedInName') ?? '';
@@ -103,8 +101,8 @@ class AuthC extends GetxHapi {
     //get user data from firestore
     if (_firebaseUser?.uid != null) {
       s.setUidKey(_firebaseUser!.uid);
-      firestoreUser.bindStream(streamFirestoreUser());
-      await isAdmin();
+      fsUser.bindStream(_streamFirestoreUser()); // TODO bindstream?
+      await awaitUser(); // used to be named await isAdmin();
     }
 
     /// TODO need to detect if user is deleted/banned/not found, etc. here.
@@ -138,20 +136,33 @@ class AuthC extends GetxHapi {
   Stream<User?> get user => _auth.authStateChanges();
 
   /// Streams the firestore user from the firestore collection
-  Stream<UserModel> streamFirestoreUser() {
+  Stream<UserModel> _streamFirestoreUser() {
     l.v('streamFirestoreUser()');
 
     return _db
         .doc('/user/${firebaseUser.value!.uid}')
         .snapshots()
-        .map((snapshot) => UserModel.fromJson(snapshot.data()!));
+        .map((snapshot) {
+      UserModel userModel = UserModel.fromJson(snapshot.data()!);
+
+      // Loaded user from db, we must update name and email settings as the
+      // user may have signed in, so the app has not history of name. Good to
+      // update email too in case it is ever changed server side.
+      nameController.text = userModel.name;
+      storeLastSignedInName();
+
+      emailController.text = userModel.email;
+      storeEmail();
+
+      return userModel;
+    });
   }
 
-  /// get the firestore user from the firestore collection
-  Future<UserModel> getFirestoreUser() {
-    return _db.doc('/user/${firebaseUser.value!.uid}').get().then(
-        (documentSnapshot) => UserModel.fromJson(documentSnapshot.data()!));
-  }
+  // /// get the firestore user from the firestore collection // TODO not used
+  // Future<UserModel> _getFirestoreUser() {
+  //   return _db.doc('/user/${firebaseUser.value!.uid}').get().then(
+  //       (documentSnapshot) => UserModel.fromJson(documentSnapshot.data()!));
+  // }
 
   /// Method to handle user sign in using email and password
   signInWithEmailAndPassword(BuildContext context) async {
@@ -162,7 +173,7 @@ class AuthC extends GetxHapi {
         password: passwordController.text.trim(),
       );
       storeLastSignedInName();
-      storeLastSignedInEmail();
+      storeEmail();
 
       passwordController.clear();
       hideLoadingIndicator();
@@ -200,16 +211,21 @@ class AuthC extends GetxHapi {
         );
         //create the new user object
         UserModel _newUser = UserModel(
-            uid: result.user!.uid,
-            email: result.user!.email!,
-            name: nameController.text,
-            photoUrl: gravatarUrl);
-        //create the user in firestore
+          uid: result.user!.uid,
+          email: result.user!.email!,
+          name: nameController.text,
+          photoUrl: gravatarUrl,
+        );
+
+        // create the user in firestore
         _createUserFirestore(_newUser, result.user!);
-        storeLastSignedInName(); // tez
-        storeLastSignedInEmail();
-        //emailController.clear();
+
+        storeLastSignedInName();
+        storeEmail();
+
+        // emailController.clear();
         passwordController.clear();
+
         hideLoadingIndicator();
         MainC.to.signIn();
       });
@@ -243,7 +259,7 @@ class AuthC extends GetxHapi {
       hideLoadingIndicator();
 
       storeLastSignedInName();
-      storeLastSignedInEmail();
+      storeEmail();
 
       showSnackBar(
         'User Updated',
@@ -341,32 +357,32 @@ class AuthC extends GetxHapi {
     }
   }
 
-  /// check if user is an admin user
-  isAdmin() async {
-    await getUser.then((user) async {
-      // TODO needed? This fails when the app goes offline:
-      // DocumentSnapshot adminRef =
-      //     await _db.collection('admin').doc(user.uid).get();
-      // if (adminRef.exists) {
-      //   admin = true;
-      // } else {
+  awaitUser() async {
+    await getUser.then((User user) async {
+      /// check if user is an admin user
+      /* TODO needed? This fails when the app goes offline:
+      DocumentSnapshot adminRef =
+          await _db.collection('admin').doc(user.uid).get();
+      if (adminRef.exists) {
+        admin = true;
+      } else { */
       admin = false;
-      // }
+/*    } */
       update();
     });
   }
 
   /// Sign out
   Future<void> signOut() {
-    getLastSignedInEmail(); // show it in case user forgets what email they used
+    getEmail(); // show it in case user forgets what email they used
 
     s.setUidKey('noLogin'); // clear for next user
 
-    storeLastSignedInEmail(); // store with 'noLogin' so persists TODO TEST
+    storeEmail(); // store with 'noLogin' so persists
 
     nameController.clear();
-    //emailController.clear();
-    //getLastSignedInEmail(); // show it in case user forgets what email they used
+    // emailController.clear();
+    getEmail(); // show it in case user forgets what email they used
     passwordController.clear();
     return _auth.signOut();
   }
@@ -375,7 +391,7 @@ class AuthC extends GetxHapi {
   waitForFirebaseLogin(String caller) async {
     int sleepBackoffMs = 250;
     // No internet needed if already initialized
-    while (AuthC.to.firebaseUser.value == null) {
+    while (firebaseUser.value == null) {
       l.d('AuthController.waitForFirebaseLogin($caller): try again after sleeping $sleepBackoffMs ms...');
       //sleep(Duration(milliseconds: sleepBackoffMs));
       await Future.delayed(Duration(milliseconds: sleepBackoffMs));
