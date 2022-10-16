@@ -72,7 +72,7 @@ class LangC extends GetxHapi {
   final String defaultLangKey = 'en';
 
   /// Always a 2 character language key, e.g. "ar", "en", etc.
-  /// TODO was initalized to '' but interactive onboarding crashes without default
+  /// TODO was initialized to '' but interactive onboarding crashes without default
   String currLangKey = 'en';
 
   /// Holds all a.json Arabic "transileration"->"Arabic" variables that the app

@@ -158,7 +158,7 @@ class AuthC extends GetxHapi {
     });
   }
 
-  // /// get the firestore user from the firestore collection // TODO not used
+  // /// get the firestore user from the firestore collection
   // Future<UserModel> _getFirestoreUser() {
   //   return _db.doc('/user/${firebaseUser.value!.uid}').get().then(
   //       (documentSnapshot) => UserModel.fromJson(documentSnapshot.data()!));
@@ -266,9 +266,7 @@ class AuthC extends GetxHapi {
         'User information successfully updated.',
       );
       return Future.value(false);
-    } catch (error) {
-      // "} on  PlatformException catch (error) {" doesn't catch all error types
-
+    } catch (error) /* "}on PlatformException catch (error){" misses errors */ {
       hideLoadingIndicator();
 
       // Don't do this so UI Update Profile button stays enabled with last
