@@ -162,7 +162,7 @@ class DemoPage1TabSwipe extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: hTextGR),
-                T('OPTIONAL: Complete the tutorial one handed.', ts, h: hText),
+                T('OPTIONAL: Use your right hand only.', ts, h: hText),
               ],
             ),
           ),
