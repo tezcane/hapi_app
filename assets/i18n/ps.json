@@ -85,6 +85,8 @@
 "That's it! We hope you enjoy hapi.": "همدا و! موږ امید لرو چې تاسو د هاپي څخه خوند واخلئ.",
 "Exit Tutorial": "ښوونه",
 "Name": "نوم",
+"Email": "بریښنالیک",
+"Password": "رمز",
 "Error Signing In": "په لاسلیک کولو کې تېروتنه",
 "Email or password is incorrect": "بریښنالیک یا رمز غلط دی",
 "Forgot password?": "خپل پټ نوم درڅخه هیر دی؟",

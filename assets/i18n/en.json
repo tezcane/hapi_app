@@ -85,6 +85,8 @@
 "That's it! We hope you enjoy hapi.": "That's it! We hope you enjoy hapi.",
 "Exit Tutorial": "Exit Tutorial",
 "Name": "Name",
+"Email": "Email",
+"Password": "Password",
 "Error Signing In": "Error Signing In",
 "Email or password is incorrect": "Email or password is incorrect",
 "Forgot password?": "Forgot password?",

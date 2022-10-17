@@ -85,6 +85,8 @@
 "That's it! We hope you enjoy hapi.": "Дал ушул! Биз сизге Hapi жакты деп үмүттөнөбүз.",
 "Exit Tutorial": "Туториал",
 "Name": "Аты",
+"Email": "Электрондук почта",
+"Password": "Купуя сөз",
 "Error Signing In": "Кирүү катасы",
 "Email or password is incorrect": "Электрондук почта же сырсөз туура эмес",
 "Forgot password?": "Сырсөздү унуттуңузбу?",

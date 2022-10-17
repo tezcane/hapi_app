@@ -85,6 +85,8 @@
 "That's it! We hope you enjoy hapi.": "خودشه! امیدواریم از هاپی لذت ببرید.",
 "Exit Tutorial": "آموزش خروجی",
 "Name": "نام",
+"Email": "پست الکترونیک",
+"Password": "کلمه عبور",
 "Error Signing In": "خطای ثبت نام در",
 "Email or password is incorrect": "آدرس ایمیل یا رمز عبور نادرست می باشد",
 "Forgot password?": "رمز ورود را فراموش کرده اید؟",

@@ -85,6 +85,8 @@
 "That's it! We hope you enjoy hapi.": "Das ist es! Wir hoffen, Sie genießen Hapi.",
 "Exit Tutorial": "Tutorial zum Ausgang",
 "Name": "Name",
+"Email": "Email",
+"Password": "Passwort",
 "Error Signing In": "Fehler bei der Anmeldung in",
 "Email or password is incorrect": "Email oder Passwort ist falsch",
 "Forgot password?": "Passwort vergessen?",

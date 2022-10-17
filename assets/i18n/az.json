@@ -85,6 +85,8 @@
 "That's it! We hope you enjoy hapi.": "Bu belədir! Ümid edirik ki, HAPI-dən zövq alacaqsınız.",
 "Exit Tutorial": "Dərslikdən çıxmaq",
 "Name": "Ad",
+"Email": "E-poçt",
+"Password": "Parol",
 "Error Signing In": "İçəri girmə xətası",
 "Email or password is incorrect": "E-poçt və ya şifrə səhvdir",
 "Forgot password?": "Şifrəni unutmusunuz?",

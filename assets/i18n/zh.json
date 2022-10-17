@@ -85,6 +85,8 @@
 "That's it! We hope you enjoy hapi.": "而已！我们希望您喜欢Hapi。",
 "Exit Tutorial": "出口教程",
 "Name": "姓名",
+"Email": "电子邮件",
+"Password": "密码",
 "Error Signing In": "错误签名",
 "Email or password is incorrect": "电子邮件或密码不正确",
 "Forgot password?": "忘记密码？",

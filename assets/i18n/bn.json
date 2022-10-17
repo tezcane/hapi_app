@@ -85,6 +85,8 @@
 "That's it! We hope you enjoy hapi.": "এটাই! আমরা আশা করি আপনি হাপি উপভোগ করবেন।",
 "Exit Tutorial": "প্রস্থান টিউটোরিয়াল",
 "Name": "নাম",
+"Email": "ইমেল",
+"Password": "পাসওয়ার্ড",
 "Error Signing In": "সাইন ইন করতে ত্রুটি",
 "Email or password is incorrect": "ইমেল বা পাসওয়ার্ড ভুল",
 "Forgot password?": "পাসওয়ার্ড ভুলে গেছেন?",

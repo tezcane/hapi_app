@@ -85,6 +85,8 @@
 "That's it! We hope you enjoy hapi.": "Менә шул! Сезгә HAPI ошар дип ышанабыз.",
 "Exit Tutorial": "Чыгу",
 "Name": "Исем",
+"Email": "Электрон почта",
+"Password": "Серсүз",
 "Error Signing In": "Кергән хата",
 "Email or password is incorrect": "Электрон почта яки серсүз дөрес түгел",
 "Forgot password?": "Серсүзне оныттыгызмы?",

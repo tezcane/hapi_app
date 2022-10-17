@@ -85,6 +85,8 @@
 "That's it! We hope you enjoy hapi.": "Bo'ldi shu! Umid qilamizki, siz Gapidan zavqlanasiz.",
 "Exit Tutorial": "O'quv qo'llanmadan chiqish",
 "Name": "Ism",
+"Email": "Elektron pochta",
+"Password": "Parol",
 "Error Signing In": "Imzo orqali xato",
 "Email or password is incorrect": "Elektron pochta yoki parol noto'g'ri",
 "Forgot password?": "Parolni unutdingizmi?",

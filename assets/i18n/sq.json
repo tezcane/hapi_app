@@ -85,6 +85,8 @@
 "That's it! We hope you enjoy hapi.": "Kjo eshte! Shpresojmë që të shijoni Hapi.",
 "Exit Tutorial": "Tutorial i daljes",
 "Name": "Emër",
+"Email": "Postë elektronike",
+"Password": "Fjalëkalim",
 "Error Signing In": "Gabim i regjistrimit",
 "Email or password is incorrect": "Emaili ose fjalëkalimi është i pasaktë",
 "Forgot password?": "keni harruar fjalëkalimin?",

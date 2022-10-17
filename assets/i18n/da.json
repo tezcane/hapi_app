@@ -85,6 +85,8 @@
 "That's it! We hope you enjoy hapi.": "Det er det! Vi håber du nyder Hapi.",
 "Exit Tutorial": "Afslut tutorial",
 "Name": "Navn",
+"Email": "E -mail",
+"Password": "Adgangskode",
 "Error Signing In": "Fejl ved at logge ind",
 "Email or password is incorrect": "E -mail eller adgangskode er forkert",
 "Forgot password?": "glemt kodeord?",

@@ -85,6 +85,8 @@
 "That's it! We hope you enjoy hapi.": "Това е! Надяваме се да се насладите на хапи.",
 "Exit Tutorial": "Изходният урок",
 "Name": "Име",
+"Email": "електронна поща",
+"Password": "Парола",
 "Error Signing In": "Грешка при влизане",
 "Email or password is incorrect": "Имейлът или паролата са неправилни",
 "Forgot password?": "Забравена парола?",

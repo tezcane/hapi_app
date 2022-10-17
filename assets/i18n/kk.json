@@ -85,6 +85,8 @@
 "That's it! We hope you enjoy hapi.": "Міне бітті! Сізге HAPI ұнайды деп сенеміз.",
 "Exit Tutorial": "Оқиырмалы",
 "Name": "Есім",
+"Email": "Электрондық пошта",
+"Password": "Пароль",
 "Error Signing In": "Қате қол қою",
 "Email or password is incorrect": "Электрондық пошта немесе пароль дұрыс емес",
 "Forgot password?": "Құпия сөзді ұмыттыңыз ба?",

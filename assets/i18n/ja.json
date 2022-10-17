@@ -85,6 +85,8 @@
 "That's it! We hope you enjoy hapi.": "それでおしまい！ハピを楽しんでいただければ幸いです。",
 "Exit Tutorial": "終了チュートリアル",
 "Name": "名前",
+"Email": "Eメール",
+"Password": "パスワード",
 "Error Signing In": "サインインエラー",
 "Email or password is incorrect": "電子メールまたはパスワードが正しくありません",
 "Forgot password?": "パスワードをお忘れですか？",

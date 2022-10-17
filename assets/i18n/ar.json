@@ -85,6 +85,8 @@
 "That's it! We hope you enjoy hapi.": "هذا هو! نأمل أن تستمتع هبي.",
 "Exit Tutorial": "خروج البرنامج التعليمي",
 "Name": "اسم",
+"Email": "البريد الإلكتروني",
+"Password": "كلمة المرور",
 "Error Signing In": "خطأ في تسجيل الدخول",
 "Email or password is incorrect": "البريد الالكتروني او كلمة المرور غير صحيحة",
 "Forgot password?": "هل نسيت كلمة السر؟",

@@ -85,6 +85,8 @@
 "That's it! We hope you enjoy hapi.": "Вот и все! Мы надеемся, что вам понравится HAPI.",
 "Exit Tutorial": "Учебное пособие по выходу",
 "Name": "Имя",
+"Email": "Эл. адрес",
+"Password": "Пароль",
 "Error Signing In": "Ошибка входит в систему",
 "Email or password is incorrect": "Email или пароль указан неверно",
 "Forgot password?": "забыл пароль?",

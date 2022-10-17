@@ -34,12 +34,7 @@ class AboutUI extends StatelessWidget {
         // Note: Can't use Get.theme here, doesn't switch background color
         backgroundColor: Theme.of(context).backgroundColor,
         body: Padding(
-          padding: const EdgeInsets.only(
-            top: 50,
-            bottom: 20,
-            left: 20,
-            right: 20,
-          ),
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -54,7 +49,7 @@ class AboutUI extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 30.0),
+                const SizedBox(height: 20.0),
                 RichText(
                   text: TextSpan(
                     style: context.textTheme.headline6,
@@ -93,9 +88,10 @@ class AboutUI extends StatelessWidget {
                       TextSpan(
                         text: 'hapi.net',
                         style: const TextStyle(
-                            color: AppThemes.hyperlink,
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline),
+                          color: AppThemes.hyperlink,
+                          fontWeight: FontWeight.bold,
+                          decoration: TextDecoration.underline,
+                        ),
                         recognizer: TapGestureRecognizer()
                           ..onTap = () => _launchUrl('https://hapi.net'),
                       ),
