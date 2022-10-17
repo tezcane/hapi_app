@@ -13,16 +13,20 @@ import 'package:hapi/onboard/onboard_ui.dart';
 class BottomBarMenu extends StatelessWidget {
   BottomBarMenu(this.navPage, this.bottomBarItems, this.aliveMainWidgets) {
     _initPageControllerAndBottomBar(NavPageC.to.getLastIdx(navPage));
+    bottomBarMenus[navPage] = this;
   }
   final NavPage navPage;
   final List<BottomBarItem> bottomBarItems;
   final List<Widget> aliveMainWidgets;
 
+  /// Use this to allow external classes to change tabs.
+  static final Map<NavPage, BottomBarMenu> bottomBarMenus = {};
+
   late final PageController _pageController;
   late int curBottomBarHighlightIdx; // to briefly highlight bottom bar indexes
 
   /// Used for tab vs swipe detection in [OnboardUI].
-  bool postFrameAnimationOccurring = false;
+  static bool postFrameAnimationOccurring = false;
 
   int movingToIdx = -1;
 
@@ -331,34 +335,26 @@ class BottomBarMenu extends StatelessWidget {
   /// PostFrameCallback so all needed objects are initialized.
   _handlePostFrameAnimation(int newIdx) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (!_pageController.hasClients) return; // fix unwanted init exception
-
-      postFrameAnimationOccurring = true;
-      _pageController
-          .animateToPage(
-            newIdx,
-            curve: Curves.easeInOut,
-            duration: const Duration(milliseconds: 500),
-          ) // this animates to the page on tab press
-          .then((_) => postFrameAnimationOccurring = false);
+      animateToPage(navPage, newIdx);
       // jumpToPage/animateToPage triggers onPageChanged, so don't need:
       //NavPageC.to.setLastIdx(widget.navPage, newIdx);
     });
   }
 
-  // TODO put history on bottom_bar_menu and switch to it with this?
-  // /// Allow an external class to animate to any page
-  // /// Note: No index overflow protected.
-  // static animateToPage(NavPage navPage, int newIdx) {
-  //   PageController pageController = bottomBarMenus[navPage]!._pageController;
-  //
-  //   if (!pageController.hasClients) return; // stop unwanted shell exception
-  //
-  //   pageController
-  //       .animateToPage(
-  //     newIdx,
-  //     curve: Curves.easeInOut,
-  //     duration: const Duration(milliseconds: 500),
-  //   );
-  // }
+  /// Allow an external class to animate to any page.
+  /// Note: No index overflow protected.
+  static animateToPage(NavPage navPage, int newIdx) {
+    PageController pageController = bottomBarMenus[navPage]!._pageController;
+
+    if (!pageController.hasClients) return; // stop unwanted shell exception
+
+    postFrameAnimationOccurring = true;
+    pageController
+        .animateToPage(
+          newIdx,
+          curve: Curves.easeInOut,
+          duration: const Duration(milliseconds: 500),
+        )
+        .then((_) => postFrameAnimationOccurring = false);
+  }
 }
