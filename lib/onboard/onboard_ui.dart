@@ -82,7 +82,7 @@ const List<BottomBarItem> _bottomBarItems = [
   ),
   BottomBarItem(
     DemoPage4MenuSettings(),
-    SizedBox(height: 150, child: T('Tab Settings Area', tsWiB)), // Settings UI
+    DemoTabSettingsArea(), // Menu Right Panel Settings
     'Settings',
     'How to change settings',
     Icons.tune_outlined,
@@ -365,6 +365,29 @@ class DemoPage3MenuIntro extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class DemoTabSettingsArea extends StatelessWidget {
+  const DemoTabSettingsArea();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+            decoration: TextDecoration.none, // makes yellow underlines go away
+          ),
+          children: [TextSpan(text: 'Tab Settings Area'.tr)],
+        ),
+      ),
+      const SizedBox(height: 25)
+    ]);
   }
 }
 

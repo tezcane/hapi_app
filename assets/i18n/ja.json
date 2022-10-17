@@ -78,6 +78,7 @@
 "Global settings": "全体設定",
 "Tab specific settings": "タブ固有の設定",
 "Appears if the selected tab has settings": "選択したタブに設定がある場合に表示されます",
+"Tab Settings Area": "タブ設定領域",
 "hapi has many features to explore.": "Hapiには、探索すべき多くの機能があります。",
 "If your device supports it, rotate it now.": "デバイスがサポートしている場合は、今すぐ回転してください。",
 "On many devices, this sentence will look small in portrait orientation and normal in landscape orientation.": "多くのデバイスでは、この文はポートレートオリエンテーションでは小さく見え、景観向けの方向では正常に見えます。",
