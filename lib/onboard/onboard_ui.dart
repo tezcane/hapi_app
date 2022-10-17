@@ -8,7 +8,7 @@ import 'package:hapi/menu/bottom_bar_menu.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/slide/menu_right/menu_right_ui.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
-import 'package:hapi/onboard/auth/sign_in_up_ui.dart';
+import 'package:hapi/onboard/auth/tutorial_and_sign_in_up_ui.dart';
 
 /// Init all of this NavPage's main widgets and bottom bar
 class OnboardUI extends StatelessWidget {
@@ -56,7 +56,7 @@ const List<BottomBarItem> _bottomBarItems = [
     TutorialAndSignInUpUI(),
     null,
     'a.hapi',
-    'Welcome tab',
+    'Welcome to hapi!',
     Icons.brightness_3_outlined,
   ),
   BottomBarItem(

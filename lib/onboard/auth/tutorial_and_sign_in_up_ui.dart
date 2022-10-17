@@ -23,16 +23,16 @@ class TutorialAndSignInUpUI extends StatelessWidget {
         (MainC.to.isPortrait ? width : h(context)) / GR;
 
     const double topLeftRightPad = 12;
-    const double bottomPad = 72; // height of bottom bar buttons
+//  const double bottomPad = 72; // height of bottom bar buttons
 
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       body: Padding(
         padding: const EdgeInsets.only(
-          top: topLeftRightPad,
+          // top: topLeftRightPad,
           left: topLeftRightPad,
           right: topLeftRightPad,
-          bottom: bottomPad, // needed on landscape or will look funny
+          //bottom: bottomPad, // needed on landscape or will look funny
         ),
         child: Center(
           child: SingleChildScrollView(
@@ -46,18 +46,18 @@ class TutorialAndSignInUpUI extends StatelessWidget {
               ),
               if (!MainC.to.isSignedIn)
                 Column(children: <Widget>[
-                  const FormVerticalSpace(),
+                  // const FormVerticalSpace(),
                   SizedBox(
                     height: 55,
                     child: LangListUI(width - topLeftRightPad * 2, false),
                   ),
-                  const FormVerticalSpace(),
-                  RichText(
-                    text: TextSpan(
-                      style: context.textTheme.headline5,
-                      children: [TextSpan(text: 'Welcome to hapi!'.tr)],
-                    ),
-                  ),
+                  // const FormVerticalSpace(),
+                  // RichText(
+                  //   text: TextSpan(
+                  //     style: context.textTheme.headline5,
+                  //     children: [TextSpan(text: 'Welcome to hapi!'.tr)],
+                  //   ),
+                  // ),
                 ]),
               const FormVerticalSpace(),
               RichText(
