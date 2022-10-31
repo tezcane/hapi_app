@@ -5,8 +5,8 @@ import 'package:hapi/main_c.dart';
 import 'package:hapi/quran/quran.dart';
 import 'package:hapi/relic/family_tree/family_tree.dart';
 import 'package:hapi/relic/relic.dart';
-import 'package:hapi/tarikh/event/et.dart';
-import 'package:hapi/tarikh/event/event_asset.dart';
+import 'package:hapi/event/et.dart';
+import 'package:hapi/event/event_asset.dart';
 
 const String _ = ' '; // space/gap
 

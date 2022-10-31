@@ -27,7 +27,7 @@ import 'package:hapi/quest/quests_ui.dart';
 import 'package:hapi/quran/quran_ui.dart';
 import 'package:hapi/relic/family_tree/family_tree_ui.dart';
 import 'package:hapi/relic/relics_ui.dart';
-import 'package:hapi/tarikh/event/event_details_ui.dart';
+import 'package:hapi/event/event_details_ui.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/tarikh_ui.dart';
 import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';

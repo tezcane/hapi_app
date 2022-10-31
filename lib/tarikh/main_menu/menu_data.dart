@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:hapi/tarikh/event/event.dart';
-import 'package:hapi/tarikh/event/event_asset.dart';
+import 'package:hapi/event/event.dart';
+import 'package:hapi/event/event_asset.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
 

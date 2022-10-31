@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:csv/csv.dart';
-import 'package:hapi/tarikh/event/et.dart';
+import 'package:hapi/event/et.dart';
 import 'package:http/http.dart' as http;
 
 /// commandline dart app that generates the localization.g.dart file.

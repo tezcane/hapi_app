@@ -3,12 +3,13 @@ import 'dart:ui' as ui;
 
 import 'package:flare_dart/math/aabb.dart' as flare;
 import 'package:flutter/material.dart';
+import 'package:hapi/event/et.dart';
+import 'package:hapi/event/event.dart';
+import 'package:hapi/event/event_asset.dart';
+import 'package:hapi/event/event_c.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
-import 'package:hapi/tarikh/event/et.dart';
-import 'package:hapi/tarikh/event/event.dart';
-import 'package:hapi/tarikh/event/event_c.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/timeline/ticks.dart';
@@ -17,8 +18,6 @@ import 'package:hapi/tarikh/timeline/timeline_data.dart';
 import 'package:hapi/tarikh/timeline/timeline_utils.dart';
 import 'package:intl/intl.dart';
 import 'package:nima/nima/math/aabb.dart' as nima;
-
-import '../event/event_asset.dart';
 
 /// These two callbacks are used to detect if a bubble or an event have been tapped.
 /// If that's the case, [ArticlePage] will be pushed onto the [Navigator] stack.

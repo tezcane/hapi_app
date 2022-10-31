@@ -6,8 +6,8 @@ import 'package:flare_flutter/flare.dart' as flare;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:hapi/tarikh/event/event.dart';
-import 'package:hapi/tarikh/event/event_asset.dart';
+import 'package:hapi/event/event.dart';
+import 'package:hapi/event/event_asset.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/timeline/timeline_utils.dart';
 

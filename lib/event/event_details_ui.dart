@@ -6,13 +6,13 @@ import 'package:get/get.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/sub_page.dart';
-import 'package:hapi/tarikh/event/animation_controller/heart_controller.dart';
-import 'package:hapi/tarikh/event/et.dart';
-import 'package:hapi/tarikh/event/et_extension.dart';
-import 'package:hapi/tarikh/event/event.dart';
-import 'package:hapi/tarikh/event/event_asset.dart';
-import 'package:hapi/tarikh/event/event_c.dart';
-import 'package:hapi/tarikh/event/event_widget.dart';
+import 'package:hapi/event/animation_controller/heart_controller.dart';
+import 'package:hapi/event/et.dart';
+import 'package:hapi/event/et_extension.dart';
+import 'package:hapi/event/event.dart';
+import 'package:hapi/event/event_asset.dart';
+import 'package:hapi/event/event_c.dart';
+import 'package:hapi/event/event_widget.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 
 /// Show detailed info about an Tarikh/Relic Event and allow it to be added or

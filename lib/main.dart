@@ -23,7 +23,7 @@ import 'package:hapi/quest/active/active_quests_c.dart';
 import 'package:hapi/quest/active/zaman_c.dart';
 import 'package:hapi/quest/daily/daily_quests_c.dart';
 import 'package:hapi/relic/relic_c.dart';
-import 'package:hapi/tarikh/event/event_c.dart';
+import 'package:hapi/event/event_c.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 //import 'package:timezone/data/latest.dart' as tz;
 //import 'package:timezone/data/latest_10y.dart' as tz;

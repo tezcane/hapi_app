@@ -4,8 +4,8 @@ import 'dart:ui' as ui;
 import 'package:flare_dart/math/aabb.dart' as flare;
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:hapi/tarikh/event/event.dart';
-import 'package:hapi/tarikh/event/event_asset.dart';
+import 'package:hapi/event/event.dart';
+import 'package:hapi/event/event_asset.dart';
 import 'package:nima/nima/math/aabb.dart' as nima;
 
 /// This controls the collapsable tarikh menu vinettes animations.

@@ -5,9 +5,9 @@ import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/onboard/auth/auth_c.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/service/db.dart';
-import 'package:hapi/tarikh/event/et.dart';
-import 'package:hapi/tarikh/event/et_extension.dart';
-import 'package:hapi/tarikh/event/event.dart';
+import 'package:hapi/event/et.dart';
+import 'package:hapi/event/et_extension.dart';
+import 'package:hapi/event/event.dart';
 
 class RelicC extends GetxHapi {
   static RelicC get to => Get.find();

@@ -2,7 +2,7 @@ import 'package:hapi/main_c.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/surah/surah.dart';
 import 'package:hapi/relic/ummah/nabi.dart';
-import 'package:hapi/tarikh/event/et.dart';
+import 'package:hapi/event/et.dart';
 
 /// See [et.dart] for detailed description why we need this in a separate file.
 extension EtExtension on ET {

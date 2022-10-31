@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hapi/tarikh/event/event.dart';
-import 'package:hapi/tarikh/event/event_asset.dart';
-import 'package:hapi/tarikh/event/event_widget.dart';
+import 'package:hapi/event/event.dart';
+import 'package:hapi/event/event_asset.dart';
+import 'package:hapi/event/event_widget.dart';
 
 /// This widget is responsible for drawing the circular thumbnail within the [ThumbnailDetailWidget].
 ///

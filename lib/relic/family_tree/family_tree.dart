@@ -4,7 +4,7 @@ import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_c.dart';
-import 'package:hapi/tarikh/event/et.dart';
+import 'package:hapi/event/et.dart';
 
 /// For UI's that have option to show Arabic, Transliteration, and locale lang.
 /// All relic enums must implement/extend this. TODO asdf implement in many places

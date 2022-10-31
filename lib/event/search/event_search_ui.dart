@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
-import 'package:hapi/tarikh/event/event.dart';
-import 'package:hapi/tarikh/event/search/search_manager.dart';
-import 'package:hapi/tarikh/event/search/search_widget.dart';
-import 'package:hapi/tarikh/event/thumbnail_detail_widget.dart';
+import 'package:hapi/event/event.dart';
+import 'package:hapi/event/search/search_manager.dart';
+import 'package:hapi/event/search/search_widget.dart';
+import 'package:hapi/event/thumbnail_detail_widget.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 
 class EventSearchUI extends StatefulWidget {

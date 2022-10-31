@@ -1,7 +1,7 @@
 import 'dart:collection';
 
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
-import 'package:hapi/tarikh/event/event.dart';
+import 'package:hapi/event/event.dart';
 
 /// This Singlton object handles the search operation in the app. When it is
 /// initialized, receiving the full list of events as input, the object fills in

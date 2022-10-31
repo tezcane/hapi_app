@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:hapi/relic/relic_c.dart';
-import 'package:hapi/tarikh/event/et.dart';
-import 'package:hapi/tarikh/event/event.dart';
-import 'package:hapi/tarikh/event/event_asset.dart';
+import 'package:hapi/event/et.dart';
+import 'package:hapi/event/event.dart';
+import 'package:hapi/event/event_asset.dart';
 
 /// Abstract class that all relics need to extend. Also extends Events so we can
 /// Relics on the Timeline (if they have dates), you're welcome.

@@ -1,8 +1,8 @@
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:hapi/main_c.dart'; // needed to get Extension on Enum
 import 'package:hapi/relic/relic.dart';
-import 'package:hapi/tarikh/event/et.dart';
-import 'package:hapi/tarikh/event/event_asset.dart';
+import 'package:hapi/event/et.dart';
+import 'package:hapi/event/event_asset.dart';
 
 class Surah extends Relic {
   Surah({

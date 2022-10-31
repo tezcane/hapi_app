@@ -5,10 +5,10 @@ import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/relic/relic_c.dart';
-import 'package:hapi/tarikh/event/et.dart';
-import 'package:hapi/tarikh/event/event.dart';
-import 'package:hapi/tarikh/event/event_c.dart';
-import 'package:hapi/tarikh/event/thumbnail_widget.dart';
+import 'package:hapi/event/et.dart';
+import 'package:hapi/event/event.dart';
+import 'package:hapi/event/event_c.dart';
+import 'package:hapi/event/thumbnail_widget.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 
 /// This widget lays out nicely the [event] provided.

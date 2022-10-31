@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/controller/time_c.dart';
 import 'package:hapi/main_c.dart';
-import 'package:hapi/tarikh/event/et.dart';
-import 'package:hapi/tarikh/event/event_asset.dart';
+import 'package:hapi/event/et.dart';
+import 'package:hapi/event/event_asset.dart';
 
 /// The timeline displays these objects, if their start is not 0. The
 /// Favorite, Search and Relics also use this object.

@@ -11,10 +11,10 @@ import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/settings_option.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/quest/active/zaman_c.dart';
-import 'package:hapi/tarikh/event/et.dart';
-import 'package:hapi/tarikh/event/et_extension.dart';
-import 'package:hapi/tarikh/event/event_c.dart';
-import 'package:hapi/tarikh/event/search/search_manager.dart';
+import 'package:hapi/event/et.dart';
+import 'package:hapi/event/et_extension.dart';
+import 'package:hapi/event/event_c.dart';
+import 'package:hapi/event/search/search_manager.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/intl.dart';
 

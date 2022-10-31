@@ -2,10 +2,10 @@ import 'package:get/get.dart';
 import 'package:hapi/controller/getx_hapi.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
-import 'package:hapi/tarikh/event/et.dart';
-import 'package:hapi/tarikh/event/et_extension.dart';
-import 'package:hapi/tarikh/event/event.dart';
-import 'package:hapi/tarikh/event/search/search_manager.dart';
+import 'package:hapi/event/et.dart';
+import 'package:hapi/event/et_extension.dart';
+import 'package:hapi/event/event.dart';
+import 'package:hapi/event/search/search_manager.dart';
 
 /// Used to init and store Tarikh and Relics events and favorites.
 class EventC extends GetxHapi {

@@ -10,7 +10,7 @@ import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/onboard/auth/auth_c.dart';
 import 'package:hapi/onboard/onboard_ui.dart';
-import 'package:hapi/tarikh/event/event_c.dart';
+import 'package:hapi/event/event_c.dart';
 
 /// NOTE ABOUT WHAT'S IN THIS FILE:
 /// We put common code across multiple app functionality in this Controller,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hapi/tarikh/event/event.dart';
+import 'package:hapi/event/event.dart';
 
 // Color interpolateColor(Color from, Color to, double elapsed) {
 //   double r, g, b, a;

@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
-import 'package:hapi/tarikh/event/et.dart';
-import 'package:hapi/tarikh/event/event.dart';
-import 'package:hapi/tarikh/event/event_c.dart';
-import 'package:hapi/tarikh/event/thumbnail_detail_widget.dart';
+import 'package:hapi/event/et.dart';
+import 'package:hapi/event/event.dart';
+import 'package:hapi/event/event_c.dart';
+import 'package:hapi/event/thumbnail_detail_widget.dart';
 
 /// It displays the list of favorites kept by the [EventC], and moves into the
 /// timeline when tapping on one of them if event type is Tarikh, otherwise it

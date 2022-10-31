@@ -5,7 +5,7 @@ import 'package:flare_dart/math/aabb.dart' as flare;
 import 'package:flare_flutter/flare.dart' as flare;
 import 'package:flutter/services.dart';
 import 'package:hapi/main_c.dart';
-import 'package:hapi/tarikh/event/event.dart';
+import 'package:hapi/event/event.dart';
 import 'package:hapi/tarikh/timeline/timeline_data.dart';
 import 'package:nima/nima.dart' as nima;
 import 'package:nima/nima/animation/actor_animation.dart' as nima;
