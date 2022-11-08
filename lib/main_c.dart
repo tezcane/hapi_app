@@ -5,12 +5,12 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:hapi/controller/getx_hapi.dart';
 import 'package:hapi/controller/nav_page_c.dart';
+import 'package:hapi/event/event_c.dart';
 import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/onboard/auth/auth_c.dart';
 import 'package:hapi/onboard/onboard_ui.dart';
-import 'package:hapi/event/event_c.dart';
 
 /// NOTE ABOUT WHAT'S IN THIS FILE:
 /// We put common code across multiple app functionality in this Controller,
@@ -36,9 +36,9 @@ extension GlobalEnumUtil on Enum {
     if (isim.startsWith('a_')) isim = isim.replaceFirst('a_', "'");
 
     return isim
-        .replaceFirst('_a_', "'")
-        .replaceFirst('__', '-')
-        .replaceFirst('_', ' ');
+        .replaceAll('_a_', "'")
+        .replaceAll('__', '-')
+        .replaceAll('_', ' ');
   }
 
   /// Get an "a." tk from an Arabic/Arabee/Transliterated enum name/isim.

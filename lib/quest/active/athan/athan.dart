@@ -62,10 +62,12 @@ class Athan {
 
     SolarTime solarTime = SolarTime(date, cord);
 
-    // DateTime dateYesterday = date.subtract(Duration(days: 1));
+    // DateTime dateYesterday = date.subtract(Duration(days: 1, hours: 2));
     // SolarTime solarTimeYesterday = SolarTime(dateYesterday, coordinates);
 
-    DateTime dateTomorrow = date.add(const Duration(days: 1));
+    // +1/2 Hour(s) needed here for daylight savings days, e.g. Nov. 6, 2022.
+    // Works because SolarTime() uses Year, Month, Day (hour accuracy not used):
+    DateTime dateTomorrow = date.add(const Duration(days: 1, hours: 2));
     SolarTime solarTimeTomorrow = SolarTime(dateTomorrow, cord);
 
     //DateTime ishaYesterdayTime;

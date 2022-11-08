@@ -3,16 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:get/get.dart';
-import 'package:hapi/main_c.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
-import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/event/animation_controller/heart_controller.dart';
 import 'package:hapi/event/et.dart';
 import 'package:hapi/event/et_extension.dart';
 import 'package:hapi/event/event.dart';
-import 'package:hapi/event/event_asset.dart';
 import 'package:hapi/event/event_c.dart';
 import 'package:hapi/event/event_widget.dart';
+import 'package:hapi/main_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
+import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 
 /// Show detailed info about an Tarikh/Relic Event and allow it to be added or
@@ -142,9 +141,12 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
       heartControllerUnfav.showParticles(false);
     }
 
+    final double wScreen = w(context);
+    final double whTopAsset = wScreen * .80;
+
     const double fabWidth = 71; // 56 + 15
     const double middleButtonsGap = 5;
-    final double w2 = (w(context) - (fabWidth * 2) - middleButtonsGap) / 2;
+    final double w2 = (wScreen - (fabWidth * 2) - middleButtonsGap) / 2;
     const double height = 160;
 
     return FabSubPage(
@@ -329,20 +331,12 @@ class _EventDetailsUIState extends State<EventDetailsUI> {
                           },
                           // child: Hero( TODO
                           //   tag: _event.tkTitle,
+                          // Center needed:
                           child: Center(
                             child: SizedBox(
-                              height: 280,
-                              width: 280,
-                              child: _event.asset is ImageAsset
-                                  ? Image(
-                                      image: AssetImage(_event.asset.filename),
-                                      fit: BoxFit.fill,
-                                    )
-                                  : EventWidget(
-                                      isActive: true,
-                                      event: _event,
-                                      interactOffset: _interactOffset,
-                                    ),
+                              height: whTopAsset,
+                              width: whTopAsset,
+                              child: _event.asset.widget(true, _interactOffset),
                             ),
                           ),
                           // ),

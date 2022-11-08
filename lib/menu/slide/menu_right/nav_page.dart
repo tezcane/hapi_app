@@ -71,17 +71,6 @@ extension EnumUtil on NavPage {
   }
 }
 
-/// TODO this is needed in another class, should it be?
-enum RELIC_TAB {
-  Favorites,
-  Search,
-  Relics, // a.Alathar
-  Places,
-  Delil,
-  Ummah,
-  Allah, // Asma_ul_Husna,
-}
-
 /*
 // TODO icons for later:
 const _dummy = const [

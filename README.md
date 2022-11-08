@@ -63,21 +63,22 @@
 
 a/at - Arabic Translation/Transliteration/Template keys, e.g. "a.Fajr", "at.{} on", see MainC's a()  
 AC   - AnimationController  
-Aft  - After
+Aft  - After  
 Bef  - Before  
 bg   - background (like bg color)  
 btn  - Button  
-C    - Controller
+C    - Controller  
 cb   - theme color background  
 cs   - theme color scaffold  
 ct   - theme color text  
-Cord - Coordinates
+Cord - Coordinates  
 curr - Current  
 db   - Database  
-del  - Delete
+del  - Delete  
 dis  - Disabled  
 dn   - down (use with up: up/dn)  
 e    - exception/error  
+et   - Event Type, e.g. Relics: Nabi, Surah, or Tarikh ET type.  
 h    - height (use with width/w)  
 i    - internationalization (for lazy/convenient way making of translation keys)  
 idx  - Index  
@@ -85,17 +86,17 @@ L    - Left (use with Left/Right->L/R)
 lat  - latitude  
 lng  - longitude  
 Loc  - Location  
-lr   - left right
+lr   - left right  
 msg  - message  
 muak - Muakkadah  
 nav  - Navigate/Navigator  
 np   - NavPage  
 nv   - new value  
-P    - placement (start, center, end)
+P    - placement (start, center, end)  
 qust - Quest  
 qyam - Qiyam  
-qv   - Quran Verse
-qvs  - Quran Verses
+qv   - Quran Verse  
+qvs  - Quran Verses  
 R    - Right (use with Left/Right->L/R)  
 Rkt  - Rakat  
 rv   - return value  

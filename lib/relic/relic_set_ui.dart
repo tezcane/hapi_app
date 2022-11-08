@@ -4,9 +4,9 @@ import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/sub_page.dart';
+import 'package:hapi/relic/al_asma/nabi.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_c.dart';
-import 'package:hapi/relic/ummah/nabi.dart';
 
 /// An entire tab (tab and tile labels, relics, filters, etc.). Uses the
 /// RelicSet object found in relic.dart.
@@ -281,15 +281,12 @@ class RelicSetUI extends StatelessWidget {
         child: Column(
           children: [
             Container(
-//            color: AppThemes.ajrColorsByIdx[Random().nextInt(7)],
+              // color: AppThemes.ajrColorsByIdx[Random().nextInt(7)],
               color: AppThemes.ajrColorsByIdx[relic.ajrLevel],
               child: SizedBox(
                 width: wTile,
                 height: wTile,
-                child: Image(
-                  image: AssetImage(relic.asset.filename),
-                  fit: BoxFit.fill,
-                ),
+                child: relic.asset.widget(false, null),
               ),
             ),
             if (showTileText)

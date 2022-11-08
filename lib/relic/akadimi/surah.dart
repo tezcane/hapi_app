@@ -1,8 +1,8 @@
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:hapi/event/et.dart';
 import 'package:hapi/main_c.dart'; // needed to get Extension on Enum
 import 'package:hapi/relic/relic.dart';
-import 'package:hapi/event/et.dart';
-import 'package:hapi/event/event_asset.dart';
+import 'package:hapi/tarikh/timeline/timeline_data.dart';
 
 class Surah extends Relic {
   Surah({
@@ -53,17 +53,19 @@ class Surah extends Relic {
   Widget get widget => throw UnimplementedError();
 
   @override
-  RelicAsset getRelicAsset({width = 200.0, height = 200.0, scale = 1.0}) =>
-      RelicAsset(
-        //'assets/images/surah/${e.name}.png',
-        'assets/images/logo/logo.png', // TODO asdf: implement getRelicAsset
+  Asset getAsset({width = 200.0, height = 200.0, scale = 1.0}) => Asset(
+        filename: 'images/logo/logo.png', // TODO asdf: implement
+        //filename: 'images/surah/${e.name}.png',
         width: width,
         height: height,
         scale: scale,
       );
+
+  static List<Relic> get relics => _relics;
+  static List<RelicSetFilter> get relicSetFilters => _relicSetFilters;
 }
 
-final List<Surah> relicsSurah = [
+final List<Surah> _relics = [
   Surah(
     e: S.Al__Fatihah,
     numEgypt: 5,
@@ -1866,12 +1868,12 @@ final List<Surah> relicsSurah = [
   ),
 ];
 
-final List<RelicSetFilter> relicSetFiltersSurah = [
+final List<RelicSetFilter> _relicSetFilters = [
   RelicSetFilter(
     tkLabel: 'a.Surah',
     idxList: List.generate(
-      relicsSurah.length,
-      (index) => relicsSurah[index].e.index,
+      _relics.length,
+      (index) => _relics[index].e.index,
     ),
     tprMax: 38, // 38 = 114/3
   ),

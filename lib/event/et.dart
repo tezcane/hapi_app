@@ -16,34 +16,33 @@
 ///   - add translations to online translation spreadsheet,
 ///   - Then run "dart update_localizations.dart" (auto-builds from ET.values)
 enum ET {
-//   // LEADERS
-//   Al_Asma_ul_Husna, // اَلاسْمَاءُ الْحُسناى TODO all names mentioned in Quran? AsmaUlHusna - 99 names of allah
+// ISLAM
+  Delil, // Proofs of Islam
+  Al__Aqida, //Tenets,
+//   Jannah, // Doors/Levels/Beings(Insan,Angels,Jinn,Hurlieen,Servants,Burak)
+// //Heaven_LevelsOfHell,
+
+// ASMA/NAMES
+  Asma_ul__Husna, // اَلاسْمَاءُ الْحُسناى TODO all names mentioned in Quran? AsmaUlHusna - 99 names of allah
   Nabi, // Prophets TODO non-Quran mentioned prophets
 //   Muhammad, // Laqab, Family Tree here?
 //   Righteous, // People: Mentioned in Quran/possible prophets/Sahabah/Promised Jannah
-//
-//   //ISLAM
-//   Delil, //Quran,Sunnah,Nature,Ruins // See "Miracles of Quran" at bottom of file
-//   Tenets, // Islam_5Pillars/6ArticlesOfFaith
-//   Jannah, // Doors/Levels/Beings(Insan,Angels,Jinn,Hurlieen,Servants,Burak)
-// //Heaven_LevelsOfHell,
-//
-//   //ACADEMIC
+
+// ACADEMIC
 //   Scriptures, //  Hadith Books/Quran/Injil/Torah/Zabur/Scrolls of X/Talmud?
   Surah, // Mecca/Medina/Revelation Date/Ayat Length/Quran Order
 //   Scholars, // Tabieen, TabiTabieen, Ulama (ImamAzam,Madhab+ Tirmidihi, Ibn Taymiyah), Dai (Givers of Dawah),
 //   Relics, // Kaba, black stone, Prophets Bow, Musa Staff, Yusuf Turban, etc. Coins?
 //   Quran_Mentions, // Tribes, Animals, Foods, People (disbelievers)
 //   Arabic, // Alphabet (Muqattaʿat letters 14 of 28: ʾalif أ, hā هـ, ḥā ح, ṭā ط, yā ي, kāf ك, lām ل, mīm م, nūn ن, sīn س, ʿain ع, ṣād ص, qāf ق, rā ر.)
-//
-//   // Ummah
+
+// Ummah
 //   Amir, // Khalif/Generals
 //   Muslims, // alive/dead, AlBayt (Zojah, Children), Famous (Malcom X, Mike Tyson, Shaqeel Oneil), // Amirs/Khalif not in Dynasties, Athletes,
-//   Places, // HolyPlaces, Mosques, Schools, Cities  (old or new), mentioned in the Quran,Ruins, Conquered or not, Istanbul, Rome
-//
-//   // Dynasties (Leaders/Historical Events/Battles)
-//   Dynasties, // Muhammad, Rashidun, Ummayad, Andalus, Abbasid, Seljuk, Ayyubi, Mamluk, Ottoman,
-//   Rasulallah, //Muhammad Battles (Badr, Uhud, etc.)
+  Makan, //Places, // HolyPlaces, Mosques, Schools, Cities  (old or new), mentioned in the Quran,Ruins, Conquered or not, Istanbul, Rome
+
+// Dynasties (Leaders/Historical Events/Battles)
+  Rasulallah, //Muhammad Battles (Badr, Uhud, etc.)
 //   Rashidun,
 //   Ummayad,
 //   Andalus,

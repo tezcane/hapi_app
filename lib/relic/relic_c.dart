@@ -1,19 +1,21 @@
 import 'package:get/get.dart';
 import 'package:hapi/controller/getx_hapi.dart';
-import 'package:hapi/main_c.dart';
-import 'package:hapi/menu/slide/menu_right/nav_page.dart';
-import 'package:hapi/onboard/auth/auth_c.dart';
-import 'package:hapi/relic/relic.dart';
-import 'package:hapi/service/db.dart';
 import 'package:hapi/event/et.dart';
 import 'package:hapi/event/et_extension.dart';
 import 'package:hapi/event/event.dart';
+import 'package:hapi/event/event_asset.dart';
+import 'package:hapi/main_c.dart';
+import 'package:hapi/onboard/auth/auth_c.dart';
+import 'package:hapi/relic/relic.dart';
+import 'package:hapi/relic/relics_ui.dart';
+import 'package:hapi/service/db.dart';
 
 class RelicC extends GetxHapi {
   static RelicC get to => Get.find();
 
-  /// Perfect hash, access via _relicSets[ET.index]
-  final List<RelicSet> _relicSets = [];
+  /// Access via _relicSets[ET]
+  /// Note: Can be a perfect hash too but relicSetFilter init complicates this.
+  final Map<ET, RelicSet> _relicSets = {};
 
   /// Perfect hash, access via _ajrLevels[ET.index]=Map<relicId, int ajrLevel>
   final List<Map<int, int>> _ajrLevels = [];
@@ -79,45 +81,54 @@ class RelicC extends GetxHapi {
     for (ET et in ET.values) {
       if (!et.isRelic) continue; // skip Tarikh events
 
-      List<Relic> relics = et.initRelics();
+      RelicSet relicSet = getRelicSet(et);
 
       /// we manually set relic assets here, done here to make relic objects
       /// closer to const (future upgrade?).
-      for (Relic relic in relics) {
-        relic.asset = await relic.getRelicAsset().toImageEventAsset();
+      for (Relic relic in relicSet.relics) {
+        relic.asset = await getEventAsset(relic.getAsset());
       }
-
-      RelicSet relicSet = RelicSet(
-        et: et,
-        relics: relics,
-        tkTitle: et.tkRelicSetTitle,
-      );
-      _relicSets.add(relicSet); // must come before next line
-      relicSet.filterList = et.initRelicSetFilters();
 
       // init ajrLevels to be used in DB access
       Map<int, int> relicIdMap = {};
       for (int relicId = 0; relicId < relicSet.relics.length; relicId++) {
-        relicIdMap[relicId] = 0; // set all relicId's for given RELIC_TYPE
+        relicIdMap[relicId] = 0; // set all relicId's for given EVENT_TYPE
       }
       _ajrLevels.add(relicIdMap); // call DB to merge ajrLevels with this next
     }
 
     // // Playground to find sort order data or dump defaults:
-    // RelicSet relicSet = relics[RELIC_TYPE.Prophet]!;
+    // RelicSet relicSet = getRelicSet(ET.Nabi);
     // int idx = 0;
     // print('********* RELIC INIT START *********');
     // for (Relic relic in relicSet.relics) {
-    //   if ((relic as Prophet).isUluAlAzm() /* isRasul()) { */) {
+    //   if ((relic as Nabi).isUluAlAzm() /* isRasul()) { */) {
     //     print(
-    //         '$idx, // ${(relic as Prophet).quranMentionCount} ${relic.tkEndTagLabel}');
+    //         '$idx, // ${(relic as Nabi).quranMentionCount} ${relic.tkTitle}');
     //   }
     //   idx++;
     // }
     // print('********* RELIC INIT DONE *********');
+
+    // // Playground to find a. names of Asma ul-Husna:
+    // RelicSet relicSet = getRelicSet(ET.Asma_ul__Husna);
+    // int idx = 0;
+    // print('********* RELIC INIT START *********');
+    // for (Relic relic in relicSet.relics) {
+    //   // if ((relic as AsmaUlHusna)//.isUluAlAzm() /* isRasul()) { */) {
+    //   // print('$idx, // ${(relic as Nabi).quranMentionCount} ${relic.tkTitle}');
+    //   // }
+    //   print(relic.e.tkIsimA);
+    //   idx++;
+    // }
+    // print('********* RELIC INIT DONE *********, idx=$idx');
   }
 
-  RelicSet getRelicSet(ET et) => _relicSets[et.index];
+  RelicSet getRelicSet(ET et) {
+    // if not in _relicSets yet, add it now
+    if (!_relicSets.containsKey(et)) _relicSets[et] = RelicSet(et);
+    return _relicSets[et]!;
+  }
 
   int getAjrLevel(ET et, int relicId) => _ajrLevels[et.index][relicId]!;
 

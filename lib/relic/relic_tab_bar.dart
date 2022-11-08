@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hapi/component/auto_scroll_tab_view/auto_scroll_controller/auto_scroll_controller.dart';
 import 'package:hapi/component/auto_scroll_tab_view/auto_scroll_tab_view.dart';
+import 'package:hapi/event/et.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
-import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_c.dart';
 import 'package:hapi/relic/relic_set_ui.dart';
-import 'package:hapi/event/et.dart';
+import 'package:hapi/relic/relics_ui.dart';
 
 /// A single RELIC_TAB bar which holds one or more RelicSets that are accessible
 /// via an AutoScrollTabView, meaning when the user scrolls vertically the

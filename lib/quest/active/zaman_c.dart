@@ -26,12 +26,12 @@ class ZamanC extends GetxHapi {
   Z get nextZ => _nextZ;
 
   /// nextZ or nextZTooltip Timestamp used to calculate countdown timer on UI.
-  DateTime _nextZTime = DUMMY_TIME1;
+  late DateTime _nextZTime;
   String tvTimeToNextZaman = '-';
   String tvTimeToNextZamanTooltip = '-';
   Z? currZTooltip = Z.Dhuhr; // may be null if in edge case
   Z nextZTooltip = Z.Asr;
-  DateTime nextZTooltipTime = DUMMY_TIME1;
+  late DateTime nextZTooltipTime;
 
   int _secsSinceFajr = 0;
   int get secsSinceFajr => _secsSinceFajr;

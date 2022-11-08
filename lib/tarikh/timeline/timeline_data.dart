@@ -60,7 +60,7 @@ class HeaderColors2 {
 
 class Asset {
   const Asset({
-    required this.source,
+    required this.filename,
     required this.width,
     required this.height,
     this.loop = true,
@@ -71,7 +71,7 @@ class Asset {
     this.intro,
     this.idle,
   });
-  final String source;
+  final String filename;
   final double width;
   final double height;
   final bool loop;
@@ -89,7 +89,7 @@ List<TimelineData> getTimelineData() {
       date: -13800000000,
       tkTitle: TR_KEY_OLDEST,
       asset: Asset(
-        source: 'tarikh/flare/Big_Bang.flr',
+        filename: 'tarikh/flare/Big_Bang.flr',
         width: 3628,
         height: 3620,
         tOffsetHorizontal: 1500,
@@ -119,7 +119,7 @@ List<TimelineData> getTimelineData() {
       date: -13000000000,
       tkTitle: 'Milky Way is Born',
       asset: Asset(
-        source: 'tarikh/flare/Milky Way.flr',
+        filename: 'tarikh/flare/Milky Way.flr',
         width: 1293,
         height: 1210,
         scale: 0.5,
@@ -131,7 +131,7 @@ List<TimelineData> getTimelineData() {
       date: -4600000000,
       tkTitle: 'Sun is Born',
       asset: Asset(
-        source: 'tarikh/flare/Sun.flr',
+        filename: 'tarikh/flare/Sun.flr',
         width: 800,
         height: 800,
         tOffsetHorizontal: -100,
@@ -146,7 +146,7 @@ List<TimelineData> getTimelineData() {
       date: -4505000000,
       tkTitle: 'Earth is Born',
       asset: Asset(
-        source: 'tarikh/flare/HeavyBombardment.flr',
+        filename: 'tarikh/flare/HeavyBombardment.flr',
         width: 1210,
         height: 1210,
         scale: 0.25,
@@ -159,7 +159,7 @@ List<TimelineData> getTimelineData() {
       date: -4100000000,
       tkTitle: 'Heavy Bombardment',
       asset: Asset(
-        source: 'tarikh/flare/HeavyBombardment.flr',
+        filename: 'tarikh/flare/HeavyBombardment.flr',
         width: 1210,
         height: 1210,
         scale: 0.25,
@@ -174,7 +174,7 @@ List<TimelineData> getTimelineData() {
       date: -4000000000,
       tkTitle: 'Life on Earth',
       asset: Asset(
-        source: 'tarikh/flare/HeavyBombardment.flr',
+        filename: 'tarikh/flare/HeavyBombardment.flr',
         width: 1210,
         height: 1210,
         intro: 'Transformation',
@@ -202,7 +202,7 @@ List<TimelineData> getTimelineData() {
       date: -3800000000,
       tkTitle: 'Single Celled Organisms',
       asset: Asset(
-        source: 'tarikh/nima/Cells.nma',
+        filename: 'tarikh/nima/Cells.nma',
         width: 800,
         height: 400,
       ),
@@ -212,7 +212,7 @@ List<TimelineData> getTimelineData() {
       date: -600000000,
       tkTitle: 'Animals',
       asset: Asset(
-        source: 'tarikh/flare/Animals.flr',
+        filename: 'tarikh/flare/Animals.flr',
         width: 814,
         height: 564,
         tOffsetHorizontal: -100,
@@ -238,7 +238,7 @@ List<TimelineData> getTimelineData() {
       date: -530000000,
       tkTitle: 'Fish',
       asset: Asset(
-        source: 'tarikh/nima/Fish_and_Stuff.nma',
+        filename: 'tarikh/nima/Fish_and_Stuff.nma',
         width: 1290,
         height: 650,
         scale: 0.65,
@@ -251,7 +251,7 @@ List<TimelineData> getTimelineData() {
       date: -396000000,
       tkTitle: 'Insects',
       asset: Asset(
-        source: 'tarikh/nima/Insects.nma',
+        filename: 'tarikh/nima/Insects.nma',
         width: 800,
         height: 528,
       ),
@@ -262,7 +262,7 @@ List<TimelineData> getTimelineData() {
       date: -312000000,
       tkTitle: 'Reptiles',
       asset: Asset(
-        source: 'tarikh/nima/Reptiles.nma',
+        filename: 'tarikh/nima/Reptiles.nma',
         width: 400,
         height: 600,
         tOffsetHorizontal: -300,
@@ -275,7 +275,7 @@ List<TimelineData> getTimelineData() {
       end: -65000000,
       tkTitle: 'Dinosaur Age',
       asset: Asset(
-        source: 'tarikh/flare/Dinosaurs.flr',
+        filename: 'tarikh/flare/Dinosaurs.flr',
         width: 800,
         height: 570,
         tOffsetHorizontal: 0,
@@ -287,7 +287,7 @@ List<TimelineData> getTimelineData() {
       date: -200000000,
       tkTitle: 'Mammals',
       asset: Asset(
-        source: 'tarikh/nima/Mammals.nma',
+        filename: 'tarikh/nima/Mammals.nma',
         tOffsetHorizontal: -200,
         width: 400,
         height: 400,
@@ -298,7 +298,7 @@ List<TimelineData> getTimelineData() {
       date: -150000000,
       tkTitle: 'Stegosaurus',
       asset: Asset(
-        source: 'tarikh/nima/Dinosaurs.nma',
+        filename: 'tarikh/nima/Dinosaurs.nma',
         width: 800,
         height: 570,
         tOffsetHorizontal: -200,
@@ -311,7 +311,7 @@ List<TimelineData> getTimelineData() {
       date: -68000000,
       tkTitle: 'Tyrannosaurus',
       asset: Asset(
-        source: 'tarikh/flare/Trex.flr',
+        filename: 'tarikh/flare/Trex.flr',
         width: 800,
         height: 570,
         tOffsetHorizontal: -200,
@@ -323,7 +323,7 @@ List<TimelineData> getTimelineData() {
       date: -65000001,
       tkTitle: 'Dinosaur Extinction',
       asset: Asset(
-        source: 'tarikh/nima/Dinosaur_Demise.nma',
+        filename: 'tarikh/nima/Dinosaur_Demise.nma',
         width: 700,
         height: 500,
         tOffsetHorizontal: -100,
@@ -335,7 +335,7 @@ List<TimelineData> getTimelineData() {
       date: -6000000,
       tkTitle: 'Primate Bipedalism',
       asset: Asset(
-        source: 'tarikh/nima/Apes.nma',
+        filename: 'tarikh/nima/Apes.nma',
         width: 528,
         height: 528,
         tOffsetHorizontal: -40,
@@ -347,7 +347,7 @@ List<TimelineData> getTimelineData() {
       date: -3300000,
       tkTitle: 'Constructed Tools',
       asset: Asset(
-        source: 'tarikh/nima/Constructive_Tools.nma',
+        filename: 'tarikh/nima/Constructive_Tools.nma',
         width: 528,
         height: 528,
         tOffsetHorizontal: -40,
@@ -371,7 +371,7 @@ List<TimelineData> getTimelineData() {
       date: -300000,
       tkTitle: 'Control Fire',
       asset: Asset(
-        source: 'tarikh/nima/Fire.nma',
+        filename: 'tarikh/nima/Fire.nma',
         width: 528,
         height: 528,
         tOffsetHorizontal: -50,
@@ -382,7 +382,7 @@ List<TimelineData> getTimelineData() {
       date: -12000,
       tkTitle: 'First Temple',
       asset: Asset(
-        source: 'tarikh/nima/First_Temple.nma',
+        filename: 'tarikh/nima/First_Temple.nma',
         width: 340,
         height: 340,
         tOffsetHorizontal: -200,
@@ -393,7 +393,7 @@ List<TimelineData> getTimelineData() {
       date: -10000,
       tkTitle: 'Agricultural Revolution',
       asset: Asset(
-        source: 'tarikh/nima/Agricultural_evolution.nma',
+        filename: 'tarikh/nima/Agricultural_evolution.nma',
         width: 528,
         height: 528,
         tOffsetHorizontal: -40,
@@ -404,7 +404,7 @@ List<TimelineData> getTimelineData() {
       date: -5000,
       tkTitle: 'Writing',
       asset: Asset(
-        source: 'tarikh/nima/Writing.nma',
+        filename: 'tarikh/nima/Writing.nma',
         width: 900,
         height: 1200,
         scale: 0.5,
@@ -417,7 +417,7 @@ List<TimelineData> getTimelineData() {
       date: -3500,
       tkTitle: 'Recorded History',
       asset: Asset(
-        source: 'tarikh/nima/Recorded_history.nma',
+        filename: 'tarikh/nima/Recorded_history.nma',
         width: 400,
         height: 400,
         tOffsetHorizontal: -200,
@@ -428,7 +428,7 @@ List<TimelineData> getTimelineData() {
       date: -2630,
       tkTitle: 'First Pyramid Built',
       asset: Asset(
-        source: 'tarikh/nima/Pyramid.nma',
+        filename: 'tarikh/nima/Pyramid.nma',
         width: 400,
         height: 430,
         tOffsetHorizontal: -350,
@@ -439,7 +439,7 @@ List<TimelineData> getTimelineData() {
       date: -27, // TODO need empire length here
       tkTitle: 'Roman Empire',
       asset: Asset(
-        source: 'tarikh/nima/Roma.nma',
+        filename: 'tarikh/nima/Roma.nma',
         width: 2100,
         height: 1375,
         scale: 0.5,
@@ -454,7 +454,7 @@ List<TimelineData> getTimelineData() {
       tkTitle: 'Crusades',
       accent: Color.fromARGB(0xFF, 227, 21, 55),
       asset: Asset(
-        source: 'tarikh/nima/Crusades.nma',
+        filename: 'tarikh/nima/Crusades.nma',
         width: 528,
         height: 528,
         tOffsetHorizontal: -60,
@@ -465,7 +465,7 @@ List<TimelineData> getTimelineData() {
       end: 1351,
       tkTitle: 'Black Plague',
       asset: Asset(
-        source: 'tarikh/nima/BlackPlague.nma',
+        filename: 'tarikh/nima/BlackPlague.nma',
         width: 800,
         height: 400,
       ),
@@ -474,7 +474,7 @@ List<TimelineData> getTimelineData() {
       date: 1453,
       tkTitle: 'Constantinople Istanbul',
       asset: Asset(
-        source: 'tarikh/nima/Constantinople.nma',
+        filename: 'tarikh/nima/Constantinople.nma',
         width: 500,
         height: 500,
       ),
@@ -483,7 +483,7 @@ List<TimelineData> getTimelineData() {
       date: 1687,
       tkTitle: 'Newton and Gravity',
       asset: Asset(
-        source: 'tarikh/nima/Newton_v2.nma',
+        filename: 'tarikh/nima/Newton_v2.nma',
         width: 500,
         height: 500,
         idle: 'apple_falls',
@@ -493,7 +493,7 @@ List<TimelineData> getTimelineData() {
       date: 1760,
       tkTitle: 'Industrialization',
       asset: Asset(
-        source: 'tarikh/nima/Industrialization.nma',
+        filename: 'tarikh/nima/Industrialization.nma',
         width: 500,
         height: 500,
         tOffsetHorizontal: -100,
@@ -503,7 +503,7 @@ List<TimelineData> getTimelineData() {
       date: 1859,
       tkTitle: "Darwin's Theory of Evolution",
       asset: Asset(
-        source: 'tarikh/nima/Darwin 2.nma',
+        filename: 'tarikh/nima/Darwin 2.nma',
         width: 1850,
         height: 2100,
         scale: 0.22,
@@ -516,7 +516,7 @@ List<TimelineData> getTimelineData() {
       end: 1918,
       tkTitle: 'World War 1',
       asset: Asset(
-        source: 'tarikh/nima/World_War_I.nma',
+        filename: 'tarikh/nima/World_War_I.nma',
         width: 528,
         height: 528,
       ),
@@ -527,7 +527,7 @@ List<TimelineData> getTimelineData() {
       end: 1945,
       tkTitle: 'World War 2',
       asset: Asset(
-        source: 'tarikh/nima/World_War_II.nma',
+        filename: 'tarikh/nima/World_War_II.nma',
         width: 528,
         height: 528,
         tOffsetHorizontal: -140,
@@ -539,7 +539,7 @@ List<TimelineData> getTimelineData() {
       end: 1991,
       tkTitle: 'Cold War',
       asset: Asset(
-        source: 'tarikh/nima/Cold_war.nma',
+        filename: 'tarikh/nima/Cold_war.nma',
         width: 528,
         height: 528,
         tOffsetHorizontal: -80,
@@ -550,7 +550,7 @@ List<TimelineData> getTimelineData() {
       date: 1969,
       tkTitle: 'Moon Landing',
       asset: Asset(
-        source: 'tarikh/nima/Moon.nma',
+        filename: 'tarikh/nima/Moon.nma',
         width: 528,
         height: 528,
         tOffsetHorizontal: -100,
@@ -561,7 +561,7 @@ List<TimelineData> getTimelineData() {
       date: 1990,
       tkTitle: 'World Wide Web',
       asset: Asset(
-        source: 'tarikh/nima/Internet.nma',
+        filename: 'tarikh/nima/Internet.nma',
         width: 528,
         height: 528,
         tOffsetHorizontal: -140,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hapi/event/event.dart';
-import 'package:hapi/event/event_asset.dart';
 import 'package:hapi/event/event_widget.dart';
 
 /// This widget is responsible for drawing the circular thumbnail within the [ThumbnailDetailWidget].
@@ -14,22 +13,13 @@ class ThumbnailWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    EventAsset asset = event.asset;
-    Widget thumbnail;
-    switch (asset.getAssetType()) {
-      case ASSET_TYPE.IMAGE:
-        thumbnail = RawImage(image: (asset as ImageAsset).image);
-        break;
-      case ASSET_TYPE.FLARE:
-      case ASSET_TYPE.NIMA:
-        thumbnail = EventWidget(isActive: false, event: event); // acts like pic
-        break;
-    }
-
     return SizedBox(
       width: radius * 4,
       height: radius * 4,
-      child: ClipPath(clipper: CircleClipper(), child: thumbnail),
+//    child: ClipPath( // use to put a circle frame around photo
+//      clipper: CircleClipper(),
+      child: event.asset.widget(false, null),
+//    ),
     );
   }
 }

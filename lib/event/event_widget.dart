@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'dart:ui' as ui;
 
 import 'package:flare_dart/math/aabb.dart' as flare;
 import 'package:flare_dart/math/vec2d.dart' as flare;
@@ -19,14 +18,12 @@ import 'package:nima/nima/math/vec2d.dart' as nima;
 /// so it can implement a custom [RenderObject] and update it accordingly.
 class EventWidget extends LeafRenderObjectWidget {
   const EventWidget({
-    required this.isActive,
     required this.event,
+    required this.isActive,
     this.interactOffset,
   });
-
-  /// A flag is used to animate the widget only when needed.
-  final bool isActive;
   final Event event;
+  final bool isActive; // flag to start/stop animations when needed
 
   /// If this widget also has a custom controller, the [interactOffset]
   /// parameter can be used to detect motion effects and alter the [FlareActor] accordingly.
@@ -63,7 +60,6 @@ class EventWidget extends LeafRenderObjectWidget {
 /// Flare/Nima [FlutterActor] where the widget is being placed.
 class VignetteRenderObject extends RenderBox {
   static const Alignment alignment = Alignment.center;
-  // static const BoxFit fit = BoxFit.contain;
 
   bool _isActive = false;
   bool _firstUpdate = true;
@@ -168,196 +164,28 @@ class VignetteRenderObject extends RenderBox {
   /// This overridden method is where we can implement our custom logic, for
   /// laying out the [FlutterActor], and drawing it to [canvas].
   @override
-  void paint(PaintingContext context, Offset offset) {
+  void paint(PaintingContext context, Offset offset) async {
     final Canvas canvas = context.canvas;
     _renderOffset = offset;
 
-    /// Don't paint if not needed.
-    if (_event == null) return;
-
-    EventAsset asset = _event!.asset;
-
-    // /// Don't paint if not needed.
-    // if (asset == null) {
-    //   return;
-    // }
-
-    canvas.save();
-
-    double w = asset.width;
-    double h = asset.height;
-
-    /// If the asset is just a static image, draw the image directly to [canvas].
-    if (asset is ImageAsset) {
-      canvas.drawImageRect(
-          asset.image,
-          Rect.fromLTWH(0.0, 0.0, asset.width, asset.height),
-          Rect.fromLTWH(offset.dx + size.width - w, asset.y, w, h),
-          Paint()
-            ..isAntiAlias = true
-            ..filterQuality = ui.FilterQuality.low
-            ..color = Colors.white.withOpacity(asset.opacity));
-    } else if (asset is NimaAsset && _nimaActor != null) {
-      /// If we have a [TimelineNima] asset, set it up properly and paint it.
-      ///
-      /// 1. Calculate the bounds for the current object.
-      /// An Axis-Aligned Bounding Box (AABB) is already set up when the asset is first loaded.
-      /// We rely on this AABB to perform screen-space calculations.
-      nima.AABB bounds = asset.setupAABB;
-
-      double contentHeight = bounds[3] - bounds[1];
-      double contentWidth = bounds[2] - bounds[0];
-      double x =
-          -bounds[0] - contentWidth / 2.0 - (alignment.x * contentWidth / 2.0);
-      double y = -bounds[1] -
-          contentHeight / 2.0 +
-          (alignment.y * contentHeight / 2.0);
-
-      Offset renderOffset = offset;
-      Size renderSize = size;
-
-      double scaleX = 1.0, scaleY = 1.0;
-
-      canvas.save();
-
-      /// This widget is always set up to use [BoxFit.contain].
-      /// But this behavior can be customized according to anyone's needs.
-      /// The following switch/case contains all the various alternatives native to Flutter.
-      // switch (fit) {
-      //   case BoxFit.fill:
-      //     scaleX = renderSize.width / contentWidth;
-      //     scaleY = renderSize.height / contentHeight;
-      //     break;
-      //   case BoxFit.contain:
-      double minScale = min(
-          renderSize.width / contentWidth, renderSize.height / contentHeight);
-      scaleX = scaleY = minScale;
-      //     break;
-      //   case BoxFit.cover:
-      //     double maxScale = max(renderSize.width / contentWidth,
-      //         renderSize.height / contentHeight);
-      //     scaleX = scaleY = maxScale;
-      //     break;
-      //   case BoxFit.fitHeight:
-      //     double minScale = renderSize.height / contentHeight;
-      //     scaleX = scaleY = minScale;
-      //     break;
-      //   case BoxFit.fitWidth:
-      //     double minScale = renderSize.width / contentWidth;
-      //     scaleX = scaleY = minScale;
-      //     break;
-      //   case BoxFit.none:
-      //     scaleX = scaleY = 1.0;
-      //     break;
-      //   case BoxFit.scaleDown:
-      //     double minScale = min(renderSize.width / contentWidth,
-      //         renderSize.height / contentHeight);
-      //     scaleX = scaleY = minScale < 1.0 ? minScale : 1.0;
-      //     break;
-      // }
-
-      /// 2. Move the [canvas] to the right position so that the widget's position
-      /// is center-aligned based on its offset, size and alignment position.
-      canvas.translate(
-          renderOffset.dx +
-              renderSize.width / 2.0 +
-              (alignment.x * renderSize.width / 2.0),
-          renderOffset.dy +
-              renderSize.height / 2.0 +
-              (alignment.y * renderSize.height / 2.0));
-
-      /// 3. Scale depending on the [fit].
-      canvas.scale(scaleX, -scaleY);
-
-      /// 4. Move the canvas to the correct [_nimaActor] position calculated above.
-      canvas.translate(x, y);
-
-      /// 5. perform the drawing operations.
-      _nimaActor!.draw(canvas, 1.0);
-
-      /// 6. Restore the canvas' original transform state.
-      canvas.restore();
-    } else if (asset is FlareAsset && _flareActor != null) {
-      /// If we have a [TimelineFlare] asset set it up properly and paint it.
-      ///
-      /// 1. Calculate the bounds for the current object.
-      /// An Axis-Aligned Bounding Box (AABB) is already set up when the asset is first loaded.
-      /// We rely on this AABB to perform screen-space calculations.
-      flare.AABB bounds = asset.setupAABB;
-      double contentWidth = bounds[2] - bounds[0];
-      double contentHeight = bounds[3] - bounds[1];
-      double x =
-          -bounds[0] - contentWidth / 2.0 - (alignment.x * contentWidth / 2.0);
-      double y = -bounds[1] -
-          contentHeight / 2.0 +
-          (alignment.y * contentHeight / 2.0);
-
-      Offset renderOffset = offset;
-      Size renderSize = size;
-
-      double scaleX = 1.0, scaleY = 1.0;
-
-      canvas.save();
-
-      /// This widget is always set up to use [BoxFit.contain].
-      /// But this behavior can be customized according to anyone's needs.
-      /// The following switch/case contains all the various alternatives native to Flutter.
-      // switch (fit) {
-      //   case BoxFit.fill:
-      //     scaleX = renderSize.width / contentWidth;
-      //     scaleY = renderSize.height / contentHeight;
-      //     break;
-      //   case BoxFit.contain:
-      double minScale = min(
-          renderSize.width / contentWidth, renderSize.height / contentHeight);
-      scaleX = scaleY = minScale;
-      //     break;
-      //   case BoxFit.cover:
-      //     double maxScale = max(renderSize.width / contentWidth,
-      //         renderSize.height / contentHeight);
-      //     scaleX = scaleY = maxScale;
-      //     break;
-      //   case BoxFit.fitHeight:
-      //     double minScale = renderSize.height / contentHeight;
-      //     scaleX = scaleY = minScale;
-      //     break;
-      //   case BoxFit.fitWidth:
-      //     double minScale = renderSize.width / contentWidth;
-      //     scaleX = scaleY = minScale;
-      //     break;
-      //   case BoxFit.none:
-      //     scaleX = scaleY = 1.0;
-      //     break;
-      //   case BoxFit.scaleDown:
-      //     double minScale = min(renderSize.width / contentWidth,
-      //         renderSize.height / contentHeight);
-      //     scaleX = scaleY = minScale < 1.0 ? minScale : 1.0;
-      //     break;
-      // }
-
-      /// 2. Move the [canvas] to the right position so that the widget's position
-      /// is center-aligned based on its offset, size and alignment position.
-      canvas.translate(
-          renderOffset.dx +
-              renderSize.width / 2.0 +
-              (alignment.x * renderSize.width / 2.0),
-          renderOffset.dy +
-              renderSize.height / 2.0 +
-              (alignment.y * renderSize.height / 2.0));
-
-      /// 3. Scale depending on the [fit].
-      canvas.scale(scaleX, scaleY);
-
-      /// 4. Move the canvas to the correct [_flareActor] position calculated above.
-      canvas.translate(x, y);
-
-      /// 5. perform the drawing operations.
-      _flareActor!.draw(canvas);
-
-      /// 6. Restore the canvas' original transform state.
-      canvas.restore();
-    }
-    canvas.restore();
+    drawAssetOnCanvas(
+      event: _event,
+      canvas: canvas,
+      offset: offset,
+      nimaActor: _nimaActor, // needed or EventWidget() doesn't animate
+      flareActor: _flareActor, // needed or EventWidget() doesn't animate
+      alignmentNima: alignment,
+      alignmentFlare: alignment,
+      size: size,
+      fit: BoxFit.contain,
+      gradientColor: null,
+      opacity: 1.0,
+      useAssetOpacity: false,
+      rs: 1.0,
+      assetScreenScale: 1.0,
+      useOffsetHorizontal: false,
+      tapTargets: null,
+    );
   }
 
   /// This callback is used by the [SchedulerBinding] in order to advance the Flare/Nima

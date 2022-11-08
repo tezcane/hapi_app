@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/utils.dart';
 import 'package:hapi/controller/time_c.dart';
+import 'package:hapi/event/et.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/quran/quran.dart';
 import 'package:hapi/relic/family_tree/family_tree.dart';
 import 'package:hapi/relic/relic.dart';
-import 'package:hapi/event/et.dart';
-import 'package:hapi/event/event_asset.dart';
+import 'package:hapi/tarikh/timeline/timeline_data.dart';
 
 const String _ = ' '; // space/gap
 
@@ -48,7 +48,7 @@ class Nabi extends FamilyTree {
           // Event data:
           et: ET.Nabi,
           tkEra: tkEra,
-          tkTitle: 'a.${e.isim}',
+          tkTitle: e.tkIsimA,
           start: start,
           end: end,
           // Relic data:
@@ -83,9 +83,8 @@ class Nabi extends FamilyTree {
   bool isUluAlAzm() => aqUluAlAzmList != null && aqUluAlAzmList!.isNotEmpty;
 
   @override
-  RelicAsset getRelicAsset({width = 200.0, height = 200.0, scale = 1.0}) =>
-      RelicAsset(
-        'assets/images/anbiya/${e.isim}.png',
+  Asset getAsset({width = 200.0, height = 200.0, scale = 1.0}) => Asset(
+        filename: 'images/anbiya/${e.isim}.png',
         width: width,
         height: height,
         scale: scale,
@@ -94,9 +93,12 @@ class Nabi extends FamilyTree {
   @override
   // TODO: implement widget
   Widget get widget => throw UnimplementedError();
+
+  static List<Relic> get relics => _relics;
+  static List<RelicSetFilter> get relicSetFilters => _relicSetFilters;
 }
 
-final List<Nabi> relicsNabi = [
+final List<Relic> _relics = [
   Nabi(
     // Event data:
     tkEra: 'Intelligent Life',
@@ -1745,7 +1747,7 @@ final List<Nabi> relicsNabi = [
     mom: AS.Amina_Bint_Wahb,
     dad: AS.Abdullah_,
     spouses: [
-      // TODO Link to RELIC_TYPE.Bayt:
+      // TODO Link to EVENT_TYPE (ET).Bayt:
       //https://en.wikipedia.org/wiki/Muhammad%27s_wives
       //https://www.quora.com/After-the-death-of-Prophet-Muhammad-which-of-his-wives-died-first
       AS.Khadijah, //     cns('595–619: ') + a('a.Khadijah'),
@@ -1762,7 +1764,7 @@ final List<Nabi> relicsNabi = [
       AS.Rayhana, //      cns('627–631: ') + a('a.Rayhana'), // concubine later married?
       AS.Maria, //        cns('628–632: ') + a('a.Maria'), // concubine later married?
     ],
-    // TODO Link to RELIC_TYPE.Bayt:
+    // TODO Link to EVENT_TYPE (ET).Bayt:
     daughters: null,
     // tvDaughters: [ // TODO Disable for now since UI gets too big
     //   PF.Zainab, //       cns('599–629 ') + a('a.Zainab'),
@@ -1843,14 +1845,14 @@ final List<Nabi> relicsNabi = [
   ),
 ];
 
-List<RelicSetFilter> relicSetFiltersNabi = [
+final List<RelicSetFilter> _relicSetFilters = [
   RelicSetFilter(
     tkLabel: 'a.Nabi',
     idxList: List.generate(
-      relicsNabi.length,
-      (index) => relicsNabi[index].e.index,
+      _relics.length,
+      (index) => _relics[index].e.index,
     ),
-    tprMax: relicsNabi.length,
+    tprMax: _relics.length,
   ),
   RelicSetFilter(
     tkLabel: 'a.Rasul',
@@ -1872,7 +1874,7 @@ List<RelicSetFilter> relicSetFiltersNabi = [
       AS.Isa.index,
       AS.Muhammad.index,
     ],
-    tprMax: relicsNabi.length,
+    tprMax: _relics.length,
   ),
   RelicSetFilter(
     tkLabel: 'a.Ulu Al-Azm',
@@ -1883,7 +1885,7 @@ List<RelicSetFilter> relicSetFiltersNabi = [
       AS.Isa.index,
       AS.Muhammad.index,
     ],
-    tprMax: relicsNabi.length,
+    tprMax: _relics.length,
   ),
   RelicSetFilter(
     tkLabel: 'Quran Name Mentions',
@@ -1915,15 +1917,15 @@ List<RelicSetFilter> relicSetFiltersNabi = [
       AS.Ilyas.index, //       2
       AS.Alyasa.index, //      2
     ],
-    tprMax: relicsNabi.length,
+    tprMax: _relics.length,
   ),
   RelicSetFilter(
     tkLabel: 'Family Tree',
     idxList: List.generate(
-      relicsNabi.length,
-      (index) => relicsNabi[index].e.index,
+      _relics.length,
+      (index) => _relics[index].e.index,
     ),
-    tprMax: relicsNabi.length,
+    tprMax: _relics.length,
     treeGraph1: getGraphAllFamily(ET.Nabi, AS.Gap.index),
     treeGraph2: getGraphOnlyRelics(ET.Nabi, AS.Gap.index),
   ),

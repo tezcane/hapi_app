@@ -87,6 +87,7 @@ dependencies:
 
   json_annotation: ^4.4.0
   graphview: ^1.1.1
+  flutter_svg: ^1.1.6
 
 dev_dependencies:
   analyzer: ^3.2.0 # 1.4.0
@@ -114,13 +115,15 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
+    - assets/
     - assets/i18n/
     - assets/i18n/a/
     - assets/i18n/event/nabi/
-#    - assets/i18n/event/surah/ TODO
+#   - assets/i18n/event/surah/ TODO asdf
     - assets/i18n/event/tarikh/
     - assets/images/
     - assets/images/Allah/
+    - assets/images/Allah/asma_ul__husna/
     - assets/images/anbiya/
     - assets/images/logo/
     - assets/images/logo/gif/

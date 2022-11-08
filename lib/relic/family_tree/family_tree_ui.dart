@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:graphview/GraphView.dart';
 import 'package:graphview/GraphView.dart' as graph_view;
+import 'package:hapi/event/et.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/sub_page.dart';
+import 'package:hapi/relic/al_asma/nabi.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_c.dart';
 import 'package:hapi/relic/relic_set_ui.dart';
-import 'package:hapi/relic/ummah/nabi.dart';
-import 'package:hapi/event/et.dart';
 
 /// Shows a Family Tree SubPage.
 // ignore: must_be_immutable

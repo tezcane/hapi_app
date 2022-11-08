@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:graphview/GraphView.dart';
+import 'package:hapi/event/et.dart';
+import 'package:hapi/event/et_extension.dart';
 import 'package:hapi/main_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/relic/relic.dart';
-import 'package:hapi/relic/relic_c.dart';
-import 'package:hapi/event/et.dart';
 
 /// For UI's that have option to show Arabic, Transliteration, and locale lang.
 /// All relic enums must implement/extend this. TODO asdf implement in many places
@@ -116,7 +116,7 @@ abstract class FamilyTree extends Relic {
 
 Graph getGraphAllFamily(ET et, int gapIdx) {
   final Graph graph = Graph()..isTree = true;
-  for (Relic relic in RelicC.to.getRelicSet(et).relics) {
+  for (Relic relic in et.initRelics()) {
     addEdgesAllFamily(graph, relic as FamilyTree, gapIdx);
   }
   return graph;
@@ -208,7 +208,7 @@ Graph getGraphOnlyRelics(ET et, int gapIdx) {
     );
   }
 
-  List<Relic> relics = RelicC.to.getRelicSet(et).relics;
+  List<Relic> relics = et.initRelics();
 
   // for each relic
   for (int relicIdx = 0; relicIdx < relics.length - 1; relicIdx++) {

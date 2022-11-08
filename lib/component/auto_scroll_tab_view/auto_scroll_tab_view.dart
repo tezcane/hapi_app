@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hapi/component/auto_scroll_tab_view/auto_scroll_controller/auto_scroll_controller.dart';
 import 'package:hapi/component/auto_scroll_tab_view/rect_getter/rect_getter.dart';
-import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/relic/relic_c.dart';
+import 'package:hapi/relic/relics_ui.dart';
 
 class AutoScrollTabView extends StatefulWidget {
   const AutoScrollTabView({

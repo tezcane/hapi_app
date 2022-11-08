@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:hapi/main_c.dart';
+import 'package:hapi/event/et.dart';
+import 'package:hapi/event/favorite/event_favorite_ui.dart';
+import 'package:hapi/event/search/event_search_ui.dart';
 import 'package:hapi/menu/bottom_bar.dart';
 import 'package:hapi/menu/bottom_bar_menu.dart';
 import 'package:hapi/menu/slide/menu_right/menu_right_ui.dart';
 import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/relic/relic_tab_bar.dart';
-import 'package:hapi/event/et.dart';
-import 'package:hapi/event/favorite/event_favorite_ui.dart';
-import 'package:hapi/event/search/event_search_ui.dart';
+
+/// TODO this is needed in another class, should it be?
+enum RELIC_TAB {
+  Al__Asma__, // Names
+  Islam,
+  Akadimi, // Academic
+  Ummah,
+  Mamlaka, // Dynasties/Kingdoms
+  // Search, TODO arabee translate these
+  // Favorites,
+}
 
 /// Init all of this NavPage's main widgets and bottom bar
 class RelicsUI extends StatelessWidget {
@@ -39,59 +49,72 @@ const _navPage = NavPage.Alathar;
 
 const List<BottomBarItem> _bottomBarItems = [
   BottomBarItem(
-    Center(child: T('Coming Soon', tsN, h: 50)),
+    // Center(child: T('Coming Soon', tsN, h: 50)),
+    RelicTabBar(
+      relicTab: RELIC_TAB.Islam,
+      etList: [ET.Delil, ET.Al__Aqida],
+    ),
     null,
-    'a.Allah',
-    'About Allah SWT',
+    'a.Islam',
+    'About Islam',
+    Icons.brightness_3_outlined,
+    onPressed: _hideKeyboard,
+  ),
+  BottomBarItem(
+    RelicTabBar(
+      relicTab: RELIC_TAB.Al__Asma__,
+      etList: [ET.Asma_ul__Husna, ET.Nabi],
+    ),
+    null,
+    "a.Al'Asma'",
+    'Big Names',
     Icons.apps_outlined,
     onPressed: _hideKeyboard,
   ),
   BottomBarItem(
     RelicTabBar(
-      relicTab: RELIC_TAB.Ummah,
-      etList: [ET.Nabi, ET.Surah],
+      relicTab: RELIC_TAB.Akadimi,
+      etList: [ET.Surah],
     ),
     null,
-    'a.Ummah',
-    'Remarkable Muslims',
-    Icons.connect_without_contact_outlined,
-    onPressed: _hideKeyboard,
-  ),
-  BottomBarItem(
-    Center(child: T('Coming Soon', tsN, h: 50)),
-    null,
-    'a.Delil',
-    'Proofs of Islam',
+    'a.Akadimi',
+    'Academic Knowledge',
     Icons.auto_stories,
     onPressed: _hideKeyboard,
   ),
   BottomBarItem(
-    Center(child: T('Coming Soon', tsN, h: 50)),
+    RelicTabBar(
+      relicTab: RELIC_TAB.Ummah,
+      etList: [ET.Makan],
+    ),
     null,
-    'Places',
-    'Famous Muslim Places',
-    Icons.map_outlined, // TODO Icons.mosque_outlined/.school_outlined
+    'a.Ummah',
+    'Muslim Things',
+    Icons.mosque_outlined, //connect_without_contact_outlined/wine_bar_sharp
     onPressed: _hideKeyboard,
   ),
   BottomBarItem(
-    Center(child: T('Coming Soon', tsN, h: 50)),
+    RelicTabBar(
+      relicTab: RELIC_TAB.Mamlaka,
+      etList: [ET.Rasulallah],
+    ),
     null,
-    'a.Alathar', // Relics
-    'Islamic relics',
-    Icons.brightness_3_outlined, // Icons.wine_bar_sharp
+    'a.Mamlaka', // Relics
+    'Large Muslim Dynasties',
+    Icons.map_outlined, // TODO Icons.school_outlined
     onPressed: _hideKeyboard,
   ),
   BottomBarItem(
     EventSearchUI(_navPage),
     null,
-    'Search',
+    'a.Search', // TODO
     'Alathar Search',
     Icons.search_outlined,
   ),
   BottomBarItem(
     EventFavoriteUI(ET.Nabi, _navPage),
     null,
-    'Favorites',
+    'a.Favorites', // TODO
     'Alathar Favorites',
     Icons.favorite_border_outlined,
     onPressed: _hideKeyboard, // in case search is showing keyboard
