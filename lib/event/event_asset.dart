@@ -626,11 +626,21 @@ drawAssetOnCanvas({
       /// 4. Move canvas to the correct [_nimaActor] position calculated above
       canvas.translate(x, y);
 
+      double actorOpacity = useAssetOpacity ? asset.opacity : 1.0;
+      if (actorOpacity < 0.0) {
+        l.w('Nima opacity is $actorOpacity, correcting to 0.0');
+        actorOpacity = 0.0;
+      }
+      if (actorOpacity > 1.0) {
+        l.w('Nima opacity is $actorOpacity, correcting to 1.0');
+        actorOpacity = 1.0;
+      }
+
       /// 5. perform the drawing operations.
       if (nimaActor != null) {
-        nimaActor.draw(canvas, useAssetOpacity ? asset.opacity : 1.0);
+        nimaActor.draw(canvas, actorOpacity);
       } else {
-        asset.actor.draw(canvas, useAssetOpacity ? asset.opacity : 1.0);
+        asset.actor.draw(canvas, actorOpacity);
       }
 
       /// 6. Restore the canvas' original transform state.
@@ -725,7 +735,18 @@ drawAssetOnCanvas({
       canvas.translate(x, y);
 
       /// 5. perform the drawing operations.
-      if (useAssetOpacity) asset.actor.modulateOpacity = asset.opacity;
+      if (useAssetOpacity) {
+        double actorOpacity = asset.opacity; //useAssetOpacity?asset.opacity:1.0
+        if (actorOpacity < 0.0) {
+          l.w('Flare opacity is $actorOpacity, correcting to 0.0');
+          asset.opacity = 0.0;
+        }
+        if (actorOpacity > 1.0) {
+          l.w('Flare opacity is $actorOpacity, correcting to 1.0');
+          asset.opacity = 1.0;
+        }
+        asset.actor.modulateOpacity = asset.opacity;
+      }
       if (flareActor != null) {
         flareActor.draw(canvas);
       } else {
