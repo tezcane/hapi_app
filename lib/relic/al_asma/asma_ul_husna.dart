@@ -17,11 +17,7 @@ class AsmaUlHusna extends Relic {
           end: 0,
           // Relic data:
           e: e,
-        ) {
-    if (quranMentionCount != this.ayas.length) {
-      print('asdf $e');
-    }
-  }
+        );
   final List<Aya> ayas; // quran or hadith ayas containing/explaining the name
   final List<GT> gts; // grammatical types
   final int quranMentionCount;
