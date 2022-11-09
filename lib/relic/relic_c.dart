@@ -98,9 +98,9 @@ class RelicC extends GetxHapi {
     }
 
     // // Playground to find sort order data or dump defaults:
+    // print('********* RELIC INIT START *********');
     // RelicSet relicSet = getRelicSet(ET.Nabi);
     // int idx = 0;
-    // print('********* RELIC INIT START *********');
     // for (Relic relic in relicSet.relics) {
     //   if ((relic as Nabi).isUluAlAzm() /* isRasul()) { */) {
     //     print(
@@ -108,19 +108,33 @@ class RelicC extends GetxHapi {
     //   }
     //   idx++;
     // }
-    // print('********* RELIC INIT DONE *********');
 
-    // // Playground to find a. names of Asma ul-Husna:
+    // // Playground for Asma ul-Husna:
     // RelicSet relicSet = getRelicSet(ET.Asma_ul__Husna);
     // int idx = 0;
-    // print('********* RELIC INIT START *********');
+    // String output = '';
+    // List<AsmaUlHusna> auhs = [];
     // for (Relic relic in relicSet.relics) {
-    //   // if ((relic as AsmaUlHusna)//.isUluAlAzm() /* isRasul()) { */) {
-    //   // print('$idx, // ${(relic as Nabi).quranMentionCount} ${relic.tkTitle}');
+    //   AsmaUlHusna auh = relic as AsmaUlHusna;
+    //   auhs.add(auh);
+    //   // for (GT gt in auh.gts) {
+    //   //   if (gt == GT.Not_In_Quran) {
+    //   //     output += 'AUH.${auh.e.name}.index, ';
+    //   //   }
     //   // }
-    //   print(relic.e.tkIsimA);
+    //   // print(relic.e.tkIsimA);
     //   idx++;
     // }
+    // auhs.sort((a, b) => a.quranMentionCount.compareTo(b.quranMentionCount));
+    // for (AsmaUlHusna auh in auhs.reversed) {
+    //   output += 'AUH.${auh.e.name}.index, ';
+    //   if (output.length > 1000) {
+    //     print(output);
+    //     output = ''; // max char print limit protection, flushed out
+    //   }
+    // }
+    //
+    // print(output);
     // print('********* RELIC INIT DONE *********, idx=$idx');
   }
 

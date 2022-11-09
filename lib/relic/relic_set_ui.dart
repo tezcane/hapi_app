@@ -4,6 +4,7 @@ import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/sub_page.dart';
+import 'package:hapi/relic/al_asma/asma_ul_husna.dart';
 import 'package:hapi/relic/al_asma/nabi.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/relic/relic_c.dart';
@@ -240,7 +241,11 @@ class RelicSetUI extends StatelessWidget {
     if (hasField) {
       switch (filterField) {
         case FILTER_FIELD.QuranMentionCount:
-          field = cni((relic as Nabi).quranMentionCount);
+          if (relic is Nabi) {
+            field = cni(relic.quranMentionCount);
+          } else if (relic is AsmaUlHusna) {
+            field = cni(relic.quranMentionCount);
+          }
           break;
         default:
           return l.E('${filterField.name} not implemented yet');

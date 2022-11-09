@@ -40,13 +40,32 @@ class AQ extends Aya {
   }) : super(
           tkNoteBefore: tkNoteBefore,
           tkNoteAfter: tkNoteAfter,
-        );
+        ) {
+    assert(surah >= 1);
+    assert(surah <= 114);
+    assert(start >= 1);
+//  assert(start <= 1); // TODO
+  }
   final int surah;
   final int start;
   int? end; // use to specify end of range, e.g. Surah 1, verse 2-3 (the 3 here)
 
   bool get isOneVerse => end == null;
   bool get isMultiVerse => end != null; // grow up...
+
+  @override
+  // TODO: implement getAyaText
+  String get tvGetAyaText => throw UnimplementedError();
+}
+
+/// Use in rare cases where need a description where an Aya would normally go.
+class AU extends Aya {
+  AU(
+    String tkNote,
+  ) : super(
+          tkNoteBefore: tkNote,
+          tkNoteAfter: null,
+        );
 
   @override
   // TODO: implement getAyaText
