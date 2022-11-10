@@ -37,10 +37,7 @@ class AQ extends Aya {
     this.end,
     String? tkNoteBefore,
     String? tkNoteAfter,
-  }) : super(
-          tkNoteBefore: tkNoteBefore,
-          tkNoteAfter: tkNoteAfter,
-        ) {
+  }) : super(tkNoteBefore: tkNoteBefore, tkNoteAfter: tkNoteAfter) {
     assert(surah >= 1);
     assert(surah <= 114);
     assert(start >= 1);
@@ -58,14 +55,12 @@ class AQ extends Aya {
   String get tvGetAyaText => throw UnimplementedError();
 }
 
-/// Use in rare cases where need a description where an Aya would normally go.
+/// AU = Aya Unknown/Unspecified. Used where a description is needed when a
+/// specific Quran or Hadith Aya isn't referencable.
 class AU extends Aya {
   AU(
     String tkNote,
-  ) : super(
-          tkNoteBefore: tkNote,
-          tkNoteAfter: null,
-        );
+  ) : super(tkNoteBefore: tkNote, tkNoteAfter: null);
 
   @override
   // TODO: implement getAyaText

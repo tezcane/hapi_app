@@ -7,14 +7,14 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hapi/controller/getx_hapi.dart';
 import 'package:hapi/controller/time_c.dart';
-import 'package:hapi/main_c.dart';
-import 'package:hapi/menu/slide/menu_bottom/settings/settings_option.dart';
-import 'package:hapi/menu/slide/menu_right/nav_page.dart';
-import 'package:hapi/quest/active/zaman_c.dart';
 import 'package:hapi/event/et.dart';
 import 'package:hapi/event/et_extension.dart';
 import 'package:hapi/event/event_c.dart';
 import 'package:hapi/event/search/search_manager.dart';
+import 'package:hapi/main_c.dart';
+import 'package:hapi/menu/slide/menu_bottom/settings/settings_option.dart';
+import 'package:hapi/menu/slide/menu_right/nav_page.dart';
+import 'package:hapi/quest/active/zaman_c.dart';
 import 'package:hijri/hijri_calendar.dart';
 import 'package:intl/intl.dart';
 
@@ -74,6 +74,7 @@ class LangC extends GetxHapi {
   /// Always a 2 character language key, e.g. "ar", "en", etc.
   /// TODO was initialized to '' but interactive onboarding crashes without default
   String currLangKey = 'en';
+  bool _isArabicScript = false;
 
   /// Holds all a.json Arabic "transileration"->"Arabic" variables that the app
   /// uses to teach Arabic to the user.
@@ -135,6 +136,8 @@ class LangC extends GetxHapi {
   List<String> get curNumerals => _curNumerals;
   bool _isEnNumerals = true;
   bool get isEnNumerals => _isEnNumerals;
+
+  bool get isArabicScript => _isArabicScript;
 
   String _am = ' AM';
   String get am => _am;
@@ -241,9 +244,12 @@ class LangC extends GetxHapi {
     _am = ' ' + 'AM'.tr; // tr ok
     _pm = ' ' + 'PM'.tr; // tr ok
 
-    _arabicScriptLangs[newLangKey] ?? false
-        ? HijriCalendar.setLocal('ar') // supports ar or en only
-        : HijriCalendar.setLocal('en'); // switch out Arabic script, if was set
+    _isArabicScript = _arabicScriptLangs[newLangKey] ?? false;
+    if (_isArabicScript) {
+      HijriCalendar.setLocal('ar'); // supports ar or en only
+    } else {
+      HijriCalendar.setLocal('en'); // switch out Arabic script, if was set
+    }
 
     try {
       numCompactFormatter = NumberFormat.compact(locale: newLangKey);

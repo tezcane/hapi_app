@@ -4,6 +4,7 @@ import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
 import 'package:hapi/menu/sub_page.dart';
+import 'package:hapi/relic/akadimi/surah.dart';
 import 'package:hapi/relic/al_asma/asma_ul_husna.dart';
 import 'package:hapi/relic/al_asma/nabi.dart';
 import 'package:hapi/relic/relic.dart';
@@ -247,8 +248,35 @@ class RelicSetUI extends StatelessWidget {
             field = cni(relic.quranMentionCount);
           }
           break;
-        default:
-          return l.E('${filterField.name} not implemented yet');
+        case FILTER_FIELD.OrderByEgyptianStandard:
+          field = cni((relic as Surah).numEgypt);
+          break;
+        case FILTER_FIELD.OrderByNoldeke:
+          field = cni((relic as Surah).numNoldeke);
+          break;
+        case FILTER_FIELD.OrderByVerseCount:
+          field = cni((relic as Surah).cntVerses);
+          break;
+        case FILTER_FIELD.OrderByRukuCount:
+          field = cnd((relic as Surah).cntRuku);
+          break;
+        case FILTER_FIELD.ShowJuz:
+          Surah surah = relic as Surah;
+          if (surah.juzEnd == null) {
+            field = cni(surah.juzBegin);
+          } else {
+            field = cns('${relic.juzBegin}-${relic.juzEnd}');
+          }
+          break;
+        case FILTER_FIELD.StartToEndDate:
+          field = 'Date Coming Soon';
+          //cnd(relic.start) + '-' + cnd(relic.end); // TODO timestamp to date
+          break;
+        case FILTER_FIELD.HasMuqattaat:
+          Surah surah = relic as Surah;
+          field = surah.arMuqattaat!;
+          if (!LangC.to.isArabicScript) field += ' (${surah.trMuqattaat})';
+          break;
       }
     }
 

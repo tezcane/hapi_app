@@ -55,7 +55,16 @@ class RelicSet {
 
 /// Used to tell RelicSetUI() to show a special field under the relic.
 enum FILTER_FIELD {
+  // Nabi and Asma ul-Husna:
   QuranMentionCount,
+  // Surah:
+  OrderByEgyptianStandard,
+  OrderByNoldeke,
+  OrderByVerseCount,
+  OrderByRukuCount,
+  ShowJuz,
+  StartToEndDate,
+  HasMuqattaat,
 }
 
 /// Used to be able to change Relic's view/information as a way for the user to

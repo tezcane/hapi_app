@@ -98,7 +98,10 @@ class RelicC extends GetxHapi {
     }
 
     // // Playground to find sort order data or dump defaults:
-    // print('********* RELIC INIT START *********');
+    // output = '';
+    // for (int i = 0; i < 114; i++) output += ', $i';
+    // print(output);
+
     // RelicSet relicSet = getRelicSet(ET.Nabi);
     // int idx = 0;
     // for (Relic relic in relicSet.relics) {
@@ -109,7 +112,6 @@ class RelicC extends GetxHapi {
     //   idx++;
     // }
 
-    // // Playground for Asma ul-Husna:
     // RelicSet relicSet = getRelicSet(ET.Asma_ul__Husna);
     // int idx = 0;
     // String output = '';
@@ -133,8 +135,35 @@ class RelicC extends GetxHapi {
     //     output = ''; // max char print limit protection, flushed out
     //   }
     // }
-    //
     // print(output);
+
+    // RelicSet relicSet = getRelicSet(ET.Surah);
+    // int idx = 0;
+    // String output = '';
+    // List<Surah> rels = [];
+    // for (Relic relic in relicSet.relics) {
+    //   Surah rel = relic as Surah;
+    //   rels.add(rel);
+    //   if (rel.isMuqattaat) {
+    //     output += 'S.${rel.e.name}.index, ';
+    //     if (output.length > 1000) {
+    //       print(output);
+    //       output = ''; // max char print limit protection, flushed out
+    //     }
+    //   }
+    //   idx++;
+    // }
+    // print(output);
+    //
+    // // rels.sort((a, b) => a.cntRuku.compareTo(b.cntRuku));
+    // // for (Surah rel in rels.reversed) {
+    // //   output += 'S.${rel.e.name}.index, ';
+    // //   if (output.length > 1000) {
+    // //     print(output);
+    // //     output = ''; // max char print limit protection, flushed out
+    // //   }
+    // // }
+    // // print(output);
     // print('********* RELIC INIT DONE *********, idx=$idx');
   }
 

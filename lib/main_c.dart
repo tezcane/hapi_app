@@ -421,6 +421,52 @@ String cni(int input) {
   return cns(input.toString());
 }
 
+/// cnd = Convert Number Double, double to other numeral system string, if
+/// needed. Example outputs with dropLeadingZero and dropTrailingZero=true:
+///    input  |  output
+///    1.0   ->   1
+///    0.1   ->    .1
+///   01.0   ->   1
+///    1.10  ->   1.1
+///   01.150 ->   1.15
+
+String cnd(double input, {dropLeadingZero = true, dropTrailingZero = true}) {
+  String rv = input.toString();
+  if (dropLeadingZero || dropTrailingZero) {
+    List<String> decVals = rv.split('.');
+
+    if (dropLeadingZero) {
+      // remove leading 0's off front, "0." of "0.5" -> ".5".
+      if (decVals[0].startsWith('0')) {
+        rv = decVals[0].substring(1, decVals[0].length);
+      } else {
+        rv = decVals[0];
+      }
+    } else {
+      rv = decVals[0];
+    }
+
+    if (dropTrailingZero) {
+      // remove trailing 0 of back, ".0" of "1.0" -> "1".
+      if (decVals[1].endsWith('0')) {
+        // if more than 2 decimal points given, add simplified decimal back
+        if (decVals[1].length > 2) {
+          rv += '.${decVals[1].substring(0, decVals[1].length - 1)}';
+        } // else don't add ".0"
+      } else {
+        rv += '.${decVals[1]}';
+      }
+    } else {
+      rv += '.${decVals[1]}';
+    }
+
+    if (rv.isEmpty) rv = '0';
+  }
+
+  if (LangC.to.isEnNumerals) return rv; // no need to convert text
+  return cns(rv);
+}
+
 /// cns = Convert Number String, Replaces all digits to another number system,
 /// like Arabic and Farsi.  Only done, if current language needs it.
 String cns(String input) {

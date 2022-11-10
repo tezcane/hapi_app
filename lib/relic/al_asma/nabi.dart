@@ -1845,47 +1845,16 @@ final List<Relic> _relics = [
   ),
 ];
 
+const List<int> _relicOrder = [
+  0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
+  22, 23, 24, //
+];
+
 final List<RelicSetFilter> _relicSetFilters = [
-  RelicSetFilter(
+  const RelicSetFilter(
     tkLabel: 'a.Nabi',
-    idxList: List.generate(
-      _relics.length,
-      (index) => _relics[index].e.index,
-    ),
-    tprMax: _relics.length,
-  ),
-  RelicSetFilter(
-    tkLabel: 'a.Rasul',
-    idxList: [
-      AS.Adam.index,
-      AS.Nuh.index,
-      AS.Hud.index,
-      AS.Salih.index,
-      AS.Ibrahim.index,
-      AS.Lut.index,
-      AS.Ismail.index,
-      AS.Yusuf.index,
-      AS.Shuayb.index,
-      AS.Musa.index,
-      AS.Harun.index,
-      AS.Dawud.index,
-      AS.Ilyas.index,
-      AS.Yunus.index,
-      AS.Isa.index,
-      AS.Muhammad.index,
-    ],
-    tprMax: _relics.length,
-  ),
-  RelicSetFilter(
-    tkLabel: 'a.Ulu Al-Azm',
-    idxList: [
-      AS.Nuh.index,
-      AS.Ibrahim.index,
-      AS.Musa.index,
-      AS.Isa.index,
-      AS.Muhammad.index,
-    ],
-    tprMax: _relics.length,
+    idxList: _relicOrder,
+    tprMax: 25,
   ),
   RelicSetFilter(
     tkLabel: 'Quran Name Mentions',
@@ -1917,15 +1886,45 @@ final List<RelicSetFilter> _relicSetFilters = [
       AS.Ilyas.index, //       2
       AS.Alyasa.index, //      2
     ],
-    tprMax: _relics.length,
+    tprMax: 25,
+  ),
+  RelicSetFilter(
+    tkLabel: 'a.Rasul',
+    idxList: [
+      AS.Adam.index,
+      AS.Nuh.index,
+      AS.Hud.index,
+      AS.Salih.index,
+      AS.Ibrahim.index,
+      AS.Lut.index,
+      AS.Ismail.index,
+      AS.Yusuf.index,
+      AS.Shuayb.index,
+      AS.Musa.index,
+      AS.Harun.index,
+      AS.Dawud.index,
+      AS.Ilyas.index,
+      AS.Yunus.index,
+      AS.Isa.index,
+      AS.Muhammad.index,
+    ],
+    tprMax: 25,
+  ),
+  RelicSetFilter(
+    tkLabel: 'a.Ulu Al-Azm',
+    idxList: [
+      AS.Nuh.index,
+      AS.Ibrahim.index,
+      AS.Musa.index,
+      AS.Isa.index,
+      AS.Muhammad.index,
+    ],
+    tprMax: 25,
   ),
   RelicSetFilter(
     tkLabel: 'Family Tree',
-    idxList: List.generate(
-      _relics.length,
-      (index) => _relics[index].e.index,
-    ),
-    tprMax: _relics.length,
+    idxList: _relicOrder,
+    tprMax: 25,
     treeGraph1: getGraphAllFamily(ET.Nabi, AS.Gap.index),
     treeGraph2: getGraphOnlyRelics(ET.Nabi, AS.Gap.index),
   ),

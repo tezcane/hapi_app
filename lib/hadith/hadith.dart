@@ -30,10 +30,7 @@ class AH extends Aya {
     this.location, {
     String? tkNoteBefore,
     String? tkNoteAfter,
-  }) : super(
-          tkNoteBefore: tkNoteBefore,
-          tkNoteAfter: tkNoteAfter,
-        );
+  }) : super(tkNoteBefore: tkNoteBefore, tkNoteAfter: tkNoteAfter);
   final HADITH_BOOK book;
   final HADITH_BOOK_CHAPTER chapter;
   final String location; // TODO further classify hadiths in different books
