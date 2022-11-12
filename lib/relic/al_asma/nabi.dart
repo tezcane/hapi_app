@@ -1852,7 +1852,7 @@ const List<int> _relicOrder = [
 
 final List<RelicSetFilter> _relicSetFilters = [
   const RelicSetFilter(
-    tkLabel: 'a.Nabi',
+    tkLabel: 'a.Al-Anbiya',
     idxList: _relicOrder,
     tprMax: 25,
   ),
@@ -1891,33 +1891,27 @@ final List<RelicSetFilter> _relicSetFilters = [
   RelicSetFilter(
     tkLabel: 'a.Rasul',
     idxList: [
-      AS.Adam.index,
-      AS.Nuh.index,
-      AS.Hud.index,
-      AS.Salih.index,
-      AS.Ibrahim.index,
-      AS.Lut.index,
-      AS.Ismail.index,
-      AS.Yusuf.index,
-      AS.Shuayb.index,
-      AS.Musa.index,
-      AS.Harun.index,
-      AS.Dawud.index,
-      AS.Ilyas.index,
-      AS.Yunus.index,
-      AS.Isa.index,
-      AS.Muhammad.index,
+      AS.Adam.index, AS.Nuh.index, AS.Hud.index, AS.Salih.index,
+      AS.Ibrahim.index, AS.Lut.index, AS.Ismail.index, AS.Yusuf.index,
+      AS.Shuayb.index, AS.Musa.index, AS.Harun.index, AS.Dawud.index,
+      AS.Ilyas.index, AS.Yunus.index, AS.Isa.index, AS.Muhammad.index, //
+    ],
+    tprMax: 25,
+  ),
+  RelicSetFilter(
+    tkLabel: 'a.Nabi',
+    idxList: [
+      AS.Idris.index, AS.Ishaq.index, AS.Yaqub.index, AS.Ayyub.index,
+      AS.Dhul__Kifl.index, AS.Suleyman.index, AS.Alyasa.index,
+      AS.Zakariya.index, AS.Yahya.index, //
     ],
     tprMax: 25,
   ),
   RelicSetFilter(
     tkLabel: 'a.Ulu Al-Azm',
     idxList: [
-      AS.Nuh.index,
-      AS.Ibrahim.index,
-      AS.Musa.index,
-      AS.Isa.index,
-      AS.Muhammad.index,
+      AS.Nuh.index, AS.Ibrahim.index, AS.Musa.index, AS.Isa.index,
+      AS.Muhammad.index, //
     ],
     tprMax: 25,
   ),

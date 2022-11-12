@@ -98,16 +98,15 @@ class RelicC extends GetxHapi {
     }
 
     // // Playground to find sort order data or dump defaults:
-    // output = '';
+    // String output = '';
     // for (int i = 0; i < 114; i++) output += ', $i';
     // print(output);
-
+    //
     // RelicSet relicSet = getRelicSet(ET.Nabi);
     // int idx = 0;
     // for (Relic relic in relicSet.relics) {
-    //   if ((relic as Nabi).isUluAlAzm() /* isRasul()) { */) {
-    //     print(
-    //         '$idx, // ${(relic as Nabi).quranMentionCount} ${relic.tkTitle}');
+    //   if (!(relic as Nabi).isRasul()) {
+    //     print('AS.${relic.e.name}.index, ');
     //   }
     //   idx++;
     // }
@@ -164,7 +163,8 @@ class RelicC extends GetxHapi {
     // //   }
     // // }
     // // print(output);
-    // print('********* RELIC INIT DONE *********, idx=$idx');
+
+    l.d('********* RELIC INIT DONE *********');
   }
 
   RelicSet getRelicSet(ET et) {
