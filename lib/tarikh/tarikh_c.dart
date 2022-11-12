@@ -107,7 +107,6 @@ class TarikhC extends GetxHapi {
   @override
   void onInit() {
     super.onInit();
-
     _initTimelineRelicsAndTarikhMenu(); // slow init, takes time to load
   }
 
@@ -143,11 +142,8 @@ class TarikhC extends GetxHapi {
     );
 
     Event event = EventC.to.getEventList(ET.Tarikh).first;
-    t.setViewport(
-      start: event.start * 2.0,
-      end: event.start,
-      animate: true,
-    ); // TODO needed, what does it and other setViewport do?
+    // TODO needed, what does it and other setViewport do?:
+    t.setViewport(start: event.start * 2.0, end: event.start, animate: true);
 
     // /// Advance the timeline to its starting position.
     t.advance(0.0, false); // TODO needed?

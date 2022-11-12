@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:hapi/main_c.dart';
-import 'package:hapi/menu/menu_c.dart';
-import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/event/et.dart';
 import 'package:hapi/event/event.dart';
 import 'package:hapi/event/event_c.dart';
+import 'package:hapi/main_c.dart';
+import 'package:hapi/menu/menu_c.dart';
+import 'package:hapi/menu/sub_page.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/timeline/timeline.dart';
@@ -476,13 +476,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
                     top: 20,
                     left: MainC.to.isPortrait ? 60 : 20,
                   ),
-                  child: T(
-                    _tvEraName,
-                    tsRe,
-                    w: titleWidth,
-                    h: 25,
-                    tv: true,
-                  ),
+                  child: T(_tvEraName, tsRe, w: titleWidth, h: 25, tv: true),
                 ),
               ],
             ),
@@ -527,8 +521,9 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
       case GutterMode.OFF:
         return Icons.favorite_border_outlined;
       case GutterMode.FAV:
-        if (c.isGutterFavEmpty) return Icons.heart_broken_outlined;
-        return Icons.favorite_outlined;
+        return c.isGutterFavEmpty
+            ? Icons.heart_broken_outlined
+            : Icons.favorite_outlined;
       case GutterMode.ALL:
         return Icons.history_edu_outlined;
     }
