@@ -794,8 +794,12 @@ class Timeline {
 
   /// Advance asset [events] with the [elapsed] time. Calls itself recursively
   /// to process all of a parent's root and its children.
-  bool _advanceAssets(List<Event> events, double elapsed, bool animate,
-      List<EventAsset> renderedAssets) {
+  bool _advanceAssets(
+    List<Event> events,
+    double elapsed,
+    bool animate,
+    List<EventAsset> renderedAssets,
+  ) {
     bool stillAnimating = false;
     for (Event event in events) {
       double y = event.labelY;
@@ -846,7 +850,7 @@ class Timeline {
         asset.velocity = 0.0;
       }
 
-      /// Determinte the opacity delta and interpolate towards that value if needed.
+      /// Determine the opacity delta and interpolate towards that value if needed.
       double da = targetAssetOpacity - asset.opacity;
       if (!animate || da.abs() < 0.01) {
         asset.opacity = targetAssetOpacity;
@@ -902,9 +906,7 @@ class Timeline {
           /// Item is in view, apply the new animation time and advance the actor.
           if (asset is NimaAsset && isActive) {
             asset.animationTime += elapsed;
-            if (asset.loop) {
-              asset.animationTime %= asset.animation.duration;
-            }
+            if (asset.loop) asset.animationTime %= asset.animation.duration;
             asset.animation.apply(asset.animationTime, asset.actor, 1.0);
             asset.actor.advance(elapsed);
             stillAnimating = true;
