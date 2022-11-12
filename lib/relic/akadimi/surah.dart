@@ -41,13 +41,14 @@ class Surah extends Relic {
   final Aya titleRefersToAya;
   final List<String> mainThemes;
 
-  /// Surah number
-  int get num => e.index + 1;
-
   bool get isSingleJuz => juzEnd == null;
   bool get isMultiJuz => juzEnd != null;
 
   bool get isMuqattaat => trMuqattaat != null;
+
+  /// Show Surah number on RelicSetUI()
+  @override
+  bool get showNum => true;
 
   @override
   // TODO: implement widget

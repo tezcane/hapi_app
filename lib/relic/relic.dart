@@ -30,6 +30,10 @@ abstract class Relic extends Event {
 
   int get ajrLevel => RelicC.to.getAjrLevel(et, e.index);
 
+  /// Override to show num (e.g. Surah Number) on RelicSetUI() title line.
+  bool get showNum => false;
+  int get num => e.index + 1; // +1 since enums 0 indexed
+
   /// Abstract methods:
   Asset getAsset({width = 200.0, height = 200.0, scale = 1.0});
   Widget get widget; // widget with all relic info

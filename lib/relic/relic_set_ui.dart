@@ -282,11 +282,14 @@ class RelicSetUI extends StatelessWidget {
 
     final double wTile = w(context) / tprSize - 4; // -4 for Wrap.spacing!
 
-    String tvRelicTitleLine1Or2 = relic.tvRelicTitleLine1;
+    String tvRelicTitleLine1Or2 = relic.showNum ? '${cni(relic.num)}. ' : '';
+
     bool isRelicTextThick = relic.isRelicTextThick && tprSize > 1;
     if (relic.isRelicTextThick && !isRelicTextThick) {
       // if tprSize is maxed, we show tvRelicTitleLine1 and 2 on the same line
-      tvRelicTitleLine1Or2 = relic.tvTitle;
+      tvRelicTitleLine1Or2 += relic.tvTitle;
+    } else {
+      tvRelicTitleLine1Or2 += relic.tvRelicTitleLine1;
     }
 
     // when tiles get tiny we force huge height to take up all width
