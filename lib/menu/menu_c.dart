@@ -8,6 +8,7 @@ import 'package:hapi/ajr/ajr_ui.dart';
 import 'package:hapi/controller/getx_hapi.dart';
 import 'package:hapi/controller/nav_page_c.dart';
 import 'package:hapi/dua/dua_ui.dart';
+import 'package:hapi/event/event_details_ui.dart';
 import 'package:hapi/hadith/hadith_ui.dart';
 import 'package:hapi/helper/loading.dart';
 import 'package:hapi/main_c.dart';
@@ -27,7 +28,6 @@ import 'package:hapi/quest/quests_ui.dart';
 import 'package:hapi/quran/quran_ui.dart';
 import 'package:hapi/relic/family_tree/family_tree_ui.dart';
 import 'package:hapi/relic/relics_ui.dart';
-import 'package:hapi/event/event_details_ui.dart';
 import 'package:hapi/tarikh/tarikh_c.dart';
 import 'package:hapi/tarikh/tarikh_ui.dart';
 import 'package:hapi/tarikh/timeline/tarikh_timeline_ui.dart';
@@ -97,7 +97,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
     if (_subPageStack.length == 1) {
       _acFabIcon.reverse();
       _fabAnimatedIcon = AnimatedIcons.menu_close; // switch to menu close icon
-      update(); // TODO needed?
+      // update(); // TODO needed?
     }
 
     /// User may have updated profile settings and hit back button before saving
@@ -112,16 +112,18 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
     _subPageStack.removeLast();
 
     /// handle tarikh animated pages, set active/inactive
+    bool goingBackToTarikhUIBackButtonWorkaround = false;
     if (getLastNavPage() == NavPage.Tarikh) {
       // if timeline showing again (after event view), make timeline active
       if (_subPageStack.isNotEmpty &&
           _subPageStack.last == SubPage.Tarikh_Timeline) {
         TarikhC.to.isActiveTimeline = true; // reactivate timeline
       } else {
+        goingBackToTarikhUIBackButtonWorkaround = true;
+
         TarikhC.to.isActiveTimeline = false; // inactivate timeline
 
         if (_subPageStack.isEmpty &&
-            // TARIKH.Menu == 0
             NavPageC.to.getLastIdx(NavPage.Tarikh) == 0) {
           TarikhC.to.isActiveTarikhMenu = true; // reactivate menu
         }
@@ -133,7 +135,13 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
       _handleRefreshLastNavPageAfterLangChange();
     } else {
       // Otherwise, normal back button operation, don't need to refresh UI.
-      Get.back(); // pop the sub menu stack
+      if (goingBackToTarikhUIBackButtonWorkaround) {
+        // Special case where if gutter event slide out was shown in Timeline,
+        // the back button no longer works, so we force back through this:
+        _navigateToNavPage(getLastNavPage());
+      } else {
+        Get.back(); // pop the sub menu stack
+      }
     }
 
     update(); // updates FAB tooltip to say what back button does

@@ -309,15 +309,10 @@ class TimelineRenderObject extends RenderBox {
     canvas.restore();
 
     // Replace two commented out (very large) if statement logic with these two:
-    if (t.nextEvent != null) {
-      // && t.nextEventOpacity > 0.0) {
-      cTrkh.updateEventBtn(cTrkh.timeBtnDn, t.nextEvent);
-    }
-
-    if (t.prevEvent != null) {
-      // && t.prevEventOpacity > 0.0) {
-      cTrkh.updateEventBtn(cTrkh.timeBtnUp, t.prevEvent);
-    }
+    // && t.nextEventOpacity > 0.0) {
+    if (t.nextEvent != null) cTrkh.updateEventBtn(cTrkh.timeBtnDn, t.nextEvent);
+    // && t.prevEventOpacity > 0.0) {
+    if (t.prevEvent != null) cTrkh.updateEventBtn(cTrkh.timeBtnUp, t.prevEvent);
 
     // Fixes bug where if we drag the timeline beyond first or last event both
     // up and down buttons show the first/last event.
@@ -512,9 +507,18 @@ class TimelineRenderObject extends RenderBox {
     /// favorite or all history elements are quickly accessible.
     ///
     /// Here the gutter is drawn and elements are added as *tappable* targets.
-    List<Event> events = cTrkh.isGutterModeAll
-        ? EventC.to.getEventList(ET.Tarikh)
-        : EventC.to.getEventListFav(ET.Tarikh);
+    List<Event> events;
+    switch (cTrkh.gutterMode) {
+      case GutterMode.OFF:
+        events = [];
+        break;
+      case GutterMode.FAV:
+        events = EventC.to.getEventListFav(ET.Tarikh);
+        break;
+      case GutterMode.ALL:
+        events = EventC.to.getEventList(ET.Tarikh);
+        break;
+    }
 
     if (!cTrkh.isGutterModeOff && events.isNotEmpty) {
       double scale = t.computeScale(t.renderStart, t.renderEnd);
@@ -602,7 +606,7 @@ class TimelineRenderObject extends RenderBox {
             Paint()
               ..isAntiAlias = true
               ..filterQuality = ui.FilterQuality.low
-              ..color = Colors.white.withOpacity(asset.opacity),
+              ..color = Colors.white.withOpacity(1.0), //TODO was asset.opacity
           );
           _tapTargets.add(
             TapTarget(asset.event, renderOffset & renderSize, zoom: true),
@@ -641,8 +645,10 @@ class TimelineRenderObject extends RenderBox {
           //     scaleX = scaleY = minScale;
           //     break;
           //   case BoxFit.cover:
-          double maxScale = max(renderSize.width / contentWidth,
-              renderSize.height / contentHeight);
+          double maxScale = max(
+            renderSize.width / contentWidth,
+            renderSize.height / contentHeight,
+          );
           scaleX = scaleY = maxScale;
           //     break;
           //   case BoxFit.fitHeight:
@@ -886,9 +892,7 @@ class TimelineRenderObject extends RenderBox {
       ui.ParagraphBuilder builder = ui.ParagraphBuilder(
         ui.ParagraphStyle(textAlign: TextAlign.start, fontSize: 20.0),
       )..pushStyle(
-          ui.TextStyle(
-            color: const Color.fromRGBO(255, 255, 255, 1.0),
-          ),
+          ui.TextStyle(color: const Color.fromRGBO(255, 255, 255, 1.0)),
         );
 
       // if (MainC.to.isOrientationChangedOrForceUIRefreshes) {
@@ -911,9 +915,12 @@ class TimelineRenderObject extends RenderBox {
       canvas.save();
       canvas.translate(bubbleX, bubbleY);
 
-      /// Get the bubble's path based on its width&height, draw it, and then add the label on top.
-      Path bubble =
-          makeBubblePath(textWidth + BubblePadding * 2.0, bubbleHeight);
+      /// Get the bubble's path based on its width&height, draw it, and then add
+      /// the label on top.
+      Path bubble = makeBubblePath(
+        textWidth + BubblePadding * 2.0,
+        bubbleHeight,
+      );
 
       canvas.drawPath(
         bubble,
@@ -957,8 +964,8 @@ class TimelineRenderObject extends RenderBox {
     }
   }
 
-  /// Given a width and a height, design a path for the bubble that lies behind events' labels
-  /// on the timeline, and return it.
+  /// Given a width and a height, design a path for the bubble that lies
+  /// behind events' labels on the timeline, and return it.
   Path makeBubblePath(double width, double height) {
     const double ArrowSize = 19.0;
     const double CornerRadius = 10.0;

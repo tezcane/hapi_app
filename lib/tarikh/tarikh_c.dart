@@ -96,7 +96,8 @@ class TarikhC extends GetxHapi {
   List<MenuSectionData> get tarikhMenuData => _tarikhMenuData;
 
   /// Turn timeline gutter off/show favorites/show all history:
-  GutterMode _gutterMode = GutterMode.OFF;
+  GutterMode _gutterMode =
+      GutterMode.values[s.rd('lastGutterModeIdx') ?? GutterMode.OFF.index];
   GutterMode get gutterMode => _gutterMode;
   set gutterMode(GutterMode newGutterMode) {
     s.wr('lastGutterModeIdx', newGutterMode.index);
@@ -125,9 +126,6 @@ class TarikhC extends GetxHapi {
 
     timeBtnUp = TimeBtn('', '', '', '', null);
     timeBtnDn = TimeBtn('', '', '', '', null);
-
-    int lastGutterModeIdx = s.rd('lastGutterModeIdx') ?? GutterMode.OFF.index;
-    gutterMode = GutterMode.values[lastGutterModeIdx];
 
     // first handle json inputs
     tih = TimelineInitHandler();
@@ -280,10 +278,7 @@ class TimelineInitHandler {
         /// extract its RGB values and save them for reference, along with the
         /// starting date of the current event.
         _backgroundColors.add(
-          TimelineBackgroundColor(
-            timelineColors.background,
-            start,
-          ),
+          TimelineBackgroundColor(timelineColors.background, start),
         );
 
         /// [Ticks] can also have custom colors, so that everything's is visible
@@ -344,10 +339,10 @@ class TimelineInitHandler {
     /// sort Tarikh the full list so they are in order of oldest to newest
     eventsTarikh.sort((Event a, Event b) => a.start.compareTo(b.start));
 
-    _backgroundColors
-        .sort((TimelineBackgroundColor a, TimelineBackgroundColor b) {
-      return a.start.compareTo(b.start);
-    });
+    _backgroundColors.sort(
+      (TimelineBackgroundColor a, TimelineBackgroundColor b) =>
+          a.start.compareTo(b.start),
+    );
 
     _tickColorsReversed = _tickColors.reversed;
 
