@@ -366,16 +366,12 @@ class Timeline {
     // Tez: fixes exception when hitting back button from timeline back to root page
     // TODO isActive was not here before, needed to fix exception after upgrading
     // flutter version:
-    if (TarikhC.to.isActiveTimeline && onNeedPaint != null) {
-      onNeedPaint!();
-    }
+    if (TarikhC.to.isActiveTimeline && onNeedPaint != null) onNeedPaint!();
   }
 
   bool advance(double elapsed, bool animate) {
-    if (_height <= 0) {
-      /// Done rendering. Need to wait for height.
-      return true;
-    }
+    /// Done rendering. Need to wait for height.
+    if (_height <= 0) return true;
 
     /// The current scale based on the rendering area.
     double scale = _height / (_renderEnd - _renderStart);
@@ -456,9 +452,7 @@ class Timeline {
     double screen = 0.0;
     HeaderColors? headerColors;
     for (HeaderColors color in _headerColorsReversed) {
-      if (screen >= color.screenY) {
-        headerColors = color;
-      }
+      if (screen >= color.screenY) headerColors = color;
     }
     headerColors ??= screen < _headerColors.first.screenY
         ? _headerColors.first
@@ -521,9 +515,7 @@ class Timeline {
       doneRendering = false;
     }
 
-    if (_nextEventOpacity == 0.0) {
-      _renderNextEvent = _nextEvent;
-    }
+    if (_nextEventOpacity == 0.0) _renderNextEvent = _nextEvent;
 
     /// Determine next event's opacity and interpolate, if needed, towards that value.
     double targetNextEventOpacity = _lastOnScreenEventY > _height / 1.7 ||
@@ -541,9 +533,7 @@ class Timeline {
       _nextEventOpacity += dt * min(1.0, elapsed * 10.0);
     }
 
-    if (_prevEventOpacity == 0.0) {
-      _renderPrevEvent = _prevEvent;
-    }
+    if (_prevEventOpacity == 0.0) _renderPrevEvent = _prevEvent;
 
     /// Determine previous event's opacity and interpolate, if needed, towards that value.
     double targetPrevEventOpacity = _firstOnScreenEventY < _height / 2.0 ||
@@ -573,9 +563,7 @@ class Timeline {
     /// If a new era is currently in view, callback.
     if (_currentEra != _lastEra) {
       _lastEra = _currentEra;
-      if (onEraChanged != null) {
-        onEraChanged!(_currentEra);
-      }
+      if (onEraChanged != null) onEraChanged!(_currentEra);
     }
 
     if (_isSteady) {
@@ -615,9 +603,7 @@ class Timeline {
 
       /// Vertical position for this element.
       double y = start * scale; // +pad;
-      if (i > 0 && y - lastEnd < EdgePadding) {
-        y = lastEnd + EdgePadding;
-      }
+      if (i > 0 && y - lastEnd < EdgePadding) y = lastEnd + EdgePadding;
 
       /// Adjust based on current scale value.
       double endY = end * scale; //-pad;
@@ -704,9 +690,7 @@ class Timeline {
       /// Check the final position has been reached, otherwise raise a flag.
       if (animate &&
           (event.labelVelocity.abs() > 0.01 ||
-              targetLabelVelocity.abs() > 0.01)) {
-        stillAnimating = true;
-      }
+              targetLabelVelocity.abs() > 0.01)) stillAnimating = true;
 
       if (event.targetLabelOpacity > 0.0) {
         _lastEventY = targetLabelY;
@@ -723,9 +707,7 @@ class Timeline {
       }
 
       /// A new era is currently in view.
-      if (event.isEra && y < 0 && endY > _height / 2.0) {
-        _currentEra = event;
-      }
+      if (event.isEra && y < 0 && endY > _height / 2.0) _currentEra = event;
 
       /// Check if the bubble is out of view and set the y position to the
       /// target one directly.
@@ -743,16 +725,12 @@ class Timeline {
       }
 
       double lx = x + LineSpacing + LineSpacing;
-      if (lx > _labelX) {
-        _labelX = lx;
-      }
+      if (lx > _labelX) _labelX = lx;
 
       if (event.children != null && event.isVisible) {
         /// Advance the rest of the hierarchy.
         if (_advanceEvents(event.children!, x + LineSpacing + LineWidth, scale,
-            elapsed, animate, depth + 1)) {
-          stillAnimating = true;
-        }
+            elapsed, animate, depth + 1)) stillAnimating = true;
       }
     }
     return stillAnimating;
@@ -839,9 +817,7 @@ class Timeline {
       event.asset.scale += event.asset.scaleVelocity * elapsed * 20.0;
       if (animate &&
           (event.asset.scaleVelocity.abs() > 0.01 ||
-              targetScaleVelocity.abs() > 0.01)) {
-        stillAnimating = true;
-      }
+              targetScaleVelocity.abs() > 0.01)) stillAnimating = true;
 
       EventAsset asset = event.asset;
       if (asset.opacity == 0.0) {
@@ -888,9 +864,7 @@ class Timeline {
           /// It's not in view: cull it. Make sure we don't advance animations.
           if (asset is NimaAsset) {
             NimaAsset nimaAsset = asset;
-            if (!nimaAsset.loop) {
-              nimaAsset.animationTime = -1.0;
-            }
+            if (!nimaAsset.loop) nimaAsset.animationTime = -1.0;
           } else if (asset is FlareAsset) {
             FlareAsset flareAsset = asset;
             if (!flareAsset.loop) {
@@ -919,9 +893,10 @@ class Timeline {
               double phase = 0.0;
               for (flare.ActorAnimation animation in asset.idleAnimations!) {
                 animation.apply(
-                    (asset.animationTime + phase) % animation.duration,
-                    asset.actor,
-                    1.0);
+                  (asset.animationTime + phase) % animation.duration,
+                  asset.actor,
+                  1.0,
+                );
                 phase += 0.16;
               }
             } else {

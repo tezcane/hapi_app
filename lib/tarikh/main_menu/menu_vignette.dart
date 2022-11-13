@@ -82,9 +82,7 @@ class MenuVignetteRenderObject extends RenderBox {
   bool _needsRepaint = false;
 
   set needsRepaint(bool value) {
-    if (_needsRepaint == value) {
-      return;
-    }
+    if (_needsRepaint == value) return;
     _needsRepaint = value;
 
     _firstUpdate = true;
@@ -100,9 +98,7 @@ class MenuVignetteRenderObject extends RenderBox {
 
   bool get isActive => _isActive;
   set isActive(bool value) {
-    if (_isActive == value) {
-      return;
-    }
+    if (_isActive == value) return;
 
     /// When this [RenderBox] becomes active, start advancing it again.
     _isActive = value;
