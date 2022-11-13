@@ -61,8 +61,8 @@ class HeaderColors2 {
 class Asset {
   const Asset({
     required this.filename,
-    required this.width,
-    required this.height,
+    this.width = 200.0,
+    this.height = 200.0,
     this.loop = true,
     this.tOffsetHorizontal = 0.0,
     this.tOffsetVertical = 0.0,

@@ -19,12 +19,7 @@ class AlAqida extends Relic {
         );
 
   @override
-  Asset getAsset({width = 200.0, height = 200.0, scale = 1.0}) => Asset(
-        filename: 'images/logo/logo.png', // TODO asdf: implement
-        width: width,
-        height: height,
-        scale: scale,
-      );
+  Asset getAsset() => Asset(filename: 'images/logo/logo.png');
 
   @override
   // TODO: implement widget

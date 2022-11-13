@@ -83,12 +83,7 @@ class Nabi extends FamilyTree {
   bool isUluAlAzm() => aqUluAlAzmList != null && aqUluAlAzmList!.isNotEmpty;
 
   @override
-  Asset getAsset({width = 200.0, height = 200.0, scale = 1.0}) => Asset(
-        filename: 'images/anbiya/${e.isim}.png',
-        width: width,
-        height: height,
-        scale: scale,
-      );
+  Asset getAsset() => Asset(filename: 'images/anbiya/${e.isim}.png');
 
   @override
   // TODO: implement widget

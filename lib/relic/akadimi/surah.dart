@@ -55,13 +55,7 @@ class Surah extends Relic {
   Widget get widget => throw UnimplementedError();
 
   @override
-  Asset getAsset({width = 200.0, height = 200.0, scale = 1.0}) => Asset(
-        filename: 'images/logo/logo.png', // TODO asdf: implement
-        //filename: 'images/surah/${e.name}.png',
-        width: width,
-        height: height,
-        scale: scale,
-      );
+  Asset getAsset() => Asset(filename: 'images/logo/logo.png');
 
   static List<Relic> get relics => _relics;
   static List<RelicSetFilter> get relicSetFilters => _relicSetFilters;

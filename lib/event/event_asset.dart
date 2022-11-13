@@ -55,21 +55,20 @@ abstract class EventAsset {
 
 /// A renderable image. Should be either a PNG or JPG file (TODO JPG untested).
 class ImageAsset extends EventAsset {
-  ImageAsset(String filename, double width, double height, double scale)
-      : super(filename, width, height, scale) {
+  ImageAsset(
+    String filename,
+    double width,
+    double height,
+    double scale,
+    this.uiImage,
+  ) : super(filename, width, height, scale) {
     _initImage();
   }
+  final ui.Image uiImage;
 
-  late final ui.Image uiImage;
   late final Widget widgetImage;
 
-  _initImage() async {
-    ByteData byteData = await rootBundle.load(filename);
-    Uint8List uint8List = Uint8List.view(byteData.buffer);
-    ui.Codec codec = await ui.instantiateImageCodec(uint8List);
-    ui.FrameInfo frame = await codec.getNextFrame();
-    uiImage = frame.image;
-
+  _initImage() {
     widgetImage = Image(image: AssetImage(filename), fit: BoxFit.fill);
   }
 
@@ -82,12 +81,8 @@ class ImageAsset extends EventAsset {
 
 /// SVG image file.
 class ImageAssetSVG extends EventAsset {
-  ImageAssetSVG(
-    String filename,
-    double width,
-    double height,
-    double scale,
-  ) : super(filename, width, height, scale) {
+  ImageAssetSVG(String filename, double width, double height, double scale)
+      : super(filename, width, height, scale) {
     _initImage();
   }
 
@@ -416,11 +411,17 @@ Future<EventAsset> getEventAsset(Asset asset) async {
   final EventAsset eventAsset;
   switch (_parseAssetType(asset.filename)) {
     case ASSET_TYPE.IMAGE:
+      ByteData byteData = await rootBundle.load(filename);
+      Uint8List uint8List = Uint8List.view(byteData.buffer);
+      ui.Codec codec = await ui.instantiateImageCodec(uint8List);
+      ui.FrameInfo frame = await codec.getNextFrame();
+
       eventAsset = ImageAsset(
         filename,
-        asset.width,
-        asset.height,
+        frame.image.width.toDouble(),
+        frame.image.width.toDouble(),
         asset.scale,
+        frame.image,
       );
       break;
     case ASSET_TYPE.IMAGE_SVG:

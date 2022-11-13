@@ -23,12 +23,9 @@ class AsmaUlHusna extends Relic {
   final int quranMentionCount;
 
   @override
-  Asset getAsset({width = 200.0, height = 200.0, scale = 1.0}) => Asset(
+  Asset getAsset() => Asset(
         filename: 'images/Allah/asma_ul__husna/'
             '${e.index < 9 ? '0${e.index + 1}' : e.index + 1}_${e.name}.svg',
-        width: width,
-        height: height,
-        scale: scale,
       );
 
   @override
