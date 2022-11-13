@@ -422,12 +422,41 @@ class TimelineInitHandler {
         );
       }
 
+      Event event = eraMenuSection.events[0];
+      Event eventClone = Event(
+        et: event.et,
+        tkEra: event.tkEra,
+        tkTitle: event.tkTitle,
+        start: event.start,
+        end: event.end,
+        startMenu: event.startMenu,
+        endMenu: event.endMenu,
+        accent: event.accent,
+      );
+
+      /// Clone menu events so some are not blank when go to timeline and back:
+      Asset assetClone = Asset(
+        filename: event.asset.filename.replaceFirst('assets/', ''),
+        width: event.asset.width,
+        height: event.asset.height,
+        loop: event.tkTitle == TR_KEY_OLDEST ? false : true,
+        // tOffsetHorizontal:
+        // tOffsetVertical:
+        // scale:
+        // bounds:
+        // intro:
+        // idle: event.tkTitle == 'Earth is Born' ? 'Earth_is_born' : null
+      );
+      EventAsset asset = await getEventAsset(assetClone);
+      asset.event = eventClone; // can and must only do this once
+      eventClone.asset = asset;
+
       TarikhC.to._tarikhMenuData.add(
         MenuSectionData(
-          eraMenuSection.events[0].tkEra,
+          eventClone.tkEra,
           eraMenuSection.textColor,
           eraMenuSection.backgroundColor,
-          eraMenuSection.events[0],
+          eventClone,
           menuItemList,
         ),
       );

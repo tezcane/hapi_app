@@ -586,6 +586,7 @@ class TimelineRenderObject extends RenderBox {
         Alignment alignment = Alignment.center;
         // BoxFit fit = BoxFit.cover;
 
+        // TODO asdf switch to switch statement add SVG
         /// Draw the assets statically within the circle.
         /// Calculations here are the same as seen in [paint()] for the assets.
         if (asset is ImageAsset) {

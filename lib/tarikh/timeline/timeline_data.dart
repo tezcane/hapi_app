@@ -218,7 +218,7 @@ List<TimelineData> getTimelineData() {
         tOffsetHorizontal: -100,
         bounds: [0.0, 0.0, 814.0, 664.0],
       ),
-      tkEra: 'Life on Earth',
+      tkEra: 'First Animals',
       accent: Color.fromARGB(55, 134, 222, 255),
       timelineColors: TimelineColors(
         background: Color.fromARGB(0xFF, 132, 175, 214),
@@ -244,7 +244,7 @@ List<TimelineData> getTimelineData() {
         scale: 0.65,
         bounds: [-549, -5, 741, 645],
       ),
-      tkEra: 'Life on Earth',
+      tkEra: 'First Animals',
       accent: Color.fromARGB(0xFF, 55, 134, 222),
     ),
     TimelineData(
@@ -255,7 +255,7 @@ List<TimelineData> getTimelineData() {
         width: 800,
         height: 528,
       ),
-      tkEra: 'Life on Earth',
+      tkEra: 'First Animals',
       accent: Color.fromARGB(0xFF, 55, 134, 222),
     ),
     TimelineData(
@@ -267,7 +267,7 @@ List<TimelineData> getTimelineData() {
         height: 600,
         tOffsetHorizontal: -300,
       ),
-      tkEra: 'Life on Earth',
+      tkEra: 'First Animals',
       accent: Color.fromARGB(0xFF, 55, 134, 222),
     ),
     TimelineData(

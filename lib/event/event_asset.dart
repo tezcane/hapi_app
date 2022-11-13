@@ -43,7 +43,7 @@ abstract class EventAsset {
   /// We create the asset before we create the timeline event so init this ASAP
   late final Event event;
 
-  double opacity = .5; // TODO tune, opacity of pictures on the menu
+  double opacity = 1.0;
   double scaleVelocity = 0.0; // TODO what does it do?
   double y = 0.0; // TODO what does it do?
   double velocity = 0.0; // TODO what does it do?
