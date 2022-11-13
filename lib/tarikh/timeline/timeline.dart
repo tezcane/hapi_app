@@ -413,8 +413,10 @@ class Timeline {
     }
 
     /// Animate movement.
-    double speed =
-        min(1.0, elapsed * (_isInteracting ? MoveSpeedInteracting : MoveSpeed));
+    double speed = min(
+      1.0,
+      elapsed * (_isInteracting ? MoveSpeedInteracting : MoveSpeed),
+    );
     double ds = _start - _renderStart;
     double de = _end - _renderEnd;
 
