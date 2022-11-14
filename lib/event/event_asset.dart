@@ -419,7 +419,7 @@ Future<EventAsset> getEventAsset(Asset asset) async {
       eventAsset = ImageAsset(
         filename,
         frame.image.width.toDouble(),
-        frame.image.width.toDouble(),
+        frame.image.height.toDouble(),
         asset.scale,
         frame.image,
       );
@@ -510,7 +510,8 @@ drawAssetOnCanvas({
       canvas.drawImageRect(
         (asset as ImageAsset).uiImage,
         Rect.fromLTWH(0.0, 0.0, asset.width, asset.height),
-        Rect.fromLTWH(offset.dx + size.width - w, asset.y, w * rs, h * rs),
+// was: Rect.fromLTWH(offset.dx + size.width - w, asset.y, w * rs, h * rs),
+        Rect.fromLTWH(offset.dx + size.width - 260, asset.y, 250, 250),
         Paint()
           ..isAntiAlias = true
           ..filterQuality = ui.FilterQuality.low

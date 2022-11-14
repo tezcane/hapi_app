@@ -607,7 +607,7 @@ class TimelineRenderObject extends RenderBox {
             Paint()
               ..isAntiAlias = true
               ..filterQuality = ui.FilterQuality.low
-              ..color = Colors.white.withOpacity(1.0), //TODO was asset.opacity
+              ..color = Colors.white.withOpacity(1.0), // was asset.opacity
           );
           _tapTargets.add(
             TapTarget(asset.event, renderOffset & renderSize, zoom: true),
