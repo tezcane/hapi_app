@@ -786,6 +786,8 @@ class TimelineRenderObject extends RenderBox {
               ui.ParagraphBuilder builder = ui.ParagraphBuilder(
                 ui.ParagraphStyle(
                   textAlign: TextAlign.center,
+                  // TODO fix arabic font size
+                  // fontFamily: 'Kitab',
                   fontFamily: 'Roboto',
                   fontSize: 10.0,
                 ),

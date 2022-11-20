@@ -98,6 +98,9 @@ class AppThemes {
     decoration: TextDecoration.none, // makes yellow underlines go away
   );
 
+  // TODO fix arabic font size
+//static const StrutStyle strutStyle = StrutStyle(fontSize: 16.0, height: 1.3);
+
   static const Color COLOR_DIRECT_DESCENDANT = Colors.green;
   static const Color COLOR_GENERATION_GAP = Colors.red;
 }

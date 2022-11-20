@@ -73,8 +73,6 @@ void main() async {
   ]);
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: []);
 
-  // ThemeC.to.getThemeModeFromStore();
-
   runApp(const HapiApp());
 }
 
@@ -86,11 +84,21 @@ class HapiApp extends StatelessWidget {
     return OrientationBuilder(
       builder: (context, orientation) {
         MainC.to.setOrientation(orientation == Orientation.portrait);
+        // TODO fix arabic font size
+        // MediaQueryData windowData =
+        //     MediaQueryData.fromWindow(WidgetsBinding.instance.window);
+        // windowData = windowData.copyWith(
+        //   textScaleFactor: 1.3,
+        //   // windowData.textScaleFactor > 1.4 ? 1.4 : windowData.textScaleFactor,
+        // );
         return Loading(
           child: MaterialApp(
+            // home: MediaQuery(
+            //   data: windowData,
             home: Scaffold(
               resizeToAvoidBottomInset: false, // fixes keyboard pushing UI up
               body: GetMaterialApp(
+                // useInheritedMediaQuery: true,
                 // translations: Localization(),
                 // locale: c.getLocale, // we set in LanguageC
                 // fallbackLocale: const Locale('en', 'US'), // uses if .tr fails
@@ -140,6 +148,7 @@ class HapiApp extends StatelessWidget {
                         ),
                       ),
                     ],
+                    // ),
                   ),
                 ),
               ),

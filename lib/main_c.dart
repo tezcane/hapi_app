@@ -248,6 +248,8 @@ class TS extends TextStyle {
   const TS(
     Color color, {
     FontWeight fontWeight = FontWeight.normal,
+    // TODO fix arabic font size
+    // String fontFamily = 'Kitab',
     String fontFamily = 'Roboto',
   }) : super(
           color: color,
@@ -298,7 +300,13 @@ class T extends StatelessWidget {
   Widget build(BuildContext context) {
     double? width = w;
     width ??= wm(context); // if not specified take up most of the screen width
-    //width -= 10; // text always designed to take up full width, add 10% padding
+
+    // TODO fix arabic font size
+    // width += 10; // text always designed to take up full width, add 10% padding
+    // double height = h;
+    // height += 10;
+    // double fontSize = 16.0;
+    // if (style != null && style!.fontSize != null) fontSize = style!.fontSize!;
 
     return SizedBox(
       width: width,
@@ -306,7 +314,13 @@ class T extends StatelessWidget {
       child: FittedBox(
         fit: boxFit,
         alignment: alignment,
-        child: Text(tv ? tkOrVal : a(tkOrVal), style: style),
+        child: Text(
+          tv ? tkOrVal : a(tkOrVal),
+          style: style,
+          // TODO fix arabic font size
+          // strutStyle: AppThemes.strutStyle,
+          // strutStyle: StrutStyle(fontSize: fontSize, height: 1.2),
+        ),
       ),
     );
   }
@@ -429,7 +443,6 @@ String cni(int input) {
 ///   01.0   ->   1
 ///    1.10  ->   1.1
 ///   01.150 ->   1.15
-
 String cnd(double input, {dropLeadingZero = true, dropTrailingZero = true}) {
   String rv = input.toString();
   if (dropLeadingZero || dropTrailingZero) {

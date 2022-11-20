@@ -1,7 +1,7 @@
 import 'package:flare_flutter/flare_actor.dart' as flare;
 import 'package:flutter/material.dart';
-import 'package:hapi/main_c.dart';
 import 'package:hapi/event/event.dart';
+import 'package:hapi/main_c.dart';
 import 'package:hapi/tarikh/main_menu/menu_data.dart';
 import 'package:hapi/tarikh/main_menu/menu_vignette.dart';
 
@@ -157,6 +157,8 @@ class _SectionState extends State<MenuSection>
                           a(widget.tkTitle),
                           style: TextStyle(
                             fontSize: 20.0,
+                            // TODO fix arabic font size
+                            // fontFamily: 'Kitab',
                             fontFamily: 'RobotoMedium',
                             color: widget.accentColor,
                           ),
@@ -188,6 +190,8 @@ class _SectionState extends State<MenuSection>
                                       style: TextStyle(
                                         color: widget.accentColor,
                                         fontSize: 20.0,
+                                        // TODO fix arabic font size
+                                        // fontFamily: 'Kitab',
                                         fontFamily: 'RobotoMedium',
                                       ),
                                     ),

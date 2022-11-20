@@ -5,8 +5,6 @@ import 'package:hapi/main_c.dart';
 import 'package:hapi/relic/relic.dart';
 import 'package:hapi/tarikh/timeline/timeline_data.dart';
 
-const String _ = ' '; // space/gap
-
 /// Peace be upon all (SAW) all the Anbiya/Prophets mentioned in the code.
 class Rasulallah extends Relic {
   Rasulallah(Enum e)
