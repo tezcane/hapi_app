@@ -134,7 +134,7 @@ class TarikhC extends GetxHapi {
     t = Timeline(
       tih.rootEvents,
       tih.tickColors,
-      tih._headerColors,
+      // tih._headerColors,
       tih._timeMin,
       tih._timeMax,
     );
@@ -220,7 +220,7 @@ class TimelineInitHandler {
 
   List<TickColors> get tickColors => _tickColors;
   late final Iterable<TickColors> _tickColorsReversed;
-  final List<HeaderColors> _headerColors = [];
+  // final List<HeaderColors> _headerColors = [];
 
   /// All the [Event]s that are loaded from disk at boot (in [loadFromBundle()]).
   /// List for "root" events, i.e. events with no parents.
@@ -293,14 +293,14 @@ class TimelineInitHandler {
           ),
         );
 
-        /// If a `header` element is present, de-serialize the colors for it too.
-        _headerColors.add(
-          HeaderColors(
-            timelineColors.header.background,
-            timelineColors.header.text,
-            start,
-          ),
-        );
+        // /// If a `header` element is present, de-serialize the colors for it too.
+        // _headerColors.add(
+        //   HeaderColors(
+        //     timelineColors.header.background,
+        //     timelineColors.header.text,
+        //     start,
+        //   ),
+        // );
       }
 
       /// Finally create Event object

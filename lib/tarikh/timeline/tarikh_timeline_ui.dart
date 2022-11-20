@@ -59,8 +59,8 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   /// Defaults to [tkDefaultEraName].
   String _tvEraName = '';
 
-  Color? _headerTextColor;
-  //Color? _headerBackgroundColor; // CAN DO: cleanup/reuse for other coloring
+  // Color? _headerTextColor;
+  // Color? _headerBackgroundColor; // CAN DO: cleanup/reuse for other coloring
 
   /// Tez was originally not here, good to have:
   @override
@@ -83,27 +83,35 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
 
     TarikhC.to.isActiveTimeline = true;
 
-    _tvEraName =
-        t.currentEra != null ? 'Era'.tr + ': ' + a(t.currentEra!.tkTitle) : '';
+    if (t.currentEra != null) {
+      _tvEraName = 'Era'.tr + ': ' + a(t.currentEra!.tkTitle);
+    } else {
+      _tvEraName = '';
+    }
 
-    t.onHeaderColorsChanged = (/*Color background,*/ Color text) {
-      setState(() {
-        _headerTextColor = text;
-//      _headerBackgroundColor = background;
-      });
-    };
+//     t.onHeaderColorsChanged = (/*Color background,*/ Color text) {
+//       setState(() {
+//         _headerTextColor = text;
+// //      _headerBackgroundColor = background;
+//       });
+//     };
 
     /// Update the label for the [Timeline] object.
     t.onEraChanged = (Event? event) {
-      setState(() => _tvEraName =
-          'Era'.tr + ': ' + (event != null ? a(event.tkTitle) : ''));
+      setState(() {
+        if (event != null) {
+          _tvEraName = 'Era'.tr + ': ' + a(event.tkTitle);
+        } else {
+          _tvEraName = '';
+        }
+      });
     };
 
-    if (t.headerTextColor != null) {
-      _headerTextColor = t.headerTextColor!;
-    } else {
-      _headerTextColor = null;
-    }
+    // if (t.headerTextColor != null) {
+    //   _headerTextColor = t.headerTextColor!;
+    // } else {
+    //   _headerTextColor = null;
+    // }
     // if (t.headerBackgroundColor != null) {
     //   _headerBackgroundColor = t.headerBackgroundColor!;
     // } else {
@@ -220,7 +228,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   }
 
   // TODO needed? never saw it called
-  /// Update the current view and change the timeline header, color and background color,
+  /// Update the current view and change the timeline era and background color,
   @override
   void didUpdateWidget(covariant TarikhTimelineUI oldWidget) {
     super.didUpdateWidget(oldWidget);
@@ -230,22 +238,33 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
     // TODO what is this doing?:
     if (t != oldWidget.timeline) {
       l.w('Timeline: didUpdateWidget true');
-      setState(() {
-        _headerTextColor = t.headerTextColor;
-//      _headerBackgroundColor = t.headerBackgroundColor;
-      });
-
-      t.onHeaderColorsChanged = (/*Color background,*/ Color text) {
+//       setState(() {
+//         _headerTextColor = t.headerTextColor;
+// //      _headerBackgroundColor = t.headerBackgroundColor;
+//       });
+//
+//       t.onHeaderColorsChanged = (/*Color background,*/ Color text) {
+//         setState(() {
+//           _headerTextColor = text;
+// //        _headerBackgroundColor = background;
+//         });
+//       };
+      t.onEraChanged = (Event? event) {
         setState(() {
-          _headerTextColor = text;
-//        _headerBackgroundColor = background;
+          if (event != null) {
+            _tvEraName = 'Era'.tr + ': ' + a(event.tkTitle);
+          } else {
+            _tvEraName = '';
+          }
         });
       };
-      t.onEraChanged = (Event? event) {
-        setState(() => _tvEraName = event != null ? a(event.tkTitle) : '');
-      };
-      setState(() =>
-          _tvEraName = t.currentEra != null ? a(t.currentEra!.tkTitle) : '');
+      setState(() {
+        if (t.currentEra != null) {
+          _tvEraName = 'Era'.tr + ': ' + a(t.currentEra!.tkTitle);
+        } else {
+          _tvEraName = '';
+        }
+      });
     } else {
       l.w('Timeline: didUpdateWidget false');
     }
@@ -257,7 +276,7 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   deactivate() {
     super.deactivate();
 
-    t.onHeaderColorsChanged = null;
+    // t.onHeaderColorsChanged = null;
     t.onEraChanged = null;
   }
 
@@ -266,7 +285,6 @@ class _TarikhTimelineUIState extends State<TarikhTimelineUI> {
   /// This widget then lays down a [Stack]:
   ///   - [TimelineRenderWidget] renders the actual contents of the timeline such as the currently visible
   ///   bubbles with their corresponding [FlareWidget]s, the left bar with the ticks, etc.
-  ///   - [BackdropFilter] that wraps the top header bar, with the back button, the favorites button, and its coloring.
   @override
   Widget build(BuildContext context) {
     EdgeInsets devicePadding = MediaQuery.of(context).padding;

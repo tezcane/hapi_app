@@ -13,17 +13,17 @@ import 'package:hapi/tarikh/timeline/timeline_utils.dart';
 
 typedef PaintCallback = Function();
 typedef ChangeEraCallback = Function(Event? era);
-typedef ChangeHeaderColorCallback = Function(/*Color background,*/ Color text);
+// typedef ChangeHeaderColorCallback = Function(/*Color background,*/ Color text);
 
 class Timeline {
   Timeline(
     this._rootEvents,
     this._tickColors,
-    this._headerColors,
+    // this._headerColors,
     this._timeMin,
     this._timeMax,
   ) {
-    _headerColorsReversed = _headerColors.reversed;
+    // _headerColorsReversed = _headerColors.reversed;
     setViewport(start: 1536.0, end: 3072.0); // TODO what is this?
   }
 
@@ -33,8 +33,8 @@ class Timeline {
 
   /// [Ticks] also have custom colors so that they are always visible with the changing background.
   final List<TickColors> _tickColors;
-  final List<HeaderColors> _headerColors;
-  late final Iterable<HeaderColors> _headerColorsReversed;
+  // final List<HeaderColors> _headerColors;
+  // late final Iterable<HeaderColors> _headerColorsReversed;
 
   final double _timeMin;
   final double _timeMax;
@@ -93,9 +93,9 @@ class Timeline {
   bool _isScaling = false;
   bool _isSteady = false;
 
-  HeaderColors? _currentHeaderColors;
+  // HeaderColors? _currentHeaderColors;
 
-  Color? _headerTextColor;
+//Color? _headerTextColor;
 //Color? _headerBackgroundColor;
 
   /// Depending on the current [Platform], different values are initialized
@@ -132,7 +132,7 @@ class Timeline {
   /// These next two callbacks are bound to set the state of the [TimelineWidget]
   /// so it can change the appearance of the top AppBar.
   ChangeEraCallback? onEraChanged;
-  ChangeHeaderColorCallback? onHeaderColorsChanged;
+  // ChangeHeaderColorCallback? onHeaderColorsChanged;
 
   Event? get currentEra => _currentEra;
 
@@ -153,7 +153,7 @@ class Timeline {
 
   bool get isInteracting => _isInteracting;
 
-  Color? get headerTextColor => _headerTextColor;
+  // Color? get headerTextColor => _headerTextColor;
 
   /// When a scale operation is detected, this setter is called:
   /// e.g. [_TimelineWidgetState.scaleStart()].
@@ -185,12 +185,14 @@ class Timeline {
 
     if (isIt) {
       /// If another timer is still needed, recreate it.
-      _steadyTimer =
-          Timer(const Duration(milliseconds: SteadyMilliseconds), () {
-        _steadyTimer = null;
-        _isSteady = true;
-        startRendering();
-      });
+      _steadyTimer = Timer(
+        const Duration(milliseconds: SteadyMilliseconds),
+        () {
+          _steadyTimer = null;
+          _isSteady = true;
+          startRendering();
+        },
+      );
     } else {
       /// Otherwise update the current state and schedule a new frame.
       _isSteady = false;
@@ -443,54 +445,54 @@ class Timeline {
       lastStart = color.start;
     }
 
-    lastStart = _headerColors.first.start;
-    for (HeaderColors color in _headerColors) {
-      color.screenY =
-          (lastStart + (color.start - lastStart / 2.0) - _renderStart) * scale;
-      lastStart = color.start;
-    }
+    // lastStart = _headerColors.first.start;
+    // for (HeaderColors color in _headerColors) {
+    //   color.screenY =
+    //       (lastStart + (color.start - lastStart / 2.0) - _renderStart) * scale;
+    //   lastStart = color.start;
+    // }
 
     // old _findHeaderColors() logic:
-    double screen = 0.0;
-    HeaderColors? headerColors;
-    for (HeaderColors color in _headerColorsReversed) {
-      if (screen >= color.screenY) headerColors = color;
-    }
-    headerColors ??= screen < _headerColors.first.screenY
-        ? _headerColors.first
-        : _headerColors.last;
-    _currentHeaderColors = headerColors;
+    // double screen = 0.0;
+    // HeaderColors? headerColors;
+    // for (HeaderColors color in _headerColorsReversed) {
+    //   if (screen >= color.screenY) headerColors = color;
+    // }
+    // headerColors ??= screen < _headerColors.first.screenY
+    //     ? _headerColors.first
+    //     : _headerColors.last;
+    // _currentHeaderColors = headerColors;
 
-    if (_headerTextColor == null) {
-      _headerTextColor = _currentHeaderColors!.text;
-      //_headerBackgroundColor = _currentHeaderColors!.background;
-    } else {
-      bool stillColoring = false;
-      Color headerTextColor = _interpolateColor(
-        _headerTextColor!,
-        _currentHeaderColors!.text,
-        elapsed,
-      );
-
-      if (headerTextColor != _headerTextColor) {
-        _headerTextColor = headerTextColor;
-        stillColoring = true;
-        doneRendering = false;
-      }
-      // Color headerBackgroundColor = interpolateColor(
-      //     _headerBackgroundColor!, _currentHeaderColors!.background, elapsed);
-      // if (headerBackgroundColor != _headerBackgroundColor) {
-      //   _headerBackgroundColor = headerBackgroundColor;
-      //   stillColoring = true;
-      //   doneRendering = false;
-      // }
-      if (stillColoring) {
-        if (onHeaderColorsChanged != null) {
-          //onHeaderColorsChanged!(_headerBackgroundColor!, _headerTextColor!);
-          onHeaderColorsChanged!(_headerTextColor!);
-        }
-      }
-    }
+    // if (_headerTextColor == null) {
+    //   _headerTextColor = _currentHeaderColors!.text;
+    //   //_headerBackgroundColor = _currentHeaderColors!.background;
+    // } else {
+    //   bool stillColoring = false;
+    //   Color headerTextColor = _interpolateColor(
+    //     _headerTextColor!,
+    //     _currentHeaderColors!.text,
+    //     elapsed,
+    //   );
+    //
+    //   if (headerTextColor != _headerTextColor) {
+    //     _headerTextColor = headerTextColor;
+    //     stillColoring = true;
+    //     doneRendering = false;
+    //   }
+    //   // Color headerBackgroundColor = interpolateColor(
+    //   //     _headerBackgroundColor!, _currentHeaderColors!.background, elapsed);
+    //   // if (headerBackgroundColor != _headerBackgroundColor) {
+    //   //   _headerBackgroundColor = headerBackgroundColor;
+    //   //   stillColoring = true;
+    //   //   doneRendering = false;
+    //   // }
+    //   if (stillColoring) {
+    //     if (onHeaderColorsChanged != null) {
+    //       //onHeaderColorsChanged!(_headerBackgroundColor!, _headerTextColor!);
+    //       onHeaderColorsChanged!(_headerTextColor!);
+    //     }
+    //   }
+    // }
 
     /// Check all the visible events and use the helper function [advanceItems()]
     /// to align their state with the elapsed time.

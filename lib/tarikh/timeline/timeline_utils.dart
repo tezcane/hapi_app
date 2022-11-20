@@ -81,13 +81,13 @@ class TickColors {
   double screenY = 0.0;
 }
 
-class HeaderColors {
-  HeaderColors(this.background, this.text, this.start);
-  final Color background;
-  final Color text;
-  final double start;
-  double screenY = 0.0;
-}
+// class HeaderColors {
+//   HeaderColors(this.background, this.text, this.start);
+//   final Color background;
+//   final Color text;
+//   final double start;
+//   double screenY = 0.0;
+// }
 
 class TapTarget {
   const TapTarget(this.event, this.rect, {this.zoom = false});

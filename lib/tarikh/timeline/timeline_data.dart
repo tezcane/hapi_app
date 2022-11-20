@@ -32,11 +32,11 @@ class TimelineColors {
   const TimelineColors({
     required this.background,
     required this.ticks,
-    required this.header,
+    // required this.header,
   });
   final Color background;
   final TickColors2 ticks;
-  final HeaderColors2 header;
+  // final HeaderColors2 header;
 }
 
 class TickColors2 {
@@ -52,11 +52,11 @@ class TickColors2 {
   final Color text;
 }
 
-class HeaderColors2 {
-  const HeaderColors2({required this.background, required this.text});
-  final Color background;
-  final Color text;
-}
+// class HeaderColors2 {
+//   const HeaderColors2({required this.background, required this.text});
+//   final Color background;
+//   final Color text;
+// }
 
 class Asset {
   const Asset({
@@ -109,10 +109,10 @@ List<TimelineData> getTimelineData() {
           short: Color.fromARGB(255, 255, 255, 51),
           text: Color.fromARGB(255, 255, 255, 157),
         ),
-        header: HeaderColors2(
-          background: Color.fromARGB(11, 47, 81, 94),
-          text: Color.fromARGB(255, 255, 255, 157),
-        ),
+        // header: HeaderColors2(
+        //   background: Color.fromARGB(11, 47, 81, 94),
+        //   text: Color.fromARGB(255, 255, 255, 157),
+        // ),
       ),
     ),
     TimelineData(
@@ -192,10 +192,10 @@ List<TimelineData> getTimelineData() {
           short: Color.fromARGB(255, 255, 255, 51),
           text: Color.fromARGB(255, 255, 255, 157),
         ),
-        header: HeaderColors2(
-          background: Color.fromARGB(27, 79, 128, 240),
-          text: Color.fromARGB(255, 255, 255, 157),
-        ),
+        // header: HeaderColors2(
+        //   background: Color.fromARGB(27, 79, 128, 240),
+        //   text: Color.fromARGB(255, 255, 255, 157),
+        // ),
       ),
     ),
     TimelineData(
@@ -228,10 +228,10 @@ List<TimelineData> getTimelineData() {
           short: Color.fromARGB(255, 255, 255, 51),
           text: Color.fromARGB(255, 255, 255, 157),
         ),
-        header: HeaderColors2(
-          background: Color.fromARGB(113, 152, 188, 240),
-          text: Color.fromARGB(255, 255, 255, 157),
-        ),
+        // header: HeaderColors2(
+        //   background: Color.fromARGB(113, 152, 188, 240),
+        //   text: Color.fromARGB(255, 255, 255, 157),
+        // ),
       ),
     ),
     TimelineData(
@@ -361,10 +361,10 @@ List<TimelineData> getTimelineData() {
           short: Color.fromARGB(0xFF, 0, 0, 35),
           text: Color.fromARGB(0xFF, 0, 0, 110),
         ),
-        header: HeaderColors2(
-          background: Color.fromARGB(245, 245, 245, 240),
-          text: Color.fromARGB(0xFF, 0, 0, 110),
-        ),
+        // header: HeaderColors2(
+        //   background: Color.fromARGB(245, 245, 245, 240),
+        //   text: Color.fromARGB(0xFF, 0, 0, 110),
+        // ),
       ),
     ),
     TimelineData(
