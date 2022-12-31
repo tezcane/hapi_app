@@ -206,10 +206,11 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
   initAppsFirstPage() {
     int navIdx = _getLastNavIdx(); //Quests
 
-    NavPage lastNavPage = NavPage.a_Asyila;
+    NavPage lastNavPage;
     try {
       lastNavPage = NavPage.values[navIdx];
     } catch (e) {
+      lastNavPage = NavPage.a_Asyila;
       l.e('appInit last index was $navIdx, no longer used, error: $e');
     }
 
@@ -323,8 +324,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
       duration: Duration(milliseconds: transitionMs),
     );
 
-    // save so app restarts at this idx
-    // if (navPage != NavPage.Mithal) s.wr('lastNavIdx', navPage.index);
+    // save so app restarts at this idx, and needed for logic around app
     s.wr('lastNavIdx', navPage.index);
   }
 

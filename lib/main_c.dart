@@ -9,6 +9,7 @@ import 'package:hapi/event/event_c.dart';
 import 'package:hapi/menu/menu_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/lang/lang_c.dart';
 import 'package:hapi/menu/slide/menu_bottom/settings/theme/app_themes.dart';
+import 'package:hapi/menu/slide/menu_right/nav_page.dart';
 import 'package:hapi/onboard/auth/auth_c.dart';
 import 'package:hapi/onboard/onboard_ui.dart';
 
@@ -98,6 +99,14 @@ class MainC extends GetxHapi {
     isSignedIn = true;
 
     showMainMenuFab();
+
+    // after onboarding we need to force Quest to be the first page now.
+    NavPage lastNavPage = MenuC.to.getLastNavPage();
+    if (lastNavPage == NavPage.Mithal) {
+      s.wr('lastNavIdx', NavPage.a_Asyila.index);
+    } else {
+      s.wr('lastNavIdx', lastNavPage.index);
+    }
 
     MenuC.to.initAppsFirstPage();
   }
