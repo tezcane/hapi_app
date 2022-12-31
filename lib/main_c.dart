@@ -64,7 +64,7 @@ class MainC extends GetxHapi {
   static MainC get to => Get.find();
 
   /// Gives main menu FAB ability to show/hide in an animated way.
-  bool _showMainMenuFab = true; // TODO asdf false, hide on splash screen?
+  bool _showMainMenuFab = false; // to hide on splash screen
   bool initNeeded = true;
 
   bool isSignedIn = false;
@@ -83,14 +83,14 @@ class MainC extends GetxHapi {
   showMainMenuFab() {
     if (!_showMainMenuFab) {
       _showMainMenuFab = true;
-      MenuC.to.update(); // needed to show FAB (MenuC has FAB logic)
+      MenuC.to.updateOnThread1Ms(); // needed to show FAB (MenuC has FAB logic)
     }
   }
 
   hideMainMenuFab() {
     if (_showMainMenuFab) {
       _showMainMenuFab = false;
-      MenuC.to.update(); // needed to hide FAB (MenuC has FAB logic)
+      MenuC.to.updateOnThread1Ms(); // needed to hide FAB (MenuC has FAB logic)
     }
   }
 

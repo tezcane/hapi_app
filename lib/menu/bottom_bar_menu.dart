@@ -79,6 +79,12 @@ class BottomBarMenu extends StatelessWidget {
   _initPageControllerAndBottomBar(int newIdx) {
     curBottomBarHighlightIdx = newIdx;
     _pageController = PageController(initialPage: newIdx);
+
+    // call action on app init, e.g. hide BottomBar on onboarding page 0:
+    if (bottomBarItems[newIdx].onPressed != null) {
+      bottomBarItems[newIdx].onPressed!.call();
+    }
+
     _handlePostFrameAnimation(newIdx); // needed for RTL<->LTR
   }
 
@@ -207,7 +213,7 @@ class BottomBarMenu extends StatelessWidget {
                 if (scrolls[UP] > CHANGE_TO_DIRECTION_STATE_THRESHOLD) {
                   state = UP;
                   if (kDebugMode) l.v('$cnt $state UP STATE SET');
-                  if (isBottomBarVisible) _hideTabBarAndMenuFab();
+                  if (isBottomBarVisible) hideTabBarAndMenuFab(navPage, true);
                 }
               } else {
                 scrolls[0] = 0; // reset all scroll in a row counts
@@ -263,7 +269,8 @@ class BottomBarMenu extends StatelessWidget {
     });
   }
 
-  _hideTabBarAndMenuFab() {
+  /// Called externally too so we can hide bottom bar on onboarding page.
+  static hideTabBarAndMenuFab(NavPage navPage, bool allowOnboardAction) {
     if (!isBottomBarVisible) return; // already hidden
 
     if (kDebugMode) l.d('$cnt $state hide bottom bar');
@@ -271,7 +278,10 @@ class BottomBarMenu extends StatelessWidget {
     MainC.to.hideMainMenuFab();
     isBottomBarVisible = false;
 
-    if (navPage == NavPage.Mithal) OnboardUI.tabBarWasHidden = true;
+    // if hiding by UI action (not user), don't set onboarding task as done
+    if (allowOnboardAction) {
+      if (navPage == NavPage.Mithal) OnboardUI.tabBarWasHidden = true;
+    }
 
     NavPageC.to.updateOnThread1Ms();
   }

@@ -58,6 +58,7 @@ const List<BottomBarItem> _bottomBarItems = [
     'a.hapi',
     'Welcome to hapi!',
     Icons.brightness_3_outlined,
+    onPressed: _hideBottomBar,
   ),
   BottomBarItem(
     DemoPage1TabSwipe(),
@@ -95,6 +96,10 @@ const List<BottomBarItem> _bottomBarItems = [
     Icons.rotate_90_degrees_ccw_outlined,
   ),
 ];
+
+_hideBottomBar() {
+  BottomBarMenu.hideTabBarAndMenuFab(NavPage.Mithal, false);
+}
 
 /// Variables used by all onboard pages
 const double hText = 18;

@@ -93,11 +93,20 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
 
     /// If here, back button was hit
 
+    NavPage lastNavPage = getLastNavPage();
+
     /// if going back to main nav page, play animation
     if (_subPageStack.length == 1) {
       _acFabIcon.reverse();
       _fabAnimatedIcon = AnimatedIcons.menu_close; // switch to menu close icon
       // update(); // TODO needed?
+
+      // Going back to onboarding's first page so hide menu/bottom bar
+      if (lastNavPage == NavPage.Mithal) {
+        // in case they dragged out the menu:
+        BottomBarMenu.hideTabBarAndMenuFab(NavPage.Mithal, false);
+        MainC.to.hideMainMenuFab(); // forces FAB to go
+      }
     }
 
     /// User may have updated profile settings and hit back button before saving
@@ -113,7 +122,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
 
     /// handle tarikh animated pages, set active/inactive
     bool goingBackToTarikhUIBackButtonWorkaround = false;
-    if (getLastNavPage() == NavPage.Tarikh) {
+    if (lastNavPage == NavPage.Tarikh) {
       // if timeline showing again (after event view), make timeline active
       if (_subPageStack.isNotEmpty &&
           _subPageStack.last == SubPage.Tarikh_Timeline) {
@@ -187,7 +196,7 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
   // TODO Persist this, where possible, pass in arguments to classes to rebuild:
   List<SubPage> _subPageStack = [];
 
-  int _getLastNavIdx() => s.rd('lastNavIdx') ?? NavPage.a_Asyila.index;
+  int _getLastNavIdx() => s.rd('lastNavIdx') ?? NavPage.Mithal.index;
 
   NavPage getLastNavPage() => _getNavPage(_getLastNavIdx());
 
@@ -315,7 +324,8 @@ class MenuC extends GetxHapi with GetTickerProviderStateMixin {
     );
 
     // save so app restarts at this idx
-    if (navPage != NavPage.Mithal) s.wr('lastNavIdx', navPage.index);
+    // if (navPage != NavPage.Mithal) s.wr('lastNavIdx', navPage.index);
+    s.wr('lastNavIdx', navPage.index);
   }
 
   /// use to push a NavPages sub page (Tarikh Favorites, etc.) on top of menu stack
